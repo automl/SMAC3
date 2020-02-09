@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -371,7 +371,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_has_conditions</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">do_optimize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GaussianProcess&#39;</span><span class="p">:</span>
+<div class="viewcode-block" id="GaussianProcess._train"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._train">[docs]</a>    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">do_optimize</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;GaussianProcess&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the Cholesky decomposition of the covariance of X and</span>
 <span class="sd">        estimates the GP hyperparameters by optimizing the marginal</span>
@@ -423,9 +423,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">kernel</span><span class="o">.</span><span class="n">theta</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_trained</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
+<div class="viewcode-block" id="GaussianProcess._get_gp"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._get_gp">[docs]</a>    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">GaussianProcessRegressor</span><span class="p">(</span>
             <span class="n">kernel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span>
             <span class="n">normalize_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -434,9 +434,9 @@
             <span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># Governed by the kernel</span>
             <span class="n">noise</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">random_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_nll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="GaussianProcess._nll"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._nll">[docs]</a>    <span class="k">def</span> <span class="nf">_nll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the negative marginal log likelihood (+ the prior) for</span>
 <span class="sd">        a hyperparameter configuration theta.</span>
@@ -469,9 +469,9 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lml</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">grad</span><span class="p">)):</span>
             <span class="k">return</span> <span class="mf">1e25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">theta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="n">lml</span><span class="p">,</span> <span class="o">-</span><span class="n">grad</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">lml</span><span class="p">,</span> <span class="o">-</span><span class="n">grad</span></div>
 
-    <span class="k">def</span> <span class="nf">_optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="GaussianProcess._optimize"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._optimize">[docs]</a>    <span class="k">def</span> <span class="nf">_optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimizes the marginal log likelihood and returns the best found</span>
 <span class="sd">        hyperparameter configuration theta.</span>
@@ -520,9 +520,9 @@
             <span class="k">if</span> <span class="n">f_opt</span> <span class="o">&lt;</span> <span class="n">f_opt_star</span><span class="p">:</span>
                 <span class="n">f_opt_star</span> <span class="o">=</span> <span class="n">f_opt</span>
                 <span class="n">theta_star</span> <span class="o">=</span> <span class="n">theta</span>
-        <span class="k">return</span> <span class="n">theta_star</span>
+        <span class="k">return</span> <span class="n">theta_star</span></div>
 
-    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">full_cov</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="GaussianProcess._predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">full_cov</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the predictive mean and variance of the objective function at</span>
 <span class="sd">        the given test points.</span>
@@ -557,7 +557,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">:</span>
             <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_untransform_y</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">var</span>
+        <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">var</span></div>
 
 <div class="viewcode-block" id="GaussianProcess.sample_functions"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess.sample_functions">[docs]</a>    <span class="k">def</span> <span class="nf">sample_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_funcs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -307,6 +307,32 @@
 <dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – Models the objective function.</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._compute">
+<em class="property">abstract </em><code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the acquisition value for a given point X. This function has
+to be overwritten in a derived class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – The input points where the acquisition function
+should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Acquisition function values wrt X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.update">
 <code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
@@ -348,6 +374,30 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.EI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.EI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -374,6 +424,30 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.EIPS._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.EIPS._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EIPS value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input point where the acquisition function</em>) – should be evaluate. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement per Second of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -394,6 +468,30 @@ integrate over.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">
 <code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
@@ -438,6 +536,28 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.LCB._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.LCB._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the LCB value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Points to evaluate LCB. N is the number of points and D the dimension for the points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -461,6 +581,30 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.LogEI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.LogEI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -487,6 +631,28 @@ acquisition function.</p>
 </dl>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.PI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.PI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.PI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the PI value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Points to evaluate PI. N is the number of points and D the dimension for the points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

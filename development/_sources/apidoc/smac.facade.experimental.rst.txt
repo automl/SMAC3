@@ -5,6 +5,7 @@ smac.facade.experimental package
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 
 .. toctree::

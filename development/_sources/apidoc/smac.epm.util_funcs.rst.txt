@@ -5,3 +5,4 @@ smac.epm.util\_funcs module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

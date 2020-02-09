@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -365,7 +365,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="n">min_samples_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EPMChooser._collect_data_to_train_model"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
         <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -381,10 +381,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">]</span>
                 <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">])</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
+<div class="viewcode-block" id="EPMChooser._get_evaluated_configs"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The</span>
@@ -442,7 +442,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="EPMChooser._get_incumbent"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">_get_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get incumbent value, configuration, and array representation.</span>
 
 <span class="sd">        This is retrieved either from the runhistory or from best predicted</span>
@@ -483,7 +483,7 @@
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">incumbent_value_as_array</span><span class="p">)</span>
             <span class="n">incumbent_value</span> <span class="o">=</span> <span class="n">incumbent_value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span></div>
+        <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span></div></div>
 </pre></div>
 
            </div>

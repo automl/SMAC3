@@ -5,3 +5,4 @@ smac.initial\_design.latin\_hypercube\_design module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

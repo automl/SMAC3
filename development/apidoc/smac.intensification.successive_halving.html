@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -343,6 +343,78 @@ It can be used to control anything by the target algorithm, Eg: number of epochs
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._get_incumbent">
+<code class="sig-name descname">_get_incumbent</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._get_incumbent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._get_incumbent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares the challenger with current incumbent and returns the best configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configuration</p></li>
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>incumbent and incumbent cost</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._init_sh_params">
+<code class="sig-name descname">_init_sh_params</code><span class="sig-paren">(</span><em class="sig-param">initial_budget: Optional[float], max_budget: Optional[float], eta: float, num_initial_challengers: Optional[int]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._init_sh_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._init_sh_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize Successive Halving parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>initial_budget</strong> (<em>typing.Optional</em><em>[</em><em>float</em><em>]</em>) – minimum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>max_budget</strong> (<em>typing.Optional</em><em>[</em><em>float</em><em>]</em>) – maximum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>eta</strong> (<em>float</em>) – ‘halving’ factor after each iteration in a successive halving run</p></li>
+<li><p><strong>num_initial_challengers</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – number of challengers to consider for the initial budget</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._top_k">
+<code class="sig-name descname">_top_k</code><span class="sig-paren">(</span><em class="sig-param">configs: List[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, k: int</em><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._top_k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._top_k" title="Permalink to this definition">¶</a></dt>
+<dd><p>selects the top ‘k’ configurations from the given list based on their performance in this budget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configs</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – list of configurations to filter from</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – number of configurations to select</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>top challenger configurations, sorted in increasing costs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.List[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._update_stage">
+<code class="sig-name descname">_update_stage</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._update_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._update_stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update tracking information for a new stage/iteration and update statistics.
+This method is called to initialize stage variables and after all configurations
+of a successive halving stage are completed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.intensification.successive_halving.SuccessiveHalving.eval_challenger">
 <code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving.eval_challenger" title="Permalink to this definition">¶</a></dt>

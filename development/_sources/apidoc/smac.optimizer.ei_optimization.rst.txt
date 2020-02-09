@@ -5,3 +5,4 @@ smac.optimizer.ei\_optimization module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

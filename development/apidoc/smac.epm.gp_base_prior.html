@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -302,6 +302,57 @@
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.GammaPrior._gradient">
+<code class="sig-name descname">_gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#GammaPrior._gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.GammaPrior._gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>As computed by Wolfram Alpha</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – A hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.GammaPrior._lnprob">
+<code class="sig-name descname">_lnprob</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#GammaPrior._lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.GammaPrior._lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the logpdf of theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.GammaPrior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#GammaPrior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.GammaPrior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns N samples from the prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -321,6 +372,61 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.HorseshoePrior._gradient">
+<code class="sig-name descname">_gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior._gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior._gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with
+respect to theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
+</ol>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.HorseshoePrior._lnprob">
+<code class="sig-name descname">_lnprob</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior._lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior._lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the log probability of theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – A hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.HorseshoePrior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#HorseshoePrior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.HorseshoePrior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns N samples from the prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -342,6 +448,61 @@ distribution.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.LognormalPrior._gradient">
+<code class="sig-name descname">_gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior._gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior._gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with
+respect to theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>(</em><em>D</em><em>,</em><em>) </em><em>numpy array</em>) – Hyperparameter configuration in log space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><ol class="upperalpha simple" start="4">
+<li><p>np.array</p></li>
+</ol>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.LognormalPrior._lnprob">
+<code class="sig-name descname">_lnprob</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior._lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior._lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the log probability of theta</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – A hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.LognormalPrior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#LognormalPrior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.LognormalPrior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns N samples from the prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -360,6 +521,59 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 <dd class="field-odd"><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.Prior._gradient">
+<code class="sig-name descname">_gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#Prior._gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.Prior._gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the gradient of the prior with respect to theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration in the original space space</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The gradient of the prior at theta.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.Prior._lnprob">
+<code class="sig-name descname">_lnprob</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#Prior._lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.Prior._lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the log probability of theta.</p>
+<p>Theta must be on the original scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – Hyperparameter configuration on the original scale.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The log probability of theta</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.Prior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#Prior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.Prior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> from the prior.</p>
+<p>All samples are on a original scale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.Prior.gradient">
 <code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#Prior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.Prior.gradient" title="Permalink to this definition">¶</a></dt>
@@ -434,6 +648,23 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 </dd>
 </dl>
 <dl class="method">
+<dt id="smac.epm.gp_base_prior.SoftTopHatPrior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#SoftTopHatPrior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.SoftTopHatPrior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns N samples from the prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.epm.gp_base_prior.SoftTopHatPrior.gradient">
 <code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#SoftTopHatPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.SoftTopHatPrior.gradient" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the gradient of the prior with respect to theta.</p>
@@ -489,6 +720,40 @@ In: NIPS 2017 Bayesian Optimization Workshop</p>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.TophatPrior._lnprob">
+<code class="sig-name descname">_lnprob</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior._lnprob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior._lnprob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the log probability of theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – A hyperparameter configuration</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_base_prior.TophatPrior._sample_from_prior">
+<code class="sig-name descname">_sample_from_prior</code><span class="sig-paren">(</span><em class="sig-param">n_samples: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior._sample_from_prior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior._sample_from_prior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> from the prior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_samples</strong> (<em>int</em>) – The number of samples that will be drawn.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.epm.gp_base_prior.TophatPrior.gradient">
 <code class="sig-name descname">gradient</code><span class="sig-paren">(</span><em class="sig-param">theta: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gp_base_prior.html#TophatPrior.gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_base_prior.TophatPrior.gradient" title="Permalink to this definition">¶</a></dt>

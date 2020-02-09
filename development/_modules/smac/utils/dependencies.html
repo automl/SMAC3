@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -319,7 +319,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unable to read requirement: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">package</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_verify_package</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
+<div class="viewcode-block" id="_verify_package"><a class="viewcode-back" href="../../../apidoc/smac.utils.dependencies.html#smac.utils.dependencies._verify_package">[docs]</a><span class="k">def</span> <span class="nf">_verify_package</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">version</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">get_distribution</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">installed_version</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
@@ -350,7 +350,7 @@
             <span class="s1">&#39;operation </span><span class="se">\&#39;</span><span class="si">%s</span><span class="se">\&#39;</span><span class="s1"> is not supported&#39;</span> <span class="o">%</span> <span class="n">operation</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">check</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">IncorrectPackageVersionError</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">installed_version</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span>
-                                           <span class="n">required_version</span><span class="p">)</span>
+                                           <span class="n">required_version</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MissingPackageError"><a class="viewcode-back" href="../../../apidoc/smac.utils.dependencies.html#smac.utils.dependencies.MissingPackageError">[docs]</a><span class="k">class</span> <span class="nc">MissingPackageError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>

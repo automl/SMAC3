@@ -5,3 +5,4 @@ smac.initial\_design.factorial\_design module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -310,6 +310,30 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dd>
 </dl>
 <dl class="method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix">
+<em class="property">abstract </em><code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: list = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds x,y matrixes from selected runs from runhistory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_dict</strong> (<em>dict</em><em>(</em><em>RunKey -&gt; RunValue</em><em>)</em>) – dictionary from RunHistory.RunKey to RunHistory.RunValue</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>instances</strong> (<em>list</em>) – list of instances</p></li>
+<li><p><strong>return_time_as_y</strong> (<em>bool</em>) – Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</p></li>
+<li><p><strong>store_statistics</strong> (<em>bool</em>) – Whether to store statistics about the data (to be used at subsequent calls)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>)</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
 <code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
@@ -394,6 +418,30 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dd>
 </dl>
 <dl class="method">
+<dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix">
+<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: list = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>“Builds X,y matrixes from selected runs from runhistory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_dict</strong> (<em>dict: RunKey -&gt; RunValue</em>) – dictionary from RunHistory.RunKey to RunHistory.RunValue</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
+<li><p><strong>instances</strong> (<em>list</em>) – list of instances</p></li>
+<li><p><strong>return_time_as_y</strong> (<em>bool</em>) – Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</p></li>
+<li><p><strong>store_statistics</strong> (<em>bool</em>) – Whether to store statistics about the data (to be used at subsequent calls)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>)</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values">
 <code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
@@ -437,6 +485,12 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix">
+<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: List[str] = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values">
 <code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values" title="Permalink to this definition">¶</a></dt>

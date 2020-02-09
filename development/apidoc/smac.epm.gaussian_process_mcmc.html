@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -288,7 +288,7 @@
 <span id="smac-epm-gaussian-process-mcmc-module"></span><h1>smac.epm.gaussian_process_mcmc module<a class="headerlink" href="#module-smac.epm.gaussian_process_mcmc" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fc0884df210&gt;, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process_mcmc.</code><code class="sig-name descname">GaussianProcessMCMC</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f7fa303a090&gt;, n_mcmc_walkers: int = 20, chain_length: int = 50, burnin_steps: int = 50, normalize_y: bool = True, mcmc_sampler: str = 'emcee', average_samples: bool = False, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameters are integrated out by MCMC. If you use this class
@@ -326,6 +326,90 @@ set n_feats (&gt; pca_dims).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._get_gp">
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7f7fa303a190&gt;<a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._get_gp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll">
+<code class="sig-name descname">_ll</code><span class="sig-paren">(</span><em class="sig-param">theta: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC._ll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the marginal log likelihood (+ the prior) for
+a hyperparameter configuration theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>np.ndarray</em><em>(</em><em>H</em><em>)</em>) – Hyperparameter vector. Note that all hyperparameter are
+on a log scale.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>lnlikelihood + prior</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll_w_grad">
+<code class="sig-name descname">_ll_w_grad</code><span class="sig-paren">(</span><em class="sig-param">theta: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC._ll_w_grad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll_w_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the marginal log likelihood (+ the prior) for
+a hyperparameter configuration theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>np.ndarray</em><em>(</em><em>H</em><em>)</em>) – Hyperparameter vector. Note that all hyperparameter are
+on a log scale.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>lnlikelihood + prior</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._predict">
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X_test: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the predictive mean and variance of the objective function
+at X average over all hyperparameter samples.
+The mean is computed by:
+:math mu(x) = frac{1}{M}sum_{i=1}^{M}mu_m(x)
+And the variance by:
+:math sigma^2(x) = (frac{1}{M}sum_{i=1}^{M}(sigma^2_m(x) + mu_m(x)^2) - mu^2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X_test</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input test points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.array(N,)</em> – predictive mean</p></li>
+<li><p><em>np.array(N,)</em> – predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._train">
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em>, <em class="sig-param">do_optimize: bool = True</em><span class="sig-paren">)</span> &#x2192; smac.epm.gaussian_process_mcmc.GaussianProcessMCMC<a class="reference internal" href="../_modules/smac/epm/gaussian_process_mcmc.html#GaussianProcessMCMC._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs MCMC sampling to sample hyperparameter configurations from the
+likelihood and trains for each sample a GP on X and y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input data points. The dimensionality of X is (N, D),
+with N as the number of points and D is the number of features.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>,</em><em>)</em>) – The corresponding target values.</p></li>
+<li><p><strong>do_optimize</strong> (<em>boolean</em>) – If set to true we perform MCMC sampling otherwise we just use the
+hyperparameter specified in the kernel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

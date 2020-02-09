@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -423,6 +423,65 @@ set n_feats (&gt; pca_dims).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.rf_with_instances.RandomForestWithInstances._init_data_container">
+<code class="sig-name descname">_init_data_container</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; pyrfr.regression.default_data_container<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._init_data_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._init_data_container" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills a pyrfr default data container, s.t. the forest knows
+categoricals and bounds for continous data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em>]</em>) – Input data points</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>]</em>) – Corresponding target values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – The filled data container that pyrfr can interpret</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>regression.default_data_container</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.rf_with_instances.RandomForestWithInstances._predict">
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict means and variances for given X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>,</em>) – n_features (config + instance features)]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, 1]</em>) – Predictive mean</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, 1]</em>) – Predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.rf_with_instances.RandomForestWithInstances._train">
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.rf_with_instances.RandomForestWithInstances<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the random forest on X and y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Input data points.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em><em> [</em><em>n_samples</em><em>, </em><em>]</em>) – The corresponding target values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>self</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances">
 <code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>

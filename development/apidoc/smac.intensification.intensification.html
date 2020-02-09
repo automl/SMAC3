@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -319,6 +319,94 @@ intensify).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.intensification.intensification.Intensifier._add_inc_run">
+<code class="sig-name descname">_add_inc_run</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._add_inc_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._add_inc_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new run for incumbent</p>
+<p><em>Side effect:</em> adds runs to &lt;run_history&gt;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.intensification.Intensifier._generate_challengers">
+<code class="sig-name descname">_generate_challengers</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser]</em><span class="sig-paren">)</span> &#x2192; Optional[Iterator[ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retuns a sequence of challengers to use in intensification
+If challengers are not provided, then optimizer will be used to generate the challenger list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – promising configurations to evaluate next</p></li>
+<li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – a sampler that generates next configurations to use for racing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A generator containing the next challengers to use</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Optional[typing.Generator[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.intensification.Intensifier._get_instances_to_run">
+<code class="sig-name descname">_get_instances_to_run</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">N: int</em><span class="sig-paren">)</span> &#x2192; Tuple[List[smac.runhistory.runhistory.InstSeedBudgetKey], float]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._get_instances_to_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._get_instances_to_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum list of &lt;instance, seed&gt; pairs to run the challenger on
+before comparing it with the incumbent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent configuration</p></li>
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configuration that is presently being evaluated</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Stores all runs we ran so far</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – number of &lt;instance, seed&gt; pairs to select</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>typing.List[InstSeedBudgetKey]</em> – list of &lt;instance, seed, budget&gt; tuples to run</p></li>
+<li><p><em>float</em> – total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.intensification.Intensifier._race_challenger">
+<code class="sig-name descname">_race_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._race_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._race_challenger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggressively race challenger against incumbent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration which challenges incumbent</p></li>
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Stores all runs we ran so far</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – Whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>new_incumbent</strong> – Either challenger or incumbent</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.intensification.Intensifier._update_trackers">
+<code class="sig-name descname">_update_trackers</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._update_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._update_trackers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates tracking variables at the end of an intensification run</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.intensification.intensification.Intensifier.eval_challenger">
 <code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.eval_challenger" title="Permalink to this definition">¶</a></dt>

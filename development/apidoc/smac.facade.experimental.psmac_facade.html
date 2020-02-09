@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -360,6 +360,27 @@ None =&gt; neither and return the full portfolio</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">
+<code class="sig-name descname">_get_mean_costs</code><span class="sig-paren">(</span><em class="sig-param">incs: List[ConfigSpace.configuration_space.Configuration], new_rh: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC._get_mean_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute mean cost per instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>incs</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – incumbents determined by all parallel SMAC runs</p></li>
+<li><p><strong>new_rh</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to determine mean performance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>List[float] means</em></p></li>
+<li><p><em>Dict(Config -&gt; Dict(inst_id(str) -&gt; float))</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids">
 <code class="sig-name descname">get_best_incumbents_ids</code><span class="sig-paren">(</span><em class="sig-param">incs: List[ConfigSpace.configuration_space.Configuration]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.get_best_incumbents_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>

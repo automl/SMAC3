@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -293,6 +293,37 @@
 <em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.output_writer.</code><code class="sig-name descname">OutputWriter</code><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writing scenario to file.</p>
+<dl class="method">
+<dt id="smac.utils.io.output_writer.OutputWriter._parse_argument">
+<code class="sig-name descname">_parse_argument</code><span class="sig-paren">(</span><em class="sig-param">scenario</em>, <em class="sig-param">key: str</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter._parse_argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter._parse_argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some values of the scenario-file need to be changed upon writing,
+such as the ‘ta’ (target algorithm), due to it’s callback. Also,
+the configspace, features, train_inst- and test-inst-lists are saved
+to output_dir, if they exist.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>scenario: Scenario</dt><dd><p>Scenario-file to be written</p>
+</dd>
+<dt>key: string</dt><dd><p>Name of the attribute in scenario-file</p>
+</dd>
+<dt>value: Any</dt><dd><p>Corresponding attribute</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>new value: string</dt><dd><p>The altered value, to be written to file</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><ul class="simple">
+<li><p>copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
+output if possible, creates the files from attributes otherwise</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.utils.io.output_writer.OutputWriter.save_configspace">
 <code class="sig-name descname">save_configspace</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">fn: str</em>, <em class="sig-param">output_format: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>

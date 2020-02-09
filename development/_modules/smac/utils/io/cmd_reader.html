@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -442,7 +442,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">help_type</span> <span class="o">=</span> <span class="n">help_type</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConfigurableHelpFormatter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]):</span>
+<div class="viewcode-block" id="ConfigurableHelpFormatter._add_item"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter._add_item">[docs]</a>    <span class="k">def</span> <span class="nf">_add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]):</span>
         <span class="k">def</span> <span class="nf">filter_actions</span><span class="p">(</span><span class="n">actions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]):</span>
             <span class="n">filtered_actions</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
@@ -467,7 +467,7 @@
                     <span class="n">args</span> <span class="o">=</span> <span class="n">filter_actions</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
                         <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_current_section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span></div></div>
 
 
 <div class="viewcode-block" id="SMACArgumentParser"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser">[docs]</a><span class="k">class</span> <span class="nc">SMACArgumentParser</span><span class="p">(</span><span class="n">ArgumentParser</span><span class="p">):</span>
@@ -488,8 +488,8 @@
 <div class="viewcode-block" id="SMACArgumentParser.add_parser"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.add_parser">[docs]</a>    <span class="k">def</span> <span class="nf">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">additional_parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">additional_parsers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">additional_parser</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter_class</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prog</span><span class="p">,</span> <span class="n">help_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">help_type</span><span class="p">)</span>
+<div class="viewcode-block" id="SMACArgumentParser._get_formatter"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser._get_formatter">[docs]</a>    <span class="k">def</span> <span class="nf">_get_formatter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">formatter_class</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">prog</span><span class="p">,</span> <span class="n">help_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">help_type</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SMACArgumentParser.format_help"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.format_help">[docs]</a>    <span class="k">def</span> <span class="nf">format_help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">formatter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_formatter</span><span class="p">()</span>
@@ -580,7 +580,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_smac_options</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_scen_options</span><span class="p">()</span>
 
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CMDReader._extract_action_info"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._extract_action_info">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_extract_action_info</span><span class="p">(</span><span class="n">actions</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]):</span>
         <span class="n">extracted_info</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">translations</span> <span class="o">=</span> <span class="p">{}</span>
@@ -623,9 +623,9 @@
                 <span class="n">cmd_action</span><span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">cmd_action</span><span class="p">[</span><span class="s1">&#39;option_strings&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span>
             <span class="n">extracted_info</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cmd_action</span>
-        <span class="k">return</span> <span class="n">extracted_info</span><span class="p">,</span> <span class="n">translations</span>
+        <span class="k">return</span> <span class="n">extracted_info</span><span class="p">,</span> <span class="n">translations</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_main_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CMDReader._add_main_options"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_main_options">[docs]</a>    <span class="k">def</span> <span class="nf">_add_main_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add main Options&quot;&quot;&quot;</span>
         <span class="n">prog</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;^python[0-9._-]*$&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -694,9 +694,9 @@
                               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">truthy</span><span class="p">,</span>
                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] Validate all psmac configurations.&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_smac_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CMDReader._add_smac_options"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_smac_options">[docs]</a>    <span class="k">def</span> <span class="nf">_add_smac_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add SMAC Options&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span> <span class="o">=</span> <span class="n">SMACArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">ConfigurableHelpFormatter</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">smac_opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;SMAC Options&quot;</span><span class="p">)</span>
@@ -836,9 +836,9 @@
                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] probablity to run a random configuration&quot;</span>
                                     <span class="s2">&quot; instead of configuration optimized on the acquisition function&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smac_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smac_parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_scen_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="CMDReader._add_scen_options"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_scen_options">[docs]</a>    <span class="k">def</span> <span class="nf">_add_scen_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add Scenario Options&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scen_parser</span> <span class="o">=</span> <span class="n">SMACArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">ConfigurableHelpFormatter</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">scen_opts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen_parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s2">&quot;Scenario Options&quot;</span><span class="p">)</span>
@@ -932,7 +932,7 @@
                                <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen_parser</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scen_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen_parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scen_cmd_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen_cmd_translations</span> <span class="o">=</span> <span class="n">CMDReader</span><span class="o">.</span><span class="n">_extract_action_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen_parser</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMDReader.parse_main_command"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.parse_main_command">[docs]</a>    <span class="k">def</span> <span class="nf">parse_main_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_cmd_opts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Parse main options&quot;&quot;&quot;</span>
@@ -1083,7 +1083,7 @@
                                                  <span class="n">scenario_cmd_opts</span><span class="o">=</span><span class="n">misc_cmd</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">main_args_</span><span class="p">,</span> <span class="n">smac_args_</span><span class="p">,</span> <span class="n">scen_args_</span></div>
 
-    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CMDReader._write_options_to_doc"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._write_options_to_doc">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_write_options_to_doc</span><span class="p">(</span><span class="n">_arguments</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exclude</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">_arguments</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
@@ -1099,7 +1099,7 @@
                 <span class="k">if</span> <span class="s1">&#39;choice&#39;</span> <span class="ow">in</span> <span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="ow">and</span> <span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">][</span><span class="s1">&#39;choice&#39;</span><span class="p">]:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; Must be from: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_arguments</span><span class="p">[</span><span class="n">arg</span><span class="p">][</span><span class="s1">&#39;choice&#39;</span><span class="p">]))</span>
                 <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CMDReader.write_main_options_to_doc"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc">[docs]</a>    <span class="k">def</span> <span class="nf">write_main_options_to_doc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;main_options.rst&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes the SMAC option-list to file for autogeneration in documentation.</span>

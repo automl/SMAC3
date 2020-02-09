@@ -5,3 +5,4 @@ smac.epm.gp\_kernels module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

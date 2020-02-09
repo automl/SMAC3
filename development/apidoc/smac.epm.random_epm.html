@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -311,6 +311,39 @@ set n_feats (&gt; pca_dims).</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.epm.random_epm.RandomEPM._predict">
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM._predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict means and variances for given X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.random_epm.RandomEPM._train">
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.random_epm.RandomEPM<a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM._train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pseudo training on X and Y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input data points. The dimensionality of X is (N, D),
+with N as the number of points and D is the number of features.</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>1</em><em>)</em>) – The corresponding target values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

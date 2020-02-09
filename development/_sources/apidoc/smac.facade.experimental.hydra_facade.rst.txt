@@ -5,3 +5,4 @@ smac.facade.experimental.hydra\_facade module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

@@ -5,3 +5,4 @@ smac.intensification.hyperband module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

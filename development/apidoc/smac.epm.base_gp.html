@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -288,9 +288,67 @@
 <span id="smac-epm-base-gp-module"></span><h1>smac.epm.base_gp module<a class="headerlink" href="#module-smac.epm.base_gp" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_gp.BaseModel">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fc0884df210&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f7fa303a090&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Abstract base class for all Gaussian process models.</p>
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._get_all_priors">
+<code class="sig-name descname">_get_all_priors</code><span class="sig-paren">(</span><em class="sig-param">add_bound_priors: bool = True</em>, <em class="sig-param">add_soft_bounds: bool = False</em><span class="sig-paren">)</span> &#x2192; List[List[smac.epm.gp_base_prior.Prior]]<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_all_priors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_all_priors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._get_gp">
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7f7fa303a190&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._impute_inactive">
+<code class="sig-name descname">_impute_inactive</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._impute_inactive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._impute_inactive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._normalize_y">
+<code class="sig-name descname">_normalize_y</code><span class="sig-paren">(</span><em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._normalize_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._normalize_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize data to zero mean unit standard deviation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>y</strong> (<em>np.ndarray</em>) – Targets for the Gaussian process</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._set_has_conditions">
+<code class="sig-name descname">_set_has_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._set_has_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._set_has_conditions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.base_gp.BaseModel._untransform_y">
+<code class="sig-name descname">_untransform_y</code><span class="sig-paren">(</span><em class="sig-param">y: numpy.ndarray</em>, <em class="sig-param">var: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._untransform_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._untransform_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform zeromean unit standard deviation data into the regular space.</p>
+<p>This function should be used after a prediction with the Gaussian process which was trained on normalized data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – Normalized data.</p></li>
+<li><p><strong>var</strong> (<em>np.ndarray</em><em> (</em><em>optional</em><em>)</em>) – Normalized variance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray on Tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>

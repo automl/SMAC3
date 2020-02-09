@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -389,7 +389,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">portfolio_cost</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_get_validation_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val_set</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="Hydra._get_validation_set"><a class="viewcode-back" href="../../../../apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._get_validation_set">[docs]</a>    <span class="k">def</span> <span class="nf">_get_validation_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val_set</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">delete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create small validation set for hydra to determine incumbent performance</span>
 
@@ -426,7 +426,7 @@
             <span class="n">val</span> <span class="o">=</span> <span class="n">insts</span><span class="p">[</span><span class="n">ids</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">delete</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">insts</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-            <span class="k">return</span> <span class="n">val</span>
+            <span class="k">return</span> <span class="n">val</span></div>
 
 <div class="viewcode-block" id="Hydra.optimize"><a class="viewcode-back" href="../../../../apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -518,7 +518,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">portfolio</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">config_cost_per_inst</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<div class="viewcode-block" id="Hydra._update_portfolio"><a class="viewcode-back" href="../../../../apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._update_portfolio">[docs]</a>    <span class="k">def</span> <span class="nf">_update_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">config_cost_per_inst</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates all configurations (in incs) and determines which ones to add to the portfolio</span>
 
@@ -561,7 +561,7 @@
             <span class="n">cur_cost</span> <span class="o">=</span> <span class="n">new_mean</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">portfolio_cost</span> <span class="o">=</span> <span class="n">cur_cost</span>
-        <span class="k">return</span> <span class="n">cur_cost</span></div>
+        <span class="k">return</span> <span class="n">cur_cost</span></div></div>
 </pre></div>
 
            </div>

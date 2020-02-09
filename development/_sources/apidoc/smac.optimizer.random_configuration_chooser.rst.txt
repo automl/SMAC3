@@ -5,3 +5,4 @@ smac.optimizer.random\_configuration\_chooser module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

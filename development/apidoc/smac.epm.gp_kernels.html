@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -290,18 +290,92 @@
 <dt id="smac.epm.gp_kernels.ConstantKernel">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">ConstantKernel</code><span class="sig-paren">(</span><em class="sig-param">constant_value: float = 1.0</em>, <em class="sig-param">constant_value_bounds: Tuple[float</em>, <em class="sig-param">float] = (1e-05</em>, <em class="sig-param">100000.0)</em>, <em class="sig-param">operate_on: Optional[numpy.ndarray] = None</em>, <em class="sig-param">prior: Optional[smac.epm.gp_base_prior.Prior] = None</em>, <em class="sig-param">has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#ConstantKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.ConstantKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.ConstantKernel._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.ConstantKernel._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#ConstantKernel._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.ConstantKernel._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.HammingKernel">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">HammingKernel</code><span class="sig-paren">(</span><em class="sig-param">length_scale: Union[float, Tuple[float, ...]] = 1.0, length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-05, 100000.0), operate_on: Optional[numpy.ndarray] = None, prior: Optional[smac.epm.gp_base_prior.Prior] = None, has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#HammingKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.HammingKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.HammingKernel._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.HammingKernel._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#HammingKernel._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.HammingKernel._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>[</em><em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em><em>]</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>[</em><em>array-like</em><em>, </em><em>shape=</em><em>(</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>) or </em><em>None</em><em>(</em><em>default</em><em>)</em><em>]</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>[</em><em>bool</em><em>, </em><em>False</em><em>(</em><em>default</em><em>)</em><em>]</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>[array-like, shape=(n_samples_X, n_samples_Y)]</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>[array-like, shape=(n_samples_X, n_samples_X, n_dims)]</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Code partially copied from skopt (<a class="reference external" href="https://github.com/scikit-optimize">https://github.com/scikit-optimize</a>).
+Made small changes to only compute necessary values and use scikit-learn helper functions.</p>
+</div>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.MagicMixin">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">MagicMixin</code><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="smac.epm.gp_kernels.MagicMixin._signature">
+<code class="sig-name descname">_signature</code><span class="sig-paren">(</span><em class="sig-param">func: Callable</em><span class="sig-paren">)</span> &#x2192; inspect.Signature<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin._signature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin._signature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="smac.epm.gp_kernels.MagicMixin.clone_with_theta">
 <code class="sig-name descname">clone_with_theta</code><span class="sig-paren">(</span><em class="sig-param">theta: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; skopt.learning.gaussian_process.kernels.Kernel<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#MagicMixin.clone_with_theta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.clone_with_theta" title="Permalink to this definition">¶</a></dt>
@@ -345,7 +419,7 @@ contained subobjects that are estimators.</p>
 
 <dl class="attribute">
 <dt id="smac.epm.gp_kernels.MagicMixin.prior">
-<code class="sig-name descname">prior</code><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.prior" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">prior</code><em class="property">: Optional[Prior]</em><em class="property"> = None</em><a class="headerlink" href="#smac.epm.gp_kernels.MagicMixin.prior" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -365,30 +439,196 @@ contained subobjects that are estimators.</p>
 <dt id="smac.epm.gp_kernels.Matern">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">Matern</code><span class="sig-paren">(</span><em class="sig-param">length_scale: Union[float, Tuple[float, ...]] = 1.0, length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-05, 100000.0), nu: float = 1.5, operate_on: Optional[numpy.ndarray] = None, prior: Optional[smac.epm.gp_base_prior.Prior] = None, has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Matern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Matern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Matern</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Matern._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.Matern._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Matern._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Matern._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Matern._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.
+:param X: Left argument of the returned kernel k(X, Y)
+:type X: array, shape (n_samples_X, n_features)
+:param Y: Right argument of the returned kernel k(X, Y). If None, k(X, X)</p>
+<blockquote>
+<div><p>if evaluated instead.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.Product">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">Product</code><span class="sig-paren">(</span><em class="sig-param">k1: skopt.learning.gaussian_process.kernels.Kernel</em>, <em class="sig-param">k2: skopt.learning.gaussian_process.kernels.Kernel</em>, <em class="sig-param">operate_on: numpy.ndarray = None</em>, <em class="sig-param">has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Product" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Product</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Product._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.Product._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Product._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: numpy.ndarray = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Product._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Product._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.RBF">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">RBF</code><span class="sig-paren">(</span><em class="sig-param">length_scale: Union[float, Tuple[float, ...]] = 1.0, length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-05, 100000.0), operate_on: Optional[numpy.ndarray] = None, prior: Optional[smac.epm.gp_base_prior.Prior] = None, has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#RBF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.RBF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.RBF</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.RBF._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.RBF._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.RBF._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#RBF._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.RBF._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.Sum">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">Sum</code><span class="sig-paren">(</span><em class="sig-param">k1: skopt.learning.gaussian_process.kernels.Kernel</em>, <em class="sig-param">k2: skopt.learning.gaussian_process.kernels.Kernel</em>, <em class="sig-param">operate_on: numpy.ndarray = None</em>, <em class="sig-param">has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Sum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.Sum</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.Sum._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.Sum._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.Sum._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: numpy.ndarray = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Sum._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.Sum._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.epm.gp_kernels.WhiteKernel">
 <em class="property">class </em><code class="sig-prename descclassname">smac.epm.gp_kernels.</code><code class="sig-name descname">WhiteKernel</code><span class="sig-paren">(</span><em class="sig-param">noise_level: Union[float, Tuple[float, ...]] = 1.0, noise_level_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-05, 100000.0), operate_on: Optional[numpy.ndarray] = None, prior: Optional[smac.epm.gp_base_prior.Prior] = None, has_conditions: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#WhiteKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.epm.gp_kernels.MagicMixin" title="smac.epm.gp_kernels.MagicMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gp_kernels.MagicMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">skopt.learning.gaussian_process.kernels.WhiteKernel</span></code></p>
+<dl class="attribute">
+<dt id="smac.epm.gp_kernels.WhiteKernel._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gp_kernels.WhiteKernel._call">
+<code class="sig-name descname">_call</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">Y: Optional[numpy.ndarray] = None</em>, <em class="sig-param">eval_gradient: bool = False</em>, <em class="sig-param">active: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#WhiteKernel._call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel._call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.
+:param X: Left argument of the returned kernel k(X, Y)
+:type X: array, shape (n_samples_X, n_features)
+:param Y: Right argument of the returned kernel k(X, Y). If None, k(X, X)</p>
+<blockquote>
+<div><p>if evaluated instead.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
+hyperparameter is determined. Only supported when Y is None.</p></li>
+<li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>K</strong> (<em>array, shape (n_samples_X, n_samples_Y)</em>) – Kernel k(X, Y)</p></li>
+<li><p><strong>K_gradient</strong> (<em>array (opt.), shape (n_samples_X, n_samples_X, n_dims)</em>) – The gradient of the kernel k(X, X) with respect to the
+hyperparameter of the kernel. Only returned when eval_gradient
+is True.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">

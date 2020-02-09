@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -337,7 +337,7 @@
                 <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options_dest2name</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">new_value</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="nf">_parse_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="viewcode-block" id="OutputWriter._parse_argument"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter._parse_argument">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Some values of the scenario-file need to be changed upon writing,</span>
 <span class="sd">        such as the &#39;ta&#39; (target algorithm), due to it&#39;s callback. Also,</span>
 <span class="sd">        the configspace, features, train_inst- and test-inst-lists are saved</span>
@@ -405,7 +405,7 @@
             <span class="c1"># No need to log, recreated from files</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">value</span>
+            <span class="k">return</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="OutputWriter.write_inst_file"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Writes instance-list to file.</span>

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -324,10 +324,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">kernel</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_gp</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+<div class="viewcode-block" id="BaseModel._get_gp"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._get_gp">[docs]</a>    <span class="k">def</span> <span class="nf">_get_gp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GaussianProcessRegressor</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_normalize_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseModel._normalize_y"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._normalize_y">[docs]</a>    <span class="k">def</span> <span class="nf">_normalize_y</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Normalize data to zero mean unit standard deviation.</span>
 
 <span class="sd">        Parameters</span>
@@ -343,9 +343,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_y_</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_y_</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span></div>
 
-    <span class="k">def</span> <span class="nf">_untransform_y</span><span class="p">(</span>
+<div class="viewcode-block" id="BaseModel._untransform_y"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._untransform_y">[docs]</a>    <span class="k">def</span> <span class="nf">_untransform_y</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">var</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -369,9 +369,9 @@
         <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="n">var</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std_y_</span> <span class="o">**</span> <span class="mi">2</span>
             <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">var</span>
-        <span class="k">return</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="n">y</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_all_priors</span><span class="p">(</span>
+<div class="viewcode-block" id="BaseModel._get_all_priors"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._get_all_priors">[docs]</a>    <span class="k">def</span> <span class="nf">_get_all_priors</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">add_bound_priors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">add_soft_bounds</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -410,9 +410,9 @@
                                     <span class="n">lower_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_bound</span><span class="o">=</span><span class="n">bounds</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
                                 <span class="p">))</span>
                     <span class="n">all_priors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">priors_for_hp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">all_priors</span>
+        <span class="k">return</span> <span class="n">all_priors</span></div>
 
-    <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseModel._set_has_conditions"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._set_has_conditions">[docs]</a>    <span class="k">def</span> <span class="nf">_set_has_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">has_conditions</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configspace</span><span class="o">.</span><span class="n">get_conditions</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span>
@@ -425,12 +425,12 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_param</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
                 <span class="n">current_param</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">current_param</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">current_param</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_impute_inactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseModel._impute_inactive"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._impute_inactive">[docs]</a>    <span class="k">def</span> <span class="nf">_impute_inactive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">X</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">X</span><span class="p">)]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">return</span> <span class="n">X</span></div>
+        <span class="k">return</span> <span class="n">X</span></div></div>
 </pre></div>
 
            </div>

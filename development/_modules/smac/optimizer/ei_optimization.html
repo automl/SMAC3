@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -364,7 +364,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)]</span></div>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="AcquisitionFunctionMaximizer._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._maximize">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -394,9 +394,9 @@
 <span class="sd">            An iterable consistng of</span>
 <span class="sd">            tuple(acqusition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_sort_configs_by_acq_value</span><span class="p">(</span>
+<div class="viewcode-block" id="AcquisitionFunctionMaximizer._sort_configs_by_acq_value"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._sort_configs_by_acq_value">[docs]</a>    <span class="k">def</span> <span class="nf">_sort_configs_by_acq_value</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">configs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
@@ -422,7 +422,7 @@
 
         <span class="c1"># Cannot use zip here because the indices array cannot index the</span>
         <span class="c1"># rand_configs list, because the second is a pure python list</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">acq_values</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">configs</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span></div>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">acq_values</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">configs</span><span class="p">[</span><span class="n">ind</span><span class="p">])</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span></div></div>
 
 
 <div class="viewcode-block" id="LocalSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch">[docs]</a><span class="k">class</span> <span class="nc">LocalSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -469,7 +469,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">vectorization_min_obtain</span> <span class="o">=</span> <span class="n">vectorization_min_obtain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vectorization_max_obtain</span> <span class="o">=</span> <span class="n">vectorization_max_obtain</span>
 
-    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+<div class="viewcode-block" id="LocalSearch._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._maximize">[docs]</a>    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
@@ -515,9 +515,9 @@
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">configs_acq</span><span class="p">:</span>
             <span class="n">inc</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Local Search&#39;</span>
 
-        <span class="k">return</span> <span class="n">configs_acq</span>
+        <span class="k">return</span> <span class="n">configs_acq</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_initial_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">additional_start_points</span><span class="p">):</span>
+<div class="viewcode-block" id="LocalSearch._get_initial_points"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._get_initial_points">[docs]</a>    <span class="k">def</span> <span class="nf">_get_initial_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">,</span> <span class="n">additional_start_points</span><span class="p">):</span>
 
         <span class="k">if</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
             <span class="n">init_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">num_points</span><span class="p">)</span>
@@ -561,9 +561,9 @@
                     <span class="n">init_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span>
                     <span class="n">init_points_as_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">init_points</span>
+        <span class="k">return</span> <span class="n">init_points</span></div>
 
-    <span class="k">def</span> <span class="nf">_do_search</span><span class="p">(</span>
+<div class="viewcode-block" id="LocalSearch._do_search"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._do_search">[docs]</a>    <span class="k">def</span> <span class="nf">_do_search</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">start_points</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
             <span class="o">**</span><span class="n">kwargs</span>
@@ -708,7 +708,7 @@
             <span class="n">local_search_steps</span><span class="p">,</span> <span class="n">neighbors_looked_at</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">times</span><span class="p">),</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">acq_val_incumbents</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)]</span></div>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">acq_val_incumbents</span><span class="p">,</span> <span class="n">incumbents</span><span class="p">)]</span></div></div>
 
 
 <div class="viewcode-block" id="DiffOpt"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.DiffOpt">[docs]</a><span class="k">class</span> <span class="nc">DiffOpt</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -723,7 +723,7 @@
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+<div class="viewcode-block" id="DiffOpt._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.DiffOpt._maximize">[docs]</a>    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
@@ -782,7 +782,7 @@
 
         <span class="n">configs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">configs</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">configs</span></div>
+        <span class="k">return</span> <span class="n">configs</span></div></div>
 
 
 <div class="viewcode-block" id="RandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch">[docs]</a><span class="k">class</span> <span class="nc">RandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -797,7 +797,7 @@
 <span class="sd">    rng : np.random.RandomState or int, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+<div class="viewcode-block" id="RandomSearch._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch._maximize">[docs]</a>    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
@@ -839,7 +839,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">)):</span>
                 <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span>
-            <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">))]</span></div>
+            <span class="k">return</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rand_configs</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rand_configs</span><span class="p">))]</span></div></div>
 
 
 <div class="viewcode-block" id="InterleavedLocalAndRandomSearch"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch">[docs]</a><span class="k">class</span> <span class="nc">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">):</span>
@@ -961,14 +961,14 @@
         <span class="n">random_configuration_chooser</span><span class="o">.</span><span class="n">next_smbo_iteration</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+<div class="viewcode-block" id="InterleavedLocalAndRandomSearch._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch._maximize">[docs]</a>    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
             <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
             <span class="n">num_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="ChallengerList"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.ChallengerList">[docs]</a><span class="k">class</span> <span class="nc">ChallengerList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -1028,7 +1028,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configurations</span> <span class="o">=</span> <span class="n">configurations</span>
 
-    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
+<div class="viewcode-block" id="FixedSet._maximize"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.FixedSet._maximize">[docs]</a>    <span class="k">def</span> <span class="nf">_maximize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
@@ -1036,7 +1036,7 @@
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]:</span>
         <span class="n">configurations</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configurations</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_configs_by_acq_value</span><span class="p">(</span><span class="n">configurations</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort_configs_by_acq_value</span><span class="p">(</span><span class="n">configurations</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

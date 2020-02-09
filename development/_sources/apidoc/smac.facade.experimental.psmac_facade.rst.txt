@@ -5,3 +5,4 @@ smac.facade.experimental.psmac\_facade module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

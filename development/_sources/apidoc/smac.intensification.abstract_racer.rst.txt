@@ -5,3 +5,4 @@ smac.intensification.abstract\_racer module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -318,6 +318,19 @@ for more detailed information about the different types of budgets possible and 
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.intensification.hyperband.Hyperband._update_stage">
+<code class="sig-name descname">_update_stage</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband._update_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband._update_stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update tracking information for a new stage/iteration and update statistics.
+This method is called to initialize stage variables and after all configurations
+of a successive halving stage are completed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.intensification.hyperband.Hyperband.eval_challenger">
 <code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/hyperband.html#Hyperband.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.hyperband.Hyperband.eval_challenger" title="Permalink to this definition">¶</a></dt>

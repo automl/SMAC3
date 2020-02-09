@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -304,7 +304,7 @@
 <span class="sd">        otherwise factorial design is overwritten</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="LHDesign._select_configurations"><a class="viewcode-back" href="../../../apidoc/smac.initial_design.latin_hypercube_design.html#smac.initial_design.latin_hypercube_design.LHDesign._select_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Selects a single configuration to run</span>
 
 <span class="sd">        Returns</span>
@@ -327,7 +327,7 @@
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform_continuous_designs</span><span class="p">(</span><span class="n">design</span><span class="o">=</span><span class="n">lhd</span><span class="p">,</span>
                                                   <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;LHD&#39;</span><span class="p">,</span>
-                                                  <span class="n">cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span></div>
+                                                  <span class="n">cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -414,7 +414,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">perc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+<div class="viewcode-block" id="AbstractRunHistory2EPM._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                       <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -440,7 +440,7 @@
 <span class="sd">        X: np.ndarray</span>
 <span class="sd">        Y: np.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AbstractRunHistory2EPM.transform"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -597,7 +597,7 @@
 <div class="viewcode-block" id="RunHistory2EPM4Cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4Cost</span><span class="p">(</span><span class="n">AbstractRunHistory2EPM</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
+<div class="viewcode-block" id="RunHistory2EPM4Cost._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                       <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">return_time_as_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -652,7 +652,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
 
 <div class="viewcode-block" id="RunHistory2EPM4Cost.transform_response_values"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values">[docs]</a>    <span class="k">def</span> <span class="nf">transform_response_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Transform function response values.</span>
@@ -827,7 +827,7 @@
 <div class="viewcode-block" id="RunHistory2EPM4EIPS"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">[docs]</a><span class="k">class</span> <span class="nc">RunHistory2EPM4EIPS</span><span class="p">(</span><span class="n">AbstractRunHistory2EPM</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
+<div class="viewcode-block" id="RunHistory2EPM4EIPS._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">return_time_as_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                       <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
@@ -858,7 +858,7 @@
 
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span></div>
 
 <div class="viewcode-block" id="RunHistory2EPM4EIPS.transform_response_values"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values">[docs]</a>    <span class="k">def</span> <span class="nf">transform_response_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Transform function response values.</span>

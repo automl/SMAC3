@@ -5,3 +5,4 @@ smac.tae.execute\_ta\_run\_hydra module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

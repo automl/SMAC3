@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -288,7 +288,7 @@
 <span id="smac-epm-gaussian-process-module"></span><h1>smac.epm.gaussian_process module<a class="headerlink" href="#module-smac.epm.gaussian_process" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.gaussian_process.GaussianProcess">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process.</code><code class="sig-name descname">GaussianProcess</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fc0884df210&gt;, normalize_y: bool = True, n_opt_restarts: int = 10, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process.</code><code class="sig-name descname">GaussianProcess</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f7fa303a090&gt;, normalize_y: bool = True, n_opt_restarts: int = 10, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
@@ -318,6 +318,88 @@ set n_feats (&gt; pca_dims).</p></li>
 </dd>
 </dl>
 <p>Abstract base class for all Gaussian process models.</p>
+<dl class="method">
+<dt id="smac.epm.gaussian_process.GaussianProcess._get_gp">
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7f7fa303a190&gt;<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._get_gp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process.GaussianProcess._nll">
+<code class="sig-name descname">_nll</code><span class="sig-paren">(</span><em class="sig-param">theta: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._nll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._nll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the negative marginal log likelihood (+ the prior) for
+a hyperparameter configuration theta.
+(negative because we use scipy minimize for optimization)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>np.ndarray</em><em>(</em><em>H</em><em>)</em>) – Hyperparameter vector. Note that all hyperparameter are
+on a log scale.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>lnlikelihood + prior</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process.GaussianProcess._optimize">
+<code class="sig-name descname">_optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optimizes the marginal log likelihood and returns the best found
+hyperparameter configuration theta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>theta</strong> – Hyperparameter vector that maximizes the marginal log likelihood</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray(H)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process.GaussianProcess._predict">
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X_test: numpy.ndarray</em>, <em class="sig-param">full_cov: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the predictive mean and variance of the objective function at
+the given test points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X_test</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input test points</p></li>
+<li><p><strong>full_cov</strong> (<em>bool</em>) – If set to true than the whole covariance matrix between the test points is returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>np.array(N,)</em> – predictive mean</p></li>
+<li><p><em>np.array(N,) or np.array(N, N) if full_cov == True</em> – predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.epm.gaussian_process.GaussianProcess._train">
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em>, <em class="sig-param">do_optimize: bool = True</em><span class="sig-paren">)</span> &#x2192; smac.epm.gaussian_process.GaussianProcess<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Cholesky decomposition of the covariance of X and
+estimates the GP hyperparameters by optimizing the marginal
+loglikelihood. The prior mean of the GP is set to the empirical
+mean of X.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input data points. The dimensionality of X is (N, D),
+with N as the number of points and D is the number of features.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>,</em><em>)</em>) – The corresponding target values.</p></li>
+<li><p><strong>do_optimize</strong> (<em>boolean</em>) – If set to true the hyperparameters are optimized otherwise
+the default hyperparameters of the kernel are used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.epm.gaussian_process.GaussianProcess.sample_functions">
 <code class="sig-name descname">sample_functions</code><span class="sig-paren">(</span><em class="sig-param">X_test: numpy.ndarray</em>, <em class="sig-param">n_funcs: int = 1</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess.sample_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess.sample_functions" title="Permalink to this definition">¶</a></dt>

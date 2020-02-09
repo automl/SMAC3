@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -390,6 +390,26 @@ data into EPM data</p>
 <ul class="simple">
 <li><p>Minimum number of samples to build a model</p></li>
 </ul>
+<dl class="method">
+<dt id="smac.optimizer.smbo.SMBO._get_timebound_for_intensification">
+<code class="sig-name descname">_get_timebound_for_intensification</code><span class="sig-paren">(</span><em class="sig-param">time_spent: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._get_timebound_for_intensification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._get_timebound_for_intensification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate time left for intensify from the time spent on
+choosing challengers using the fraction of time intended for
+intensification (which is specified in
+scenario.intensification_percentage).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time_spent</strong> (<em>float</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>time_left</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.run" title="Permalink to this definition">¶</a></dt>

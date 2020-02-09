@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -528,7 +528,7 @@
 
         <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div>
 
-    <span class="k">def</span> <span class="nf">_add_inc_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Intensifier._add_inc_run"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._add_inc_run">[docs]</a>    <span class="k">def</span> <span class="nf">_add_inc_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                      <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Add new run for incumbent</span>
@@ -605,9 +605,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># maximum runs for incumbent reached, do not run incumbent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span></div>
 
-    <span class="k">def</span> <span class="nf">_race_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Intensifier._race_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._race_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">_race_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -702,9 +702,9 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="n">incumbent</span>
+        <span class="k">return</span> <span class="n">incumbent</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_instances_to_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Intensifier._get_instances_to_run"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_instances_to_run">[docs]</a>    <span class="k">def</span> <span class="nf">_get_instances_to_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                               <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                               <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -752,7 +752,7 @@
             <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">to_run</span><span class="p">,</span> <span class="n">inc_sum_cost</span>
+        <span class="k">return</span> <span class="n">to_run</span><span class="p">,</span> <span class="n">inc_sum_cost</span></div>
 
 <div class="viewcode-block" id="Intensifier.get_next_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                             <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
@@ -825,7 +825,7 @@
         <span class="c1"># return currently running challenger</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_challenger</span><span class="p">,</span> <span class="kc">False</span></div>
 
-    <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="Intensifier._generate_challengers"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._generate_challengers">[docs]</a>    <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                               <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
                               <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">])</span> \
             <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]:</span>
@@ -860,9 +860,9 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chall_gen</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chall_gen</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">chall_gen</span>
+        <span class="k">return</span> <span class="n">chall_gen</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Intensifier._update_trackers"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._update_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">_update_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates tracking variables at the end of an intensification run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -876,7 +876,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">update_average_configs_per_intensify</span><span class="p">(</span>
-            <span class="n">n_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span><span class="p">)</span></div>
+            <span class="n">n_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

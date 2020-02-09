@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -304,6 +304,93 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._add_edge">
+<code class="sig-name descname">_add_edge</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_edge" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._add_hyperparameter">
+<code class="sig-name descname">_add_hyperparameter</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_hyperparameter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_condition">
+<code class="sig-name descname">_check_condition</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_condition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_configuration_rigorous">
+<code class="sig-name descname">_check_configuration_rigorous</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_configuration_rigorous" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_default_configuration">
+<code class="sig-name descname">_check_default_configuration</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_default_configuration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_edges">
+<code class="sig-name descname">_check_edges</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_edges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_forbidden">
+<code class="sig-name descname">_check_forbidden</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._check_forbidden_component">
+<code class="sig-name descname">_check_forbidden_component</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden_component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._create_tmp_dag">
+<code class="sig-name descname">_create_tmp_dag</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._create_tmp_dag" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._get_child_conditions_of">
+<code class="sig-name descname">_get_child_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_child_conditions_of" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._get_children_of">
+<code class="sig-name descname">_get_children_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_children_of" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._get_parent_conditions_of">
+<code class="sig-name descname">_get_parent_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parent_conditions_of" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._get_parents_of">
+<code class="sig-name descname">_get_parents_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parents_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parent hyperparameters of a given hyperparameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List with all parent hyperparameters</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._sort_hyperparameters">
+<code class="sig-name descname">_sort_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._sort_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="smac.configspace.ConfigurationSpace._update_cache">
+<code class="sig-name descname">_update_cache</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._update_cache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="smac.configspace.ConfigurationSpace.add_condition">
 <code class="sig-name descname">add_condition</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_condition" title="Permalink to this definition">¶</a></dt>
@@ -780,6 +867,11 @@ Default to None</p></li>
 </dd>
 </dl>
 <dl class="attribute">
+<dt id="smac.configspace.Configuration._populate_values">
+<code class="sig-name descname">_populate_values</code><a class="headerlink" href="#smac.configspace.Configuration._populate_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="smac.configspace.Configuration.get">
 <code class="sig-name descname">get</code><a class="headerlink" href="#smac.configspace.Configuration.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return for a given hyperparameter name <code class="docutils literal notranslate"><span class="pre">item</span></code> the value of this
@@ -874,6 +966,31 @@ Not used by the configuration space.</p></li>
 </dd>
 </dl>
 <dl class="method">
+<dt id="smac.configspace.Constant._inverse_transform">
+<code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.Constant._sample">
+<code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.Constant._transform">
+<code class="sig-name descname">_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.Constant._transform_scalar">
+<code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform_scalar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.Constant._transform_vector">
+<code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="smac.configspace.Constant.get_neighbors">
 <code class="sig-name descname">get_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.get_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -945,6 +1062,36 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._get_probabilities">
+<code class="sig-name descname">_get_probabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._get_probabilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._inverse_transform">
+<code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._sample">
+<code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._transform">
+<code class="sig-name descname">_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._transform_scalar">
+<code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.CategoricalHyperparameter._transform_vector">
+<code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="smac.configspace.CategoricalHyperparameter.allow_greater_less_comparison">
 <code class="sig-name descname">allow_greater_less_comparison</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.allow_greater_less_comparison" title="Permalink to this definition">¶</a></dt>
@@ -1053,6 +1200,26 @@ Not used by the configuration space.</p></li>
 </dd>
 </dl>
 <dl class="method">
+<dt id="smac.configspace.UniformFloatHyperparameter._inverse_transform">
+<code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformFloatHyperparameter._sample">
+<code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformFloatHyperparameter._transform_scalar">
+<code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformFloatHyperparameter._transform_vector">
+<code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="smac.configspace.UniformFloatHyperparameter.check_default">
 <code class="sig-name descname">check_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.check_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1124,6 +1291,26 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.configspace.UniformIntegerHyperparameter._inverse_transform">
+<code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformIntegerHyperparameter._sample">
+<code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformIntegerHyperparameter._transform_scalar">
+<code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.configspace.UniformIntegerHyperparameter._transform_vector">
+<code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.check_default">
 <code class="sig-name descname">check_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.check_default" title="Permalink to this definition">¶</a></dt>
@@ -1201,6 +1388,11 @@ if the <em>InCondition</em> is satisfied</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.configspace.InCondition._evaluate">
+<code class="sig-name descname">_evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.InCondition._evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="smac.configspace.InCondition.values">
 <code class="sig-name descname">values</code><a class="headerlink" href="#smac.configspace.InCondition.values" title="Permalink to this definition">¶</a></dt>

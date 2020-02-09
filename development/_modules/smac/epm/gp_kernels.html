@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -374,7 +374,7 @@
             <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">ConstantKernel</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
+<div class="viewcode-block" id="MagicMixin._signature"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin._signature">[docs]</a>    <span class="k">def</span> <span class="nf">_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">sig_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>  <span class="c1"># type: Optional[Signature]</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -385,7 +385,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_signature_cache</span><span class="p">[</span><span class="n">func</span><span class="p">]</span> <span class="o">=</span> <span class="n">sig</span>
             <span class="k">return</span> <span class="n">sig</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sig_</span>
+            <span class="k">return</span> <span class="n">sig_</span></div>
 
 <div class="viewcode-block" id="MagicMixin.get_params"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get parameters of this kernel.</span>
@@ -489,7 +489,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="Sum._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Sum._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -529,7 +529,7 @@
             <span class="n">K2</span><span class="p">,</span> <span class="n">K2_gradient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">eval_gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">K1</span> <span class="o">+</span> <span class="n">K2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">K1_gradient</span><span class="p">,</span> <span class="n">K2_gradient</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Product"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">[docs]</a><span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Product</span><span class="p">):</span>
@@ -545,7 +545,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="Product._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -586,7 +586,7 @@
             <span class="k">return</span> <span class="n">K1</span> <span class="o">*</span> <span class="n">K2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">K1_gradient</span> <span class="o">*</span> <span class="n">K2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
                                        <span class="n">K2_gradient</span> <span class="o">*</span> <span class="n">K1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ConstantKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">[docs]</a><span class="k">class</span> <span class="nc">ConstantKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">ConstantKernel</span><span class="p">):</span>
@@ -605,7 +605,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="ConstantKernel._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -656,7 +656,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">K</span></div>
+            <span class="k">return</span> <span class="n">K</span></div></div>
 
 
 <div class="viewcode-block" id="Matern"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern">[docs]</a><span class="k">class</span> <span class="nc">Matern</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Matern</span><span class="p">):</span>
@@ -676,7 +676,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="Matern._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -771,7 +771,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">K_gradient</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">K</span></div>
+            <span class="k">return</span> <span class="n">K</span></div></div>
 
 
 <div class="viewcode-block" id="RBF"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF">[docs]</a><span class="k">class</span> <span class="nc">RBF</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">RBF</span><span class="p">):</span>
@@ -790,7 +790,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="RBF._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.RBF._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -855,7 +855,7 @@
                 <span class="n">K_gradient</span> <span class="o">*=</span> <span class="n">K</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
                 <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">K_gradient</span>
 
-        <span class="k">return</span> <span class="n">K</span></div>
+        <span class="k">return</span> <span class="n">K</span></div></div>
 
 
 <div class="viewcode-block" id="WhiteKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel">[docs]</a><span class="k">class</span> <span class="nc">WhiteKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">WhiteKernel</span><span class="p">):</span>
@@ -874,7 +874,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="WhiteKernel._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.WhiteKernel._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -923,7 +923,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">K</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div></div>
 
 
 <div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">HammingKernel</span><span class="p">):</span>
@@ -941,7 +941,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
 
-    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
+<div class="viewcode-block" id="HammingKernel._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1010,7 +1010,7 @@
             <span class="n">grad</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">length_scale</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">grad</span>
-        <span class="k">return</span> <span class="n">K</span></div>
+        <span class="k">return</span> <span class="n">K</span></div></div>
 </pre></div>
 
            </div>

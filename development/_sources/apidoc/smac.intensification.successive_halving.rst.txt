@@ -5,3 +5,4 @@ smac.intensification.successive\_halving module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

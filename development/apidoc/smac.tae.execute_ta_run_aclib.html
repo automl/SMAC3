@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -307,6 +307,11 @@ that returned NaN or inf)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib._call_ta">
+<code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">instance_specific: str</em>, <em class="sig-param">cutoff: float</em>, <em class="sig-param">seed: int</em><span class="sig-paren">)</span> &#x2192; Tuple[Dict, str, str]<a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib._call_ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: Optional[float] = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">budget: Optional[float] = None</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span> &#x2192; Tuple[smac.tae.execute_ta_run.StatusType, float, float, Dict]<a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run" title="Permalink to this definition">¶</a></dt>

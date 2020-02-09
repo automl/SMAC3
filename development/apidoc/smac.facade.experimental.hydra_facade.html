@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -360,6 +360,45 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="smac.facade.experimental.hydra_facade.Hydra._get_validation_set">
+<code class="sig-name descname">_get_validation_set</code><span class="sig-paren">(</span><em class="sig-param">val_set: str</em>, <em class="sig-param">delete: bool = True</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._get_validation_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._get_validation_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create small validation set for hydra to determine incumbent performance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_set</strong> (<em>str</em>) – Set to validate incumbent(s) on. [train, valX].
+train =&gt; whole training set,
+valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
+<li><p><strong>delete</strong> (<em>bool</em>) – Flag to delete all validation instances from the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>val</strong> – List of instance-ids to validate on</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.facade.experimental.hydra_facade.Hydra._update_portfolio">
+<code class="sig-name descname">_update_portfolio</code><span class="sig-paren">(</span><em class="sig-param">incs: numpy.ndarray</em>, <em class="sig-param">config_cost_per_inst: Dict</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._update_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._update_portfolio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates all configurations (in incs) and determines which ones to add to the portfolio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>incs</strong> (<em>np.ndarray</em>) – List of Configurations</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cur_cost</strong> – The current cost of the portfolio</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Union[np.float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.optimize" title="Permalink to this definition">¶</a></dt>
