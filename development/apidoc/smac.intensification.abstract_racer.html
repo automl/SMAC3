@@ -288,7 +288,7 @@
 <span id="smac-intensification-abstract-racer-module"></span><h1>smac.intensification.abstract_racer module<a class="headerlink" href="#module-smac.intensification.abstract_racer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.intensification.abstract_racer.AbstractRacer">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[int] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Optional[Mapping[str, numpy.ndarray]] = None, cutoff: Optional[float] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all racing methods</p>
 <p>The “intensification” is designed to be spread across multiple <code class="docutils literal notranslate"><span class="pre">eval_challenger()</span></code> runs.
@@ -304,7 +304,7 @@ like Successive Halving or Hyperband.</p>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
 <li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
 <li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
-<li><p><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</p></li>
+<li><p><strong>cutoff</strong> (<em>float</em>) – runtime cutoff of TA runs</p></li>
 <li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
 <li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
 <li><p><strong>minR</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to

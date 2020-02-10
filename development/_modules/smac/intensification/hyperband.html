@@ -347,16 +347,15 @@
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
                  <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                  <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                  <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">instance_order</span><span class="o">=</span><span class="s1">&#39;shuffle_once&#39;</span><span class="p">,</span>
-                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">instance_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">,</span>
+                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
                          <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
@@ -373,15 +372,14 @@
                          <span class="n">run_obj_time</span><span class="o">=</span><span class="n">run_obj_time</span><span class="p">,</span>
                          <span class="n">n_seeds</span><span class="o">=</span><span class="n">n_seeds</span><span class="p">,</span>
                          <span class="n">instance_order</span><span class="o">=</span><span class="n">instance_order</span><span class="p">,</span>
-                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
-                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
         <span class="c1"># to track completed hyperband iterations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: SuccessiveHalving # type: ignore[assignment]</span>
 
 <div class="viewcode-block" id="Hyperband.eval_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.eval_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">eval_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>

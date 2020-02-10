@@ -298,6 +298,7 @@
 
 
 <div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractRacer</span><span class="p">):</span>
+
     <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
 
 <span class="sd">    Implementation following the description in</span>
@@ -362,6 +363,8 @@
 <span class="sd">        * shuffle - shuffle before every SH run</span>
 <span class="sd">    adaptive_capping_slackfactor : float</span>
 <span class="sd">        slack factor of adpative capping (factor * adaptive cutoff)</span>
+<span class="sd">    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional</span>
+<span class="sd">        Do not set this argument, it will only be used by hyperband!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -371,7 +374,7 @@
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
                  <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                  <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -381,7 +384,7 @@
                  <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">instance_order</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">,</span>
                  <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
-                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">inst_seed_pairs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
                          <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
@@ -408,9 +411,8 @@
 
         <span class="c1"># if instances are coming from Hyperband, skip the instance preprocessing section</span>
         <span class="c1"># it is already taken care by Hyperband</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;inst_seed_pairs&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inst_seed_pairs</span><span class="p">:</span>
             <span class="c1"># set seed(s) for all SH runs</span>
             <span class="c1"># - currently user gives the number of seeds to consider</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">:</span>
@@ -429,6 +431,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">:</span>
                 <span class="c1"># randomize once</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="n">inst_seed_pairs</span>
 
         <span class="c1"># successive halving parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_sh_params</span><span class="p">(</span><span class="n">initial_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">num_initial_challengers</span><span class="p">)</span>
@@ -445,6 +449,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Define state variables to please mypy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
 
 <div class="viewcode-block" id="SuccessiveHalving._init_sh_params"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._init_sh_params">[docs]</a>    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
@@ -574,13 +583,15 @@
         <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="n">curr_insts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span><span class="p">]</span>
 
         <span class="c1"># selecting cutoff if running adaptive capping</span>
-        <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_cutoff</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
-                                    <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                    <span class="n">inc_sum_cost</span><span class="o">=</span><span class="n">inc_sum_cost</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cutoff</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># ran out of time to validate challenger</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stop challenger itensification due to adaptive capping.&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">:</span>
+            <span class="n">cutoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_cutoff</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                                        <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                        <span class="n">inc_sum_cost</span><span class="o">=</span><span class="n">inc_sum_cost</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cutoff</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># ran out of time to validate challenger</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Stop challenger itensification due to adaptive capping.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Cutoff for challenger: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
 
@@ -596,7 +607,9 @@
                     <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
                     <span class="n">budget</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span> <span class="k">else</span> <span class="n">curr_budget</span><span class="p">,</span>
                     <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">),</span>
-                    <span class="n">capped</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cutoff</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)</span>
+                    <span class="c1"># Cutoff might be None if self.cutoff is None, but then the first if statement prevents</span>
+                    <span class="c1"># evaluation of the second if statement</span>
+                    <span class="n">capped</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cutoff</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)</span>  <span class="c1"># type: ignore[operator] # noqa F821</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">+=</span> <span class="n">dur</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -695,8 +708,12 @@
             <span class="n">new_challenger</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># sample top configs from previously sampled configurations</span>
-            <span class="n">challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-            <span class="n">new_challenger</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">new_challenger</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="n">challenger</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">new_challenger</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="n">challenger</span><span class="p">:</span>
             <span class="c1"># reset instance index for the new challenger</span>
@@ -725,7 +742,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="c1"># to track challengers across stages</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -755,7 +772,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="p">[]</span>
 
                 <span class="c1"># randomize instance-seed pairs per successive halving run, if user specifies</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle&#39;</span><span class="p">:</span>
