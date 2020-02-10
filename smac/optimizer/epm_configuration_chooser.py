@@ -79,14 +79,14 @@ class EPMChooser(object):
             acquisition_func, self.scenario.cs, rng
         )
 
-        self.initial_design_configs = []
+        self.initial_design_configs = []  # type: typing.List[Configuration]
 
         self.predict_incumbent = predict_incumbent
 
         self.min_samples_model = min_samples_model
         self.currently_considered_budgets = [0.0, ]
 
-    def _collect_data_to_train_model(self):
+    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for i in self.runhistory.data.keys():
@@ -104,10 +104,10 @@ class EPMChooser(object):
 
         return np.empty(shape=[0, 0]), np.empty(shape=[0, ])
 
-    def _get_evaluated_configs(self):
+    def _get_evaluated_configs(self) -> typing.List[Configuration]:
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
-    def choose_next(self, incumbent_value: float = None):
+    def choose_next(self, incumbent_value: float = None) -> typing.Iterable:
         """Choose next candidate solution with Bayesian optimization. The
         suggested configurations depend on the argument ``acq_optimizer`` to
         the ``SMBO`` class.
@@ -137,14 +137,14 @@ class EPMChooser(object):
             )
         self.model.train(X, Y)
 
-        if incumbent_value is None:
+        if incumbent_value is not None:
+            incumbent = None  # type: typing.Optional[Configuration]
+            incumbent_array = None  # type: typing.Optional[np.ndarray]
+        else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
             incumbent, incumbent_array, incumbent_value = self._get_incumbent()
-        else:
-            incumbent = None
-            incumbent_array = None
 
         self.acquisition_func.update(
             model=self.model,

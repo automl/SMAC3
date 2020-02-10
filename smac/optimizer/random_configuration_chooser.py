@@ -26,7 +26,7 @@ class RandomConfigurationChooser(ABC):
         pass
 
     @abstractmethod
-    def check(self, iteration) -> bool:
+    def check(self, iteration: int) -> bool:
         """Check if the next configuration should be at random"""
         pass
 
@@ -53,7 +53,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
     def next_smbo_iteration(self) -> None:
         pass
 
-    def check(self, iteration) -> bool:
+    def check(self, iteration: int) -> bool:
         return iteration % self.modulus < 1
 
 
