@@ -12,5 +12,6 @@ MYPYOPS="$MYPYOPS --ignore-missing-imports --follow-imports skip"
 MYPYOPTS="$MYPYOPS --disallow-untyped-defs"
 mypy $MYPYOPTS --show-error-codes smac/configspace
 mypy $MYPYOPTS --show-error-codes smac/epm
+mypy $MYPYOPTS --show-error-codes smac/intensification
 mypy $MYPYOPTS --show-error-codes smac/runhistory
 mypy $MYPYOPTS --show-error-codes smac/tae

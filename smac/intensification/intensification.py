@@ -466,7 +466,8 @@ class Intensifier(AbstractRacer):
 
         # Line 11
         self.rs.shuffle(missing_runs)
-        assert N > 0
+        if N < 0:
+            raise ValueError('Argument N must not be smaller than zero, but is %s' % str(N))
         to_run = missing_runs[:min(N, len(missing_runs))]
         missing_runs = missing_runs[min(N, len(missing_runs)):]
 

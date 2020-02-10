@@ -19,9 +19,6 @@ __license__ = "3-clause BSD"
 
 
 class SuccessiveHalving(AbstractRacer):
-    curr_inst_idx = 0
-    running_challenger = None
-    curr_challengers = set()  # type: typing.Set[Configuration]
 
     """Races multiple challengers against an incumbent using Successive Halving method
 
@@ -173,6 +170,11 @@ class SuccessiveHalving(AbstractRacer):
             self.repeat_configs = True
         else:
             self.repeat_configs = False
+
+        # Define state variables to please mypy
+        self.curr_inst_idx = 0
+        self.running_challenger = None
+        self.curr_challengers = set()  # type: typing.Set[Configuration]
 
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
