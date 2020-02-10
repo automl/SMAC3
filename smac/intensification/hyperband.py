@@ -68,16 +68,15 @@ class Hyperband(SuccessiveHalving):
                  rng: np.random.RandomState,
                  instances: typing.List[str],
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[int] = None,
+                 cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
                  initial_budget: typing.Optional[float] = None,
                  max_budget: typing.Optional[float] = None,
                  eta: float = 3,
                  run_obj_time: bool = True,
                  n_seeds: typing.Optional[int] = None,
-                 instance_order='shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 **kwargs):
+                 instance_order: str = 'shuffle_once',
+                 adaptive_capping_slackfactor: float = 1.2,) -> None:
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -94,15 +93,14 @@ class Hyperband(SuccessiveHalving):
                          run_obj_time=run_obj_time,
                          n_seeds=n_seeds,
                          instance_order=instance_order,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         **kwargs)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
         # to track completed hyperband iterations
         self.hb_iters = 0
-        self.sh_intensifier = None
+        self.sh_intensifier = None  # type: SuccessiveHalving # type: ignore[assignment]
 
     def eval_challenger(self,
                         challenger: Configuration,

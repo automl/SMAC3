@@ -20,6 +20,9 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
+_config_to_run_type = typing.Union[typing.Iterator[Configuration], None]
+
+
 class IntensifierStage(Enum):
     """Class to define different stages of intensifier"""
     RUN_INCUMBENT = 1  # Lines 3-7
@@ -86,8 +89,7 @@ class Intensifier(AbstractRacer):
                  minR: int = 1,
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 2,
-                 **kwargs):
+                 min_chall: int = 2,):
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -100,8 +102,7 @@ class Intensifier(AbstractRacer):
                          run_obj_time=run_obj_time,
                          minR=minR,
                          maxR=maxR,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         **kwargs)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -129,12 +130,12 @@ class Intensifier(AbstractRacer):
         self._chall_indx = 0
         self.current_challenger = None
         self.continue_challenger = False
-        self.configs_to_run = None
+        self.configs_to_run = None  # type: _config_to_run_type
 
         # racing related variables
-        self.to_run = None
+        self.to_run = []  # type: typing.List[InstSeedBudgetKey]
         self.inc_sum_cost = np.inf
-        self.N = None
+        self.N = -1
 
     def eval_challenger(self,
                         challenger: Configuration,
@@ -279,9 +280,9 @@ class Intensifier(AbstractRacer):
             except IndexError:
                 self.logger.debug("No run for incumbent found")
                 max_runs = 0
-            inc_inst = set([x[0] for x in inc_inst if x[1] == max_runs])
+            inc_inst = [x[0] for x in inc_inst if x[1] == max_runs]
 
-            available_insts = set(self.instances) - inc_inst
+            available_insts = list(sorted(set(self.instances) - set(inc_inst)))
 
             # if all instances were used n times, we can pick an instances
             # from the complete set again
@@ -292,12 +293,11 @@ class Intensifier(AbstractRacer):
             if self.deterministic:
                 next_seed = 0
             else:
-                next_seed = self.rs.randint(low=0, high=MAXINT,
-                                            size=1)[0]
+                next_seed = self.rs.randint(low=0, high=MAXINT, size=1)[0]
 
             if available_insts:
                 # Line 5 (here for easier code)
-                next_instance = self.rs.choice(list(available_insts))
+                next_instance = self.rs.choice(available_insts)
                 # Line 7
                 self.logger.debug("Add run of incumbent")
                 status, cost, dur, res = self.tae_runner.start(
@@ -366,17 +366,21 @@ class Intensifier(AbstractRacer):
             # Run challenger on all <instance, seed> to run
             instance, seed, _ = self.to_run.pop()
 
-            cutoff = self._adapt_cutoff(challenger=challenger,
-                                        run_history=run_history,
-                                        inc_sum_cost=self.inc_sum_cost)
-            if cutoff is not None and cutoff <= 0:
-                # no time to validate challenger
-                self.logger.debug("Stop challenger itensification due "
-                                  "to adaptive capping.")
-                # challenger performance is worse than incumbent
-                # move on to the next iteration
-                self.stage = IntensifierStage.RUN_INCUMBENT
-                return incumbent
+            cutoff = self.cutoff
+            if self.run_obj_time:
+                cutoff = self._adapt_cutoff(challenger=challenger,
+                                            run_history=run_history,
+                                            inc_sum_cost=self.inc_sum_cost)
+                if cutoff is not None and cutoff <= 0:
+                    # no time to validate challenger
+                    self.logger.debug("Stop challenger itensification due "
+                                      "to adaptive capping.")
+                    # challenger performance is worse than incumbent
+                    # move on to the next iteration
+                    self.stage = IntensifierStage.RUN_INCUMBENT
+                    return incumbent
+
+            self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
             self.logger.debug("Add run of challenger")
             try:
@@ -385,9 +389,10 @@ class Intensifier(AbstractRacer):
                     instance=instance,
                     seed=seed,
                     cutoff=cutoff,
-                    instance_specific=self.instance_specifics.get(
-                        instance, "0"),
-                    capped=(self.cutoff is not None) and (cutoff < self.cutoff))
+                    instance_specific=self.instance_specifics.get(instance, "0"),
+                    # Cutoff might be None if self.cutoff is None, but then the first if statement prevents
+                    # evaluation of the second if statement
+                    capped=(self.cutoff is not None) and (cutoff < self.cutoff))  # type: ignore[operator] # noqa F821
                 self._num_run += 1
                 self._ta_time += dur
 
@@ -461,6 +466,8 @@ class Intensifier(AbstractRacer):
 
         # Line 11
         self.rs.shuffle(missing_runs)
+        if N < 0:
+            raise ValueError('Argument N must not be smaller than zero, but is %s' % str(N))
         to_run = missing_runs[:min(N, len(missing_runs))]
         missing_runs = missing_runs[min(N, len(missing_runs)):]
 
@@ -518,9 +525,9 @@ class Intensifier(AbstractRacer):
                 (self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run):
 
             # this is a new intensification run, get the next list of configurations to run
-            if not self.configs_to_run:
-                self.configs_to_run = self._generate_challengers(challengers=challengers,
-                                                                 chooser=chooser)
+            if self.configs_to_run is None:
+                self.configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
+                self.configs_to_run = typing.cast(typing.Iterator[Configuration], self.configs_to_run)
 
             # pick next configuration from the generator
             try:
@@ -535,7 +542,7 @@ class Intensifier(AbstractRacer):
                 self._chall_indx += 1
                 self.current_challenger = challenger
                 self.N = max(1, self.minR)
-                self.to_run = None
+                self.to_run = []
 
                 # reset time bound related params since this is a new configuration
                 self.start_time = time.time()
@@ -549,7 +556,7 @@ class Intensifier(AbstractRacer):
     def _generate_challengers(self,
                               challengers: typing.Optional[typing.List[Configuration]],
                               chooser: typing.Optional[EPMChooser]) \
-            -> typing.Optional[typing.Iterator[Configuration]]:
+            -> _config_to_run_type:
         """
         Retuns a sequence of challengers to use in intensification
         If challengers are not provided, then optimizer will be used to generate the challenger list
@@ -566,10 +573,11 @@ class Intensifier(AbstractRacer):
         typing.Optional[typing.Generator[Configuration]]
             A generator containing the next challengers to use
         """
+
         if challengers:
             # iterate over challengers provided
             self.logger.debug("Using challengers provided")
-            chall_gen = challengers
+            chall_gen = iter(challengers)  # type: _config_to_run_type
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
             self.logger.debug("Generating new challenger from optimizer")

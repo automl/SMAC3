@@ -244,7 +244,8 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.stage, 0)
         self.assertEqual(intensifier.sh_iters, 1)
-        self.assertEqual(intensifier.configs_to_run, None)
+        self.assertIsInstance(intensifier.configs_to_run, list)
+        self.assertEqual(len(intensifier.configs_to_run), 0)
 
     def test_eval_challenger_1(self):
         """

@@ -380,15 +380,18 @@ class SMAC4AC(object):
             'cutoff': scenario.cutoff,
             'deterministic': scenario.deterministic,
             'run_obj_time': scenario.run_obj == "runtime",
-            'always_race_against': scenario.cs.get_default_configuration()
-            if scenario.always_race_default else None,
-            'use_ta_time_bound': scenario.use_ta_time,
             'instance_specifics': scenario.instance_specific,
-            'minR': scenario.minR,
-            'maxR': scenario.maxR,
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,
-            'min_chall': scenario.intens_min_chall
         }
+        if (
+            isinstance(intensifier, Intensifier)
+            or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier))
+        ):
+            intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()
+            intensifier_def_kwargs['use_ta_time_bound'] = scenario.use_ta_time
+            intensifier_def_kwargs['minR'] = scenario.minR
+            intensifier_def_kwargs['maxR'] = scenario.maxR
+            intensifier_def_kwargs['min_chall'] = scenario.intens_min_chall
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
 

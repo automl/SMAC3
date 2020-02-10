@@ -55,7 +55,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+            cutoff=1, instances=[1])
 
         # Error when nothing to choose from
         with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
@@ -74,7 +74,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+            cutoff=1, instances=[1])
         chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
 
         config, _ = intensifier.get_next_challenger(challengers=None, chooser=chooser, run_history=self.rh)
@@ -94,7 +94,7 @@ class TestAbstractIntensifier(unittest.TestCase):
         intensifier = AbstractRacer(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            cutoff=1, instances=[1], initial_budget=1, max_budget=3, eta=2)
+            cutoff=1, instances=[1])
 
         # should not repeat configurations
         self.rh.add(self.config1, 1, 1, StatusType.SUCCESS)
