@@ -173,7 +173,8 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
+        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs,
+                              tae_runner_kwargs=self._tae_kwargs)
         for i in range(self.n_iterations):
             self.logger.info("=" * 120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
