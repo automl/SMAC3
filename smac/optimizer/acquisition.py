@@ -1,7 +1,7 @@
 # encoding=utf8
 import abc
 import copy
-from typing import List
+from typing import List, Any, Tuple
 
 import numpy as np
 from scipy.stats import norm
@@ -25,9 +25,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     logger
     """
 
-    def __str__(self):
-        return type(self).__name__ + " (" + self.long_name + ")"
-
     def __init__(self, model: AbstractEPM):
         """Constructor
 
@@ -37,10 +34,10 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Models the objective function.
         """
         self.model = model
-        self._required_updates = ('model', )
+        self._required_updates = ('model', )  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
-    def update(self, **kwargs):
+    def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
         This method will be called after fitting the model, but before maximizing the acquisition
@@ -64,7 +61,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             if key in self._required_updates:
                 setattr(self, key, kwargs[key])
 
-    def __call__(self, configurations: List[Configuration]):
+    def __call__(self, configurations: List[Configuration]) -> np.ndarray:
         """Computes the acquisition value for a given X
 
         Parameters
@@ -89,7 +86,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         return acq
 
     @abc.abstractmethod
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
 
@@ -118,7 +115,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     for further details.
     """
 
-    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs):
+    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
         """Constructor
 
         Parameters
@@ -130,13 +127,13 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             Additional keyword arguments
         """
 
-        super().__init__(model, **kwargs)
-        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.long_name
+        super().__init__(model)
+        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.__class__.__name__
         self.acq = acquisition_function
-        self._functions = None
+        self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
 
-    def update(self, model: AbstractEPM, **kwargs):
+    def update(self, **kwargs: Any) -> None:
         """Update the acquisition functions values.
 
         This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
@@ -152,14 +149,16 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             integrate over.
         kwargs
         """
+        model = kwargs['model']
+        del kwargs['model']
         if not hasattr(model, 'models') or len(model.models) == 0:
             raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
-        if self._functions is None or len(self._functions) != len(model.models):
+        if len(self._functions) == 0 or len(self._functions) != len(model.models):
             self._functions = [copy.deepcopy(self.acq) for _ in model.models]
-        for model, func in zip(model.models, self._functions):
-            func.update(model=model, **kwargs)
+        for submodel, func in zip(model.models, self._functions):
+            func.update(model=submodel, **kwargs)
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -209,7 +208,7 @@ class EI(AbstractAcquisitionFunction):
         self.eta = None
         self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -281,7 +280,7 @@ class EIPS(EI):
         super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EIPS value.
 
         Parameters
@@ -366,7 +365,7 @@ class LogEI(AbstractAcquisitionFunction):
         self.eta = None
         self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -446,7 +445,7 @@ class PI(AbstractAcquisitionFunction):
         self.eta = None
         self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PI value.
 
         Parameters
@@ -498,7 +497,7 @@ class LCB(AbstractAcquisitionFunction):
         self.num_data = None
         self._required_updates = ('model', 'num_data')
 
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
 
         Parameters

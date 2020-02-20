@@ -115,7 +115,7 @@ class SMBO(object):
         self.num_run = num_run
         self.rng = rng
 
-        self.initial_design_configs = []
+        self.initial_design_configs = []  # type: typing.List[Configuration]
 
         # initialize the chooser to get configurations from the EPM
         self.epm_chooser = EPMChooser(scenario=scenario,
@@ -131,7 +131,7 @@ class SMBO(object):
                                       predict_incumbent=predict_incumbent,
                                       min_samples_model=min_samples_model)
 
-    def start(self):
+    def start(self) -> None:
         """Starts the Bayesian Optimization loop.
         Detects whether the optimization is restored from a previous state.
         """
@@ -162,7 +162,7 @@ class SMBO(object):
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
 
-    def run(self):
+    def run(self) -> Configuration:
         """Runs the Bayesian optimization loop
 
         Returns
@@ -231,12 +231,12 @@ class SMBO(object):
         return self.incumbent
 
     def validate(self,
-                 config_mode='inc',
-                 instance_mode='train+test',
-                 repetitions=1,
-                 use_epm=False,
-                 n_jobs=-1,
-                 backend='threading'):
+                 config_mode: str = 'inc',
+                 instance_mode: str = 'train+test',
+                 repetitions: int = 1,
+                 use_epm: bool = False,
+                 n_jobs: int = -1,
+                 backend: str = 'threading') -> RunHistory:
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
@@ -269,7 +269,7 @@ class SMBO(object):
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:
-            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")
+            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")  # type: typing.Optional[str] # noqa E501
         else:
             new_rh_path = None
 
@@ -287,7 +287,7 @@ class SMBO(object):
                                         output_fn=new_rh_path)
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent: float):
+    def _get_timebound_for_intensification(self, time_spent: float) -> float:
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in

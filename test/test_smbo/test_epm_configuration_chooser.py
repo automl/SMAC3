@@ -58,7 +58,7 @@ class TestEPMChooser(unittest.TestCase):
         # There is no model, so it returns a single random configuration
         x = smbo.epm_chooser.choose_next()
         self.assertEqual(len(x), 1)
-        self.assertEqual(x[0].origin, "Random Search")
+        self.assertEqual(next(x).origin, "Random Search")
 
     def test_choose_next_higher_budget(self):
         seed = 42
@@ -88,9 +88,10 @@ class TestEPMChooser(unittest.TestCase):
 
         # should return random search configuration
         x = smbo.epm_chooser.choose_next(incumbent_value=0.0)
-        self.assertEqual(x[0].get_array().shape, (2,))
         self.assertEqual(len(x), 1)
-        self.assertEqual(x[0].origin, 'Random Search')
+        next_one = next(x)
+        self.assertEqual(next_one.get_array().shape, (2,))
+        self.assertEqual(next_one.origin, 'Random Search')
 
     def test_choose_next_empty_X(self):
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser

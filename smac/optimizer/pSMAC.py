@@ -16,7 +16,7 @@ VALIDATEDRUNHISTORY_RE = r'validated_runhistory\.json$'
 def read(run_history: RunHistory,
          output_dirs: typing.Union[str, typing.List[str]],
          configuration_space: ConfigurationSpace,
-         logger: logging.Logger):
+         logger: logging.Logger) -> None:
     """Update runhistory with run results from concurrent runs of pSMAC.
 
     Parameters
@@ -62,7 +62,7 @@ def read(run_history: RunHistory,
     logger.info('Shared model mode: Finished loading new runs, found %d new runs.' % difference)
 
 
-def write(run_history: RunHistory, output_directory: str, logger: logging.Logger):
+def write(run_history: RunHistory, output_directory: str, logger: logging.Logger) -> None:
     """Write the runhistory to the output directory.
 
     Overwrites previously outputted runhistories.
@@ -79,7 +79,7 @@ def write(run_history: RunHistory, output_directory: str, logger: logging.Logger
 
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
-    logging.debug("Saving runhistory to %s" % output_filename)
+    logger.debug("Saving runhistory to %s" % output_filename)
 
     with tempfile.NamedTemporaryFile('wb', dir=output_directory,
                                      delete=False) as fh:
