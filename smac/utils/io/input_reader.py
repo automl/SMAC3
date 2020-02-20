@@ -1,6 +1,9 @@
+import typing
+
 import numpy as np
-from smac.configspace import pcs, pcs_new
+from smac.configspace import pcs, pcs_new, ConfigurationSpace
 from smac.configspace import json as pcs_json
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -8,6 +11,9 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
+
+INSTANCE_TYPE = typing.List[typing.List[str]]
+INSTANCE_FEATURES_TYPE = typing.Tuple[typing.List[str], np.ndarray]
 
 
 class InputReader(object):
@@ -19,10 +25,10 @@ class InputReader(object):
           on an earlier version!
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def read_scenario_file(self, fn: str):
+    def read_scenario_file(self, fn: str) -> typing.Dict[str, typing.Any]:
         """Encapsulates read_scenario_file of pysmac
 
         Parameters
@@ -131,7 +137,7 @@ class InputReader(object):
                     scenario_option_names.get(tmp[0], tmp[0])] = " ".join(tmp[1:])
         return(scenario_dict)
 
-    def read_instance_file(self, fn: str):
+    def read_instance_file(self, fn: str) -> INSTANCE_TYPE:
         """Encapsulates read_instances_file of pysmac
 
         Parameters
@@ -150,7 +156,9 @@ class InputReader(object):
             instance_names = fh.readlines()
         return([s.strip().split() for s in instance_names])
 
-    def read_instance_features_file(self, fn: str):
+    def read_instance_features_file(
+        self, fn: str,
+    ) -> INSTANCE_FEATURES_TYPE:
         """Encapsulates read_instances_file of pysmac
 
         Parameters
@@ -174,7 +182,7 @@ class InputReader(object):
         return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
     @staticmethod
-    def read_pcs_file(fn: str, logger=None):
+    def read_pcs_file(fn: str, logger: typing.Optional[PickableLoggerAdapter] = None) -> ConfigurationSpace:
         """Encapsulates generating configuration space object from file.
 
         Automatically detects whether the cs is saved in json, pcs or pcs_new.

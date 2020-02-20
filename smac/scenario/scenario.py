@@ -27,7 +27,11 @@ class Scenario(object):
 
     """
 
-    def __init__(self, scenario=None, cmd_options: dict = None):
+    def __init__(
+        self,
+        scenario: typing.Union[str, typing.Dict, None] = None,
+        cmd_options: typing.Optional[typing.Dict] = None,
+    ):
         """ Creates a scenario-object. The output_dir will be
         "output_dir/run_id/" and if that exists already, the old folder and its
         content will be moved (without any checks on whether it's still used by
@@ -52,7 +56,7 @@ class Scenario(object):
 
         self.output_dir_for_this_run = None
 
-        self._arguments = {}
+        self._arguments = {}  # type: typing.Dict[str, typing.Any]
         self._arguments.update(CMDReader().scen_cmd_actions)
 
         if scenario is None:
@@ -92,18 +96,20 @@ class Scenario(object):
                 if isinstance(arg_value, (int, str, float)):
                     self.logger.debug("%s = %s" % (arg_name, arg_value))
 
-    def _transform_arguments(self):
+    def _transform_arguments(self) -> None:
         """TODO"""
 
         self.n_features = len(self.feature_dict)
         self.feature_array = None
 
-        self.instance_specific = {}
+        self.instance_specific = {}  # type: typing.Dict[str, str]
 
         if self.run_obj == "runtime":
             self.logy = True
 
-        def extract_instance_specific(instance_list):
+        def extract_instance_specific(
+            instance_list: typing.Sequence[typing.Union[str, typing.List[str]]],
+        ) -> typing.List[str]:
             insts = []
             for inst in instance_list:
                 if len(inst) > 1:
@@ -111,36 +117,36 @@ class Scenario(object):
                 insts.append(inst[0])
             return insts
 
-        self.train_insts = extract_instance_specific(self.train_insts)
+        self.train_insts = extract_instance_specific(self.train_insts)  # type: typing.List[str]
         if self.test_insts:
-            self.test_insts = extract_instance_specific(self.test_insts)
+            self.test_insts = extract_instance_specific(self.test_insts)  # type: typing.List[str]
 
         self.train_insts = self._to_str_and_warn(list_=self.train_insts)
         self.test_insts = self._to_str_and_warn(list_=self.test_insts)
 
         if self.feature_dict:
-            self.feature_array = []
+            feature_array = []
             for inst_ in self.train_insts:
-                self.feature_array.append(self.feature_dict[inst_])
-            self.feature_array = np.array(self.feature_array)
+                feature_array.append(self.feature_dict[inst_])
+            self.feature_array = np.array(feature_array)
             self.n_features = self.feature_array.shape[1]
 
         if self.use_ta_time:
             if self.algo_runs_timelimit is None or not np.isfinite(self.algo_runs_timelimit):
-                self.algo_runs_timelimit = self.wallclock_limit
-            self.wallclock_limit = np.inf
+                self.algo_runs_timelimit = self.wallclock_limit  # type: float
+            self.wallclock_limit = np.inf  # type: float
 
-    def __getstate__(self):
+    def __getstate__(self) -> typing.Dict[str, typing.Any]:
         d = dict(self.__dict__)
         del d['logger']
         return d
 
-    def __setstate__(self, d):
+    def __setstate__(self, d: typing.Dict[str, typing.Any]) -> None:
         self.__dict__.update(d)
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
 
-    def _to_str_and_warn(self, list_: typing.List[typing.Any]):
+    def _to_str_and_warn(self, list_: typing.List[typing.Any]) -> typing.List[typing.Any]:
         warn_ = False
         for i, e in enumerate(list_):
             if e is not None and not isinstance(e, str):
@@ -153,6 +159,6 @@ class Scenario(object):
             self.logger.warning("All instances were casted to str.")
         return list_
 
-    def write(self):
+    def write(self) -> None:
         """ Write scenario to self.output_dir/scenario.txt. """
         self.out_writer.write_scenario_file(self)

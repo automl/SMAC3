@@ -26,7 +26,9 @@ __maintainer__ = "Joshua Marben"
 __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
-def _unbound_tae_starter(tae, *args, **kwargs):
+def _unbound_tae_starter(
+    tae: ExecuteTARun, *args: typing.Any, **kwargs: typing.Any
+) -> typing.Tuple[StatusType, float, float, typing.Dict]:
     """
     Unbound function to be used by joblibs Parallel, since directly passing the
     TAE results in pickling-problems.
@@ -58,7 +60,7 @@ class Validator(object):
     def __init__(self,
                  scenario: Scenario,
                  trajectory: list,
-                 rng: Union[np.random.RandomState, int] = None):
+                 rng: Union[np.random.RandomState, int, None] = None) -> None:
         """
         Construct Validator for given scenario and trajectory.
 
@@ -87,7 +89,12 @@ class Validator(object):
             num_run = 1
             self.rng = np.random.RandomState(seed=num_run)
 
-    def _save_results(self, rh: RunHistory, output_fn, backup_fn=None):
+    def _save_results(
+        self,
+        rh: RunHistory,
+        output_fn: str,
+        backup_fn: typing.Optional[str] = None,
+    ) -> None:
         """ Helper to save results to file
 
         Parameters
@@ -107,10 +114,11 @@ class Validator(object):
             return
         # Check if a folder or a file is specified as output
         if not output_fn.endswith('.json'):
+            if backup_fn is None:
+                raise ValueError('If output_fn does not end with .json the argument backup_fn needs to be given.')
             output_dir = output_fn
             output_fn = os.path.join(output_dir, backup_fn)
-            self.logger.debug("Output is \"%s\", changing to \"%s\"!",
-                              output_dir, output_fn)
+            self.logger.debug("Output is \"%s\", changing to \"%s\"!", output_dir, output_fn)
         base = os.path.split(output_fn)[0]
         if not base == "" and not os.path.exists(base):
             self.logger.debug("Folder (\"%s\") doesn't exist, creating.", base)
@@ -182,6 +190,7 @@ class Validator(object):
         # Create TAE
         if not tae:
             tae = ExecuteTARunOld(ta=self.scen.ta,
+                                  runhistory=runhistory,
                                   stats=inf_stats,
                                   run_obj=self.scen.run_obj,
                                   par_factor=self.scen.par_factor,
@@ -192,26 +201,30 @@ class Validator(object):
 
         # Validate!
         run_results = self._validate_parallel(tae, runs, n_jobs, backend)
+        assert len(run_results) == len(runs), (run_results, runs)
 
         # tae returns (status, cost, runtime, additional_info)
         # Add runs to RunHistory
-        idx = 0
-        for result in run_results:
-            validated_rh.add(config=runs[idx].config,
+        for run, result in zip(runs, run_results):
+            validated_rh.add(config=run.config,
                              cost=result[1],
                              time=result[2],
                              status=result[0],
-                             instance_id=runs[idx].inst,
-                             seed=runs[idx].seed,
+                             instance_id=run.inst,
+                             seed=run.seed,
                              additional_info=result[3])
-            idx += 1
 
         if output_fn:
             self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
         return validated_rh
 
-    def _validate_parallel(self, tae: ExecuteTARun, runs: typing.List[_Run],
-                           n_jobs: int, backend: str):
+    def _validate_parallel(
+        self,
+        tae: ExecuteTARun,
+        runs: typing.List[_Run],
+        n_jobs: int,
+        backend: str,
+    ) -> typing.List[typing.Tuple[StatusType, float, float, typing.Dict]]:
         """
         Validate runs with joblibs Parallel-interface
 
@@ -246,8 +259,8 @@ class Validator(object):
                      instance_mode: Union[str, typing.List[str]] = 'test',
                      repetitions: int = 1,
                      runhistory: RunHistory = None,
-                     output_fn="",
-                     reuse_epm=True,
+                     output_fn: str = "",
+                     reuse_epm: bool = True,
                      ) -> RunHistory:
         """
         Use EPM to predict costs/runtimes for unknown config/inst-pairs.
@@ -285,7 +298,7 @@ class Validator(object):
         elif reuse_epm is False or self.epm is None:
             # Create RandomForest
             types, bounds = get_types(self.scen.cs, self.scen.feature_array)
-            self.epm = RandomForestWithInstances(
+            epm = RandomForestWithInstances(
                 configspace=self.scen.cs,
                 types=types,
                 bounds=bounds,
@@ -315,7 +328,9 @@ class Validator(object):
             self.logger.debug("Training model with data of shape X: %s, y:%s",
                               str(X.shape), str(y.shape))
             # Train random forest
-            self.epm.train(X, y)
+            epm.train(X, y)
+        else:
+            epm = typing.cast(RandomForestWithInstances, self.epm)
 
         # Predict desired runs
         runs, rh_epm = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
@@ -334,7 +349,8 @@ class Validator(object):
         self.logger.debug("Predicting desired %d runs, data has shape %s",
                           len(runs), str(X_pred.shape))
 
-        y_pred = self.epm.predict(X_pred)
+        y_pred = epm.predict(X_pred)
+        self.epm = epm
 
         # Add runs to runhistory
         for run, pred in zip(runs, y_pred[0]):
@@ -391,11 +407,15 @@ class Validator(object):
         if isinstance(configs, str):
             configs = self._get_configs(configs)
         if isinstance(insts, str):
-            insts = self._get_instances(insts)
-
+            instances = self._get_instances(insts)  # type: typing.Sequence[typing.Union[str, None]]
+        elif insts is not None:
+            instances = insts
+        else:
+            instances = [None]
         # If no instances are given, fix the instances to one "None" instance
-        if not insts:
-            insts = [None]
+        if not instances:
+            instances = [None]
+
         # If algorithm is deterministic, fix repetitions to 1
         if self.scen.deterministic and repetitions != 1:
             self.logger.warning("Specified %d repetitions, but fixing to 1, "
@@ -403,7 +423,7 @@ class Validator(object):
             repetitions = 1
 
         # Extract relevant information from given runhistory
-        inst_seed_config = self._process_runhistory(configs, insts, runhistory)
+        inst_seed_config = self._process_runhistory(configs, instances, runhistory)
 
         # Now create the actual run-list
         runs = []
@@ -412,11 +432,11 @@ class Validator(object):
         # If we reuse runs, we want to return them as well
         new_rh = RunHistory()
 
-        for i in sorted(insts):
+        for i in sorted(instances):
             for rep in range(repetitions):
                 # First, find a seed and add all the data we can take from the
                 # given runhistory to "our" validation runhistory.
-                configs_evaluated = []
+                configs_evaluated = []  # type: Configuration
                 if runhistory and i in inst_seed_config:
                     # Choose seed based on most often evaluated inst-seed-pair
                     seed, configs_evaluated = inst_seed_config[i].pop(0)
@@ -452,12 +472,16 @@ class Validator(object):
         self.logger.info("Collected %d runs from %d configurations on %d "
                          "instances with %d repetitions. Reusing %d runs from "
                          "given runhistory.", len(runs), len(configs),
-                         len(insts), repetitions, runs_from_rh)
+                         len(instances), repetitions, runs_from_rh)
 
         return runs, new_rh
 
-    def _process_runhistory(self, configs: typing.List[Configuration],
-                            insts: typing.List[str], runhistory: RunHistory):
+    def _process_runhistory(
+        self,
+        configs: typing.List[Configuration],
+        insts: typing.Sequence[typing.Optional[str]],
+        runhistory: RunHistory,
+    ) -> typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]:
         """
         Processes runhistory from self._get_runs by extracting already evaluated
         (relevant) config-inst-seed tuples.
@@ -482,8 +506,8 @@ class Validator(object):
         # To this end, we create a dictionary as {instances:{seed:[configs]}}
         # Like this we can easily retrieve the most used instance-seed pairs to
         # minimize the number of runs to be evaluated
-        inst_seed_config = {}
         if runhistory:
+            inst_seed_config = {}  # type: typing.Dict[str, typing.Dict[int, typing.List[Configuration]]]
             relevant = dict()
             for key in runhistory.data:
                 if (runhistory.ids_config[key.config_id] in configs and key.instance_id in insts):
@@ -502,12 +526,15 @@ class Validator(object):
                 else:
                     inst_seed_config[inst] = {seed: [config]}
 
-            inst_seed_config = {i:
-                                sorted([(seed, list(inst_seed_config[i][seed]))
-                                        for seed in inst_seed_config[i]],
-                                       key=lambda x: len(x[1]))
-                                for i in inst_seed_config}
-        return inst_seed_config
+            return {
+                i: sorted(
+                    [(seed, list(inst_seed_config[i][seed])) for seed in inst_seed_config[i]],
+                    key=lambda x: len(x[1])
+                ) for i in inst_seed_config
+            }
+        else:
+            rval = {}  # type: typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]
+            return rval
 
     def _get_configs(self, mode: str) -> typing.List[str]:
         """
@@ -588,7 +615,7 @@ class Validator(object):
                                 "\"train+test\"!", instance_mode, instance_mode)
             instance_mode = 'train+test'
 
-        instances = []
+        instances = []  # type: typing.List[str]
         if (instance_mode == 'train' or instance_mode == 'train+test') and not self.scen.train_insts == [None]:
             instances.extend(self.scen.train_insts)
         if (instance_mode == 'test' or instance_mode == 'train+test') and not self.scen.test_insts == [None]:

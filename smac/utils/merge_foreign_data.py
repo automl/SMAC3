@@ -9,7 +9,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
                                  runhistory: RunHistory,
                                  in_scenario_fn_list: typing.List[str],
                                  in_runhistory_fn_list: typing.List[str],
-                                 cs: ConfigurationSpace,):
+                                 cs: ConfigurationSpace,) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -48,7 +48,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
 def merge_foreign_data(scenario: Scenario,
                        runhistory: RunHistory,
                        in_scenario_list: typing.List[Scenario],
-                       in_runhistory_list: typing.List[RunHistory]):
+                       in_runhistory_list: typing.List[RunHistory]) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
