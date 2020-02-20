@@ -358,14 +358,14 @@
             <span class="n">acquisition_func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">rng</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="n">predict_incumbent</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="n">min_samples_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">]</span>
 
-<div class="viewcode-block" id="EPMChooser._collect_data_to_train_model"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EPMChooser._collect_data_to_train_model"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
         <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -383,10 +383,10 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">])</span></div>
 
-<div class="viewcode-block" id="EPMChooser._get_evaluated_configs"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="EPMChooser._get_evaluated_configs"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterable</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The</span>
 <span class="sd">        suggested configurations depend on the argument ``acq_optimizer`` to</span>
 <span class="sd">        the ``SMBO`` class.</span>
@@ -416,14 +416,14 @@
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[Configuration]</span>
+            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[np.ndarray]</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
                                  <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
             <span class="n">incumbent</span><span class="p">,</span> <span class="n">incumbent_array</span><span class="p">,</span> <span class="n">incumbent_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_incumbent</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">incumbent_array</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>

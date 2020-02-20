@@ -314,7 +314,7 @@
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._compute">
-<em class="property">abstract </em><code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the acquisition value for a given point X. This function has
 to be overwritten in a derived class.</p>
 <dl class="field-list simple">
@@ -335,7 +335,7 @@ dimensions of one X.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition function attributes required for calculation.</p>
 <p>This method will be called after fitting the model, but before maximizing the acquisition
 function. As an examples, EI uses it to update the current fmin.</p>
@@ -381,7 +381,7 @@ acquisition function.</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.EI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -431,7 +431,7 @@ acquisition function.</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.EIPS._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EIPS value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -452,7 +452,7 @@ dimensions of one X.</p>
 
 <dl class="class">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Marginalize over Model hyperparameters to compute the integrated acquisition function.</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
@@ -475,7 +475,7 @@ integrate over.</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -494,7 +494,7 @@ dimensions of one X.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition functions values.</p>
 <p>This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
 of P(x=x_min), EI uses it to update the current fmin.</p>
@@ -543,7 +543,7 @@ acquisition function.</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.LCB._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the LCB value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -588,7 +588,7 @@ acquisition function.</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.LogEI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -638,7 +638,7 @@ acquisition function.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.acquisition.PI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the PI value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

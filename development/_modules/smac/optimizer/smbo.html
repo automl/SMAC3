@@ -394,7 +394,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="n">num_run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
 
         <span class="c1"># initialize the chooser to get configurations from the EPM</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span> <span class="o">=</span> <span class="n">EPMChooser</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
@@ -410,7 +410,7 @@
                                       <span class="n">predict_incumbent</span><span class="o">=</span><span class="n">predict_incumbent</span><span class="p">,</span>
                                       <span class="n">min_samples_model</span><span class="o">=</span><span class="n">min_samples_model</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Starts the Bayesian Optimization loop.</span>
 <span class="sd">        Detects whether the optimization is restored from a previous state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -441,7 +441,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State restored with following budget:&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SMBO.run"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMBO.run"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Runs the Bayesian optimization loop</span>
 
 <span class="sd">        Returns</span>
@@ -510,12 +510,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>
-                 <span class="n">instance_mode</span><span class="o">=</span><span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
-                 <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+                 <span class="n">config_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;inc&#39;</span><span class="p">,</span>
+                 <span class="n">instance_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;train+test&#39;</span><span class="p">,</span>
+                 <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
 
@@ -548,7 +548,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">trajectory</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">:</span>
-            <span class="n">new_rh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;validated_runhistory.json&quot;</span><span class="p">)</span>
+            <span class="n">new_rh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;validated_runhistory.json&quot;</span><span class="p">)</span>  <span class="c1"># type: typing.Optional[str] # noqa E501</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_rh_path</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -566,7 +566,7 @@
                                         <span class="n">output_fn</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_rh</span></div>
 
-<div class="viewcode-block" id="SMBO._get_timebound_for_intensification"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO._get_timebound_for_intensification">[docs]</a>    <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="SMBO._get_timebound_for_intensification"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO._get_timebound_for_intensification">[docs]</a>    <span class="k">def</span> <span class="nf">_get_timebound_for_intensification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Calculate time left for intensify from the time spent on</span>
 <span class="sd">        choosing challengers using the fraction of time intended for</span>
 <span class="sd">        intensification (which is specified in</span>

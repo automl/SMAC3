@@ -309,7 +309,7 @@
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._maximize">
-<em class="property">abstract </em><code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._maximize" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements acquisition function maximization.</p>
 <p>In contrast to <code class="docutils literal notranslate"><span class="pre">maximize</span></code>, this method returns an iterable of tuples,
 consisting of the acquisition function value and the configuration. This
@@ -320,7 +320,6 @@ allows to plug together different acquisition function maximizers.</p>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -352,7 +351,7 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">
-<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = None</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#AcquisitionFunctionMaximizer.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -360,7 +359,11 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
+<li><p><strong>random_configuration_chooser</strong> (<a class="reference internal" href="smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><em>RandomConfigurationChooser</em></a><em>, </em><em>optional</em>) – part of the returned ChallengerList such
+that we can interleave random configurations
+by a scheme defined by the random_configuration_chooser;
+random_configuration_chooser.next_smbo_iteration()
+is called at the end of this function</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -376,8 +379,8 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.ChallengerList">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">ChallengerList</code><span class="sig-paren">(</span><em class="sig-param">challengers</em>, <em class="sig-param">configuration_space</em>, <em class="sig-param">random_configuration_chooser=&lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#ChallengerList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.ChallengerList" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">ChallengerList</code><span class="sig-paren">(</span><em class="sig-param">challengers: List[ConfigSpace.configuration_space.Configuration], configuration_space: ConfigSpace.configuration_space.ConfigurationSpace, random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#ChallengerList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.ChallengerList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Generic</span></code></p>
 <p>Helper class to interleave random configurations in a list of challengers.</p>
 <p>Provides an iterator which returns a random configuration in each second
 iteration. Reduces time necessary to generate a list of new challengers
@@ -391,6 +394,11 @@ in each iteration which are never looked at.</p>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.ei_optimization.ChallengerList._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.ei_optimization.ChallengerList._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -414,7 +422,7 @@ in each iteration which are never looked at.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.DiffOpt._maximize">
-<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">_sorted: bool = False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#DiffOpt._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt._maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">_sorted: bool = False</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#DiffOpt._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.DiffOpt._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>DifferentialEvolutionSolver</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -423,7 +431,6 @@ in each iteration which are never looked at.</p>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
 <li><p><strong>_sorted</strong> (<em>bool</em>) – whether random configurations are sorted according to acquisition function</p></li>
-<li><p><strong>**kwargs</strong> – not used</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -440,14 +447,16 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.FixedSet">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">FixedSet</code><span class="sig-paren">(</span><em class="sig-param">configurations</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#FixedSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.FixedSet" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">FixedSet</code><span class="sig-paren">(</span><em class="sig-param">configurations: List[ConfigSpace.configuration_space.Configuration], acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction, config_space: ConfigSpace.configuration_space.ConfigurationSpace, rng: Union[bool, numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#FixedSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.FixedSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></code></a></p>
 <p>Maximize the acquisition function over a finite list of configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>configurations</strong> (<em>List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – Candidate configurations</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em>) – Arguments to pass to the super class.</p></li>
+<li><p><strong>acquisition_function</strong> (<a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><em>AbstractAcquisitionFunction</em></a>) – </p></li>
+<li><p><strong>config_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -458,7 +467,7 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.FixedSet._maximize">
-<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#FixedSet._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.FixedSet._maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#FixedSet._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.FixedSet._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements acquisition function maximization.</p>
 <p>In contrast to <code class="docutils literal notranslate"><span class="pre">maximize</span></code>, this method returns an iterable of tuples,
 consisting of the acquisition function value and the configuration. This
@@ -469,7 +478,6 @@ allows to plug together different acquisition function maximizers.</p>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -512,7 +520,7 @@ sampled configurations in between.</p>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch._maximize">
-<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch._maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em><span class="sig-paren">)</span> &#x2192; Iterable[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implements acquisition function maximization.</p>
 <p>In contrast to <code class="docutils literal notranslate"><span class="pre">maximize</span></code>, this method returns an iterable of tuples,
 consisting of the acquisition function value and the configuration. This
@@ -523,7 +531,6 @@ allows to plug together different acquisition function maximizers.</p>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>**kwargs</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -532,33 +539,6 @@ tuple(acqusition_value, <a class="reference internal" href="smac.configspace.htm
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>iterable</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize">
-<code class="sig-name descname">maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">random_configuration_chooser</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; Iterable[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#InterleavedLocalAndRandomSearch.maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch.maximize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maximize acquisition function using <code class="docutils literal notranslate"><span class="pre">_maximize</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
-<li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
-<li><p><strong>random_configuration_chooser</strong> (<a class="reference internal" href="smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><em>RandomConfigurationChooser</em></a>) – part of the returned ChallengerList such
-that we can interleave random configurations
-by a scheme defined by the random_configuration_chooser;
-random_configuration_chooser.next_smbo_iteration()
-is called at the end of this function</p></li>
-<li><p><strong>**kwargs</strong> – passed to acquisition function</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>to be concrete: ~smac.ei_optimization.ChallengerList</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -592,17 +572,17 @@ reduce the overhead of SMAC</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.LocalSearch._do_search">
-<code class="sig-name descname">_do_search</code><span class="sig-paren">(</span><em class="sig-param">start_points: List[ConfigSpace.configuration_space.Configuration], **kwargs</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._do_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._do_search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_do_search</code><span class="sig-paren">(</span><em class="sig-param">start_points: List[ConfigSpace.configuration_space.Configuration]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._do_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._do_search" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.LocalSearch._get_initial_points">
-<code class="sig-name descname">_get_initial_points</code><span class="sig-paren">(</span><em class="sig-param">num_points</em>, <em class="sig-param">runhistory</em>, <em class="sig-param">additional_start_points</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._get_initial_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._get_initial_points" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_initial_points</code><span class="sig-paren">(</span><em class="sig-param">num_points: int, runhistory: smac.runhistory.runhistory.RunHistory, additional_start_points: Optional[List[Tuple[float, ConfigSpace.configuration_space.Configuration]]]</em><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._get_initial_points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._get_initial_points" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.LocalSearch._maximize">
-<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">additional_start_points: Optional[List[Tuple[float</em>, <em class="sig-param">ConfigSpace.configuration_space.Configuration]]] = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">additional_start_points: Optional[List[Tuple[float</em>, <em class="sig-param">ConfigSpace.configuration_space.Configuration]]] = None</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#LocalSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.LocalSearch._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts a local search from the given startpoint and quits
 if either the max number of steps is reached or no neighbor
 with an higher improvement was found.</p>
@@ -613,8 +593,6 @@ with an higher improvement was found.</p>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
 <li><p><strong>additional_start_points</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em><em>]</em><em>]</em>) – Additional start point</p></li>
-<li><p><strong>***kwargs</strong> – Additional parameters that will be passed to the
-acquisition function</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -650,7 +628,7 @@ acquisition function</p></li>
 
 <dl class="method">
 <dt id="smac.optimizer.ei_optimization.RandomSearch._maximize">
-<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">_sorted: bool = False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#RandomSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch._maximize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_maximize</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">num_points: int</em>, <em class="sig-param">_sorted: bool = False</em><span class="sig-paren">)</span> &#x2192; List[Tuple[float, ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#RandomSearch._maximize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.RandomSearch._maximize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Randomly sampled configurations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -659,7 +637,6 @@ acquisition function</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – current stats object</p></li>
 <li><p><strong>num_points</strong> (<em>int</em>) – number of points to be sampled</p></li>
 <li><p><strong>_sorted</strong> (<em>bool</em>) – whether random configurations are sorted according to acquisition function</p></li>
-<li><p><strong>**kwargs</strong> – not used</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

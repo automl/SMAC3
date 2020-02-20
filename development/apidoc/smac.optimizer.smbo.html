@@ -392,7 +392,7 @@ data into EPM data</p>
 </ul>
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO._get_timebound_for_intensification">
-<code class="sig-name descname">_get_timebound_for_intensification</code><span class="sig-paren">(</span><em class="sig-param">time_spent: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._get_timebound_for_intensification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._get_timebound_for_intensification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_timebound_for_intensification</code><span class="sig-paren">(</span><em class="sig-param">time_spent: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._get_timebound_for_intensification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._get_timebound_for_intensification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate time left for intensify from the time spent on
 choosing challengers using the fraction of time intended for
 intensification (which is specified in
@@ -412,7 +412,7 @@ scenario.intensification_percentage).</p>
 
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs the Bayesian optimization loop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -426,14 +426,14 @@ scenario.intensification_percentage).</p>
 
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.start" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Starts the Bayesian Optimization loop.
 Detects whether the optimization is restored from a previous state.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">config_mode='inc'</em>, <em class="sig-param">instance_mode='train+test'</em>, <em class="sig-param">repetitions=1</em>, <em class="sig-param">use_epm=False</em>, <em class="sig-param">n_jobs=-1</em>, <em class="sig-param">backend='threading'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">config_mode: str = 'inc'</em>, <em class="sig-param">instance_mode: str = 'train+test'</em>, <em class="sig-param">repetitions: int = 1</em>, <em class="sig-param">use_epm: bool = False</em>, <em class="sig-param">n_jobs: int = -1</em>, <em class="sig-param">backend: str = 'threading'</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create validator-object and run validation, using
 scenario-information, runhistory from smbo and tae_runner from intensify</p>
 <dl class="field-list simple">
