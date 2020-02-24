@@ -26,6 +26,9 @@ class Scenario(object):
     All arguments set in the Scenario are set as attributes.
 
     """
+    use_ta_time = True
+    feature_dict = {}  # type: typing.Dict[str, np.ndarray]
+    run_obj = 'None'
 
     def __init__(
         self,
@@ -106,6 +109,9 @@ class Scenario(object):
 
         if self.run_obj == "runtime":
             self.logy = True
+        # This pleases mypy by defining the variable above. However, we need to assign some value
+        elif self.run_obj == 'None':
+            raise ValueError('Internal error - this must never happen!')
 
         def extract_instance_specific(
             instance_list: typing.Sequence[typing.Union[str, typing.List[str]]],

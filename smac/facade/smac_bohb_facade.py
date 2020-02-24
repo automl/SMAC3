@@ -1,3 +1,5 @@
+import typing
+
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
@@ -29,7 +31,7 @@ class BOHB4HPO(SMAC4AC):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: typing.Any):
         """
         Constructor
         see ~smac.facade.smac_facade for documentation
@@ -81,6 +83,7 @@ class BOHB4HPO(SMAC4AC):
         acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
         kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
+        print(scenario.__dict__.get('always_race_against'))
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
 

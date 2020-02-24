@@ -1,3 +1,5 @@
+import typing
+
 import numpy as np
 
 from smac.facade.smac_ac_facade import SMAC4AC
@@ -47,7 +49,7 @@ class SMAC4BO(SMAC4AC):
 
     """
 
-    def __init__(self, model_type='gp_mcmc', **kwargs):
+    def __init__(self, model_type: str = 'gp_mcmc', **kwargs: typing.Any):
         """
         Constructor
         see ~smac.facade.smac_facade for documentation
