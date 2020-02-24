@@ -109,7 +109,8 @@ class Scenario(object):
 
         if self.run_obj == "runtime":
             self.logy = True
-        elif self.run_obj == 'None':  # This pleases mypy by defining the variable above. However, we need to assign some value
+        # This pleases mypy by defining the variable above. However, we need to assign some value
+        elif self.run_obj == 'None':
             raise ValueError('Internal error - this must never happen!')
 
         def extract_instance_specific(
