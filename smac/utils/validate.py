@@ -293,7 +293,7 @@ class Validator(object):
         runhistory: RunHistory
             runhistory with predicted runs
         """
-        if not isinstance(runhistory, RunHistory) and (self.epm is None or reuse_epm is False):
+        if not isinstance(runhistory, RunHistory) and (self.epm is None or not reuse_epm):
             raise ValueError("No runhistory specified for validating with EPM!")
         elif not reuse_epm or self.epm is None:
             # Create RandomForest
