@@ -5,7 +5,7 @@ import numpy as np
 
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
-from smac.configspace import ConfigurationSpace
+from smac.configspace import ConfigurationSpace, Configuration
 from smac.runhistory.runhistory import RunKey
 from smac.tae.execute_func import ExecuteTAFuncArray
 
@@ -22,7 +22,7 @@ def fmin_smac(func: typing.Callable,
               maxfun: int = -1,
               rng: typing.Union[np.random.RandomState, int] = None,
               scenario_args: typing.Mapping[str, typing.Any] = None,
-              **kwargs):
+              **kwargs: typing.Any) -> typing.Tuple[Configuration, float, SMAC4HPO]:
     """
     Minimize a function func using the SMAC4HPO facade
     (i.e., a modified version of SMAC).

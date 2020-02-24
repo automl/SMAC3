@@ -1,3 +1,6 @@
+# type: ignore
+# mypy: ignore-errors
+
 import logging
 import os
 import datetime

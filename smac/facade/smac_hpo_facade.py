@@ -1,3 +1,5 @@
+import typing
+
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
@@ -28,7 +30,7 @@ class SMAC4HPO(SMAC4AC):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: typing.Any):
         """
         Constructor
         see ~smac.facade.smac_facade for docu

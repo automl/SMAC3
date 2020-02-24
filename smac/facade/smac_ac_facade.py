@@ -1,7 +1,7 @@
 import inspect
 import logging
 import os
-from typing import List, Union, Optional, Type, Callable
+from typing import List, Union, Optional, Type, Callable, cast, Tuple
 
 import numpy as np
 
@@ -42,7 +42,7 @@ from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import get_types, get_rng
 # utils
-from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.io.traj_logging import TrajLogger, TrajEntry
 from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
 from smac.configspace import Configuration
@@ -195,6 +195,7 @@ class SMAC4AC(object):
             # but set the self-output_dir to the dir.
             # necessary because we want to write traj to new output-dir in CLI.
             self.output_dir = scenario.output_dir_for_this_run
+        rng = cast(np.random.RandomState, rng)
 
         if (
                 scenario.deterministic is True and getattr(scenario, 'tuner_timeout',
@@ -364,11 +365,13 @@ class SMAC4AC(object):
                             "call string in the scenario file."
                             % type(tae_runner))
 
+        tae_runner = cast(ExecuteTARun, tae_runner)
         # Check that overall objective and tae objective are the same
-        if tae_runner.run_obj != scenario.run_obj:
+        # TODO: remove these two ignores once the scenario object knows all its attributes!
+        if tae_runner.run_obj != scenario.run_obj:  # type: ignore[union-attr] # noqa F821
             raise ValueError("Objective for the target algorithm runner and "
                              "the scenario must be the same, but are '%s' and "
-                             "'%s'" % (tae_runner.run_obj, scenario.run_obj))
+                             "'%s'" % (tae_runner.run_obj, scenario.run_obj))  # type: ignore[union-attr] # noqa F821
 
         # initialize intensification
         intensifier_def_kwargs = {
@@ -525,7 +528,7 @@ class SMAC4AC(object):
         else:
             self.solver = smbo_class(**smbo_args)
 
-    def optimize(self):
+    def optimize(self) -> Configuration:
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
@@ -560,7 +563,7 @@ class SMAC4AC(object):
                  repetitions: int = 1,
                  use_epm: bool = False,
                  n_jobs: int = -1,
-                 backend: str = 'threading'):
+                 backend: str = 'threading') -> RunHistory:
         """
         Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
@@ -594,7 +597,7 @@ class SMAC4AC(object):
         return self.solver.validate(config_mode, instance_mode, repetitions,
                                     use_epm, n_jobs, backend)
 
-    def get_tae_runner(self):
+    def get_tae_runner(self) -> ExecuteTARun:
         """
         Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
@@ -606,7 +609,7 @@ class SMAC4AC(object):
         """
         return self.solver.intensifier.tae_runner
 
-    def get_runhistory(self):
+    def get_runhistory(self) -> RunHistory:
         """
         Returns the runhistory (i.e., all evaluated configurations and
          the results).
@@ -621,7 +624,7 @@ class SMAC4AC(object):
                              'to accessing the runhistory.')
         return self.runhistory
 
-    def get_trajectory(self):
+    def get_trajectory(self) -> List[TrajEntry]:
         """
         Returns the trajectory (i.e., all incumbent configurations over
         time).
@@ -636,7 +639,7 @@ class SMAC4AC(object):
                              'to accessing the runhistory.')
         return self.trajectory
 
-    def get_X_y(self):
+    def get_X_y(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Simple interface to obtain all data in runhistory in ``X, y`` format.
 
