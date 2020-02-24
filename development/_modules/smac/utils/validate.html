@@ -305,7 +305,9 @@
 <span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;joshua.marben@neptun.uni-freiburg.de&quot;</span>
 
 
-<div class="viewcode-block" id="_unbound_tae_starter"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate._unbound_tae_starter">[docs]</a><span class="k">def</span> <span class="nf">_unbound_tae_starter</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="_unbound_tae_starter"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate._unbound_tae_starter">[docs]</a><span class="k">def</span> <span class="nf">_unbound_tae_starter</span><span class="p">(</span>
+    <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unbound function to be used by joblibs Parallel, since directly passing the</span>
 <span class="sd">    TAE results in pickling-problems.</span>
@@ -337,7 +339,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
                  <span class="n">trajectory</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-                 <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct Validator for given scenario and trajectory.</span>
 
@@ -366,7 +368,12 @@
             <span class="n">num_run</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">num_run</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Validator._save_results"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._save_results">[docs]</a>    <span class="k">def</span> <span class="nf">_save_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rh</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">output_fn</span><span class="p">,</span> <span class="n">backup_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Validator._save_results"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._save_results">[docs]</a>    <span class="k">def</span> <span class="nf">_save_results</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rh</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+        <span class="n">output_fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">backup_fn</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Helper to save results to file</span>
 
 <span class="sd">        Parameters</span>
@@ -386,10 +393,11 @@
             <span class="k">return</span>
         <span class="c1"># Check if a folder or a file is specified as output</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">output_fn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">backup_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;If output_fn does not end with .json the argument backup_fn needs to be given.&#39;</span><span class="p">)</span>
             <span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_fn</span>
             <span class="n">output_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">backup_fn</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Output is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">, changing to </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">!&quot;</span><span class="p">,</span>
-                              <span class="n">output_dir</span><span class="p">,</span> <span class="n">output_fn</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Output is </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">, changing to </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">!&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">output_fn</span><span class="p">)</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">output_fn</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">base</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Folder (</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2">) doesn&#39;t exist, creating.&quot;</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
@@ -461,6 +469,7 @@
         <span class="c1"># Create TAE</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tae</span><span class="p">:</span>
             <span class="n">tae</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span>
+                                  <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                                   <span class="n">stats</span><span class="o">=</span><span class="n">inf_stats</span><span class="p">,</span>
                                   <span class="n">run_obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
                                   <span class="n">par_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
@@ -471,26 +480,30 @@
 
         <span class="c1"># Validate!</span>
         <span class="n">run_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_parallel</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_results</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">),</span> <span class="p">(</span><span class="n">run_results</span><span class="p">,</span> <span class="n">runs</span><span class="p">)</span>
 
         <span class="c1"># tae returns (status, cost, runtime, additional_info)</span>
         <span class="c1"># Add runs to RunHistory</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">run_results</span><span class="p">:</span>
-            <span class="n">validated_rh</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+        <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">run_results</span><span class="p">):</span>
+            <span class="n">validated_rh</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
                              <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
                              <span class="n">time</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
                              <span class="n">status</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                             <span class="n">instance_id</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">inst</span><span class="p">,</span>
-                             <span class="n">seed</span><span class="o">=</span><span class="n">runs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                             <span class="n">instance_id</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">inst</span><span class="p">,</span>
+                             <span class="n">seed</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
                              <span class="n">additional_info</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">output_fn</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_save_results</span><span class="p">(</span><span class="n">validated_rh</span><span class="p">,</span> <span class="n">output_fn</span><span class="p">,</span> <span class="n">backup_fn</span><span class="o">=</span><span class="s2">&quot;validated_runhistory.json&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">validated_rh</span></div>
 
-<div class="viewcode-block" id="Validator._validate_parallel"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._validate_parallel">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_parallel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">runs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_Run</span><span class="p">],</span>
-                           <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="Validator._validate_parallel"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._validate_parallel">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_parallel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
+        <span class="n">runs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_Run</span><span class="p">],</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate runs with joblibs Parallel-interface</span>
 
@@ -525,8 +538,8 @@
                      <span class="n">instance_mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span><span class="p">,</span>
                      <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">output_fn</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-                     <span class="n">reuse_epm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">output_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                     <span class="n">reuse_epm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                      <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use EPM to predict costs/runtimes for unknown config/inst-pairs.</span>
@@ -559,12 +572,12 @@
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            runhistory with predicted runs</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">reuse_epm</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">reuse_epm</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No runhistory specified for validating with EPM!&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">reuse_epm</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">reuse_epm</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Create RandomForest</span>
             <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span>
+            <span class="n">epm</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span>
                 <span class="n">configspace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
                 <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
                 <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
@@ -594,7 +607,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Training model with data of shape X: </span><span class="si">%s</span><span class="s2">, y:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                               <span class="nb">str</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
             <span class="c1"># Train random forest</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">epm</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">epm</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">RandomForestWithInstances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">epm</span><span class="p">)</span>
 
         <span class="c1"># Predict desired runs</span>
         <span class="n">runs</span><span class="p">,</span> <span class="n">rh_epm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_runs</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
@@ -613,7 +628,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Predicting desired </span><span class="si">%d</span><span class="s2"> runs, data has shape </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                           <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">X_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
 
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_pred</span><span class="p">)</span>
+        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">epm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_pred</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epm</span> <span class="o">=</span> <span class="n">epm</span>
 
         <span class="c1"># Add runs to runhistory</span>
         <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -670,11 +686,15 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">insts</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">insts</span><span class="p">)</span>
-
+            <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">insts</span><span class="p">)</span>  <span class="c1"># type: typing.Sequence[typing.Union[str, None]]</span>
+        <span class="k">elif</span> <span class="n">insts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="n">insts</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
         <span class="c1"># If no instances are given, fix the instances to one &quot;None&quot; instance</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">insts</span><span class="p">:</span>
-            <span class="n">insts</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
+
         <span class="c1"># If algorithm is deterministic, fix repetitions to 1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">and</span> <span class="n">repetitions</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Specified </span><span class="si">%d</span><span class="s2"> repetitions, but fixing to 1, &quot;</span>
@@ -682,7 +702,7 @@
             <span class="n">repetitions</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="c1"># Extract relevant information from given runhistory</span>
-        <span class="n">inst_seed_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_runhistory</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">insts</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
+        <span class="n">inst_seed_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_runhistory</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
 
         <span class="c1"># Now create the actual run-list</span>
         <span class="n">runs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -691,11 +711,11 @@
         <span class="c1"># If we reuse runs, we want to return them as well</span>
         <span class="n">new_rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">insts</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">instances</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
                 <span class="c1"># First, find a seed and add all the data we can take from the</span>
                 <span class="c1"># given runhistory to &quot;our&quot; validation runhistory.</span>
-                <span class="n">configs_evaluated</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">configs_evaluated</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: Configuration</span>
                 <span class="k">if</span> <span class="n">runhistory</span> <span class="ow">and</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inst_seed_config</span><span class="p">:</span>
                     <span class="c1"># Choose seed based on most often evaluated inst-seed-pair</span>
                     <span class="n">seed</span><span class="p">,</span> <span class="n">configs_evaluated</span> <span class="o">=</span> <span class="n">inst_seed_config</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -731,12 +751,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Collected </span><span class="si">%d</span><span class="s2"> runs from </span><span class="si">%d</span><span class="s2"> configurations on </span><span class="si">%d</span><span class="s2"> &quot;</span>
                          <span class="s2">&quot;instances with </span><span class="si">%d</span><span class="s2"> repetitions. Reusing </span><span class="si">%d</span><span class="s2"> runs from &quot;</span>
                          <span class="s2">&quot;given runhistory.&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">configs</span><span class="p">),</span>
-                         <span class="nb">len</span><span class="p">(</span><span class="n">insts</span><span class="p">),</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">runs_from_rh</span><span class="p">)</span>
+                         <span class="nb">len</span><span class="p">(</span><span class="n">instances</span><span class="p">),</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">runs_from_rh</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">runs</span><span class="p">,</span> <span class="n">new_rh</span></div>
 
-<div class="viewcode-block" id="Validator._process_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._process_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">_process_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
-                            <span class="n">insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">):</span>
+<div class="viewcode-block" id="Validator._process_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._process_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">_process_runhistory</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Processes runhistory from self._get_runs by extracting already evaluated</span>
 <span class="sd">        (relevant) config-inst-seed tuples.</span>
@@ -761,8 +785,8 @@
         <span class="c1"># To this end, we create a dictionary as {instances:{seed:[configs]}}</span>
         <span class="c1"># Like this we can easily retrieve the most used instance-seed pairs to</span>
         <span class="c1"># minimize the number of runs to be evaluated</span>
-        <span class="n">inst_seed_config</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">runhistory</span><span class="p">:</span>
+            <span class="n">inst_seed_config</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, typing.Dict[int, typing.List[Configuration]]]</span>
             <span class="n">relevant</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">runhistory</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="ow">in</span> <span class="n">configs</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">instance_id</span> <span class="ow">in</span> <span class="n">insts</span><span class="p">):</span>
@@ -781,12 +805,15 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">inst_seed_config</span><span class="p">[</span><span class="n">inst</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">seed</span><span class="p">:</span> <span class="p">[</span><span class="n">config</span><span class="p">]}</span>
 
-            <span class="n">inst_seed_config</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span>
-                                <span class="nb">sorted</span><span class="p">([(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">inst_seed_config</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">seed</span><span class="p">]))</span>
-                                        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">inst_seed_config</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
-                                       <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inst_seed_config</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">inst_seed_config</span></div>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="n">i</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">[(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">inst_seed_config</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">seed</span><span class="p">]))</span> <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">inst_seed_config</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+                    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inst_seed_config</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]</span>
+            <span class="k">return</span> <span class="n">rval</span></div>
 
 <div class="viewcode-block" id="Validator._get_configs"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._get_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_get_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -867,7 +894,7 @@
                                 <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2">train+test</span><span class="se">\&quot;</span><span class="s2">!&quot;</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">)</span>
             <span class="n">instance_mode</span> <span class="o">=</span> <span class="s1">&#39;train+test&#39;</span>
 
-        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">instances</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[str]</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">instance_mode</span> <span class="o">==</span> <span class="s1">&#39;train&#39;</span> <span class="ow">or</span> <span class="n">instance_mode</span> <span class="o">==</span> <span class="s1">&#39;train+test&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">train_insts</span> <span class="o">==</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
             <span class="n">instances</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">train_insts</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">instance_mode</span> <span class="o">==</span> <span class="s1">&#39;test&#39;</span> <span class="ow">or</span> <span class="n">instance_mode</span> <span class="o">==</span> <span class="s1">&#39;train+test&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">test_insts</span> <span class="o">==</span> <span class="p">[</span><span class="kc">None</span><span class="p">]:</span>

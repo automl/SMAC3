@@ -288,7 +288,7 @@
 <span id="smac-utils-dependencies-module"></span><h1>smac.utils.dependencies module<a class="headerlink" href="#module-smac.utils.dependencies" title="Permalink to this headline">¶</a></h1>
 <dl class="exception">
 <dt id="smac.utils.dependencies.IncorrectPackageVersionError">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">IncorrectPackageVersionError</code><span class="sig-paren">(</span><em class="sig-param">package_name</em>, <em class="sig-param">installed_version</em>, <em class="sig-param">operation</em>, <em class="sig-param">required_version</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#IncorrectPackageVersionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">IncorrectPackageVersionError</code><span class="sig-paren">(</span><em class="sig-param">package_name: str</em>, <em class="sig-param">installed_version: distutils.version.LooseVersion</em>, <em class="sig-param">operation: str</em>, <em class="sig-param">required_version: distutils.version.LooseVersion</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#IncorrectPackageVersionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <dl class="attribute">
 <dt id="smac.utils.dependencies.IncorrectPackageVersionError.error_message">
@@ -299,7 +299,7 @@
 
 <dl class="exception">
 <dt id="smac.utils.dependencies.MissingPackageError">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">MissingPackageError</code><span class="sig-paren">(</span><em class="sig-param">package_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#MissingPackageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">MissingPackageError</code><span class="sig-paren">(</span><em class="sig-param">package_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#MissingPackageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <dl class="attribute">
 <dt id="smac.utils.dependencies.MissingPackageError.error_message">
@@ -310,17 +310,17 @@
 
 <dl class="function">
 <dt id="smac.utils.dependencies._verify_package">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">_verify_package</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">operation</em>, <em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#_verify_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies._verify_package" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">_verify_package</code><span class="sig-paren">(</span><em class="sig-param">name: str</em>, <em class="sig-param">operation: str</em>, <em class="sig-param">version: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/dependencies.html#_verify_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies._verify_package" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="smac.utils.dependencies.are_valid_packages">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">are_valid_packages</code><span class="sig-paren">(</span><em class="sig-param">packages</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#are_valid_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.are_valid_packages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">are_valid_packages</code><span class="sig-paren">(</span><em class="sig-param">packages: Union[List[str], str]</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/utils/dependencies.html#are_valid_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.are_valid_packages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="smac.utils.dependencies.verify_packages">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">verify_packages</code><span class="sig-paren">(</span><em class="sig-param">packages</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#verify_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.verify_packages" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">verify_packages</code><span class="sig-paren">(</span><em class="sig-param">packages: Union[List[str], str]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/dependencies.html#verify_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.verify_packages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

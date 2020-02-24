@@ -288,7 +288,7 @@
                                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                                  <span class="n">in_scenario_fn_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
                                  <span class="n">in_runhistory_fn_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                                 <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,):</span>
+                                 <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another</span>
 <span class="sd">    &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</span>
 
@@ -327,7 +327,7 @@
 <div class="viewcode-block" id="merge_foreign_data"><a class="viewcode-back" href="../../../apidoc/smac.utils.merge_foreign_data.html#smac.utils.merge_foreign_data.merge_foreign_data">[docs]</a><span class="k">def</span> <span class="nf">merge_foreign_data</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
                        <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                        <span class="n">in_scenario_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
-                       <span class="n">in_runhistory_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]):</span>
+                       <span class="n">in_runhistory_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another</span>
 <span class="sd">    &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</span>
 

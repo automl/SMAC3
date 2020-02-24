@@ -286,6 +286,8 @@
 <span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span><span class="p">,</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">FloatHyperparameter</span><span class="p">,</span> <span class="n">IntegerHyperparameter</span><span class="p">,</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">Constant</span>
 
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2016, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
@@ -309,7 +311,7 @@
 <span class="sd">    trajectory</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">stats</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Parameters</span>
@@ -333,9 +335,9 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Could not make output directory.&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-                    <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Could not make output directory: &quot;</span>
-                                  <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
+                    <span class="n">e</span> <span class="o">=</span> <span class="ne">OSError</span><span class="p">(</span><span class="s2">&quot;Could not make output directory: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">output_dir</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Could not make output directory.&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">e</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_old.csv&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">old_traj_fn</span><span class="p">):</span>
@@ -349,10 +351,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">aclib_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alljson_traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;traj.json&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[TrajEntry]</span>
 
 <div class="viewcode-block" id="TrajLogger.add_entry"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.add_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">):</span>
+                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to trajectory files (several formats) with using the</span>
 <span class="sd">        same timestamps for each entry</span>
 
@@ -380,7 +382,7 @@
 
 <div class="viewcode-block" id="TrajLogger._add_in_old_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_old_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                            <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+                           <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to old SMAC2-like trajectory file</span>
 
 <span class="sd">        Parameters</span>
@@ -414,7 +416,7 @@
 
 <div class="viewcode-block" id="TrajLogger._add_in_aclib_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_aclib_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_aclib_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                              <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                             <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+                             <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to AClib2-like trajectory file</span>
 
 <span class="sd">        Parameters</span>
@@ -450,7 +452,7 @@
 
 <div class="viewcode-block" id="TrajLogger._add_in_alljson_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_alljson_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                                <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                               <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+                               <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to AClib2-like (but with configs as json) trajectory file</span>
 
 <span class="sd">        Parameters</span>
@@ -479,7 +481,10 @@
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrajLogger.read_traj_alljson_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">read_traj_alljson_format</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_traj_alljson_format</span><span class="p">(</span>
+        <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]]:</span>
         <span class="sd">&quot;&quot;&quot;Reads trajectory from file</span>
 
 <span class="sd">        Parameters</span>
@@ -512,7 +517,10 @@
         <span class="k">return</span> <span class="n">trajectory</span></div>
 
 <div class="viewcode-block" id="TrajLogger.read_traj_aclib_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">read_traj_aclib_format</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_traj_aclib_format</span><span class="p">(</span>
+        <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]]]:</span>
         <span class="sd">&quot;&quot;&quot;Reads trajectory from file</span>
 
 <span class="sd">        Parameters</span>
@@ -546,7 +554,7 @@
         <span class="k">return</span> <span class="n">trajectory</span></div>
 
 <div class="viewcode-block" id="TrajLogger._convert_dict_to_config"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._convert_dict_to_config">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_convert_dict_to_config</span><span class="p">(</span><span class="n">config_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_convert_dict_to_config</span><span class="p">(</span><span class="n">config_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Since we save a configurations in a dictionary str-&gt;str we have to</span>
 <span class="sd">        try to figure out the type (int, float, str) of each parameter value</span>
 
@@ -558,6 +566,7 @@
 <span class="sd">            Configuration Space to translate dict object into Confiuration object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># type: typing.Union[str, float, int, bool]</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">config_list</span><span class="p">:</span>
             <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
@@ -569,7 +578,7 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hp</span><span class="p">,</span> <span class="p">(</span><span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">Constant</span><span class="p">)):</span>
                 <span class="c1"># Checking for the correct type requires jumping some hoops</span>
                 <span class="c1"># First, we gather possible interpretations of our string</span>
-                <span class="n">interpretations</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>
+                <span class="n">interpretations</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span>  <span class="c1"># type: typing.List[typing.Union[str, bool, int, float]]</span>
                 <span class="k">if</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">]:</span>
                     <span class="c1"># Special Case for booleans (assuming we support them)</span>
                     <span class="c1"># This is important to avoid false positive warnings triggered by 1 == True or &quot;False&quot; == True</span>

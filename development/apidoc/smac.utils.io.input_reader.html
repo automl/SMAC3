@@ -300,7 +300,7 @@ on an earlier version!</p>
 </dl>
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_instance_features_file">
-<code class="sig-name descname">read_instance_features_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_instance_features_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span> &#x2192; Tuple[List[str], numpy.ndarray]<a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_instances_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -319,7 +319,7 @@ second one is a dict with ‘instance name’ -
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_instance_file">
-<code class="sig-name descname">read_instance_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_instance_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span> &#x2192; List[List[str]]<a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_instances_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,7 +338,7 @@ information for the specific instance.</p>
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_pcs_file">
-<em class="property">static </em><code class="sig-name descname">read_pcs_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">logger=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">read_pcs_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">logger: Optional[smac.utils.logging.PickableLoggerAdapter] = None</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.ConfigurationSpace<a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates generating configuration space object from file.</p>
 <p>Automatically detects whether the cs is saved in json, pcs or pcs_new.</p>
 <dl class="field-list simple">
@@ -356,7 +356,7 @@ information for the specific instance.</p>
 
 <dl class="method">
 <dt id="smac.utils.io.input_reader.InputReader.read_scenario_file">
-<code class="sig-name descname">read_scenario_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_scenario_file</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em><span class="sig-paren">)</span> &#x2192; Dict[str, Any]<a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_scenario_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

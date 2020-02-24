@@ -277,10 +277,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.stats.stats</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
@@ -318,21 +321,21 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wallclock_time_used</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wallclock_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># debug stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_intensify</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># exponential moving average</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span> <span class="o">=</span> <span class="mf">0.2</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Stats.save"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.save"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save all relevant attributes to json-dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -355,7 +358,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fh</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.load"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.load"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load all attributes from dictionary in file into stats-object.</span>
 
@@ -379,7 +382,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Stats does not recognize </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Stats.start_timing"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.start_timing">[docs]</a>    <span class="k">def</span> <span class="nf">start_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.start_timing"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.start_timing">[docs]</a>    <span class="k">def</span> <span class="nf">start_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the timer (for the runtime configuration budget).</span>
 <span class="sd">        Substracting wallclock time used so we can continue loaded Stats.</span>
@@ -389,7 +392,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.get_used_wallclock_time"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_used_wallclock_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_used_wallclock_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.get_used_wallclock_time"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_used_wallclock_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_used_wallclock_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Returns used wallclock time</span>
 
 <span class="sd">        Returns</span>
@@ -400,28 +403,30 @@
 
         <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span></div>
 
-<div class="viewcode-block" id="Stats.get_remaing_time_budget"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaing_time_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaing_time_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.get_remaing_time_budget"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaing_time_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaing_time_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtracts the runtime configuration budget with the used wallclock</span>
 <span class="sd">        time&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">wallclock_limit</span> <span class="o">-</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="s2">&quot;Scenario is missing&quot;</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.get_remaining_ta_runs"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_ta_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.get_remaining_ta_runs"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_ta_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtract the target algorithm runs in the scenario with the used ta</span>
 <span class="sd">        runs&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="s2">&quot;Scenario is missing&quot;</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.get_remaining_ta_budget"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_ta_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.get_remaining_ta_budget"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.get_remaining_ta_budget">[docs]</a>    <span class="k">def</span> <span class="nf">get_remaining_ta_budget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Subtracts the ta running budget with the used time&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">algo_runs_timelimit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">algo_runs_timelimit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Scenario is missing&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Stats.is_budget_exhausted"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">[docs]</a>    <span class="k">def</span> <span class="nf">is_budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.is_budget_exhausted"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">[docs]</a>    <span class="k">def</span> <span class="nf">is_budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether the configuration budget for time budget, ta_budget</span>
 <span class="sd">        and ta_runs is empty</span>
 
@@ -433,7 +438,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_remaing_time_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_budget</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">0</span>
                 <span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span></div>
 
-<div class="viewcode-block" id="Stats.update_average_configs_per_intensify"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.update_average_configs_per_intensify">[docs]</a>    <span class="k">def</span> <span class="nf">update_average_configs_per_intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.update_average_configs_per_intensify"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.update_average_configs_per_intensify">[docs]</a>    <span class="k">def</span> <span class="nf">update_average_configs_per_intensify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_configs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Updates statistics how many configurations on average per used in</span>
 <span class="sd">        intensify</span>
 
@@ -446,12 +451,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_n_configs_per_intensify</span> <span class="o">+=</span> <span class="n">n_configs</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_calls_of_intensify</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="n">n_configs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_configs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ema_n_configs_per_intensifiy</span> \
                 <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_EMA_ALPHA</span> <span class="o">*</span> <span class="n">n_configs</span></div>
 
-<div class="viewcode-block" id="Stats.print_stats"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_out</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Stats.print_stats"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.print_stats">[docs]</a>    <span class="k">def</span> <span class="nf">print_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">debug_out</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Prints all statistics</span>
 
 <span class="sd">        Parameters</span>
