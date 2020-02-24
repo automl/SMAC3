@@ -5,14 +5,17 @@ import typing
 from smac.configspace import pcs_new, json, ConfigurationSpace
 from smac.utils.logging import PickableLoggerAdapter
 
+if typing.TYPE_CHECKING:
+    from smac.scenario.scenario import Scenario
+
 
 class OutputWriter(object):
     """Writing scenario to file."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = PickableLoggerAdapter(name=self.__module__ + "." + self.__class__.__name__)
 
-    def write_scenario_file(self, scenario):
+    def write_scenario_file(self, scenario: 'Scenario') -> None:
         """Write scenario to a file (format is compatible with input_reader).
         Will overwrite if file exists. If you have arguments that need special
         parsing when saving, specify so in the _parse_argument-function.
@@ -31,7 +34,7 @@ class OutputWriter(object):
         if scenario.output_dir_for_this_run is None or scenario.output_dir_for_this_run == "":
             scenario.logger.info("No output directory for scenario logging "
                                  "specified -- scenario will not be logged.")
-            return False
+            return
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir_for_this_run):
             scenario.logger.debug("Output directory does not exist! Will be "
@@ -58,7 +61,7 @@ class OutputWriter(object):
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
 
-    def _parse_argument(self, scenario, key: str, value):
+    def _parse_argument(self, scenario: 'Scenario', key: str, value: typing.Any) -> typing.Any:
         """Some values of the scenario-file need to be changed upon writing,
         such as the 'ta' (target algorithm), due to it's callback. Also,
         the configspace, features, train_inst- and test-inst-lists are saved
@@ -128,7 +131,7 @@ class OutputWriter(object):
         else:
             return value
 
-    def write_inst_file(self, insts: typing.List[str], fn: str):
+    def write_inst_file(self, insts: typing.List[str], fn: str) -> None:
         """Writes instance-list to file.
 
         Parameters
@@ -141,7 +144,12 @@ class OutputWriter(object):
         with open(fn, 'w') as fh:
             fh.write("\n".join(insts))
 
-    def write_inst_features_file(self, n_features: int, feat_dict, fn: str):
+    def write_inst_features_file(
+        self,
+        n_features: int,
+        feat_dict: typing.Dict[str, typing.Iterable[float]],
+        fn: str,
+    ) -> None:
         """Writes features to file.
 
         Parameters
@@ -155,12 +163,11 @@ class OutputWriter(object):
         """
         header = "Instance, " + ", ".join(
             ["feature" + str(i) for i in range(n_features)]) + "\n"
-        body = [", ".join([inst] + [str(f) for f in feat_dict[inst]]) + "\n"
-                for inst in feat_dict]
+        body = [", ".join([inst] + [str(f) for f in feat_dict[inst]]) + "\n" for inst in feat_dict]
         with open(fn, 'w') as fh:
             fh.write(header + "".join(body))
 
-    def save_configspace(self, cs: ConfigurationSpace, fn: str, output_format: str):
+    def save_configspace(self, cs: ConfigurationSpace, fn: str, output_format: str) -> None:
         """Writing ConfigSpace to file.
 
         Parameters
@@ -184,5 +191,5 @@ class OutputWriter(object):
         else:
             raise ValueError(
                 "Configuration space output format %s not supported. "
-                "Please choose one of %s" % set(writers.keys())
+                "Please choose one of %s" % (output_format, set(writers.keys()))
             )

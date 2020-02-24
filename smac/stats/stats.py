@@ -1,7 +1,10 @@
-import time
-import os
-import logging
 import json
+import logging
+import os
+import time
+import typing
+
+import numpy as np
 
 from smac.scenario.scenario import Scenario
 
@@ -39,21 +42,21 @@ class Stats(object):
 
         self.ta_runs = 0
         self.n_configs = 0
-        self.wallclock_time_used = 0
-        self.ta_time_used = 0
+        self.wallclock_time_used = 0.0
+        self.ta_time_used = 0.0
         self.inc_changed = 0
 
         # debug stats
         self._n_configs_per_intensify = 0
         self._n_calls_of_intensify = 0
         # exponential moving average
-        self._ema_n_configs_per_intensifiy = 0
+        self._ema_n_configs_per_intensifiy = 0.0
         self._EMA_ALPHA = 0.2
 
-        self._start_time = None
+        self._start_time = np.NaN
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def save(self):
+    def save(self) -> None:
         """
         Save all relevant attributes to json-dictionary.
         """
@@ -76,7 +79,7 @@ class Stats(object):
         with open(path, 'w') as fh:
             json.dump(data, fh)
 
-    def load(self, fn=None):
+    def load(self, fn: typing.Optional[str] = None) -> None:
         """
         Load all attributes from dictionary in file into stats-object.
 
@@ -100,7 +103,7 @@ class Stats(object):
             else:
                 raise ValueError("Stats does not recognize {}".format(key))
 
-    def start_timing(self):
+    def start_timing(self) -> None:
         """
         Starts the timer (for the runtime configuration budget).
         Substracting wallclock time used so we can continue loaded Stats.
@@ -110,7 +113,7 @@ class Stats(object):
         else:
             raise ValueError("Scenario is missing")
 
-    def get_used_wallclock_time(self):
+    def get_used_wallclock_time(self) -> float:
         """Returns used wallclock time
 
         Returns
@@ -121,28 +124,30 @@ class Stats(object):
 
         return time.time() - self._start_time
 
-    def get_remaing_time_budget(self):
+    def get_remaing_time_budget(self) -> float:
         """Subtracts the runtime configuration budget with the used wallclock
         time"""
         if self.__scenario:
             return self.__scenario.wallclock_limit - (time.time() - self._start_time)
         else:
-            raise "Scenario is missing"
+            raise ValueError("Scenario is missing")
 
-    def get_remaining_ta_runs(self):
+    def get_remaining_ta_runs(self) -> int:
         """Subtract the target algorithm runs in the scenario with the used ta
         runs"""
         if self.__scenario:
             return self.__scenario.ta_run_limit - self.ta_runs
         else:
-            raise "Scenario is missing"
+            raise ValueError("Scenario is missing")
 
-    def get_remaining_ta_budget(self):
+    def get_remaining_ta_budget(self) -> int:
         """Subtracts the ta running budget with the used time"""
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
+        else:
+            raise ValueError('Scenario is missing')
 
-    def is_budget_exhausted(self):
+    def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget
         and ta_runs is empty
 
@@ -154,7 +159,7 @@ class Stats(object):
         return (self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget() < 0
                 ) or self.get_remaining_ta_runs() <= 0
 
-    def update_average_configs_per_intensify(self, n_configs: int):
+    def update_average_configs_per_intensify(self, n_configs: int) -> None:
         """Updates statistics how many configurations on average per used in
         intensify
 
@@ -167,12 +172,12 @@ class Stats(object):
         self._n_configs_per_intensify += n_configs
 
         if self._n_calls_of_intensify == 1:
-            self._ema_n_configs_per_intensifiy = n_configs
+            self._ema_n_configs_per_intensifiy = float(n_configs)
         else:
             self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensifiy \
                 + self._EMA_ALPHA * n_configs
 
-    def print_stats(self, debug_out: bool = False):
+    def print_stats(self, debug_out: bool = False) -> None:
         """Prints all statistics
 
         Parameters

@@ -10,7 +10,7 @@ def create_output_directory(
         scenario: Scenario,
         run_id: int,
         logger: Logger = None,
-):
+) -> str:
     """Create output directory for this run.
 
     Side effect: Adds the current output directory to the scenario object!
@@ -21,6 +21,10 @@ def create_output_directory(
     scenario : ~smac.scenario.scenario.Scenario
 
     run_id : int
+
+    Returns
+    -------
+    str
     """
     if scenario.output_dir:
         output_dir = os.path.join(

@@ -7,6 +7,8 @@ import collections
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant
 
+from smac.stats.stats import Stats
+
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
@@ -30,7 +32,7 @@ class TrajLogger(object):
     trajectory
     """
 
-    def __init__(self, output_dir, stats):
+    def __init__(self, output_dir: typing.Optional[str], stats: Stats) -> None:
         """Constructor
 
         Parameters
@@ -54,9 +56,9 @@ class TrajLogger(object):
                 try:
                     os.makedirs(output_dir)
                 except OSError:
-                    self.logger.debug("Could not make output directory.", exc_info=1)
-                    raise OSError("Could not make output directory: "
-                                  "{}.".format(output_dir))
+                    e = OSError("Could not make output directory: {}.".format(output_dir))
+                    self.logger.error("Could not make output directory.", exc_info=e)
+                    raise e
 
             self.old_traj_fn = os.path.join(output_dir, "traj_old.csv")
             if not os.path.isfile(self.old_traj_fn):
@@ -70,10 +72,10 @@ class TrajLogger(object):
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
             self.alljson_traj_fn = os.path.join(output_dir, "traj.json")
 
-        self.trajectory = []
+        self.trajectory = []  # type: typing.List[TrajEntry]
 
     def add_entry(self, train_perf: float, incumbent_id: int,
-                  incumbent: Configuration):
+                  incumbent: Configuration) -> None:
         """Adds entries to trajectory files (several formats) with using the
         same timestamps for each entry
 
@@ -101,7 +103,7 @@ class TrajLogger(object):
 
     def _add_in_old_format(self, train_perf: float, incumbent_id: int,
                            incumbent: Configuration, ta_time_used: float,
-                           wallclock_time: float):
+                           wallclock_time: float) -> None:
         """Adds entries to old SMAC2-like trajectory file
 
         Parameters
@@ -135,7 +137,7 @@ class TrajLogger(object):
 
     def _add_in_aclib_format(self, train_perf: float, incumbent_id: int,
                              incumbent: Configuration, ta_time_used: float,
-                             wallclock_time: float):
+                             wallclock_time: float) -> None:
         """Adds entries to AClib2-like trajectory file
 
         Parameters
@@ -171,7 +173,7 @@ class TrajLogger(object):
 
     def _add_in_alljson_format(self, train_perf: float, incumbent_id: int,
                                incumbent: Configuration, ta_time_used: float,
-                               wallclock_time: float):
+                               wallclock_time: float) -> None:
         """Adds entries to AClib2-like (but with configs as json) trajectory file
 
         Parameters
@@ -200,7 +202,10 @@ class TrajLogger(object):
             fp.write("\n")
 
     @staticmethod
-    def read_traj_alljson_format(fn: str, cs: ConfigurationSpace):
+    def read_traj_alljson_format(
+        fn: str,
+        cs: ConfigurationSpace,
+    ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
         Parameters
@@ -233,7 +238,10 @@ class TrajLogger(object):
         return trajectory
 
     @staticmethod
-    def read_traj_aclib_format(fn: str, cs: ConfigurationSpace):
+    def read_traj_aclib_format(
+        fn: str,
+        cs: ConfigurationSpace,
+    ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
         Parameters
@@ -267,7 +275,7 @@ class TrajLogger(object):
         return trajectory
 
     @staticmethod
-    def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace):
+    def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace) -> Configuration:
         """Since we save a configurations in a dictionary str->str we have to
         try to figure out the type (int, float, str) of each parameter value
 
@@ -279,6 +287,7 @@ class TrajLogger(object):
             Configuration Space to translate dict object into Confiuration object
         """
         config_dict = {}
+        v = ''  # type: typing.Union[str, float, int, bool]
         for param in config_list:
             k, v = param.split("=")
             v = v.strip("'")
@@ -290,7 +299,7 @@ class TrajLogger(object):
             elif isinstance(hp, (CategoricalHyperparameter, Constant)):
                 # Checking for the correct type requires jumping some hoops
                 # First, we gather possible interpretations of our string
-                interpretations = [v]
+                interpretations = [v]  # type: typing.List[typing.Union[str, bool, int, float]]
                 if v in ["True", "False"]:
                     # Special Case for booleans (assuming we support them)
                     # This is important to avoid false positive warnings triggered by 1 == True or "False" == True
