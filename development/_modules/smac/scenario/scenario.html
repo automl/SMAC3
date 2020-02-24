@@ -305,6 +305,9 @@
 <span class="sd">    All arguments set in the Scenario are set as attributes.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">use_ta_time</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">feature_dict</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, np.ndarray]</span>
+    <span class="n">run_obj</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -385,6 +388,9 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logy</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># This pleases mypy by defining the variable above. However, we need to assign some value</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Internal error - this must never happen!&#39;</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">extract_instance_specific</span><span class="p">(</span>
             <span class="n">instance_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Sequence</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>

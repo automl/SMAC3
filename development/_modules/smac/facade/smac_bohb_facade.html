@@ -277,7 +277,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.facade.smac_bohb_facade</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4LogScaledCost</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">LogEI</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
@@ -308,7 +310,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 <span class="sd">        see ~smac.facade.smac_facade for documentation</span>
@@ -360,6 +362,7 @@
         <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">[</span><span class="s1">&#39;n_sls_iterations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;acquisition_function_optimizer_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer_kwargs</span>
 
+        <span class="nb">print</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;always_race_against&#39;</span><span class="p">))</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
 

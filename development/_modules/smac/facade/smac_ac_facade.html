@@ -280,7 +280,7 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -321,7 +321,7 @@
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span><span class="p">,</span> <span class="n">get_rng</span>
 <span class="c1"># utils</span>
-<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span><span class="p">,</span> <span class="n">TrajEntry</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -474,6 +474,7 @@
             <span class="c1"># but set the self-output_dir to the dir.</span>
             <span class="c1"># necessary because we want to write traj to new output-dir in CLI.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span>
                 <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
@@ -643,11 +644,13 @@
                             <span class="s2">&quot;call string in the scenario file.&quot;</span>
                             <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">))</span>
 
+        <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">)</span>
         <span class="c1"># Check that overall objective and tae objective are the same</span>
-        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">:</span>
+        <span class="c1"># TODO: remove these two ignores once the scenario object knows all its attributes!</span>
+        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Objective for the target algorithm runner and &quot;</span>
                              <span class="s2">&quot;the scenario must be the same, but are &#39;</span><span class="si">%s</span><span class="s2">&#39; and &quot;</span>
-                             <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>
+                             <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
 
         <span class="c1"># initialize intensification</span>
         <span class="n">intensifier_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
@@ -804,7 +807,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SMAC4AC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4AC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimizes the algorithm provided in scenario (given in constructor)</span>
 
@@ -839,7 +842,7 @@
                  <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">):</span>
+                 <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create validator-object and run validation, using</span>
 <span class="sd">        scenario-information, runhistory from smbo and tae_runner from intensify</span>
@@ -873,7 +876,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                     <span class="n">use_epm</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SMAC4AC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4AC.get_tae_runner"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner">[docs]</a>    <span class="k">def</span> <span class="nf">get_tae_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ExecuteTARun</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns target algorithm evaluator (TAE) object which can run the</span>
 <span class="sd">        target algorithm given a configuration</span>
@@ -885,7 +888,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
 
-<div class="viewcode-block" id="SMAC4AC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4AC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the runhistory (i.e., all evaluated configurations and</span>
 <span class="sd">         the results).</span>
@@ -900,7 +903,7 @@
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span></div>
 
-<div class="viewcode-block" id="SMAC4AC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4AC.get_trajectory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TrajEntry</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the trajectory (i.e., all incumbent configurations over</span>
 <span class="sd">        time).</span>
@@ -915,7 +918,7 @@
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
 
-<div class="viewcode-block" id="SMAC4AC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4AC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Simple interface to obtain all data in runhistory in ``X, y`` format.</span>
 
