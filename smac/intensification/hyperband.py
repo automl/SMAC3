@@ -59,6 +59,9 @@ class Hyperband(SuccessiveHalving):
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adpative cutoff)
+    min_chall: int
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+        raise an exception if a value larger than 1 is passed.
     """
 
     def __init__(self,
@@ -76,7 +79,8 @@ class Hyperband(SuccessiveHalving):
                  run_obj_time: bool = True,
                  n_seeds: typing.Optional[int] = None,
                  instance_order: str = 'shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,) -> None:
+                 adaptive_capping_slackfactor: float = 1.2,
+                 min_chall: int = 1,) -> None:
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -93,7 +97,8 @@ class Hyperband(SuccessiveHalving):
                          run_obj_time=run_obj_time,
                          n_seeds=n_seeds,
                          instance_order=instance_order,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+                         min_chall=min_chall,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)

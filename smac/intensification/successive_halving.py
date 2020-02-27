@@ -86,6 +86,9 @@ class SuccessiveHalving(AbstractRacer):
         slack factor of adpative capping (factor * adaptive cutoff)
     inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
+    min_chall: int
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+        raise an exception if a value larger than 1 is passed.
     """
 
     def __init__(self,
@@ -105,7 +108,9 @@ class SuccessiveHalving(AbstractRacer):
                  n_seeds: typing.Optional[int] = None,
                  instance_order: typing.Optional[str] = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None):
+                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+                 min_chall: int = 1,
+                 ):
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -116,10 +121,14 @@ class SuccessiveHalving(AbstractRacer):
                          cutoff=cutoff,
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+                         min_chall=min_chall)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
+
+        if self.min_chall > 1:
+            raise ValueError('Successive Halving cannot handle argument `min_chall` > 1.')
 
         # INSTANCES
 
@@ -141,9 +150,9 @@ class SuccessiveHalving(AbstractRacer):
             else:
                 seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
                 if self.n_seeds == 1:
-                    self.logger.warn('The target algorithm is specified to be non deterministic, '
-                                     'but number of seeds to evaluate are set to 1. '
-                                     'Consider setting `n_seeds` > 1.')
+                    self.logger.warning('The target algorithm is specified to be non deterministic, '
+                                        'but number of seeds to evaluate are set to 1. '
+                                        'Consider setting `n_seeds` > 1.')
 
             # storing instances & seeds as tuples
             self.inst_seed_pairs = [(i, s) for s in seeds for i in self.instances]

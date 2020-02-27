@@ -67,8 +67,7 @@ class Intensifier(AbstractRacer):
     adaptive_capping_slackfactor: float
         slack factor of adpative capping (factor * adpative cutoff)
     min_chall: int
-        minimal number of challengers to be considered
-        (even if time_bound is exhausted earlier)
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
     def __init__(self, tae_runner: ExecuteTARun,
@@ -99,7 +98,8 @@ class Intensifier(AbstractRacer):
                          run_obj_time=run_obj_time,
                          minR=minR,
                          maxR=maxR,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+                         min_chall=min_chall,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -112,7 +112,6 @@ class Intensifier(AbstractRacer):
             raise ValueError("run_limit must be > 1")
 
         self.use_ta_time_bound = use_ta_time_bound
-        self.min_chall = min_chall
 
         # stage variables
         # the intensification procedure is divided into 3 'stages':

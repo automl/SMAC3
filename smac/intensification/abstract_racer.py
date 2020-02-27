@@ -59,6 +59,8 @@ class AbstractRacer(object):
         intensifiy).
     adaptive_capping_slackfactor: float
         slack factor of adpative capping (factor * adpative cutoff)
+    min_chall: int
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
     def __init__(self,
@@ -73,7 +75,8 @@ class AbstractRacer(object):
                  run_obj_time: bool = True,
                  minR: int = 1,
                  maxR: int = 2000,
-                 adaptive_capping_slackfactor: float = 1.2,):
+                 adaptive_capping_slackfactor: float = 1.2,
+                 min_chall: int = 1,):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -88,10 +91,10 @@ class AbstractRacer(object):
         self.run_obj_time = run_obj_time
         self.tae_runner = tae_runner
 
-        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
-
         self.minR = minR
         self.maxR = maxR
+        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
+        self.min_chall = min_chall
 
         # instances
         if instances is None:
