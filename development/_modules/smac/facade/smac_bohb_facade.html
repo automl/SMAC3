@@ -330,6 +330,7 @@
         <span class="c1"># select Hyperband as the intensifier ensure respective parameters are provided</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hyperband</span>
         <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>
+        <span class="n">intensifier_kwargs</span><span class="p">[</span><span class="s1">&#39;min_chall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">intensifier_kwargs</span>
         <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
 

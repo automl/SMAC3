@@ -346,8 +346,7 @@
 <span class="sd">    adaptive_capping_slackfactor: float</span>
 <span class="sd">        slack factor of adpative capping (factor * adpative cutoff)</span>
 <span class="sd">    min_chall: int</span>
-<span class="sd">        minimal number of challengers to be considered</span>
-<span class="sd">        (even if time_bound is exhausted earlier)</span>
+<span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
@@ -378,7 +377,8 @@
                          <span class="n">run_obj_time</span><span class="o">=</span><span class="n">run_obj_time</span><span class="p">,</span>
                          <span class="n">minR</span><span class="o">=</span><span class="n">minR</span><span class="p">,</span>
                          <span class="n">maxR</span><span class="o">=</span><span class="n">maxR</span><span class="p">,</span>
-                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,)</span>
+                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
+                         <span class="n">min_chall</span><span class="o">=</span><span class="n">min_chall</span><span class="p">,)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -391,7 +391,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;run_limit must be &gt; 1&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">use_ta_time_bound</span> <span class="o">=</span> <span class="n">use_ta_time_bound</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_chall</span> <span class="o">=</span> <span class="n">min_chall</span>
 
         <span class="c1"># stage variables</span>
         <span class="c1"># the intensification procedure is divided into 3 &#39;stages&#39;:</span>

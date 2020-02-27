@@ -288,7 +288,7 @@
 <span id="smac-intensification-abstract-racer-module"></span><h1>smac.intensification.abstract_racer module<a class="headerlink" href="#module-smac.intensification.abstract_racer" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.intensification.abstract_racer.AbstractRacer">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Optional[Mapping[str, numpy.ndarray]] = None, cutoff: Optional[float] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Optional[Mapping[str, numpy.ndarray]] = None, cutoff: Optional[float] = None, deterministic: bool = False, run_obj_time: bool = True, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, min_chall: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all racing methods</p>
 <p>The “intensification” is designed to be spread across multiple <code class="docutils literal notranslate"><span class="pre">eval_challenger()</span></code> runs.
@@ -312,6 +312,7 @@ intensify).</p></li>
 <li><p><strong>maxR</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
 intensifiy).</p></li>
 <li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</p></li>
+<li><p><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier)</p></li>
 </ul>
 </dd>
 </dl>
