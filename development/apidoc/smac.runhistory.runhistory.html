@@ -580,7 +580,7 @@ multiple times</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory._cost">
-<code class="sig-name descname">_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[List[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; List[float]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory._cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._cost" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[Iterable[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; List[float]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory._cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return array of all costs for the given config for further calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -625,7 +625,7 @@ information from TA or fields such as start time and host_id)</p></li>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.average_cost">
-<code class="sig-name descname">average_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[List[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">average_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[Iterable[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration.</p>
 <p>This is the mean of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -803,7 +803,7 @@ moving average;</p>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.sum_cost">
-<code class="sig-name descname">sum_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[List[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sum_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[Iterable[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">

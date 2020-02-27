@@ -305,9 +305,9 @@
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s2">&quot;run_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">run_id</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

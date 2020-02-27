@@ -350,7 +350,7 @@ performance on configs in runhistory (depends on self.predict_incumbent)</p>
 
 <dl class="method">
 <dt id="smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">
-<code class="sig-name descname">choose_next</code><span class="sig-paren">(</span><em class="sig-param">incumbent_value: float = None</em><span class="sig-paren">)</span> &#x2192; Iterable<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">choose_next</code><span class="sig-paren">(</span><em class="sig-param">incumbent_value: float = None</em><span class="sig-paren">)</span> &#x2192; Iterator[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The
 suggested configurations depend on the argument <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> to
 the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>

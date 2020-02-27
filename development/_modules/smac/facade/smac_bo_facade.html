@@ -282,6 +282,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_gp</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gaussian_process_mcmc</span> <span class="kn">import</span> <span class="n">GaussianProcessMCMC</span><span class="p">,</span> <span class="n">GaussianProcess</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="kn">import</span> <span class="n">HorseshoePrior</span><span class="p">,</span> <span class="n">LognormalPrior</span>
 <span class="kn">from</span> <span class="nn">smac.epm.gp_kernels</span> <span class="kn">import</span> <span class="n">ConstantKernel</span><span class="p">,</span> <span class="n">Matern</span><span class="p">,</span> <span class="n">WhiteKernel</span><span class="p">,</span> <span class="n">HammingKernel</span>
@@ -401,7 +402,7 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s2">&quot;gp&quot;</span><span class="p">:</span>
-                <span class="n">model_class</span> <span class="o">=</span> <span class="n">GaussianProcess</span>
+                <span class="n">model_class</span> <span class="o">=</span> <span class="n">GaussianProcess</span>  <span class="c1"># type: typing.Type[BaseModel]</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_class</span>
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;kernel&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kernel</span>
                 <span class="n">model_kwargs</span><span class="p">[</span><span class="s1">&#39;normalize_y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -454,7 +455,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">1000</span>    <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="c1"># activate predict incumbent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="kc">True</span></div>
 </pre></div>

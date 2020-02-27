@@ -336,7 +336,7 @@ intensify).</p></li>
 
 <dl class="method">
 <dt id="smac.intensification.intensification.Intensifier._generate_challengers">
-<code class="sig-name descname">_generate_challengers</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser]</em><span class="sig-paren">)</span> &#x2192; Optional[Iterator[ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_generate_challengers</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser]</em><span class="sig-paren">)</span> &#x2192; Iterator[Optional[ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retuns a sequence of challengers to use in intensification
 If challengers are not provided, then optimizer will be used to generate the challenger list</p>
 <dl class="field-list simple">

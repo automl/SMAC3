@@ -353,10 +353,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Feature Space has to be the same for both scenarios (</span><span class="si">%d</span><span class="s2"> vs </span><span class="si">%d</span><span class="s2">).&quot;</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">scenario</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span> <span class="n">in_scenario</span><span class="o">.</span><span class="n">n_features</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span> <span class="o">!=</span> <span class="n">in_scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span> <span class="o">!=</span> <span class="n">in_scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PCS of both scenarios have to be identical.&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">!=</span> <span class="n">in_scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">!=</span> <span class="n">in_scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cutoffs of both scenarios have to be identical.&quot;</span><span class="p">)</span>
 
         <span class="n">scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">in_scenario</span><span class="o">.</span><span class="n">feature_dict</span><span class="p">)</span>

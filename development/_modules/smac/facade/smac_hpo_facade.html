@@ -372,7 +372,7 @@
 
         <span class="c1"># better improve acquisition function optimization</span>
         <span class="c1"># 2. more randomly sampled configurations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">10000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">acq_opt_challengers</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 
         <span class="c1"># activate predict incumbent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">predict_incumbent</span> <span class="o">=</span> <span class="kc">True</span></div>

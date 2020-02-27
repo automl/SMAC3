@@ -293,6 +293,8 @@
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
 
+<span class="n">_config_to_run_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span>
+
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Ashwin Raaghav Narayanan&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2019, ML4AAD&quot;</span>
@@ -384,7 +386,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">5</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mf">0.</span>
 
         <span class="c1"># attributes for sampling next configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">True</span>
@@ -487,7 +489,7 @@
         <span class="k">if</span> <span class="n">challengers</span><span class="p">:</span>
             <span class="c1"># iterate over challengers provided</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using challengers provided&quot;</span><span class="p">)</span>
-            <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>
+            <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">challengers</span><span class="p">)</span>  <span class="c1"># type: _config_to_run_type</span>
         <span class="k">elif</span> <span class="n">chooser</span><span class="p">:</span>
             <span class="c1"># generating challengers on-the-fly if optimizer is given</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Generating new challenger from optimizer&quot;</span><span class="p">)</span>
@@ -498,6 +500,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Time to select next challenger: </span><span class="si">%.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
 
         <span class="c1"># select challenger from the generators</span>
+        <span class="k">assert</span> <span class="n">chall_gen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">challenger</span> <span class="ow">in</span> <span class="n">chall_gen</span><span class="p">:</span>
             <span class="c1"># repetitions allowed</span>
             <span class="k">if</span> <span class="n">repeat_configs</span><span class="p">:</span>

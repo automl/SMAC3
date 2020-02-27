@@ -291,15 +291,12 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">InstSeedBudgetKey</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">BudgetExhaustedException</span><span class="p">,</span> <span class="n">CappedRunException</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span><span class="p">,</span> <span class="n">_config_to_run_type</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Katharina Eggensperger, Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
-
-
-<span class="n">_config_to_run_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="IntensifierStage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.IntensifierStage">[docs]</a><span class="k">class</span> <span class="nc">IntensifierStage</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -409,7 +406,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_challenger</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: _config_to_run_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([])</span>  <span class="c1"># type: _config_to_run_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># racing related variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[InstSeedBudgetKey]</span>
@@ -804,9 +802,10 @@
                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span><span class="p">):</span>
 
             <span class="c1"># this is a new intensification run, get the next list of configurations to run</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_challengers</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span> <span class="n">chooser</span><span class="o">=</span><span class="n">chooser</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span><span class="p">:</span>
+                <span class="n">configs_to_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_challengers</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span> <span class="n">chooser</span><span class="o">=</span><span class="n">chooser</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">_config_to_run_type</span><span class="p">,</span> <span class="n">configs_to_run</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="c1"># pick next configuration from the generator</span>
             <span class="k">try</span><span class="p">:</span>
@@ -825,7 +824,7 @@
 
                 <span class="c1"># reset time bound related params since this is a new configuration</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mf">0.0</span>
 
             <span class="k">return</span> <span class="n">challenger</span><span class="p">,</span> <span class="kc">True</span>
 
@@ -864,10 +863,6 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No configurations/chooser provided. Cannot generate challenger!&#39;</span><span class="p">)</span>
 
-        <span class="c1"># ensuring a generator is returned</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chall_gen</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">chall_gen</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">chall_gen</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">chall_gen</span></div>
 
 <div class="viewcode-block" id="Intensifier._update_trackers"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._update_trackers">[docs]</a>    <span class="k">def</span> <span class="nf">_update_trackers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -877,7 +872,8 @@
         <span class="c1"># track iterations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iters</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># reset for a new iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_run</span> <span class="o">=</span> <span class="mi">0</span>

@@ -336,7 +336,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">in_reader</span> <span class="o">=</span> <span class="n">InputReader</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out_writer</span> <span class="o">=</span> <span class="n">OutputWriter</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[str]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, typing.Any]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_arguments</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">CMDReader</span><span class="p">()</span><span class="o">.</span><span class="n">scen_cmd_actions</span><span class="p">)</span>

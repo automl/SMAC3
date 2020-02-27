@@ -277,8 +277,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.epm.rf_with_instances</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pyrfr</span> <span class="kn">import</span> <span class="n">regression</span>
@@ -410,8 +409,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_trees</span><span class="p">,</span> <span class="n">max_num_nodes</span><span class="p">,</span> <span class="n">do_bootstrapping</span><span class="p">,</span>
                        <span class="n">n_points_per_tree</span><span class="p">,</span> <span class="n">ratio_features</span><span class="p">,</span> <span class="n">min_samples_split</span><span class="p">,</span>
                        <span class="n">min_samples_leaf</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">,</span> <span class="n">eps_purity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RandomForestWithInstances._train"><a class="viewcode-back" href="../../../apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances._train">[docs]</a>    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;RandomForestWithInstances&#39;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Trains the random forest on X and y.</span>

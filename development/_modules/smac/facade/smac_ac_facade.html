@@ -280,7 +280,7 @@
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -370,7 +370,7 @@
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Stats</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">smbo_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">smbo_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -465,7 +465,7 @@
             <span class="c1"># initial random number generator</span>
             <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">create_output_directory</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>   <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="n">run_id</span><span class="p">,</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">run_id</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
             <span class="c1"># output-directory is created in CLI when restoring from a</span>
             <span class="c1"># folder. calling the function again in the facade results in two</span>
@@ -473,17 +473,18 @@
             <span class="c1"># restoring, the output-folder exists already and we omit creating it,</span>
             <span class="c1"># but set the self-output_dir to the dir.</span>
             <span class="c1"># necessary because we want to write traj to new output-dir in CLI.</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">)</span>   <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="n">rng</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span>
-                <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span>
-                                                           <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>
+                <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span> <span class="ow">is</span> <span class="kc">True</span>   <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="s1">&#39;tuner_timeout&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Optimizing a deterministic scenario for quality without a tuner timeout - will make &#39;</span>
                              <span class="s1">&#39;SMAC deterministic and only evaluate one configuration per iteration!&#39;</span><span class="p">)</span>
-            <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>
-            <span class="n">scenario</span><span class="o">.</span><span class="n">min_chall</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">intensification_percentage</span> <span class="o">=</span> <span class="mf">1e-10</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">scenario</span><span class="o">.</span><span class="n">min_chall</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 
         <span class="n">scenario</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
 
@@ -493,9 +494,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">Stats</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Runtime as objective automatically activates log(y) transformation&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">=</span> <span class="s2">&quot;LOG&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">=</span> <span class="s2">&quot;LOG&quot;</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 
         <span class="c1"># initialize empty runhistory</span>
         <span class="n">runhistory_def_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -504,7 +505,7 @@
         <span class="k">if</span> <span class="n">runhistory</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">runhistory</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">(</span><span class="o">**</span><span class="n">runhistory_def_kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">runhistory</span><span class="p">):</span>
-            <span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span><span class="p">(</span><span class="o">**</span><span class="n">runhistory_def_kwargs</span><span class="p">)</span>
+            <span class="n">runhistory</span> <span class="o">=</span> <span class="n">runhistory</span><span class="p">(</span><span class="o">**</span><span class="n">runhistory_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[operator] # noqa F821</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">):</span>
             <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
@@ -517,23 +518,25 @@
             <span class="n">rand_conf_chooser_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">random_configuration_chooser_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">random_configuration_chooser</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="s1">&#39;prob&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rand_conf_chooser_kwargs</span><span class="p">:</span>
-                <span class="n">rand_conf_chooser_kwargs</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rand_prob</span>
-            <span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">ChooserProb</span><span class="p">(</span><span class="o">**</span><span class="n">rand_conf_chooser_kwargs</span><span class="p">)</span>
+                <span class="n">rand_conf_chooser_kwargs</span><span class="p">[</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rand_prob</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">random_configuration_chooser_instance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">ChooserProb</span><span class="p">(</span><span class="o">**</span><span class="n">rand_conf_chooser_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+            <span class="p">)</span>  <span class="c1"># type: RandomConfigurationChooser</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">):</span>
-            <span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span><span class="p">(</span><span class="o">**</span><span class="n">rand_conf_chooser_kwargs</span><span class="p">)</span>
+            <span class="n">random_configuration_chooser_instance</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span><span class="p">(</span><span class="o">**</span><span class="n">rand_conf_chooser_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">,</span> <span class="n">RandomConfigurationChooser</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;random_configuration_chooser has to be&quot;</span>
                              <span class="s2">&quot; a class or object of RandomConfigurationChooser&quot;</span><span class="p">)</span>
 
         <span class="c1"># reset random number generator in config space to draw different</span>
         <span class="c1"># random configurations with each seed given to SMAC</span>
-        <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 
         <span class="c1"># initial Trajectory Logger</span>
         <span class="n">traj_logger</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
 
         <span class="c1"># initial EPM</span>
-        <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>
+        <span class="n">types</span><span class="p">,</span> <span class="n">bounds</span> <span class="o">=</span> <span class="n">get_types</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">feature_array</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="n">model_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="n">types</span><span class="p">,</span>
             <span class="s1">&#39;bounds&#39;</span><span class="p">:</span> <span class="n">bounds</span><span class="p">,</span>
@@ -545,36 +548,40 @@
             <span class="n">model_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">model_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">{</span>
-                <span class="s1">&#39;log_y&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">],</span>
-                <span class="s1">&#39;num_trees&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">,</span>
-                <span class="s1">&#39;do_bootstrapping&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">,</span>
-                <span class="s1">&#39;ratio_features&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">,</span>
-                <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">,</span>
-                <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">,</span>
-                <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">,</span>
+                <span class="s1">&#39;log_y&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">],</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;num_trees&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_num_trees</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;do_bootstrapping&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_do_bootstrapping</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;ratio_features&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_ratio_features</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;min_samples_split&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_split</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_min_samples_leaf</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;max_depth&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">rf_max_depth</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_def_kwargs</span><span class="p">:</span>
                     <span class="n">model_def_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s1">&#39;configspace&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="o">**</span><span class="n">model_def_kwargs</span><span class="p">)</span>
+            <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s1">&#39;configspace&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">model_instance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">RandomForestWithInstances</span><span class="p">(</span><span class="o">**</span><span class="n">model_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+            <span class="p">)</span>  <span class="c1"># type: AbstractEPM</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
-            <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s1">&#39;configspace&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">model_def_kwargs</span><span class="p">)</span>
+            <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s1">&#39;configspace&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">model_instance</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">model_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Model not recognized: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">model</span><span class="p">)))</span>
 
         <span class="c1"># initial acquisition function</span>
-        <span class="n">acq_def_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">}</span>
+        <span class="n">acq_def_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model_instance</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">acquisition_function_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acq_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">acquisition_function_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">acquisition_function</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]:</span>
-                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">LogEI</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">acquisition_function_instance</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">LogEI</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="p">)</span>  <span class="c1"># type: AbstractAcquisitionFunction</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>
+                <span class="n">acquisition_function_instance</span> <span class="o">=</span> <span class="n">EI</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">):</span>
-            <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">acquisition_function</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>
+            <span class="n">acquisition_function_instance</span> <span class="o">=</span> <span class="n">acquisition_function</span><span class="p">(</span><span class="o">**</span><span class="n">acq_def_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument acquisition_function must be None or an object implementing the &quot;</span>
@@ -582,29 +589,31 @@
                 <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">integrate_acquisition_function</span><span class="p">:</span>
-            <span class="n">acquisition_function</span> <span class="o">=</span> <span class="n">IntegratedAcquisitionFunction</span><span class="p">(</span>
-                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="n">acquisition_function_instance</span> <span class="o">=</span> <span class="n">IntegratedAcquisitionFunction</span><span class="p">(</span>
+                <span class="n">acquisition_function</span><span class="o">=</span><span class="n">acquisition_function_instance</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">acq_def_kwargs</span>
             <span class="p">)</span>
 
         <span class="c1"># initialize optimizer on acquisition function</span>
         <span class="n">acq_func_opt_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;acquisition_function&#39;</span><span class="p">:</span> <span class="n">acquisition_function</span><span class="p">,</span>
-            <span class="s1">&#39;config_space&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
+            <span class="s1">&#39;acquisition_function&#39;</span><span class="p">:</span> <span class="n">acquisition_function_instance</span><span class="p">,</span>
+            <span class="s1">&#39;config_space&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acq_func_opt_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">acquisition_function_optimizer_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">{</span>
-                <span class="s1">&#39;max_steps&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">sls_max_steps</span><span class="p">,</span>
-                <span class="s1">&#39;n_steps_plateau_walk&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">sls_n_steps_plateau_walk</span><span class="p">,</span>
+                <span class="s1">&#39;max_steps&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">sls_max_steps</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;n_steps_plateau_walk&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">sls_n_steps_plateau_walk</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">acq_func_opt_kwargs</span><span class="p">:</span>
                     <span class="n">acq_func_opt_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>
+            <span class="n">acquisition_function_optimizer_instance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+            <span class="p">)</span>  <span class="c1"># type: AcquisitionFunctionMaximizer</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">acquisition_function_optimizer</span><span class="p">):</span>
-            <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>
+            <span class="n">acquisition_function_optimizer_instance</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument acquisition_function_optimizer must be None or an object implementing the &quot;</span>
@@ -619,23 +628,25 @@
             <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
             <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
             <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
-            <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>
-            <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>
-            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>
+            <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">tae_runner_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tae_runner_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="s1">&#39;ta&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tae_def_kwargs</span><span class="p">:</span>
-            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta</span>
+            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">if</span> <span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta</span>
-            <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>
+            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+            <span class="p">)</span>  <span class="c1"># type: ExecuteTARun</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
-            <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>
+            <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tae_runner</span>
-            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_pynisher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">limit_resources</span>
-            <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>
+            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_pynisher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">limit_resources</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Argument &#39;tae_runner&#39; is </span><span class="si">%s</span><span class="s2">, but must be &quot;</span>
                             <span class="s2">&quot;either None, a callable or an object implementing &quot;</span>
@@ -644,43 +655,44 @@
                             <span class="s2">&quot;call string in the scenario file.&quot;</span>
                             <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">))</span>
 
-        <span class="n">tae_runner</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">tae_runner</span><span class="p">)</span>
         <span class="c1"># Check that overall objective and tae objective are the same</span>
         <span class="c1"># TODO: remove these two ignores once the scenario object knows all its attributes!</span>
-        <span class="k">if</span> <span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
+        <span class="k">if</span> <span class="n">tae_runner_instance</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">!=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">:</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Objective for the target algorithm runner and &quot;</span>
                              <span class="s2">&quot;the scenario must be the same, but are &#39;</span><span class="si">%s</span><span class="s2">&#39; and &quot;</span>
-                             <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
+                             <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner_instance</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
 
         <span class="c1"># initialize intensification</span>
         <span class="n">intensifier_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;tae_runner&#39;</span><span class="p">:</span> <span class="n">tae_runner</span><span class="p">,</span>
+            <span class="s1">&#39;tae_runner&#39;</span><span class="p">:</span> <span class="n">tae_runner_instance</span><span class="p">,</span>
             <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
             <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
-            <span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span>
-            <span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
-            <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
-            <span class="s1">&#39;run_obj_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>
-            <span class="s1">&#39;instance_specifics&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>
-            <span class="s1">&#39;adaptive_capping_slackfactor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>
+            <span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;run_obj_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;instance_specifics&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;adaptive_capping_slackfactor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">Intensifier</span><span class="p">)</span>
             <span class="ow">or</span> <span class="p">(</span><span class="n">intensifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">Intensifier</span><span class="p">))</span>
         <span class="p">):</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;always_race_against&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_ta_time_bound&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;minR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">minR</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;maxR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;min_chall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span>
+            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;always_race_against&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_ta_time_bound&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;minR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">minR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;maxR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;min_chall&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">if</span> <span class="n">intensifier_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">intensifier_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">intensifier_kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">intensifier</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>
+            <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">Intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+            <span class="p">)</span>  <span class="c1"># type: AbstractRacer</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">):</span>
-            <span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>
+            <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="n">intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument intensifier must be None or an object implementing the Intensifier, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
@@ -693,10 +705,10 @@
                 <span class="s2">&quot;Either use initial_design or initial_configurations; but not both&quot;</span><span class="p">)</span>
 
         <span class="n">init_design_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;cs&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>
+            <span class="s1">&#39;cs&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
-            <span class="s1">&#39;ta_run_limit&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">,</span>
+            <span class="s1">&#39;ta_run_limit&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;configs&#39;</span><span class="p">:</span> <span class="n">initial_configurations</span><span class="p">,</span>
             <span class="s1">&#39;n_configs_x_params&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
             <span class="s1">&#39;max_config_fracs&#39;</span><span class="p">:</span> <span class="mf">0.0</span>
@@ -704,25 +716,25 @@
         <span class="k">if</span> <span class="n">initial_design_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">init_design_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">initial_design_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_configurations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">initial_design</span> <span class="o">=</span> <span class="n">InitialDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">InitialDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">initial_design</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                 <span class="n">init_design_def_kwargs</span><span class="p">[</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">DefaultConfiguration</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;RANDOM&quot;</span><span class="p">:</span>
+                <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">DefaultConfiguration</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;RANDOM&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                 <span class="n">init_design_def_kwargs</span><span class="p">[</span><span class="s1">&#39;max_config_fracs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">RandomConfigurations</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;LHD&quot;</span><span class="p">:</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">LHDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;FACTORIAL&quot;</span><span class="p">:</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">FactorialInitialDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;SOBOL&quot;</span><span class="p">:</span>
-                <span class="n">initial_design</span> <span class="o">=</span> <span class="n">SobolDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+                <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">RandomConfigurations</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;LHD&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">LHDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;FACTORIAL&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">FactorialInitialDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span> <span class="o">==</span> <span class="s2">&quot;SOBOL&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">SobolDesign</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know what kind of initial_incumbent &quot;</span>
-                                 <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is&quot;</span> <span class="o">%</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span><span class="p">)</span>
+                                 <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is&quot;</span> <span class="o">%</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_incumbent</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">initial_design</span><span class="p">):</span>
-            <span class="n">initial_design</span> <span class="o">=</span> <span class="n">initial_design</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
+            <span class="n">initial_design_instance</span> <span class="o">=</span> <span class="n">initial_design</span><span class="p">(</span><span class="o">**</span><span class="n">init_design_def_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument initial_design must be None or an object implementing the InitialDesign, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
@@ -732,17 +744,17 @@
         <span class="c1"># if we log the performance data,</span>
         <span class="c1"># the RFRImputator will already get</span>
         <span class="c1"># log transform data from the runhistory</span>
-        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]:</span>
-            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)]))</span>
-            <span class="n">threshold</span> <span class="o">=</span> <span class="n">cutoff</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">]:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)]))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">cutoff</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">)</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)])</span>
-            <span class="n">threshold</span> <span class="o">=</span> <span class="n">cutoff</span> <span class="o">*</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span>
-        <span class="n">num_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+            <span class="n">cutoff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">)])</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">threshold</span> <span class="o">=</span> <span class="n">cutoff</span> <span class="o">*</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="n">num_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="n">imputor</span> <span class="o">=</span> <span class="n">RFRImputator</span><span class="p">(</span><span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                                <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
                                <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
-                               <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                               <span class="n">model</span><span class="o">=</span><span class="n">model_instance</span><span class="p">,</span>
                                <span class="n">change_threshold</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
                                <span class="n">max_iter</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
@@ -765,21 +777,23 @@
             <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory2epm_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">runhistory2epm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;runtime&#39;</span><span class="p">:</span>
-                <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
+                <span class="n">rh2epm</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="p">)</span>  <span class="c1"># type: AbstractRunHistory2EPM</span>
             <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;NONE&quot;</span><span class="p">:</span>
-                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>
-                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">:</span>
-                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;INVS&quot;</span><span class="p">:</span>
-                    <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4InvScaledCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;NONE&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                    <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOG&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                    <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;LOGS&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                    <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogScaledCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="k">elif</span> <span class="n">scenario</span><span class="o">.</span><span class="n">transform_y</span> <span class="o">==</span> <span class="s2">&quot;INVS&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                    <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4InvScaledCost</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown run objective: </span><span class="si">%s</span><span class="s1">. Should be either &#39;</span>
                                  <span class="s1">&#39;quality or runtime.&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">runhistory2epm</span><span class="p">):</span>
-            <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">runhistory2epm</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>
+            <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">runhistory2epm</span><span class="p">(</span><span class="o">**</span><span class="n">r2e_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument runhistory2epm must be None or an object implementing the RunHistory2EPM, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
@@ -789,23 +803,23 @@
         <span class="n">smbo_args</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;scenario&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="p">,</span>
             <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-            <span class="s1">&#39;initial_design&#39;</span><span class="p">:</span> <span class="n">initial_design</span><span class="p">,</span>
+            <span class="s1">&#39;initial_design&#39;</span><span class="p">:</span> <span class="n">initial_design_instance</span><span class="p">,</span>
             <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
-            <span class="s1">&#39;runhistory2epm&#39;</span><span class="p">:</span> <span class="n">runhistory2epm</span><span class="p">,</span>
-            <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier</span><span class="p">,</span>
+            <span class="s1">&#39;runhistory2epm&#39;</span><span class="p">:</span> <span class="n">rh2epm</span><span class="p">,</span>
+            <span class="s1">&#39;intensifier&#39;</span><span class="p">:</span> <span class="n">intensifier_instance</span><span class="p">,</span>
             <span class="s1">&#39;num_run&#39;</span><span class="p">:</span> <span class="n">run_id</span><span class="p">,</span>
-            <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
-            <span class="s1">&#39;acq_optimizer&#39;</span><span class="p">:</span> <span class="n">acquisition_function_optimizer</span><span class="p">,</span>
-            <span class="s1">&#39;acquisition_func&#39;</span><span class="p">:</span> <span class="n">acquisition_function</span><span class="p">,</span>
+            <span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="n">model_instance</span><span class="p">,</span>
+            <span class="s1">&#39;acq_optimizer&#39;</span><span class="p">:</span> <span class="n">acquisition_function_optimizer_instance</span><span class="p">,</span>
+            <span class="s1">&#39;acquisition_func&#39;</span><span class="p">:</span> <span class="n">acquisition_function_instance</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
             <span class="s1">&#39;restore_incumbent&#39;</span><span class="p">:</span> <span class="n">restore_incumbent</span><span class="p">,</span>
-            <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">:</span> <span class="n">random_configuration_chooser</span>
-        <span class="p">}</span>
+            <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">:</span> <span class="n">random_configuration_chooser_instance</span>
+        <span class="p">}</span>  <span class="c1"># type: Dict[str, Any]</span>
 
         <span class="k">if</span> <span class="n">smbo_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">SMBO</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">SMBO</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">smbo_class</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
 
 <div class="viewcode-block" id="SMAC4AC.optimize"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -916,26 +930,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;trajectory&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;SMAC was not fitted yet. Call optimize() prior &#39;</span>
                              <span class="s1">&#39;to accessing the runhistory.&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div>
-
-<div class="viewcode-block" id="SMAC4AC.get_X_y"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_X_y">[docs]</a>    <span class="k">def</span> <span class="nf">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Simple interface to obtain all data in runhistory in ``X, y`` format.</span>
-
-<span class="sd">        Uses</span>
-<span class="sd">        :meth:`smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y()`.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        X: numpy.ndarray</span>
-<span class="sd">            matrix of all configurations (+ instance features)</span>
-<span class="sd">        y: numpy.ndarray</span>
-<span class="sd">            vector of cost values; can include censored runs</span>
-<span class="sd">        cen: numpy.ndarray</span>
-<span class="sd">            vector of bools indicating whether the y-value is censored</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">get_X_y</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span></div></div>
 </pre></div>
 
            </div>
