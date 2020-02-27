@@ -63,22 +63,20 @@ class AbstractRacer(object):
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
-    def __init__(
-        self,
-        tae_runner: ExecuteTARun,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Optional[typing.Mapping[str, np.ndarray]] = None,
-        cutoff: typing.Optional[float] = None,
-        deterministic: bool = False,
-        run_obj_time: bool = True,
-        minR: int = 1,
-        maxR: int = 2000,
-        adaptive_capping_slackfactor: float = 1.2,
-        min_chall: int = 1,
-    ):
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
+                 stats: Stats,
+                 traj_logger: TrajLogger,
+                 rng: np.random.RandomState,
+                 instances: typing.List[str],
+                 instance_specifics: typing.Optional[typing.Mapping[str, np.ndarray]] = None,
+                 cutoff: typing.Optional[float] = None,
+                 deterministic: bool = False,
+                 run_obj_time: bool = True,
+                 minR: int = 1,
+                 maxR: int = 2000,
+                 adaptive_capping_slackfactor: float = 1.2,
+                 min_chall: int = 1,):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)

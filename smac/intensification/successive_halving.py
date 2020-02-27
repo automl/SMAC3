@@ -87,30 +87,30 @@ class SuccessiveHalving(AbstractRacer):
     inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_chall: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier)
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+        raise an exception if a value larger than 1 is passed.
     """
 
-    def __init__(
-        self,
-        tae_runner: ExecuteTARun,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, np.ndarray] = None,
-        cutoff: typing.Optional[float] = None,
-        deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
-        eta: float = 3,
-        num_initial_challengers: typing.Optional[int] = None,
-        run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
-        instance_order: typing.Optional[str] = 'shuffle_once',
-        adaptive_capping_slackfactor: float = 1.2,
-        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
-        min_chall: int = 1,
-    ):
+    def __init__(self,
+                 tae_runner: ExecuteTARun,
+                 stats: Stats,
+                 traj_logger: TrajLogger,
+                 rng: np.random.RandomState,
+                 instances: typing.List[str],
+                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
+                 cutoff: typing.Optional[float] = None,
+                 deterministic: bool = False,
+                 initial_budget: typing.Optional[float] = None,
+                 max_budget: typing.Optional[float] = None,
+                 eta: float = 3,
+                 num_initial_challengers: typing.Optional[int] = None,
+                 run_obj_time: bool = True,
+                 n_seeds: typing.Optional[int] = None,
+                 instance_order: typing.Optional[str] = 'shuffle_once',
+                 adaptive_capping_slackfactor: float = 1.2,
+                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+                 min_chall: int = 1,
+                 ):
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -150,9 +150,9 @@ class SuccessiveHalving(AbstractRacer):
             else:
                 seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
                 if self.n_seeds == 1:
-                    self.logger.warn('The target algorithm is specified to be non deterministic, '
-                                     'but number of seeds to evaluate are set to 1. '
-                                     'Consider setting `n_seeds` > 1.')
+                    self.logger.warning('The target algorithm is specified to be non deterministic, '
+                                        'but number of seeds to evaluate are set to 1. '
+                                        'Consider setting `n_seeds` > 1.')
 
             # storing instances & seeds as tuples
             self.inst_seed_pairs = [(i, s) for s in seeds for i in self.instances]
