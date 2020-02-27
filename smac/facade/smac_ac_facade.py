@@ -395,16 +395,14 @@ class SMAC4AC(object):
             'run_obj_time': scenario.run_obj == "runtime",  # type: ignore[attr-defined] # noqa F821
             'instance_specifics': scenario.instance_specific,  # type: ignore[attr-defined] # noqa F821
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
+            'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         }
-        if (
-            isinstance(intensifier, Intensifier)
-            or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier))
-        ):
+        if isinstance(intensifier, Intensifier) \
+                or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):
             intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821
             intensifier_def_kwargs['use_ta_time_bound'] = scenario.use_ta_time  # type: ignore[attr-defined] # noqa F821
             intensifier_def_kwargs['minR'] = scenario.minR  # type: ignore[attr-defined] # noqa F821
             intensifier_def_kwargs['maxR'] = scenario.maxR  # type: ignore[attr-defined] # noqa F821
-            intensifier_def_kwargs['min_chall'] = scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         if intensifier_kwargs is not None:
             intensifier_def_kwargs.update(intensifier_kwargs)
 

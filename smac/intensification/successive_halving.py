@@ -86,26 +86,31 @@ class SuccessiveHalving(AbstractRacer):
         slack factor of adpative capping (factor * adaptive cutoff)
     inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
+    min_chall: int
+        minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
-    def __init__(self,
-                 tae_runner: ExecuteTARun,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 initial_budget: typing.Optional[float] = None,
-                 max_budget: typing.Optional[float] = None,
-                 eta: float = 3,
-                 num_initial_challengers: typing.Optional[int] = None,
-                 run_obj_time: bool = True,
-                 n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None):
+    def __init__(
+        self,
+        tae_runner: ExecuteTARun,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        initial_budget: typing.Optional[float] = None,
+        max_budget: typing.Optional[float] = None,
+        eta: float = 3,
+        num_initial_challengers: typing.Optional[int] = None,
+        run_obj_time: bool = True,
+        n_seeds: typing.Optional[int] = None,
+        instance_order: typing.Optional[str] = 'shuffle_once',
+        adaptive_capping_slackfactor: float = 1.2,
+        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        min_chall: int = 1,
+    ):
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -116,10 +121,14 @@ class SuccessiveHalving(AbstractRacer):
                          cutoff=cutoff,
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor)
+                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+                         min_chall=min_chall)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
+
+        if self.min_chall > 1:
+            raise ValueError('Successive Halving cannot handle argument `min_chall` > 1.')
 
         # INSTANCES
 
