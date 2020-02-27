@@ -57,7 +57,7 @@ class Scenario(object):
         self.in_reader = InputReader()
         self.out_writer = OutputWriter()
 
-        self.output_dir_for_this_run = None
+        self.output_dir_for_this_run = None  # type: typing.Optional[str]
 
         self._arguments = {}  # type: typing.Dict[str, typing.Any]
         self._arguments.update(CMDReader().scen_cmd_actions)

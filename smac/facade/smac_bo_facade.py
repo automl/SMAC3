@@ -3,6 +3,7 @@ import typing
 import numpy as np
 
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
@@ -122,7 +123,7 @@ class SMAC4BO(SMAC4AC):
                 raise ValueError()
 
             if model_type == "gp":
-                model_class = GaussianProcess
+                model_class = GaussianProcess  # type: typing.Type[BaseModel]
                 kwargs['model'] = model_class
                 model_kwargs['kernel'] = kernel
                 model_kwargs['normalize_y'] = True
@@ -175,6 +176,6 @@ class SMAC4BO(SMAC4AC):
 
         self.logger.info(self.__class__)
 
-        self.solver.scenario.acq_opt_challengers = 1000
+        self.solver.scenario.acq_opt_challengers = 1000    # type: ignore[attr-defined] # noqa F821
         # activate predict incumbent
         self.solver.epm_chooser.predict_incumbent = True

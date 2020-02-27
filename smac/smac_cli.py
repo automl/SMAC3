@@ -4,12 +4,13 @@ import logging
 import numpy as np
 import typing
 
+from smac.configspace import Configuration
 from smac.utils.io.cmd_reader import CMDReader
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.roar_facade import ROAR
-from smac.facade.experimental.hydra_facade import Hydra
-from smac.facade.experimental.psmac_facade import PSMAC
+from smac.facade.experimental.hydra_facade import Hydra  # type: ignore[attr-defined] # noqa F821
+from smac.facade.experimental.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bo_facade import SMAC4BO
 from smac.runhistory.runhistory import RunHistory
@@ -31,12 +32,12 @@ class SMACCLI(object):
 
     """Main class of SMAC"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Constructor"""
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-    def main_cli(self, commandline_arguments: typing.List[str] = None):
+    def main_cli(self, commandline_arguments: typing.Optional[typing.List[str]] = None) -> None:
         """Main function of SMAC for CLI interface"""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
@@ -77,7 +78,8 @@ class SMACCLI(object):
         # Restore state
         if main_args_.restore_state:
             root_logger.debug("Restoring state from %s...", main_args_.restore_state)
-            rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, main_args_)
+            restore_state = main_args_.restore_state
+            rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, restore_state)
 
             scen.output_dir_for_this_run = create_output_directory(
                 scen, main_args_.seed, root_logger,
@@ -94,13 +96,16 @@ class SMACCLI(object):
                 runhistory=rh,
                 in_scenario_fn_list=main_args_.warmstart_scenario,
                 in_runhistory_fn_list=main_args_.warmstart_runhistory,
-                cs=scen.cs,)
+                cs=scen.cs,  # type: ignore[attr-defined] # noqa F821
+            )
 
         if main_args_.warmstart_incumbent:
-            initial_configs = [scen.cs.get_default_configuration()]
+            initial_configs = [scen.cs.get_default_configuration()]  # type: ignore[attr-defined] # noqa F821
             for traj_fn in main_args_.warmstart_incumbent:
                 trajectory = TrajLogger.read_traj_aclib_format(
-                    fn=traj_fn, cs=scen.cs)
+                    fn=traj_fn,
+                    cs=scen.cs,  # type: ignore[attr-defined] # noqa F821
+                )
                 initial_configs.append(trajectory[-1]["incumbent"])
 
         if main_args_.mode == "SMAC4AC":
@@ -166,20 +171,24 @@ class SMACCLI(object):
         except (TAEAbortException, FirstRunCrashedException) as err:
             self.logger.error(err)
 
-    def restore_state(self, scen, args_):
+    def restore_state(
+        self,
+        scen: Scenario,
+        restore_state: str,
+    ) -> typing.Tuple[RunHistory, Stats, typing.List, typing.List]:
         """Read in files for state-restoration: runhistory, stats, trajectory.
         """
         # Check for folder and files
-        rh_path = os.path.join(args_.restore_state, "runhistory.json")
-        stats_path = os.path.join(args_.restore_state, "stats.json")
-        traj_path_aclib = os.path.join(args_.restore_state, "traj_aclib2.json")
-        traj_path_old = os.path.join(args_.restore_state, "traj_old.csv")
-        _ = os.path.join(args_.restore_state, "scenario.txt")
-        if not os.path.isdir(args_.restore_state):
+        rh_path = os.path.join(restore_state, "runhistory.json")
+        stats_path = os.path.join(restore_state, "stats.json")
+        traj_path_aclib = os.path.join(restore_state, "traj_aclib2.json")
+        traj_path_old = os.path.join(restore_state, "traj_old.csv")
+        _ = os.path.join(restore_state, "scenario.txt")
+        if not os.path.isdir(restore_state):
             raise FileNotFoundError("Could not find folder from which to restore.")
         # Load runhistory and stats
         rh = RunHistory()
-        rh.load_json(rh_path, scen.cs)
+        rh.load_json(rh_path, scen.cs)  # type: ignore[attr-defined] # noqa F821
         self.logger.debug("Restored runhistory from %s", rh_path)
         stats = Stats(scen)
         stats.load(stats_path)
@@ -190,28 +199,33 @@ class SMACCLI(object):
             traj_list_old = traj_fn.readlines()
         return rh, stats, traj_list_aclib, traj_list_old
 
-    def restore_state_after_output_dir(self, scen, stats, traj_list_aclib,
-                                       traj_list_old):
+    def restore_state_after_output_dir(
+        self,
+        scen: Scenario,
+        stats: Stats,
+        traj_list_aclib: typing.List,
+        traj_list_old: typing.List,
+    ) -> Configuration:
         """Finish processing files for state-restoration. Trajectory
         is read in, but needs to be written to new output-folder. Therefore, the
         output-dir is created. This needs to be considered in the SMAC-facade."""
         # write trajectory-list
-        traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")
-        traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")
+        traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")  # type: ignore[attr-defined] # noqa F821
+        traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")  # type: ignore[attr-defined] # noqa F821
         with open(traj_path_aclib, 'w') as traj_fn:
             traj_fn.writelines(traj_list_aclib)
         with open(traj_path_old, 'w') as traj_fn:
             traj_fn.writelines(traj_list_old)
         # read trajectory to retrieve incumbent
         # TODO replace this with simple traj_path_aclib?
-        trajectory = TrajLogger.read_traj_aclib_format(fn=traj_path_aclib, cs=scen.cs)
+        trajectory = TrajLogger.read_traj_aclib_format(fn=traj_path_aclib, cs=scen.cs)  # type: ignore[attr-defined] # noqa F821
         incumbent = trajectory[-1]["incumbent"]
         self.logger.debug("Restored incumbent %s from %s", incumbent,
                           traj_path_aclib)
         return incumbent
 
 
-def cmd_line_call():
+def cmd_line_call() -> None:
     """
     Entry point to be installable to /user/bin
     :return:

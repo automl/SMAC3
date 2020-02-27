@@ -23,7 +23,7 @@ for name, requirements in extras_require.items():
     if dependencies.are_valid_packages(requirements):
         extras_installed.add(name)
     for requirement in requirements:
-        package_name = dependencies.RE_PATTERN.match(requirement).group('name')
+        package_name = dependencies.RE_PATTERN.match(requirement).group('name')  # type: ignore[union-attr] # noqa F821
         if package_name == 'scikit-optimize':
             package_name = 'skopt'
         lazy_import.lazy_module(package_name)

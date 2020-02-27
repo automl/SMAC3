@@ -42,7 +42,7 @@ class OutputWriter(object):
             try:
                 os.makedirs(scenario.output_dir_for_this_run)
             except OSError:
-                scenario.logger.debug("Could not make output directory.", exc_info=1)
+                scenario.logger.debug("Could not make output directory.", exc_info=True)
                 raise OSError("Could not make output directory: "
                               "{}.".format(scenario.output_dir_for_this_run))
 
@@ -90,31 +90,38 @@ class OutputWriter(object):
             # Copy if file exists, else write to new file
             if value is not None and os.path.isfile(value):
                 try:
+                    assert scenario.output_dir_for_this_run is not None  # please mypy
                     new_path = shutil.copy(value, scenario.output_dir_for_this_run)
                 except shutil.SameFileError:
                     new_path = value  # File is already in output_dir
                 # For .pcs-file, also save with the same basename as json and use json-path!
-                if key == 'pcs_fn' and scenario.cs is not None and value.endswith('.pcs'):
+                if key == 'pcs_fn' and scenario.cs is not None and value.endswith('.pcs'):  # type: ignore[attr-defined] # noqa F821
                     file_name = os.path.splitext(os.path.basename(value))[0]
+                    assert scenario.output_dir_for_this_run is not None  # please mypy
                     new_path = os.path.join(scenario.output_dir_for_this_run, file_name + '.json')
-                    self.save_configspace(scenario.cs, new_path, 'json')
+                    self.save_configspace(scenario.cs, new_path, 'json')  # type: ignore[attr-defined] # noqa F821
                     scenario.logger.debug("Setting the pcs_fn-attr of written scenario from %s to %s", value, new_path)
-            elif key == 'pcs_fn' and scenario.cs is not None:
+            elif key == 'pcs_fn' and scenario.cs is not None:  # type: ignore[attr-defined] # noqa F821
                 try:
+                    assert scenario.output_dir_for_this_run is not None  # please mypy
                     pcs_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.pcs')
-                    self.save_configspace(scenario.cs, pcs_path, 'pcs_new')
+                    self.save_configspace(scenario.cs, pcs_path, 'pcs_new')  # type: ignore[attr-defined] # noqa F821
                 except TypeError:
                     self.logger.error("Could not write pcs file to disk."
                                       " ConfigSpace not compatible with (new) pcs format.")
+                assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'configspace.json')
-                self.save_configspace(scenario.cs, new_path, 'json')
+                self.save_configspace(scenario.cs, new_path, 'json')  # type: ignore[attr-defined] # noqa F821
             elif key == 'train_inst_fn' and scenario.train_insts != [None]:
+                assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'train_insts.txt')
                 self.write_inst_file(scenario.train_insts, new_path)
             elif key == 'test_inst_fn' and scenario.test_insts != [None]:
+                assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'test_insts.txt')
                 self.write_inst_file(scenario.test_insts, new_path)
             elif key == 'feature_fn' and scenario.feature_dict != {}:
+                assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, 'features.txt')
                 self.write_inst_features_file(scenario.n_features,
                                               scenario.feature_dict, new_path)

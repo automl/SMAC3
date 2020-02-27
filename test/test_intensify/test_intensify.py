@@ -1,3 +1,4 @@
+import collections
 import unittest
 
 import logging
@@ -431,4 +432,6 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config3)), 1)
         self.assertEqual(intensifier.n_iters, 1)
-        self.assertEqual(intensifier.configs_to_run, None)
+        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
+        with self.assertRaises(StopIteration):
+            next(intensifier.configs_to_run)

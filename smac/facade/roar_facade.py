@@ -40,7 +40,7 @@ class ROAR(SMAC4AC):
                      typing.Union[typing.Type[ExecuteTARun], typing.Callable]
                  ] = None,
                  runhistory: RunHistory = None,
-                 intensifier: AbstractRacer = None,
+                 intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
                  acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
                  initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
@@ -90,7 +90,7 @@ class ROAR(SMAC4AC):
         """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        scenario.acq_opt_challengers = 1
+        scenario.acq_opt_challengers = 1   # type: ignore[attr-defined] # noqa F821
 
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = RandomSearch

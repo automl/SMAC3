@@ -12,15 +12,12 @@ from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, InstSeedBudgetKey
 from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.abstract_racer import AbstractRacer, _config_to_run_type
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-_config_to_run_type = typing.Union[typing.Iterator[Configuration], None]
 
 
 class IntensifierStage(Enum):
@@ -130,7 +127,8 @@ class Intensifier(AbstractRacer):
         self._chall_indx = 0
         self.current_challenger = None
         self.continue_challenger = False
-        self.configs_to_run = None  # type: _config_to_run_type
+        self.configs_to_run = iter([])  # type: _config_to_run_type
+        self.update_configs_to_run = True
 
         # racing related variables
         self.to_run = []  # type: typing.List[InstSeedBudgetKey]
@@ -525,9 +523,10 @@ class Intensifier(AbstractRacer):
                 (self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run):
 
             # this is a new intensification run, get the next list of configurations to run
-            if self.configs_to_run is None:
-                self.configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
-                self.configs_to_run = typing.cast(typing.Iterator[Configuration], self.configs_to_run)
+            if self.update_configs_to_run:
+                configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
+                self.configs_to_run = typing.cast(_config_to_run_type, configs_to_run)
+                self.update_configs_to_run = False
 
             # pick next configuration from the generator
             try:
@@ -546,7 +545,7 @@ class Intensifier(AbstractRacer):
 
                 # reset time bound related params since this is a new configuration
                 self.start_time = time.time()
-                self._ta_time = 0
+                self._ta_time = 0.0
 
             return challenger, True
 
@@ -585,10 +584,6 @@ class Intensifier(AbstractRacer):
         else:
             raise ValueError('No configurations/chooser provided. Cannot generate challenger!')
 
-        # ensuring a generator is returned
-        if isinstance(chall_gen, list):
-            chall_gen = (i for i in chall_gen)
-
         return chall_gen
 
     def _update_trackers(self) -> None:
@@ -598,7 +593,8 @@ class Intensifier(AbstractRacer):
         # track iterations
         self.n_iters += 1
         self.iteration_done = True
-        self.configs_to_run = None
+        self.configs_to_run = iter([])
+        self.update_configs_to_run = True
 
         # reset for a new iteration
         self._num_run = 0

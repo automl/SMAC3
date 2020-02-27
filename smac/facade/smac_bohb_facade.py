@@ -89,7 +89,7 @@ class BOHB4HPO(SMAC4AC):
 
         # better improve acquisition function optimization
         # 2. more randomly sampled configurations
-        self.solver.scenario.acq_opt_challengers = 10000
+        self.solver.scenario.acq_opt_challengers = 10000  # type: ignore[attr-defined] # noqa F821
 
         # activate predict incumbent
         self.solver.epm_chooser.predict_incumbent = True

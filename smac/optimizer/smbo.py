@@ -107,7 +107,7 @@ class SMBO(object):
         self.incumbent = restore_incumbent
 
         self.scenario = scenario
-        self.config_space = scenario.cs
+        self.config_space = scenario.cs  # type: ignore[attr-defined] # noqa F821
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
@@ -174,9 +174,9 @@ class SMBO(object):
 
         # Main BO loop
         while True:
-            if self.scenario.shared_model:
+            if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                 pSMAC.read(run_history=self.runhistory,
-                           output_dirs=self.scenario.input_psmac_dirs,
+                           output_dirs=self.scenario.input_psmac_dirs,  # type: ignore[attr-defined] # noqa F821
                            configuration_space=self.config_space,
                            logger=self.logger)
 
@@ -211,11 +211,12 @@ class SMBO(object):
                         time_bound=max(self.intensifier._min_time, time_left))
 
                 except FirstRunCrashedException:
-                    if self.scenario.abort_on_first_run_crash:
+                    if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
                         raise
-                if self.scenario.shared_model:
+                if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
+                    assert self.scenario.output_dir_for_this_run is not None  # please mypy
                     pSMAC.write(run_history=self.runhistory,
-                                output_directory=self.scenario.output_dir_for_this_run,
+                                output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
                                 logger=self.logger)
 
             self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
@@ -231,8 +232,8 @@ class SMBO(object):
         return self.incumbent
 
     def validate(self,
-                 config_mode: str = 'inc',
-                 instance_mode: str = 'train+test',
+                 config_mode: typing.Union[str, typing.List[Configuration]] = 'inc',
+                 instance_mode: typing.Union[str, typing.List[str]] = 'train+test',
                  repetitions: int = 1,
                  use_epm: bool = False,
                  n_jobs: int = -1,
@@ -264,8 +265,11 @@ class SMBO(object):
             runhistory containing all specified runs
         """
         if isinstance(config_mode, str):
+            assert self.scenario.output_dir_for_this_run is not None  # Please mypy
             traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-            trajectory = TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.config_space)
+            trajectory = (
+                TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.config_space)
+            )  # type: typing.Optional[typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]]
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:
@@ -301,7 +305,7 @@ class SMBO(object):
         -------
         time_left : float
         """
-        frac_intensify = self.scenario.intensification_percentage
+        frac_intensify = self.scenario.intensification_percentage  # type: ignore[attr-defined] # noqa F821
         if frac_intensify <= 0 or frac_intensify >= 1:
             raise ValueError("The value for intensification_percentage-"
                              "option must lie in (0,1), instead: %.2f" %

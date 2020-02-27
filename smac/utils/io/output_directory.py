@@ -26,9 +26,9 @@ def create_output_directory(
     -------
     str
     """
-    if scenario.output_dir:
+    if scenario.output_dir:  # type: ignore[attr-defined] # noqa F821
         output_dir = os.path.join(
-            scenario.output_dir,
+            scenario.output_dir,  # type: ignore[attr-defined] # noqa F821
             "run_%d" % (run_id),
         )
     else:

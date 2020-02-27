@@ -89,7 +89,7 @@ class AbstractRunHistory2EPM(object):
 
         # Configuration
         self.impute_censored_data = impute_censored_data
-        self.cutoff_time = self.scenario.cutoff
+        self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
         self.imputor = imputor
 
         # Fill with some default values
@@ -302,7 +302,7 @@ class AbstractRunHistory2EPM(object):
         y = []
         cen = []
         feature_dict = self.scenario.feature_dict
-        params = self.scenario.cs.get_hyperparameters()
+        params = self.scenario.cs.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
         for k, v in runhistory.data.items():
             config = runhistory.ids_config[k.config_id]
             x = [config.get(p.name) for p in params]

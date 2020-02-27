@@ -123,7 +123,7 @@ class BaseModel(AbstractEPM):
                         if add_soft_bounds:
                             priors_for_hp.append(
                                 smac.epm.gp_base_prior.SoftTopHatPrior(
-                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
+                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng, exponent=2,
                                 ))
                         else:
                             priors_for_hp.append(

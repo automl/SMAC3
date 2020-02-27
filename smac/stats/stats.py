@@ -90,6 +90,7 @@ class Stats(object):
             in the current scenario is used.
         """
         if not fn:
+            assert self.__scenario.output_dir_for_this_run is not None  # please mypy
             fn = os.path.join(
                 self.__scenario.output_dir_for_this_run, "stats.json"
             )
@@ -136,11 +137,11 @@ class Stats(object):
         """Subtract the target algorithm runs in the scenario with the used ta
         runs"""
         if self.__scenario:
-            return self.__scenario.ta_run_limit - self.ta_runs
+            return self.__scenario.ta_run_limit - self.ta_runs  # type: ignore[attr-defined] # noqa F821
         else:
             raise ValueError("Scenario is missing")
 
-    def get_remaining_ta_budget(self) -> int:
+    def get_remaining_ta_budget(self) -> float:
         """Subtracts the ta running budget with the used time"""
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
@@ -192,7 +193,7 @@ class Stats(object):
         log_func("##########################################################")
         log_func("Statistics:")
         log_func("#Incumbent changed: %d" % (self.inc_changed - 1))  # first change is default conf
-        log_func("#Target algorithm runs: %d / %s" % (self.ta_runs, str(self.__scenario.ta_run_limit)))
+        log_func("#Target algorithm runs: %d / %s" % (self.ta_runs, str(self.__scenario.ta_run_limit)))  # type: ignore[attr-defined] # noqa F821
         log_func("#Configurations: %d" % (self.n_configs))
         log_func(
             "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit))
