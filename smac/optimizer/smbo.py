@@ -59,7 +59,7 @@ class SMBO(object):
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool = True,
+                 predict_x_best: bool = True,
                  min_samples_model: int = 1):
         """
         Interface that contains the main Bayesian optimization loop
@@ -96,8 +96,8 @@ class SMBO(object):
             Chooser for random configuration -- one of
             * ChooserNoCoolDown(modulus)
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-        predict_incumbent: bool
-            Use predicted performance of incumbent instead of observed performance
+        predict_x_best: bool
+            Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
 -            Minimum number of samples to build a model
         """
@@ -128,7 +128,7 @@ class SMBO(object):
                                       rng=rng,
                                       restore_incumbent=restore_incumbent,
                                       random_configuration_chooser=random_configuration_chooser,
-                                      predict_incumbent=predict_incumbent,
+                                      predict_x_best=predict_x_best,
                                       min_samples_model=min_samples_model)
 
     def start(self) -> None:

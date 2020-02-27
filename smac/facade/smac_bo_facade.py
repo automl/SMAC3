@@ -178,4 +178,4 @@ class SMAC4BO(SMAC4AC):
 
         self.solver.scenario.acq_opt_challengers = 1000    # type: ignore[attr-defined] # noqa F821
         # activate predict incumbent
-        self.solver.epm_chooser.predict_incumbent = True
+        self.solver.epm_chooser.predict_x_best = True

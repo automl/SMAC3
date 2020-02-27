@@ -186,7 +186,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertFalse(new)
 
         # evaluating configuration
-        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,)
+        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, log_traj=False)
         config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config2)
         self.assertEqual(len(intensifier.curr_challengers), 1)
@@ -347,25 +347,27 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              incumbent=None,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, None)   # since this is first run, doesn't return any incumbent
+        self.assertEqual(inc, self.config1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 1)
+        self.assertEqual(intensifier.configs_to_run, [])
+        self.assertEqual(intensifier.stage, 0)
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, None)
+        self.assertEqual(inc, self.config1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
-        self.assertEqual(intensifier.configs_to_run, [self.config1])
+        self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, self.config1)  # run completed, incumbent generated
+        self.assertEqual(inc, self.config1)
 
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 2)
         self.assertEqual(intensifier.sh_iters, 1)

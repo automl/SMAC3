@@ -93,7 +93,7 @@ class BOHB4HPO(SMAC4AC):
         self.solver.scenario.acq_opt_challengers = 10000  # type: ignore[attr-defined] # noqa F821
 
         # activate predict incumbent
-        self.solver.epm_chooser.predict_incumbent = True
+        self.solver.epm_chooser.predict_x_best = True
 
         # BOHB requires at least D+1 no. of samples to build a model
         self.solver.epm_chooser.min_samples_model = len(scenario.cs.get_hyperparameters()) + 1
