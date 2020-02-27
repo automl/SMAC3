@@ -92,7 +92,7 @@ class Validator(object):
     def _save_results(
         self,
         rh: RunHistory,
-        output_fn: str,
+        output_fn: typing.Optional[str],
         backup_fn: typing.Optional[str] = None,
     ) -> None:
         """ Helper to save results to file
@@ -109,7 +109,7 @@ class Validator(object):
             append backup_fn as filename (if output_fn ends on '.json', this
             argument is ignored)
         """
-        if output_fn == "":
+        if not output_fn:
             self.logger.info("No output specified, validated runhistory not saved.")
             return
         # Check if a folder or a file is specified as output
@@ -216,8 +216,7 @@ class Validator(object):
                              seed=run.seed,
                              additional_info=result[3])
 
-        if output_fn:
-            self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
+        self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
         return validated_rh
 
     def _validate_parallel(
