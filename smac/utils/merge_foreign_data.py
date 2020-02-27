@@ -74,10 +74,10 @@ def merge_foreign_data(scenario: Scenario,
             raise ValueError("Feature Space has to be the same for both scenarios (%d vs %d)." % (
                 scenario.n_features, in_scenario.n_features))
 
-        if scenario.cs != in_scenario.cs:
+        if scenario.cs != in_scenario.cs:  # type: ignore[attr-defined] # noqa F821
             raise ValueError("PCS of both scenarios have to be identical.")
 
-        if scenario.cutoff != in_scenario.cutoff:
+        if scenario.cutoff != in_scenario.cutoff:  # type: ignore[attr-defined] # noqa F821
             raise ValueError("Cutoffs of both scenarios have to be identical.")
 
         scenario.feature_dict.update(in_scenario.feature_dict)

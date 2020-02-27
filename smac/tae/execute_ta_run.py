@@ -134,7 +134,7 @@ class ExecuteTARun(object):
         instance: str,
         cutoff: typing.Optional[float] = None,
         seed: int = 12345,
-        budget: typing.Optional[float] = 0.0,
+        budget: float = 0.0,
         instance_specific: str = "0",
         capped: bool = False,
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:

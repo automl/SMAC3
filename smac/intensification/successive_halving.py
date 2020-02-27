@@ -444,7 +444,7 @@ class SuccessiveHalving(AbstractRacer):
 
         return challenger, new_challenger
 
-    def _update_stage(self, run_history: RunHistory = None) -> None:
+    def _update_stage(self, run_history: RunHistory) -> None:
         """
         Update tracking information for a new stage/iteration and update statistics.
         This method is called to initialize stage variables and after all configurations

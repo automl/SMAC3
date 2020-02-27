@@ -354,7 +354,7 @@ class GaussianProcessMCMC(BaseModel):
         if (theta > 50).any():
             theta[theta > 50] = 50
 
-        lml = 0
+        lml = 0.
         grad = np.zeros(theta.shape)
 
         # Add prior

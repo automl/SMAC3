@@ -76,7 +76,9 @@ class EPMChooser(object):
         self.random_configuration_chooser = random_configuration_chooser
 
         self._random_search = RandomSearch(
-            acquisition_func, self.scenario.cs, rng
+            acquisition_func,
+            self.scenario.cs,  # type: ignore[attr-defined] # noqa F821
+            rng,
         )
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
@@ -107,7 +109,7 @@ class EPMChooser(object):
     def _get_evaluated_configs(self) -> typing.List[Configuration]:
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
-    def choose_next(self, incumbent_value: float = None) -> typing.Iterable:
+    def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The
         suggested configurations depend on the argument ``acq_optimizer`` to
         the ``SMBO`` class.
@@ -158,7 +160,7 @@ class EPMChooser(object):
         challengers = self.acq_optimizer.maximize(
             runhistory=self.runhistory,
             stats=self.stats,
-            num_points=self.scenario.acq_opt_challengers,
+            num_points=self.scenario.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser=self.random_configuration_chooser
         )
         return challengers

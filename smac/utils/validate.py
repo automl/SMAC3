@@ -59,7 +59,7 @@ class Validator(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 trajectory: list,
+                 trajectory: typing.Optional[typing.List],
                  rng: Union[np.random.RandomState, int, None] = None) -> None:
         """
         Construct Validator for given scenario and trajectory.
@@ -78,7 +78,7 @@ class Validator(object):
 
         self.traj = trajectory
         self.scen = scenario
-        self.epm = None
+        self.epm = None  # type: typing.Optional[RandomForestWithInstances]
 
         if isinstance(rng, np.random.RandomState):
             self.rng = rng
@@ -134,7 +134,7 @@ class Validator(object):
                  backend: str = 'threading',
                  runhistory: RunHistory = None,
                  tae: ExecuteTARun = None,
-                 output_fn: str = "",
+                 output_fn: typing.Optional[str] = None,
                  ) -> RunHistory:
         """
         Validate configs on instances and save result in runhistory.
@@ -182,19 +182,21 @@ class Validator(object):
         runs, validated_rh = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
 
         # Create new Stats without limits
-        inf_scen = Scenario({'run_obj': self.scen.run_obj,
-                             'cutoff_time': self.scen.cutoff, 'output_dir': ""})
+        inf_scen = Scenario({
+            'run_obj': self.scen.run_obj,
+            'cutoff_time': self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
+            'output_dir': ""})
         inf_stats = Stats(inf_scen)
         inf_stats.start_timing()
 
         # Create TAE
         if not tae:
-            tae = ExecuteTARunOld(ta=self.scen.ta,
+            tae = ExecuteTARunOld(ta=self.scen.ta,  # type: ignore[attr-defined] # noqa F821
                                   runhistory=runhistory,
                                   stats=inf_stats,
                                   run_obj=self.scen.run_obj,
-                                  par_factor=self.scen.par_factor,
-                                  cost_for_crash=self.scen.cost_for_crash)
+                                  par_factor=self.scen.par_factor,  # type: ignore[attr-defined] # noqa F821
+                                  cost_for_crash=self.scen.cost_for_crash)  # type: ignore[attr-defined] # noqa F821
         else:
             # Inject endless-stats
             tae.stats = inf_stats
@@ -249,7 +251,8 @@ class Validator(object):
         run_results = Parallel(n_jobs=n_jobs, backend=backend)(
             delayed(_unbound_tae_starter)(tae, run.config,
                                           run.inst,
-                                          self.scen.cutoff, run.seed,
+                                          self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
+                                          run.seed,
                                           run.inst_specs,
                                           capped=False) for run in runs)
         return run_results
@@ -258,8 +261,8 @@ class Validator(object):
                      config_mode: Union[str, typing.List[Configuration]] = 'def',
                      instance_mode: Union[str, typing.List[str]] = 'test',
                      repetitions: int = 1,
-                     runhistory: RunHistory = None,
-                     output_fn: str = "",
+                     runhistory: typing.Optional[RunHistory] = None,
+                     output_fn: typing.Optional[str] = None,
                      reuse_epm: bool = True,
                      ) -> RunHistory:
         """
@@ -297,9 +300,9 @@ class Validator(object):
             raise ValueError("No runhistory specified for validating with EPM!")
         elif not reuse_epm or self.epm is None:
             # Create RandomForest
-            types, bounds = get_types(self.scen.cs, self.scen.feature_array)
+            types, bounds = get_types(self.scen.cs, self.scen.feature_array)  # type: ignore[attr-defined] # noqa F821
             epm = RandomForestWithInstances(
-                configspace=self.scen.cs,
+                configspace=self.scen.cs,  # type: ignore[attr-defined] # noqa F821
                 types=types,
                 bounds=bounds,
                 instance_features=self.scen.feature_array,
@@ -311,19 +314,20 @@ class Validator(object):
             impute_state = None
             impute_censored_data = False
             if self.scen.run_obj == 'runtime':
-                threshold = self.scen.cutoff * self.scen.par_factor
+                threshold = self.scen.cutoff * self.scen.par_factor  # type: ignore[attr-defined] # noqa F821
                 imputor = RFRImputator(rng=self.rng,
-                                       cutoff=self.scen.cutoff,
+                                       cutoff=self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
                                        threshold=threshold,
-                                       model=self.epm)
+                                       model=epm)
                 impute_censored_data = True
                 impute_state = [StatusType.CAPPED]
             # Transform training data (from given rh)
-            rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),
+            rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),  # type: ignore[attr-defined] # noqa F821
                                          scenario=self.scen, rng=self.rng,
                                          impute_censored_data=impute_censored_data,
                                          imputor=imputor,
                                          impute_state=impute_state)
+            assert runhistory is not None  # please mypy
             X, y = rh2epm.transform(runhistory)
             self.logger.debug("Training model with data of shape X: %s, y:%s",
                               str(X.shape), str(y.shape))
@@ -335,7 +339,7 @@ class Validator(object):
         # Predict desired runs
         runs, rh_epm = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
 
-        feature_array_size = len(self.scen.cs.get_hyperparameters())
+        feature_array_size = len(self.scen.cs.get_hyperparameters())  # type: ignore[attr-defined] # noqa F821
         if self.scen.feature_array is not None:
             feature_array_size += self.scen.feature_array.shape[1]
 
@@ -417,7 +421,7 @@ class Validator(object):
             instances = [None]
 
         # If algorithm is deterministic, fix repetitions to 1
-        if self.scen.deterministic and repetitions != 1:
+        if self.scen.deterministic and repetitions != 1:  # type: ignore[attr-defined] # noqa F821
             self.logger.warning("Specified %d repetitions, but fixing to 1, "
                                 "because algorithm is deterministic.", repetitions)
             repetitions = 1
@@ -480,7 +484,7 @@ class Validator(object):
         self,
         configs: typing.List[Configuration],
         insts: typing.Sequence[typing.Optional[str]],
-        runhistory: RunHistory,
+        runhistory: typing.Optional[RunHistory],
     ) -> typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]:
         """
         Processes runhistory from self._get_runs by extracting already evaluated
@@ -553,6 +557,11 @@ class Validator(object):
         configs: list<Configuration>
             list with desired configurations
         """
+
+        # Get trajectory and make sure it's not None to please mypy
+        traj = self.traj
+        assert traj is not None  # please mypy
+
         # Add desired configs
         configs = []
         mode = mode.lower()
@@ -561,9 +570,9 @@ class Validator(object):
             raise ValueError("%s not a valid option for config_mode in validation."
                              % mode)
         if mode == "def" or mode == "def+inc":
-            configs.append(self.scen.cs.get_default_configuration())
+            configs.append(self.scen.cs.get_default_configuration())  # type: ignore[attr-defined] # noqa F821
         if mode == "inc" or mode == "def+inc":
-            configs.append(self.traj[-1]["incumbent"])
+            configs.append(traj[-1]["incumbent"])
         if mode in ["wallclock_time", "cpu_time"]:
             # get highest time-entry and add entries from there
             # not using wallclock_limit in case it's inf
@@ -572,16 +581,16 @@ class Validator(object):
             elif (mode == "cpu_time" and np.isfinite(self.scen.algo_runs_timelimit)):
                 max_time = self.scen.algo_runs_timelimit
             else:
-                max_time = self.traj[-1][mode]
+                max_time = traj[-1][mode]
             counter = 2 ** 0
-            for entry in self.traj[::-1]:
+            for entry in traj[::-1]:
                 if (entry[mode] <= max_time / counter and entry["incumbent"] not in configs):
                     configs.append(entry["incumbent"])
                     counter *= 2
-            if not self.traj[0]["incumbent"] in configs:
-                configs.append(self.traj[0]["incumbent"])  # add first
+            if not traj[0]["incumbent"] in configs:
+                configs.append(traj[0]["incumbent"])  # add first
         if mode == "all":
-            for entry in self.traj:
+            for entry in traj:
                 if not entry["incumbent"] in configs:
                     configs.append(entry["incumbent"])
         self.logger.debug("Gathered %d configurations for mode %s.",

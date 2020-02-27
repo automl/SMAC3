@@ -5,7 +5,7 @@ import logging
 import time
 import numpy as np
 
-from typing import Iterable, List, Union, Tuple, Optional, Set, Iterator
+from typing import List, Union, Tuple, Optional, Set, Iterator
 
 from smac.configspace import (
     get_one_exchange_neighbourhood,
@@ -65,7 +65,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         stats: Stats,
         num_points: int,
         random_configuration_chooser: Optional[RandomConfigurationChooser] = None,
-    ) -> Iterable[Configuration]:
+    ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
 
         Parameters
@@ -104,7 +104,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
             runhistory: RunHistory,
             stats: Stats,
             num_points: int,
-    ) -> Iterable[Tuple[float, Configuration]]:
+    ) -> List[Tuple[float, Configuration]]:
         """Implements acquisition function maximization.
 
         In contrast to ``maximize``, this method returns an iterable of tuples,
@@ -624,7 +624,7 @@ class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
         runhistory: RunHistory,
         stats: Stats,
         num_points: int,
-    ) -> Iterable[Tuple[float, Configuration]]:
+    ) -> List[Tuple[float, Configuration]]:
 
         # Get configurations sorted by EI
         next_configs_by_random_search_sorted = self.random_search._maximize(
@@ -735,6 +735,6 @@ class FixedSet(AcquisitionFunctionMaximizer):
         runhistory: RunHistory,
         stats: Stats,
         num_points: int,
-    ) -> Iterable[Tuple[float, Configuration]]:
+    ) -> List[Tuple[float, Configuration]]:
         configurations = copy.deepcopy(self.configurations)
         return self._sort_configs_by_acq_value(configurations)

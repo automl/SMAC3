@@ -531,7 +531,7 @@ class RunHistory(object):
     def _cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.List[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
     ) -> typing.List[float]:
         """Return array of all costs for the given config for further calculations.
 
@@ -565,7 +565,7 @@ class RunHistory(object):
     def average_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.List[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
     ) -> float:
         """Return the average cost of a configuration.
 
@@ -584,12 +584,12 @@ class RunHistory(object):
         Cost: float
             Average cost
         """
-        return np.mean(self._cost(config, instance_seed_budget_keys))
+        return float(np.mean(self._cost(config, instance_seed_budget_keys)))
 
     def sum_cost(
         self,
         config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.List[InstSeedBudgetKey]] = None,
+        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
     ) -> float:
         """Return the sum of costs of a configuration.
 
@@ -608,4 +608,4 @@ class RunHistory(object):
         sum_cost: float
             Sum of costs of config
         """
-        return np.sum(self._cost(config, instance_seed_budget_keys))
+        return float(np.sum(self._cost(config, instance_seed_budget_keys)))

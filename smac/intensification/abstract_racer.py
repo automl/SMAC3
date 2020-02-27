@@ -14,6 +14,8 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
+_config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
+
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -105,7 +107,7 @@ class AbstractRacer(object):
         self._min_time = 10 ** -5
         self._num_run = 0
         self._chall_indx = 0
-        self._ta_time = 0
+        self._ta_time = 0.
 
         # attributes for sampling next configuration
         self.repeat_configs = True
@@ -208,7 +210,7 @@ class AbstractRacer(object):
         if challengers:
             # iterate over challengers provided
             self.logger.debug("Using challengers provided")
-            chall_gen = (c for c in challengers)
+            chall_gen = (c for c in challengers)  # type: _config_to_run_type
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
             self.logger.debug("Generating new challenger from optimizer")
@@ -219,6 +221,7 @@ class AbstractRacer(object):
         self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
 
         # select challenger from the generators
+        assert chall_gen is not None
         for challenger in chall_gen:
             # repetitions allowed
             if repeat_configs:

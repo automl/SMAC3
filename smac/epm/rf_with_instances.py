@@ -1,4 +1,3 @@
-import logging
 import typing
 
 import numpy as np
@@ -131,8 +130,6 @@ class RandomForestWithInstances(BaseModel):
         self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
                        n_points_per_tree, ratio_features, min_samples_split,
                        min_samples_leaf, max_depth, eps_purity, self.seed]
-
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstances':
         """Trains the random forest on X and y.

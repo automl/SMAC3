@@ -201,7 +201,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1], initial_budget=1, max_budget=2, eta=2)
 
-        intensifier._update_stage()
+        intensifier._update_stage(run_history=None)
         intensifier.stage += 1
         intensifier.configs_to_run = [self.config1]
 
@@ -221,7 +221,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             cutoff=1, instances=[1], initial_budget=1, max_budget=2, eta=2)
 
         # first stage update
-        intensifier._update_stage()
+        intensifier._update_stage(run_history=None)
 
         self.assertEqual(intensifier.stage, 0)
         self.assertEqual(intensifier.sh_iters, 0)
@@ -263,7 +263,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[None], initial_budget=0.25, max_budget=0.5, eta=2)
-        intensifier._update_stage()
+        intensifier._update_stage(run_history=None)
 
         self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
@@ -308,7 +308,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                         status=StatusType.SUCCESS, instance_id=i + 1, seed=0,
                         additional_info=None)
 
-        intensifier._update_stage()
+        intensifier._update_stage(run_history=None)
 
         # config2 should be capped and config1 should still be the incumbent
         inc, _ = intensifier.eval_challenger(challenger=self.config2,
@@ -338,7 +338,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[0, 1], instance_order='shuffle', eta=2,
             deterministic=True, cutoff=1)
 
-        intensifier._update_stage()
+        intensifier._update_stage(run_history=None)
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
