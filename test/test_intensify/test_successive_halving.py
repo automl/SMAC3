@@ -81,10 +81,29 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
         self.assertListEqual(intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
+        self.assertListEqual(list(intensifier.all_budgets), [1.25, 2.5, 5., 10.])
         self.assertFalse(intensifier.instance_as_budget)
         self.assertFalse(intensifier.repeat_configs)
 
     def test_init_3(self):
+        """
+            test parameter initialiations for successive halving - real-valued budget, high initial budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            instances=[1], initial_budget=9, max_budget=10, eta=2)
+
+        self.assertEqual(len(intensifier.inst_seed_pairs), 1)  # since instance-seed pairs
+        self.assertEqual(intensifier.initial_budget, 9)
+        self.assertEqual(intensifier.max_budget, 10)
+        self.assertListEqual(intensifier.n_configs_in_stage, [1.0])
+        self.assertListEqual(list(intensifier.all_budgets), [10.])
+        self.assertFalse(intensifier.instance_as_budget)
+        self.assertFalse(intensifier.repeat_configs)
+
+    def test_init_4(self):
         """
             test wrong parameter initializations for successive halving
         """

@@ -364,7 +364,7 @@ class AbstractRacer(object):
         self,
         incumbent: Configuration,
         challenger: Configuration,
-    ):
+    ) -> None:
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
         self.logger.info("Changes in incumbent:")
         for param in params:
