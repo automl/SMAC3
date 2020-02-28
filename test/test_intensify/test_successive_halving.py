@@ -40,6 +40,8 @@ class TestSuccessiveHalving(unittest.TestCase):
                                      values={'a': 100, 'b': 0})
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
+        self.config4 = Configuration(self.cs,
+                                     values={'a': 0, 'b': 0})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
                               "run_obj": 'runtime',
@@ -154,10 +156,23 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.rh.add(config=self.config2, cost=2, time=2,
                     status=StatusType.SUCCESS, instance_id=2, seed=None,
                     additional_info=None)
-        conf = intensifier._top_k(configs=[self.config2, self.config1],
-                                  k=1, run_history=self.rh)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.SUCCESS, instance_id=2, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=0.5, time=0.5,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=0.5, time=0.5,
+                    status=StatusType.SUCCESS, instance_id=2, seed=None,
+                    additional_info=None)
+        conf = intensifier._top_k(configs=[self.config1, self.config2, self.config3, self.config4],
+                                  k=2, run_history=self.rh)
 
-        self.assertEqual(conf, [self.config1])
+        # Check that config4 is also before config1 (as it has the lower cost)
+        self.assertEqual(conf, [self.config4, self.config1])
 
     def test_top_k_2(self):
         """
