@@ -585,6 +585,13 @@ class SuccessiveHalving(AbstractRacer):
                                   'changing the incumbent',
                                   chall_run.budget, inc_run.budget)
                 new_incumbent = challenger
+                if log_traj:
+                    # adding incumbent entry
+                    self.stats.inc_changed += 1
+                    new_inc_cost = run_history.get_cost(new_incumbent)
+                    self.traj_logger.add_entry(train_perf=new_inc_cost,
+                                               incumbent_id=self.stats.inc_changed,
+                                               incumbent=new_incumbent)
             else:
                 chall_cost = run_history.get_cost(challenger)
                 inc_cost = run_history.get_cost(incumbent)
@@ -602,12 +609,17 @@ class SuccessiveHalving(AbstractRacer):
                             self.logger.debug("  %s remains unchanged: %r" %
                                               (param[0], param[1]))
                     new_incumbent = challenger
+                    if log_traj:
+                        # adding incumbent entry
+                        self.stats.inc_changed += 1  # first incumbent
+                        self.traj_logger.add_entry(train_perf=chall_cost,
+                                                   incumbent_id=self.stats.inc_changed,
+                                                   incumbent=new_incumbent)
                 else:
                     self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
                                       inc_cost, chall_cost, inc_run.budget)
                     new_incumbent = incumbent
 
-                print(inc_cost, chall_cost)
         else:
             raise ValueError('This should not happen!')
 
