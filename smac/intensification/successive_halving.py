@@ -185,9 +185,6 @@ class SuccessiveHalving(AbstractRacer):
         self.running_challenger = None
         self.curr_challengers = set()  # type: typing.Set[Configuration]
 
-        # Counter to keep track of what's the highest stage ever visited throughout all calls to SH
-        self._highest_stage_visited = 0
-
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
                         max_budget: typing.Optional[float],
@@ -359,7 +356,7 @@ class SuccessiveHalving(AbstractRacer):
             self.curr_challengers.add(challenger)
 
             # get incumbent in the last stage if all instances have been evaluated
-            if self.stage == self._highest_stage_visited and n_insts_remaining <= 0:
+            if n_insts_remaining <= 0:
                 incumbent = self._get_incumbent(challenger=challenger,
                                                 incumbent=incumbent,
                                                 run_history=run_history,
@@ -513,8 +510,6 @@ class SuccessiveHalving(AbstractRacer):
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == 'shuffle':
                     self.rs.shuffle(self.inst_seed_pairs)
-
-        self._highest_stage_visited = max(self.stage, self._highest_stage_visited)
 
         # to track successful (without capping) configurations for the next stage
         self.curr_challengers = set()
