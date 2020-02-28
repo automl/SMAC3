@@ -357,7 +357,7 @@ are already present.</p>
 <p>Computes for a given x the expected improvement as
 acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]\)</span>,
-with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent.</p>
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location.</p>
 <p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -407,7 +407,7 @@ dimensions of one X.</p>
 <p>Computes for a given x the expected improvement as
 acquisition value.
 <span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
-with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -616,7 +616,7 @@ dimensions of one X.</p>
 <p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>P(f_{t+1}(mathbf{X})geq f(mathbf{X^+})) :=
 Phi(</p>
 </dd>
-<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt><dd><p>with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
+<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt><dd><p>with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
 <dl class="simple">
 <dt>model<span class="classifier">AbstractEPM</span></dt><dd><dl class="simple">
 <dt>A model that implements at least</dt><dd><ul class="simple">

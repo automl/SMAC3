@@ -288,7 +288,7 @@
 <span id="smac-optimizer-epm-configuration-chooser-module"></span><h1>smac.optimizer.epm_configuration_chooser module<a class="headerlink" href="#module-smac.optimizer.epm_configuration_chooser" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.optimizer.epm_configuration_chooser.EPMChooser">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.epm_configuration_chooser.</code><code class="sig-name descname">EPMChooser</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_incumbent: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.epm_configuration_chooser.</code><code class="sig-name descname">EPMChooser</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_x_best: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <blockquote>
 <div><p>Interface to train the EPM and generate next configurations</p>
@@ -312,7 +312,7 @@ RandomForestWithInstances)</p>
 * ChooserNoCoolDown(modulus)
 * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p>
 </dd>
-<dt>predict_incumbent: bool</dt><dd><p>Use predicted performance of incumbent instead of observed performance</p>
+<dt>predict_x_best: bool</dt><dd><p>Choose x_best for computing the acquisition function via the model instead of via the observations.</p>
 </dd>
 </dl>
 <p>min_samples_model: int</p>
@@ -331,14 +331,18 @@ RandomForestWithInstances)</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_incumbent">
-<code class="sig-name descname">_get_incumbent</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray, ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_incumbent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_incumbent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get incumbent value, configuration, and array representation.</p>
-<p>This is retrieved either from the runhistory or from best predicted
-performance on configs in runhistory (depends on self.predict_incumbent)</p>
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">
+<code class="sig-name descname">_get_x_best</code><span class="sig-paren">(</span><em class="sig-param">predict: bool</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray, ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get value, configuration, and array representation of the “best” configuration.</p>
+<p>The definition of best varies depending on the argument <code class="docutils literal notranslate"><span class="pre">predict</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+this function will return the stats of the best configuration as predicted by the model,
+otherwise it will return the stats for the best observed configuration.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predict</strong> (<em>bool</em>) – Whether to use the predicted or observed best.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><em>float</em></p></li>
 <li><p><em>np.ndarry</em></p></li>
 <li><p><em>Configuration</em></p></li>
@@ -356,17 +360,15 @@ suggested configurations depend on the argument <code class="docutils literal no
 the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration
-(required for acquisition function);
-if not given, it will be inferred from runhistory;
-if not given and runhistory is empty,
-it will raise a ValueError</p>
+<dd class="field-odd"><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration (required for acquisition function);
+If not given, it will be inferred from runhistory or predicted;
+if not given and runhistory is empty, it will raise a ValueError.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable</p>
+<dd class="field-odd"><p>Iterator</p>
 </dd>
 </dl>
 </dd></dl>

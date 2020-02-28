@@ -540,14 +540,14 @@
 <span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+        <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Line 3</span>
         <span class="c1"># First evaluate incumbent on a new instance</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxR</span><span class="p">:</span>
             <span class="c1"># Line 4</span>
             <span class="c1"># find all instances that have the most runs on the inc</span>
-            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">inc_inst</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">instance</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">inc_runs</span><span class="p">]</span>
             <span class="n">inc_inst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Counter</span><span class="p">(</span><span class="n">inc_inst</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
             <span class="n">inc_inst</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -591,7 +591,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span>
 
             <span class="c1"># output estimated performance of incumbent</span>
-            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Updated estimated cost of incumbent on </span><span class="si">%d</span><span class="s2"> runs: </span><span class="si">%.4f</span><span class="s2">&quot;</span>
                              <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">),</span> <span class="n">inc_perf</span><span class="p">))</span>
@@ -679,7 +679,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
                 <span class="k">return</span> <span class="n">incumbent</span>
 
-        <span class="n">chal_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+        <span class="n">chal_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">chal_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Estimated cost of challenger on </span><span class="si">%d</span><span class="s1"> runs: </span><span class="si">%.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chal_runs</span><span class="p">),</span> <span class="n">chal_perf</span><span class="p">))</span>
 
@@ -735,8 +735,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get next instances left for the challenger</span>
         <span class="c1"># Line 8</span>
-        <span class="n">inc_inst_seeds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">))</span>
-        <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">))</span>
+        <span class="n">inc_inst_seeds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="c1"># Line 10</span>
         <span class="n">missing_runs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inc_inst_seeds</span> <span class="o">-</span> <span class="n">chall_inst_seeds</span><span class="p">)</span>
 

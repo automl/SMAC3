@@ -552,7 +552,7 @@
         <span class="c1"># cost used by challenger for going over all its runs</span>
         <span class="c1"># should be subset of runs of incumbent (not checked for efficiency</span>
         <span class="c1"># reasons)</span>
-        <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+        <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">chal_sum_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">sum_cost</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
             <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">chall_inst_seeds</span><span class="p">,</span>
@@ -595,8 +595,8 @@
 <span class="sd">        None or better of the two configurations x,y</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-        <span class="n">chall_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+        <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">chall_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">to_compare_runs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span>
 
         <span class="c1"># performance on challenger runs</span>
@@ -627,16 +627,7 @@
             <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Challenger (</span><span class="si">%.4f</span><span class="s2">) is better than incumbent (</span><span class="si">%.4f</span><span class="s2">)&quot;</span>
                              <span class="s2">&quot; on </span><span class="si">%d</span><span class="s2"> runs.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">chal_perf</span><span class="p">,</span> <span class="n">inc_perf</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">))</span>
-            <span class="c1"># Show changes in the configuration</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">param</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">[</span><span class="n">param</span><span class="p">],</span> <span class="n">challenger</span><span class="p">[</span><span class="n">param</span><span class="p">])</span>
-                             <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">challenger</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changes in incumbent:&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> : </span><span class="si">%r</span><span class="s2"> -&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">param</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span>
-                                      <span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -646,7 +637,20 @@
             <span class="k">return</span> <span class="n">challenger</span>
 
         <span class="c1"># undecided</span>
-        <span class="k">return</span> <span class="kc">None</span></div></div>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AbstractRacer._log_incumbent_changes"><a class="viewcode-back" href="../../../apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer._log_incumbent_changes">[docs]</a>    <span class="k">def</span> <span class="nf">_log_incumbent_changes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">param</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">[</span><span class="n">param</span><span class="p">],</span> <span class="n">challenger</span><span class="p">[</span><span class="n">param</span><span class="p">])</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">challenger</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changes in incumbent:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">param</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> : </span><span class="si">%r</span><span class="s2"> -&gt; </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">param</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> remains unchanged: </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
 </pre></div>
 
            </div>

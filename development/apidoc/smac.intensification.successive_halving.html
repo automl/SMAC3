@@ -387,7 +387,9 @@ raise an exception if a value larger than 1 is passed.</p></li>
 <dl class="method">
 <dt id="smac.intensification.successive_halving.SuccessiveHalving._top_k">
 <code class="sig-name descname">_top_k</code><span class="sig-paren">(</span><em class="sig-param">configs: List[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, k: int</em><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._top_k"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._top_k" title="Permalink to this definition">¶</a></dt>
-<dd><p>selects the top ‘k’ configurations from the given list based on their performance in this budget</p>
+<dd><p>Selects the top ‘k’ configurations from the given list based on their performance.</p>
+<p>This retrieves the performance for each configuration from the runhistory and checks
+that the highest budget they’ve been evaluated on is the same for each of the configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -531,21 +531,17 @@
 </li>
       </ul></li>
       <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._get_incumbent">_get_incumbent() (smac.intensification.successive_halving.SuccessiveHalving method)</a>
-
-      <ul>
-        <li><a href="apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_incumbent">(smac.optimizer.epm_configuration_chooser.EPMChooser method)</a>
 </li>
-      </ul></li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._get_initial_points">_get_initial_points() (smac.optimizer.ei_optimization.LocalSearch method)</a>
 </li>
       <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator._get_instances">_get_instances() (smac.utils.validate.Validator method)</a>
 </li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_instances_to_run">_get_instances_to_run() (smac.intensification.intensification.Intensifier method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">_get_mean_costs() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._get_parent_conditions_of">_get_parent_conditions_of (smac.configspace.ConfigurationSpace attribute)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._get_parents_of">_get_parents_of (smac.configspace.ConfigurationSpace attribute)</a>
@@ -557,6 +553,8 @@
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO._get_timebound_for_intensification">_get_timebound_for_intensification() (smac.optimizer.smbo.SMBO method)</a>
 </li>
       <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._get_validation_set">_get_validation_set() (smac.facade.experimental.hydra_facade.Hydra method)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">_get_x_best() (smac.optimizer.epm_configuration_chooser.EPMChooser method)</a>
 </li>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.GammaPrior._gradient">_gradient() (smac.epm.gp_base_prior.GammaPrior method)</a>
 
@@ -604,6 +602,8 @@
         <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.TophatPrior._lnprob">(smac.epm.gp_base_prior.TophatPrior method)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer._log_incumbent_changes">_log_incumbent_changes() (smac.intensification.abstract_racer.AbstractRacer method)</a>
+</li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey._make">_make() (smac.runhistory.runhistory.InstSeedBudgetKey class method)</a>
 
       <ul>
@@ -967,8 +967,6 @@
 </li>
       </ul></li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue.cost">cost() (smac.runhistory.runhistory.RunValue property)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.cost_per_config">cost_per_config (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
       <li><a href="apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun.crash_cost">crash_cost (smac.tae.execute_ta_run.ExecuteTARun attribute)</a>
 </li>
@@ -1466,6 +1464,8 @@
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.num_run">num_run (smac.optimizer.smbo.SMBO attribute)</a>
 </li>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.num_runs_per_config">num_runs_per_config (smac.runhistory.runhistory.RunHistory attribute)</a>
+</li>
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">num_targets (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
 </li>
   </ul></td>
@@ -1491,8 +1491,6 @@
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.output_dir">output_dir (smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter">OutputWriter (class in smac.utils.io.output_writer)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.overwrite_existing_runs">overwrite_existing_runs (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1681,8 +1679,6 @@
       <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost">RunHistory2EPM4SqrtScaledCost (class in smac.runhistory.runhistory2epm)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey">RunKey (class in smac.runhistory.runhistory)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.runs_per_config">runs_per_config (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue">RunValue (class in smac.runhistory.runhistory)</a>
 </li>

@@ -463,7 +463,7 @@
 <span class="sd">    acquisition value.</span>
 
 <span class="sd">    :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,</span>
-<span class="sd">    with :math:`f(X^+)` as the incumbent.</span>
+<span class="sd">    with :math:`f(X^+)` as the best location.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -544,7 +544,7 @@
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes for a given x the expected improvement as</span>
 <span class="sd">        acquisition value.</span>
 <span class="sd">        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,</span>
-<span class="sd">        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.</span>
+<span class="sd">        with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -707,7 +707,7 @@
 
 <span class="sd">        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=</span>
 <span class="sd">        \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,</span>
-<span class="sd">        with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal</span>
+<span class="sd">        with :math:`f(X^+)` as the best location and :math:`\Phi` the cdf of the standard normal</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

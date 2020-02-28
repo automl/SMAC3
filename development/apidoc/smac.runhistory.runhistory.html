@@ -502,7 +502,19 @@ implement default like this:</p>
 <em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunHistory</code><span class="sig-paren">(</span><em class="sig-param">overwrite_existing_runs: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Container for target algorithm run information.</p>
-<p><strong>Note:</strong> Guaranteed to be picklable.</p>
+<p>Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
+empirical cost observed on either the full instance set or a subset. The cost is the average over all
+observed costs for one configuration:</p>
+<ul class="simple">
+<li><p>If using budgets for a single instance, only the cost on the highest observed budget is returned.</p></li>
+<li><p>If using instances as the budget, the average cost over all evaluated instances is returned.</p></li>
+<li><p>Theoretically, the runhistory object can handle instances and budgets at the same time. This is
+neither used nor tested.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Guaranteed to be picklable.</p>
+</div>
 <dl class="attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.data">
 <code class="sig-name descname">data</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
@@ -537,19 +549,8 @@ implement default like this:</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="smac.runhistory.runhistory.RunHistory.cost_per_config">
-<code class="sig-name descname">cost_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.cost_per_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Maps config_id -&gt; cost</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="smac.runhistory.runhistory.RunHistory.runs_per_config">
-<code class="sig-name descname">runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.runs_per_config" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.runhistory.runhistory.RunHistory.num_runs_per_config">
+<code class="sig-name descname">num_runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.num_runs_per_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config_id -&gt; number of runs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -558,11 +559,12 @@ implement default like this:</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="smac.runhistory.runhistory.RunHistory.overwrite_existing_runs">
-<code class="sig-name descname">overwrite_existing_runs</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.overwrite_existing_runs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code> and a run of a configuration on an instance-budget-seed-pair already exists,
+it is overwritten.</p>
+</dd>
+</dl>
 <p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -650,6 +652,10 @@ queried for all runs of the given configuration.</p></li>
 <code class="sig-name descname">compute_all_costs</code><span class="sig-paren">(</span><em class="sig-param">instances: Optional[List[str]] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.compute_all_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the cost of all configurations from scratch and overwrites
 self.cost_perf_config and self.runs_per_config accordingly;</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only used for <code class="docutils literal notranslate"><span class="pre">merge_foreign_data</span></code> and should be removed.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of instances; if given, cost is only computed wrt to this instance set</p>
@@ -706,7 +712,8 @@ False otherwise</p>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_cost">
 <code class="sig-name descname">get_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns empirical cost for a configuration; uses  self.cost_per_config</p>
+<dd><p>Returns empirical cost for a configuration.</p>
+<p>See the class docstring for how the costs are computed. The costs are not re-computed, but are read from cache.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – </p>
@@ -723,29 +730,34 @@ False otherwise</p>
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">
 <code class="sig-name descname">get_instance_costs_for_config</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span> &#x2192; Dict[str, List[float]]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_instance_costs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the average cost per instance (across seeds)
-for a configuration
-:param config: Parameter configuration
-:type config: Configuration from ConfigSpace</p>
+<dd><p>Returns the average cost per instance (across seeds) for a configuration</p>
+<p>If the runhistory contains budgets, only the highest budget for a configuration is returned.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is used by the pSMAC facade to determine the incumbent after the evaluation.</p>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>cost_per_inst</strong></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>cost_per_inst</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict&lt;instance name&lt;str&gt;, cost&lt;float&gt;&gt;</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
-<code class="sig-name descname">get_runs_for_config</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">max_budget: bool = True</em><span class="sig-paren">)</span> &#x2192; List[smac.runhistory.runhistory.InstSeedBudgetKey]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_runs_for_config</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">only_max_observed_budget: bool</em><span class="sig-paren">)</span> &#x2192; List[smac.runhistory.runhistory.InstSeedBudgetKey]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>Configuration from ConfigSpace</em>) – Parameter configuration</p></li>
-<li><p><strong>max_budget</strong> (<em>bool</em>) – Select only the max budget run from each configuration (default=True)</p></li>
+<li><p><strong>only_max_observed_budget</strong> (<em>bool</em>) – Select only the maximally observed budget run for this configuration</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

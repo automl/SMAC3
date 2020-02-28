@@ -338,7 +338,7 @@
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
-                 <span class="n">predict_incumbent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">predict_x_best</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interface that contains the main Bayesian optimization loop</span>
@@ -375,8 +375,8 @@
 <span class="sd">            Chooser for random configuration -- one of</span>
 <span class="sd">            * ChooserNoCoolDown(modulus)</span>
 <span class="sd">            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</span>
-<span class="sd">        predict_incumbent: bool</span>
-<span class="sd">            Use predicted performance of incumbent instead of observed performance</span>
+<span class="sd">        predict_x_best: bool</span>
+<span class="sd">            Choose x_best for computing the acquisition function via the model instead of via the observations.</span>
 <span class="sd">        min_samples_model: int</span>
 <span class="sd">-            Minimum number of samples to build a model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -407,7 +407,7 @@
                                       <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
                                       <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">restore_incumbent</span><span class="p">,</span>
                                       <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
-                                      <span class="n">predict_incumbent</span><span class="o">=</span><span class="n">predict_incumbent</span><span class="p">,</span>
+                                      <span class="n">predict_x_best</span><span class="o">=</span><span class="n">predict_x_best</span><span class="p">,</span>
                                       <span class="n">min_samples_model</span><span class="o">=</span><span class="n">min_samples_model</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
