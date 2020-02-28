@@ -40,6 +40,8 @@ class TestSuccessiveHalving(unittest.TestCase):
                                      values={'a': 100, 'b': 0})
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
+        self.config4 = Configuration(self.cs,
+                                     values={'a': 0, 'b': 0})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
                               "run_obj": 'runtime',
@@ -81,10 +83,29 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.initial_budget, 1)
         self.assertEqual(intensifier.max_budget, 10)
         self.assertListEqual(intensifier.n_configs_in_stage, [8.0, 4.0, 2.0, 1.0])
+        self.assertListEqual(list(intensifier.all_budgets), [1.25, 2.5, 5., 10.])
         self.assertFalse(intensifier.instance_as_budget)
         self.assertFalse(intensifier.repeat_configs)
 
     def test_init_3(self):
+        """
+            test parameter initialiations for successive halving - real-valued budget, high initial budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            instances=[1], initial_budget=9, max_budget=10, eta=2)
+
+        self.assertEqual(len(intensifier.inst_seed_pairs), 1)  # since instance-seed pairs
+        self.assertEqual(intensifier.initial_budget, 9)
+        self.assertEqual(intensifier.max_budget, 10)
+        self.assertListEqual(intensifier.n_configs_in_stage, [1.0])
+        self.assertListEqual(list(intensifier.all_budgets), [10.])
+        self.assertFalse(intensifier.instance_as_budget)
+        self.assertFalse(intensifier.repeat_configs)
+
+    def test_init_4(self):
         """
             test wrong parameter initializations for successive halving
         """
@@ -135,10 +156,23 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.rh.add(config=self.config2, cost=2, time=2,
                     status=StatusType.SUCCESS, instance_id=2, seed=None,
                     additional_info=None)
-        conf = intensifier._top_k(configs=[self.config2, self.config1],
-                                  k=1, run_history=self.rh)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.SUCCESS, instance_id=2, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=0.5, time=0.5,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=0.5, time=0.5,
+                    status=StatusType.SUCCESS, instance_id=2, seed=None,
+                    additional_info=None)
+        conf = intensifier._top_k(configs=[self.config1, self.config2, self.config3, self.config4],
+                                  k=2, run_history=self.rh)
 
-        self.assertEqual(conf, [self.config1])
+        # Check that config4 is also before config1 (as it has the lower cost)
+        self.assertEqual(conf, [self.config4, self.config1])
 
     def test_top_k_2(self):
         """
@@ -186,7 +220,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertFalse(new)
 
         # evaluating configuration
-        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,)
+        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, log_traj=False)
         config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         self.assertEqual(config, self.config2)
         self.assertEqual(len(intensifier.curr_challengers), 1)
@@ -347,27 +381,29 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              incumbent=None,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, None)   # since this is first run, doesn't return any incumbent
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 1)
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
+        self.assertEqual(intensifier.configs_to_run, [])
+        self.assertEqual(intensifier.stage, 0)
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, None)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
-        self.assertEqual(intensifier.configs_to_run, [self.config1])
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
+        self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh,)
 
-        self.assertEqual(inc, self.config1)  # run completed, incumbent generated
+        self.assertEqual(inc, self.config1)
 
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(self.stats.inc_changed, 1)
 
@@ -382,4 +418,61 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              run_history=self.rh)
 
         self.assertEqual(config, self.config2)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
+
+    def test_do_not_update_incumbent_on_lower_budget(self):
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1], initial_budget=1)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=1)
+        inc = intensifier._get_incumbent(challenger=self.config1, incumbent=None, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config1)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=2)
+        inc = intensifier._get_incumbent(challenger=self.config1, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config1)
+
+        # Adding a worse configuration
+        self.rh.add(config=self.config2, cost=2, time=2,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=1)
+        inc = intensifier._get_incumbent(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config1)
+        self.rh.add(config=self.config2, cost=2, time=2,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=2)
+        inc = intensifier._get_incumbent(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config1)
+
+        # Adding a better configuration, but the incumbent will only be changed on budget=2
+        self.rh.add(config=self.config3, cost=0.5, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=1)
+        inc = intensifier._get_incumbent(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config1)
+        self.rh.add(config=self.config3, cost=0.5, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=2)
+        inc = intensifier._get_incumbent(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config3)
+
+        # Test that the state is only based on the runhistory
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1], initial_budget=1)
+        # Adding a better configuration, but the incumbent will only be changed on budget=2
+        self.rh.add(config=self.config4, cost=0.1, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=1)
+        inc = intensifier._get_incumbent(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config3)
+        self.rh.add(config=self.config4, cost=0.1, time=3,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None, budget=2)
+        inc = intensifier._get_incumbent(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
+        self.assertEqual(inc, self.config4)

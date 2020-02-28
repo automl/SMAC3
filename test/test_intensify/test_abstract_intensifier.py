@@ -250,7 +250,7 @@ class TestAbstractIntensifier(unittest.TestCase):
                         seed=i,
                         additional_info=None)
 
-        inst_seed_pairs = self.rh.get_runs_for_config(self.config1)
+        inst_seed_pairs = self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)
         # cost used by incumbent for going over all runs in inst_seed_pairs
         inc_sum_cost = self.rh.sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs)
 

@@ -184,7 +184,7 @@ class EI(AbstractAcquisitionFunction):
     acquisition value.
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
-    with :math:`f(X^+)` as the incumbent.
+    with :math:`f(X^+)` as the best location.
     """
 
     def __init__(self,
@@ -265,7 +265,7 @@ class EIPS(EI):
         r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
-        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
+        with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
 
         Parameters
         ----------
@@ -428,7 +428,7 @@ class PI(AbstractAcquisitionFunction):
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
         \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,
-        with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal
+        with :math:`f(X^+)` as the best location and :math:`\Phi` the cdf of the standard normal
 
         Parameters
         ----------

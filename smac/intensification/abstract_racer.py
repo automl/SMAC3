@@ -273,7 +273,7 @@ class AbstractRacer(object):
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
-        chall_inst_seeds = run_history.get_runs_for_config(challenger)
+        chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_sum_cost = run_history.sum_cost(
             config=challenger,
             instance_seed_budget_keys=chall_inst_seeds,
@@ -316,8 +316,8 @@ class AbstractRacer(object):
         None or better of the two configurations x,y
         """
 
-        inc_runs = run_history.get_runs_for_config(incumbent)
-        chall_runs = run_history.get_runs_for_config(challenger)
+        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
@@ -348,16 +348,7 @@ class AbstractRacer(object):
             n_samples = len(chall_runs)
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f)"
                              " on %d runs." % (chal_perf, inc_perf, n_samples))
-            # Show changes in the configuration
-            params = sorted([(param, incumbent[param], challenger[param])
-                             for param in challenger.keys()])
-            self.logger.info("Changes in incumbent:")
-            for param in params:
-                if param[1] != param[2]:
-                    self.logger.info("  %s : %r -> %r" % param)
-                else:
-                    self.logger.debug("  %s remains unchanged: %r" %
-                                      (param[0], param[1]))
+            self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
                 self.stats.inc_changed += 1
@@ -368,3 +359,16 @@ class AbstractRacer(object):
 
         # undecided
         return None
+
+    def _log_incumbent_changes(
+        self,
+        incumbent: Configuration,
+        challenger: Configuration,
+    ) -> None:
+        params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
+        self.logger.info("Changes in incumbent:")
+        for param in params:
+            if param[1] != param[2]:
+                self.logger.info("  %s : %r -> %r" % param)
+            else:
+                self.logger.debug("  %s remains unchanged: %r", param[0], param[1])

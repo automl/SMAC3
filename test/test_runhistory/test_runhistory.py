@@ -65,7 +65,7 @@ class RunhistoryTest(unittest.TestCase):
                    seed=12345, additional_info=None)
 
         self.assertEqual(len(rh.data), 1)
-        self.assertEqual(len(rh.get_runs_for_config(config)), 1)
+        self.assertEqual(len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1)
         self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
         self.assertEqual(list(rh.data.values())[0].cost, 1)
 
@@ -73,7 +73,7 @@ class RunhistoryTest(unittest.TestCase):
         '''
             get some config runs from runhistory
         '''
-        # return max budget only
+        # return max observed budget only
         rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
@@ -84,13 +84,14 @@ class RunhistoryTest(unittest.TestCase):
                instance_id=1, seed=1, budget=1)
         rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
                instance_id=1, seed=1, budget=2)
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
-               instance_id=2, seed=2, budget=1)
+        with self.assertRaisesRegex(ValueError, 'This should not happen!'):
+            rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS,
+                   instance_id=2, seed=2, budget=1)
 
         rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS,
                instance_id=1, seed=1, budget=1)
 
-        ist = rh.get_runs_for_config(config=config1)
+        ist = rh.get_runs_for_config(config=config1, only_max_observed_budget=True)
 
         self.assertEqual(len(ist), 2)
         self.assertEqual(ist[0].instance, 1)
@@ -98,7 +99,7 @@ class RunhistoryTest(unittest.TestCase):
         self.assertEqual(ist[0].budget, 2)
         self.assertEqual(ist[1].budget, 1)
 
-        # multiple budgets
+        # multiple budgets (only_max_observed_budget=False)
         rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
@@ -115,7 +116,7 @@ class RunhistoryTest(unittest.TestCase):
         rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS,
                instance_id=1, seed=1, budget=2)
 
-        ist = rh.get_runs_for_config(config=config1, max_budget=False)
+        ist = rh.get_runs_for_config(config=config1, only_max_observed_budget=False)
 
         self.assertEqual(len(ist), 2)
         self.assertEqual(ist[0].instance, 1)

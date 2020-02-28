@@ -225,11 +225,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
         Returns
         -------
-        incumbent: np.array(1, D)
-            The best found configuration
-        acq_val_incumbent: np.array(1,1)
-            The acquisition value of the incumbent
-
+        List
         """
 
         init_points = self._get_initial_points(num_points, runhistory, additional_start_points)
@@ -304,41 +300,41 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         # Gather data strucuture for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
-        incumbents = start_points
-        # Compute the acquisition value of the incumbents
-        num_incumbents = len(incumbents)
-        acq_val_incumbents = self.acquisition_function(incumbents)
-        if num_incumbents == 1:
-            acq_val_incumbents = [acq_val_incumbents[0][0]]
+        candidates = start_points
+        # Compute the acquisition value of the candidates
+        num_candidates = len(candidates)
+        acq_val_candidates = self.acquisition_function(candidates)
+        if num_candidates == 1:
+            acq_val_candidates = [acq_val_candidates[0][0]]
         else:
-            acq_val_incumbents = [a[0] for a in acq_val_incumbents]
+            acq_val_candidates = [a[0] for a in acq_val_candidates]
 
         # Set up additional variables required to do vectorized local search:
         # whether the i-th local search is still running
-        active = [True] * num_incumbents
+        active = [True] * num_candidates
         # number of plateau walks of the i-th local search. Reaching the maximum number is the stopping criterion of
         # the local search.
-        n_no_plateau_walk = [0] * num_incumbents
+        n_no_plateau_walk = [0] * num_candidates
         # tracking the number of steps for logging purposes
-        local_search_steps = [0] * num_incumbents
+        local_search_steps = [0] * num_candidates
         # tracking the number of neighbors looked at for logging purposes
-        neighbors_looked_at = [0] * num_incumbents
+        neighbors_looked_at = [0] * num_candidates
         # tracking the number of neighbors generated for logging purposse
-        neighbors_generated = [0] * num_incumbents
+        neighbors_generated = [0] * num_candidates
         # how many neighbors were obtained for the i-th local search. Important to map the individual acquisition
         # function values to the correct local search run
-        obtain_n = [self.vectorization_min_obtain] * num_incumbents
+        obtain_n = [self.vectorization_min_obtain] * num_candidates
         # Tracking the time it takes to compute the acquisition function
         times = []
 
         # Set up the neighborhood generators
         neighborhood_iterators = []
-        for i, inc in enumerate(incumbents):
+        for i, inc in enumerate(candidates):
             neighborhood_iterators.append(get_one_exchange_neighbourhood(
                 inc, seed=self.rng.randint(low=0, high=100000)))
             local_search_steps[i] += 1
         # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq = [[]] * num_incumbents  # type: List[List[Configuration]]
+        neighbors_w_equal_acq = [[]] * num_candidates  # type: List[List[Configuration]]
 
         num_iters = 0
         while np.any(active):
@@ -346,9 +342,9 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             num_iters += 1
             # Whether the i-th local search improved. When a new neighborhood is generated, this is used to determine
             # whether a step was made (improvement) or not (iterator exhausted)
-            improved = [False] * num_incumbents
-            # Used to request a new neighborhood for the incumbent of the i-th local search
-            new_neighborhood = [False] * num_incumbents
+            improved = [False] * num_candidates
+            # Used to request a new neighborhood for the candidates of the i-th local search
+            new_neighborhood = [False] * num_candidates
 
             # gather all neighbors
             neighbors = []
@@ -374,10 +370,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if np.ndim(acq_val.shape) == 0:
                     acq_val = [acq_val]
 
-                # Comparing the acquisition function of the neighbors with the acquisition value of the incumbent
+                # Comparing the acquisition function of the neighbors with the acquisition value of the candidate
                 acq_index = 0
                 # Iterating the all i local searches
-                for i in range(num_incumbents):
+                for i in range(num_candidates):
                     if not active[i]:
                         continue
                     # And for each local search we know how many neighbors we obtained
@@ -390,21 +386,21 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                             neighbors_looked_at[i] += 1
 
                             # Found a better configuration
-                            if acq_val[acq_index] > acq_val_incumbents[i]:
+                            if acq_val[acq_index] > acq_val_candidates[i]:
                                 self.logger.debug(
                                     "Local search %d: Switch to one of the neighbors (after %d configurations).",
                                     i,
                                     neighbors_looked_at[i],
                                 )
-                                incumbents[i] = neighbors[acq_index]
-                                acq_val_incumbents[i] = acq_val[acq_index]
+                                candidates[i] = neighbors[acq_index]
+                                acq_val_candidates[i] = acq_val[acq_index]
                                 new_neighborhood[i] = True
                                 improved[i] = True
                                 local_search_steps[i] += 1
                                 neighbors_w_equal_acq[i] = []
                                 obtain_n[i] = 1
                             # Found an equally well performing configuration, keeping it for plateau walking
-                            elif acq_val[acq_index] == acq_val_incumbents[i]:
+                            elif acq_val[acq_index] == acq_val_candidates[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
 
                             acq_index += 1
@@ -412,7 +408,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             # Now we check whether we need to create new neighborhoods and whether we need to increase the number of
             # plateau walks for one of the local searches. Also disables local searches if the number of plateau walks
             # is reached (and all being switched off is the termination criterion).
-            for i in range(num_incumbents):
+            for i in range(num_candidates):
                 if not active[i]:
                     continue
                 if obtain_n[i] == 0 or improved[i]:
@@ -423,7 +419,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 if new_neighborhood[i]:
                     if not improved[i] and n_no_plateau_walk[i] < self.n_steps_plateau_walk:
                         if len(neighbors_w_equal_acq[i]) != 0:
-                            incumbents[i] = neighbors_w_equal_acq[i][0]
+                            candidates[i] = neighbors_w_equal_acq[i][0]
                             neighbors_w_equal_acq[i] = []
                         n_no_plateau_walk[i] += 1
                     if n_no_plateau_walk[i] >= self.n_steps_plateau_walk:
@@ -431,7 +427,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                         continue
 
                     neighborhood_iterators[i] = get_one_exchange_neighbourhood(
-                        incumbents[i], seed=self.rng.randint(low=0, high=100000),
+                        candidates[i], seed=self.rng.randint(low=0, high=100000),
                     )
 
         self.logger.debug(
@@ -440,7 +436,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             local_search_steps, neighbors_looked_at, np.mean(times),
         )
 
-        return [(a, i) for a, i in zip(acq_val_incumbents, incumbents)]
+        return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
 
 
 class DiffOpt(AcquisitionFunctionMaximizer):

@@ -28,7 +28,7 @@ class EPMChooser(object):
                  rng: np.random.RandomState,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
-                 predict_incumbent: bool = True,
+                 predict_x_best: bool = True,
                  min_samples_model: int = 1
                  ):
         """
@@ -55,8 +55,8 @@ class EPMChooser(object):
             Chooser for random configuration -- one of
             * ChooserNoCoolDown(modulus)
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-        predict_incumbent: bool
-            Use predicted performance of incumbent instead of observed performance
+        predict_x_best: bool
+            Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
 -            Minimum number of samples to build a model
         """
@@ -83,7 +83,7 @@ class EPMChooser(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        self.predict_incumbent = predict_incumbent
+        self.predict_x_best = predict_x_best
 
         self.min_samples_model = min_samples_model
         self.currently_considered_budgets = [0.0, ]
@@ -117,15 +117,13 @@ class EPMChooser(object):
         Parameters
         ----------
         incumbent_value: float
-            Cost value of incumbent configuration
-            (required for acquisition function);
-            if not given, it will be inferred from runhistory;
-            if not given and runhistory is empty,
-            it will raise a ValueError
+            Cost value of incumbent configuration (required for acquisition function);
+            If not given, it will be inferred from runhistory or predicted;
+            if not given and runhistory is empty, it will raise a ValueError.
 
         Returns
         -------
-        Iterable
+        Iterator
         """
 
         self.logger.debug("Search for next configuration")
@@ -140,19 +138,20 @@ class EPMChooser(object):
         self.model.train(X, Y)
 
         if incumbent_value is not None:
-            incumbent = None  # type: typing.Optional[Configuration]
-            incumbent_array = None  # type: typing.Optional[np.ndarray]
+            best_observation = incumbent_value
+            x_best = None  # type: typing.Optional[Configuration]
+            x_best_array = None  # type: typing.Optional[np.ndarray]
         else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            incumbent, incumbent_array, incumbent_value = self._get_incumbent()
+            x_best, x_best_array, best_observation = self._get_x_best(self.predict_x_best)
 
         self.acquisition_func.update(
             model=self.model,
-            eta=incumbent_value,
-            incumbent=incumbent,
-            incumbent_array=incumbent_array,
+            eta=best_observation,
+            incumbent=x_best,
+            incumbent_array=x_best_array,
             num_data=len(self._get_evaluated_configs()),
             X=X,
         )
@@ -165,11 +164,17 @@ class EPMChooser(object):
         )
         return challengers
 
-    def _get_incumbent(self) -> typing.Tuple[float, np.ndarray, Configuration]:
-        """Get incumbent value, configuration, and array representation.
+    def _get_x_best(self, predict: bool) -> typing.Tuple[float, np.ndarray, Configuration]:
+        """Get value, configuration, and array representation of the "best" configuration.
 
-        This is retrieved either from the runhistory or from best predicted
-        performance on configs in runhistory (depends on self.predict_incumbent)
+        The definition of best varies depending on the argument ``predict``. If set to ``True``,
+        this function will return the stats of the best configuration as predicted by the model,
+        otherwise it will return the stats for the best observed configuration.
+
+        Parameters
+        ----------
+        predict : bool
+            Whether to use the predicted or observed best.
 
         Return
         ------
@@ -179,7 +184,7 @@ class EPMChooser(object):
         """
         all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
-        if self.predict_incumbent:
+        if predict:
             configs_array = convert_configurations_to_array(all_configs)
             costs = list(map(
                 lambda input_: (
@@ -189,21 +194,18 @@ class EPMChooser(object):
                 zip(configs_array, all_configs),
             ))
             costs = sorted(costs, key=lambda t: t[0])
-            incumbent = costs[0][2]
-            incumbent_array = costs[0][1]
-            incumbent_value = costs[0][0]
+            x_best = costs[0][2]
+            x_best_array = costs[0][1]
+            best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            if self.runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of "
-                                 "the incumbent is unknown.")
-            incumbent = self.incumbent
-            incumbent_array = convert_configurations_to_array([all_configs])
-            incumbent_value = self.runhistory.get_cost(incumbent)
-            incumbent_value_as_array = np.array(incumbent_value).reshape((1, 1))
+            x_best = self.incumbent
+            x_best_array = convert_configurations_to_array([all_configs])
+            best_observation = self.runhistory.get_cost(x_best)
+            best_observation_as_array = np.array(best_observation).reshape((1, 1))
             # It's unclear how to do this for inv scaling and potential future scaling.
             # This line should be changed if necessary
-            incumbent_value = self.rh2EPM.transform_response_values(incumbent_value_as_array)
-            incumbent_value = incumbent_value[0][0]
+            best_observation = self.rh2EPM.transform_response_values(best_observation_as_array)
+            best_observation = best_observation[0][0]
 
-        return incumbent, incumbent_array, incumbent_value
+        return x_best, x_best_array, best_observation

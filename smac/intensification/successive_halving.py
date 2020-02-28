@@ -291,17 +291,17 @@ class SuccessiveHalving(AbstractRacer):
         #   - this check is required because there is no incumbent performance
         #     for the first ever 'intensify' run (from initial design)
         if incumbent:
-            inc_runs = run_history.get_runs_for_config(incumbent)
+            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
         else:
             inc_sum_cost = np.inf
 
         # select which instance to run current config on
         curr_budget = self.all_budgets[self.stage]
-        prev_budget = self.all_budgets[self.stage - 1] if self.stage > 0 else 0.0
 
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
@@ -356,7 +356,7 @@ class SuccessiveHalving(AbstractRacer):
             self.curr_challengers.add(challenger)
 
             # get incumbent in the last stage if all instances have been evaluated
-            if (self.stage + 1) == len(self.all_budgets) and n_insts_remaining <= 0:
+            if n_insts_remaining <= 0:
                 incumbent = self._get_incumbent(challenger=challenger,
                                                 incumbent=incumbent,
                                                 run_history=run_history,
@@ -418,10 +418,13 @@ class SuccessiveHalving(AbstractRacer):
         self.iteration_done = False
 
         curr_budget = int(self.all_budgets[self.stage])
-        prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
 
         # if all instances have been executed, then reset and move on to next config
-        n_insts = (curr_budget - prev_budget) if self.instance_as_budget else len(self.inst_seed_pairs)
+        if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+            n_insts = (curr_budget - prev_budget)
+        else:
+            n_insts = len(self.inst_seed_pairs)
         n_insts_remaining = n_insts - self.curr_inst_idx
 
         # if there are instances pending, finish running configuration
@@ -550,11 +553,61 @@ class SuccessiveHalving(AbstractRacer):
                                            incumbent_id=self.stats.inc_changed,
                                            incumbent=new_incumbent)
 
-        else:
+        elif self.instance_as_budget:
             new_incumbent = self._compare_configs(incumbent, challenger,
                                                   run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
+        else:
+            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+            chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
+            if len(inc_runs) > 1:
+                raise ValueError(
+                    'Number of incumbent runs on budget %f must not exceed 1, but is %d',
+                    inc_runs[0].budget, len(inc_runs),
+                )
+            if len(chall_runs) > 1:
+                raise ValueError(
+                    'Number of challenger runs on budget %f must not exceed 1, but is %d',
+                    chall_runs[0].budget, len(chall_runs),
+                )
+            inc_run = inc_runs[0]
+            chall_run = chall_runs[0]
+            if inc_run.budget > chall_run.budget:
+                self.logger.debug('Incumbent evaluated on higher budget than challenger (%.4f > %.4f), '
+                                  'not changing the incumbent',
+                                  inc_run.budget, chall_run.budget)
+                new_incumbent = incumbent
+            elif inc_run.budget < chall_run.budget:
+                self.logger.debug('Challenger evaluated on higher budget than incumbent (%.4f > %.4f), '
+                                  'changing the incumbent',
+                                  chall_run.budget, inc_run.budget)
+                new_incumbent = challenger
+                if log_traj:
+                    # adding incumbent entry
+                    self.stats.inc_changed += 1
+                    new_inc_cost = run_history.get_cost(new_incumbent)
+                    self.traj_logger.add_entry(train_perf=new_inc_cost,
+                                               incumbent_id=self.stats.inc_changed,
+                                               incumbent=new_incumbent)
+            else:
+                chall_cost = run_history.get_cost(challenger)
+                inc_cost = run_history.get_cost(incumbent)
+                if chall_cost < inc_cost:
+                    self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
+                                     chall_cost, inc_cost, chall_run.budget)
+                    self._log_incumbent_changes(incumbent, challenger)
+                    new_incumbent = challenger
+                    if log_traj:
+                        # adding incumbent entry
+                        self.stats.inc_changed += 1  # first incumbent
+                        self.traj_logger.add_entry(train_perf=chall_cost,
+                                                   incumbent_id=self.stats.inc_changed,
+                                                   incumbent=new_incumbent)
+                else:
+                    self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
+                                      inc_cost, chall_cost, inc_run.budget)
+                    new_incumbent = incumbent
 
         return new_incumbent
 
@@ -563,7 +616,10 @@ class SuccessiveHalving(AbstractRacer):
                run_history: RunHistory,
                k: int) -> typing.List[Configuration]:
         """
-        selects the top 'k' configurations from the given list based on their performance in this budget
+        Selects the top 'k' configurations from the given list based on their performance.
+
+        This retrieves the performance for each configuration from the runhistory and checks
+        that the highest budget they've been evaluated on is the same for each of the configurations.
 
         Parameters
         ----------
@@ -582,10 +638,10 @@ class SuccessiveHalving(AbstractRacer):
         # extracting costs for each given configuration
         config_costs = {}
         # sample list instance-seed-budget key to act as base
-        run_key = run_history.get_runs_for_config(configs[0])
+        run_key = run_history.get_runs_for_config(configs[0], only_max_observed_budget=True)
         for c in configs:
             # ensuring that all configurations being compared are run on the same set of instance, seed & budget
-            cur_run_key = run_history.get_runs_for_config(c)
+            cur_run_key = run_history.get_runs_for_config(c, only_max_observed_budget=True)
             if cur_run_key != run_key:
                 raise AssertionError('Cannot compare configs that were run on different instances-seeds-budgets')
             config_costs[c] = run_history.get_cost(c)

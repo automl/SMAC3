@@ -117,7 +117,7 @@ class Hyperband(SuccessiveHalving):
         Running intensification via hyperband to determine the incumbent configuration.
         *Side effect:* adds runs to run_history
 
-        Implementation of hyperband (Li et al., 2017)
+        Implementation of hyperband (Li et al., 2018)
 
         Parameters
         ----------
