@@ -348,7 +348,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              run_history=self.rh,)
 
         self.assertEqual(inc, self.config1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.configs_to_run, [])
         self.assertEqual(intensifier.stage, 0)
 
@@ -358,7 +358,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              run_history=self.rh,)
 
         self.assertEqual(inc, self.config1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
@@ -369,7 +369,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(inc, self.config1)
 
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1)), 2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(self.stats.inc_changed, 1)
 
@@ -384,4 +384,4 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              run_history=self.rh)
 
         self.assertEqual(config, self.config2)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2)), 2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)

@@ -173,7 +173,7 @@ class TestIntensify(unittest.TestCase):
         # such that c(config1) = 1.25 and c(config2) close to 1.3
         self.assertEqual(inc, self.config1)
         # the capped run should not be counted in runs_perf_config
-        self.assertAlmostEqual(self.rh.runs_per_config[2], 2)
+        self.assertAlmostEqual(self.rh.num_runs_per_config[2], 2)
         self.assertFalse(intensifier.continue_challenger)
 
     def test_race_challenger_large(self):
@@ -218,7 +218,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.rh.get_cost(self.config2), 1)
 
         # get data for config2 to check that the correct run was performed
-        runs = self.rh.get_runs_for_config(self.config2)
+        runs = self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
         self.assertEqual(len(runs), 10)
 
     def test_race_challenger_large_blocked_seed(self):
@@ -263,7 +263,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.rh.get_cost(self.config2), 1)
 
         # get data for config2 to check that the correct run was performed
-        runs = self.rh.get_runs_for_config(self.config2)
+        runs = self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
         self.assertEqual(len(runs), 10)
 
         seeds = sorted([r.seed for r in runs])
@@ -316,7 +316,7 @@ class TestIntensify(unittest.TestCase):
 
         intensifier._add_inc_run(incumbent=self.config1, run_history=self.rh)
         self.assertEqual(len(self.rh.data), 2, self.rh.data)
-        runs = self.rh.get_runs_for_config(config=self.config1)
+        runs = self.rh.get_runs_for_config(config=self.config1, only_max_observed_budget=True)
         # exactly one run on each instance
         self.assertIn(1, [runs[0].instance, runs[1].instance])
         self.assertIn(2, [runs[0].instance, runs[1].instance])
@@ -430,7 +430,7 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(inc, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3)), 1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.n_iters, 1)
         self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
         with self.assertRaises(StopIteration):

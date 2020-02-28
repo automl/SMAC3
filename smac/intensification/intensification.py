@@ -261,14 +261,14 @@ class Intensifier(AbstractRacer):
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
-        inc_runs = run_history.get_runs_for_config(incumbent)
+        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
 
         # Line 3
         # First evaluate incumbent on a new instance
         if len(inc_runs) < self.maxR:
             # Line 4
             # find all instances that have the most runs on the inc
-            inc_runs = run_history.get_runs_for_config(incumbent)
+            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_inst = [s.instance for s in inc_runs]
             inc_inst = list(Counter(inc_inst).items())
             inc_inst.sort(key=lambda x: x[1], reverse=True)
@@ -312,7 +312,7 @@ class Intensifier(AbstractRacer):
                 self.stage = IntensifierStage.RUN_CHALLENGER
 
             # output estimated performance of incumbent
-            inc_runs = run_history.get_runs_for_config(incumbent)
+            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_perf = run_history.get_cost(incumbent)
             self.logger.info("Updated estimated cost of incumbent on %d runs: %.4f"
                              % (len(inc_runs), inc_perf))
@@ -400,7 +400,7 @@ class Intensifier(AbstractRacer):
                 self.stage = IntensifierStage.RUN_INCUMBENT
                 return incumbent
 
-        chal_runs = run_history.get_runs_for_config(challenger)
+        chal_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_perf = run_history.get_cost(challenger)
         self.logger.debug('Estimated cost of challenger on %d runs: %.4f' % (len(chal_runs), chal_perf))
 
@@ -456,8 +456,8 @@ class Intensifier(AbstractRacer):
         """
         # get next instances left for the challenger
         # Line 8
-        inc_inst_seeds = set(run_history.get_runs_for_config(incumbent))
-        chall_inst_seeds = set(run_history.get_runs_for_config(challenger))
+        inc_inst_seeds = set(run_history.get_runs_for_config(incumbent, only_max_observed_budget=True))
+        chall_inst_seeds = set(run_history.get_runs_for_config(challenger, only_max_observed_budget=True))
         # Line 10
         missing_runs = list(inc_inst_seeds - chall_inst_seeds)
 

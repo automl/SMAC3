@@ -273,7 +273,7 @@ class AbstractRacer(object):
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
-        chall_inst_seeds = run_history.get_runs_for_config(challenger)
+        chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_sum_cost = run_history.sum_cost(
             config=challenger,
             instance_seed_budget_keys=chall_inst_seeds,
@@ -316,8 +316,8 @@ class AbstractRacer(object):
         None or better of the two configurations x,y
         """
 
-        inc_runs = run_history.get_runs_for_config(incumbent)
-        chall_runs = run_history.get_runs_for_config(challenger)
+        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
