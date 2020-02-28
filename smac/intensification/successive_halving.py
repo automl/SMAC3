@@ -621,7 +621,10 @@ class SuccessiveHalving(AbstractRacer):
                run_history: RunHistory,
                k: int) -> typing.List[Configuration]:
         """
-        selects the top 'k' configurations from the given list based on their performance in this budget
+        Selects the top 'k' configurations from the given list based on their performance.
+
+        This retrieves the performance for each configuration from the runhistory and checks
+        that the highest budget they've been evaluated on is the same for each of the configurations.
 
         Parameters
         ----------
