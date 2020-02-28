@@ -301,10 +301,10 @@ class SuccessiveHalving(AbstractRacer):
 
         # select which instance to run current config on
         curr_budget = self.all_budgets[self.stage]
-        prev_budget = self.all_budgets[self.stage - 1] if self.stage > 0 else 0.0
 
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
@@ -421,10 +421,13 @@ class SuccessiveHalving(AbstractRacer):
         self.iteration_done = False
 
         curr_budget = int(self.all_budgets[self.stage])
-        prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
 
         # if all instances have been executed, then reset and move on to next config
-        n_insts = (curr_budget - prev_budget) if self.instance_as_budget else len(self.inst_seed_pairs)
+        if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+            n_insts = (curr_budget - prev_budget)
+        else:
+            n_insts = len(self.inst_seed_pairs)
         n_insts_remaining = n_insts - self.curr_inst_idx
 
         # if there are instances pending, finish running configuration
@@ -560,7 +563,7 @@ class SuccessiveHalving(AbstractRacer):
                                                   run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
-        elif not self.instance_as_budget:
+        else:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
             if len(inc_runs) > 1:
@@ -610,9 +613,6 @@ class SuccessiveHalving(AbstractRacer):
                     self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
                                       inc_cost, chall_cost, inc_run.budget)
                     new_incumbent = incumbent
-
-        else:
-            raise ValueError('This should not happen!')
 
         return new_incumbent
 
