@@ -598,16 +598,7 @@ class SuccessiveHalving(AbstractRacer):
                 if chall_cost < inc_cost:
                     self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
                                      chall_cost, inc_cost, chall_run.budget)
-                    # Show changes in the configuration
-                    params = sorted([(param, incumbent[param], challenger[param])
-                                     for param in challenger.keys()])
-                    self.logger.info("Changes in incumbent:")
-                    for param in params:
-                        if param[1] != param[2]:
-                            self.logger.info("  %s : %r -> %r" % param)
-                        else:
-                            self.logger.debug("  %s remains unchanged: %r" %
-                                              (param[0], param[1]))
+                    self._log_incumbent_changes(incumbent, challenger)
                     new_incumbent = challenger
                     if log_traj:
                         # adding incumbent entry

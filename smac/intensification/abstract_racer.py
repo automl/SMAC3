@@ -348,16 +348,7 @@ class AbstractRacer(object):
             n_samples = len(chall_runs)
             self.logger.info("Challenger (%.4f) is better than incumbent (%.4f)"
                              " on %d runs." % (chal_perf, inc_perf, n_samples))
-            # Show changes in the configuration
-            params = sorted([(param, incumbent[param], challenger[param])
-                             for param in challenger.keys()])
-            self.logger.info("Changes in incumbent:")
-            for param in params:
-                if param[1] != param[2]:
-                    self.logger.info("  %s : %r -> %r" % param)
-                else:
-                    self.logger.debug("  %s remains unchanged: %r" %
-                                      (param[0], param[1]))
+            self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
                 self.stats.inc_changed += 1
@@ -368,3 +359,16 @@ class AbstractRacer(object):
 
         # undecided
         return None
+
+    def _log_incumbent_changes(
+        self,
+        incumbent: Configuration,
+        challenger: Configuration,
+    ):
+        params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
+        self.logger.info("Changes in incumbent:")
+        for param in params:
+            if param[1] != param[2]:
+                self.logger.info("  %s : %r -> %r" % param)
+            else:
+                self.logger.debug("  %s remains unchanged: %r", param[0], param[1])
