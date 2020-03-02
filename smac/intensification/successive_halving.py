@@ -129,9 +129,9 @@ class SuccessiveHalving(AbstractRacer):
 
         if self.min_chall > 1:
             raise ValueError('Successive Halving cannot handle argument `min_chall` > 1.')
+        self.first_run = True
 
         # INSTANCES
-
         self.n_seeds = n_seeds if n_seeds else 1
         self.instance_order = instance_order
 
@@ -295,6 +295,10 @@ class SuccessiveHalving(AbstractRacer):
             inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
         else:
             inc_sum_cost = np.inf
+            if self.first_run:
+                self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
+                incumbent = challenger
+                self.first_run = False
 
         # select which instance to run current config on
         curr_budget = self.all_budgets[self.stage]
@@ -357,10 +361,10 @@ class SuccessiveHalving(AbstractRacer):
 
             # get incumbent in the last stage if all instances have been evaluated
             if n_insts_remaining <= 0:
-                incumbent = self._get_incumbent(challenger=challenger,
-                                                incumbent=incumbent,
-                                                run_history=run_history,
-                                                log_traj=log_traj)
+                incumbent = self._compare_configs(challenger=challenger,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  log_traj=log_traj)
         except BudgetExhaustedException:
             # Returning the final incumbent selected so far because we ran out of optimization budget
             self.logger.debug("Budget exhausted; "
@@ -516,11 +520,11 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
 
-    def _get_incumbent(self,
-                       challenger: Configuration,
-                       incumbent: typing.Optional[Configuration],
-                       run_history: RunHistory,
-                       log_traj: bool = True) -> Configuration:
+    def _compare_configs(self,
+                         challenger: Configuration,
+                         incumbent: typing.Optional[Configuration],
+                         run_history: RunHistory,
+                         log_traj: bool = True) -> Configuration:
         """
         Compares the challenger with current incumbent and returns the best configuration
 
@@ -540,22 +544,9 @@ class SuccessiveHalving(AbstractRacer):
         typing.Tuple[Configuration, float]
             incumbent and incumbent cost
         """
-        # compare challenger with current incumbent
-        if incumbent is None:  # first intensify run from initial design
-            new_incumbent = challenger
-            inc_perf = run_history.get_cost(new_incumbent)
-            self.logger.info("First Incumbent found! Cost of incumbent is (%.4f)" % inc_perf)
-            self.logger.info("incumbent configuration: %s" % str(challenger))
-            if log_traj:
-                # adding incumbent entry
-                self.stats.inc_changed += 1  # first incumbent
-                self.traj_logger.add_entry(train_perf=inc_perf,
-                                           incumbent_id=self.stats.inc_changed,
-                                           incumbent=new_incumbent)
 
-        elif self.instance_as_budget:
-            new_incumbent = self._compare_configs(incumbent, challenger,
-                                                  run_history, log_traj)
+        if self.instance_as_budget:
+            new_incumbent = super()._compare_configs(incumbent, challenger, run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
         else:
@@ -607,6 +598,12 @@ class SuccessiveHalving(AbstractRacer):
                 else:
                     self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
                                       inc_cost, chall_cost, inc_run.budget)
+                    if log_traj and self.stats.inc_changed == 0:
+                        # adding incumbent entry
+                        self.stats.inc_changed += 1  # first incumbent
+                        self.traj_logger.add_entry(train_perf=inc_cost,
+                                                   incumbent_id=self.stats.inc_changed,
+                                                   incumbent=incumbent)
                     new_incumbent = incumbent
 
         return new_incumbent

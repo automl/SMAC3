@@ -428,36 +428,36 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=1)
-        inc = intensifier._get_incumbent(challenger=self.config1, incumbent=None, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config1, incumbent=None, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=2)
-        inc = intensifier._get_incumbent(challenger=self.config1, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config1, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
 
         # Adding a worse configuration
         self.rh.add(config=self.config2, cost=2, time=2,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=1)
-        inc = intensifier._get_incumbent(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
         self.rh.add(config=self.config2, cost=2, time=2,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=2)
-        inc = intensifier._get_incumbent(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config2, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
 
         # Adding a better configuration, but the incumbent will only be changed on budget=2
         self.rh.add(config=self.config3, cost=0.5, time=3,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=1)
-        inc = intensifier._get_incumbent(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
         self.rh.add(config=self.config3, cost=0.5, time=3,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=2)
-        inc = intensifier._get_incumbent(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config3, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config3)
 
         # Test that the state is only based on the runhistory
@@ -469,10 +469,10 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.rh.add(config=self.config4, cost=0.1, time=3,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=1)
-        inc = intensifier._get_incumbent(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config3)
         self.rh.add(config=self.config4, cost=0.1, time=3,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=2)
-        inc = intensifier._get_incumbent(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config4)

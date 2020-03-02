@@ -197,7 +197,7 @@ class Intensifier(AbstractRacer):
             # we run incumbent once and then challenger in the next
             if self.stage == IntensifierStage.RUN_INCUMBENT:
                 # Lines 3-7
-                self._add_inc_run(incumbent=incumbent, run_history=run_history)
+                self._add_inc_run(incumbent=incumbent, run_history=run_history, log_traj=log_traj)
             elif self.stage == IntensifierStage.RUN_CHALLENGER:
                 # Lines 8-17
                 incumbent = self._race_challenger(challenger=challenger,
@@ -249,7 +249,8 @@ class Intensifier(AbstractRacer):
 
     def _add_inc_run(self,
                      incumbent: Configuration,
-                     run_history: RunHistory) -> None:
+                     run_history: RunHistory,
+                     log_traj: bool = True) -> None:
         """Add new run for incumbent
 
         *Side effect:* adds runs to <run_history>
@@ -260,6 +261,9 @@ class Intensifier(AbstractRacer):
             best configuration so far
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
         """
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
 
@@ -324,6 +328,11 @@ class Intensifier(AbstractRacer):
         else:
             # maximum runs for incumbent reached, do not run incumbent
             self.stage = IntensifierStage.RUN_CHALLENGER
+
+        self._compare_configs(
+            incumbent=incumbent, challenger=incumbent,
+            run_history=run_history,
+            log_traj=log_traj)
 
     def _race_challenger(self,
                          challenger: Configuration,

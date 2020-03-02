@@ -340,6 +340,12 @@ class AbstractRacer(object):
                 self.logger.debug("Incumbent (%.4f) is at least as good as the "
                                   "challenger (%.4f) on %d runs." %
                                   (inc_perf, chal_perf, len(chall_runs)))
+                if log_traj and self.stats.inc_changed == 0:
+                    # adding incumbent entry
+                    self.stats.inc_changed += 1  # first incumbent
+                    self.traj_logger.add_entry(train_perf=inc_perf,
+                                               incumbent_id=self.stats.inc_changed,
+                                               incumbent=incumbent)
                 return incumbent
 
             # Challenger is better than incumbent
