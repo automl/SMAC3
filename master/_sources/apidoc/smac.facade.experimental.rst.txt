@@ -5,10 +5,10 @@ smac.facade.experimental package
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 
 .. toctree::
 
-   smac.facade.experimental.epils_facade
    smac.facade.experimental.hydra_facade
    smac.facade.experimental.psmac_facade

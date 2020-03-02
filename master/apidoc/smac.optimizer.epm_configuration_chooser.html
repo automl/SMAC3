@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>smac.optimizer.epm_configuration_chooser module &mdash; SMAC 0.12.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.optimizer.pSMAC module" href="smac.optimizer.pSMAC.html" />
+    <link rel="prev" title="smac.optimizer.ei_optimization module" href="smac.optimizer.ei_optimization.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SMAC
+          
+
+          
+            
+            <img src="../_static/SMAC3.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.12.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validation.html">Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.optimizer.epm_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SMAC</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../api.html">API Documentation</a> &raquo;</li>
+        
+          <li><a href="smac.optimizer.html">smac.optimizer package</a> &raquo;</li>
+        
+      <li>smac.optimizer.epm_configuration_chooser module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/apidoc/smac.optimizer.epm_configuration_chooser.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-smac.optimizer.epm_configuration_chooser">
+<span id="smac-optimizer-epm-configuration-chooser-module"></span><h1>smac.optimizer.epm_configuration_chooser module<a class="headerlink" href="#module-smac.optimizer.epm_configuration_chooser" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser">
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.epm_configuration_chooser.</code><code class="sig-name descname">EPMChooser</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_x_best: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<blockquote>
+<div><p>Interface to train the EPM and generate next configurations</p>
+<dl class="simple">
+<dt>scenario: smac.scenario.scenario.Scenario</dt><dd><p>Scenario object</p>
+</dd>
+<dt>stats: smac.stats.stats.Stats</dt><dd><p>statistics object with configuration budgets</p>
+</dd>
+<dt>runhistory: smac.runhistory.runhistory.RunHistory</dt><dd><p>runhistory with all runs so far</p>
+</dd>
+<dt>model: smac.epm.rf_with_instances.RandomForestWithInstances</dt><dd><p>empirical performance model (right now, we support only
+RandomForestWithInstances)</p>
+</dd>
+<dt>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</dt><dd><p>Optimizer of acquisition function.</p>
+</dd>
+<dt>restore_incumbent: Configuration</dt><dd><p>incumbent to be used from the start. ONLY used to restore states.</p>
+</dd>
+<dt>rng: np.random.RandomState</dt><dd><p>Random number generator</p>
+</dd>
+<dt>random_configuration_chooser</dt><dd><p>Chooser for random configuration – one of
+* ChooserNoCoolDown(modulus)
+* ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p>
+</dd>
+<dt>predict_x_best: bool</dt><dd><p>Choose x_best for computing the acquisition function via the model instead of via the observations.</p>
+</dd>
+</dl>
+<p>min_samples_model: int</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Minimum number of samples to build a model</p></li>
+</ul>
+<dl class="method">
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">
+<code class="sig-name descname">_collect_data_to_train_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._collect_data_to_train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">
+<code class="sig-name descname">_get_evaluated_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_evaluated_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">
+<code class="sig-name descname">_get_x_best</code><span class="sig-paren">(</span><em class="sig-param">predict: bool</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray, ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get value, configuration, and array representation of the “best” configuration.</p>
+<p>The definition of best varies depending on the argument <code class="docutils literal notranslate"><span class="pre">predict</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
+this function will return the stats of the best configuration as predicted by the model,
+otherwise it will return the stats for the best observed configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predict</strong> (<em>bool</em>) – Whether to use the predicted or observed best.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>float</em></p></li>
+<li><p><em>np.ndarry</em></p></li>
+<li><p><em>Configuration</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">
+<code class="sig-name descname">choose_next</code><span class="sig-paren">(</span><em class="sig-param">incumbent_value: float = None</em><span class="sig-paren">)</span> &#x2192; Iterator[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose next candidate solution with Bayesian optimization. The
+suggested configurations depend on the argument <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> to
+the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>incumbent_value</strong> (<em>float</em>) – Cost value of incumbent configuration (required for acquisition function);
+If not given, it will be inferred from runhistory or predicted;
+if not given and runhistory is empty, it will raise a ValueError.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="smac.optimizer.pSMAC.html" class="btn btn-neutral float-right" title="smac.optimizer.pSMAC module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smac.optimizer.ei_optimization.html" class="btn btn-neutral float-left" title="smac.optimizer.ei_optimization module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

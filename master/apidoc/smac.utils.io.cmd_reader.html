@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.io.cmd_reader module &mdash; SMAC 0.11.1 documentation</title>
+  <title>smac.utils.io.cmd_reader module &mdash; SMAC 0.12.0 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.utils.io.input_reader module" href="smac.utils.io.input_reader.html" />
@@ -64,7 +65,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.12.0
               </div>
             
           
@@ -116,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -124,7 +124,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -133,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -146,14 +146,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -191,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -199,6 +200,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -292,14 +304,42 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.utils.io.cmd_reader.CMDReader._add_main_options">
+<code class="sig-name descname">_add_main_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader._add_main_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader._add_main_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add main Options</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.cmd_reader.CMDReader._add_scen_options">
+<code class="sig-name descname">_add_scen_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader._add_scen_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader._add_scen_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add Scenario Options</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.cmd_reader.CMDReader._add_smac_options">
+<code class="sig-name descname">_add_smac_options</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader._add_smac_options"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader._add_smac_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add SMAC Options</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.cmd_reader.CMDReader._extract_action_info">
+<em class="property">static </em><code class="sig-name descname">_extract_action_info</code><span class="sig-paren">(</span><em class="sig-param">actions: List[argparse.Action]</em><span class="sig-paren">)</span> &#x2192; Tuple[Dict, Dict]<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader._extract_action_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader._extract_action_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.cmd_reader.CMDReader._write_options_to_doc">
+<em class="property">static </em><code class="sig-name descname">_write_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">_arguments: dict, path: str, exclude: List[str]</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader._write_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader._write_options_to_doc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.parse_main_command">
-<code class="sig-name descname">parse_main_command</code><span class="sig-paren">(</span><em class="sig-param">main_cmd_opts: List[str]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_main_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_main_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parse_main_command</code><span class="sig-paren">(</span><em class="sig-param">main_cmd_opts: Sequence[str]</em><span class="sig-paren">)</span> &#x2192; Tuple[argparse.Namespace, List[str]]<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_main_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_main_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse main options</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.parse_scenario_command">
-<code class="sig-name descname">parse_scenario_command</code><span class="sig-paren">(</span><em class="sig-param">scenario_file: str = None</em>, <em class="sig-param">scenario_dict: dict = {}</em>, <em class="sig-param">scenario_cmd_opts: List[str] = []</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_scenario_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_scenario_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parse_scenario_command</code><span class="sig-paren">(</span><em class="sig-param">scenario_file: str = None</em>, <em class="sig-param">scenario_dict: dict = {}</em>, <em class="sig-param">scenario_cmd_opts: List[str] = []</em><span class="sig-paren">)</span> &#x2192; argparse.Namespace<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_scenario_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_scenario_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse scenario options
 :param scenario_file: str or None
 Path to the scenario file.
@@ -313,13 +353,13 @@ Parsed scenario arguments</p>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.parse_smac_command">
-<code class="sig-name descname">parse_smac_command</code><span class="sig-paren">(</span><em class="sig-param">smac_dict: dict = {}</em>, <em class="sig-param">smac_cmd_opts: List[str] = []</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_smac_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_smac_command" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parse_smac_command</code><span class="sig-paren">(</span><em class="sig-param">smac_dict: dict = {}</em>, <em class="sig-param">smac_cmd_opts: List[str] = []</em><span class="sig-paren">)</span> &#x2192; Tuple[argparse.Namespace, Dict, List[str]]<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.parse_smac_command"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.parse_smac_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse SMAC options</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.read_cmd">
-<code class="sig-name descname">read_cmd</code><span class="sig-paren">(</span><em class="sig-param">commandline_arguments: List[str] = ['-b', 'html', '-d', 'build/doctrees', '.', 'build/html']</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_cmd</code><span class="sig-paren">(</span><em class="sig-param">commandline_arguments: Sequence[str] = ('-b'</em>, <em class="sig-param">'html'</em>, <em class="sig-param">'-d'</em>, <em class="sig-param">'build/doctrees'</em>, <em class="sig-param">'.'</em>, <em class="sig-param">'build/html')</em><span class="sig-paren">)</span> &#x2192; Tuple[argparse.Namespace, argparse.Namespace, argparse.Namespace]<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_cmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads command line options (main, smac and scenario options)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -333,7 +373,7 @@ Parsed scenario arguments</p>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.read_smac_scenario_dict_cmd">
-<code class="sig-name descname">read_smac_scenario_dict_cmd</code><span class="sig-paren">(</span><em class="sig-param">dict_cmd: dict</em>, <em class="sig-param">scenario_file: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_smac_scenario_dict_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_smac_scenario_dict_cmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_smac_scenario_dict_cmd</code><span class="sig-paren">(</span><em class="sig-param">dict_cmd: dict</em>, <em class="sig-param">scenario_file: str = None</em><span class="sig-paren">)</span> &#x2192; Tuple[argparse.Namespace, argparse.Namespace]<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.read_smac_scenario_dict_cmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.read_smac_scenario_dict_cmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads smac and scenario options provided in a dictionary</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -347,7 +387,7 @@ Parsed scenario arguments</p>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc">
-<code class="sig-name descname">write_main_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'main_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_main_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_main_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'main_options.rst'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_main_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the SMAC option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
 <dl class="field-list simple">
@@ -359,7 +399,7 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.write_scenario_options_to_doc">
-<code class="sig-name descname">write_scenario_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'scenario_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_scenario_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_scenario_options_to_doc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_scenario_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'scenario_options.rst'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_scenario_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_scenario_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the Scenario option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
 <dl class="field-list simple">
@@ -371,7 +411,7 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.CMDReader.write_smac_options_to_doc">
-<code class="sig-name descname">write_smac_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'smac_options.rst'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_smac_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_smac_options_to_doc" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">write_smac_options_to_doc</code><span class="sig-paren">(</span><em class="sig-param">path: str = 'smac_options.rst'</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#CMDReader.write_smac_options_to_doc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.CMDReader.write_smac_options_to_doc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the SMAC option-list to file for autogeneration in documentation.
 The list is created in doc/conf.py and read in doc/options.rst.</p>
 <dl class="field-list simple">
@@ -392,14 +432,19 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
 <dl class="class">
 <dt id="smac.utils.io.cmd_reader.ConfigurableHelpFormatter">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">ConfigurableHelpFormatter</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">help_type='standard'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#ConfigurableHelpFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.ConfigurableHelpFormatter" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">ConfigurableHelpFormatter</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">help_type: str = 'standard'</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#ConfigurableHelpFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.ConfigurableHelpFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentDefaultsHelpFormatter</span></code></p>
 <p>Configurable Help Formatter. Can filter out developer options.</p>
+<dl class="method">
+<dt id="smac.utils.io.cmd_reader.ConfigurableHelpFormatter._add_item">
+<code class="sig-name descname">_add_item</code><span class="sig-paren">(</span><em class="sig-param">func: Callable</em>, <em class="sig-param">args: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#ConfigurableHelpFormatter._add_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.ConfigurableHelpFormatter._add_item" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.utils.io.cmd_reader.DevHelpAction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">DevHelpAction</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#DevHelpAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.DevHelpAction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">DevHelpAction</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#DevHelpAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.DevHelpAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Action</span></code></p>
 <p>Action to show standard and developer options in help message</p>
 </dd></dl>
@@ -462,36 +507,41 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
 <dl class="class">
 <dt id="smac.utils.io.cmd_reader.SMACArgumentParser">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">SMACArgumentParser</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">SMACArgumentParser</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></p>
 <p>ArgumentParser that can be extended by additional parsers.</p>
 <dl class="method">
+<dt id="smac.utils.io.cmd_reader.SMACArgumentParser._get_formatter">
+<code class="sig-name descname">_get_formatter</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; argparse.HelpFormatter<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser._get_formatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser._get_formatter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="smac.utils.io.cmd_reader.SMACArgumentParser.add_parser">
-<code class="sig-name descname">add_parser</code><span class="sig-paren">(</span><em class="sig-param">additional_parser: argparse.ArgumentParser</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.add_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.add_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_parser</code><span class="sig-paren">(</span><em class="sig-param">additional_parser: argparse.ArgumentParser</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.add_parser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.add_parser" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.SMACArgumentParser.format_help">
-<code class="sig-name descname">format_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.format_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.format_help" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">format_help</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.format_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.format_help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="smac.utils.io.cmd_reader.SMACArgumentParser.set_help_type">
-<code class="sig-name descname">set_help_type</code><span class="sig-paren">(</span><em class="sig-param">help_type: str</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.set_help_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.set_help_type" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_help_type</code><span class="sig-paren">(</span><em class="sig-param">help_type: str</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#SMACArgumentParser.set_help_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.SMACArgumentParser.set_help_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.utils.io.cmd_reader.StandardHelpAction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">StandardHelpAction</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#StandardHelpAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.StandardHelpAction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">StandardHelpAction</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#StandardHelpAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.StandardHelpAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Action</span></code></p>
 <p>Action to only show standard options in help message</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="smac.utils.io.cmd_reader.truthy">
-<code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">truthy</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#truthy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.truthy" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.utils.io.cmd_reader.</code><code class="sig-name descname">truthy</code><span class="sig-paren">(</span><em class="sig-param">x: Any</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/utils/io/cmd_reader.html#truthy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.cmd_reader.truthy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert x into its truth value</p>
 </dd></dl>
 
@@ -517,7 +567,7 @@ The list is created in doc/conf.py and read in doc/options.rst.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

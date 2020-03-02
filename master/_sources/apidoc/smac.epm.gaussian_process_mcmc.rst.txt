@@ -5,3 +5,4 @@ smac.epm.gaussian\_process\_mcmc module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

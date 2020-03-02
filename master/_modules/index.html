@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; SMAC 0.11.1 documentation</title>
+  <title>Overview: module code &mdash; SMAC 0.12.0 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
 </head>
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.12.0
               </div>
             
           
@@ -114,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -122,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -131,6 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -144,14 +144,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -189,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -197,6 +198,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -263,7 +275,11 @@
            <div itemprop="articleBody">
             
   <h1>All modules for which code is available</h1>
-<ul><li><a href="smac/configspace/util.html">smac.configspace.util</a></li>
+<ul><li><a href="ConfigSpace/conditions.html">ConfigSpace.conditions</a></li>
+<li><a href="ConfigSpace/configuration_space.html">ConfigSpace.configuration_space</a></li>
+<li><a href="ConfigSpace/hyperparameters.html">ConfigSpace.hyperparameters</a></li>
+<li><a href="collections.html">collections</a></li>
+<li><a href="smac/configspace/util.html">smac.configspace.util</a></li>
 <li><a href="smac/epm/base_epm.html">smac.epm.base_epm</a></li>
 <li><a href="smac/epm/base_gp.html">smac.epm.base_gp</a></li>
 <li><a href="smac/epm/base_imputor.html">smac.epm.base_imputor</a></li>
@@ -274,17 +290,16 @@
 <li><a href="smac/epm/gp_kernels.html">smac.epm.gp_kernels</a></li>
 <li><a href="smac/epm/random_epm.html">smac.epm.random_epm</a></li>
 <li><a href="smac/epm/rf_with_instances.html">smac.epm.rf_with_instances</a></li>
-<li><a href="smac/epm/rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo</a></li>
 <li><a href="smac/epm/rfr_imputator.html">smac.epm.rfr_imputator</a></li>
 <li><a href="smac/epm/uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances</a></li>
 <li><a href="smac/epm/util_funcs.html">smac.epm.util_funcs</a></li>
-<li><a href="smac/facade/experimental/epils_facade.html">smac.facade.experimental.epils_facade</a></li>
 <li><a href="smac/facade/experimental/hydra_facade.html">smac.facade.experimental.hydra_facade</a></li>
 <li><a href="smac/facade/experimental/psmac_facade.html">smac.facade.experimental.psmac_facade</a></li>
 <li><a href="smac/facade/func_facade.html">smac.facade.func_facade</a></li>
 <li><a href="smac/facade/roar_facade.html">smac.facade.roar_facade</a></li>
 <li><a href="smac/facade/smac_ac_facade.html">smac.facade.smac_ac_facade</a></li>
 <li><a href="smac/facade/smac_bo_facade.html">smac.facade.smac_bo_facade</a></li>
+<li><a href="smac/facade/smac_bohb_facade.html">smac.facade.smac_bohb_facade</a></li>
 <li><a href="smac/facade/smac_hpo_facade.html">smac.facade.smac_hpo_facade</a></li>
 <li><a href="smac/initial_design/default_configuration_design.html">smac.initial_design.default_configuration_design</a></li>
 <li><a href="smac/initial_design/factorial_design.html">smac.initial_design.factorial_design</a></li>
@@ -292,11 +307,13 @@
 <li><a href="smac/initial_design/latin_hypercube_design.html">smac.initial_design.latin_hypercube_design</a></li>
 <li><a href="smac/initial_design/random_configuration_design.html">smac.initial_design.random_configuration_design</a></li>
 <li><a href="smac/initial_design/sobol_design.html">smac.initial_design.sobol_design</a></li>
+<li><a href="smac/intensification/abstract_racer.html">smac.intensification.abstract_racer</a></li>
+<li><a href="smac/intensification/hyperband.html">smac.intensification.hyperband</a></li>
 <li><a href="smac/intensification/intensification.html">smac.intensification.intensification</a></li>
+<li><a href="smac/intensification/successive_halving.html">smac.intensification.successive_halving</a></li>
 <li><a href="smac/optimizer/acquisition.html">smac.optimizer.acquisition</a></li>
 <li><a href="smac/optimizer/ei_optimization.html">smac.optimizer.ei_optimization</a></li>
-<li><a href="smac/optimizer/epils.html">smac.optimizer.epils</a></li>
-<li><a href="smac/optimizer/objective.html">smac.optimizer.objective</a></li>
+<li><a href="smac/optimizer/epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser</a></li>
 <li><a href="smac/optimizer/pSMAC.html">smac.optimizer.pSMAC</a></li>
 <li><a href="smac/optimizer/random_configuration_chooser.html">smac.optimizer.random_configuration_chooser</a></li>
 <li><a href="smac/optimizer/smbo.html">smac.optimizer.smbo</a></li>
@@ -311,7 +328,6 @@
 <li><a href="smac/tae/execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra</a></li>
 <li><a href="smac/tae/execute_ta_run_old.html">smac.tae.execute_ta_run_old</a></li>
 <li><a href="smac/utils/dependencies.html">smac.utils.dependencies</a></li>
-<li><a href="smac/utils/duplicate_filter_logging.html">smac.utils.duplicate_filter_logging</a></li>
 <li><a href="smac/utils/io/cmd_reader.html">smac.utils.io.cmd_reader</a></li>
 <li><a href="smac/utils/io/input_reader.html">smac.utils.io.input_reader</a></li>
 <li><a href="smac/utils/io/output_directory.html">smac.utils.io.output_directory</a></li>
@@ -333,7 +349,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

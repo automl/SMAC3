@@ -5,3 +5,4 @@ smac.epm.base\_gp module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

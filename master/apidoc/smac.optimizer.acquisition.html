@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.acquisition module &mdash; SMAC 0.11.1 documentation</title>
+  <title>smac.optimizer.acquisition module &mdash; SMAC 0.12.0 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.optimizer.ei_optimization module" href="smac.optimizer.ei_optimization.html" />
@@ -64,7 +65,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.12.0
               </div>
             
           
@@ -116,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -124,7 +124,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -133,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -146,14 +146,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -191,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -199,6 +200,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -295,15 +307,40 @@
 <dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – Models the objective function.</p>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._compute">
+<em class="property">abstract </em><code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the acquisition value for a given point X. This function has
+to be overwritten in a derived class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – The input points where the acquisition function
+should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Acquisition function values wrt X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update the acquisition functions values.</p>
-<p>This method will be called if the model is updated. E.g.
-entropy search uses it to update its approximation of P(x=x_min),
-EI uses it to update the current fmin.</p>
-<p>The default implementation takes all keyword arguments and sets the
-respective attributes for the acquisition function object.</p>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the acquisition function attributes required for calculation.</p>
+<p>This method will be called after fitting the model, but before maximizing the acquisition
+function. As an examples, EI uses it to update the current fmin.</p>
+<p>The default implementation only updates the attributes of the acqusition function which
+are already present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>kwargs</strong> – </p>
@@ -320,7 +357,7 @@ respective attributes for the acquisition function object.</p>
 <p>Computes for a given x the expected improvement as
 acquisition value.</p>
 <p><span class="math notranslate nohighlight">\(EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]\)</span>,
-with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent.</p>
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location.</p>
 <p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -337,6 +374,30 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.EI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.EI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -345,8 +406,8 @@ acquisition function.</p></li>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.EI</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.
-<span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}\)</span>,
-with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
+<span class="math notranslate nohighlight">\(EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}\)</span>,
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(r(x)\)</span> as runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -363,11 +424,35 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.EIPS._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.EIPS._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EIPS value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input point where the acquisition function</em>) – should be evaluate. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement per Second of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">acquisition_function: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Marginalize over Model hyperparameters to compute the integrated acquisition function.</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
@@ -383,9 +468,33 @@ integrate over.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">model: smac.epm.base_epm.AbstractEPM</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition functions values.</p>
 <p>This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
 of P(x=x_min), EI uses it to update the current fmin.</p>
@@ -427,6 +536,28 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.LCB._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.LCB._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the LCB value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Points to evaluate LCB. N is the number of points and D the dimension for the points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -450,6 +581,30 @@ acquisition function.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.LogEI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.LogEI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the EI value and its derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em><em>, </em><em>The input points where the acquisition function</em>) – should be evaluated. The dimensionality of X is (N, D), with N as
+the number of points to evaluate at and D is the number of
+dimensions of one X.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -461,7 +616,7 @@ acquisition function.</p></li>
 <p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>P(f_{t+1}(mathbf{X})geq f(mathbf{X^+})) :=
 Phi(</p>
 </dd>
-<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt><dd><p>with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the incumbent and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
+<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt><dd><p>with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
 <dl class="simple">
 <dt>model<span class="classifier">AbstractEPM</span></dt><dd><dl class="simple">
 <dt>A model that implements at least</dt><dd><ul class="simple">
@@ -476,6 +631,28 @@ acquisition function.</p>
 </dl>
 </dd>
 </dl>
+<dl class="attribute">
+<dt id="smac.optimizer.acquisition.PI._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.PI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.optimizer.acquisition.PI._compute">
+<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the PI value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em><em>(</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Points to evaluate PI. N is the number of points and D the dimension for the points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Expected Improvement of X</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -500,7 +677,7 @@ acquisition function.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

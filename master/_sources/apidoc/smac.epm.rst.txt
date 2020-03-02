@@ -5,6 +5,7 @@ smac.epm package
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 
 .. toctree::
@@ -19,7 +20,6 @@ smac.epm package
    smac.epm.gp_kernels
    smac.epm.random_epm
    smac.epm.rf_with_instances
-   smac.epm.rf_with_instances_hpo
    smac.epm.rfr_imputator
    smac.epm.uncorrelated_mo_rf_with_instances
    smac.epm.util_funcs

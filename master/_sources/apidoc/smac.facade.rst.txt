@@ -5,6 +5,7 @@ smac.facade package
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Subpackages
 
@@ -19,4 +20,5 @@ Subpackages
    smac.facade.roar_facade
    smac.facade.smac_ac_facade
    smac.facade.smac_bo_facade
+   smac.facade.smac_bohb_facade
    smac.facade.smac_hpo_facade

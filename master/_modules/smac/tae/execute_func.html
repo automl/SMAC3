@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_func &mdash; SMAC 0.11.1 documentation</title>
+  <title>smac.tae.execute_func &mdash; SMAC 0.12.0 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -62,7 +63,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.12.0
               </div>
             
           
@@ -114,7 +115,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -122,7 +122,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -131,6 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -144,14 +144,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -189,7 +191,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -197,6 +198,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -269,12 +281,19 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pynisher</span>
 
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="k">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="k">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">MAX_CUTOFF</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>  <span class="c1"># noqa F401</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Matthias Feurer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -295,11 +314,18 @@
 <span class="sd">    use_pynisher</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">run_obj</span><span class="p">:</span><span class="nb">str</span><span class="o">=</span><span class="s2">&quot;quality&quot;</span><span class="p">,</span>
-                 <span class="n">memory_limit</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">par_factor</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">cost_for_crash</span><span class="p">:</span><span class="nb">float</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
-                 <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">use_pynisher</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ta</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+        <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;RunHistory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">run_obj</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
+        <span class="n">memory_limit</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+        <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_pynisher</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                          <span class="n">run_obj</span><span class="o">=</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="n">par_factor</span><span class="p">,</span>
@@ -325,29 +351,37 @@
 <span class="sd">            cost that is used in case of crashed runs (including runs</span>
 <span class="sd">            that returned NaN or inf)</span>
 <span class="sd">        use_pynisher: bool</span>
-<span class="sd">            use pynisher to limit resources; </span>
+<span class="sd">            use pynisher to limit resources;</span>
 <span class="sd">            if disabled</span>
-<span class="sd">              * TA func can use as many resources </span>
+<span class="sd">              * TA func can use as many resources</span>
 <span class="sd">              as it wants (time and memory) --- use with caution</span>
 <span class="sd">              * all runs will be returned as SUCCESS if returned value is not None</span>
-<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">ta</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span> <span class="o">=</span> <span class="s1">&#39;seed&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span> <span class="o">=</span> <span class="s1">&#39;instance&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_budget</span> <span class="o">=</span> <span class="s1">&#39;budget&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">ta</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Argument `ta` must be a callable, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">ta</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ta</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span> <span class="n">ta</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">memory_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">memory_limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">memory_limit</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span> <span class="o">=</span> <span class="n">memory_limit</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span> <span class="o">=</span> <span class="n">use_pynisher</span>
 
-<div class="viewcode-block" id="AbstractTAFunc.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">cutoff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">,</span>
-            <span class="n">instance_specific</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; for at</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractTAFunc.run"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12345</span><span class="p">,</span>
+            <span class="n">budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Runs target algorithm &lt;self._ta&gt; with configuration &lt;config&gt; for at</span>
 <span class="sd">        most &lt;cutoff&gt; seconds, allowing it to use at most &lt;memory_limit&gt; RAM.</span>
 
 <span class="sd">        Whether the target algorithm is called with the &lt;instance&gt; and</span>
@@ -356,18 +390,18 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">            config : dictionary (or similar)</span>
+<span class="sd">            config : Configuration, dictionary (or similar)</span>
 <span class="sd">                Dictionary param -&gt; value</span>
-<span class="sd">            instance : str</span>
+<span class="sd">            instance : str, optional</span>
 <span class="sd">                Problem instance</span>
-<span class="sd">            cutoff : int, optional</span>
+<span class="sd">            cutoff : float, optional</span>
 <span class="sd">                Wallclock time limit of the target algorithm. If no value is</span>
-<span class="sd">                provided no limit will be enforced.</span>
-<span class="sd">            memory_limit : int, optional</span>
-<span class="sd">                Memory limit in MB enforced on the target algorithm If no</span>
-<span class="sd">                value is provided no limit will be enforced.</span>
+<span class="sd">                provided no limit will be enforced. It is casted to integer internally.</span>
 <span class="sd">            seed : int</span>
 <span class="sd">                Random seed</span>
+<span class="sd">            budget : float, optional</span>
+<span class="sd">                A positive, real-valued number representing an arbitrary limit to the target algorithm</span>
+<span class="sd">                Handled by the target algorithm internally</span>
 <span class="sd">            instance_specific: str</span>
 <span class="sd">                Instance specific information (e.g., domain file or solution)</span>
 <span class="sd">        Returns</span>
@@ -381,36 +415,39 @@
 <span class="sd">            additional_info: dict</span>
 <span class="sd">                all further additional run information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># walltime for pynisher has to be a rounded up integer</span>
-        <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
-            <span class="k">if</span> <span class="n">cutoff</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> is outside the legal range of [0, 65535] &quot;</span>
-                                 <span class="s2">&quot;for cutoff (when using pynisher, due to OS limitations)&quot;</span> <span class="o">%</span> <span class="n">cutoff</span><span class="p">)</span>
 
-        <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logger&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pynisher&quot;</span><span class="p">),</span>
-                     <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
-                     <span class="s1">&#39;mem_in_mb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">}</span>
-
-        <span class="n">obj_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">obj_kwargs</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[str, typing.Union[int, str, float, None]]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_instance</span><span class="p">:</span>
             <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_budget</span><span class="p">:</span>
+            <span class="n">obj_kwargs</span><span class="p">[</span><span class="s1">&#39;budget&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">budget</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_pynisher</span><span class="p">:</span>
+            <span class="c1"># walltime for pynisher has to be a rounded up integer</span>
+            <span class="k">if</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">cutoff</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">cutoff</span> <span class="o">&gt;</span> <span class="n">MAX_CUTOFF</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> is outside the legal range of [0, 65535] &quot;</span>
+                                     <span class="s2">&quot;for cutoff (when using pynisher, due to OS limitations)&quot;</span> <span class="o">%</span> <span class="n">cutoff</span><span class="p">)</span>
 
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">)</span>
-    
-            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
-    
+            <span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;logger&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;pynisher&quot;</span><span class="p">),</span>
+                         <span class="s1">&#39;wall_time_in_s&#39;</span><span class="p">:</span> <span class="n">cutoff</span><span class="p">,</span>
+                         <span class="s1">&#39;mem_in_mb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_limit</span><span class="p">}</span>
+
+            <span class="c1"># call ta</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ta</span><span class="p">)</span>
+            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">obj_kwargs</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
                 <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
-    
+
+            <span class="c1"># get status, cost, time</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
@@ -423,26 +460,58 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
-        
+
             <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span>
-            
-            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># call ta</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ta</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">obj_kwargs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">additional_run_info</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span>
+                    <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
-            
+                <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+
             <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
-            <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># check serializability of results</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Target Algorithm returned &#39;cost&#39; </span><span class="si">{}</span><span class="s2"> (type </span><span class="si">{}</span><span class="s2">) but it is not serializable. &quot;</span>
+                            <span class="s2">&quot;Please ensure all objects returned are JSON serializable.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)))</span> \
+                <span class="kn">from</span> <span class="nn">e</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">additional_run_info</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Target Algorithm returned &#39;additional_run_info&#39; (</span><span class="si">{}</span><span class="s2">) with some non-serializable items. &quot;</span>
+                            <span class="s2">&quot;Please ensure all objects returned are JSON serializable.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">additional_run_info</span><span class="p">))</span> \
+                <span class="kn">from</span> <span class="nn">e</span>
+
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="AbstractTAFunc._call_ta"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc._call_ta">[docs]</a>    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]]:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="ExecuteTAFuncDict"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTAFuncDict</span><span class="p">(</span><span class="n">AbstractTAFunc</span><span class="p">):</span>
@@ -477,11 +546,18 @@
 <span class="sd">        Memory limit (in MB) that will be applied to the target algorithm.</span>
 <span class="sd">    par_factor : int, optional</span>
 <span class="sd">        Penalized average runtime factor. Only used when `run_obj=&#39;runtime&#39;`</span>
+<span class="sd">    use_pynisher: bool, optional</span>
+<span class="sd">        use pynisher to limit resources;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTAFuncDict._call_ta"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict._call_ta">[docs]</a>    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]]:</span>
 
-        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ExecuteTAFuncArray"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTAFuncArray</span><span class="p">(</span><span class="n">AbstractTAFunc</span><span class="p">):</span>
@@ -517,11 +593,16 @@
 <span class="sd">        Penalized average runtime factor. Only used when `run_obj=&#39;runtime&#39;`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTAFuncArray._call_ta"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray._call_ta">[docs]</a>    <span class="k">def</span> <span class="nf">_call_ta</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]]:</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">())],</span>
                      <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">obj</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">obj_kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
@@ -534,7 +615,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

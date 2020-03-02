@@ -5,3 +5,4 @@ smac.utils.io.output\_directory module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

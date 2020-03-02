@@ -5,3 +5,4 @@ smac.initial\_design.sobol\_design module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

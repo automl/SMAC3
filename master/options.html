@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Options and file formats &mdash; SMAC 0.11.1 documentation</title>
+  <title>Options and file formats &mdash; SMAC 0.12.0 documentation</title>
   
 
   
@@ -21,11 +21,11 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -34,6 +34,7 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Target Algorithm Evaluator" href="tae.html" />
@@ -64,7 +65,7 @@
             
             
               <div class="version">
-                0.11.1
+                0.12.0
               </div>
             
           
@@ -116,7 +117,6 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rf_with_instances_hpo.html">smac.epm.rf_with_instances_hpo module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
@@ -124,7 +124,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.facade.html">smac.facade package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="apidoc/smac.facade.experimental.epils_facade.html">smac.facade.experimental.epils_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="apidoc/smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
 </ul>
@@ -133,6 +132,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 </ul>
 </li>
@@ -146,14 +146,16 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.intensification.html">smac.intensification package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.optimizer.html">smac.optimizer package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epils.html">smac.optimizer.epils module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.objective.html">smac.optimizer.objective module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
@@ -191,7 +193,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.constants.html">smac.utils.constants module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.duplicate_filter_logging.html">smac.utils.duplicate_filter_logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.logging.html">smac.utils.logging module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
@@ -199,6 +200,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
@@ -358,53 +370,56 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <dt class="field-even">intensification_percentage</dt>
 <dd class="field-even"><p>The fraction of time to be used on intensification (versus choice of next Configurations). Default: 0.5.</p>
 </dd>
-<dt class="field-odd">maxR</dt>
-<dd class="field-odd"><p>Maximum number of calls per configuration. Default: 2000.</p>
+<dt class="field-odd">limit_resources</dt>
+<dd class="field-odd"><p>If true, <em>SMAC</em> will use pynisher to limit time and memory for the target algorithm. Allows SMAC to use all resources available. Applicable only to func TAEs. Set to ‘True’ by default. (Use with caution!) Default: True.</p>
 </dd>
-<dt class="field-even">minR</dt>
-<dd class="field-even"><p>Minimum number of calls per configuration. Default: 1.</p>
+<dt class="field-even">maxR</dt>
+<dd class="field-even"><p>Maximum number of calls per configuration. Default: 2000.</p>
 </dd>
-<dt class="field-odd">output_dir</dt>
-<dd class="field-odd"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2019-09-25_14:14:54_018770.</p>
+<dt class="field-odd">minR</dt>
+<dd class="field-odd"><p>Minimum number of calls per configuration. Default: 1.</p>
 </dd>
-<dt class="field-even">rand_prob</dt>
-<dd class="field-even"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
+<dt class="field-even">output_dir</dt>
+<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2020-03-02_15:00:58_007947.</p>
 </dd>
-<dt class="field-odd">random_configuration_chooser</dt>
-<dd class="field-odd"><p>path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></p>
+<dt class="field-odd">rand_prob</dt>
+<dd class="field-odd"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
 </dd>
-<dt class="field-even">rf_do_bootstrapping</dt>
-<dd class="field-even"><p>Use bootstraping in random forest. Default: True.</p>
+<dt class="field-even">random_configuration_chooser</dt>
+<dd class="field-even"><p>path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of <cite>RandomConfigurationChooser</cite></p>
 </dd>
-<dt class="field-odd">rf_max_depth</dt>
-<dd class="field-odd"><p>Maximum depth of each tree in the random forest. Default: 20.</p>
+<dt class="field-odd">rf_do_bootstrapping</dt>
+<dd class="field-odd"><p>Use bootstraping in random forest. Default: True.</p>
 </dd>
-<dt class="field-even">rf_min_samples_leaf</dt>
-<dd class="field-even"><p>Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</p>
+<dt class="field-even">rf_max_depth</dt>
+<dd class="field-even"><p>Maximum depth of each tree in the random forest. Default: 20.</p>
 </dd>
-<dt class="field-odd">rf_min_samples_split</dt>
-<dd class="field-odd"><p>Minimum number of samples to split for building a tree in the random forest. Default: 3.</p>
+<dt class="field-odd">rf_min_samples_leaf</dt>
+<dd class="field-odd"><p>Minimum required number of samples in each leaf of a tree in the random forest. Default: 3.</p>
 </dd>
-<dt class="field-even">rf_num_trees</dt>
-<dd class="field-even"><p>Number of trees in the random forest (&gt; 1). Default: 10.</p>
+<dt class="field-even">rf_min_samples_split</dt>
+<dd class="field-even"><p>Minimum number of samples to split for building a tree in the random forest. Default: 3.</p>
 </dd>
-<dt class="field-odd">rf_ratio_features</dt>
-<dd class="field-odd"><p>Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</p>
+<dt class="field-odd">rf_num_trees</dt>
+<dd class="field-odd"><p>Number of trees in the random forest (&gt; 1). Default: 10.</p>
 </dd>
-<dt class="field-even">shared_model</dt>
-<dd class="field-even"><p>Whether to run SMAC in parallel mode.</p>
+<dt class="field-even">rf_ratio_features</dt>
+<dd class="field-even"><p>Ratio of sampled features in each split ([0.,1.]). Default: 0.8333333333333334.</p>
 </dd>
-<dt class="field-odd">sls_max_steps</dt>
-<dd class="field-odd"><p>Maximum number of local search steps in one iteration during the optimization of the acquisition function.</p>
+<dt class="field-odd">shared_model</dt>
+<dd class="field-odd"><p>Whether to run SMAC in parallel mode.</p>
 </dd>
-<dt class="field-even">sls_n_steps_plateau_walk</dt>
-<dd class="field-even"><p>Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</p>
+<dt class="field-even">sls_max_steps</dt>
+<dd class="field-even"><p>Maximum number of local search steps in one iteration during the optimization of the acquisition function.</p>
 </dd>
-<dt class="field-odd">transform_y</dt>
-<dd class="field-odd"><p>Transform all observed cost values via log-transformations or inverse scaling. The subfix “s” indicates that SMAC scales the y-values accordingly to apply the transformation. Default: NONE.</p>
+<dt class="field-odd">sls_n_steps_plateau_walk</dt>
+<dd class="field-odd"><p>Maximum number of steps on plateaus during the optimization of the acquisition function. Default: 10.</p>
 </dd>
-<dt class="field-even">use_ta_time</dt>
-<dd class="field-even"><p>Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</p>
+<dt class="field-even">transform_y</dt>
+<dd class="field-even"><p>Transform all observed cost values via log-transformations or inverse scaling. The subfix “s” indicates that SMAC scales the y-values accordingly to apply the transformation. Default: NONE.</p>
+</dd>
+<dt class="field-odd">use_ta_time</dt>
+<dd class="field-odd"><p>Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</p>
 </dd>
 </dl>
 </div>
@@ -576,7 +591,7 @@ seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015-2019, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein, Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>

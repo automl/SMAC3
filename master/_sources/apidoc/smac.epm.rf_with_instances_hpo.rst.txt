@@ -1,7 +1,0 @@
-smac.epm.rf\_with\_instances\_hpo module
-========================================
-
-.. automodule:: smac.epm.rf_with_instances_hpo
-   :members:
-   :undoc-members:
-   :show-inheritance:
