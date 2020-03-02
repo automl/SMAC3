@@ -305,16 +305,19 @@ class RandomForestWithInstances(BaseModel):
                     preds_trees[tree_id] += preds
 
             # 2. average in each tree
-            for tree_id in range(self.rf_opts.num_trees):
-                if self.log_y:
-                    preds_trees[tree_id] = \
-                        np.log(np.mean(np.exp(preds_trees[tree_id])))
-                else:
-                    preds_trees[tree_id] = np.mean(preds_trees[tree_id])
+            pts = np.zeros(self.rf_opts.num_trees)
+            if self.log_y:
+                for tree_id in range(self.rf_opts.num_trees):
+                    pts[tree_id] = \
+                            np.log(np.exp(np.array(preds_trees[tree_id])).mean())
+            else: 
+                for tree_id in range(self.rf_opts.num_trees):
+                    pts[tree_id] = np.array(preds_trees[tree_id]).mean()
+
 
             # 3. compute statistics across trees
-            mean_x = np.mean(preds_trees)
-            var_x = np.var(preds_trees)
+            mean_x = pts.mean()
+            var_x = pts.var() 
             if var_x < self.var_threshold:
                 var_x = self.var_threshold
 
