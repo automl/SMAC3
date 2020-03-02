@@ -8,7 +8,6 @@
   [BOHB](http://proceedings.mlr.press/v80/falkner18a.html) algorithm (#551).
 * Source code is now PEP8 compliant. PEP8 compliance is checked by travis-ci (#565).
 * Source code is now annotated with type annotation and checked with mypy.
-* Examples are now rendered on the webiset using sphinx gallery (#567).
 
 ## Minor Changes
 
@@ -23,6 +22,7 @@
 * removed the default rng from the Gaussian process priors (#554).
 * Adds the possibility to specify the acquisition function optimizer for the random search (ROAR) facade (#563).
 * Bump minimal version of `ConfigSpace` requirement to 0.4.9 (#578).
+* Examples are now rendered on the website using sphinx gallery (#567).
 
 ## Bug fixes
 
