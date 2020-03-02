@@ -222,7 +222,7 @@ class TestGP(unittest.TestCase):
         class Dummy:
             counter = 0
 
-            def __call__(self, X, eval_gradient=True):
+            def __call__(self, X, eval_gradient=True, clone_kernel=True):
                 # If this is not aligned with the GP an error will be raised that None is not iterable
                 if self.counter == 13:
                     return None
