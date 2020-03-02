@@ -4,16 +4,22 @@ import typing
 
 import emcee
 import numpy as np
-from lazy_import import lazy_callable
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
+from smac.epm.gp_base_prior import Prior
+
+if typing.TYPE_CHECKING:
+    from skopt.learning.gaussian_process.kernels import Kernel
+    from skopt.learning.gaussian_process import GaussianProcessRegressor
+else:
+    from lazy_import import lazy_callable
+    Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
+    GaussianProcessRegressor = lazy_callable(
+        'skopt.learning.gaussian_process.GaussianProcessRegressor')
 
 logger = logging.getLogger(__name__)
-Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
-GaussianProcessRegressor = lazy_callable(
-    'skopt.learning.gaussian_process.GaussianProcessRegressor')
 
 
 class GaussianProcessMCMC(BaseModel):
@@ -21,7 +27,7 @@ class GaussianProcessMCMC(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: np.ndarray,
+        types: typing.List[int],
         bounds: typing.List[typing.Tuple[float, float]],
         seed: int,
         kernel: Kernel,
@@ -31,7 +37,8 @@ class GaussianProcessMCMC(BaseModel):
         normalize_y: bool = True,
         mcmc_sampler: str = 'emcee',
         average_samples: bool = False,
-        **kwargs
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
     ):
         """
         Gaussian process model.
@@ -48,14 +55,14 @@ class GaussianProcessMCMC(BaseModel):
 
         Parameters
         ----------
-        types : np.ndarray (D)
+        types : List[int]
             Specifies the number of categorical values of an input dimension where
             the i-th entry corresponds to the i-th input dimension. Let's say we
             have 2 dimension where the first dimension consists of 3 different
             categorical choices and the second dimension is continuous than we
-            have to pass np.array([2, 0]). Note that we count starting from 0.
-        bounds : list
-            Specifies the bounds for continuous features.
+            have to pass [3, 0]. Note that we count starting from 0.
+        bounds : List[Tuple[float, float]]
+            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
             Model seed.
         kernel : george kernel object
@@ -74,21 +81,29 @@ class GaussianProcessMCMC(BaseModel):
             Zero mean unit variance normalization of the output values
         mcmc_sampler : str
             Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.
-        average_samples : bool
-            Average the sampled hyperparameters if ``True``, uses the samples independently if ``False``.
-            This is equivalent to the posterior mean as used by
-            Letham et al. (2018, http://lethalletham.com/ConstrainedBO.pdf).
-        rng: np.random.RandomState
-            Random number generator
+        instance_features : np.ndarray (I, K)
+            Contains the K dimensional instance features
+            of the I different instances
+        pca_components : float
+            Number of components to keep when using PCA to reduce
+            dimensionality of instance features. Requires to
+            set n_feats (> pca_dims).
         """
-        super().__init__(configspace=configspace, types=types, bounds=bounds, seed=seed, **kwargs)
+        super().__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            kernel=kernel,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
 
-        self.kernel = kernel
         self.n_mcmc_walkers = n_mcmc_walkers
         self.chain_length = chain_length
         self.burned = False
         self.burnin_steps = burnin_steps
-        self.models = []
+        self.models = []  # type: typing.List[GaussianProcess]
         self.normalize_y = normalize_y
         self.mcmc_sampler = mcmc_sampler
         self.average_samples = average_samples
@@ -100,7 +115,7 @@ class GaussianProcessMCMC(BaseModel):
         # Internal statistics
         self._n_ll_evals = 0
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool=True):
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcessMCMC':
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -126,14 +141,7 @@ class GaussianProcessMCMC(BaseModel):
             # they unnormalize the data at prediction time.
             y = self._normalize_y(y)
 
-        self.gp = GaussianProcessRegressor(
-            kernel=self.kernel,
-            normalize_y=False,
-            optimizer=None,
-            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
-            alpha=0,  # Governed by the kernel
-            noise=None,
-        )
+        self.gp = self._get_gp()
 
         if do_optimize:
             self.gp.fit(X, y)
@@ -151,6 +159,8 @@ class GaussianProcessMCMC(BaseModel):
                 if not self.burned:
                     # Initialize the walkers by sampling from the prior
                     dim_samples = []
+
+                    prior = None  # type: typing.Optional[typing.Union[typing.List[Prior], Prior]]
                     for dim, prior in enumerate(self._all_priors):
                         # Always sample from the first prior
                         if isinstance(prior, list):
@@ -158,6 +168,7 @@ class GaussianProcessMCMC(BaseModel):
                                 prior = None
                             else:
                                 prior = prior[0]
+                        prior = typing.cast(typing.Optional[Prior], prior)
                         if prior is None:
                             raise NotImplementedError()
                         else:
@@ -267,6 +278,17 @@ class GaussianProcessMCMC(BaseModel):
                 model.std_y_ = self.std_y_
 
         self.is_trained = True
+        return self
+
+    def _get_gp(self) -> GaussianProcessRegressor:
+        return GaussianProcessRegressor(
+            kernel=self.kernel,
+            normalize_y=False,
+            optimizer=None,
+            n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
+            alpha=0,  # Governed by the kernel
+            noise=None,
+        )
 
     def _ll(self, theta: np.ndarray) -> float:
         """
@@ -295,7 +317,7 @@ class GaussianProcessMCMC(BaseModel):
 
         try:
             lml = self.gp.log_marginal_likelihood(theta)
-        except ValueError as e:
+        except ValueError:
             return -np.inf
 
         # Add prior
@@ -332,7 +354,7 @@ class GaussianProcessMCMC(BaseModel):
         if (theta > 50).any():
             theta[theta > 50] = 50
 
-        lml = 0
+        lml = 0.
         grad = np.zeros(theta.shape)
 
         # Add prior
@@ -358,7 +380,7 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return lml, grad
 
-    def _predict(self, X_test: np.ndarray):
+    def _predict(self, X_test: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -383,7 +405,7 @@ class GaussianProcessMCMC(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
-        X = self._impute_inactive(X_test)
+        X_test = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])

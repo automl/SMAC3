@@ -1,7 +1,7 @@
 # encoding=utf8
 import abc
 import copy
-from typing import List
+from typing import List, Any, Tuple
 
 import numpy as np
 from scipy.stats import norm
@@ -25,9 +25,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     logger
     """
 
-    def __str__(self):
-        return type(self).__name__ + " (" + self.long_name + ")"
-
     def __init__(self, model: AbstractEPM):
         """Constructor
 
@@ -37,26 +34,34 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
             Models the objective function.
         """
         self.model = model
+        self._required_updates = ('model', )  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
-    def update(self, **kwargs):
-        """Update the acquisition functions values.
+    def update(self, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
 
-        This method will be called if the model is updated. E.g.
-        entropy search uses it to update its approximation of P(x=x_min),
-        EI uses it to update the current fmin.
+        This method will be called after fitting the model, but before maximizing the acquisition
+        function. As an examples, EI uses it to update the current fmin.
 
-        The default implementation takes all keyword arguments and sets the
-        respective attributes for the acquisition function object.
+        The default implementation only updates the attributes of the acqusition function which
+        are already present.
 
         Parameters
         ----------
         kwargs
         """
+        for key in self._required_updates:
+            if key not in kwargs:
+                raise ValueError(
+                    'Acquisition function %s needs to be updated with key %s, but only got '
+                    'keys %s.'
+                    % (self.__class__.__name__, key, list(kwargs.keys()))
+                )
         for key in kwargs:
-            setattr(self, key, kwargs[key])
+            if key in self._required_updates:
+                setattr(self, key, kwargs[key])
 
-    def __call__(self, configurations: List[Configuration]):
+    def __call__(self, configurations: List[Configuration]) -> np.ndarray:
         """Computes the acquisition value for a given X
 
         Parameters
@@ -81,7 +86,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         return acq
 
     @abc.abstractmethod
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the acquisition value for a given point X. This function has
         to be overwritten in a derived class.
 
@@ -110,7 +115,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     for further details.
     """
 
-    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs):
+    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
         """Constructor
 
         Parameters
@@ -122,13 +127,13 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             Additional keyword arguments
         """
 
-        super().__init__(model, **kwargs)
-        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.long_name
+        super().__init__(model)
+        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.__class__.__name__
         self.acq = acquisition_function
-        self._functions = None
+        self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
 
-    def update(self, model: AbstractEPM, **kwargs):
+    def update(self, **kwargs: Any) -> None:
         """Update the acquisition functions values.
 
         This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
@@ -144,14 +149,16 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             integrate over.
         kwargs
         """
+        model = kwargs['model']
+        del kwargs['model']
         if not hasattr(model, 'models') or len(model.models) == 0:
             raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
-        if self._functions is None or len(self._functions) != len(model.models):
+        if len(self._functions) == 0 or len(self._functions) != len(model.models):
             self._functions = [copy.deepcopy(self.acq) for _ in model.models]
-        for model, func in zip(model.models, self._functions):
-            func.update(model=model, **kwargs)
+        for submodel, func in zip(model.models, self._functions):
+            func.update(model=submodel, **kwargs)
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -177,12 +184,12 @@ class EI(AbstractAcquisitionFunction):
     acquisition value.
 
     :math:`EI(X) := \mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi \} \right]`,
-    with :math:`f(X^+)` as the incumbent.
+    with :math:`f(X^+)` as the best location.
     """
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         """Constructor
 
         Parameters
@@ -199,8 +206,9 @@ class EI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -253,11 +261,11 @@ class EI(AbstractAcquisitionFunction):
 class EIPS(EI):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
-        :math:`EI(X) := \frac{\mathbb{E}\left[ \max\{0, f(\mathbf{X^+}) - f_{t+1}(\mathbf{X}) - \xi\right] \} ]} {np.log(r(x))}`,
-        with :math:`f(X^+)` as the incumbent and :math:`r(x)` as runtime.
+        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
+        with :math:`f(X^+)` as the best location and :math:`r(x)` as runtime.
 
         Parameters
         ----------
@@ -272,7 +280,7 @@ class EIPS(EI):
         super(EIPS, self).__init__(model, par=par)
         self.long_name = 'Expected Improvement per Second'
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EIPS value.
 
         Parameters
@@ -338,7 +346,7 @@ class LogEI(AbstractAcquisitionFunction):
 
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
@@ -355,8 +363,9 @@ class LogEI(AbstractAcquisitionFunction):
         self.long_name = 'Expected Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray, **kwargs):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
 
         Parameters
@@ -412,14 +421,14 @@ class LogEI(AbstractAcquisitionFunction):
 class PI(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=0.0):
+                 par: float = 0.0):
 
         """Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
         \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,
-        with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal
+        with :math:`f(X^+)` as the best location and :math:`\Phi` the cdf of the standard normal
 
         Parameters
         ----------
@@ -434,8 +443,9 @@ class PI(AbstractAcquisitionFunction):
         self.long_name = 'Probability of Improvement'
         self.par = par
         self.eta = None
+        self._required_updates = ('model', 'eta')
 
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PI value.
 
         Parameters
@@ -463,7 +473,7 @@ class PI(AbstractAcquisitionFunction):
 class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
-                 par: float=1.0):
+                 par: float = 1.0):
 
         """Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
@@ -484,10 +494,10 @@ class LCB(AbstractAcquisitionFunction):
         super(LCB, self).__init__(model)
         self.long_name = 'Lower Confidence Bound'
         self.par = par
-        self.eta = None  # to be compatible with the existing update calls in SMBO
         self.num_data = None
+        self._required_updates = ('model', 'num_data')
 
-    def _compute(self, X: np.ndarray):
+    def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
 
         Parameters
@@ -508,5 +518,5 @@ class LCB(AbstractAcquisitionFunction):
             X = X[:, np.newaxis]
         m, var_ = self.model.predict_marginalized_over_instances(X)
         std = np.sqrt(var_)
-        beta = 2*np.log((X.shape[1] * self.num_data**2) / self.par)
-        return -(m - np.sqrt(beta)*std)
+        beta = 2 * np.log((X.shape[1] * self.num_data**2) / self.par)
+        return -(m - np.sqrt(beta) * std)

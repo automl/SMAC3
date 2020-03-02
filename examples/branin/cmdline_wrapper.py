@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 
 from branin import branin
 
@@ -37,7 +36,7 @@ if __name__ == '__main__':
     # Unused in this example:
     # instance, instance_specific, cutoff, runlength = sys.argv[1:5]
     seed = sys.argv[5]
-    # sys.argv[6] and sys.argv[8] are the names of the target algorithm 
+    # sys.argv[6] and sys.argv[8] are the names of the target algorithm
     # parameters (here: "-x1", "-x2")
     x = float(sys.argv[7])
     y = float(sys.argv[9])

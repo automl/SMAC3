@@ -1,6 +1,6 @@
 cd examples
 
-for script in fmin_rosenbrock.py SMAC4BO_rosenbrock.py SMAC4HPO_acq_rosenbrock.py SMAC4HPO_rf.py SMAC4HPO_rosenbrock.py SMAC4HPO_svm.py
+for script in *.py
 do
     python $script
     rval=$?

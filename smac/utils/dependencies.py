@@ -1,6 +1,7 @@
 import importlib
 import pkg_resources
 import re
+import typing
 from distutils.version import LooseVersion
 
 SUBPATTERN = r'((?P<operation%d>==|>=|>|<)(?P<version%d>(\d+)?(\.[a-zA-Z0-9]+)?(\.\d+)?))'
@@ -8,7 +9,7 @@ RE_PATTERN = re.compile(
     r'^(?P<name>[\w\-]+)%s?(,%s)?$' % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2)))
 
 
-def are_valid_packages(packages):
+def are_valid_packages(packages: typing.Union[typing.List[str], str]) -> bool:
     try:
         verify_packages(packages)
     except (MissingPackageError, IncorrectPackageVersionError):
@@ -17,7 +18,7 @@ def are_valid_packages(packages):
         return True
 
 
-def verify_packages(packages):
+def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
     if not packages:
         return
     if isinstance(packages, str):
@@ -40,14 +41,14 @@ def verify_packages(packages):
             raise ValueError('Unable to read requirement: %s' % package)
 
 
-def _verify_package(name, operation, version):
+def _verify_package(name: str, operation: str, version: str) -> None:
     try:
-        module = pkg_resources.get_distribution(name)
-        installed_version = LooseVersion(module.version)
+        distribution = pkg_resources.get_distribution(name)
+        installed_version = LooseVersion(distribution.version)
     except pkg_resources.DistributionNotFound:
         try:
             module = importlib.import_module(name)
-            installed_version = LooseVersion(module.__version__)
+            installed_version = LooseVersion(module.__version__)  # type: ignore[attr-defined] # noqa F821
         except ImportError:
             raise MissingPackageError(name)
 
@@ -63,11 +64,9 @@ def _verify_package(name, operation, version):
     elif operation == '<':
         check = installed_version < required_version
     elif operation == '>=':
-        check = installed_version > required_version or \
-                installed_version == required_version
+        check = installed_version > required_version or installed_version == required_version
     elif operation == '<=':
-        check = installed_version < required_version or \
-                installed_version == required_version
+        check = installed_version < required_version or installed_version == required_version
     else:
         raise NotImplementedError(
             'operation \'%s\' is not supported' % operation)
@@ -79,7 +78,7 @@ def _verify_package(name, operation, version):
 class MissingPackageError(Exception):
     error_message = 'Mandatory package \'{name}\' not found!'
 
-    def __init__(self, package_name):
+    def __init__(self, package_name: str) -> None:
         self.package_name = package_name
         super(MissingPackageError, self).__init__(
             self.error_message.format(name=package_name))
@@ -88,8 +87,13 @@ class MissingPackageError(Exception):
 class IncorrectPackageVersionError(Exception):
     error_message = '\'{name} {installed_version}\' version mismatch ({operation}{required_version})'
 
-    def __init__(self, package_name, installed_version, operation,
-                 required_version):
+    def __init__(
+        self,
+        package_name: str,
+        installed_version: LooseVersion,
+        operation: str,
+        required_version: LooseVersion,
+    ) -> None:
         self.package_name = package_name
         self.installed_version = installed_version
         self.operation = operation

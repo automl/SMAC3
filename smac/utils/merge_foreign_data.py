@@ -1,7 +1,6 @@
 from smac.runhistory.runhistory import RunHistory, DataOrigin
 from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.optimizer.objective import average_cost
 
 import typing
 
@@ -10,8 +9,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
                                  runhistory: RunHistory,
                                  in_scenario_fn_list: typing.List[str],
                                  in_runhistory_fn_list: typing.List[str],
-                                 cs: ConfigurationSpace,
-                                 aggregate_func: typing.Callable = average_cost):
+                                 cs: ConfigurationSpace,) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -27,8 +25,6 @@ def merge_foreign_data_from_file(scenario: Scenario,
         list filenames of runhistory dumps
     cs: ConfigurationSpace
         parameter configuration space to read runhistory from file
-    aggregate_func: typing.Callable
-        function to aggregate performance of a configuratoion across instances
 
     Returns
     -------
@@ -37,11 +33,12 @@ def merge_foreign_data_from_file(scenario: Scenario,
     """
 
     if not in_scenario_fn_list:
-        raise ValueError("To read warmstart data from previous runhistories, the corresponding scenarios are required. Use option --warmstart_scenario")
+        raise ValueError("To read warmstart data from previous runhistories,"
+                         " the corresponding scenarios are required. Use option --warmstart_scenario")
     scens = [Scenario(scenario=scen_fn, cmd_options={"output_dir": ""}) for scen_fn in in_scenario_fn_list]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
-        rh = RunHistory(aggregate_func)
+        rh = RunHistory()
         rh.load_json(rh_fn, cs)
         rhs.append(rh)
 
@@ -51,7 +48,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
 def merge_foreign_data(scenario: Scenario,
                        runhistory: RunHistory,
                        in_scenario_list: typing.List[Scenario],
-                       in_runhistory_list: typing.List[RunHistory]):
+                       in_runhistory_list: typing.List[RunHistory]) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -77,10 +74,10 @@ def merge_foreign_data(scenario: Scenario,
             raise ValueError("Feature Space has to be the same for both scenarios (%d vs %d)." % (
                 scenario.n_features, in_scenario.n_features))
 
-        if scenario.cs != in_scenario.cs:
+        if scenario.cs != in_scenario.cs:  # type: ignore[attr-defined] # noqa F821
             raise ValueError("PCS of both scenarios have to be identical.")
 
-        if scenario.cutoff != in_scenario.cutoff:
+        if scenario.cutoff != in_scenario.cutoff:  # type: ignore[attr-defined] # noqa F821
             raise ValueError("Cutoffs of both scenarios have to be identical.")
 
         scenario.feature_dict.update(in_scenario.feature_dict)

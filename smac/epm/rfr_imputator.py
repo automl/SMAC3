@@ -1,11 +1,12 @@
 import logging
+import typing
 import warnings
+
 import numpy as np
 from scipy.stats import truncnorm
 
 import smac.epm.base_imputor
 from smac.epm.base_epm import AbstractEPM
-
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -16,7 +17,6 @@ __version__ = "0.0.1"
 
 
 class RFRImputator(smac.epm.base_imputor.BaseImputor):
-
     """Imputor using pyrfr's Random Forest regressor.
 
     **Note:** Sets var_threshold as the lower bound on the variance for the
@@ -39,8 +39,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
     def __init__(self, rng: np.random.RandomState, cutoff: float,
                  threshold: float, model: AbstractEPM,
-                 change_threshold: float=0.01,
-                 max_iter: int=2):
+                 change_threshold: float = 0.01,
+                 max_iter: int = 2):
         """Constructor
 
         Parameters
@@ -72,7 +72,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.var_threshold = 10 ** -2
 
     def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray):
+               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> typing.Optional[np.ndarray]:
         """
         Imputes censored runs and returns new y values.
 
@@ -108,7 +108,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         imputed_y = None  # define this, if imputation fails
 
         # Define variables
-        y = None
+        y = np.empty((0, ))  # This only defines the type, the actual value will not be used later on.
 
         it = 1
         change = 0
@@ -130,8 +130,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 warnings.filterwarnings(
                     'ignore', r'divide by zero encountered in (true_divide|log).*')
                 imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
-                                            b=(self.threshold - y_mean) /
-                                            y_stdev,
+                                            b=(self.threshold - y_mean) / y_stdev,
                                             loc=y_mean,
                                             scale=y_stdev,
                                             moments='m')
@@ -154,9 +153,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
-                change = np.mean(np.abs(imputed_y -
-                                     y[uncensored_y.shape[0]:]) /
-                                 y[uncensored_y.shape[0]:])
+                change = np.mean(np.abs(imputed_y - y[uncensored_y.shape[0]:]) / y[uncensored_y.shape[0]:])
 
             # lower all values that are higher than threshold
             # should probably never happen

@@ -3,7 +3,14 @@ import unittest.mock
 
 import numpy as np
 
-from smac.optimizer.acquisition import EI, LogEI, EIPS, PI, LCB, IntegratedAcquisitionFunction
+from smac.optimizer.acquisition import (
+    EI,
+    LogEI,
+    EIPS,
+    PI,
+    LCB,
+    IntegratedAcquisitionFunction,
+)
 
 
 class ConfigurationMock(object):
@@ -22,10 +29,8 @@ class MockModel(object):
         self.num_targets = num_targets
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 1)), \
-               np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 1))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)),\
+            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1))
 
 
 class MockModelDual(object):
@@ -33,10 +38,35 @@ class MockModelDual(object):
         self.num_targets = num_targets
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 2)), \
-               np.array([np.mean(X, axis=1).reshape((1, -1))] *
-                        self.num_targets).reshape((-1, 2))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), \
+            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
+
+
+class TestAcquisitionFunction(unittest.TestCase):
+    def setUp(self):
+        self.model = unittest.mock.Mock()
+        self.acq = EI(model=self.model)
+
+    def test_update_model_and_eta(self):
+        model = 'abc'
+        self.assertIsNone(self.acq.eta)
+        self.acq.update(model=model, eta=0.1)
+        self.assertEqual(self.acq.model, model)
+        self.assertEqual(self.acq.eta, 0.1)
+
+    def test_update_other(self):
+        self.acq.other = 'other'
+
+        with self.assertRaisesRegex(
+            ValueError,
+            r"Acquisition function EI needs to be updated with key model, but only got keys "
+            r"\['other'\].",
+        ):
+            self.acq.update(other=None)
+
+        model = 'abc'
+        self.acq.update(model=model, eta=0.1, other=None)
+        self.assertEqual(self.acq.other, 'other')
 
 
 class TestIntegratedAcquisitionFunction(unittest.TestCase):
@@ -87,16 +117,6 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
             self.assertEqual(counting_mock.counter, 1)
 
     def test_compute_with_different_numbers_of_models(self):
-        class CountingMock:
-            counter = 0
-            long_name = 'CountingMock'
-
-            def _compute(self, *args, **kwargs):
-                self.counter += 1
-                return self.counter
-
-            def update(self, **kwargs):
-                pass
 
         for i in range(1, 3):
             self.model.models = [MockModel()] * i
@@ -174,7 +194,8 @@ class TestEIPS(unittest.TestCase):
     def test_fail(self):
         with self.assertRaises(ValueError):
             configurations = [ConfigurationMock([1.0, 1.0])]
-            acq = self.ei(configurations)
+            self.ei(configurations)
+
 
 class TestLogEI(unittest.TestCase):
     def setUp(self):

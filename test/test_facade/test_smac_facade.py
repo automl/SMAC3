@@ -7,7 +7,6 @@ import unittest.mock
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
-from nose.plugins.attrib import attr
 
 from smac.configspace import ConfigurationSpace
 
@@ -27,10 +26,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.random_configuration_chooser import (
-    ChooserCosineAnnealing,
-    ChooserProb,
-)
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.tae.execute_func import ExecuteTAFuncDict
 
 
@@ -86,38 +82,36 @@ class TestSMACFacade(unittest.TestCase):
         )
 
     def test_construct_runhistory(self):
-        fixture = 'dummy'
 
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'aggregate_func': fixture})
-        self.assertEqual(smbo.solver.runhistory.aggregate_func, fixture)
+        self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
+        smbo = SMAC4AC(self.scenario, runhistory_kwargs={'overwrite_existing_runs': True})
+        self.assertIsInstance(smbo.solver.runhistory, RunHistory)
+        self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        rh = RunHistory(aggregate_func=None)
-        smbo = SMAC4AC(self.scenario, runhistory=rh)
-        self.assertIsNotNone(smbo.solver.runhistory.aggregate_func)
 
     def test_construct_random_configuration_chooser(self):
         rng = np.random.RandomState(42)
         smbo = SMAC4AC(self.scenario)
-        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
-        self.assertIsNot(smbo.solver.random_configuration_chooser, rng)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
+        self.assertIsNot(smbo.solver.epm_chooser.random_configuration_chooser, rng)
         smbo = SMAC4AC(self.scenario, rng=rng)
-        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
-        self.assertIs(smbo.solver.random_configuration_chooser.rng, rng)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
+        self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
         smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={'rng': rng})
-        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
-        self.assertIs(smbo.solver.random_configuration_chooser.rng, rng)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
+        self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
         smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={'prob': 0.1})
-        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserProb)
-        self.assertEqual(smbo.solver.random_configuration_chooser.prob, 0.1)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
+        self.assertEqual(smbo.solver.epm_chooser.random_configuration_chooser.prob, 0.1)
         smbo = SMAC4AC(
             self.scenario,
-            random_configuration_chooser=ChooserCosineAnnealing,
-            random_configuration_chooser_kwargs={'prob_max': 1, 'prob_min': 0.1, 'restart_iteration': 10},
+            random_configuration_chooser=ChooserNoCoolDown,
+            random_configuration_chooser_kwargs={'modulus': 10},
         )
-        self.assertIsInstance(smbo.solver.random_configuration_chooser, ChooserCosineAnnealing)
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
             SMAC4AC(self.scenario, random_configuration_chooser_kwargs={'dummy': 0.1})
@@ -125,19 +119,19 @@ class TestSMACFacade(unittest.TestCase):
     def test_construct_epm(self):
         rng = np.random.RandomState(42)
         smbo = SMAC4AC(self.scenario)
-        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
         smbo = SMAC4AC(self.scenario, rng=rng)
-        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
-        self.assertEqual(smbo.solver.model.seed, 1935803228)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.epm_chooser.model.seed, 1935803228)
         smbo = SMAC4AC(self.scenario, model_kwargs={'seed': 2})
-        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
-        self.assertEqual(smbo.solver.model.seed, 2)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
         smbo = SMAC4AC(self.scenario, model_kwargs={'num_trees': 20})
-        self.assertIsInstance(smbo.solver.model, RandomForestWithInstances)
-        self.assertEqual(smbo.solver.model.rf_opts.num_trees, 20)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.epm_chooser.model.rf_opts.num_trees, 20)
         smbo = SMAC4AC(self.scenario, model=RandomEPM, model_kwargs={'seed': 2})
-        self.assertIsInstance(smbo.solver.model, RandomEPM)
-        self.assertEqual(smbo.solver.model.seed, 2)
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomEPM)
+        self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
             SMAC4AC(self.scenario, model_kwargs={'dummy': 0.1})
@@ -145,16 +139,16 @@ class TestSMACFacade(unittest.TestCase):
     def test_construct_acquisition_function(self):
         rng = np.random.RandomState(42)
         smbo = SMAC4AC(self.scenario)
-        self.assertIsInstance(smbo.solver.acquisition_func, EI)
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         smbo = SMAC4AC(self.scenario, rng=rng)
-        self.assertIsInstance(smbo.solver.acquisition_func.model, RandomForestWithInstances)
-        self.assertEqual(smbo.solver.acquisition_func.model.seed, 1935803228)
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances)
+        self.assertEqual(smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228)
         smbo = SMAC4AC(self.scenario, acquisition_function_kwargs={'par': 17})
-        self.assertIsInstance(smbo.solver.acquisition_func, EI)
-        self.assertEqual(smbo.solver.acquisition_func.par, 17)
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
+        self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 17)
         smbo = SMAC4AC(self.scenario, acquisition_function=LCB, acquisition_function_kwargs={'par': 19})
-        self.assertIsInstance(smbo.solver.acquisition_func, LCB)
-        self.assertEqual(smbo.solver.acquisition_func.par, 19)
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, LCB)
+        self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 19)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
             SMAC4AC(self.scenario, acquisition_function_kwargs={'dummy': 0.1})
@@ -178,9 +172,6 @@ class TestSMACFacade(unittest.TestCase):
         )
         self.assertIsInstance(smbo.solver.intensifier, DummyIntensifier)
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
-        # Check for construction failure on wrong argument
-        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
-            SMAC4AC(self.scenario, intensifier_kwargs={'dummy': 0.1})
 
     def test_construct_initial_design(self):
 
@@ -200,9 +191,6 @@ class TestSMACFacade(unittest.TestCase):
         )
         self.assertIsInstance(smbo.solver.initial_design, InitialDesign)
         self.assertEqual(smbo.solver.initial_design.configs, 'dummy')
-        # Check for construction failure on wrong argument
-        with self.assertRaisesRegex(Exception, 'got an unexpected keyword argument'):
-            SMAC4AC(self.scenario, intensifier_kwargs={'dummy': 0.1})
 
         for initial_incumbent_string, expected_instance in (
             ("DEFAULT", DefaultConfiguration),
@@ -225,10 +213,11 @@ class TestSMACFacade(unittest.TestCase):
                 acquisition_function=EIPS,
                 runhistory2epm=RunHistory2EPM4EIPS,
             ).solver
-            self.assertIsInstance(smbo.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.acquisition_func, EIPS)
-            self.assertIsInstance(smbo.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
-            self.assertIsInstance(smbo.rh2EPM, RunHistory2EPM4EIPS)
+            self.assertIsInstance(smbo.epm_chooser.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.epm_chooser.acquisition_func, EIPS)
+            self.assertIsInstance(smbo.epm_chooser.acquisition_func.model,
+                                  UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
     ####################################################################################################################
     # Other tests...
@@ -268,8 +257,7 @@ class TestSMACFacade(unittest.TestCase):
         )
         self.assertRaisesRegex(
             TypeError,
-            "Argument run_id accepts only arguments of type None, int or np.random.RandomState, "
-            "you provided <class 'str'>.",
+            "Argument run_id accepts only arguments of type None, int, you provided <class 'str'>.",
             get_rng,
             run_id='ABC'
         )
@@ -300,7 +288,6 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(run_id, 2505)
         self.assertIs(rng_1, rs)
 
-    @attr('slow')
     @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
     def test_check_deterministic_rosenbrock(self, patch):
 
@@ -390,7 +377,7 @@ class TestSMACFacade(unittest.TestCase):
         shutil.rmtree(smac.output_dir + '.OLD.OLD')
         shutil.rmtree(smac.output_dir + '.OLD')
         # This is done by teardown!
-        #shutil.rmtree(smac.output_dir)
+        # shutil.rmtree(smac.output_dir)
         shutil.rmtree(smac4.output_dir)
 
     def test_no_output(self):

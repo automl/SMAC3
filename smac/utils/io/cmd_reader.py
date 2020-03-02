@@ -1,4 +1,12 @@
-from argparse import Action, ArgumentDefaultsHelpFormatter, ArgumentParser, FileType, Namespace, SUPPRESS
+from argparse import (
+    Action,
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    FileType,
+    Namespace,
+    SUPPRESS,
+    HelpFormatter,
+)
 import datetime
 import distutils.util
 import logging
@@ -9,19 +17,26 @@ import sys
 import time
 import typing
 
+import numpy as np
+
 from smac.utils.constants import MAXINT, N_TREES
-from smac.utils.io.input_reader import InputReader
+from smac.utils.io.input_reader import InputReader, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 in_reader = InputReader()
-parsed_scen_args = {}
-logger = None
+PARSED_SCENARIO_ARGS_TYPE = typing.Dict[
+    str, typing.Union[str, int, typing.Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, typing.List[str]]
+]
+parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
+# Placeholder logger that will not be used in practice, but which will be replaced by
+# the logger onces the parsing logic is instantiated
+logger = logging.getLogger(__name__)
 
 
-def truthy(x):
+def truthy(x: typing.Any) -> bool:
     """Convert x into its truth value"""
     if isinstance(x, bool):
         return x
@@ -36,7 +51,13 @@ def truthy(x):
 class CheckScenarioFileAction(Action):
     """Check scenario file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: str,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         fn = values
         if fn:
             if not os.path.isfile(fn):
@@ -47,21 +68,34 @@ class CheckScenarioFileAction(Action):
 class ParseRandomConfigurationChooserAction(Action):
     """Parse random configuration chooser given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str = None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.IO,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         module_file = values
         module_path = module_file.name
         module_file.close()
         import importlib.util
         spec = importlib.util.spec_from_file_location("smac.custom.random_configuration_chooser", module_path)
+        assert spec.loader is not None  # please mypy
         rcc_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(rcc_module)
-        setattr(namespace, self.dest, rcc_module.RandomConfigurationChooserImpl())
+        spec.loader.exec_module(rcc_module)  # type: ignore[attr-defined] # noqa F821
+        setattr(namespace, self.dest, rcc_module.RandomConfigurationChooserImpl())  # type: ignore[attr-defined] # noqa F821
 
 
 class ProcessRunObjectiveAction(Action):
     """Process run objective given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: str,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         if values == "runtime":
             parsed_scen_args["cutoff_time_required"] = {
                 "error": "--cutoff-time is required when --run-objective is set to \"runtime\""
@@ -72,7 +106,13 @@ class ProcessRunObjectiveAction(Action):
 class ParseOverallObjectiveAction(Action):
     """Parse overall objective given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: str,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         par_str = values
         if par_str[:3] in ["PAR", "par"]:
             par_str = par_str[3:]
@@ -90,7 +130,13 @@ class ParseOverallObjectiveAction(Action):
 class ReadTrainInstFileAction(Action):
     """Read training instance file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.Optional[str],
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -103,7 +149,13 @@ class ReadTrainInstFileAction(Action):
 class ReadTestInstFileAction(Action):
     """Read test instance file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.Optional[str],
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         fn = values
         if fn:
             if os.path.isfile(fn):
@@ -116,12 +168,19 @@ class ReadTestInstFileAction(Action):
 class ReadFeatureFileAction(Action):
     """Read feature file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.Optional[str],
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         fn = values
         if fn:
             if os.path.isfile(fn):
-                parsed_scen_args["features"] = in_reader.read_instance_features_file(fn)
-                parsed_scen_args["feature_names"], parsed_scen_args["feature_dict"] = parsed_scen_args["features"]
+                instance_features = in_reader.read_instance_features_file(fn)
+                parsed_scen_args["feature_names"], parsed_scen_args["feature_dict"] = instance_features
+                parsed_scen_args["features"] = instance_features
             else:
                 parser.exit(1, "Could not find feature file: {}".format(fn))
         setattr(namespace, self.dest, values)
@@ -130,12 +189,19 @@ class ReadFeatureFileAction(Action):
 class ReadPCSFileAction(Action):
     """Read PCS (parameter configuration space) file given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.Optional[str],
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         fn = values
         if fn:
             if os.path.isfile(fn):
-                parsed_scen_args['cs'] = in_reader.read_pcs_file(fn)
-                parsed_scen_args["cs"].seed(42)
+                cs = in_reader.read_pcs_file(fn)
+                cs.seed(42)
+                parsed_scen_args['cs'] = cs
             else:
                 parser.exit(1, "Could not find pcs file: {}".format(fn))
         setattr(namespace, self.dest, values)
@@ -144,7 +210,13 @@ class ReadPCSFileAction(Action):
 class ProcessOutputDirAction(Action):
     """Process output directory given by user"""
 
-    def __call__(self, parser: ArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: ArgumentParser,
+        namespace: Namespace,
+        values: typing.Optional[str],
+        option_string: str = None,
+    ) -> None:
         directory = values
         if not directory:
             logger.debug("Deactivate output directory.")
@@ -159,12 +231,12 @@ class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
     Configurable Help Formatter. Can filter out developer options.
     """
 
-    def __init__(self, *args, help_type='standard', **kwargs):
+    def __init__(self, *args: typing.Any, help_type: str = 'standard', **kwargs: typing.Any):
         self.help_type = help_type
         super(ConfigurableHelpFormatter, self).__init__(*args, **kwargs)
 
-    def _add_item(self, func: typing.Callable, args: typing.Union[list, tuple]):
-        def filter_actions(actions: typing.List[Action]):
+    def _add_item(self, func: typing.Callable, args: typing.Any) -> None:
+        def filter_actions(actions: typing.List[Action]) -> typing.List[Action]:
             filtered_actions = []
             for action in actions:
                 dev = False
@@ -196,39 +268,43 @@ class SMACArgumentParser(ArgumentParser):
     ArgumentParser that can be extended by additional parsers.
     """
 
-    def __init__(self, *args, **kwargs):
-        self.additional_parsers = []
+    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
+        self.additional_parsers = []  # type: typing.List[ArgumentParser]
         self.help_type = 'standard'  # standard or dev
         super(SMACArgumentParser, self).__init__(*args, **kwargs)
 
-    def set_help_type(self, help_type: str):
+    def set_help_type(self, help_type: str) -> None:
         self.help_type = help_type
         for parser in self.additional_parsers:
-            parser.help_type = help_type
+            parser.help_type = help_type  # type: ignore[attr-defined] # noqa F821
 
-    def add_parser(self, additional_parser: ArgumentParser):
+    def add_parser(self, additional_parser: ArgumentParser) -> None:
         self.additional_parsers.append(additional_parser)
 
-    def _get_formatter(self):
-        return self.formatter_class(prog=self.prog, help_type=self.help_type)
+    def _get_formatter(self) -> HelpFormatter:
+        return self.formatter_class(prog=self.prog, help_type=self.help_type)  # type: ignore[call-arg] # noqa F821
 
-    def format_help(self):
+    def format_help(self) -> str:
         formatter = self._get_formatter()
 
         # usage
-        formatter.add_usage(self.usage, self._actions,
-                            self._mutually_exclusive_groups)
+        formatter.add_usage(
+            self.usage,  # type: ignore[arg-type] # noqa F821
+            self._actions,
+            self._mutually_exclusive_groups,
+        )
 
         # description
         formatter.add_text(self.description)
 
         # positionals, optionals and user-defined groups
-        def add_action_groups(parser: ArgumentParser):
+        def add_action_groups(parser: ArgumentParser) -> None:
             for action_group in parser._action_groups:
                 formatter.start_section(action_group.title)
                 formatter.add_text(action_group.description)
                 formatter.add_arguments(action_group._group_actions)
                 formatter.end_section()
+
         add_action_groups(self)
 
         # positionals, optionals and user-defined groups from additional parsers
@@ -245,10 +321,17 @@ class SMACArgumentParser(ArgumentParser):
 class StandardHelpAction(Action):
     """Action to only show standard options in help message"""
 
-    def __init__(self, *args, **kwargs):
-        super(StandardHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
+    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
+        # https://github.com/python/mypy/issues/6799
+        super().__init__(default=SUPPRESS, nargs=0, *args, **kwargs)  # type: ignore
 
-    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: SMACArgumentParser,
+        namespace: Namespace,
+        values: list,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         parser.set_help_type('standard')
         parser.print_help()
         parser.exit()
@@ -257,10 +340,17 @@ class StandardHelpAction(Action):
 class DevHelpAction(Action):
     """Action to show standard and developer options in help message"""
 
-    def __init__(self, *args, **kwargs):
-        super(DevHelpAction, self).__init__(default=SUPPRESS, nargs=0, *args, **kwargs)
+    def __init__(self, *args: typing.Any, **kwargs: typing.Any):
+        # https://github.com/python/mypy/issues/6799
+        super().__init__(default=SUPPRESS, nargs=0, *args, **kwargs)  # type: ignore
 
-    def __call__(self, parser: SMACArgumentParser, namespace: Namespace, values: list, option_string: str=None):
+    def __call__(  # type: ignore[override] # noqa F821
+        self,
+        parser: SMACArgumentParser,
+        namespace: Namespace,
+        values: list,
+        option_string: typing.Optional[str] = None,
+    ) -> None:
         parser.set_help_type('dev')
         parser.print_help()
         parser.exit()
@@ -274,25 +364,25 @@ class CMDReader(object):
     logger : Logger
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         global logger, parsed_scen_args
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         logger = self.logger
 
         # initialized in _add_main_options
-        self.parser = None
-        self.main_cmd_actions = {}
-        self.main_cmd_translations = {}
+        self.parser = None  # type: SMACArgumentParser # type: ignore[assignment]
+        self.main_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
+        self.main_cmd_translations = {}  # type: typing.Dict[str, str]
         # initialized in _add_smac_options
-        self.smac_parser = None
-        self.smac_cmd_actions = {}
-        self.smac_cmd_translations = {}
+        self.smac_parser = None  # type: SMACArgumentParser # type: ignore[assignment]
+        self.smac_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
+        self.smac_cmd_translations = {}  # type: typing.Dict[str, str]
         # initialized in _add_scen_options
-        self.scen_parser = None
-        self.scen_cmd_actions = {}
-        self.scen_cmd_translations = {}
+        self.scen_parser = None  # type: SMACArgumentParser # type: ignore[assignment]
+        self.scen_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
+        self.scen_cmd_translations = {}  # type: typing.Dict[str, str]
         # needed for argument interdependencies
-        self.parsed_scen_args = {}
+        self.parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
         parsed_scen_args = self.parsed_scen_args
 
         # add arguments to parser
@@ -301,21 +391,20 @@ class CMDReader(object):
         self._add_scen_options()
 
     @staticmethod
-    def _extract_action_info(actions: typing.List[Action]):
+    def _extract_action_info(actions: typing.List[Action]) -> typing.Tuple[typing.Dict, typing.Dict]:
         extracted_info = {}
         translations = {}
         for action in actions:
-            name = list(filter(lambda e: e.startswith('--'), action.option_strings))
-            if name:
-                name = name[0]
+            name_list = list(filter(lambda e: e.startswith('--'), action.option_strings))
+            if name_list:
+                name = name_list[0]
             else:
                 name = action.option_strings[0]
             dest = name
             if hasattr(action, 'dest'):
                 dest = action.dest
-            cmd_action = {
-                'dest': dest
-            }
+            cmd_action = dict()  # type: typing.Dict[str, typing.Union[str, typing.Callable[[str], typing.Any], typing.IO, None, typing.Type, bool, typing.Sequence[str], typing.Iterable]] # noqa 501
+            cmd_action['dest'] = dest
             for name in action.option_strings:
                 translations[name] = dest
                 translations[name.lstrip('-')] = dest
@@ -345,7 +434,7 @@ class CMDReader(object):
             extracted_info[name] = cmd_action
         return extracted_info, translations
 
-    def _add_main_options(self):
+    def _add_main_options(self) -> None:
         """Add main Options"""
         prog = sys.argv[0]
         if re.match("^python[0-9._-]*$", sys.argv[0]):
@@ -369,8 +458,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "EPILS", "Hydra", "PSMAC", "SMAC4HPO",
-                                                          "SMAC4BO"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "Hydra", "PSMAC", "SMAC4HPO", "SMAC4BO"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,
@@ -417,7 +505,7 @@ class CMDReader(object):
 
         self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
 
-    def _add_smac_options(self):
+    def _add_smac_options(self) -> None:
         """Add SMAC Options"""
         self.smac_parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         smac_opts = self.smac_parser.add_argument_group("SMAC Options")
@@ -426,6 +514,12 @@ class CMDReader(object):
                                default=True, type=truthy,
                                help="If true, *SMAC* will abort if the first run of "
                                     "the target algorithm crashes.")
+        smac_opts.add_argument("--limit-resources", "--limit_resources",
+                               dest='limit_resources',
+                               default=True, type=truthy,
+                               help="If true, *SMAC* will use pynisher to limit time and memory for "
+                                    "the target algorithm. Allows SMAC to use all resources available. "
+                                    "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)")
 
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
@@ -462,7 +556,7 @@ class CMDReader(object):
         smac_opts.add_argument("--use-ta-time", "--use_ta_time", dest="use_ta_time",
                                default=False, type=truthy,
                                help="[dev] Instead of measuring SMAC's wallclock time, "
-                               "only consider time reported by the target algorithm (ta).")
+                                    "only consider time reported by the target algorithm (ta).")
 
         # Hyperparameters
         smac_opts.add_argument("--always-race-default", "--always_race_default", dest='always_race_default',
@@ -478,79 +572,82 @@ class CMDReader(object):
         smac_opts.add_argument("--transform_y", "--transform-y",
                                dest='transform_y',
                                choices=["NONE", "LOG", "LOGS", "INVS"],
-                               default="NONE",                      
+                               default="NONE",
                                help="[dev] Transform all observed cost values"
-                               " via log-transformations or inverse scaling."
-                               " The subfix \"s\" indicates that SMAC scales the"
-                               " y-values accordingly to apply the transformation.")
+                                    " via log-transformations or inverse scaling."
+                                    " The subfix \"s\" indicates that SMAC scales the"
+                                    " y-values accordingly to apply the transformation.")
 
-        ## RF Hyperparameters
-        smac_opts.add_argument("--rf_num_trees","--rf-num-trees",
+        # RF Hyperparameters
+        smac_opts.add_argument("--rf_num_trees",
+                               "--rf-num-trees",
                                dest='rf_num_trees',
                                default=N_TREES, type=int,
                                help="[dev] Number of trees in the random forest (> 1).")
-        smac_opts.add_argument("--rf_do_bootstrapping","--rf-do-bootstrapping",
-                       dest='rf_do_bootstrapping',
-                       default=True, type=bool,
-                       help="[dev] Use bootstraping in random forest.")
-        smac_opts.add_argument("--rf_ratio_features","--rf-ratio-features",
-                       dest='rf_ratio_features',
-                       default=5. / 6., type=float,
-                       help="[dev] Ratio of sampled features in each split ([0.,1.]).")
-        smac_opts.add_argument("--rf_min_samples_split","--rf-min-samples-split",
-                       dest='rf_min_samples_split',
-                       default=3, type=int,
-                       help="[dev] Minimum number of samples to split for building a tree in the random forest.")
-        smac_opts.add_argument("--rf_min_samples_leaf","--rf-min-samples-leaf",
-                       dest='rf_min_samples_leaf',
-                       default=3, type=int,
-                       help="[dev] Minimum required number of samples in each leaf of a tree in the random forest.")
-        smac_opts.add_argument("--rf_max_depth","--rf-max-depth",
-                       dest='rf_max_depth',
-                       default=20, type=int,
-                       help="[dev] Maximum depth of each tree in the random forest.")
-        ## AcquisitionOptimizer SLS
-        smac_opts.add_argument("--sls_n_steps_plateau_walk","--sls-n-steps-plateau-walk",
-               dest='sls_n_steps_plateau_walk',
-               default=10, type=int,
-               help="[dev] Maximum number of steps on plateaus during "
-                    "the optimization of the acquisition function.")
-        smac_opts.add_argument("--sls_max_steps","--sls-max-steps",
-               dest='sls_max_steps',
-               default=None, type=int,
-               help="[dev] Maximum number of local search steps in one iteration"
-                    " during the optimization of the acquisition function.")
-        smac_opts.add_argument("--acq_opt_challengers","--acq-opt-challengers",
-               dest='acq_opt_challengers',
-               default=5000, type=int,
-               help="[dev] Number of challengers returned by acquisition function" 
-                    " optimization. Also influences the number of randomly sampled"
-                    " configurations to optimized the acquisition function")
-    
-        ## Intensification
-        smac_opts.add_argument("--intens_adaptive_capping_slackfactor","--intens-adaptive-capping-slackfactork",
-               dest='intens_adaptive_capping_slackfactor',
-               default=1.2, type=float,
-               help="[dev] Slack factor of adpative capping (factor * adpative cutoff)."
-                    " Only active if obj is runtime."
-                    " If set to very large number it practically deactivates adaptive capping.")
-        smac_opts.add_argument("--intens_min_chall","--intens-min-chall",
-               dest='intens_min_chall',
-               default=2, type=int,
-               help="[dev] Minimal number of challengers to be considered in each intensification run (> 1)."
-                    " Set to 1 and in combination with very small intensification-percentage."
-                    " it will deactivate randomly sampled configurations"
-                    " (and hence, extrapolation of random forest will be an issue.)")
-        smac_opts.add_argument("--rand_prob","--rand-prob",
-               dest='rand_prob',
-               default=0.5, type=float,
-               help="[dev] probablity to run a random configuration"
-               " instead of configuration optimized on the acquisition function")
+        smac_opts.add_argument("--rf_do_bootstrapping", "--rf-do-bootstrapping",
+                               dest='rf_do_bootstrapping',
+                               default=True, type=bool,
+                               help="[dev] Use bootstraping in random forest.")
+        smac_opts.add_argument("--rf_ratio_features", "--rf-ratio-features",
+                               dest='rf_ratio_features',
+                               default=5. / 6., type=float,
+                               help="[dev] Ratio of sampled features in each split ([0.,1.]).")
+        smac_opts.add_argument("--rf_min_samples_split", "--rf-min-samples-split",
+                               dest='rf_min_samples_split',
+                               default=3, type=int,
+                               help="[dev] Minimum number of samples"
+                                    " to split for building a tree in the random forest.")
+        smac_opts.add_argument("--rf_min_samples_leaf", "--rf-min-samples-leaf",
+                               dest='rf_min_samples_leaf',
+                               default=3, type=int,
+                               help="[dev] Minimum required number of"
+                                    " samples in each leaf of a tree in the random forest.")
+        smac_opts.add_argument("--rf_max_depth", "--rf-max-depth",
+                               dest='rf_max_depth',
+                               default=20, type=int,
+                               help="[dev] Maximum depth of each tree in the random forest.")
+        # AcquisitionOptimizer SLS
+        smac_opts.add_argument("--sls_n_steps_plateau_walk", "--sls-n-steps-plateau-walk",
+                               dest='sls_n_steps_plateau_walk',
+                               default=10, type=int,
+                               help="[dev] Maximum number of steps on plateaus during "
+                                    "the optimization of the acquisition function.")
+        smac_opts.add_argument("--sls_max_steps", "--sls-max-steps",
+                               dest='sls_max_steps',
+                               default=None, type=int,
+                               help="[dev] Maximum number of local search steps in one iteration"
+                                    " during the optimization of the acquisition function.")
+        smac_opts.add_argument("--acq_opt_challengers", "--acq-opt-challengers",
+                               dest='acq_opt_challengers',
+                               default=5000, type=int,
+                               help="[dev] Number of challengers returned by acquisition function"
+                                    " optimization. Also influences the number of randomly sampled"
+                                    " configurations to optimized the acquisition function")
 
+        # Intensification
+        smac_opts.add_argument("--intens_adaptive_capping_slackfactor", "--intens-adaptive-capping-slackfactork",
+                               dest='intens_adaptive_capping_slackfactor',
+                               default=1.2, type=float,
+                               help="[dev] Slack factor of adpative capping (factor * adpative cutoff)."
+                                    " Only active if obj is runtime."
+                                    " If set to very large number it practically deactivates adaptive capping.")
+        smac_opts.add_argument("--intens_min_chall", "--intens-min-chall",
+                               dest='intens_min_chall',
+                               default=2, type=int,
+                               help="[dev] Minimal number of challengers to be"
+                                    " considered in each intensification run (> 1)."
+                                    " Set to 1 and in combination with very small intensification-percentage."
+                                    " it will deactivate randomly sampled configurations"
+                                    " (and hence, extrapolation of random forest will be an issue.)")
+        smac_opts.add_argument("--rand_prob", "--rand-prob",
+                               dest='rand_prob',
+                               default=0.5, type=float,
+                               help="[dev] probablity to run a random configuration"
+                                    " instead of configuration optimized on the acquisition function")
         self.parser.add_parser(self.smac_parser)
         self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
 
-    def _add_scen_options(self):
+    def _add_scen_options(self) -> None:
         """Add Scenario Options"""
         self.scen_parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         scen_opts = self.scen_parser.add_argument_group("Scenario Options")
@@ -564,8 +661,8 @@ class CMDReader(object):
         scen_opts.add_argument("--deterministic", dest="deterministic",
                                default=False, type=truthy,
                                help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
-                               " (the same static seed of 0 is always passed to the function/algorithm)."
-                               " If false, different random seeds are passed to the target function/algorithm.")
+                                    " (the same static seed of 0 is always passed to the function/algorithm)."
+                                    " If false, different random seeds are passed to the target function/algorithm.")
         scen_opts.add_argument("--run-obj", "--run_obj", dest="run_obj",
                                type=str, action=ProcessRunObjectiveAction,
                                required=True, choices=['runtime', 'quality'],
@@ -594,7 +691,8 @@ class CMDReader(object):
                                type=float,
                                help="[dev] Maximum available memory the target algorithm "
                                     "can occupy before being cancelled in MB.")
-        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", "--algo-runs-timelimit", "--algo_runs_timelimit", dest="algo_runs_timelimit",
+        scen_opts.add_argument("--tuner-timeout", "--tuner_timeout", "--algo-runs-timelimit", "--algo_runs_timelimit",
+                               dest="algo_runs_timelimit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum amount of CPU-time used for optimization.")
         scen_opts.add_argument("--wallclock-limit", "--wallclock_limit", dest="wallclock_limit",
@@ -603,19 +701,23 @@ class CMDReader(object):
         scen_opts.add_argument("--always-race-default", "--always_race_default", dest="always_race_default",
                                default=False, type=truthy,
                                help="[dev] Race new incumbents always against default configuration.")
-        scen_opts.add_argument("--runcount-limit", "--runcount_limit", "--ta-run-limit", "--ta_run_limit", dest="ta_run_limit",
+        scen_opts.add_argument("--runcount-limit", "--runcount_limit", "--ta-run-limit", "--ta_run_limit",
+                               dest="ta_run_limit",
                                default=float('inf'), type=float,
                                help="[dev] Maximum number of algorithm-calls during optimization.")
-        scen_opts.add_argument("--instance-file", "--instance_file", "--train-inst-fn", "--train_inst_fn", dest='train_inst_fn',
+        scen_opts.add_argument("--instance-file", "--instance_file", "--train-inst-fn", "--train_inst_fn",
+                               dest='train_inst_fn',
                                type=str, action=ReadTrainInstFileAction,
                                help="[dev] Specifies the file with the training-instances.")
         scen_opts.add_argument("--instances", "--train-insts", "--train_insts", dest="train_insts",
                                default=[[None]],  # overridden by --instance-file
                                help=SUPPRESS)
-        scen_opts.add_argument("--test-instance-file", "--test_instance_file", "--test-inst-fn", "--test_inst_fn", dest='test_inst_fn',
+        scen_opts.add_argument("--test-instance-file", "--test_instance_file", "--test-inst-fn", "--test_inst_fn",
+                               dest='test_inst_fn',
                                type=str, action=ReadTestInstFileAction,
                                help="[dev] Specifies the file with the test-instances.")
-        scen_opts.add_argument("--test-instances", "--test_instances", "--test-insts", "--test_insts", dest="test_insts",
+        scen_opts.add_argument("--test-instances", "--test_instances", "--test-insts", "--test_insts",
+                               dest="test_insts",
                                default=[[None]],  # overridden by --test-instance-file
                                help=SUPPRESS)
         scen_opts.add_argument("--feature-file", "--feature_file", "--feature-fn", "--feature_fn", dest='feature_fn',
@@ -625,7 +727,7 @@ class CMDReader(object):
                                default={},  # instance name -> feature vector, overridden by --feature-file
                                help=SUPPRESS)
         scen_opts.add_argument("--feature-names", "--feature_names", dest="feature_names",
-                               type=list,
+                               type=list,  # type: ignore[arg-type] # noqa F821
                                help=SUPPRESS)  # added after parsing --features
         scen_opts.add_argument("--initial-incumbent", "--initial_incumbent", dest='initial_incumbent',
                                default="DEFAULT", type=str, choices=['DEFAULT', 'RANDOM', 'LHD', 'SOBOL', 'FACTORIAL'],
@@ -641,7 +743,7 @@ class CMDReader(object):
         self.parser.add_parser(self.scen_parser)
         self.scen_cmd_actions, self.scen_cmd_translations = CMDReader._extract_action_info(self.scen_parser._actions)
 
-    def parse_main_command(self, main_cmd_opts: typing.List[str]):
+    def parse_main_command(self, main_cmd_opts: typing.Sequence[str]) -> typing.Tuple[Namespace, typing.List[str]]:
         """Parse main options"""
         args_, misc = self.parser.parse_known_args(main_cmd_opts)
         try:
@@ -650,7 +752,11 @@ class CMDReader(object):
             pass
         return args_, misc
 
-    def parse_smac_command(self, smac_dict: dict = {}, smac_cmd_opts: typing.List[str] = []):
+    def parse_smac_command(
+        self,
+        smac_dict: dict = {},
+        smac_cmd_opts: typing.List[str] = [],
+    ) -> typing.Tuple[Namespace, typing.Dict, typing.List[str]]:
         """Parse SMAC options"""
         # transform smac dict to smac_args
         try:
@@ -689,9 +795,9 @@ class CMDReader(object):
         return args_, misc_dict, misc_cmd
 
     def parse_scenario_command(self,
-                               scenario_file: str=None,
-                               scenario_dict: dict={},
-                               scenario_cmd_opts: typing.List[str]=[]):
+                               scenario_file: str = None,
+                               scenario_dict: dict = {},
+                               scenario_cmd_opts: typing.List[str] = []) -> Namespace:
         """
         Parse scenario options
         :param scenario_file: str or None
@@ -704,7 +810,7 @@ class CMDReader(object):
         Parsed scenario arguments
         """
         # read scenario file
-        scenario_file_dict = {}
+        scenario_file_dict = {}  # type: typing.Dict[str, typing.Any]
         if isinstance(scenario_file, str):
             scenario_file_dict = in_reader.read_scenario_file(scenario_file)
         elif scenario_file is None:
@@ -752,7 +858,7 @@ class CMDReader(object):
 
         if "cutoff_time_required" in self.parsed_scen_args:
             if self.parsed_scen_args["cutoff_time_required"] and not scen_args_.cutoff:
-                self.parser.exit(1, "Error: {}".format(self.parsed_scen_args["cutoff_time_required"]["error"]))
+                self.parser.exit(1, "Error: {}".format(self.parsed_scen_args["cutoff_time_required"]["error"]))  # type: ignore # noqa 501
             self.parsed_scen_args.pop("cutoff_time_required")
 
         # copy parsed scenario args to scen_args_
@@ -762,7 +868,11 @@ class CMDReader(object):
 
         return scen_args_
 
-    def read_smac_scenario_dict_cmd(self, dict_cmd: dict, scenario_file: str=None):
+    def read_smac_scenario_dict_cmd(
+        self,
+        dict_cmd: dict,
+        scenario_file: str = None,
+    ) -> typing.Tuple[Namespace, Namespace]:
         """Reads smac and scenario options provided in a dictionary
 
         Returns
@@ -775,7 +885,10 @@ class CMDReader(object):
                                                  scenario_cmd_opts=misc_cmd)
         return smac_args_, scen_args_
 
-    def read_cmd(self, commandline_arguments: typing.List[str]=sys.argv[1:]):
+    def read_cmd(
+        self,
+        commandline_arguments: typing.Sequence[str] = tuple(sys.argv[1:]),
+    ) -> typing.Tuple[Namespace, Namespace, Namespace]:
         """Reads command line options (main, smac and scenario options)
 
         Returns
@@ -791,7 +904,7 @@ class CMDReader(object):
         return main_args_, smac_args_, scen_args_
 
     @staticmethod
-    def _write_options_to_doc(_arguments: dict, path: str, exclude: typing.List[str]):
+    def _write_options_to_doc(_arguments: dict, path: str, exclude: typing.List[str]) -> None:
         with open(path, 'w') as fh:
             for arg in sorted(_arguments.keys()):
                 print_arg = arg.lstrip('-').replace('-', '_')
@@ -808,7 +921,7 @@ class CMDReader(object):
                 fh.write("\n")
             fh.write("\n\n")
 
-    def write_main_options_to_doc(self, path: str='main_options.rst'):
+    def write_main_options_to_doc(self, path: str = 'main_options.rst') -> None:
         """Writes the SMAC option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 
@@ -817,11 +930,11 @@ class CMDReader(object):
         path: string
             Where to write to (relative to doc-folder since executed in conf.py)
         """
-        exclude = []
+        exclude = []  # type: typing.List
         _arguments = self.main_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
-    def write_smac_options_to_doc(self, path: str='smac_options.rst'):
+    def write_smac_options_to_doc(self, path: str = 'smac_options.rst') -> None:
         """Writes the SMAC option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 
@@ -830,11 +943,11 @@ class CMDReader(object):
         path: string
             Where to write to (relative to doc-folder since executed in conf.py)
         """
-        exclude = []
+        exclude = []  # type: typing.List
         _arguments = self.smac_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
-    def write_scenario_options_to_doc(self, path: str='scenario_options.rst'):
+    def write_scenario_options_to_doc(self, path: str = 'scenario_options.rst') -> None:
         """Writes the Scenario option-list to file for autogeneration in documentation.
         The list is created in doc/conf.py and read in doc/options.rst.
 

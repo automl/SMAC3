@@ -47,10 +47,16 @@ is written in C++.
 ## Requirements
 
 Besides the listed requirements (see `requirements.txt`), the random forest
-used in SMAC3 requires SWIG (>= 3.0).
+used in SMAC3 requires SWIG (>= 3.0, <4.0) as a build dependency:
 
 ```apt-get install swig```
 
+On Arch Linux (or any distribution with swig4 as default implementation):
+
+```
+pacman -Syu swig3
+ln -s /usr/bin/swig-3 /usr/bin/swig
+```
 
 ## Installation via pip
 

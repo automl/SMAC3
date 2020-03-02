@@ -14,9 +14,7 @@ from smac.runhistory import runhistory, runhistory2epm
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.optimizer.objective import average_cost
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
@@ -38,7 +36,7 @@ class RunhistoryTest(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.rh = runhistory.RunHistory(aggregate_func=average_cost)
+        self.rh = runhistory.RunHistory()
         self.cs = get_config_space()
         self.config1 = Configuration(self.cs,
                                      values={'a': 0, 'b': 100})
@@ -175,11 +173,11 @@ class RunhistoryTest(unittest.TestCase):
         )
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
-                                                       scenario=self.scen,
-                                                       impute_censored_data=True,
-                                                       impute_state=[
-                                                           StatusType.TIMEOUT],
-                                                       imputor=self.imputor)
+                                                    scenario=self.scen,
+                                                    impute_censored_data=True,
+                                                    impute_state=[
+                                                        StatusType.TIMEOUT],
+                                                    imputor=self.imputor)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=23,
@@ -261,7 +259,7 @@ class RunhistoryTest(unittest.TestCase):
                               'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
-                                                       scenario=self.scen)
+                                                    scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=10,
                     status=StatusType.SUCCESS, instance_id=23,
@@ -285,7 +283,7 @@ class RunhistoryTest(unittest.TestCase):
         # log_10(20 * 10)
         self.assertTrue(np.allclose(y, np.array([[1.], [200.]]), atol=0.001))
 
-        #TODO: unit test for censored data in quality scenario
+        # TODO: unit test for censored data in quality scenario
 
     def test_get_X_y(self):
         '''
@@ -294,11 +292,11 @@ class RunhistoryTest(unittest.TestCase):
 
         self.scen = Scenario({'cutoff_time': 20, 'cs': self.cs,
                               'run_obj': 'runtime',
-                              'instances': [['1'],['2']],
+                              'instances': [['1'], ['2']],
                               'features': {
-                                  '1': [1,1],
-                                  '2': [2,2]
-                                  },
+                                  '1': [1, 1],
+                                  '2': [2, 2]
+                              },
                               'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
@@ -324,21 +322,21 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        X,y,c = rh2epm.get_X_y(self.rh)
+        X, y, c = rh2epm.get_X_y(self.rh)
 
-        print(X,y,c)
+        print(X, y, c)
 
-        X_sol = np.array([[0,100,1,1],
-                          [0,100,2,2],
-                          [100,0,1,1],
-                          [100,0,2,2]])
-        self.assertTrue(np.all(X==X_sol))
+        X_sol = np.array([[0, 100, 1, 1],
+                          [0, 100, 2, 2],
+                          [100, 0, 1, 1],
+                          [100, 0, 2, 2]])
+        self.assertTrue(np.all(X == X_sol))
 
-        y_sol = np.array([1,2,1,0.1])
-        self.assertTrue(np.all(y==y_sol))
+        y_sol = np.array([1, 2, 1, 0.1])
+        self.assertTrue(np.all(y == y_sol))
 
         c_sol = np.array([False, False, True, True])
-        self.assertTrue(np.all(c==c_sol))
+        self.assertTrue(np.all(c == c_sol))
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ class TestHydraFacade(unittest.TestCase):
         optimizer = Hydra(self.scenario, n_iterations=3, incs_per_round=2)
         portfolio = optimizer.optimize()
         self.assertEqual(len(portfolio), 6)
-        
+
     def tearDown(self):
         hydras = glob.glob1('.', 'hydra*')
         for folder in hydras:

@@ -57,11 +57,11 @@ before_install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - if [[ `which conda` ]]; then echo 'Conda installation successful'; else exit 1; fi
-  - conda create -n testenv --yes python=$PYTHON_VERSION pip wheel nose gxx_linux-64 gcc_linux-64 swig
+  - conda create -n testenv --yes python=$PYTHON_VERSION pip wheel pytest gxx_linux-64 gcc_linux-64 swig
   - source activate testenv
 
 install:
-  - pip install pep8 codecov mypy flake8
+  - pip install pep8 codecov mypy flake8 pytest-cov
   - cat requirements.txt | xargs -n 1 -L 1 pip install
   - pip install .[all]
 

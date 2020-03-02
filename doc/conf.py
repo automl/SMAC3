@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
+    'sphinx_gallery.gen_gallery',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -310,3 +311,16 @@ cmd_reader = CMDReader()
 cmd_reader.write_main_options_to_doc()
 cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
+
+# Sphinx-gallery configuration.
+sphinx_gallery_conf = {
+    # disable mini galleries clustered by the used functions
+    'backreferences_dir': False,
+    # path to the examples
+    'examples_dirs': '../examples',
+    # path where to save gallery generated examples
+    'gallery_dirs': 'examples',
+    # compile execute examples in the examples dir
+    'filename_pattern': '.*example.py$|.*tutorial.py$',
+    # TODO: fix back/forward references for the examples.
+}

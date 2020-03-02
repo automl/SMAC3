@@ -1,11 +1,16 @@
 import logging
 import math
 from enum import Enum
+import typing
 
 import numpy as np
 
 from smac.configspace import Configuration
+from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
+
+if typing.TYPE_CHECKING:
+    from smac.runhistory.runhistory import RunHistory  # noqa F401
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -25,7 +30,8 @@ class StatusType(Enum):
     MEMOUT = 5
     CAPPED = 6
 
-    def enum_hook(obj):
+    @staticmethod
+    def enum_hook(obj: typing.Dict) -> typing.Any:
         """Hook function passed to json-deserializer as "object_hook".
         EnumEncoder in runhistory/runhistory.
         """
@@ -79,17 +85,23 @@ class ExecuteTARun(object):
     logger
     """
 
-    def __init__(self, ta, stats=None, runhistory=None,
-                 run_obj: str="runtime", par_factor: int=1,
-                 cost_for_crash: float=float(MAXINT),
-                 abort_on_first_run_crash: bool=True):
+    def __init__(
+        self,
+        ta: typing.Union[typing.List[str], typing.Callable],
+        stats: Stats,
+        runhistory: typing.Optional['RunHistory'] = None,
+        run_obj: str = "runtime",
+        par_factor: int = 1,
+        cost_for_crash: float = float(MAXINT),
+        abort_on_first_run_crash: bool = True,
+    ) -> None:
         """Constructor
 
         Parameters
         ----------
         ta : list
             target algorithm command line as list of arguments
-        runhistory: RunHistory
+        runhistory: RunHistory, optional
             runhistory to keep track of all runs; only used if set
         stats: Stats()
              stats object to collect statistics about runtime and so on
@@ -116,12 +128,16 @@ class ExecuteTARun(object):
             self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
 
-    def start(self, config: Configuration,
-              instance: str,
-              cutoff: float=None,
-              seed: int=12345,
-              instance_specific: str="0",
-              capped: bool=False):
+    def start(
+        self,
+        config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: float = 0.0,
+        instance_specific: str = "0",
+        capped: bool = False,
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """Wrapper function for ExecuteTARun.run() to check configuration
         budget before the runs and to update stats after run
 
@@ -131,10 +147,13 @@ class ExecuteTARun(object):
                 Mainly a dictionary param -> value
             instance : string
                 Problem instance
-            cutoff : float
+            cutoff : float, optional
                 Runtime cutoff
             seed : int
                 Random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
             capped: bool
@@ -161,14 +180,18 @@ class ExecuteTARun(object):
         if cutoff is not None:
             cutoff = int(math.ceil(cutoff))
         if cutoff is None and self.run_obj == "runtime":
-            self.logger.error("For scenarios optimizing running time "
-                              "(run objective), a cutoff time is required, "
-                              "but not given to this call.")
+            self.logger.critical("For scenarios optimizing running time "
+                                 "(run objective), a cutoff time is required, "
+                                 "but not given to this call.")
+            raise ValueError("For scenarios optimizing running time "
+                             "(run objective), a cutoff time is required, "
+                             "but not given to this call.")
 
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
                                                           cutoff=cutoff,
                                                           seed=seed,
+                                                          budget=budget,
                                                           instance_specific=instance_specific)
 
         # update SMAC stats
@@ -176,8 +199,10 @@ class ExecuteTARun(object):
         self.stats.ta_time_used += float(runtime)
 
         # Catch NaN or inf.
-        if (self.run_obj == 'runtime' and not np.isfinite(runtime) or
-            self.run_obj == 'quality' and not np.isfinite(cost)):
+        if (
+            self.run_obj == 'runtime' and not np.isfinite(runtime)
+            or self.run_obj == 'quality' and not np.isfinite(cost)
+        ):
             self.logger.warning("Target Algorithm returned NaN or inf as {}. "
                                 "Algorithm run is treated as CRASHED, cost "
                                 "is set to {} for quality scenarios. "
@@ -192,10 +217,13 @@ class ExecuteTARun(object):
                                     "in the trajectory-file.")
 
         if self.run_obj == "runtime":
+            # The following line pleases mypy - we already check for cutoff not being none above, prior to calling
+            # run. However, mypy assumes that the data type of cutoff is still Optional[int]
+            assert cutoff is not None
             if runtime > self.par_factor * cutoff:
-                self.logger.warn("Returned running time is larger "
-                                 "than {0} times the passed cutoff time. "
-                                 "Clamping to {0} x cutoff.".format(self.par_factor))
+                self.logger.warning("Returned running time is larger "
+                                    "than {0} times the passed cutoff time. "
+                                    "Clamping to {0} x cutoff.".format(self.par_factor))
                 runtime = cutoff * self.par_factor
                 status = StatusType.TIMEOUT
             if status == StatusType.SUCCESS:
@@ -215,6 +243,7 @@ class ExecuteTARun(object):
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
+                                budget=budget,
                                 additional_info=additional_info)
             self.stats.n_configs = len(self.runhistory.config_ids)
 
@@ -232,10 +261,14 @@ class ExecuteTARun(object):
 
         return status, cost, runtime, additional_info
 
-    def run(self, config: Configuration, instance: str,
-            cutoff: int=None,
-            seed: int=12345,
-            instance_specific: str="0"):
+    def run(
+        self, config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
@@ -246,11 +279,14 @@ class ExecuteTARun(object):
                 dictionary param -> value
             instance : string
                 problem instance
-            cutoff : int, optional
+            cutoff : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced.
             seed : int
                 random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target algorithm
+                Handled by the target algorithm internally
             instance_specific: str
                 instance specific information (e.g., domain file or solution)
 

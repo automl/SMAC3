@@ -1,14 +1,19 @@
+"""
+=========================================================================================
+Using the SMAC interface tuned for hyperparameter optimization for black-box optimization
+=========================================================================================
+"""
+
 import logging
 
 import numpy as np
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-
+from smac.facade.smac_hpo_facade import SMAC4HPO
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.facade.smac_hpo_facade import SMAC4HPO
 
 
 def rosenbrock_2d(x):
@@ -35,9 +40,9 @@ x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
 cs.add_hyperparameters([x0, x1])
 
 # Scenario object
-scenario = Scenario({"run_obj": "quality",   # we optimize quality (alternatively runtime)
-                     "runcount-limit": 10,   # max. number of function evaluations; for this example set to a low number
-                     "cs": cs,               # configuration space
+scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                     "runcount-limit": 10,  # max. number of function evaluations; for this example set to a low number
+                     "cs": cs,  # configuration space
                      "deterministic": "true"
                      })
 

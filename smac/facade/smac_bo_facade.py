@@ -1,8 +1,12 @@
+import typing
+
 import numpy as np
 
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 from smac.epm.util_funcs import get_types, get_rng
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
@@ -46,25 +50,31 @@ class SMAC4BO(SMAC4AC):
 
     """
 
-    def __init__(self, model_type='gp_mcmc', **kwargs):
+    def __init__(self, model_type: str = 'gp_mcmc', **kwargs: typing.Any):
         """
         Constructor
         see ~smac.facade.smac_facade for documentation
         """
+
         scenario = kwargs['scenario']
 
-        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) <= 40:
+            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        else:
+            raise ValueError(
+                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
+                'Please use a different initial design, such as "the Latin Hypercube design".',
+            )
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
-        init_kwargs = kwargs.get('initial_design_kwargs', dict())
+        init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
         init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 8)
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 
         if kwargs.get('model') is None:
-            from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
 
-            model_kwargs = kwargs.get('model_kwargs', dict())
+            model_kwargs = kwargs.get('model_kwargs', dict()) or dict()
 
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
@@ -102,7 +112,7 @@ class SMAC4BO(SMAC4AC):
 
             if len(cont_dims) > 0 and len(cat_dims) > 0:
                 # both
-                kernel = cov_amp * (exp_kernel*ham_kernel) + noise_kernel
+                kernel = cov_amp * (exp_kernel * ham_kernel) + noise_kernel
             elif len(cont_dims) > 0 and len(cat_dims) == 0:
                 # only cont
                 kernel = cov_amp * exp_kernel + noise_kernel
@@ -113,7 +123,7 @@ class SMAC4BO(SMAC4AC):
                 raise ValueError()
 
             if model_type == "gp":
-                model_class = GaussianProcess
+                model_class = GaussianProcess  # type: typing.Type[BaseModel]
                 kwargs['model'] = model_class
                 model_kwargs['kernel'] = kernel
                 model_kwargs['normalize_y'] = True
@@ -138,17 +148,23 @@ class SMAC4BO(SMAC4AC):
             kwargs['model_kwargs'] = model_kwargs
 
         if kwargs.get('random_configuration_chooser') is None:
-            random_config_chooser_kwargs = kwargs.get('random_configuration_chooser_kwargs', dict())
+            random_config_chooser_kwargs = kwargs.get(
+                'random_configuration_chooser_kwargs',
+                dict(),
+            ) or dict()
             random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.08447232371720552)
             kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
 
         if kwargs.get('acquisition_function_optimizer') is None:
-            acquisition_function_optimizer_kwargs = kwargs.get('acquisition_function_optimizer_kwargs', dict())
+            acquisition_function_optimizer_kwargs = kwargs.get(
+                'acquisition_function_optimizer_kwargs',
+                dict(),
+            ) or dict()
             acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
             kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
-        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
+        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict()) or dict()
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
@@ -160,6 +176,6 @@ class SMAC4BO(SMAC4AC):
 
         self.logger.info(self.__class__)
 
-        self.solver.scenario.acq_opt_challengers = 1000
+        self.solver.scenario.acq_opt_challengers = 1000    # type: ignore[attr-defined] # noqa F821
         # activate predict incumbent
-        self.solver.predict_incumbent = True
+        self.solver.epm_chooser.predict_x_best = True

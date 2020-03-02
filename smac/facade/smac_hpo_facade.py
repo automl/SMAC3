@@ -1,3 +1,5 @@
+import typing
+
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.optimizer.acquisition import LogEI
@@ -28,7 +30,7 @@ class SMAC4HPO(SMAC4AC):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: typing.Any):
         """
         Constructor
         see ~smac.facade.smac_facade for docu
@@ -36,7 +38,13 @@ class SMAC4HPO(SMAC4AC):
 
         scenario = kwargs['scenario']
 
-        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) <= 40:
+            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        else:
+            raise ValueError(
+                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
+                'Please use a different initial design, such as "the Latin Hypercube design".',
+            )
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict())
@@ -44,24 +52,25 @@ class SMAC4HPO(SMAC4AC):
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 
-        # only 1 configuration per SMBO iteration
+        # Intensification parameters - which intensifier to use and respective parameters
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
         intensifier_kwargs['min_chall'] = 1
         kwargs['intensifier_kwargs'] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
 
-        model_class = RandomForestWithInstances
-        kwargs['model'] = model_class
+        if kwargs.get('model') is None:
+            model_class = RandomForestWithInstances
+            kwargs['model'] = model_class
 
-        # == static RF settings
-        model_kwargs = kwargs.get('model_kwargs', dict())
-        model_kwargs['num_trees'] = model_kwargs.get('num_trees', 10)
-        model_kwargs['do_bootstrapping'] = model_kwargs.get('do_bootstrapping', True)
-        model_kwargs['ratio_features'] = model_kwargs.get('ratio_features', 1.0)
-        model_kwargs['min_samples_split'] = model_kwargs.get('min_samples_split', 2)
-        model_kwargs['min_samples_leaf'] = model_kwargs.get('min_samples_leaf', 1)
-        model_kwargs['log_y'] = model_kwargs.get('log_y', True)
-        kwargs['model_kwargs'] = model_kwargs
+            # == static RF settings
+            model_kwargs = kwargs.get('model_kwargs', dict())
+            model_kwargs['num_trees'] = model_kwargs.get('num_trees', 10)
+            model_kwargs['do_bootstrapping'] = model_kwargs.get('do_bootstrapping', True)
+            model_kwargs['ratio_features'] = model_kwargs.get('ratio_features', 1.0)
+            model_kwargs['min_samples_split'] = model_kwargs.get('min_samples_split', 2)
+            model_kwargs['min_samples_leaf'] = model_kwargs.get('min_samples_leaf', 1)
+            model_kwargs['log_y'] = model_kwargs.get('log_y', True)
+            kwargs['model_kwargs'] = model_kwargs
 
         # == Acquisition function
         kwargs['acquisition_function'] = kwargs.get('acquisition_function', LogEI)
@@ -84,7 +93,7 @@ class SMAC4HPO(SMAC4AC):
 
         # better improve acquisition function optimization
         # 2. more randomly sampled configurations
-        self.solver.scenario.acq_opt_challengers = 10000
+        self.solver.scenario.acq_opt_challengers = 10000  # type: ignore[attr-defined] # noqa F821
 
         # activate predict incumbent
-        self.solver.predict_incumbent = True
+        self.solver.epm_chooser.predict_x_best = True

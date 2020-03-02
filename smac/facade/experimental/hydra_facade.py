@@ -1,3 +1,6 @@
+# type: ignore
+# mypy: ignore-errors
+
 import logging
 import os
 import datetime
@@ -20,7 +23,6 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.experimental.psmac_facade import PSMAC
 from smac.utils.io.output_directory import create_output_directory
 from smac.runhistory.runhistory import RunHistory
-from smac.optimizer.objective import average_cost
 from smac.epm.util_funcs import get_rng
 from smac.utils.constants import MAXINT
 from smac.optimizer.pSMAC import read
@@ -97,7 +99,7 @@ class Hydra(object):
         self.top_dir = None
         self.solver = None
         self.portfolio = None
-        self.rh = RunHistory(average_cost)
+        self.rh = RunHistory()
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if incs_per_round <= 0:
@@ -111,7 +113,7 @@ class Hydra(object):
         self.optimizer = None
         self.portfolio_cost = None
 
-    def _get_validation_set(self, val_set: str, delete: bool=True) -> typing.List[str]:
+    def _get_validation_set(self, val_set: str, delete: bool = True) -> typing.List[str]:
         """
         Create small validation set for hydra to determine incumbent performance
 
@@ -138,7 +140,7 @@ class Hydra(object):
             self.logger.warning('Can not determine validation set size. Using full training-set!')
             return self.scenario.train_insts
         else:
-            size = int(val_set[3:])/100
+            size = int(val_set[3:]) / 100
             if size <= 0 or size >= 1:
                 raise ValueError('X invalid in valX, should be between 0 and 1')
             insts = np.array(self.scenario.train_insts)
@@ -174,9 +176,10 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs)
+        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs,
+                              tae_runner_kwargs=self._tae_kwargs)
         for i in range(self.n_iterations):
-            self.logger.info("="*120)
+            self.logger.info("=" * 120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
 
             if i == 0:
@@ -231,11 +234,11 @@ class Hydra(object):
         self.rh.save_json(fn=os.path.join(self.top_dir, 'all_validated_runs_runhistory.json'), save_external=True)
         with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
             pickle.dump(self.portfolio, fh)
-        self.logger.info("~"*120)
+        self.logger.info("~" * 120)
         self.logger.info('Resulting Portfolio:')
         for configuration in self.portfolio:
             self.logger.info(str(configuration))
-        self.logger.info("~"*120)
+        self.logger.info("~" * 120)
 
         return self.portfolio
 

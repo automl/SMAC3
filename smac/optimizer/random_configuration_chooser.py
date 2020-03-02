@@ -26,7 +26,7 @@ class RandomConfigurationChooser(ABC):
         pass
 
     @abstractmethod
-    def check(self, iteration) -> bool:
+    def check(self, iteration: int) -> bool:
         """Check if the next configuration should be at random"""
         pass
 
@@ -53,7 +53,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
     def next_smbo_iteration(self) -> None:
         pass
 
-    def check(self, iteration) -> bool:
+    def check(self, iteration: int) -> bool:
         return iteration % self.modulus < 1
 
 
@@ -189,8 +189,8 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
 
     def next_smbo_iteration(self) -> None:
         self.prob = (
-            self.prob_min
-            + (0.5 * (self.prob_max - self.prob_min) * (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
+            self.prob_min + (
+                0.5 * (self.prob_max - self.prob_min) * (1 + np.cos(self.iteration * np.pi / self.restart_iteration)))
         )
         self.logger.error("Probability for random configs: %f" % self.prob)
         self.iteration += 1
