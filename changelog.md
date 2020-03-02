@@ -1,10 +1,38 @@
-# 0.11.2dev
+# 0.12.0
 
-## Maintenance
+## Major Changes
 
-* Dropped the random forest with HPO surrogate which was added in 0.9
-* Dropped the EPILS facade which was added in 0.6
-* MAINT Simplified the interface for constructing a runhistory object
+* Support for Successive Halving and Hyperband as new instensification/racing strategies.
+* Improve the SMAC architecture by moving from an architecture where new candidates are passed to the racing algorithm 
+  to an architecture where the racing algorithm requests new candidates, which is necessary to implement the
+  [BOHB](http://proceedings.mlr.press/v80/falkner18a.html) algorithm (#551).
+* Source code is now PEP8 compliant. PEP8 compliance is checked by travis-ci (#565).
+* Source code is now annotated with type annotation and checked with mypy.
+* Examples are now rendered on the webiset using sphinx gallery (#567).
+
+## Minor Changes
+
+* New argument to directly control the size of the initial design (#553).
+* Acquisition function is fed additional arguments at update time (#557).
+* Adds new acquisition function maximizer which goes through a list of pre-specified configurations (#558).
+* Document that the dependency pyrfr does not work with SWIG 4.X (#599).
+* Improved error message for objects which cannot be serialized to json (#453).
+* Dropped the random forest with HPO surrogate which was added in 0.9.
+* Dropped the EPILS facade which was added in 0.6.
+* Simplified the interface for constructing a runhistory object.
+* removed the default rng from the Gaussian process priors (#554).
+* Adds the possibility to specify the acquisition function optimizer for the random search (ROAR) facade (#563).
+* Bump minimal version of `ConfigSpace` requirement to 0.4.9 (#578).
+
+## Bug fixes
+
+* Fixes a bug which caused SMAC to fail for Python function if `use_pynisher=False` and an exception was raised
+  (#437).
+* Fixes a bug in which samples from a Gaussian process were shaped differently based on the number of dimesions of
+  the `y`-array used for fitting the GP (#556).
+* Fixes a bug with respect saving data as json (#555).
+* Better error message for a sobol initial design of size `>40` ( #564).
+* Add a missing return statement to `GaussianProcess._train`.
 
 # 0.11.1
 
@@ -32,7 +60,6 @@
 * Extend the Sobol and LHD initial design to work for non-continuous hyperparameters as well applying an idea similar
   to inverse transform sampling (#494)
   
-
 ## Bug fixes
 
 * Fixes a regression in the validation scripts (#519)
