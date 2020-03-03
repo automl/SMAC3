@@ -290,8 +290,7 @@ class RandomForestWithInstances(BaseModel):
 
         X = self._impute_inactive(X)
 
-        mean_ = np.zeros(X.shape[0])
-        var = np.zeros(X.shape[0])
+        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees)) # marginalized predictions for each tree
         for i, x in enumerate(X):
 
             # marginalize over instances
@@ -308,21 +307,17 @@ class RandomForestWithInstances(BaseModel):
             pts = np.zeros(self.rf_opts.num_trees)
             if self.log_y:
                 for tree_id in range(self.rf_opts.num_trees):
-                    pts[tree_id] = \
+                    dat_[i, tree_id] = \
                             np.log(np.exp(np.array(preds_trees[tree_id])).mean())
-            else: 
+            else:
                 for tree_id in range(self.rf_opts.num_trees):
-                    pts[tree_id] = np.array(preds_trees[tree_id]).mean()
+                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
 
+        # 3. compute statistics across trees
+        mean_ = dat_.mean(axis=1)
+        var = dat_.var(axis=1)
 
-            # 3. compute statistics across trees
-            mean_x = pts.mean()
-            var_x = pts.var() 
-            if var_x < self.var_threshold:
-                var_x = self.var_threshold
-
-            var[i] = var_x
-            mean_[i] = mean_x
+        var[var < self.var_threshold] = self.var_threshold
 
         if len(mean_.shape) == 1:
             mean_ = mean_.reshape((-1, 1))
