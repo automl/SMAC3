@@ -293,24 +293,27 @@ class RandomForestWithInstances(BaseModel):
         dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
         for i, x in enumerate(X):
 
-            # marginalize over instances
-            # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: typing.List[typing.List[float]]
+            all_preds = []
+            third_dimension = 0
+
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])
                 preds_per_tree = self.rf.all_leaf_values(x_)
-                for tree_id, preds in enumerate(preds_per_tree):
-                    preds_trees[tree_id] += preds
+                all_preds.append(preds_per_tree)
+                max_num_leaf_data = max(map(len, preds_per_tree))
+                third_dimension = max(max_num_leaf_data, third_dimension)
 
-            # 2. average in each tree
-            if self.log_y:
-                for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = \
-                        np.log(np.exp(np.array(preds_trees[tree_id])).mean())
-            else:
-                for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
+            # Transform list of 2d arrays into a 3d array
+            preds_as_array = np.zeros((len(self.instance_features), self.rf_opts.num_trees, third_dimension)) * np.NaN
+            for i_, preds_per_tree in enumerate(all_preds):
+                for j, pred in enumerate(preds_per_tree):
+                    preds_as_array[i_, j, :len(pred)] = pred
+
+            # Do all necessary computation with vectorized functions
+            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+
+            dat_[i] = preds_as_array.mean(axis=0)
 
         # 3. compute statistics across trees
         mean_ = dat_.mean(axis=1)
