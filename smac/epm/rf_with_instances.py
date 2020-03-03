@@ -290,7 +290,7 @@ class RandomForestWithInstances(BaseModel):
 
         X = self._impute_inactive(X)
 
-        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees)) # marginalized predictions for each tree
+        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
         for i, x in enumerate(X):
 
             # marginalize over instances
@@ -304,11 +304,10 @@ class RandomForestWithInstances(BaseModel):
                     preds_trees[tree_id] += preds
 
             # 2. average in each tree
-            pts = np.zeros(self.rf_opts.num_trees)
             if self.log_y:
                 for tree_id in range(self.rf_opts.num_trees):
                     dat_[i, tree_id] = \
-                            np.log(np.exp(np.array(preds_trees[tree_id])).mean())
+                        np.log(np.exp(np.array(preds_trees[tree_id])).mean())
             else:
                 for tree_id in range(self.rf_opts.num_trees):
                     dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
