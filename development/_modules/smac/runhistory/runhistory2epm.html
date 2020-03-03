@@ -835,7 +835,8 @@
         <span class="k">if</span> <span class="n">return_time_as_y</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">store_statistics</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+            <span class="c1"># store_statistics is currently not necessary</span>
+            <span class="k">pass</span>
 
         <span class="c1"># First build nan-matrix of size #configs x #params+1</span>
         <span class="n">n_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_dict</span><span class="p">)</span>
