@@ -521,10 +521,10 @@ class SuccessiveHalving(AbstractRacer):
         self.running_challenger = None
 
     def _compare_configs(self,
+                         incumbent: Configuration,
                          challenger: Configuration,
-                         incumbent: typing.Optional[Configuration],
                          run_history: RunHistory,
-                         log_traj: bool = True) -> Configuration:
+                         log_traj: bool = True) -> typing.Optional[Configuration]:
         """
         Compares the challenger with current incumbent and returns the best configuration
 
