@@ -263,6 +263,10 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 conf_array = convert_configurations_to_array(configs_previous_runs)
                 costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
                 assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
+
+                # In case of the predictive model returning the prediction for more than one objective per configuration
+                # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+                # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
                 if len(costs.shape) == 2 and costs.shape[1] > 1:
                     weights = np.array([self.rng.rand() for _ in range(costs.shape[1])])
                     weights = weights / np.sum(weights)
