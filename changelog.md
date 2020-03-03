@@ -5,6 +5,7 @@
 ## Minor Changes
 
 * Upgrade the minimal scikit-learn dependency to 0.22.X.
+* Allow passing `tae_runner_kwargs` to `ROAR`.
 
 ## Bug Fixes
 
