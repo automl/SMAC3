@@ -39,6 +39,7 @@ class ROAR(SMAC4AC):
                  tae_runner: typing.Optional[
                      typing.Union[typing.Type[ExecuteTARun], typing.Callable]
                  ] = None,
+                 tae_runner_kwargs: typing.Optional[typing.Dict] = None,
                  runhistory: RunHistory = None,
                  intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
                  acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
@@ -63,6 +64,8 @@ class ROAR(SMAC4AC):
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+        tae_runner_kwargs: Optional[Dict]
+            arguments passed to constructor of '~tae_runner'
         runhistory: RunHistory
             Runhistory to store all algorithm runs
         intensifier: AbstractRacer
@@ -99,6 +102,7 @@ class ROAR(SMAC4AC):
         super().__init__(
             scenario=scenario,
             tae_runner=tae_runner,
+            tae_runner_kwargs=tae_runner_kwargs,
             runhistory=runhistory,
             intensifier=intensifier,
             runhistory2epm=RunHistory2EPM4Cost,
