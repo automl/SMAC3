@@ -556,7 +556,8 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
-            raise NotImplementedError()
+            # store_statistics is currently not necessary
+            pass
 
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
