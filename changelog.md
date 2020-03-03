@@ -4,6 +4,8 @@
 
 ## Minor Changes
 
+* Upgrade the minimal scikit-learn dependency to 0.22.X.
+
 ## Bug Fixes
 
 # 0.12.0
