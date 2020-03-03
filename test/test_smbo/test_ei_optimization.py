@@ -187,6 +187,35 @@ class TestLocalSearch(unittest.TestCase):
         minima = [-rosenbrock_4d(m) for m in minimizer]
         self.assertGreater(minima[0], -0.05)
 
+    def test_get_initial_points_moo(self):
+        class Model:
+
+            def predict_marginalized_over_instances(self, X):
+                return X, X
+
+        class AcquisitionFunction:
+
+            model = Model()
+
+            def __call__(self, X):
+                return np.array([x.get_array().sum() for x in X]).reshape((-1, 1))
+
+        ls = LocalSearch(
+            acquisition_function=AcquisitionFunction(),
+            config_space=self.cs,
+            n_steps_plateau_walk=10,
+            max_steps=np.inf,
+        )
+
+        runhistory = RunHistory()
+        random_configs = self.cs.sample_configuration(size=100)
+        costs = np.array([rosenbrock_4d(random_config) for random_config in random_configs])
+        for random_config, cost in zip(random_configs, costs):
+            runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
+
+        points = ls._get_initial_points(num_points=5, runhistory=runhistory, additional_start_points=None)
+        self.assertEqual(len(points), 10)
+
 
 class TestRandomSearch(unittest.TestCase):
     @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
