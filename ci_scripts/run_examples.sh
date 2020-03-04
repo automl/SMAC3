@@ -17,6 +17,13 @@ if [ "$rval" != 0 ]; then
     echo "Error running example QCP"
     exit $rval
 fi
+python SMAC4AC_spear_qcp.py
+rval=$?
+if [ "$rval" != 0 ]; then
+    echo "Error running python example QCP"
+    exit $rval
+fi
+
 cd ..
 
 cd branin
