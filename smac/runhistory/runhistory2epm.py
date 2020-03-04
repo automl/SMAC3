@@ -3,6 +3,7 @@ import logging
 import typing
 
 import numpy as np
+import scipy as sp
 
 from smac.tae.execute_ta_run import StatusType
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
@@ -10,6 +11,7 @@ from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.utils import constants
 from smac.scenario.scenario import Scenario
+from smac.utils.constants import VERY_SMALL_NUMBER
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -543,6 +545,57 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         values = (values - min_y) / (self.max_y - min_y)
         values = np.log(values)
         return values
+
+
+class RunHistory2EPM4BiLogCost(RunHistory2EPM4Cost):
+        """TODO"""
+
+        def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+            """Transform function response values.
+
+            Transform the response values by using a bilog transformation
+
+            Source: "Scalable Constrained Bayesian Optimization" by Eriksson and Poloczek
+            https://arxiv.org/pdf/2002.08526.pdf
+
+            Parameters
+            ----------
+            values : np.ndarray
+                Response values to be transformed.
+
+            Returns
+            -------
+            np.ndarray
+            """
+            return np.sign(values) * np.log(1 + np.abs(values))
+
+
+class RunHistory2EPM4GaussianCopula(RunHistory2EPM4Cost):
+    """TODO"""
+
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values.
+
+        Transform the response values by using a Gaussian Copula:
+            1. compute quantiles of ECDF on given values
+            2. compute inverse Gaussian CDF for these quantiles
+
+        Source: "Scalable Constrained Bayesian Optimization" by Eriksson and Poloczek
+        https://arxiv.org/pdf/2002.08526.pdf
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
+        # ECDF
+        quants = [sp.stats.percentileofscore(values, v)/100 - VERY_SMALL_NUMBER for v in values]
+        # Inverse Gaussian CDF
+        return np.array([sp.stats.norm.ppf(q) for q in quants]).reshape((-1, 1))
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
