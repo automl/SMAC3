@@ -44,7 +44,6 @@ class BOHB4HPO(SMAC4HPO):
         # select Hyperband as the intensifier ensure respective parameters are provided
         kwargs['intensifier'] = Hyperband
 
-        print(scenario.__dict__.get('always_race_against'))
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
 

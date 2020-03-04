@@ -343,8 +343,8 @@ class RunhistoryTest(unittest.TestCase):
             adding some rundata and check budget selection
         '''
 
-        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
-                                                       scenario=self.scen)
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1,
@@ -357,7 +357,11 @@ class RunhistoryTest(unittest.TestCase):
 
         X, y = rh2epm.transform(self.rh, budget_subset=[1])
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
-        self.assertTrue(np.allclose(y, np.array([[0.]])))  # 10^0 = 1
+        self.assertTrue(np.allclose(y, np.array([[1]])))
+
+        X, y = rh2epm.transform(self.rh, budget_subset=[2])
+        self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
+        self.assertTrue(np.allclose(y, np.array([[2]])))
 
 
 if __name__ == "__main__":
