@@ -338,6 +338,27 @@ class RunhistoryTest(unittest.TestCase):
         c_sol = np.array([False, False, True, True])
         self.assertTrue(np.all(c == c_sol))
 
+    def test_budget_selection(self):
+        '''
+            adding some rundata and check budget selection
+        '''
+
+        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
+                                                       scenario=self.scen)
+
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=1,
+                    additional_info=None)
+        self.rh.add(config=self.config1, cost=2, time=2,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+
+        X, y = rh2epm.transform(self.rh, budget_subset=[1])
+        self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
+        self.assertTrue(np.allclose(y, np.array([[0.]])))  # 10^0 = 1
+
 
 if __name__ == "__main__":
     unittest.main()
