@@ -45,8 +45,8 @@ class SuccessiveHalving(AbstractRacer):
 
     Examples for successive halving (and hyperband) can be found here:
     * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`
-    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4HPO_sgd_hyperband_instances.py`
-    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4HPO_mlp_hyperband.py`
+    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`
+    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`
 
     Parameters
     ----------
