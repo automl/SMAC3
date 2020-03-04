@@ -13,12 +13,12 @@ from smac.utils import constants
 from smac.scenario.scenario import Scenario
 from smac.utils.constants import VERY_SMALL_NUMBER
 
-__author__ = "Katharina Eggensperger"
-__copyright__ = "Copyright 2015, ML4AAD"
+__author__ = "Katharina Eggensperger, Marius Lindauer"
+__copyright__ = "Copyright 2015-2020, AutoML.org"
 __license__ = "3-clause BSD"
 __maintainer__ = "Katharina Eggensperger"
 __email__ = "eggenspk@cs.uni-freiburg.de"
-__version__ = "0.0.1"
+__version__ = "0.0.3"
 
 
 class AbstractRunHistory2EPM(object):
