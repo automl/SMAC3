@@ -184,6 +184,7 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
         self.curr_challengers = set()  # type: typing.Set[Configuration]
+        self.cap_challengers = set()  # type: typing.Set[Configuration]
 
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
@@ -288,9 +289,10 @@ class SuccessiveHalving(AbstractRacer):
             incumbent and incumbent cost
         """
         # calculating the incumbent's performance for adaptive capping
-        #   - this check is required because there is no incumbent performance
-        #     for the first ever 'intensify' run (from initial design)
-        if incumbent:
+        # this check is required because:
+        #   - there is no incumbent performance for the first ever 'intensify' run (from initial design)
+        #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
+        if incumbent and incumbent != challenger:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
         else:
@@ -357,7 +359,10 @@ class SuccessiveHalving(AbstractRacer):
                 self.curr_inst_idx = np.inf
 
             # adding challengers to the list of evaluated challengers
-            self.curr_challengers.add(challenger)
+            if np.isfinite(self.curr_inst_idx):   # inf for capped configs
+                self.curr_challengers.add(challenger)  # successful configs
+            else:
+                self.cap_challengers.add(challenger)   # capped configs
 
             # get incumbent in the last stage if all instances have been evaluated
             if n_insts_remaining <= 0:
@@ -371,7 +376,8 @@ class SuccessiveHalving(AbstractRacer):
                               "Interrupting optimization run and returning current incumbent")
 
         # if all configurations for the current stage have been evaluated, reset stage
-        if len(self.curr_challengers) == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
+        num_chal_evaluated = len(self.curr_challengers) + len(self.cap_challengers)
+        if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
 
             self.logger.info('Successive Halving iteration-step: %d-%d with '
                              'budget [%.2f / %d] - evaluated %d challenger(s)' %
@@ -482,12 +488,14 @@ class SuccessiveHalving(AbstractRacer):
             self.configs_to_run = []  # type: typing.List[Configuration]
             self.curr_inst_idx = 0
             self.running_challenger = None
-            self.curr_challengers = set()
+            self.curr_challengers = set()  # successful configs
+            self.cap_challengers = set()   # capped configs
 
         else:
             self.stage += 1
 
-            if self.stage < len(self.all_budgets):
+            if self.stage < len(self.all_budgets) and \
+                    len(self.curr_challengers) > 0:
                 # if this is the next stage in same iteration,
                 # use top 'k' from the evaluated configurations for next iteration
 
@@ -515,8 +523,9 @@ class SuccessiveHalving(AbstractRacer):
                 if self.instance_order == 'shuffle':
                     self.rs.shuffle(self.inst_seed_pairs)
 
-        # to track successful (without capping) configurations for the next stage
-        self.curr_challengers = set()
+        # to track configurations for the next stage
+        self.curr_challengers = set()  # successful configs
+        self.cap_challengers = set()   # capped configs
         self.curr_inst_idx = 0
         self.running_challenger = None
 
