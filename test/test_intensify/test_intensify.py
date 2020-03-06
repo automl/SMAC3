@@ -386,9 +386,9 @@ class TestIntensify(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
             intensifier._generate_challengers(challengers=None, chooser=None)
 
-    def test_eval_challenger(self):
+    def test_eval_challenger_1(self):
         """
-            test eval_challenger() - a complete intensification run
+            test eval_challenger() - a complete intensification run with a `always_race_against` configuration
         """
         def target(x):
             return x['a']
@@ -400,88 +400,14 @@ class TestIntensify(unittest.TestCase):
             tae_runner=taf, stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
-            instances=[1], run_obj_time=False,
+            instances=[1, 2], run_obj_time=False,
             deterministic=False, always_race_against=self.config3, run_limit=1)
 
-        # run incumbent first if it was not run before
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
-                                                    chooser=None)
-        self.assertEqual(config, self.config2)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        # eval config 2 (=first run)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh,)
-        self.assertEqual(inc, self.config2)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        self.assertEqual(self.stats.inc_changed, 1)
-
-        # run challenger now that the incumbent has been executed
-        config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
-                                                    chooser=None)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        self.assertEqual(config, self.config1)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh,)
-
-        # challenger has a better performance, so incumbent has changed
-        self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.inc_changed, 2)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
-        self.assertFalse(intensifier.continue_challenger)
-
-        # run `always_race_against`
-        config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
-                                                    chooser=None)
-        self.assertEqual(config, self.config1)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh,)
-
-        self.assertEqual(inc, self.config3)
-        self.assertEqual(self.stats.inc_changed, 3)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.n_iters, 0)
-        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
 
-        config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
-                                                    chooser=None)
-        self.assertEqual(config, self.config1)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
-
-        self.assertEqual(inc, self.config3)
-        self.assertEqual(self.stats.inc_changed, 3)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        self.assertEqual(intensifier.n_iters, 1)
-        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
-
-        # TODO: Why are there only three runs?
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
-
-
-        with self.assertRaises(StopIteration):
-            next(intensifier.configs_to_run)
-
-    def test_eval_challenger_new(self):
-        """
-            test eval_challenger() - a complete intensification run
-        """
-
-        def target(x):
-            return x['a']
-
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-        taf.runhistory = self.rh
-
-        intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
-            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345),
-            instances=[1], run_obj_time=False,
-            deterministic=False, always_race_against=None, run_limit=1)
-
+        # intensification iteration #1
         # run incumbent first if it was not run before
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1, self.config3],
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1],
                                                     chooser=None)
         self.assertEqual(config, self.config2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
@@ -504,35 +430,115 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
         self.assertFalse(intensifier.continue_challenger)
 
+        # run `always_race_against`
         config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
                                                     chooser=None)
         self.assertEqual(config, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
 
-        self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.inc_changed, 2)
+        # the default configuration (config3) should be better than incumbent
+        self.assertEqual(inc, self.config3)
+        self.assertEqual(self.stats.inc_changed, 3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
-        self.assertEqual(intensifier.n_iters, 0)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
+        self.assertEqual(intensifier.n_iters, 1)  # 1 intensification run complete!
         self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
+        # no configs should be left at the end
+        with self.assertRaises(StopIteration):
+            next(intensifier.configs_to_run)
 
+        # intensification iteration #2
         config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
                                                     chooser=None)
+        self.assertEqual(config, self.config1)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+
+        # incumbent is run on the 2nd instance
+        self.assertEqual(inc, self.config3)
+        self.assertEqual(self.stats.inc_changed, 3)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 2)
+
+    def test_eval_challenger_2(self):
+        """
+            test eval_challenger() - a complete intensification run without a `always_race_against` configuration
+        """
+
+        def target(x):
+            return x['a']
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf.runhistory = self.rh
+
+        intensifier = Intensifier(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345),
+            instances=[1], run_obj_time=False,
+            deterministic=True, always_race_against=None, run_limit=1)
+
+        self.assertEqual(intensifier.n_iters, 0)
+
+        # intensification iteration #1
+        # run incumbent first if it was not run before
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config1],
+                                                    chooser=None)
+        self.assertEqual(config, self.config2)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
+        # eval config 2 (=first run)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, )
+        self.assertEqual(inc, self.config2)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+        self.assertEqual(self.stats.inc_changed, 1)
+
+        # run challenger now that the incumbent has been executed
+        config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
+                                                    chooser=None)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+        self.assertEqual(config, self.config1)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+
+        # challenger has a better performance, so incumbent has changed
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.inc_changed, 2)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)  # since there is no `always_race_against`
+        self.assertFalse(intensifier.continue_challenger)
+        self.assertEqual(intensifier.n_iters, 1)  # 1 intensification run complete!
+        # no configs should be left at the end
+        with self.assertRaises(StopIteration):
+            next(intensifier.configs_to_run)
+
+        # intensification iteration #2
+        # run incumbent
+        config, _ = intensifier.get_next_challenger(challengers=None,  # since incumbent is run, no configs required
+                                                    chooser=None)
+        self.assertEqual(config, self.config1)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.inc_changed, 2)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
+        self.assertEqual(intensifier.n_iters, 1)
+        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
+
+        # run challenger
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3],  # provide next challengers
+                                                    chooser=None)
         self.assertEqual(config, self.config3)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
 
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        self.assertEqual(intensifier.n_iters, 1)
-        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
 
-        # TODO: Why are there only three runs?
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
-
-        with self.assertRaises(StopIteration):
-            next(intensifier.configs_to_run)

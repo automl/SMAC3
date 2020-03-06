@@ -205,18 +205,11 @@ class Intensifier(AbstractRacer):
                                                   run_history=run_history,
                                                   log_traj=log_traj)
             else:
-                if self.always_race_against and \
-                        challenger == incumbent and \
-                        self.always_race_against != challenger:
-                    self.logger.debug("Race against constant configuration after incumbent change.")
-                    incumbent = self._race_challenger(challenger=self.always_race_against,
-                                                      incumbent=incumbent,
-                                                      run_history=run_history,
-                                                      log_traj=log_traj)
-                else:
-                    # move on to next iteration
-                    self.stage = IntensifierStage.RUN_INCUMBENT
-                    self.continue_challenger = False
+                self.logger.debug("Race against constant configuration after incumbent change.")
+                incumbent = self._race_challenger(challenger=self.always_race_against,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  log_traj=log_traj)
 
         except BudgetExhaustedException:
             # We return incumbent, SMBO stops due to its own budget checks
@@ -419,15 +412,23 @@ class Intensifier(AbstractRacer):
                 incumbent=incumbent, challenger=challenger,
                 run_history=run_history,
                 log_traj=log_traj)
+
+            # update intensification stage
             if new_incumbent == incumbent:
                 # move on to the next iteration
                 self.stage = IntensifierStage.RUN_INCUMBENT
                 self.continue_challenger = False
 
             elif new_incumbent == challenger:
+                # New incumbent found
                 incumbent = challenger
-                # New incumbent found. Go to the next stage
-                self.stage = IntensifierStage.RUN_DEFAULT
+                # compare against default configuration if provided, else go to next iteration
+                if self.always_race_against and \
+                        self.always_race_against != challenger:
+                    self.stage = IntensifierStage.RUN_DEFAULT
+                else:
+                    self.stage = IntensifierStage.RUN_INCUMBENT
+                    self.continue_challenger = False
 
             else:  # Line 17
                 # challenger is not worse, continue
