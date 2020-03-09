@@ -338,8 +338,6 @@ class TestSuccessiveHalving(unittest.TestCase):
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
 
-        intensifier._update_stage(run_history=self.rh)
-
         # config1 should be executed successfully and selected as incumbent
         config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
@@ -368,6 +366,61 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 3)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
+
+    def test_eval_challenger_capping(self):
+        """
+            test eval_challenger with adaptive capping and all configurations capped
+        """
+
+        def target(x):
+            time.sleep(1.5)
+            return (x['a'] + 1) / 1000.
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf.runhistory = self.rh
+
+        intensifier = SuccessiveHalving(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
+            instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
+
+        for i in range(2):
+            self.rh.add(config=self.config1, cost=.001, time=0.001,
+                        status=StatusType.SUCCESS, instance_id=i + 1, seed=0,
+                        additional_info=None)
+
+        # provide configurations
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2],
+                                                    chooser=None, run_history=self.rh)
+        # config2 should be capped and config1 should still be the incumbent
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=self.config1,
+                                             run_history=self.rh, )
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 1)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
+
+        # provide configurations
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3],
+                                                    chooser=None, run_history=self.rh)
+        # config3 should also be capped and config1 should be the incumbent
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=self.config1,
+                                             run_history=self.rh, )
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 2)
+        self.assertEqual(self.stats.inc_changed, 0)
+        self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
+
+        # now the SH iteration should begin a new iteration since all configs were capped!
+        self.assertEqual(intensifier.sh_iters, 1)
+        self.assertEqual(intensifier.stage, 0)
+
+        # should raise an error
+        with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
+            config, _ = intensifier.get_next_challenger(challengers=None,
+                                                        chooser=None, run_history=self.rh)
 
     def test_eval_challenger_3(self):
         """
