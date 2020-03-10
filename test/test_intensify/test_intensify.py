@@ -1,7 +1,5 @@
 import collections
 import unittest
-from unittest.mock import MagicMock, Mock
-import mock
 
 import logging
 import numpy as np

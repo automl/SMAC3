@@ -518,14 +518,20 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
 
     def test_do_not_update_incumbent_on_lower_budget(self):
+        """
+            test _compare_config for incumbent selection according to budget
+        """
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats, traj_logger=None,
-            rng=np.random.RandomState(12345),
-            instances=[1], initial_budget=1)
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=[1], initial_budget=1, max_budget=2, eta=2)
+
+        # SH considers challenger as incumbent in first run in eval_challenger
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None, budget=1)
-        inc = intensifier._compare_configs(challenger=self.config1, incumbent=None, run_history=self.rh, log_traj=False)
+        inc = intensifier._compare_configs(challenger=self.config1, incumbent=self.config1,
+                                           run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
