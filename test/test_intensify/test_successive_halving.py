@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import logging
 import numpy as np
@@ -143,7 +144,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
-            instances=[1], initial_budget=1)
+            instances=[1, 2], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None)
@@ -192,6 +193,25 @@ class TestSuccessiveHalving(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Cannot compare configs'):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
+
+    def test_top_k_3(self):
+        """
+            test _top_k() for not enough configs to generate for the next budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1], initial_budget=1)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=1, time=1,
+                    status=StatusType.CRASHED, instance_id=1, seed=None,
+                    additional_info=None)
+        configs = intensifier._top_k(configs=[self.config1], k=2, run_history=self.rh)
+
+        # top_k should return whatever configuration is possible
+        self.assertEqual(configs, [self.config1])
 
     def test_get_next_challenger_1(self):
         """
@@ -324,11 +344,64 @@ class TestSuccessiveHalving(unittest.TestCase):
            test eval_challenger with runtime objective and adaptive capping
         """
 
-        def target(x):
-            time.sleep(1.5)
+        def target(x: Configuration, instance: str):
+            if x['a'] == 100 or instance == 2:
+                time.sleep(1.5)
             return (x['a'] + 1) / 1000.
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf.runhistory = self.rh
+
+        intensifier = SuccessiveHalving(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
+            instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
+
+        # config1 should be executed successfully and selected as incumbent
+        config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=None,
+                                             run_history=self.rh, )
+        self.assertEqual(config, self.config1)
+        self.assertEqual(self.stats.ta_runs, 1)
+        self.assertEqual(self.stats.inc_changed, 1)
+
+        # config2 should be capped and config1 should still be the incumbent
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=inc,
+                                             run_history=self.rh,)
+
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 2)
+        self.assertEqual(self.stats.inc_changed, 1)
+        self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
+
+        # config1 is selected for the next stage and allowed to timeout since this is the 1st run for this instance
+        config, _ = intensifier.get_next_challenger(challengers=[], chooser=None, run_history=self.rh)
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=inc,
+                                             run_history=self.rh, )
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 3)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
+
+    @mock.patch.object(SuccessiveHalving, '_top_k')
+    def test_eval_challenger_capping(self, patch):
+        """
+            test eval_challenger with adaptive capping and all configurations capped/crashed
+        """
+
+        def target(x):
+            if x['b'] == 100:
+                time.sleep(1.5)
+            if x['a'] == 100:
+                raise ValueError('You shall not pass')
+            return (x['a'] + 1) / 1000.
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime",
+                                abort_on_first_run_crash=False)
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
@@ -342,17 +415,41 @@ class TestSuccessiveHalving(unittest.TestCase):
                         status=StatusType.SUCCESS, instance_id=i + 1, seed=0,
                         additional_info=None)
 
-        intensifier._update_stage(run_history=None)
-
+        # provide configurations
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2],
+                                                    chooser=None, run_history=self.rh)
         # config2 should be capped and config1 should still be the incumbent
-        inc, _ = intensifier.eval_challenger(challenger=self.config2,
+        inc, _ = intensifier.eval_challenger(challenger=config,
                                              incumbent=self.config1,
-                                             run_history=self.rh,)
-
+                                             run_history=self.rh, )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CRASHED)
+        self.assertEqual(len(intensifier.curr_challengers), 0)
+
+        # provide configurations
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3],
+                                                    chooser=None, run_history=self.rh)
+        # config3 should also be capped and config1 should be the incumbent
+        inc, _ = intensifier.eval_challenger(challenger=config,
+                                             incumbent=self.config1,
+                                             run_history=self.rh, )
+        self.assertEqual(inc, self.config1)
+        self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 0)
-        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
+        self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
+        self.assertEqual(len(intensifier.curr_challengers), 0)
+        # top_k() should not be called since all configs were capped
+        self.assertFalse(patch.called)
+
+        # now the SH iteration should begin a new iteration since all configs were capped!
+        self.assertEqual(intensifier.sh_iters, 1)
+        self.assertEqual(intensifier.stage, 0)
+
+        # should raise an error as this is a new iteration but no configs were provided
+        with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
+            config, _ = intensifier.get_next_challenger(challengers=None,
+                                                        chooser=None, run_history=self.rh)
 
     def test_eval_challenger_3(self):
         """
@@ -372,7 +469,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[0, 1], instance_order='shuffle', eta=2,
             deterministic=True, cutoff=1)
 
-        intensifier._update_stage(run_history=None)
+        intensifier._update_stage(run_history=self.rh)
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
@@ -414,7 +511,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh)
 
         self.assertEqual(config, self.config2)

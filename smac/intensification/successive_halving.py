@@ -9,7 +9,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun
+from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun, StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -184,6 +184,7 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
         self.curr_challengers = set()  # type: typing.Set[Configuration]
+        self.fail_challengers = set()  # type: typing.Set[Configuration]
 
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
@@ -288,9 +289,10 @@ class SuccessiveHalving(AbstractRacer):
             incumbent and incumbent cost
         """
         # calculating the incumbent's performance for adaptive capping
-        #   - this check is required because there is no incumbent performance
-        #     for the first ever 'intensify' run (from initial design)
-        if incumbent:
+        # this check is required because:
+        #   - there is no incumbent performance for the first ever 'intensify' run (from initial design)
+        #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
+        if incumbent and incumbent != challenger:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
         else:
@@ -324,7 +326,7 @@ class SuccessiveHalving(AbstractRacer):
                                         inc_sum_cost=inc_sum_cost)
             if cutoff is not None and cutoff <= 0:
                 # ran out of time to validate challenger
-                self.logger.debug("Stop challenger itensification due to adaptive capping.")
+                self.logger.debug("Stop challenger intensification due to adaptive capping.")
                 self.curr_inst_idx = np.inf
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
@@ -355,9 +357,18 @@ class SuccessiveHalving(AbstractRacer):
                                   "Interrupting current challenger and moving on to the next one")
                 # ignore all pending instances
                 self.curr_inst_idx = np.inf
+                status = StatusType.CAPPED
 
             # adding challengers to the list of evaluated challengers
-            self.curr_challengers.add(challenger)
+            #  - should not capped
+            #  - should be successful in at least 1 run
+            # curr_challengers is a set, so "at least 1" success can be counted by set addition
+            # for each successful instance run for a challenger (no duplicates created)
+            if np.isfinite(self.curr_inst_idx) and \
+                    status == StatusType.SUCCESS:
+                self.curr_challengers.add(challenger)  # successful configs
+            else:
+                self.fail_challengers.add(challenger)   # capped/crashed configs
 
             # get incumbent in the last stage if all instances have been evaluated
             if n_insts_remaining <= 0:
@@ -371,7 +382,8 @@ class SuccessiveHalving(AbstractRacer):
                               "Interrupting optimization run and returning current incumbent")
 
         # if all configurations for the current stage have been evaluated, reset stage
-        if len(self.curr_challengers) == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
+        num_chal_evaluated = len(self.curr_challengers.union(self.fail_challengers))
+        if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
 
             self.logger.info('Successive Halving iteration-step: %d-%d with '
                              'budget [%.2f / %d] - evaluated %d challenger(s)' %
@@ -482,12 +494,14 @@ class SuccessiveHalving(AbstractRacer):
             self.configs_to_run = []  # type: typing.List[Configuration]
             self.curr_inst_idx = 0
             self.running_challenger = None
-            self.curr_challengers = set()
+            self.curr_challengers = set()  # successful configs
+            self.fail_challengers = set()   # capped configs
 
         else:
             self.stage += 1
 
-            if self.stage < len(self.all_budgets):
+            if self.stage < len(self.all_budgets) and \
+                    len(self.curr_challengers) > 0:
                 # if this is the next stage in same iteration,
                 # use top 'k' from the evaluated configurations for next iteration
 
@@ -515,8 +529,9 @@ class SuccessiveHalving(AbstractRacer):
                 if self.instance_order == 'shuffle':
                     self.rs.shuffle(self.inst_seed_pairs)
 
-        # to track successful (without capping) configurations for the next stage
-        self.curr_challengers = set()
+        # to track configurations for the next stage
+        self.curr_challengers = set()  # successful configs
+        self.fail_challengers = set()   # capped configs
         self.curr_inst_idx = 0
         self.running_challenger = None
 
