@@ -144,7 +144,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
-            instances=[1], initial_budget=1)
+            instances=[1, 2], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
                     additional_info=None)
@@ -193,6 +193,25 @@ class TestSuccessiveHalving(unittest.TestCase):
         with self.assertRaisesRegex(AssertionError, 'Cannot compare configs'):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
+
+    def test_top_k_3(self):
+        """
+            test _top_k() for not enough configs to generate for the next budget
+        """
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1], initial_budget=1)
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1, seed=None,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=1, time=1,
+                    status=StatusType.CRASHED, instance_id=1, seed=None,
+                    additional_info=None)
+        configs = intensifier._top_k(configs=[self.config1], k=2, run_history=self.rh)
+
+        # top_k should return whatever configuration is possible
+        self.assertEqual(configs, [self.config1])
 
     def test_get_next_challenger_1(self):
         """
@@ -406,6 +425,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CRASHED)
+        self.assertEqual(len(intensifier.curr_challengers), 0)
 
         # provide configurations
         config, _ = intensifier.get_next_challenger(challengers=[self.config3],
@@ -418,6 +438,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 0)
         self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
+        self.assertEqual(len(intensifier.curr_challengers), 0)
         # top_k() should not be called since all configs were capped
         self.assertFalse(patch.called)
 
@@ -448,7 +469,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[0, 1], instance_order='shuffle', eta=2,
             deterministic=True, cutoff=1)
 
-        intensifier._update_stage(run_history=None)
+        intensifier._update_stage(run_history=self.rh)
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
@@ -490,7 +511,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
         inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
+                                             incumbent=inc,
                                              run_history=self.rh)
 
         self.assertEqual(config, self.config2)
