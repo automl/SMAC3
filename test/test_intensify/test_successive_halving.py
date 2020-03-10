@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 
 import logging
 import numpy as np
@@ -367,16 +368,21 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(self.stats.ta_runs, 3)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
 
-    def test_eval_challenger_capping(self):
+    @mock.patch.object(SuccessiveHalving, '_top_k')
+    def test_eval_challenger_capping(self, patch):
         """
-            test eval_challenger with adaptive capping and all configurations capped
+            test eval_challenger with adaptive capping and all configurations capped/crashed
         """
 
         def target(x):
-            time.sleep(1.5)
+            if x['b'] == 100:
+                time.sleep(1.5)
+            if x['a'] == 100:
+                raise ValueError('You shall not pass')
             return (x['a'] + 1) / 1000.
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime",
+                                abort_on_first_run_crash=False)
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
@@ -399,7 +405,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                                              run_history=self.rh, )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
-        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CRASHED)
 
         # provide configurations
         config, _ = intensifier.get_next_challenger(challengers=[self.config3],
@@ -412,12 +418,14 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 0)
         self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
+        # top_k() should not be called since all configs were capped
+        self.assertFalse(patch.called)
 
         # now the SH iteration should begin a new iteration since all configs were capped!
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(intensifier.stage, 0)
 
-        # should raise an error
+        # should raise an error as this is a new iteration but no configs were provided
         with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
             config, _ = intensifier.get_next_challenger(challengers=None,
                                                         chooser=None, run_history=self.rh)
