@@ -362,8 +362,9 @@ class SuccessiveHalving(AbstractRacer):
             # adding challengers to the list of evaluated challengers
             #  - should not capped
             #  - should be successful in at least 1 run
-            # curr_challengers is a set, so "at least 1" success can be counted by set addition
-            # for each successful instance run for a challenger (no duplicates created)
+            # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
+            # If a configuration is successful, it is added to curr_challengers.
+            # if it fails after, it is added to fail_challengers too.
             if np.isfinite(self.curr_inst_idx) and \
                     status == StatusType.SUCCESS:
                 self.curr_challengers.add(challenger)  # successful configs

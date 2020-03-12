@@ -425,17 +425,17 @@ class TestIntensify(unittest.TestCase):
         # challenger has a better performance, so incumbent has changed
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.inc_changed, 2)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_BASIS)
         self.assertFalse(intensifier.continue_challenger)
 
-        # run `always_race_against`
+        # run basis configuration (`always_race_against`)
         config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
                                                     chooser=None)
-        self.assertEqual(config, self.config1)
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_DEFAULT)
+        self.assertEqual(config, self.config3)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_BASIS)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
 
-        # the default configuration (config3) should be better than incumbent
+        # the basis configuration (config3) should be better than incumbent
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
