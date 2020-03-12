@@ -54,6 +54,18 @@ class RunhistoryTest(unittest.TestCase):
             loaded_rh = pickle.load(fh)
         self.assertEqual(loaded_rh.data, rh.data)
 
+    def test_illegal_input(self):
+        rh = RunHistory()
+
+        with self.assertRaisesRegex(TypeError, 'Configuration to add to the runhistory must not be None'):
+            rh.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
+
+        with self.assertRaisesRegex(
+            TypeError,
+            "Configuration to add to the runhistory is not of type Configuration, but <class 'str'>",
+        ):
+            rh.add(config='abc', cost=1.23, time=2.34, status=StatusType.SUCCESS)
+
     def test_add_multiple_times(self):
         rh = RunHistory()
         cs = get_config_space()
