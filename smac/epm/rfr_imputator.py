@@ -64,7 +64,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.change_threshold = change_threshold
         self.cutoff = cutoff
         self.threshold = threshold
-        self.seed = rng.random_integers(low=0, high=1000)
+        self.seed = rng.randint(low=0, high=1000)
 
         self.model = model
 
