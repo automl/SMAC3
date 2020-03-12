@@ -205,12 +205,6 @@ class Intensifier(AbstractRacer):
                                                   incumbent=incumbent,
                                                   run_history=run_history,
                                                   log_traj=log_traj)
-            # else:
-            #     self.logger.debug("Race against basis configuration after incumbent change.")
-            #     incumbent = self._race_challenger(challenger=self.always_race_against,
-            #                                       incumbent=incumbent,
-            #                                       run_history=run_history,
-            #                                       log_traj=log_traj)
 
         except BudgetExhaustedException:
             # We return incumbent, SMBO stops due to its own budget checks
