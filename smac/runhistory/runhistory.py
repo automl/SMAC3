@@ -195,6 +195,13 @@ class RunHistory(object):
                 Defines how data will be used.
         """
 
+        if config is None:
+            raise TypeError('Configuration to add to the runhistory must not be None')
+        elif not isinstance(config, Configuration):
+            raise TypeError(
+                'Configuration to add to the runhistory is not of type Configuration, but %s' % type(config)
+            )
+
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
         if config_id_tmp is None:
