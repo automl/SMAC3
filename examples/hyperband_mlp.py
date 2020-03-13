@@ -1,10 +1,10 @@
 """
-===========================
-Optimizing an MLP with BOHB
-===========================
+================================
+Optimizing an MLP with Hyperband
+================================
 
-An example for the usage of Hyperband intensifier in SMAC.
-We optimize a simple MLP on the digits dataset using "Hyperband" intensification.
+An example for the usage of a model-free Hyperband intensifier in SMAC.
+The configurations are randomly sampled
 
 In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
 optimize the average accuracy on a 5-fold cross validation.
@@ -23,7 +23,7 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bohb_facade import BOHB4HPO
+from smac.facade.hyperband_facade import HB4AC
 from smac.scenario.scenario import Scenario
 
 digits = load_digits()
@@ -53,22 +53,15 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
         -------
         float
     """
-    # For deactivated parameters, the configuration stores None-values.
-    # This is not accepted by the MLP, so we replace them with placeholder values.
-    lr = cfg['learning_rate'] if cfg['learning_rate'] else 'constant'
-    lr_init = cfg['learning_rate_init'] if cfg['learning_rate_init'] else 0.001
-    batch_size = cfg['batch_size'] if cfg['batch_size'] else 200
 
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
         mlp = MLPClassifier(
             hidden_layer_sizes=[cfg["n_neurons"]] * cfg["n_layer"],
-            solver=cfg['solver'],
-            batch_size=batch_size,
+            batch_size=cfg['batch_size'],
             activation=cfg['activation'],
-            learning_rate=lr,
-            learning_rate_init=lr_init,
+            learning_rate_init=cfg['learning_rate_init'],
             max_iter=int(np.ceil(budget)),
             random_state=seed)
 
@@ -92,22 +85,9 @@ n_layer = UniformIntegerHyperparameter("n_layer", 1, 5, default_value=1)
 n_neurons = UniformIntegerHyperparameter("n_neurons", 8, 1024, log=True, default_value=10)
 activation = CategoricalHyperparameter("activation", ['logistic', 'tanh', 'relu'],
                                        default_value='tanh')
-solver = CategoricalHyperparameter('solver', ['lbfgs', 'sgd', 'adam'], default_value='adam')
 batch_size = UniformIntegerHyperparameter('batch_size', 30, 300, default_value=200)
-learning_rate = CategoricalHyperparameter('learning_rate', ['constant', 'invscaling', 'adaptive'],
-                                          default_value='constant')
 learning_rate_init = UniformFloatHyperparameter('learning_rate_init', 0.0001, 1.0, default_value=0.001, log=True)
-cs.add_hyperparameters([n_layer, n_neurons, activation, solver, batch_size, learning_rate, learning_rate_init])
-
-# Adding conditions to restrict the hyperparameter space
-# Since learning rate is used when solver is 'sgd'
-use_lr = CS.conditions.EqualsCondition(child=learning_rate, parent=solver, value='sgd')
-# Since learning rate initialization will only be accounted for when using 'sgd' or 'adam'
-use_lr_init = CS.conditions.InCondition(child=learning_rate_init, parent=solver, values=['sgd', 'adam'])
-# Since batch size will not be considered when optimizer is 'lbfgs'
-use_batch_size = CS.conditions.InCondition(child=batch_size, parent=solver, values=['sgd', 'adam'])
-# We can also add  multiple conditions on hyperparameters at once:
-cs.add_conditions([use_lr, use_batch_size, use_lr_init])
+cs.add_hyperparameters([n_layer, n_neurons, activation, batch_size, learning_rate_init])
 
 # SMAC scenario object
 scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
@@ -126,9 +106,9 @@ max_iters = 50
 # intensifier parameters
 intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_iters, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
-smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=mlp_from_cfg,
-                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+smac = HB4AC(scenario=scenario, rng=np.random.RandomState(42),
+             tae_runner=mlp_from_cfg,
+             intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos
