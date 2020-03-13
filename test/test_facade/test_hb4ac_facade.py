@@ -42,3 +42,4 @@ class TestHBFacade(unittest.TestCase):
         self.assertIsInstance(facade.solver.epm_chooser.model, RandomEPM)
         self.assertIsInstance(facade.solver.intensifier, Hyperband)
         self.assertEqual(facade.solver.intensifier.min_chall, 1)
+        self.output_dirs.append(scenario.output_dir)

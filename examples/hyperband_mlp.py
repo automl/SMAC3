@@ -13,7 +13,6 @@ optimize the average accuracy on a 5-fold cross validation.
 import logging
 import warnings
 
-import ConfigSpace as CS
 import numpy as np
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
