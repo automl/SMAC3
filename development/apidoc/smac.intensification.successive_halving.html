@@ -347,8 +347,8 @@ raise an exception if a value larger than 1 is passed.</p></li>
 </dd>
 </dl>
 <dl class="method">
-<dt id="smac.intensification.successive_halving.SuccessiveHalving._get_incumbent">
-<code class="sig-name descname">_get_incumbent</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._get_incumbent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._get_incumbent" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._compare_configs">
+<code class="sig-name descname">_compare_configs</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Optional[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._compare_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._compare_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares the challenger with current incumbent and returns the best configuration</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

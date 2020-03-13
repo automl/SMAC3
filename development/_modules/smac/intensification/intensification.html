@@ -303,7 +303,7 @@
     <span class="sd">&quot;&quot;&quot;Class to define different stages of intensifier&quot;&quot;&quot;</span>
     <span class="n">RUN_INCUMBENT</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Lines 3-7</span>
     <span class="n">RUN_CHALLENGER</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Lines 8-17</span>
-    <span class="n">RUN_DEFAULT</span> <span class="o">=</span> <span class="mi">3</span></div>
+    <span class="n">RUN_BASIS</span> <span class="o">=</span> <span class="mi">3</span></div>
 
 
 <div class="viewcode-block" id="Intensifier"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier">[docs]</a><span class="k">class</span> <span class="nc">Intensifier</span><span class="p">(</span><span class="n">AbstractRacer</span><span class="p">):</span>
@@ -476,26 +476,14 @@
             <span class="c1"># we run incumbent once and then challenger in the next</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span><span class="p">:</span>
                 <span class="c1"># Lines 3-7</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_add_inc_run</span><span class="p">(</span><span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_inc_run</span><span class="p">(</span><span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span> <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span> <span class="ow">or</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_BASIS</span><span class="p">:</span>
                 <span class="c1"># Lines 8-17</span>
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                                                   <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="ow">and</span> \
-                        <span class="n">challenger</span> <span class="o">==</span> <span class="n">incumbent</span> <span class="ow">and</span> \
-                        <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="o">!=</span> <span class="n">challenger</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Race against constant configuration after incumbent change.&quot;</span><span class="p">)</span>
-                    <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_race_challenger</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span><span class="p">,</span>
-                                                      <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                                                      <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
-                                                      <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># move on to next iteration</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">except</span> <span class="n">BudgetExhaustedException</span><span class="p">:</span>
             <span class="c1"># We return incumbent, SMBO stops due to its own budget checks</span>
@@ -528,7 +516,8 @@
 
 <div class="viewcode-block" id="Intensifier._add_inc_run"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._add_inc_run">[docs]</a>    <span class="k">def</span> <span class="nf">_add_inc_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-                     <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                     <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                     <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Add new run for incumbent</span>
 
 <span class="sd">        *Side effect:* adds runs to &lt;run_history&gt;</span>
@@ -539,6 +528,9 @@
 <span class="sd">            best configuration so far</span>
 <span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        log_traj: bool</span>
+<span class="sd">            Whether to log changes of incumbents in trajectory</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -602,7 +594,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># maximum runs for incumbent reached, do not run incumbent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_CHALLENGER</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span>
+            <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+            <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+            <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Intensifier._race_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._race_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">_race_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
@@ -689,15 +686,23 @@
                 <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                 <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                 <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
+
+            <span class="c1"># update intensification stage</span>
             <span class="k">if</span> <span class="n">new_incumbent</span> <span class="o">==</span> <span class="n">incumbent</span><span class="p">:</span>
                 <span class="c1"># move on to the next iteration</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">elif</span> <span class="n">new_incumbent</span> <span class="o">==</span> <span class="n">challenger</span><span class="p">:</span>
+                <span class="c1"># New incumbent found</span>
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="n">challenger</span>
-                <span class="c1"># New incumbent found. Go to the next stage</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_DEFAULT</span>
+                <span class="c1"># compare against basis configuration if provided, else go to next iteration</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="ow">and</span> \
+                        <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span> <span class="o">!=</span> <span class="n">challenger</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_BASIS</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># Line 17</span>
                 <span class="c1"># challenger is not worse, continue</span>
@@ -790,6 +795,11 @@
 
         <span class="c1"># sampling from next challenger marks the beginning of a new iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># if in RUN_BASIS stage, return the basis configuration (i.e., `always_race_against`)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_BASIS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Race against basis configuration after incumbent change.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_race_against</span><span class="p">,</span> <span class="kc">False</span>
 
         <span class="c1"># if the current challenger could not be rejected, it is run again on more instances</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_challenger</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span><span class="p">:</span>

@@ -320,7 +320,7 @@ intensify).</p></li>
 </dl>
 <dl class="method">
 <dt id="smac.intensification.intensification.Intensifier._add_inc_run">
-<code class="sig-name descname">_add_inc_run</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._add_inc_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._add_inc_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_inc_run</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._add_inc_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._add_inc_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new run for incumbent</p>
 <p><em>Side effect:</em> adds runs to &lt;run_history&gt;</p>
 <dl class="field-list simple">
@@ -328,6 +328,7 @@ intensify).</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – best configuration so far</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – Whether to log changes of incumbents in trajectory</p></li>
 </ul>
 </dd>
 </dl>
@@ -467,13 +468,13 @@ while the later iterations pick top configurations from the previously selected 
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Class to define different stages of intensifier</p>
 <dl class="attribute">
-<dt id="smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER">
-<code class="sig-name descname">RUN_CHALLENGER</code><em class="property"> = 2</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.intensification.intensification.IntensifierStage.RUN_BASIS">
+<code class="sig-name descname">RUN_BASIS</code><em class="property"> = 3</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_BASIS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="smac.intensification.intensification.IntensifierStage.RUN_DEFAULT">
-<code class="sig-name descname">RUN_DEFAULT</code><em class="property"> = 3</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER">
+<code class="sig-name descname">RUN_CHALLENGER</code><em class="property"> = 2</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

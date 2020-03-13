@@ -619,6 +619,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the &quot;</span>
                                   <span class="s2">&quot;challenger (</span><span class="si">%.4f</span><span class="s2">) on </span><span class="si">%d</span><span class="s2"> runs.&quot;</span> <span class="o">%</span>
                                   <span class="p">(</span><span class="n">inc_perf</span><span class="p">,</span> <span class="n">chal_perf</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">log_traj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># adding incumbent entry</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">inc_perf</span><span class="p">,</span>
+                                               <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                               <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
                 <span class="k">return</span> <span class="n">incumbent</span>
 
             <span class="c1"># Challenger is better than incumbent</span>
