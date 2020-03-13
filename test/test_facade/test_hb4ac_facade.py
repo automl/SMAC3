@@ -6,12 +6,14 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 
-from smac.facade.smac_bohb_facade import BOHB4HPO
+from smac.facade.hyperband_facade import HB4AC
+from smac.intensification.hyperband import Hyperband
 from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.epm.random_epm import RandomEPM
 from smac.scenario.scenario import Scenario
 
 
-class TestBOHBFacade(unittest.TestCase):
+class TestHBFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
@@ -34,10 +36,9 @@ class TestBOHBFacade(unittest.TestCase):
             cs.add_hyperparameter(UniformFloatHyperparameter('x%d' % (i + 1), 0, 1))
         scenario = Scenario({'cs': cs, 'run_obj': 'quality'})
         hb_kwargs = {'initial_budget': 1, 'max_budget': 3}
-        facade = BOHB4HPO(scenario=scenario, intensifier_kwargs=hb_kwargs)
+        facade = HB4AC(scenario=scenario, intensifier_kwargs=hb_kwargs)
 
         self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
-        # ensure number of samples required is D+1
-        self.assertEqual(facade.solver.epm_chooser.min_samples_model, 41)
+        self.assertIsInstance(facade.solver.epm_chooser.model, RandomEPM)
+        self.assertIsInstance(facade.solver.intensifier, Hyperband)
         self.assertEqual(facade.solver.intensifier.min_chall, 1)
-        self.output_dirs.append(scenario.output_dir)

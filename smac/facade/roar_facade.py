@@ -42,6 +42,7 @@ class ROAR(SMAC4AC):
                  tae_runner_kwargs: typing.Optional[typing.Dict] = None,
                  runhistory: RunHistory = None,
                  intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
+                 intensifier_kwargs: typing.Optional[typing.Dict] = None,
                  acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
                  initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
@@ -70,6 +71,8 @@ class ROAR(SMAC4AC):
             Runhistory to store all algorithm runs
         intensifier: AbstractRacer
             intensification object to issue a racing to decide the current incumbent
+        intensifier_kwargs: Optional[Dict]
+            arguments passed to the constructor of '~intensifier'
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used
@@ -105,6 +108,7 @@ class ROAR(SMAC4AC):
             tae_runner_kwargs=tae_runner_kwargs,
             runhistory=runhistory,
             intensifier=intensifier,
+            intensifier_kwargs=intensifier_kwargs,
             runhistory2epm=RunHistory2EPM4Cost,
             initial_design=initial_design,
             initial_design_kwargs=initial_design_kwargs,

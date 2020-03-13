@@ -1,18 +1,17 @@
 import typing
 
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
+from smac.facade.roar_facade import ROAR
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.intensification.hyperband import Hyperband
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2018, ML4AAD"
+__author__ = "Ashwin Raaghav Narayanan"
+__copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class BOHB4HPO(SMAC4HPO):
+class HB4AC(ROAR):
     """
-    Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization
+    Facade to use model-free Hyperband for algorithm configuration
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -35,10 +34,7 @@ class BOHB4HPO(SMAC4HPO):
         see ~smac.facade.smac_facade for documentation
         """
 
-        scenario = kwargs['scenario']
-
         kwargs['initial_design'] = kwargs.get('initial_design', RandomConfigurations)
-        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
 
         # Intensification parameters
         # select Hyperband as the intensifier ensure respective parameters are provided
@@ -55,13 +51,3 @@ class BOHB4HPO(SMAC4HPO):
 
         super().__init__(**kwargs)
         self.logger.info(self.__class__)
-
-        # better improve acquisition function optimization
-        # 2. more randomly sampled configurations
-        self.solver.scenario.acq_opt_challengers = 10000  # type: ignore[attr-defined] # noqa F821
-
-        # activate predict incumbent
-        self.solver.epm_chooser.predict_x_best = True
-
-        # BOHB requires at least D+1 no. of samples to build a model
-        self.solver.epm_chooser.min_samples_model = len(scenario.cs.get_hyperparameters()) + 1
