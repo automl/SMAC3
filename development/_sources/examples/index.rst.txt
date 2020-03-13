@@ -136,9 +136,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_sgd_hyperband_instances_thumb.png
+ .. figure:: /examples/images/thumb/sphx_glr_BOHB4HPO_sgd_instances_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4HPO_sgd_hyperband_instances.py`
+     :ref:`sphx_glr_examples_BOHB4HPO_sgd_instances.py`
 
 .. raw:: html
 
@@ -148,7 +148,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4HPO_sgd_hyperband_instances
+   /examples/BOHB4HPO_sgd_instances
 
 .. raw:: html
 
@@ -156,9 +156,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_mlp_hyperband_thumb.png
+ .. figure:: /examples/images/thumb/sphx_glr_BOHB4HPO_mlp_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4HPO_mlp_hyperband.py`
+     :ref:`sphx_glr_examples_BOHB4HPO_mlp.py`
 
 .. raw:: html
 
@@ -168,7 +168,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4HPO_mlp_hyperband
+   /examples/BOHB4HPO_mlp
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

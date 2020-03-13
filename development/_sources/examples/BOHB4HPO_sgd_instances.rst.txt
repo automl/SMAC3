@@ -1,10 +1,10 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_examples_SMAC4HPO_sgd_hyperband_instances.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_examples_BOHB4HPO_sgd_instances.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_examples_SMAC4HPO_sgd_hyperband_instances.py:
+.. _sphx_glr_examples_BOHB4HPO_sgd_instances.py:
 
 
 ==============================================================
@@ -37,8 +37,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 
     # Import ConfigSpace and different types of parameters
     from smac.configspace import ConfigurationSpace
-    from smac.facade.smac_hpo_facade import SMAC4HPO
-    from smac.intensification.hyperband import Hyperband
+    from smac.facade.smac_bohb_facade import BOHB4HPO
     # Import SMAC-utilities
     from smac.scenario.scenario import Scenario
 
@@ -92,7 +91,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
             # get instance
             data, target = generate_instances(int(instance[0]), int(instance[1]))
 
-            cv = StratifiedKFold(n_splits=4, random_state=seed)  # to make CV splits consistent
+            cv = StratifiedKFold(n_splits=4, random_state=seed, shuffle=True)  # to make CV splits consistent
             scores = cross_val_score(clf, data, target, cv=cv)
         return 1 - np.mean(scores)  # Minimize!
 
@@ -128,16 +127,13 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
     intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
                           'instance_order': None,  # You can also shuffle the order of using instances by this parameter.
                           # 'shuffle' will shuffle instances before each SH run and
-                          # 'shuffle_once' will shuffle instances once before the 1st
-                          # SH iteration begins
+                          # 'shuffle_once' will shuffle instances once before the 1st SH iteration begins
                           }
 
     # To optimize, we pass the function to the SMAC-object
-    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+    smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
                     tae_runner=sgd_from_cfg,
-                    intensifier=Hyperband,  # you can also change the intensifier to use like this!
-                    # This example currently uses Hyperband intensification,
-                    intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
+                    intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -165,7 +161,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
    **Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
-.. _sphx_glr_download_examples_SMAC4HPO_sgd_hyperband_instances.py:
+.. _sphx_glr_download_examples_BOHB4HPO_sgd_instances.py:
 
 
 .. only :: html
@@ -177,13 +173,13 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: SMAC4HPO_sgd_hyperband_instances.py <SMAC4HPO_sgd_hyperband_instances.py>`
+     :download:`Download Python source code: BOHB4HPO_sgd_instances.py <BOHB4HPO_sgd_instances.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: SMAC4HPO_sgd_hyperband_instances.ipynb <SMAC4HPO_sgd_hyperband_instances.ipynb>`
+     :download:`Download Jupyter notebook: BOHB4HPO_sgd_instances.ipynb <BOHB4HPO_sgd_instances.ipynb>`
 
 
 .. only:: html

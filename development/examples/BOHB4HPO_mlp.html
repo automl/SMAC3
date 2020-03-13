@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="F.A.Q." href="../faq.html" />
-    <link rel="prev" title="Optimizing average cross-validation performance with HyperBand" href="SMAC4HPO_sgd_hyperband_instances.html" /> 
+    <link rel="prev" title="Optimizing average cross-validation performance with HyperBand" href="BOHB4HPO_sgd_instances.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -209,7 +209,7 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
@@ -269,7 +269,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/examples/SMAC4HPO_mlp_hyperband.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/BOHB4HPO_mlp.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -284,10 +284,10 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4hpo-mlp-hyperband-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-bohb4hpo-mlp-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="optimizing-an-mlp-with-hyperband">
-<span id="sphx-glr-examples-smac4hpo-mlp-hyperband-py"></span><h1>Optimizing an MLP with HyperBand<a class="headerlink" href="#optimizing-an-mlp-with-hyperband" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-examples-bohb4hpo-mlp-py"></span><h1>Optimizing an MLP with HyperBand<a class="headerlink" href="#optimizing-an-mlp-with-hyperband" title="Permalink to this headline">¶</a></h1>
 <p>An example for the usage of Hyperband intensifier in SMAC.
 We optimize a simple MLP on the digits dataset using “Hyperband” intensification.</p>
 <p>In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
@@ -305,8 +305,7 @@ optimize the average accuracy on a 5-fold cross validation.</p>
 <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_bohb_facade</span> <span class="kn">import</span> <span class="n">BOHB4HPO</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
 <span class="n">digits</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
@@ -356,7 +355,7 @@ optimize the average accuracy on a 5-fold cross validation.</p>
             <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="c1"># returns the cross validation accuracy</span>
-        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>  <span class="c1"># Because minimize!</span>
@@ -409,10 +408,8 @@ optimize the average accuracy on a 5-fold cross validation.</p>
 <span class="c1"># intensifier parameters</span>
 <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_budget&#39;</span><span class="p">:</span> <span class="n">max_iters</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">BOHB4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
                 <span class="n">tae_runner</span><span class="o">=</span><span class="n">mlp_from_cfg</span><span class="p">,</span>
-                <span class="n">intensifier</span><span class="o">=</span><span class="n">Hyperband</span><span class="p">,</span>  <span class="c1"># you can also change the intensifier to use like this!</span>
-                <span class="c1"># This example currently uses Hyperband intensification,</span>
                 <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all arguments related to intensifier can be passed like this</span>
 
 <span class="c1"># Example call of the function with default values</span>
@@ -433,12 +430,12 @@ optimize the average accuracy on a 5-fold cross validation.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4hpo-mlp-hyperband-py">
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-bohb4hpo-mlp-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/bf6e1e1e2293ee0886656d5e074e31eb/SMAC4HPO_mlp_hyperband.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4HPO_mlp_hyperband.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/b0a0e1524eab0e7ac81afb9fb2de8a1a/BOHB4HPO_mlp.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">BOHB4HPO_mlp.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/6e44b309e2937e00aa0ca5d5002bc1b4/SMAC4HPO_mlp_hyperband.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4HPO_mlp_hyperband.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/19b172302f79fc2d00b594cb5cb970fa/BOHB4HPO_mlp.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">BOHB4HPO_mlp.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -455,7 +452,7 @@ optimize the average accuracy on a 5-fold cross validation.</p>
         <a href="../faq.html" class="btn btn-neutral float-right" title="F.A.Q." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="SMAC4HPO_sgd_hyperband_instances.html" class="btn btn-neutral float-left" title="Optimizing average cross-validation performance with HyperBand" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-left" title="Optimizing average cross-validation performance with HyperBand" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

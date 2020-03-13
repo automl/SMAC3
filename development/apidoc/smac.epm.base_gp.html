@@ -209,8 +209,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -288,7 +288,7 @@
 <span id="smac-epm-base-gp-module"></span><h1>smac.epm.base_gp module<a class="headerlink" href="#module-smac.epm.base_gp" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.epm.base_gp.BaseModel">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fba1c1dd210&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fcf024a6290&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Abstract base class for all Gaussian process models.</p>
 <dl class="method">
@@ -298,7 +298,7 @@
 
 <dl class="method">
 <dt id="smac.epm.base_gp.BaseModel._get_gp">
-<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7fba2ca44d10&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7fcf024a62d0&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

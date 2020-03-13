@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimizing an MLP with HyperBand" href="SMAC4HPO_mlp_hyperband.html" />
+    <link rel="next" title="Optimizing an MLP with HyperBand" href="BOHB4HPO_mlp.html" />
     <link rel="prev" title="Optimize the hyperparameters of a support vector machine" href="SMAC4HPO_svm.html" /> 
 </head>
 
@@ -210,7 +210,7 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -269,7 +269,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/examples/SMAC4HPO_sgd_hyperband_instances.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/BOHB4HPO_sgd_instances.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -284,10 +284,10 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4hpo-sgd-hyperband-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="optimizing-average-cross-validation-performance-with-hyperband">
-<span id="sphx-glr-examples-smac4hpo-sgd-hyperband-instances-py"></span><h1>Optimizing average cross-validation performance with HyperBand<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-hyperband" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-examples-bohb4hpo-sgd-instances-py"></span><h1>Optimizing average cross-validation performance with HyperBand<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-hyperband" title="Permalink to this headline">¶</a></h1>
 <p>An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using “Hyperband” intensification. We split the digits dataset (10 classes) into 45 binary datasets.</p>
@@ -308,8 +308,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 
 <span class="c1"># Import ConfigSpace and different types of parameters</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_bohb_facade</span> <span class="kn">import</span> <span class="n">BOHB4HPO</span>
 <span class="c1"># Import SMAC-utilities</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
@@ -363,7 +362,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
         <span class="c1"># get instance</span>
         <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">generate_instances</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
 
@@ -399,16 +398,13 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;max_budget&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                       <span class="s1">&#39;instance_order&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># You can also shuffle the order of using instances by this parameter.</span>
                       <span class="c1"># &#39;shuffle&#39; will shuffle instances before each SH run and</span>
-                      <span class="c1"># &#39;shuffle_once&#39; will shuffle instances once before the 1st</span>
-                      <span class="c1"># SH iteration begins</span>
+                      <span class="c1"># &#39;shuffle_once&#39; will shuffle instances once before the 1st SH iteration begins</span>
                       <span class="p">}</span>
 
 <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">BOHB4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
                 <span class="n">tae_runner</span><span class="o">=</span><span class="n">sgd_from_cfg</span><span class="p">,</span>
-                <span class="n">intensifier</span><span class="o">=</span><span class="n">Hyperband</span><span class="p">,</span>  <span class="c1"># you can also change the intensifier to use like this!</span>
-                <span class="c1"># This example currently uses Hyperband intensification,</span>
-                <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all parameters related to intensifier can be passed like this</span>
+                <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all arguments related to intensifier can be passed like this</span>
 
 <span class="c1"># Example call of the function</span>
 <span class="c1"># It returns: Status, Cost, Runtime, Additional Infos</span>
@@ -432,12 +428,12 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4hpo-sgd-hyperband-instances-py">
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-bohb4hpo-sgd-instances-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/526ec788f3e4e8ad3775d3d3c434d665/SMAC4HPO_sgd_hyperband_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4HPO_sgd_hyperband_instances.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/98aec4aea132c9631dc169fd91ae8e1f/BOHB4HPO_sgd_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">BOHB4HPO_sgd_instances.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/a1b76e7cd94aea70ae184ce018455641/SMAC4HPO_sgd_hyperband_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4HPO_sgd_hyperband_instances.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/06cae64aff2cb1ad23b3fec2aded5627/BOHB4HPO_sgd_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">BOHB4HPO_sgd_instances.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -451,7 +447,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="SMAC4HPO_mlp_hyperband.html" class="btn btn-neutral float-right" title="Optimizing an MLP with HyperBand" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="BOHB4HPO_mlp.html" class="btn btn-neutral float-right" title="Optimizing an MLP with HyperBand" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="SMAC4HPO_svm.html" class="btn btn-neutral float-left" title="Optimize the hyperparameters of a support vector machine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

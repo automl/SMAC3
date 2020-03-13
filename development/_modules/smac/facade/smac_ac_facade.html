@@ -207,8 +207,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with HyperBand</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -693,7 +693,7 @@
             <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="n">intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                <span class="s2">&quot;Argument intensifier must be None or an object implementing the Intensifier, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
+                <span class="s2">&quot;Argument intensifier must be None or an object implementing the AbstractRacer, but is &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span>
                 <span class="nb">type</span><span class="p">(</span><span class="n">intensifier</span><span class="p">)</span>
             <span class="p">)</span>
 
