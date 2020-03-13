@@ -414,7 +414,7 @@ class SMAC4AC(object):
             intensifier_instance = intensifier(**intensifier_def_kwargs)  # type: ignore[arg-type] # noqa F821
         else:
             raise TypeError(
-                "Argument intensifier must be None or an object implementing the Intensifier, but is '%s'" %
+                "Argument intensifier must be None or an object implementing the AbstractRacer, but is '%s'" %
                 type(intensifier)
             )
 

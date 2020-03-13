@@ -26,8 +26,7 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.intensification.hyperband import Hyperband
+from smac.facade.smac_bohb_facade import BOHB4HPO
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
@@ -81,7 +80,7 @@ def sgd_from_cfg(cfg, seed, instance):
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
 
-        cv = StratifiedKFold(n_splits=4, random_state=seed)  # to make CV splits consistent
+        cv = StratifiedKFold(n_splits=4, random_state=seed, shuffle=True)  # to make CV splits consistent
         scores = cross_val_score(clf, data, target, cv=cv)
     return 1 - np.mean(scores)  # Minimize!
 
@@ -117,16 +116,13 @@ scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative t
 intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
                       'instance_order': None,  # You can also shuffle the order of using instances by this parameter.
                       # 'shuffle' will shuffle instances before each SH run and
-                      # 'shuffle_once' will shuffle instances once before the 1st
-                      # SH iteration begins
+                      # 'shuffle_once' will shuffle instances once before the 1st SH iteration begins
                       }
 
 # To optimize, we pass the function to the SMAC-object
-smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=sgd_from_cfg,
-                intensifier=Hyperband,  # you can also change the intensifier to use like this!
-                # This example currently uses Hyperband intensification,
-                intensifier_kwargs=intensifier_kwargs)  # all parameters related to intensifier can be passed like this
+                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
