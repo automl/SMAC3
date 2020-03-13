@@ -421,6 +421,8 @@ class TestIntensify(unittest.TestCase):
         # regular intensification begins - run incumbent first
         config, _ = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
                                                     chooser=None)
+        self.assertEqual(config, inc)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
@@ -519,6 +521,7 @@ class TestIntensify(unittest.TestCase):
         # regular intensification begins - run incumbent
         config, _ = intensifier.get_next_challenger(challengers=None,  # since incumbent is run, no configs required
                                                     chooser=None)
+        self.assertEqual(config, inc)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
 
