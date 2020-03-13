@@ -24,7 +24,7 @@ class IntensifierStage(Enum):
     """Class to define different stages of intensifier"""
     RUN_INCUMBENT = 1  # Lines 3-7
     RUN_CHALLENGER = 2  # Lines 8-17
-    RUN_DEFAULT = 3
+    RUN_BASIS = 3
 
 
 class Intensifier(AbstractRacer):
@@ -197,26 +197,14 @@ class Intensifier(AbstractRacer):
             # we run incumbent once and then challenger in the next
             if self.stage == IntensifierStage.RUN_INCUMBENT:
                 # Lines 3-7
-                self._add_inc_run(incumbent=incumbent, run_history=run_history)
-            elif self.stage == IntensifierStage.RUN_CHALLENGER:
+                self._add_inc_run(incumbent=incumbent, run_history=run_history, log_traj=log_traj)
+            elif self.stage == IntensifierStage.RUN_CHALLENGER or \
+                    self.stage == IntensifierStage.RUN_BASIS:
                 # Lines 8-17
                 incumbent = self._race_challenger(challenger=challenger,
                                                   incumbent=incumbent,
                                                   run_history=run_history,
                                                   log_traj=log_traj)
-            else:
-                if self.always_race_against and \
-                        challenger == incumbent and \
-                        self.always_race_against != challenger:
-                    self.logger.debug("Race against constant configuration after incumbent change.")
-                    incumbent = self._race_challenger(challenger=self.always_race_against,
-                                                      incumbent=incumbent,
-                                                      run_history=run_history,
-                                                      log_traj=log_traj)
-                else:
-                    # move on to next iteration
-                    self.stage = IntensifierStage.RUN_INCUMBENT
-                    self.continue_challenger = False
 
         except BudgetExhaustedException:
             # We return incumbent, SMBO stops due to its own budget checks
@@ -249,7 +237,8 @@ class Intensifier(AbstractRacer):
 
     def _add_inc_run(self,
                      incumbent: Configuration,
-                     run_history: RunHistory) -> None:
+                     run_history: RunHistory,
+                     log_traj: bool = True) -> None:
         """Add new run for incumbent
 
         *Side effect:* adds runs to <run_history>
@@ -260,6 +249,9 @@ class Intensifier(AbstractRacer):
             best configuration so far
         run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
         """
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
 
@@ -324,6 +316,11 @@ class Intensifier(AbstractRacer):
         else:
             # maximum runs for incumbent reached, do not run incumbent
             self.stage = IntensifierStage.RUN_CHALLENGER
+
+        self._compare_configs(
+            incumbent=incumbent, challenger=incumbent,
+            run_history=run_history,
+            log_traj=log_traj)
 
     def _race_challenger(self,
                          challenger: Configuration,
@@ -410,15 +407,23 @@ class Intensifier(AbstractRacer):
                 incumbent=incumbent, challenger=challenger,
                 run_history=run_history,
                 log_traj=log_traj)
+
+            # update intensification stage
             if new_incumbent == incumbent:
                 # move on to the next iteration
                 self.stage = IntensifierStage.RUN_INCUMBENT
                 self.continue_challenger = False
 
             elif new_incumbent == challenger:
+                # New incumbent found
                 incumbent = challenger
-                # New incumbent found. Go to the next stage
-                self.stage = IntensifierStage.RUN_DEFAULT
+                # compare against basis configuration if provided, else go to next iteration
+                if self.always_race_against and \
+                        self.always_race_against != challenger:
+                    self.stage = IntensifierStage.RUN_BASIS
+                else:
+                    self.stage = IntensifierStage.RUN_INCUMBENT
+                    self.continue_challenger = False
 
             else:  # Line 17
                 # challenger is not worse, continue
@@ -511,6 +516,11 @@ class Intensifier(AbstractRacer):
 
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
+
+        # if in RUN_BASIS stage, return the basis configuration (i.e., `always_race_against`)
+        if self.stage == IntensifierStage.RUN_BASIS:
+            self.logger.debug("Race against basis configuration after incumbent change.")
+            return self.always_race_against, False
 
         # if the current challenger could not be rejected, it is run again on more instances
         if self.current_challenger and self.continue_challenger:

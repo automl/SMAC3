@@ -50,7 +50,8 @@ class AbstractTAFunc(ExecuteTARun):
 
         super().__init__(ta=ta, stats=stats, runhistory=runhistory,
                          run_obj=run_obj, par_factor=par_factor,
-                         cost_for_crash=cost_for_crash)
+                         cost_for_crash=cost_for_crash,
+                         abort_on_first_run_crash=abort_on_first_run_crash)
         """
         Abstract class for having a function as target algorithm
 
