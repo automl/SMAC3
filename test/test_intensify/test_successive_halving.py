@@ -486,6 +486,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
         self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
         self.assertEqual(intensifier.stage, 1)
+        self.assertEqual(intensifier.fail_chal_offset, 1)  # 2 configs expected, but 1 failure
 
         # run next stage - should run only 1 configuration since other 3 were capped
         # 1 runs for config1
