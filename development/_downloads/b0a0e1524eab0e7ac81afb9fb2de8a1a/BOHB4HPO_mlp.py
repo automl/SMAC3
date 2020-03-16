@@ -1,7 +1,7 @@
 """
-================================
-Optimizing an MLP with HyperBand
-================================
+===========================
+Optimizing an MLP with BOHB
+===========================
 
 An example for the usage of Hyperband intensifier in SMAC.
 We optimize a simple MLP on the digits dataset using "Hyperband" intensification.

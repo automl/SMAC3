@@ -128,6 +128,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -208,8 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
@@ -1228,6 +1230,8 @@
         <li><a href="apidoc/smac.configspace.html#smac.configspace.UniformIntegerHyperparameter.has_neighbors">(smac.configspace.UniformIntegerHyperparameter method)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC">HB4AC (class in smac.facade.hyperband_facade)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior">HorseshoePrior (class in smac.epm.gp_base_prior)</a>
@@ -1372,6 +1376,8 @@
         <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.logger">(smac.facade.experimental.hydra_facade.Hydra attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.logger">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.logger">(smac.facade.hyperband_facade.HB4AC attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.logger">(smac.facade.roar_facade.ROAR attribute)</a>
 </li>
@@ -1652,9 +1658,11 @@
       </ul></li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">RunHistory (class in smac.runhistory.runhistory)</a>
 </li>
-      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.runhistory">runhistory (smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.runhistory">runhistory (smac.facade.hyperband_facade.HB4AC attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.runhistory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.runhistory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
@@ -1771,6 +1779,8 @@
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#module-smac.facade.experimental.psmac_facade">smac.facade.experimental.psmac_facade (module)</a>
 </li>
       <li><a href="apidoc/smac.facade.func_facade.html#module-smac.facade.func_facade">smac.facade.func_facade (module)</a>
+</li>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">smac.facade.hyperband_facade (module)</a>
 </li>
       <li><a href="apidoc/smac.facade.roar_facade.html#module-smac.facade.roar_facade">smac.facade.roar_facade (module)</a>
 </li>
@@ -1897,6 +1907,8 @@
       <ul>
         <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.solver">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.solver">(smac.facade.hyperband_facade.HB4AC attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.solver">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.solver">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
@@ -1922,6 +1934,8 @@
 
       <ul>
         <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.stats">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.stats">(smac.facade.hyperband_facade.HB4AC attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.stats">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
@@ -1984,9 +1998,11 @@
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.train_perf">train_perf() (smac.utils.io.traj_logging.TrajEntry property)</a>
 </li>
-      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.trajectory">trajectory (smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.trajectory">trajectory (smac.facade.hyperband_facade.HB4AC attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.trajectory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+</li>
         <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.trajectory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>

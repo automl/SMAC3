@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Optimizing an MLP with HyperBand &mdash; SMAC 0.12.1dev documentation</title>
+  <title>Optimizing an MLP with BOHB &mdash; SMAC 0.12.1dev documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="F.A.Q." href="../faq.html" />
-    <link rel="prev" title="Optimizing average cross-validation performance with HyperBand" href="BOHB4HPO_sgd_instances.html" /> 
+    <link rel="prev" title="Optimizing average cross-validation performance with BOHB" href="BOHB4HPO_sgd_instances.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -263,7 +265,7 @@
         
           <li><a href="index.html">Examples</a> &raquo;</li>
         
-      <li>Optimizing an MLP with HyperBand</li>
+      <li>Optimizing an MLP with BOHB</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -286,8 +288,8 @@
 <p class="admonition-title">Note</p>
 <p>Click <a class="reference internal" href="#sphx-glr-download-examples-bohb4hpo-mlp-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="optimizing-an-mlp-with-hyperband">
-<span id="sphx-glr-examples-bohb4hpo-mlp-py"></span><h1>Optimizing an MLP with HyperBand<a class="headerlink" href="#optimizing-an-mlp-with-hyperband" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-example-title section" id="optimizing-an-mlp-with-bohb">
+<span id="sphx-glr-examples-bohb4hpo-mlp-py"></span><h1>Optimizing an MLP with BOHB<a class="headerlink" href="#optimizing-an-mlp-with-bohb" title="Permalink to this headline">¶</a></h1>
 <p>An example for the usage of Hyperband intensifier in SMAC.
 We optimize a simple MLP on the digits dataset using “Hyperband” intensification.</p>
 <p>In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
@@ -452,7 +454,7 @@ optimize the average accuracy on a 5-fold cross validation.</p>
         <a href="../faq.html" class="btn btn-neutral float-right" title="F.A.Q." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-left" title="Optimizing average cross-validation performance with HyperBand" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-left" title="Optimizing average cross-validation performance with BOHB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
