@@ -11,12 +11,21 @@ do
 done
 
 cd spear_qcp
-bash run.sh
+bash run_SMAC.sh
 rval=$?
 if [ "$rval" != 0 ]; then
     echo "Error running example QCP"
     exit $rval
 fi
+
+bash run_ROAR.sh
+rval=$?
+if [ "$rval" != 0 ]; then
+    echo "Error running example QCP"
+    exit $rval
+fi
+
+
 python SMAC4AC_spear_qcp.py
 rval=$?
 if [ "$rval" != 0 ]; then
