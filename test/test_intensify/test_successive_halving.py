@@ -451,6 +451,67 @@ class TestSuccessiveHalving(unittest.TestCase):
             config, _ = intensifier.get_next_challenger(challengers=None,
                                                         chooser=None, run_history=self.rh)
 
+    def test_eval_challenger_capping_2(self):
+        """
+            test eval_challenger for adaptive capping with all but one configuration capped
+        """
+        def target(x):
+            if x['a'] + x['b'] > 0:
+                time.sleep(1.5)
+            return x['a']
+
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf.runhistory = self.rh
+
+        intensifier = SuccessiveHalving(
+            tae_runner=taf, stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345), deterministic=False, cutoff=1,
+            instances=[1, 2], n_seeds=2, initial_budget=1, max_budget=4, eta=2, instance_order=None)
+
+        # first configuration run
+        config, _ = intensifier.get_next_challenger(challengers=[self.config4],
+                                                    chooser=None, run_history=self.rh)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, )
+        self.assertEqual(inc, self.config4)
+
+        # remaining 3 runs should be capped
+        for i in [self.config1, self.config2, self.config3]:
+            config, _ = intensifier.get_next_challenger(challengers=[i],
+                                                        chooser=None, run_history=self.rh)
+            inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+
+        self.assertEqual(inc, self.config4)
+        self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
+        self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CAPPED)
+        self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
+        self.assertEqual(intensifier.stage, 1)
+        self.assertEqual(intensifier.fail_chal_offset, 1)  # 2 configs expected, but 1 failure
+
+        # run next stage - should run only 1 configuration since other 3 were capped
+        # 1 runs for config1
+        config, _ = intensifier.get_next_challenger(challengers=[],
+                                                    chooser=None, run_history=self.rh)
+        self.assertEqual(config, self.config4)
+        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+        self.assertEqual(intensifier.stage, 2)
+
+        # run next stage with only config1
+        # should go to next iteration since no more configurations left
+        for _ in range(2):
+            config, _ = intensifier.get_next_challenger(challengers=[],
+                                                        chooser=None, run_history=self.rh)
+            self.assertEqual(config, self.config4)
+            inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+
+        self.assertEqual(inc, self.config4)
+        self.assertEqual(len(self.rh.get_runs_for_config(self.config4, only_max_observed_budget=True)), 4)
+        self.assertEqual(intensifier.sh_iters, 1)
+        self.assertEqual(intensifier.stage, 0)
+
+        with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
+            intensifier.get_next_challenger(challengers=[], chooser=None, run_history=self.rh)
+
     def test_eval_challenger_3(self):
         """
             test eval_challenger for updating to next stage and shuffling instance order every run
