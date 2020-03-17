@@ -10,7 +10,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.ei_optimization import RandomSearch, AcquisitionFunctionMaximizer
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost, AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -103,7 +103,7 @@ class ROAR(SMAC4AC):
 
         if scenario.run_obj == "runtime":
             # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
-            runhistory2epm = RunHistory2EPM4LogCost
+            runhistory2epm = RunHistory2EPM4LogCost  # type: typing.Type[AbstractRunHistory2EPM]
         else:
             runhistory2epm = RunHistory2EPM4Cost
 
