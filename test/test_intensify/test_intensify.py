@@ -600,4 +600,3 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
-
