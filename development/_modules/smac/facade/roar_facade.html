@@ -291,7 +291,7 @@
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">RandomSearch</span><span class="p">,</span> <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
@@ -382,6 +382,12 @@
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">RandomSearch</span>
 
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
+            <span class="c1"># We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)</span>
+            <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span>  <span class="c1"># type: typing.Type[AbstractRunHistory2EPM]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span>
+
         <span class="c1"># use SMAC facade</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
@@ -390,7 +396,7 @@
             <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
             <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
             <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>
-            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">RunHistory2EPM4Cost</span><span class="p">,</span>
+            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">runhistory2epm</span><span class="p">,</span>
             <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
             <span class="n">initial_design_kwargs</span><span class="o">=</span><span class="n">initial_design_kwargs</span><span class="p">,</span>
             <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>
