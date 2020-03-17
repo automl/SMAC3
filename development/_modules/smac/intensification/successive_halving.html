@@ -466,6 +466,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="SuccessiveHalving._init_sh_params"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._init_sh_params">[docs]</a>    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
@@ -650,7 +651,7 @@
                     <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># successful configs</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>   <span class="c1"># capped/crashed configs</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># capped/crashed configs</span>
 
             <span class="c1"># get incumbent in the last stage if all instances have been evaluated</span>
             <span class="k">if</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -664,7 +665,7 @@
                               <span class="s2">&quot;Interrupting optimization run and returning current incumbent&quot;</span><span class="p">)</span>
 
         <span class="c1"># if all configurations for the current stage have been evaluated, reset stage</span>
-        <span class="n">num_chal_evaluated</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">))</span>
+        <span class="n">num_chal_evaluated</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span>
         <span class="k">if</span> <span class="n">num_chal_evaluated</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span> <span class="ow">and</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successive Halving iteration-step: </span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1"> with &#39;</span>
@@ -778,6 +779,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>   <span class="c1"># capped configs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -793,6 +795,13 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top_k</span><span class="p">(</span><span class="n">configs</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="p">),</span>
                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                                                   <span class="n">k</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">next_n_chal</span><span class="p">))</span>
+                <span class="c1"># if some runs were capped, top_k returns less than the required configurations</span>
+                <span class="c1"># to handle that, we keep some failed configurations (since they are technically failed here too)</span>
+                <span class="n">missing_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">])</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">missing_challengers</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="n">missing_challengers</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># update stats for the prev iteration</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">update_average_configs_per_intensify</span><span class="p">(</span><span class="n">n_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span><span class="p">)</span>
@@ -806,6 +815,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
                 <span class="c1"># randomize instance-seed pairs per successive halving run, if user specifies</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">==</span> <span class="s1">&#39;shuffle&#39;</span><span class="p">:</span>
@@ -813,7 +823,7 @@
 
         <span class="c1"># to track configurations for the next stage</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>   <span class="c1"># capped configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># capped/failed configs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span></div>
 
