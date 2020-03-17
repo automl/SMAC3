@@ -183,9 +183,15 @@ class Intensifier(AbstractRacer):
             return incumbent, inc_perf
 
         # if first ever run, then assume current challenger to be the incumbent
-        if self.stage == IntensifierStage.RUN_FIRST_CONFIG and not incumbent:
-            self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
-            incumbent = challenger
+        if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
+            if incumbent is None:
+                self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
+                incumbent = challenger
+            else:
+                inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+                if len(inc_runs) > 0:
+                    self.logger.debug("Skipping RUN_FIRST_CONFIG stage since incumbent is already run before")
+                    self.stage = IntensifierStage.RUN_INCUMBENT
 
         self.logger.debug("Intensify on %s", challenger)
         if hasattr(challenger, 'origin'):
