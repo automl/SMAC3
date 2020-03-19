@@ -71,8 +71,9 @@ def _verify_package(name: str, operation: str, version: str) -> None:
         raise NotImplementedError(
             'operation \'%s\' is not supported' % operation)
     if not check:
-        raise IncorrectPackageVersionError(name, installed_version, operation,
-                                           required_version)
+        pass
+        #raise IncorrectPackageVersionError(name, installed_version, operation,
+        #                                   required_version)
 
 
 class MissingPackageError(Exception):
