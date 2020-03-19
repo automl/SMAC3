@@ -358,6 +358,7 @@ class SuccessiveHalving(AbstractRacer):
                                   "Interrupting current challenger and moving on to the next one")
                 # ignore all pending instances
                 self.curr_inst_idx = np.inf
+                n_insts_remaining = 0
                 status = StatusType.CAPPED
 
             # adding challengers to the list of evaluated challengers
@@ -502,16 +503,18 @@ class SuccessiveHalving(AbstractRacer):
 
         else:
             self.stage += 1
+            # only uncapped challengers are considered valid for the next iteration
+            valid_challengers = list(self.curr_challengers - self.fail_challengers)
 
             if self.stage < len(self.all_budgets) and \
-                    len(self.curr_challengers) > 0:
+                    len(valid_challengers) > 0:
                 # if this is the next stage in same iteration,
                 # use top 'k' from the evaluated configurations for next iteration
 
                 # determine 'k' for the next iteration - at least 1
                 next_n_chal = max(1, self.n_configs_in_stage[self.stage])
                 # selecting the top 'k' challengers for the next iteration
-                self.configs_to_run = self._top_k(configs=list(self.curr_challengers),
+                self.configs_to_run = self._top_k(configs=valid_challengers,
                                                   run_history=run_history,
                                                   k=int(next_n_chal))
                 # if some runs were capped, top_k returns less than the required configurations
