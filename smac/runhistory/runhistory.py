@@ -389,7 +389,7 @@ class RunHistory(object):
 
         for idx, (i, s, b) in enumerate(runs):
             key = RunKey(config_id=self.config_ids[config], instance_id=i, seed=s, budget=b)
-            value = self.data.get(key)
+            value = self.data.get(key)  # type: ignore[arg-type] # noqa F821
             costs[idx] = value.cost
 
         return costs
