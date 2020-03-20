@@ -578,9 +578,9 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(config, self.config2)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
 
-    def test_do_not_update_incumbent_on_lower_budget(self):
+    def test_incumbent_selection_default(self):
         """
-            test _compare_config for incumbent selection according to budget
+            test _compare_config for default incumbent selection design (highest budget so far)
         """
         intensifier = SuccessiveHalving(
             tae_runner=None, stats=self.stats, traj_logger=None,
@@ -640,3 +640,54 @@ class TestSuccessiveHalving(unittest.TestCase):
                     additional_info=None, budget=2)
         inc = intensifier._compare_configs(challenger=self.config4, incumbent=inc, run_history=self.rh, log_traj=False)
         self.assertEqual(inc, self.config4)
+
+    def test_incumbent_selection_designs(self):
+        """
+            test _compare_config with different incumbent selection designs
+        """
+
+        # select best on any budget
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=[1], initial_budget=1, max_budget=2, eta=2, incumbent_selection='any_budget')
+
+        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=1,
+                    cost=0.5, time=1, status=StatusType.SUCCESS, additional_info=None)
+        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=2,
+                    cost=10, time=1, status=StatusType.SUCCESS, additional_info=None)
+        self.rh.add(config=self.config2, instance_id=1, seed=None, budget=2,
+                    cost=5, time=1, status=StatusType.SUCCESS, additional_info=None)
+
+        # incumbent should be config1, since it has the best performance in one of the budgets
+        inc = intensifier._compare_configs(incumbent=self.config2, challenger=self.config1,
+                                           run_history=self.rh, log_traj=False)
+        self.assertEqual(self.config1, inc)
+        # if config1 is incumbent already, it shouldn't change
+        inc = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2,
+                                           run_history=self.rh, log_traj=False)
+        self.assertEqual(self.config1, inc)
+
+        # select best on highest budget only
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=[1], initial_budget=1, max_budget=4, eta=2, incumbent_selection='highest_budget')
+
+        # incumbent should not change, since there is no run on the highest budget,
+        # though config1 is run on a higher budget
+        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=2,
+                    cost=0.5, time=1, status=StatusType.SUCCESS, additional_info=None)
+        self.rh.add(config=self.config2, instance_id=1, seed=None, budget=1,
+                    cost=5, time=1, status=StatusType.SUCCESS, additional_info=None)
+        inc = intensifier._compare_configs(incumbent=self.config2, challenger=self.config1,
+                                           run_history=self.rh, log_traj=False)
+        self.assertEqual(self.config2, inc)
+        self.assertEqual(self.stats.inc_changed, 0)
+
+        # incumbent changes to config1 since that is run on the highest budget
+        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=4,
+                    cost=10, time=1, status=StatusType.SUCCESS, additional_info=None)
+        inc = intensifier._compare_configs(incumbent=self.config2, challenger=self.config1,
+                                           run_history=self.rh, log_traj=False)
+        self.assertEqual(self.config1, inc)

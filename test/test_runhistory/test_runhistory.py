@@ -229,6 +229,21 @@ class RunhistoryTest(unittest.TestCase):
 
         self.assertListEqual(rh.get_all_configs_per_budget([1]), [config1, config2])
 
+    def test_get_all_costs_for_config(self):
+        rh = RunHistory()
+
+        cs = get_config_space()
+        config1 = Configuration(cs, values={'a': 1, 'b': 1})
+
+        rh.add(config=config1, instance_id=1, seed=1, budget=1,
+               cost=1, time=10, status=StatusType.SUCCESS)
+        rh.add(config=config1, instance_id=1, seed=1, budget=2,
+               cost=10, time=10, status=StatusType.SUCCESS)
+
+        costs = rh.get_all_costs_for_config(config1)
+
+        self.assertListEqual(costs, [1, 10])
+
     def test_json_origin(self):
 
         for origin in ['test_origin', None]:

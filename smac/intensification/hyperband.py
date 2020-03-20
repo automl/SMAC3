@@ -62,6 +62,12 @@ class Hyperband(SuccessiveHalving):
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
+    incumbent_selection: typing.Optional[str]
+        How to select incumbent from successive halving. Only active for real-valued budgets.
+        Can be set to: [None, highest_budget, any_budget]
+        * None - incumbent is the best in the highest budget run so far (default)
+        * highest_budget - incumbent is selected only based on the highest budget
+        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
 
     def __init__(self,
@@ -80,7 +86,8 @@ class Hyperband(SuccessiveHalving):
                  n_seeds: typing.Optional[int] = None,
                  instance_order: str = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,) -> None:
+                 min_chall: int = 1,
+                 incumbent_selection: typing.Optional[str] = None,) -> None:
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -98,7 +105,8 @@ class Hyperband(SuccessiveHalving):
                          n_seeds=n_seeds,
                          instance_order=instance_order,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,)
+                         min_chall=min_chall,
+                         incumbent_selection=incumbent_selection,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)

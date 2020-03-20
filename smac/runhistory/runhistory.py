@@ -370,6 +370,30 @@ class RunHistory(object):
                 configs.append(self.ids_config[c])
         return configs
 
+    def get_all_costs_for_config(self,
+                                 config: Configuration) -> typing.List[float]:
+        """
+        get cost for all runs of the given configuration and its runs
+
+        Parameter
+        ---------
+            config: Configuration
+
+        Returns
+        -------
+            typing.List[float]
+                costs for each run as a list
+        """
+        runs = self.get_runs_for_config(config=config, only_max_observed_budget=False)
+        costs = [0.0] * len(runs)
+
+        for idx, (i, s, b) in enumerate(runs):
+            key = RunKey(config_id=self.config_ids[config], instance_id=i, seed=s, budget=b)
+            value = self.data.get(key)
+            costs[idx] = value.cost
+
+        return costs
+
     def empty(self) -> bool:
         """Check whether or not the RunHistory is empty.
 
