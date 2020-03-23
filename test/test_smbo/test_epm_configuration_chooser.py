@@ -146,7 +146,7 @@ class TestEPMChooser(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI.
-        self.assertEqual(len(challengers), 9968)
+        self.assertEqual(len(challengers), 10198)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -163,7 +163,7 @@ class TestEPMChooser(unittest.TestCase):
 
         self.assertEqual(num_local_search, 11)
         self.assertEqual(num_random_search_sorted, 5000)
-        self.assertEqual(num_random_search, 4957)
+        self.assertEqual(num_random_search, 5187)
 
     @unittest.skipIf(sys.version_info < (3, 6), 'Test not deterministic for Python 3.5 and earlier')
     def test_choose_next_3(self):
@@ -195,7 +195,7 @@ class TestEPMChooser(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI
-        self.assertEqual(len(challengers), 9983)
+        self.assertEqual(len(challengers), 9986)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -210,9 +210,9 @@ class TestEPMChooser(unittest.TestCase):
             else:
                 raise ValueError(c.origin)
 
-        self.assertEqual(num_local_search, 25)
+        self.assertEqual(num_local_search, 26)
         self.assertEqual(num_random_search_sorted, 5000)
-        self.assertEqual(num_random_search, 4958)
+        self.assertEqual(num_random_search, 4960)
 
 
 if __name__ == "__main__":
