@@ -372,6 +372,7 @@
 <span class="sd">    * If using instances as the budget, the average cost over all evaluated instances is returned.</span>
 <span class="sd">    * Theoretically, the runhistory object can handle instances and budgets at the same time. This is</span>
 <span class="sd">      neither used nor tested.</span>
+<span class="sd">    * Capped runs are not included in this cost.</span>
 
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
@@ -418,7 +419,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>  <span class="c1"># type: typing.Dict[RunKey, RunValue]</span>
 
         <span class="c1"># for fast access, we have also an unordered data structure</span>
-        <span class="c1"># to get all instance seed pairs of a configuration</span>
+        <span class="c1"># to get all instance seed pairs of a configuration.</span>
+        <span class="c1"># This does not include capped runs.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config_ids</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[Configuration, int]</span>
@@ -546,6 +548,10 @@
         <span class="sd">&quot;&quot;&quot;Store the performance of a configuration across the instances in</span>
 <span class="sd">        self.cost_per_config and also updates self.runs_per_config;</span>
 
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        This method ignores capped runs.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        config: Configuration</span>
@@ -596,6 +602,10 @@
 <div class="viewcode-block" id="RunHistory.get_runs_for_config"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_runs_for_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                             <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Return all runs (instance seed pairs) for a configuration.</span>
+<span class="sd">        </span>
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        This method ignores capped runs.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>

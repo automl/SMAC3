@@ -512,6 +512,7 @@ observed costs for one configuration:</p>
 <li><p>If using instances as the budget, the average cost over all evaluated instances is returned.</p></li>
 <li><p>Theoretically, the runhistory object can handle instances and budgets at the same time. This is
 neither used nor tested.</p></li>
+<li><p>Capped runs are not included in this cost.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -755,6 +756,10 @@ False otherwise</p>
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
 <code class="sig-name descname">get_runs_for_config</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">only_max_observed_budget: bool</em><span class="sig-paren">)</span> &#x2192; List[smac.runhistory.runhistory.InstSeedBudgetKey]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method ignores capped runs.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -858,6 +863,10 @@ and be available <code class="xref py py-meth docutils literal notranslate"><spa
 <code class="sig-name descname">update_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the performance of a configuration across the instances in
 self.cost_per_config and also updates self.runs_per_config;</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method ignores capped runs.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – configuration to update cost based on all runs in runhistory</p>
