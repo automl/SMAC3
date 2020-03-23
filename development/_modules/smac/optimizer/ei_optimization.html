@@ -286,7 +286,7 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Callable</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_one_exchange_neighbourhood</span><span class="p">,</span>
@@ -369,7 +369,8 @@
 <span class="sd">        iterable</span>
 <span class="sd">            An iterable consisting of :class:`smac.configspace.Configuration`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">next_configs_by_acq_value</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)]</span>
+        <span class="k">def</span> <span class="nf">next_configs_by_acq_value</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maximize</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">num_points</span><span class="p">)]</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="n">ChallengerList</span><span class="p">(</span><span class="n">next_configs_by_acq_value</span><span class="p">,</span>
                                      <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="p">,</span>
@@ -839,7 +840,6 @@
 <span class="sd">            An iterable consistng of</span>
 <span class="sd">            tuple(acqusition_value, :class:`smac.configspace.Configuration`).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="n">num_points</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">rand_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">(</span>
                 <span class="n">size</span><span class="o">=</span><span class="n">num_points</span><span class="p">)</span>
@@ -952,8 +952,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    challengers : list</span>
-<span class="sd">        List of challengers (without interleaved random configurations)</span>
+<span class="sd">    challenger_callback : Callable</span>
+<span class="sd">        Callback function which returns a list of challengers (without interleaved random configurations, must a be a</span>
+<span class="sd">        closure: https://www.programiz.com/python-programming/closure)</span>
 
 <span class="sd">    configuration_space : ConfigurationSpace</span>
 <span class="sd">        ConfigurationSpace from which to sample new random configurations.</span>
@@ -961,20 +962,23 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">challenger_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
         <span class="n">configuration_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
         <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
     <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="n">challengers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">challengers_callback</span> <span class="o">=</span> <span class="n">challenger_callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[List[Configuration]]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span> <span class="o">=</span> <span class="n">configuration_space</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 1-based to prevent from starting with a random configuration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span>
 
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">StopIteration</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_configuration_chooser</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers_callback</span><span class="p">()</span>
             <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">config</span>
@@ -983,12 +987,16 @@
                 <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration_space</span><span class="o">.</span><span class="n">sample_configuration</span><span class="p">()</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;Random Search&#39;</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers_callback</span><span class="p">()</span>
                 <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_index</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_index</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">config</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">challengers_callback</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">challengers</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_index</span></div>
 
 

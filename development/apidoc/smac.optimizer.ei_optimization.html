@@ -381,7 +381,7 @@ is called at the end of this function</p></li>
 
 <dl class="class">
 <dt id="smac.optimizer.ei_optimization.ChallengerList">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">ChallengerList</code><span class="sig-paren">(</span><em class="sig-param">challengers: List[ConfigSpace.configuration_space.Configuration], configuration_space: ConfigSpace.configuration_space.ConfigurationSpace, random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#ChallengerList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.ChallengerList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.ei_optimization.</code><code class="sig-name descname">ChallengerList</code><span class="sig-paren">(</span><em class="sig-param">challenger_callback: Callable</em>, <em class="sig-param">configuration_space: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">random_configuration_chooser: Optional[smac.optimizer.random_configuration_chooser.RandomConfigurationChooser] = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/ei_optimization.html#ChallengerList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.ei_optimization.ChallengerList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Generic</span></code></p>
 <p>Helper class to interleave random configurations in a list of challengers.</p>
 <p>Provides an iterator which returns a random configuration in each second
@@ -391,7 +391,8 @@ in each iteration which are never looked at.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>challengers</strong> (<em>list</em>) – List of challengers (without interleaved random configurations)</p></li>
+<li><p><strong>challenger_callback</strong> (<em>Callable</em>) – Callback function which returns a list of challengers (without interleaved random configurations, must a be a
+closure: <a class="reference external" href="https://www.programiz.com/python-programming/closure">https://www.programiz.com/python-programming/closure</a>)</p></li>
 <li><p><strong>configuration_space</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – ConfigurationSpace from which to sample new random configurations.</p></li>
 </ul>
 </dd>
