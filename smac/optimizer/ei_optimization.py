@@ -5,7 +5,7 @@ import logging
 import time
 import numpy as np
 
-from typing import List, Union, Tuple, Optional, Set, Iterator
+from typing import List, Union, Tuple, Optional, Set, Iterator, Callable
 
 from smac.configspace import (
     get_one_exchange_neighbourhood,
@@ -88,7 +88,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         iterable
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
-        next_configs_by_acq_value = [t[1] for t in self._maximize(runhistory, stats, num_points)]
+        next_configs_by_acq_value = lambda: [t[1] for t in self._maximize(runhistory, stats, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value,
                                      self.config_space,
@@ -558,7 +558,6 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             An iterable consistng of
             tuple(acqusition_value, :class:`smac.configspace.Configuration`).
         """
-
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(
                 size=num_points)
@@ -671,8 +670,9 @@ class ChallengerList(Iterator):
 
     Parameters
     ----------
-    challengers : list
-        List of challengers (without interleaved random configurations)
+    challenger_callback : Callable
+        Callback function which returns a list of challengers (without interleaved random configurations, must a be a
+        closure: https://www.programiz.com/python-programming/closure)
 
     configuration_space : ConfigurationSpace
         ConfigurationSpace from which to sample new random configurations.
@@ -680,20 +680,23 @@ class ChallengerList(Iterator):
 
     def __init__(
         self,
-        challengers: List[Configuration],
+        challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
         random_configuration_chooser: Optional[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
     ):
-        self.challengers = challengers
+        self.challengers_callback = challenger_callback
+        self.challengers = None  # type: Optional[List[Configuration]]
         self.configuration_space = configuration_space
         self._index = 0
         self._iteration = 1  # 1-based to prevent from starting with a random configuration
         self.random_configuration_chooser = random_configuration_chooser
 
     def __next__(self) -> Configuration:
-        if self._index == len(self.challengers):
+        if self.challengers is not None and self._index == len(self.challengers):
             raise StopIteration
         elif self.random_configuration_chooser is None:
+            if self.challengers is None:
+                self.challengers = self.challengers_callback()
             config = self.challengers[self._index]
             self._index += 1
             return config
@@ -702,12 +705,16 @@ class ChallengerList(Iterator):
                 config = self.configuration_space.sample_configuration()
                 config.origin = 'Random Search'
             else:
+                if self.challengers is None:
+                    self.challengers = self.challengers_callback()
                 config = self.challengers[self._index]
                 self._index += 1
             self._iteration += 1
             return config
 
     def __len__(self) -> int:
+        if self.challengers is None:
+            self.challengers = self.challengers_callback()
         return len(self.challengers) - self._index
 
 
