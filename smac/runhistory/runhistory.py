@@ -91,6 +91,7 @@ class RunHistory(object):
     * If using instances as the budget, the average cost over all evaluated instances is returned.
     * Theoretically, the runhistory object can handle instances and budgets at the same time. This is
       neither used nor tested.
+    * Capped runs are not included in this cost.
 
     Note
     ----
@@ -137,7 +138,8 @@ class RunHistory(object):
         self.data = collections.OrderedDict()  # type: typing.Dict[RunKey, RunValue]
 
         # for fast access, we have also an unordered data structure
-        # to get all instance seed pairs of a configuration
+        # to get all instance seed pairs of a configuration.
+        # This does not include capped runs.
         self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]
 
         self.config_ids = {}  # type: typing.Dict[Configuration, int]
@@ -265,6 +267,10 @@ class RunHistory(object):
         """Store the performance of a configuration across the instances in
         self.cost_per_config and also updates self.runs_per_config;
 
+        Note
+        ----
+        This method ignores capped runs.
+
         Parameters
         ----------
         config: Configuration
@@ -315,6 +321,10 @@ class RunHistory(object):
     def get_runs_for_config(self,
                             config: Configuration, only_max_observed_budget: bool) -> typing.List[InstSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
+        
+        Note
+        ----
+        This method ignores capped runs.
 
         Parameters
         ----------
