@@ -321,7 +321,7 @@ class RunHistory(object):
     def get_runs_for_config(self,
                             config: Configuration, only_max_observed_budget: bool) -> typing.List[InstSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
-        
+
         Note
         ----
         This method ignores capped runs.

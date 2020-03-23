@@ -15,7 +15,7 @@ from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
-from smac.configspace import ConfigurationSpace, Configuration
+from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.utils import test_helpers
@@ -45,10 +45,7 @@ class TestEIMaximization(unittest.TestCase):
     @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
     @unittest.mock.patch.object(EI, '__call__')
     @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
-    def test_challenger_list_callback(self,
-                                              patch_sample,
-                                              patch_ei,
-                                              patch_impute):
+    def test_challenger_list_callback(self, patch_sample, patch_ei, patch_impute):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = ConfigurationMock(1)
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
@@ -108,7 +105,6 @@ class TestEIMaximization(unittest.TestCase):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].origin, 'Random Search')
             self.assertEqual(rval[i][0], 0)
-
 
 
 class TestLocalSearch(unittest.TestCase):

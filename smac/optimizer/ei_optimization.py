@@ -88,7 +88,8 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         iterable
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
-        next_configs_by_acq_value = lambda: [t[1] for t in self._maximize(runhistory, stats, num_points)]
+        def next_configs_by_acq_value() -> List[Configuration]:
+            return [t[1] for t in self._maximize(runhistory, stats, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value,
                                      self.config_space,
