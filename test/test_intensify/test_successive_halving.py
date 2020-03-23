@@ -586,6 +586,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=2, eta=2)
+        intensifier.stage = 0
 
         # SH considers challenger as incumbent in first run in eval_challenger
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -629,6 +630,8 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
             instances=[1], initial_budget=1)
+        intensifier.stage = 0
+
         # Adding a better configuration, but the incumbent will only be changed on budget=2
         self.rh.add(config=self.config4, cost=0.1, time=3,
                     status=StatusType.SUCCESS, instance_id=1, seed=None,
@@ -651,6 +654,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=2, eta=2, incumbent_selection='any_budget')
+        intensifier.stage = 0
 
         self.rh.add(config=self.config1, instance_id=1, seed=None, budget=1,
                     cost=0.5, time=1, status=StatusType.SUCCESS, additional_info=None)
@@ -673,21 +677,22 @@ class TestSuccessiveHalving(unittest.TestCase):
             tae_runner=None, stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=4, eta=2, incumbent_selection='highest_budget')
+        intensifier.stage = 0
 
         # incumbent should not change, since there is no run on the highest budget,
-        # though config1 is run on a higher budget
-        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=2,
+        # though config3 is run on a higher budget
+        self.rh.add(config=self.config3, instance_id=1, seed=None, budget=2,
                     cost=0.5, time=1, status=StatusType.SUCCESS, additional_info=None)
-        self.rh.add(config=self.config2, instance_id=1, seed=None, budget=1,
+        self.rh.add(config=self.config4, instance_id=1, seed=None, budget=1,
                     cost=5, time=1, status=StatusType.SUCCESS, additional_info=None)
-        inc = intensifier._compare_configs(incumbent=self.config2, challenger=self.config1,
+        inc = intensifier._compare_configs(incumbent=self.config4, challenger=self.config3,
                                            run_history=self.rh, log_traj=False)
-        self.assertEqual(self.config2, inc)
+        self.assertEqual(self.config4, inc)
         self.assertEqual(self.stats.inc_changed, 0)
 
-        # incumbent changes to config1 since that is run on the highest budget
-        self.rh.add(config=self.config1, instance_id=1, seed=None, budget=4,
+        # incumbent changes to config3 since that is run on the highest budget
+        self.rh.add(config=self.config3, instance_id=1, seed=None, budget=4,
                     cost=10, time=1, status=StatusType.SUCCESS, additional_info=None)
-        inc = intensifier._compare_configs(incumbent=self.config2, challenger=self.config1,
+        inc = intensifier._compare_configs(incumbent=self.config4, challenger=self.config3,
                                            run_history=self.rh, log_traj=False)
-        self.assertEqual(self.config1, inc)
+        self.assertEqual(self.config3, inc)

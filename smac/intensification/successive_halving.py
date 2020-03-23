@@ -89,10 +89,10 @@ class SuccessiveHalving(AbstractRacer):
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
-    incumbent_selection: typing.Optional[str]
-        How to select incumbent from successive halving. Only active for real-valued budgets.
-        Can be set to: [None, highest_budget, any_budget]
-        * None - incumbent is the best in the highest budget run so far (default)
+    incumbent_selection: str
+        How to select incumbent in successive halving. Only active for real-valued budgets.
+        Can be set to: [highest_executed_budget, highest_budget, any_budget]
+        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
@@ -116,7 +116,7 @@ class SuccessiveHalving(AbstractRacer):
                  adaptive_capping_slackfactor: float = 1.2,
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
-                 incumbent_selection: typing.Optional[str] = None,
+                 incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
 
         super().__init__(tae_runner=tae_runner,
@@ -188,6 +188,7 @@ class SuccessiveHalving(AbstractRacer):
             self.repeat_configs = False
 
         # incumbent selection design
+        assert incumbent_selection in ['highest_executed_budget', 'highest_budget', 'any_budget']
         self.incumbent_selection = incumbent_selection
 
         # Define state variables to please mypy
@@ -614,9 +615,9 @@ class SuccessiveHalving(AbstractRacer):
 
         # incumbent selection: highest budget only
         if self.incumbent_selection == 'highest_budget':
-            if chall_runs[0].budget < self.max_budget:
+            if chall_run.budget < self.max_budget:
                 self.logger.debug('Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.',
-                                  chall_runs[0].budget, self.max_budget)
+                                  chall_run.budget, self.max_budget)
                 return incumbent
 
         # incumbent selection: highest budget run so far
@@ -689,8 +690,8 @@ class SuccessiveHalving(AbstractRacer):
         curr_budget = self.all_budgets[self.stage]
 
         # compare challenger and incumbent based on cost
-        chall_cost = min(run_history.get_all_costs_for_config(challenger))
-        inc_cost = min(run_history.get_all_costs_for_config(incumbent))
+        chall_cost = run_history.get_min_cost(challenger)
+        inc_cost = run_history.get_min_cost(incumbent)
         if np.isfinite(chall_cost) and np.isfinite(inc_cost):
             if chall_cost < inc_cost:
                 self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) for any budget.",
