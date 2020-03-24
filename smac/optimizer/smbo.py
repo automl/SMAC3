@@ -227,7 +227,9 @@ class SMBO(object):
             if self.stats.is_budget_exhausted():
                 break
 
-            self.stats.print_stats(debug_out=True)
+            # print stats at the end of each intensification iteration
+            if self.intensifier.iteration_done:
+                self.stats.print_stats(debug_out=True)
 
         return self.incumbent
 
