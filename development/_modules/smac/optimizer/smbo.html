@@ -508,7 +508,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
                 <span class="k">break</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="n">debug_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># print stats at the end of each intensification iteration</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">iteration_done</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">(</span><span class="n">debug_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span></div>
 
