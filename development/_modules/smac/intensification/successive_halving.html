@@ -370,6 +370,12 @@
 <span class="sd">    min_chall: int</span>
 <span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will</span>
 <span class="sd">        raise an exception if a value larger than 1 is passed.</span>
+<span class="sd">    incumbent_selection: str</span>
+<span class="sd">        How to select incumbent in successive halving. Only active for real-valued budgets.</span>
+<span class="sd">        Can be set to: [highest_executed_budget, highest_budget, any_budget]</span>
+<span class="sd">        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)</span>
+<span class="sd">        * highest_budget - incumbent is selected only based on the highest budget</span>
+<span class="sd">        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -391,7 +397,8 @@
                  <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
                  <span class="n">inst_seed_pairs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="p">):</span>
+                 <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;highest_executed_budget&#39;</span><span class="p">,</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
                          <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
@@ -460,6 +467,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># incumbent selection design</span>
+        <span class="k">assert</span> <span class="n">incumbent_selection</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;highest_executed_budget&#39;</span><span class="p">,</span> <span class="s1">&#39;highest_budget&#39;</span><span class="p">,</span> <span class="s1">&#39;any_budget&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span> <span class="o">=</span> <span class="n">incumbent_selection</span>
 
         <span class="c1"># Define state variables to please mypy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
@@ -654,7 +665,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># capped/crashed configs</span>
 
-            <span class="c1"># get incumbent in the last stage if all instances have been evaluated</span>
+            <span class="c1"># get incumbent if all instances have been evaluated</span>
             <span class="k">if</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
@@ -836,7 +847,8 @@
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                          <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compares the challenger with current incumbent and returns the best configuration</span>
+<span class="sd">        Compares the challenger with current incumbent and returns the best configuration,</span>
+<span class="sd">        based on the given incumbent selection design.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -851,70 +863,142 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        typing.Tuple[Configuration, float]</span>
-<span class="sd">            incumbent and incumbent cost</span>
+<span class="sd">        typing.Optional[Configuration]</span>
+<span class="sd">            incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span><span class="p">:</span>
             <span class="n">new_incumbent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">,</span> <span class="n">run_history</span><span class="p">,</span> <span class="n">log_traj</span><span class="p">)</span>
             <span class="c1"># if compare config returned none, then it is undecided. So return old incumbent</span>
             <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span> <span class="k">if</span> <span class="n">new_incumbent</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">new_incumbent</span>
+            <span class="k">return</span> <span class="n">new_incumbent</span>
+
+        <span class="c1"># For real-valued budgets, compare configs based on the incumbent selection design</span>
+        <span class="n">curr_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span>
+
+        <span class="c1"># incumbent selection: best on any budget</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span> <span class="o">==</span> <span class="s1">&#39;any_budget&#39;</span><span class="p">:</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs_across_budgets</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+                                                                 <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+                                                                 <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
+                                                                 <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">new_incumbent</span>
+
+        <span class="c1"># get runs for both configurations</span>
+        <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">chall_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Number of incumbent runs on budget </span><span class="si">%f</span><span class="s1"> must not exceed 1, but is </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
+                             <span class="n">inc_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Number of challenger runs on budget </span><span class="si">%f</span><span class="s1"> must not exceed 1, but is </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
+                             <span class="n">chall_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">))</span>
+        <span class="n">inc_run</span> <span class="o">=</span> <span class="n">inc_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">chall_run</span> <span class="o">=</span> <span class="n">chall_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># incumbent selection: highest budget only</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span> <span class="o">==</span> <span class="s1">&#39;highest_budget&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Challenger (budget=</span><span class="si">%.4f</span><span class="s1">) has not been evaluated on the highest budget </span><span class="si">%.4f</span><span class="s1"> yet.&#39;</span><span class="p">,</span>
+                                  <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">incumbent</span>
+
+        <span class="c1"># incumbent selection: highest budget run so far</span>
+        <span class="k">if</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span> <span class="o">&gt;</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Incumbent evaluated on higher budget than challenger (</span><span class="si">%.4f</span><span class="s1"> &gt; </span><span class="si">%.4f</span><span class="s1">), &#39;</span>
+                              <span class="s1">&#39;not changing the incumbent&#39;</span><span class="p">,</span>
+                              <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">incumbent</span>
+        <span class="k">if</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span> <span class="o">&lt;</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Challenger evaluated on higher budget than incumbent (</span><span class="si">%.4f</span><span class="s1"> &gt; </span><span class="si">%.4f</span><span class="s1">), &#39;</span>
+                              <span class="s1">&#39;changing the incumbent&#39;</span><span class="p">,</span>
+                              <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
+                <span class="c1"># adding incumbent entry</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">new_inc_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">new_inc_cost</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">curr_budget</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">challenger</span>
+
+        <span class="c1"># compare challenger and incumbent based on cost</span>
+        <span class="n">chall_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+        <span class="n">inc_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">chall_cost</span> <span class="o">&lt;</span> <span class="n">inc_cost</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Challenger (</span><span class="si">%.4f</span><span class="s2">) is better than incumbent (</span><span class="si">%.4f</span><span class="s2">) on budget </span><span class="si">%.4f</span><span class="s2">.&quot;</span><span class="p">,</span>
+                             <span class="n">chall_cost</span><span class="p">,</span> <span class="n">inc_cost</span><span class="p">,</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">challenger</span>
+            <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
+                <span class="c1"># adding incumbent entry</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chall_cost</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">new_incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">curr_budget</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">inc_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">chall_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;Number of incumbent runs on budget </span><span class="si">%f</span><span class="s1"> must not exceed 1, but is </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">inc_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">inc_runs</span><span class="p">),</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;Number of challenger runs on budget </span><span class="si">%f</span><span class="s1"> must not exceed 1, but is </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">chall_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">),</span>
-                <span class="p">)</span>
-            <span class="n">inc_run</span> <span class="o">=</span> <span class="n">inc_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">chall_run</span> <span class="o">=</span> <span class="n">chall_runs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span> <span class="o">&gt;</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Incumbent evaluated on higher budget than challenger (</span><span class="si">%.4f</span><span class="s1"> &gt; </span><span class="si">%.4f</span><span class="s1">), &#39;</span>
-                                  <span class="s1">&#39;not changing the incumbent&#39;</span><span class="p">,</span>
-                                  <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
-                <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span>
-            <span class="k">elif</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span> <span class="o">&lt;</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Challenger evaluated on higher budget than incumbent (</span><span class="si">%.4f</span><span class="s1"> &gt; </span><span class="si">%.4f</span><span class="s1">), &#39;</span>
-                                  <span class="s1">&#39;changing the incumbent&#39;</span><span class="p">,</span>
-                                  <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the challenger (</span><span class="si">%.4f</span><span class="s2">) on budget </span><span class="si">%.4f</span><span class="s2">.&quot;</span><span class="p">,</span>
+                              <span class="n">inc_cost</span><span class="p">,</span> <span class="n">chall_cost</span><span class="p">,</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">log_traj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># adding incumbent entry</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">inc_cost</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">curr_budget</span><span class="p">)</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span>
+
+        <span class="k">return</span> <span class="n">new_incumbent</span></div>
+
+<div class="viewcode-block" id="SuccessiveHalving._compare_configs_across_budgets"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._compare_configs_across_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">_compare_configs_across_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                                        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                                        <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
+                                        <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compares challenger with current incumbent on any budget</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        challenger : Configuration</span>
+<span class="sd">            promising configuration</span>
+<span class="sd">        incumbent : Configuration</span>
+<span class="sd">            best configuration so far</span>
+<span class="sd">        run_history : smac.runhistory.runhistory.RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+<span class="sd">        log_traj : bool</span>
+<span class="sd">            whether to log changes of incumbents in trajectory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        typing.Optional[Configuration]</span>
+<span class="sd">            incumbent configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">curr_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span>
+
+        <span class="c1"># compare challenger and incumbent based on cost</span>
+        <span class="n">chall_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_min_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+        <span class="n">inc_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_min_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">chall_cost</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">inc_cost</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">chall_cost</span> <span class="o">&lt;</span> <span class="n">inc_cost</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Challenger (</span><span class="si">%.4f</span><span class="s2">) is better than incumbent (</span><span class="si">%.4f</span><span class="s2">) for any budget.&quot;</span><span class="p">,</span>
+                                 <span class="n">chall_cost</span><span class="p">,</span> <span class="n">inc_cost</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
                 <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">challenger</span>
                 <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
                     <span class="c1"># adding incumbent entry</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>
-                    <span class="n">new_inc_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">new_incumbent</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">new_inc_cost</span><span class="p">,</span>
-                                               <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
-                                               <span class="n">incumbent</span><span class="o">=</span><span class="n">new_incumbent</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chall_cost</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                               <span class="n">incumbent</span><span class="o">=</span><span class="n">new_incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">curr_budget</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">chall_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
-                <span class="n">inc_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">chall_cost</span> <span class="o">&lt;</span> <span class="n">inc_cost</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Challenger (</span><span class="si">%.4f</span><span class="s2">) is better than incumbent (</span><span class="si">%.4f</span><span class="s2">) on budget </span><span class="si">%.4f</span><span class="s2">.&quot;</span><span class="p">,</span>
-                                     <span class="n">chall_cost</span><span class="p">,</span> <span class="n">inc_cost</span><span class="p">,</span> <span class="n">chall_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_log_incumbent_changes</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">challenger</span><span class="p">)</span>
-                    <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">challenger</span>
-                    <span class="k">if</span> <span class="n">log_traj</span><span class="p">:</span>
-                        <span class="c1"># adding incumbent entry</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">chall_cost</span><span class="p">,</span>
-                                                   <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
-                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">new_incumbent</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the challenger (</span><span class="si">%.4f</span><span class="s2">) on budget </span><span class="si">%.4f</span><span class="s2">.&quot;</span><span class="p">,</span>
-                                      <span class="n">inc_cost</span><span class="p">,</span> <span class="n">chall_cost</span><span class="p">,</span> <span class="n">inc_run</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">log_traj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c1"># adding incumbent entry</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">inc_cost</span><span class="p">,</span>
-                                                   <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
-                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">)</span>
-                    <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Incumbent (</span><span class="si">%.4f</span><span class="s2">) is at least as good as the challenger (</span><span class="si">%.4f</span><span class="s2">) for any budget.&quot;</span><span class="p">,</span>
+                                  <span class="n">inc_cost</span><span class="p">,</span> <span class="n">chall_cost</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">log_traj</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># adding incumbent entry</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># first incumbent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">add_entry</span><span class="p">(</span><span class="n">train_perf</span><span class="o">=</span><span class="n">inc_cost</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">inc_changed</span><span class="p">,</span>
+                                               <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">curr_budget</span><span class="p">)</span>
+                <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Non-finite costs from run history!&#39;</span><span class="p">)</span>
+            <span class="n">new_incumbent</span> <span class="o">=</span> <span class="n">incumbent</span>
 
         <span class="k">return</span> <span class="n">new_incumbent</span></div>
 

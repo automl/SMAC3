@@ -290,7 +290,7 @@
 <span id="smac-intensification-successive-halving-module"></span><h1>smac.intensification.successive_halving module<a class="headerlink" href="#module-smac.intensification.successive_halving" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.intensification.successive_halving.SuccessiveHalving">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.successive_halving.</code><code class="sig-name descname">SuccessiveHalving</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[float] = None, deterministic: bool = False, initial_budget: Optional[float] = None, max_budget: Optional[float] = None, eta: float = 3, num_initial_challengers: Optional[int] = None, run_obj_time: bool = True, n_seeds: Optional[int] = None, instance_order: Optional[str] = 'shuffle_once', adaptive_capping_slackfactor: float = 1.2, inst_seed_pairs: Optional[List[Tuple[str, int]]] = None, min_chall: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.successive_halving.</code><code class="sig-name descname">SuccessiveHalving</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: Optional[float] = None, deterministic: bool = False, initial_budget: Optional[float] = None, max_budget: Optional[float] = None, eta: float = 3, num_initial_challengers: Optional[int] = None, run_obj_time: bool = True, n_seeds: Optional[int] = None, instance_order: Optional[str] = 'shuffle_once', adaptive_capping_slackfactor: float = 1.2, inst_seed_pairs: Optional[List[Tuple[str, int]]] = None, min_chall: int = 1, incumbent_selection: str = 'highest_executed_budget'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.abstract_racer.AbstractRacer</span></code></a></p>
 <p>Races multiple challengers against an incumbent using Successive Halving method</p>
 <p>Implementation following the description in
@@ -345,13 +345,19 @@ It can be used to control anything by the target algorithm, Eg: number of epochs
 <li><p><strong>inst_seed_pairs</strong> (<em>typing.List</em><em>[</em><em>typing.Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Do not set this argument, it will only be used by hyperband!</p></li>
 <li><p><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
 raise an exception if a value larger than 1 is passed.</p></li>
+<li><p><strong>incumbent_selection</strong> (<em>str</em>) – How to select incumbent in successive halving. Only active for real-valued budgets.
+Can be set to: [highest_executed_budget, highest_budget, any_budget]
+* highest_executed_budget - incumbent is the best in the highest budget run so far (default)
+* highest_budget - incumbent is selected only based on the highest budget
+* any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="method">
 <dt id="smac.intensification.successive_halving.SuccessiveHalving._compare_configs">
 <code class="sig-name descname">_compare_configs</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Optional[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._compare_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._compare_configs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compares the challenger with current incumbent and returns the best configuration</p>
+<dd><p>Compares the challenger with current incumbent and returns the best configuration,
+based on the given incumbent selection design.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -362,10 +368,32 @@ raise an exception if a value larger than 1 is passed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>incumbent and incumbent cost</p>
+<dd class="field-even"><p>incumbent configuration</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>typing.Tuple[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>, float]</p>
+<dd class="field-odd"><p>typing.Optional[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.intensification.successive_halving.SuccessiveHalving._compare_configs_across_budgets">
+<code class="sig-name descname">_compare_configs_across_budgets</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Optional[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#SuccessiveHalving._compare_configs_across_budgets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving.SuccessiveHalving._compare_configs_across_budgets" title="Permalink to this definition">¶</a></dt>
+<dd><p>compares challenger with current incumbent on any budget</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configuration</p></li>
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – best configuration so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>incumbent configuration</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Optional[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>]</p>
 </dd>
 </dl>
 </dd></dl>

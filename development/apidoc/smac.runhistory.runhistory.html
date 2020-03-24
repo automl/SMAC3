@@ -753,6 +753,24 @@ False otherwise</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.get_min_cost">
+<code class="sig-name descname">get_min_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_min_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_min_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the lowest empirical cost for a configuration, across all runs (budgets)</p>
+<p>See the class docstring for how the costs are computed. The costs are not re-computed, but are read from cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>min_cost</strong> – Computed cost for configuration</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
 <code class="sig-name descname">get_runs_for_config</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">only_max_observed_budget: bool</em><span class="sig-paren">)</span> &#x2192; List[smac.runhistory.runhistory.InstSeedBudgetKey]<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
@@ -802,6 +820,28 @@ moving average;</p>
 <li><p><strong>fn</strong> (<em>str</em>) – file name to load from</p></li>
 <li><p><strong>cs</strong> (<em>ConfigSpace</em>) – instance of configuration space</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory.RunHistory.min_cost">
+<code class="sig-name descname">min_cost</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance_seed_budget_keys: Optional[Iterable[smac.runhistory.runhistory.InstSeedBudgetKey]] = None</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.min_cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minimum cost of a configuration</p>
+<p>This is the minimum cost of all instance-seed pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Configuration to calculate objective for</p></li>
+<li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
+queried for all runs of the given configuration.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>min_cost</strong> – minimum cost of config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>

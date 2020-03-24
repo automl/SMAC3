@@ -296,7 +296,7 @@
 
 <span class="n">TrajEntry</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;TrajEntry&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;train_perf&#39;</span><span class="p">,</span> <span class="s1">&#39;incumbent_id&#39;</span><span class="p">,</span> <span class="s1">&#39;incumbent&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;ta_runs&#39;</span><span class="p">,</span> <span class="s1">&#39;ta_time_used&#39;</span><span class="p">,</span> <span class="s1">&#39;wallclock_time&#39;</span><span class="p">])</span>
+                  <span class="s1">&#39;ta_runs&#39;</span><span class="p">,</span> <span class="s1">&#39;ta_time_used&#39;</span><span class="p">,</span> <span class="s1">&#39;wallclock_time&#39;</span><span class="p">,</span> <span class="s1">&#39;budget&#39;</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="TrajLogger"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger">[docs]</a><span class="k">class</span> <span class="nc">TrajLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -355,8 +355,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[TrajEntry]</span>
 
-<div class="viewcode-block" id="TrajLogger.add_entry"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.add_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TrajLogger.add_entry"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.add_entry">[docs]</a>    <span class="k">def</span> <span class="nf">add_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                  <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                  <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                  <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to trajectory files (several formats) with using the</span>
 <span class="sd">        same timestamps for each entry</span>
 
@@ -368,22 +370,25 @@
 <span class="sd">            id of incumbent</span>
 <span class="sd">        incumbent: Configuration()</span>
 <span class="sd">            current incumbent configuration</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            budget used in intensifier to limit TA (default: 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ta_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span>
         <span class="n">ta_time_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span>
         <span class="n">wallclock_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_used_wallclock_time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajEntry</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                               <span class="n">ta_runs</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">))</span>
+                               <span class="n">ta_runs</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">,</span> <span class="n">budget</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_old_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                     <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_aclib_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                       <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_alljson_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_alljson_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="p">,</span>
                                         <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrajLogger._add_in_old_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_old_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_old_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                           <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                           <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                           <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                            <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to old SMAC2-like trajectory file</span>
 
@@ -417,7 +422,8 @@
             <span class="p">))</span></div>
 
 <div class="viewcode-block" id="TrajLogger._add_in_aclib_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_aclib_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_aclib_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                             <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                             <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                             <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                              <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to AClib2-like trajectory file</span>
 
@@ -453,7 +459,8 @@
             <span class="n">fp</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TrajLogger._add_in_alljson_format"><a class="viewcode-back" href="../../../../apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format">[docs]</a>    <span class="k">def</span> <span class="nf">_add_in_alljson_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_perf</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                               <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                               <span class="n">ta_time_used</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
                                <span class="n">wallclock_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds entries to AClib2-like (but with configs as json) trajectory file</span>
 
@@ -465,6 +472,8 @@
 <span class="sd">            Id of incumbent</span>
 <span class="sd">        incumbent: Configuration()</span>
 <span class="sd">            Current incumbent configuration</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            budget (cutoff) used in intensifier to limit TA (default: 0)</span>
 <span class="sd">        ta_time_used: float</span>
 <span class="sd">            CPU time used by the target algorithm</span>
 <span class="sd">        wallclock_time: float</span>
@@ -475,6 +484,7 @@
                       <span class="s2">&quot;evaluations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span>
                       <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="n">train_perf</span><span class="p">,</span>
                       <span class="s2">&quot;incumbent&quot;</span><span class="p">:</span> <span class="n">incumbent</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">(),</span>
+                      <span class="s2">&quot;budget&quot;</span><span class="p">:</span> <span class="n">budget</span><span class="p">,</span>
                       <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">incumbent</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
                       <span class="p">}</span>
 
@@ -505,6 +515,7 @@
 <span class="sd">            &quot;wallclock_time&quot;: float,</span>
 <span class="sd">            &quot;evaluations&quot;: int</span>
 <span class="sd">            &quot;cost&quot;: float,</span>
+<span class="sd">            &quot;budget&quot;: budget,</span>
 <span class="sd">            &quot;incumbent&quot;: Configuration</span>
 <span class="sd">            }</span>
 <span class="sd">        &quot;&quot;&quot;</span>

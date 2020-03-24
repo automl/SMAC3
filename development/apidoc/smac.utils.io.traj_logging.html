@@ -292,9 +292,9 @@
 <span id="smac-utils-io-traj-logging-module"></span><h1>smac.utils.io.traj_logging module<a class="headerlink" href="#module-smac.utils.io.traj_logging" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.utils.io.traj_logging.TrajEntry">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajEntry</code><span class="sig-paren">(</span><em class="sig-param">train_perf</em>, <em class="sig-param">incumbent_id</em>, <em class="sig-param">incumbent</em>, <em class="sig-param">ta_runs</em>, <em class="sig-param">ta_time_used</em>, <em class="sig-param">wallclock_time</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajEntry</code><span class="sig-paren">(</span><em class="sig-param">train_perf</em>, <em class="sig-param">incumbent_id</em>, <em class="sig-param">incumbent</em>, <em class="sig-param">ta_runs</em>, <em class="sig-param">ta_time_used</em>, <em class="sig-param">wallclock_time</em>, <em class="sig-param">budget</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of TrajEntry(train_perf, incumbent_id, incumbent, ta_runs, ta_time_used, wallclock_time)</p>
+<p>Create new instance of TrajEntry(train_perf, incumbent_id, incumbent, ta_runs, ta_time_used, wallclock_time, budget)</p>
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajEntry._asdict">
 <code class="sig-name descname">_asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._asdict" title="Permalink to this definition">¶</a></dt>
@@ -308,7 +308,7 @@
 
 <dl class="attribute">
 <dt id="smac.utils.io.traj_logging.TrajEntry._fields">
-<code class="sig-name descname">_fields</code><em class="property"> = ('train_perf', 'incumbent_id', 'incumbent', 'ta_runs', 'ta_time_used', 'wallclock_time')</em><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_fields</code><em class="property"> = ('train_perf', 'incumbent_id', 'incumbent', 'ta_runs', 'ta_time_used', 'wallclock_time', 'budget')</em><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -326,6 +326,12 @@
 <dt id="smac.utils.io.traj_logging.TrajEntry._replace">
 <code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new TrajEntry object replacing specified fields with new values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.utils.io.traj_logging.TrajEntry.budget">
+<em class="property">property </em><code class="sig-name descname">budget</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.budget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 6</p>
 </dd></dl>
 
 <dl class="method">
@@ -429,7 +435,7 @@
 
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format">
-<code class="sig-name descname">_add_in_alljson_format</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">ta_time_used: float</em>, <em class="sig-param">wallclock_time: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_in_alljson_format</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">budget: float</em>, <em class="sig-param">ta_time_used: float</em>, <em class="sig-param">wallclock_time: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to AClib2-like (but with configs as json) trajectory file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -437,6 +443,7 @@
 <li><p><strong>train_perf</strong> (<em>float</em>) – Estimated performance on training (sub)set</p></li>
 <li><p><strong>incumbent_id</strong> (<em>int</em>) – Id of incumbent</p></li>
 <li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>(</em><em>)</em>) – Current incumbent configuration</p></li>
+<li><p><strong>budget</strong> (<em>float</em>) – budget (cutoff) used in intensifier to limit TA (default: 0)</p></li>
 <li><p><strong>ta_time_used</strong> (<em>float</em>) – CPU time used by the target algorithm</p></li>
 <li><p><strong>wallclock_time</strong> (<em>float</em>) – Wallclock time used so far</p></li>
 </ul>
@@ -478,7 +485,7 @@ try to figure out the type (int, float, str) of each parameter value</p>
 
 <dl class="method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.add_entry">
-<code class="sig-name descname">add_entry</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_entry</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">budget: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to trajectory files (several formats) with using the
 same timestamps for each entry</p>
 <dl class="field-list simple">
@@ -487,6 +494,7 @@ same timestamps for each entry</p>
 <li><p><strong>train_perf</strong> (<em>float</em>) – estimated performance on training (sub)set</p></li>
 <li><p><strong>incumbent_id</strong> (<em>int</em>) – id of incumbent</p></li>
 <li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>(</em><em>)</em>) – current incumbent configuration</p></li>
+<li><p><strong>budget</strong> (<em>float</em>) – budget used in intensifier to limit TA (default: 0)</p></li>
 </ul>
 </dd>
 </dl>
@@ -537,6 +545,7 @@ same timestamps for each entry</p>
 “wallclock_time”: float,
 “evaluations”: int
 “cost”: float,
+“budget”: budget,
 “incumbent”: Configuration
 }</p>
 </dd>
