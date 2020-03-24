@@ -110,17 +110,14 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(frmt_str % 0.5, data[0][0])
         self.assertEquals(frmt_str % 0.9, data[0][1])
         self.assertEquals(frmt_str % 0.5, data[0][4])
-        self.assertEquals(frmt_str % 0.0, data[0][5])
 
         self.assertEquals(frmt_str % 0, data[1][0])
         self.assertEquals(frmt_str % 1.3, data[1][1])
         self.assertEquals(frmt_str % 2, data[1][4])
-        self.assertEquals(frmt_str % 10, data[1][5])
 
         self.assertEquals(frmt_str % 0, data[2][0])
         self.assertEquals(frmt_str % .7, data[2][1])
         self.assertEquals(frmt_str % 3, data[2][4])
-        self.assertEquals(frmt_str % 10, data[2][5])
 
         # Check aclib2-format
         self.assertEquals(json_dicts_aclib2[0]['cpu_time'], .5)
@@ -135,6 +132,8 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dicts_alljson[0]['incumbent']), 4)
         self.assertTrue(json_dicts_alljson[0]["incumbent"]["param_a"] == 0.5)
         self.assertTrue(json_dicts_alljson[2]["incumbent"]["param_a"] == 0.0)
+        self.assertEqual(json_dicts_alljson[0]['budget'], 0)
+        self.assertEqual(json_dicts_alljson[2]['budget'], 10)
 
     @patch('smac.stats.stats.Stats')
     def test_ambigious_categoricals(self, mock_stats):

@@ -98,15 +98,15 @@ class TrajLogger(object):
         self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
                                ta_runs, ta_time_used, wallclock_time, budget))
         if self.output_dir is not None:
-            self._add_in_old_format(train_perf, incumbent_id, incumbent, budget,
+            self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
-            self._add_in_aclib_format(train_perf, incumbent_id, incumbent, budget,
+            self._add_in_aclib_format(train_perf, incumbent_id, incumbent,
                                       ta_time_used, wallclock_time)
             self._add_in_alljson_format(train_perf, incumbent_id, incumbent, budget,
                                         ta_time_used, wallclock_time)
 
     def _add_in_old_format(self, train_perf: float, incumbent_id: int,
-                           incumbent: Configuration, budget: float,
+                           incumbent: Configuration,
                            ta_time_used: float,
                            wallclock_time: float) -> None:
         """Adds entries to old SMAC2-like trajectory file
@@ -119,8 +119,6 @@ class TrajLogger(object):
             Id of incumbent
         incumbent: Configuration()
             Current incumbent configuration
-        budget: float
-            budget (cutoff) used in intensifier to limit TA (default: 0)
         ta_time_used: float
             CPU time used by the target algorithm
         wallclock_time: float
@@ -133,18 +131,17 @@ class TrajLogger(object):
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         with open(self.old_traj_fn, "a") as fp:
-            fp.write("%f, %f, %f, %d, %f, %f, %s\n" % (
+            fp.write("%f, %f, %f, %d, %f, %s\n" % (
                 ta_time_used,
                 train_perf,
                 wallclock_time,
                 incumbent_id,
                 wallclock_time - ta_time_used,
-                budget,
                 ", ".join(conf)
             ))
 
     def _add_in_aclib_format(self, train_perf: float, incumbent_id: int,
-                             incumbent: Configuration, budget: float,
+                             incumbent: Configuration,
                              ta_time_used: float,
                              wallclock_time: float) -> None:
         """Adds entries to AClib2-like trajectory file
@@ -157,8 +154,6 @@ class TrajLogger(object):
             Id of incumbent
         incumbent: Configuration()
             Current incumbent configuration
-        budget: float
-            budget (cutoff) used in intensifier to limit TA (default: 0)
         ta_time_used: float
             CPU time used by the target algorithm
         wallclock_time: float
@@ -175,7 +170,6 @@ class TrajLogger(object):
                       "evaluations": self.stats.ta_runs,
                       "cost": train_perf,
                       "incumbent": conf,
-                      "budget": budget,
                       "origin": incumbent.origin,
                       }
 
@@ -277,7 +271,6 @@ class TrajLogger(object):
             "wallclock_time": float,
             "evaluations": int
             "cost": float,
-            "budget": budget,
             "incumbent": Configuration
             }
         """
