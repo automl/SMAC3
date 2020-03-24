@@ -158,12 +158,12 @@ class RunhistoryTest(unittest.TestCase):
 
         rh.compute_all_costs()
         updated_cost_config2 = rh.get_cost(config2)
-        self.assertTrue(cost_config2 == updated_cost_config2)
+        self.assertEqual(cost_config2, updated_cost_config2)
 
         rh.compute_all_costs(instances=[2])
         updated_cost_config2 = rh.get_cost(config2)
-        self.assertTrue(cost_config2 != updated_cost_config2)
-        self.assertTrue(updated_cost_config2 == 20)
+        self.assertNotEqual(cost_config2, updated_cost_config2)
+        self.assertEqual(updated_cost_config2, 20)
 
     def test_incremental_update(self):
 
@@ -176,13 +176,13 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.SUCCESS, instance_id=1,
                seed=1)
 
-        self.assertTrue(rh.get_cost(config1) == 10)
+        self.assertEqual(rh.get_cost(config1), 10)
 
         rh.add(config=config1, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=2,
                seed=1)
 
-        self.assertTrue(rh.get_cost(config1) == 15)
+        self.assertEqual(rh.get_cost(config1), 15)
 
     def test_multiple_budgets(self):
 
@@ -195,14 +195,15 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.SUCCESS, instance_id=1,
                seed=1, budget=1)
 
-        self.assertTrue(rh.get_cost(config1) == 10)
+        self.assertEqual(rh.get_cost(config1), 10)
 
         # only the higher budget gets included in the config cost
         rh.add(config=config1, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=1,
                seed=1, budget=2)
 
-        self.assertTrue(rh.get_cost(config1) == 20)
+        self.assertEqual(rh.get_cost(config1), 20)
+        self.assertEqual(rh.get_min_cost(config1), 10)
 
     def test_get_configs_per_budget(self):
 

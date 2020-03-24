@@ -4,7 +4,6 @@ Created on Apr 25, 2015
 @author: Andre Biedenkapp
 '''
 import tempfile
-import unittest
 import logging
 import json
 import os
@@ -71,21 +70,22 @@ class TrajLoggerTest(unittest.TestCase):
             tl = TrajLogger(output_dir=tmpdir, stats=mock_stats)
 
             # Add some entries
-            tl.add_entry(0.9, 1, self.test_config)
+            tl.add_entry(0.9, 1, self.test_config, 0)
             mock_stats.ta_runs = 2
             mock_stats.ta_time_used = 0
-            tl.add_entry(1.3, 1, self.test_config)
+            tl.add_entry(1.3, 1, self.test_config, 10)
             mock_stats.ta_time_used = 0
-            tl.add_entry(0.7, 2, Configuration(self.cs, dict(self.test_config.get_dictionary(), **{'param_a': 0.})))
+            tl.add_entry(0.7, 2, Configuration(self.cs, dict(self.test_config.get_dictionary(), **{'param_a': 0.})), 10)
 
             # Test the list that's added to the trajectory class
-            self.assertEqual(tl.trajectory[0], TrajEntry(0.9, 1, self.test_config, 1, 0.5, 1))
+            self.assertEqual(tl.trajectory[0], TrajEntry(0.9, 1, self.test_config, 1, 0.5, 1, 0))
             # Test named-tuple-access:
             self.assertEqual(tl.trajectory[0].train_perf, 0.9)
             self.assertEqual(tl.trajectory[0].incumbent_id, 1)
             self.assertEqual(tl.trajectory[0].ta_runs, 1)
             self.assertEqual(tl.trajectory[0].ta_time_used, 0.5)
             self.assertEqual(tl.trajectory[0].wallclock_time, 1)
+            self.assertEqual(tl.trajectory[0].budget, 0)
             self.assertEqual(len(tl.trajectory), 3)
 
             # Check if the trajectories are generated
@@ -109,15 +109,15 @@ class TrajLoggerTest(unittest.TestCase):
         frmt_str = '%1.6f'
         self.assertEquals(frmt_str % 0.5, data[0][0])
         self.assertEquals(frmt_str % 0.9, data[0][1])
-        self.assertEquals(frmt_str % 0.5, data[0][-5])
+        self.assertEquals(frmt_str % 0.5, data[0][4])
 
         self.assertEquals(frmt_str % 0, data[1][0])
         self.assertEquals(frmt_str % 1.3, data[1][1])
-        self.assertEquals(frmt_str % 2, data[1][-5])
+        self.assertEquals(frmt_str % 2, data[1][4])
 
         self.assertEquals(frmt_str % 0, data[2][0])
         self.assertEquals(frmt_str % .7, data[2][1])
-        self.assertEquals(frmt_str % 3, data[2][-5])
+        self.assertEquals(frmt_str % 3, data[2][4])
 
         # Check aclib2-format
         self.assertEquals(json_dicts_aclib2[0]['cpu_time'], .5)
@@ -132,6 +132,8 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEquals(len(json_dicts_alljson[0]['incumbent']), 4)
         self.assertTrue(json_dicts_alljson[0]["incumbent"]["param_a"] == 0.5)
         self.assertTrue(json_dicts_alljson[2]["incumbent"]["param_a"] == 0.0)
+        self.assertEqual(json_dicts_alljson[0]['budget'], 0)
+        self.assertEqual(json_dicts_alljson[2]['budget'], 10)
 
     @patch('smac.stats.stats.Stats')
     def test_ambigious_categoricals(self, mock_stats):

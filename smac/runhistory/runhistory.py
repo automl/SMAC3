@@ -148,6 +148,8 @@ class RunHistory(object):
 
         # Stores cost for each configuration ID
         self._cost_per_config = {}  # type: typing.Dict[int, float]
+        # Stores min cost across all budgets for each configuration ID
+        self._min_cost_per_config = {}  # type: typing.Dict[int, float]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
         self.num_runs_per_config = {}  # type: typing.Dict[int, int]
@@ -276,12 +278,14 @@ class RunHistory(object):
         config: Configuration
             configuration to update cost based on all runs in runhistory
         """
+        config_id = self.config_ids[config]
         # removing duplicates while keeping the order
         inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
-        perf = self.average_cost(config, inst_seed_budgets)
-        config_id = self.config_ids[config]
-        self._cost_per_config[config_id] = perf
+        self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self.num_runs_per_config[config_id] = len(inst_seed_budgets)
+
+        all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
+        self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
     def incremental_update_cost(self, config: Configuration, cost: float) -> None:
         """Incrementally updates the performance of a configuration by using a
@@ -379,6 +383,23 @@ class RunHistory(object):
             if b in budget_subset:
                 configs.append(self.ids_config[c])
         return configs
+
+    def get_min_cost(self, config: Configuration) -> float:
+        """Returns the lowest empirical cost for a configuration, across all runs (budgets)
+
+        See the class docstring for how the costs are computed. The costs are not re-computed, but are read from cache.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        min_cost: float
+            Computed cost for configuration
+        """
+        config_id = self.config_ids.get(config)
+        return self._min_cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
     def empty(self) -> bool:
         """Check whether or not the RunHistory is empty.
@@ -601,6 +622,30 @@ class RunHistory(object):
         """
         return float(np.sum(self._cost(config, instance_seed_budget_keys)))
 
+    def min_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
+    ) -> float:
+        """Return the minimum cost of a configuration
+
+        This is the minimum cost of all instance-seed pairs.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
+
+        Returns
+        ----------
+        min_cost: float
+            minimum cost of config
+        """
+        return float(np.min(self._cost(config, instance_seed_budget_keys)))
+
     def compute_all_costs(self, instances: typing.Optional[typing.List[str]] = None) -> None:
         """Computes the cost of all configurations from scratch and overwrites
         self.cost_perf_config and self.runs_per_config accordingly;
@@ -627,8 +672,8 @@ class RunHistory(object):
                 )
 
             if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
-                perf = self.average_cost(config, inst_seed_budgets)
-                self._cost_per_config[config_id] = perf
+                self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
+                self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
                 self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
     def get_instance_costs_for_config(self, config: Configuration) -> typing.Dict[str, typing.List[float]]:

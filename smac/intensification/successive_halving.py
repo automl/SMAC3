@@ -89,6 +89,12 @@ class SuccessiveHalving(AbstractRacer):
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
+    incumbent_selection: str
+        How to select incumbent in successive halving. Only active for real-valued budgets.
+        Can be set to: [highest_executed_budget, highest_budget, any_budget]
+        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
+        * highest_budget - incumbent is selected only based on the highest budget
+        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
 
     def __init__(self,
@@ -110,7 +116,8 @@ class SuccessiveHalving(AbstractRacer):
                  adaptive_capping_slackfactor: float = 1.2,
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
-                 ):
+                 incumbent_selection: str = 'highest_executed_budget',
+                 ) -> None:
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -179,6 +186,10 @@ class SuccessiveHalving(AbstractRacer):
             self.repeat_configs = True
         else:
             self.repeat_configs = False
+
+        # incumbent selection design
+        assert incumbent_selection in ['highest_executed_budget', 'highest_budget', 'any_budget']
+        self.incumbent_selection = incumbent_selection
 
         # Define state variables to please mypy
         self.curr_inst_idx = 0
@@ -373,7 +384,7 @@ class SuccessiveHalving(AbstractRacer):
             else:
                 self.fail_challengers.add(challenger)  # capped/crashed configs
 
-            # get incumbent in the last stage if all instances have been evaluated
+            # get incumbent if all instances have been evaluated
             if n_insts_remaining <= 0:
                 incumbent = self._compare_configs(challenger=challenger,
                                                   incumbent=incumbent,
@@ -555,7 +566,8 @@ class SuccessiveHalving(AbstractRacer):
                          run_history: RunHistory,
                          log_traj: bool = True) -> typing.Optional[Configuration]:
         """
-        Compares the challenger with current incumbent and returns the best configuration
+        Compares the challenger with current incumbent and returns the best configuration,
+        based on the given incumbent selection design.
 
         Parameters
         ----------
@@ -570,70 +582,142 @@ class SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        typing.Tuple[Configuration, float]
-            incumbent and incumbent cost
+        typing.Optional[Configuration]
+            incumbent configuration
         """
 
         if self.instance_as_budget:
             new_incumbent = super()._compare_configs(incumbent, challenger, run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
+            return new_incumbent
+
+        # For real-valued budgets, compare configs based on the incumbent selection design
+        curr_budget = self.all_budgets[self.stage]
+
+        # incumbent selection: best on any budget
+        if self.incumbent_selection == 'any_budget':
+            new_incumbent = self._compare_configs_across_budgets(challenger=challenger,
+                                                                 incumbent=incumbent,
+                                                                 run_history=run_history,
+                                                                 log_traj=log_traj)
+            return new_incumbent
+
+        # get runs for both configurations
+        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
+
+        if len(inc_runs) > 1:
+            raise ValueError('Number of incumbent runs on budget %f must not exceed 1, but is %d',
+                             inc_runs[0].budget, len(inc_runs))
+        if len(chall_runs) > 1:
+            raise ValueError('Number of challenger runs on budget %f must not exceed 1, but is %d',
+                             chall_runs[0].budget, len(chall_runs))
+        inc_run = inc_runs[0]
+        chall_run = chall_runs[0]
+
+        # incumbent selection: highest budget only
+        if self.incumbent_selection == 'highest_budget':
+            if chall_run.budget < self.max_budget:
+                self.logger.debug('Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.',
+                                  chall_run.budget, self.max_budget)
+                return incumbent
+
+        # incumbent selection: highest budget run so far
+        if inc_run.budget > chall_run.budget:
+            self.logger.debug('Incumbent evaluated on higher budget than challenger (%.4f > %.4f), '
+                              'not changing the incumbent',
+                              inc_run.budget, chall_run.budget)
+            return incumbent
+        if inc_run.budget < chall_run.budget:
+            self.logger.debug('Challenger evaluated on higher budget than incumbent (%.4f > %.4f), '
+                              'changing the incumbent',
+                              chall_run.budget, inc_run.budget)
+            if log_traj:
+                # adding incumbent entry
+                self.stats.inc_changed += 1
+                new_inc_cost = run_history.get_cost(challenger)
+                self.traj_logger.add_entry(train_perf=new_inc_cost, incumbent_id=self.stats.inc_changed,
+                                           incumbent=challenger, budget=curr_budget)
+            return challenger
+
+        # compare challenger and incumbent based on cost
+        chall_cost = run_history.get_cost(challenger)
+        inc_cost = run_history.get_cost(incumbent)
+        if chall_cost < inc_cost:
+            self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
+                             chall_cost, inc_cost, chall_run.budget)
+            self._log_incumbent_changes(incumbent, challenger)
+            new_incumbent = challenger
+            if log_traj:
+                # adding incumbent entry
+                self.stats.inc_changed += 1  # first incumbent
+                self.traj_logger.add_entry(train_perf=chall_cost, incumbent_id=self.stats.inc_changed,
+                                           incumbent=new_incumbent, budget=curr_budget)
         else:
-            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
-            if len(inc_runs) > 1:
-                raise ValueError(
-                    'Number of incumbent runs on budget %f must not exceed 1, but is %d',
-                    inc_runs[0].budget, len(inc_runs),
-                )
-            if len(chall_runs) > 1:
-                raise ValueError(
-                    'Number of challenger runs on budget %f must not exceed 1, but is %d',
-                    chall_runs[0].budget, len(chall_runs),
-                )
-            inc_run = inc_runs[0]
-            chall_run = chall_runs[0]
-            if inc_run.budget > chall_run.budget:
-                self.logger.debug('Incumbent evaluated on higher budget than challenger (%.4f > %.4f), '
-                                  'not changing the incumbent',
-                                  inc_run.budget, chall_run.budget)
-                new_incumbent = incumbent
-            elif inc_run.budget < chall_run.budget:
-                self.logger.debug('Challenger evaluated on higher budget than incumbent (%.4f > %.4f), '
-                                  'changing the incumbent',
-                                  chall_run.budget, inc_run.budget)
+            self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
+                              inc_cost, chall_cost, inc_run.budget)
+            if log_traj and self.stats.inc_changed == 0:
+                # adding incumbent entry
+                self.stats.inc_changed += 1  # first incumbent
+                self.traj_logger.add_entry(train_perf=inc_cost, incumbent_id=self.stats.inc_changed,
+                                           incumbent=incumbent, budget=curr_budget)
+            new_incumbent = incumbent
+
+        return new_incumbent
+
+    def _compare_configs_across_budgets(self,
+                                        challenger: Configuration,
+                                        incumbent: Configuration,
+                                        run_history: RunHistory,
+                                        log_traj: bool = True) -> typing.Optional[Configuration]:
+        """
+        compares challenger with current incumbent on any budget
+
+        Parameters
+        ----------
+        challenger : Configuration
+            promising configuration
+        incumbent : Configuration
+            best configuration so far
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        log_traj : bool
+            whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        typing.Optional[Configuration]
+            incumbent configuration
+        """
+        curr_budget = self.all_budgets[self.stage]
+
+        # compare challenger and incumbent based on cost
+        chall_cost = run_history.get_min_cost(challenger)
+        inc_cost = run_history.get_min_cost(incumbent)
+        if np.isfinite(chall_cost) and np.isfinite(inc_cost):
+            if chall_cost < inc_cost:
+                self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) for any budget.",
+                                 chall_cost, inc_cost)
+                self._log_incumbent_changes(incumbent, challenger)
                 new_incumbent = challenger
                 if log_traj:
                     # adding incumbent entry
-                    self.stats.inc_changed += 1
-                    new_inc_cost = run_history.get_cost(new_incumbent)
-                    self.traj_logger.add_entry(train_perf=new_inc_cost,
-                                               incumbent_id=self.stats.inc_changed,
-                                               incumbent=new_incumbent)
+                    self.stats.inc_changed += 1  # first incumbent
+                    self.traj_logger.add_entry(train_perf=chall_cost, incumbent_id=self.stats.inc_changed,
+                                               incumbent=new_incumbent, budget=curr_budget)
             else:
-                chall_cost = run_history.get_cost(challenger)
-                inc_cost = run_history.get_cost(incumbent)
-                if chall_cost < inc_cost:
-                    self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
-                                     chall_cost, inc_cost, chall_run.budget)
-                    self._log_incumbent_changes(incumbent, challenger)
-                    new_incumbent = challenger
-                    if log_traj:
-                        # adding incumbent entry
-                        self.stats.inc_changed += 1  # first incumbent
-                        self.traj_logger.add_entry(train_perf=chall_cost,
-                                                   incumbent_id=self.stats.inc_changed,
-                                                   incumbent=new_incumbent)
-                else:
-                    self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
-                                      inc_cost, chall_cost, inc_run.budget)
-                    if log_traj and self.stats.inc_changed == 0:
-                        # adding incumbent entry
-                        self.stats.inc_changed += 1  # first incumbent
-                        self.traj_logger.add_entry(train_perf=inc_cost,
-                                                   incumbent_id=self.stats.inc_changed,
-                                                   incumbent=incumbent)
-                    new_incumbent = incumbent
+                self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) for any budget.",
+                                  inc_cost, chall_cost)
+                if log_traj and self.stats.inc_changed == 0:
+                    # adding incumbent entry
+                    self.stats.inc_changed += 1  # first incumbent
+                    self.traj_logger.add_entry(train_perf=inc_cost, incumbent_id=self.stats.inc_changed,
+                                               incumbent=incumbent, budget=curr_budget)
+                new_incumbent = incumbent
+        else:
+            self.logger.debug('Non-finite costs from run history!')
+            new_incumbent = incumbent
 
         return new_incumbent
 
