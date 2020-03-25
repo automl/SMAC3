@@ -620,7 +620,6 @@ class Intensifier(AbstractRacer):
         """
         # track iterations
         self.n_iters += 1
-        self.iteration_started = False
         self.iteration_done = True
         self.configs_to_run = iter([])
         self.update_configs_to_run = True
