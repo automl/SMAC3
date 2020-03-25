@@ -55,7 +55,7 @@ class SMACCLI(object):
                 "%(levelname)s:\t%(message)s")
         else:
             formatter = logging.Formatter(
-                "%(asctime)s:%(levelname)s:%(name)s:%(message)s",
+                "%(asctime)s:%(levelname)s:%(name)s:\t%(message)s",
                 "%Y-%m-%d %H:%M:%S")
         logger_handler.setFormatter(formatter)
         root_logger.addHandler(logger_handler)
