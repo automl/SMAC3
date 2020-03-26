@@ -44,7 +44,10 @@ class RunhistoryTest(unittest.TestCase):
                                      values={'a': 100, 'b': 0})
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
-
+        self.config4 = Configuration(self.cs,
+                                     values={'a': 23, 'b': 23})
+        self.config5 = Configuration(self.cs,
+                                     values={'a': 5, 'b': 10})
         self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20,
                               'cs': self.cs})
         self.types, self.bounds = get_types(self.cs, None)
@@ -378,6 +381,50 @@ class RunhistoryTest(unittest.TestCase):
         X, y = rh2epm.transform(self.rh, budget_subset=[2])
         self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
         self.assertTrue(np.allclose(y, np.array([[2]])))
+
+    def test_run_selection(self):
+        '''
+            adding some rundata and check budget selection
+        '''
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=1,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=2, time=2,
+                    status=StatusType.CRASHED, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.MEMOUT, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=4, time=4,
+                    status=StatusType.CONVERGED, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+        self.rh.add(config=self.config5, cost=5, time=5,
+                    status=StatusType.TIMEOUT, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+
+        for s, v in [(StatusType.SUCCESS, 1), (StatusType.CRASHED, 2), (StatusType.MEMOUT, 3),
+                     (StatusType.CONVERGED, 4), (StatusType.TIMEOUT, 5), ]:
+            rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                        success_states=[s, ],
+                                                        impute_censored_data=False,
+                                                        scenario=self.scen)
+            X, y = rh2epm.transform(self.rh, budget_subset=None)
+            self.assertTrue(np.allclose(y, np.array([[v]])))
+
+        for s, v in [(StatusType.SUCCESS, [1, 4]), (StatusType.CRASHED, [4, ]),
+                     (StatusType.MEMOUT, [4, ]), (StatusType.CONVERGED, [4, ]),
+                     (StatusType.TIMEOUT, [4, ]), ]:
+            rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                        success_states=[s, ],
+                                                        impute_censored_data=False,
+                                                        scenario=self.scen)
+            X, y = rh2epm.transform(self.rh, budget_subset=[1])
+            self.assertListEqual(list(y.flatten()), list(v))
 
 
 if __name__ == "__main__":
