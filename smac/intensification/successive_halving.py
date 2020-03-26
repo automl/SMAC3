@@ -194,7 +194,7 @@ class SuccessiveHalving(AbstractRacer):
         # Define state variables to please mypy
         self.curr_inst_idx = 0
         self.running_challenger = None
-        self.curr_challengers = set()  # type: typing.Set[Configuration]
+        self.success_challengers = set()  # type: typing.Set[Configuration]
         self.fail_challengers = set()  # type: typing.Set[Configuration]
         self.fail_chal_offset = 0
 
@@ -379,7 +379,7 @@ class SuccessiveHalving(AbstractRacer):
             # If a configuration is successful, it is added to curr_challengers.
             # if it fails it is added to fail_challengers.
             if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
-                self.curr_challengers.add(challenger)  # successful configs
+                self.success_challengers.add(challenger)  # successful configs
             else:
                 self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
 
@@ -395,7 +395,7 @@ class SuccessiveHalving(AbstractRacer):
                               "Interrupting optimization run and returning current incumbent")
 
         # if all configurations for the current stage have been evaluated, reset stage
-        num_chal_evaluated = len(self.curr_challengers.union(self.fail_challengers)) + self.fail_chal_offset
+        num_chal_evaluated = len(self.success_challengers.union(self.fail_challengers)) + self.fail_chal_offset
         if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
 
             self.logger.info('Successive Halving iteration-step: %d-%d with '
@@ -507,14 +507,14 @@ class SuccessiveHalving(AbstractRacer):
             self.configs_to_run = []  # type: typing.List[Configuration]
             self.curr_inst_idx = 0
             self.running_challenger = None
-            self.curr_challengers = set()  # successful configs
+            self.success_challengers = set()  # successful configs
             self.fail_challengers = set()  # capped configs
             self.fail_chal_offset = 0
 
         else:
             self.stage += 1
             # only uncapped challengers are considered valid for the next iteration
-            valid_challengers = list(self.curr_challengers - self.fail_challengers)
+            valid_challengers = list(self.success_challengers - self.fail_challengers)
 
             if self.stage < len(self.all_budgets) and \
                     len(valid_challengers) > 0:
@@ -554,7 +554,7 @@ class SuccessiveHalving(AbstractRacer):
                     self.rs.shuffle(self.inst_seed_pairs)
 
         # to track configurations for the next stage
-        self.curr_challengers = set()  # successful configs
+        self.success_challengers = set()  # successful configs
         self.fail_challengers = set()  # capped/failed configs
         self.curr_inst_idx = 0
         self.running_challenger = None
