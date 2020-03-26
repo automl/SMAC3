@@ -191,6 +191,10 @@ class AbstractRunHistory2EPM(object):
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                           if run.budget in budget_subset and
                           runhistory.data[run].status in self.success_states}
+            # Also add converged runs from all budgets
+            add = {run: runhistory.data[run] for run in runhistory.data.keys()
+                   if runhistory.data[run].status == StatusType.CONVERGED}
+            s_run_dict.update(add)
         else:
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                           if runhistory.data[run].status in self.success_states}
