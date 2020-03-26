@@ -113,6 +113,7 @@ class Intensifier(AbstractRacer):
             raise ValueError("run_limit must be > 1")
 
         self.use_ta_time_bound = use_ta_time_bound
+        self.elapsed_time = 0
 
         # stage variables
         # the intensification procedure is divided into 4 'stages':
@@ -173,6 +174,8 @@ class Intensifier(AbstractRacer):
         if time_bound < self._min_time:
             raise ValueError("time_bound must be >= %f" % self._min_time)
 
+        start_time = time.time()
+
         # The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs
         # Lines 1 + 2 happen in the optimizer (SMBO)
 
@@ -218,17 +221,19 @@ class Intensifier(AbstractRacer):
             self.logger.debug("Budget exhausted; Return incumbent")
             return incumbent, inc_perf
 
+        # time used to evaluated challenger
+        self.elapsed_time = time.time() - start_time
+
         # check if 1 intensification run is complete - line 18
-        tm = time.time()
         if self.stage == IntensifierStage.RUN_INCUMBENT and self._chall_indx >= self.min_chall:
             if self._num_run > self.run_limit:
                 self.logger.info("Maximum #runs for intensification reached")
                 self._next_iteration()
 
-            if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
+            if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
                 self.logger.debug("Wallclock time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
-                                  (tm - self.start_time, time_bound))
+                                  (self.elapsed_time, time_bound))
                 self._next_iteration()
 
             elif self._ta_time - time_bound >= 0:
@@ -627,6 +632,7 @@ class Intensifier(AbstractRacer):
         # reset for a new iteration
         self._num_run = 0
         self._chall_indx = 0
+        self.elapsed_time = 0
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)
