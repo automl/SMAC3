@@ -205,7 +205,7 @@ class AbstractRunHistory2EPM(object):
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list, store_statistics=True)
 
-        # Get TIMEOUT runs
+        # Get real TIMEOUT runs
         if budget_subset is not None:
             t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                           if runhistory.data[run].status == StatusType.TIMEOUT
@@ -233,9 +233,15 @@ class AbstractRunHistory2EPM(object):
                 raise ValueError("Cannot handle budgets and capped runs")
 
             # Get all censored runs
-            c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status in self.impute_state
-                          and runhistory.data[run].time < self.cutoff_time}
+            if budget_subset is not None:
+                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                              if runhistory.data[run].status in self.impute_state
+                              and runhistory.data[run].time < self.cutoff_time
+                              and run.budget in budget_subset}
+            else:
+                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                              if runhistory.data[run].status in self.impute_state
+                              and runhistory.data[run].time < self.cutoff_time}
 
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
@@ -298,6 +304,7 @@ class AbstractRunHistory2EPM(object):
 
     def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Simple interface to obtain all data in runhistory in X, y format
+        Note: This function should not be used as it does not consider all available StatusTypes
 
         Parameters
         ----------
@@ -313,6 +320,7 @@ class AbstractRunHistory2EPM(object):
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
         """
+        self.logger.warning("This function is not tested and might not work as expected!")
         X = []
         y = []
         cen = []
