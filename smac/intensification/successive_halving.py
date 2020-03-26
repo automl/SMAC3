@@ -373,16 +373,15 @@ class SuccessiveHalving(AbstractRacer):
                 status = StatusType.CAPPED
 
             # adding challengers to the list of evaluated challengers
-            #  - should not capped
-            #  - should be successful in at least 1 run
+            #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
+            #  - Advance to next stage: SUCCESS
             # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
             # If a configuration is successful, it is added to curr_challengers.
-            # if it fails after, it is added to fail_challengers too.
-            if np.isfinite(self.curr_inst_idx) and \
-                    status == StatusType.SUCCESS:
+            # if it fails it is added to fail_challengers.
+            if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
                 self.curr_challengers.add(challenger)  # successful configs
             else:
-                self.fail_challengers.add(challenger)  # capped/crashed configs
+                self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
 
             # get incumbent if all instances have been evaluated
             if n_insts_remaining <= 0:
@@ -401,8 +400,8 @@ class SuccessiveHalving(AbstractRacer):
 
             self.logger.info('Successive Halving iteration-step: %d-%d with '
                              'budget [%.2f / %d] - evaluated %d challenger(s)' %
-                             (self.sh_iters + 1, self.stage + 1,
-                              self.all_budgets[self.stage], self.max_budget, self.n_configs_in_stage[self.stage]))
+                             (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
+                              self.n_configs_in_stage[self.stage]))
 
             self._update_stage(run_history=run_history)
 
@@ -509,7 +508,7 @@ class SuccessiveHalving(AbstractRacer):
             self.curr_inst_idx = 0
             self.running_challenger = None
             self.curr_challengers = set()  # successful configs
-            self.fail_challengers = set()   # capped configs
+            self.fail_challengers = set()  # capped configs
             self.fail_chal_offset = 0
 
         else:
