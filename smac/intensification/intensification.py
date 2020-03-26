@@ -222,7 +222,7 @@ class Intensifier(AbstractRacer):
             return incumbent, inc_perf
 
         # time used to evaluated challenger
-        self.elapsed_time = time.time() - start_time
+        self.elapsed_time += time.time() - start_time
 
         # check if 1 intensification run is complete - line 18
         if self.stage == IntensifierStage.RUN_INCUMBENT and self._chall_indx >= self.min_chall:
@@ -576,10 +576,6 @@ class Intensifier(AbstractRacer):
                 self.N = max(1, self.minR)
                 self.to_run = []
 
-                # reset time bound related params since this is a new configuration
-                self.start_time = time.time()
-                self._ta_time = 0.0
-
             return challenger, True
 
         # return currently running challenger
@@ -633,6 +629,7 @@ class Intensifier(AbstractRacer):
         self._num_run = 0
         self._chall_indx = 0
         self.elapsed_time = 0
+        self._ta_time = 0.0
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)

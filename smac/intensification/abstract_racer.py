@@ -108,7 +108,7 @@ class AbstractRacer(object):
 
         # general attributes
         self._min_time = 10 ** -5
-        self._num_run = 0
+        self.num_run = 0  # Number of runs done in an iteration so far
         self._chall_indx = 0
         self._ta_time = 0.
 
