@@ -97,12 +97,12 @@ class AbstractRunHistory2EPM(object):
             self.rng = np.random.RandomState(seed=1)
 
         if impute_state is None:
-            self.impute_state = [StatusType.CAPPED, ]
+            raise TypeError("impute_state not given")
         else:
             self.impute_state = impute_state
 
         if success_states is None:
-            self.success_states = [StatusType.SUCCESS, ]
+            raise TypeError("success_state not given")
         else:
             self.success_states = success_states
 
@@ -186,24 +186,30 @@ class AbstractRunHistory2EPM(object):
         """
         self.logger.debug("Transform runhistory into X,y format")
 
-        # consider only successfully finished runs
-        s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                      if runhistory.data[run].status in self.success_states}
-
-        # consider only runs on a given budget
+        # Get only successfully finished runs
         if budget_subset is not None:
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if run.budget in budget_subset}
+                          if run.budget in budget_subset and
+                          runhistory.data[run].status in self.success_states}
+        else:
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status in self.success_states}
 
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list, store_statistics=True)
 
-        # Also get TIMEOUT runs
-        t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                      if runhistory.data[
-                          run].status == StatusType.TIMEOUT and runhistory.data[run].time >= self.cutoff_time}
+        # Get TIMEOUT runs
+        if budget_subset is not None:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time
+                          and run.budget in budget_subset}
+        else:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time}
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training
@@ -217,10 +223,15 @@ class AbstractRunHistory2EPM(object):
             return tX, tY
 
         if self.impute_censored_data:
+            if budget_subset is not None:
+                # TODO: Check whether we need to take care of budgets here as well
+                raise ValueError("Cannot handle budgets and capped runs")
+
             # Get all censored runs
             c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[
-                              run].status in self.impute_state and runhistory.data[run].time < self.cutoff_time}
+                          if runhistory.data[run].status in self.impute_state
+                          and runhistory.data[run].time < self.cutoff_time}
+
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
                 # If we do not impute, we also return TIMEOUT data
@@ -244,13 +255,12 @@ class AbstractRunHistory2EPM(object):
                                             instances=t_instance_id_list,
                                             return_time_as_y=True,
                                             store_statistics=False,)
+                self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" %
+                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
-                self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
-                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
-                # return imp_Y in PAR depending on the used threshold in
-                # imputor
+                # return imp_Y in PAR depending on the used threshold in imputor
                 assert isinstance(self.imputor, BaseImputor)  # please mypy
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
