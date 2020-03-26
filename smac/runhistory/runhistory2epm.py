@@ -96,7 +96,7 @@ class AbstractRunHistory2EPM(object):
         if rng is None:
             self.rng = np.random.RandomState(seed=1)
 
-        if impute_state is None:
+        if impute_state is None and impute_censored_data:
             raise TypeError("impute_state not given")
         else:
             self.impute_state = impute_state
