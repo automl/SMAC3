@@ -474,7 +474,7 @@ class Intensifier(AbstractRacer):
         inc_inst_seeds = set(run_history.get_runs_for_config(incumbent, only_max_observed_budget=True))
         chall_inst_seeds = set(run_history.get_runs_for_config(challenger, only_max_observed_budget=True))
         # Line 10
-        missing_runs = list(inc_inst_seeds - chall_inst_seeds)
+        missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
 
         # Line 11
         self.rs.shuffle(missing_runs)
