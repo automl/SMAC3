@@ -399,7 +399,7 @@ class RunhistoryTest(unittest.TestCase):
                     seed=None, budget=2,
                     additional_info=None)
         self.rh.add(config=self.config4, cost=4, time=4,
-                    status=StatusType.CONVERGED, instance_id=1,
+                    status=StatusType.DONOTADVANCE, instance_id=1,
                     seed=None, budget=2,
                     additional_info=None)
         self.rh.add(config=self.config5, cost=5, time=5,
@@ -408,7 +408,7 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info=None)
 
         for s, v in [(StatusType.SUCCESS, 1), (StatusType.CRASHED, 2), (StatusType.MEMOUT, 3),
-                     (StatusType.CONVERGED, 4), (StatusType.TIMEOUT, 5), ]:
+                     (StatusType.DONOTADVANCE, 4), (StatusType.TIMEOUT, 5), ]:
             rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                         success_states=[s, ],
                                                         impute_censored_data=False,
@@ -417,7 +417,7 @@ class RunhistoryTest(unittest.TestCase):
             self.assertTrue(np.allclose(y, np.array([[v]])))
 
         for s, v in [(StatusType.SUCCESS, [1, 4]), (StatusType.CRASHED, [4, ]),
-                     (StatusType.MEMOUT, [4, ]), (StatusType.CONVERGED, [4, ]),
+                     (StatusType.MEMOUT, [4, ]), (StatusType.DONOTADVANCE, [4, ]),
                      (StatusType.TIMEOUT, [4, ]), ]:
             rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                         success_states=[s, ],

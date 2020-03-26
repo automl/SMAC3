@@ -29,7 +29,11 @@ class StatusType(Enum):
     ABORT = 4
     MEMOUT = 5
     CAPPED = 6
-    CONVERGED = 7  # Success, but run does not need a higher budget. Only relevant for SH/HB
+    # Only relevant for SH/HB. Run might have a results, but should not be considered further.
+    # By default, these runs will always be considered for building the model. Potential use cases:
+    # 1) The run has converged and does not benefit from a higher budget
+    # 2) The run has exhausted given resources and will not benefit from higher budgets
+    DONOTADVANCE = 7
 
     @staticmethod
     def enum_hook(obj: typing.Dict) -> typing.Any:
