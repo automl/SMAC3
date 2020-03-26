@@ -29,6 +29,7 @@ class StatusType(Enum):
     ABORT = 4
     MEMOUT = 5
     CAPPED = 6
+    CONVERGED = 7  # Success, but run does not need a higher budget. Only relevant for SH/HB
 
     @staticmethod
     def enum_hook(obj: typing.Dict) -> typing.Any:
