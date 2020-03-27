@@ -113,7 +113,7 @@ class Intensifier(AbstractRacer):
             raise ValueError("run_limit must be > 1")
 
         self.use_ta_time_bound = use_ta_time_bound
-        self.elapsed_time = 0
+        self.elapsed_time = 0.
 
         # stage variables
         # the intensification procedure is divided into 4 'stages':
@@ -226,7 +226,7 @@ class Intensifier(AbstractRacer):
 
         # check if 1 intensification run is complete - line 18
         if self.stage == IntensifierStage.RUN_INCUMBENT and self._chall_indx >= self.min_chall:
-            if self._num_run > self.run_limit:
+            if self.num_run > self.run_limit:
                 self.logger.info("Maximum #runs for intensification reached")
                 self._next_iteration()
 
@@ -307,7 +307,7 @@ class Intensifier(AbstractRacer):
                     cutoff=self.cutoff,
                     instance_specific=self.instance_specifics.get(next_instance, "0"))
                 self._ta_time += dur
-                self._num_run += 1
+                self.num_run += 1
             else:
                 self.logger.debug("No further instance-seed pairs for "
                                   "incumbent available.")
@@ -403,7 +403,7 @@ class Intensifier(AbstractRacer):
                     # Cutoff might be None if self.cutoff is None, but then the first if statement prevents
                     # evaluation of the second if statement
                     capped=(self.cutoff is not None) and (cutoff < self.cutoff))  # type: ignore[operator] # noqa F821
-                self._num_run += 1
+                self.num_run += 1
                 self._ta_time += dur
 
             except CappedRunException:
@@ -626,7 +626,7 @@ class Intensifier(AbstractRacer):
         self.update_configs_to_run = True
 
         # reset for a new iteration
-        self._num_run = 0
+        self.num_run = 0
         self._chall_indx = 0
         self.elapsed_time = 0
         self._ta_time = 0.0
