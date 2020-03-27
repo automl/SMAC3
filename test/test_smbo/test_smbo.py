@@ -156,17 +156,19 @@ class TestSMBO(unittest.TestCase):
         solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
 
         class SideEffect:
-            def __init__(self, intensifier):
+            def __init__(self, intensifier, get_next_challenger):
                 self.intensifier = intensifier
+                self.get_next_challenger = get_next_challenger
                 self.counter = 0
 
             def __call__(self, *args, **kwargs):
                 self.counter += 1
                 if self.counter % 4 == 0:
                     self.intensifier.num_run = 0
-                return self.intensifier.get_next_challenger(*args, **kwargs)
+                return self.get_next_challenger(*args, **kwargs)
 
-        solver.intensifier.get_next_challenger = unittest.mock.Mock(side_effect=SideEffect(solver.intensifier))
+        solver.intensifier.get_next_challenger = unittest.mock.Mock(
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_challenger))
 
         solver.run()
 
