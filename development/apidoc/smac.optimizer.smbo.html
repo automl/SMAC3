@@ -394,14 +394,17 @@ data into EPM data</p>
 </ul>
 <dl class="method">
 <dt id="smac.optimizer.smbo.SMBO._get_timebound_for_intensification">
-<code class="sig-name descname">_get_timebound_for_intensification</code><span class="sig-paren">(</span><em class="sig-param">time_spent: float</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._get_timebound_for_intensification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._get_timebound_for_intensification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_timebound_for_intensification</code><span class="sig-paren">(</span><em class="sig-param">time_spent: float</em>, <em class="sig-param">update: bool</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._get_timebound_for_intensification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._get_timebound_for_intensification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate time left for intensify from the time spent on
 choosing challengers using the fraction of time intended for
 intensification (which is specified in
 scenario.intensification_percentage).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>time_spent</strong> (<em>float</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_spent</strong> (<em>float</em>) – </p></li>
+<li><p><strong>update</strong> (<em>bool</em>) – Only used to check in the unit tests how this function was called</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>time_left</strong></p>

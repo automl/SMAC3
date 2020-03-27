@@ -435,6 +435,7 @@
                                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                                                                   <span class="n">time_bound</span><span class="o">=</span><span class="n">time_bound</span><span class="p">,</span>
                                                                   <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="c1"># reset if SH iteration is over, else update for next iteration</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">iteration_done</span><span class="p">:</span>
@@ -507,6 +508,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># update for next iteration</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">-=</span> <span class="mi">1</span>
