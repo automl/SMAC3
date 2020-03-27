@@ -424,7 +424,7 @@ class RunhistoryTest(unittest.TestCase):
                                                         impute_censored_data=False,
                                                         scenario=self.scen)
             X, y = rh2epm.transform(self.rh, budget_subset=[1])
-            self.assertListEqual(list(y.flatten()), list(v))
+            self.assertSetEqual(set(y.flatten()), set(v))
 
 
 if __name__ == "__main__":
