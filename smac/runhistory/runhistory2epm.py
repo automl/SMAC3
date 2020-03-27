@@ -228,10 +228,6 @@ class AbstractRunHistory2EPM(object):
             return tX, tY
 
         if self.impute_censored_data:
-            if budget_subset is not None:
-                # TODO: Check whether we need to take care of budgets here as well
-                raise ValueError("Cannot handle budgets and capped runs")
-
             # Get all censored runs
             if budget_subset is not None:
                 c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()

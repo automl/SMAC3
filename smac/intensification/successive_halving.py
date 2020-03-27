@@ -44,7 +44,7 @@ class SuccessiveHalving(AbstractRacer):
         ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.
 
     Examples for successive halving (and hyperband) can be found here:
-    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`
+    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`
     * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`
     * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`
 
