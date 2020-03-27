@@ -164,11 +164,9 @@ class TestSMBO(unittest.TestCase):
                 self.counter += 1
                 if self.counter % 4 == 0:
                     self.intensifier.num_run = 0
+                return self.intensifier.get_next_challenger(*args, **kwargs)
 
-        solver.intensifier.get_next_challenger = unittest.mock.Mock(
-            wraps=solver.intensifier.get_next_challenger,
-            side_effect=SideEffect(solver.intensifier),
-        )
+        solver.intensifier.get_next_challenger = unittest.mock.Mock(side_effect=SideEffect(solver.intensifier))
 
         solver.run()
 
