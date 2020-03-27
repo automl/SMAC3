@@ -189,8 +189,8 @@ class AbstractRunHistory2EPM(object):
         # Get only successfully finished runs
         if budget_subset is not None:
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if run.budget in budget_subset and
-                          runhistory.data[run].status in self.success_states}
+                          if run.budget in budget_subset
+                          and runhistory.data[run].status in self.success_states}
             # Also add converged runs from all budgets
             add = {run: runhistory.data[run] for run in runhistory.data.keys()
                    if runhistory.data[run].status == StatusType.DONOTADVANCE}

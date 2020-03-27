@@ -240,7 +240,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.fail_challengers.add(self.config3)
         intensifier.fail_challengers.add(self.config4)
         intensifier._update_stage(self.rh)
-        self.assertEqual(intensifier.fail_chal_offset, 1) # we miss one challenger for this round
+        self.assertEqual(intensifier.fail_chal_offset, 1)  # we miss one challenger for this round
         configs = intensifier._top_k(configs=[self.config1], k=2, run_history=self.rh)
         self.assertEqual(configs, [self.config1])
 
@@ -249,7 +249,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                     budget=intensifier.all_budgets[1], additional_info=None)
         intensifier.fail_challengers.add(self.config2)
         intensifier._update_stage(self.rh)
-        self.assertEqual(intensifier.stage, 0) # going back, since there are not enough to advance
+        self.assertEqual(intensifier.stage, 0)  # going back, since there are not enough to advance
 
     def test_get_next_challenger_1(self):
         """
