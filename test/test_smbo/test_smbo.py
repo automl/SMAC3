@@ -120,11 +120,11 @@ class TestSMBO(unittest.TestCase):
             return SMAC4AC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
         smbo = get_smbo(0.3)
-        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0))
+        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0, update=False))
         smbo = get_smbo(0.5)
-        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03))
+        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03, update=False))
         smbo = get_smbo(0.7)
-        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6))
+        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6, update=False))
         # Test for invalid <= 0
         smbo = get_smbo(0)
         self.assertRaises(ValueError, smbo.run)
