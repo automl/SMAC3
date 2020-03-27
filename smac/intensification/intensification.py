@@ -113,6 +113,7 @@ class Intensifier(AbstractRacer):
             raise ValueError("run_limit must be > 1")
 
         self.use_ta_time_bound = use_ta_time_bound
+        self.elapsed_time = 0.
 
         # stage variables
         # the intensification procedure is divided into 4 'stages':
@@ -173,6 +174,8 @@ class Intensifier(AbstractRacer):
         if time_bound < self._min_time:
             raise ValueError("time_bound must be >= %f" % self._min_time)
 
+        start_time = time.time()
+
         # The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs
         # Lines 1 + 2 happen in the optimizer (SMBO)
 
@@ -218,24 +221,26 @@ class Intensifier(AbstractRacer):
             self.logger.debug("Budget exhausted; Return incumbent")
             return incumbent, inc_perf
 
-        # check if 1 intensification run is complete
-        tm = time.time()
-        if self.stage == IntensifierStage.RUN_INCUMBENT and self._chall_indx >= self.min_chall:
-            if self._num_run > self.run_limit:
-                self.logger.info("Maximum #runs for intensification reached")
-                self._update_trackers()
+        # time used to evaluate challenger
+        self.elapsed_time += time.time() - start_time
 
-            if not self.use_ta_time_bound and tm - self.start_time - time_bound >= 0:
+        # check if 1 intensification run is complete - line 18
+        if self.stage == IntensifierStage.RUN_INCUMBENT and self._chall_indx >= self.min_chall:
+            if self.num_run > self.run_limit:
+                self.logger.info("Maximum #runs for intensification reached")
+                self._next_iteration()
+
+            if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
                 self.logger.debug("Wallclock time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
-                                  (tm - self.start_time, time_bound))
-                self._update_trackers()
+                                  (self.elapsed_time, time_bound))
+                self._next_iteration()
 
             elif self._ta_time - time_bound >= 0:
                 self.logger.debug("TA time limit for intensification reached ("
                                   "used: %f sec, available: %f sec)" %
                                   (self._ta_time, time_bound))
-                self._update_trackers()
+                self._next_iteration()
 
         inc_perf = run_history.get_cost(incumbent)
 
@@ -302,7 +307,7 @@ class Intensifier(AbstractRacer):
                     cutoff=self.cutoff,
                     instance_specific=self.instance_specifics.get(next_instance, "0"))
                 self._ta_time += dur
-                self._num_run += 1
+                self.num_run += 1
             else:
                 self.logger.debug("No further instance-seed pairs for "
                                   "incumbent available.")
@@ -318,6 +323,7 @@ class Intensifier(AbstractRacer):
             # if running first configuration, go to next stage after 1st run
             if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
                 self.stage = IntensifierStage.RUN_INCUMBENT
+                self._next_iteration()
             else:
                 # Termination condition; after each run, this checks
                 # whether further runs are necessary due to minR
@@ -397,7 +403,7 @@ class Intensifier(AbstractRacer):
                     # Cutoff might be None if self.cutoff is None, but then the first if statement prevents
                     # evaluation of the second if statement
                     capped=(self.cutoff is not None) and (cutoff < self.cutoff))  # type: ignore[operator] # noqa F821
-                self._num_run += 1
+                self.num_run += 1
                 self._ta_time += dur
 
             except CappedRunException:
@@ -409,7 +415,6 @@ class Intensifier(AbstractRacer):
 
         chal_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_perf = run_history.get_cost(challenger)
-        self.logger.debug('Estimated cost of challenger on %d runs: %.4f' % (len(chal_runs), chal_perf))
 
         # if all <instance, seed> have been run, compare challenger performance
         if not self.to_run:
@@ -423,6 +428,8 @@ class Intensifier(AbstractRacer):
                 # move on to the next iteration
                 self.stage = IntensifierStage.RUN_INCUMBENT
                 self.continue_challenger = False
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, but worse than incumbent',
+                                  len(chal_runs), chal_perf)
 
             elif new_incumbent == challenger:
                 # New incumbent found
@@ -434,11 +441,18 @@ class Intensifier(AbstractRacer):
                     self.stage = IntensifierStage.RUN_BASIS
                 else:
                     self.stage = IntensifierStage.RUN_INCUMBENT
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, becomes new incumbent',
+                                  len(chal_runs), chal_perf)
 
             else:  # Line 17
                 # challenger is not worse, continue
                 self.N = 2 * self.N
                 self.continue_challenger = True
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, adding %d runs to the queue',
+                                  len(chal_runs), chal_perf, self.N / 2)
+        else:
+            self.logger.debug('Estimated cost of challenger on %d runs: %.4f, still %d runs to go (continue racing)',
+                              len(chal_runs), chal_perf, len(self.to_run))
 
         return incumbent
 
@@ -552,7 +566,7 @@ class Intensifier(AbstractRacer):
                 challenger = next(self.configs_to_run)
             except StopIteration:
                 # out of challengers for the current iteration, start next incumbent iteration
-                self._update_trackers()
+                self._next_iteration()
                 return None, False
 
             if challenger:
@@ -561,10 +575,6 @@ class Intensifier(AbstractRacer):
                 self.current_challenger = challenger
                 self.N = max(1, self.minR)
                 self.to_run = []
-
-                # reset time bound related params since this is a new configuration
-                self.start_time = time.time()
-                self._ta_time = 0.0
 
             return challenger, True
 
@@ -605,7 +615,7 @@ class Intensifier(AbstractRacer):
 
         return chall_gen
 
-    def _update_trackers(self) -> None:
+    def _next_iteration(self) -> None:
         """
         Updates tracking variables at the end of an intensification run
         """
@@ -616,8 +626,10 @@ class Intensifier(AbstractRacer):
         self.update_configs_to_run = True
 
         # reset for a new iteration
-        self._num_run = 0
+        self.num_run = 0
         self._chall_indx = 0
+        self.elapsed_time = 0
+        self._ta_time = 0.0
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)

@@ -360,7 +360,7 @@ class SuccessiveHalving(AbstractRacer):
                     capped=(self.cutoff is not None) and (cutoff < self.cutoff)  # type: ignore[operator] # noqa F821
                 )
                 self._ta_time += dur
-                self._num_run += 1
+                self.num_run += 1
                 self.curr_inst_idx += 1
 
             except CappedRunException:
@@ -542,7 +542,7 @@ class SuccessiveHalving(AbstractRacer):
                 # reset stats for the new iteration
                 self._ta_time = 0
                 self._chall_indx = 0
-                self._num_run = 0
+                self.num_run = 0
 
                 self.iteration_done = True
                 self.sh_iters += 1

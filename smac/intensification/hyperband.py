@@ -154,6 +154,7 @@ class Hyperband(SuccessiveHalving):
                                                                   run_history=run_history,
                                                                   time_bound=time_bound,
                                                                   log_traj=log_traj)
+        self.num_run += 1
 
         # reset if SH iteration is over, else update for next iteration
         if self.sh_intensifier.iteration_done:
@@ -226,6 +227,7 @@ class Hyperband(SuccessiveHalving):
             self.s = self.s_max
             self.hb_iters += 1
             self.iteration_done = True
+            self.num_run = 0
         else:
             # update for next iteration
             self.s -= 1

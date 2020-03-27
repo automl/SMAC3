@@ -195,13 +195,17 @@ class SMBO(object):
             self.initial_design_configs = [c for c in self.initial_design_configs if c != challenger]
 
             # update timebound only if a 'new' configuration is sampled as the challenger
-            if new_challenger:
+            if self.intensifier.num_run == 0:
                 time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(time_spent)
+                time_left = self._get_timebound_for_intensification(time_spent, update=False)
+                self.logger.debug('New intensification time bound: %f', time_left)
+            else:
+                old_time_left = time_left
+                time_spent = time_spent + (time.time() - start_time)
+                time_left = self._get_timebound_for_intensification(time_spent, update=True)
+                self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
             if challenger:
-                # evaluate selected challenger
-                self.logger.debug("Intensify - evaluate challenger")
 
                 try:
                     self.incumbent, inc_perf = self.intensifier.eval_challenger(
@@ -293,7 +297,7 @@ class SMBO(object):
                                         output_fn=new_rh_path)
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent: float) -> float:
+    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
@@ -302,6 +306,9 @@ class SMBO(object):
         Parameters
         ----------
         time_spent : float
+
+        update : bool
+            Only used to check in the unit tests how this function was called
 
         Returns
         -------
