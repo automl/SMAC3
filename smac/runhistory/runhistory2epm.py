@@ -45,7 +45,7 @@ class AbstractRunHistory2EPM(object):
         self,
         scenario: Scenario,
         num_params: int,
-        success_states: typing.Optional[typing.List[StatusType]] = None,
+        success_states: typing.List[StatusType] = None,
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
         imputor: typing.Optional[BaseImputor] = None,
@@ -98,16 +98,17 @@ class AbstractRunHistory2EPM(object):
 
         if impute_state is None and impute_censored_data:
             raise TypeError("impute_state not given")
-        elif impute_state is None:
+
+        if impute_state is None:
             # please mypy
             self.impute_state = []  # type: typing.List[StatusType]
         else:
             self.impute_state = impute_state
 
         if success_states is None:
-            raise TypeError("success_state not given")
-        else:
-            self.success_states = success_states
+            raise TypeError("success_states not given")
+
+        self.success_states = success_states
 
         self.instance_features = scenario.feature_dict
         self.n_feats = scenario.n_features
