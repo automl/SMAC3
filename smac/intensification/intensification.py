@@ -221,7 +221,7 @@ class Intensifier(AbstractRacer):
             self.logger.debug("Budget exhausted; Return incumbent")
             return incumbent, inc_perf
 
-        # time used to evaluated challenger
+        # time used to evaluate challenger
         self.elapsed_time += time.time() - start_time
 
         # check if 1 intensification run is complete - line 18
