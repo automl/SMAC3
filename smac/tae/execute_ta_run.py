@@ -198,7 +198,9 @@ class ExecuteTARun(object):
                                                           seed=seed,
                                                           budget=budget,
                                                           instance_specific=instance_specific)
-
+        if budget == 0 and status == StatusType.DONOTADVANCE:
+            raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on "
+                             "instances.")
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(runtime)
@@ -225,7 +227,6 @@ class ExecuteTARun(object):
             # The following line pleases mypy - we already check for cutoff not being none above, prior to calling
             # run. However, mypy assumes that the data type of cutoff is still Optional[int]
             assert cutoff is not None
-            assert status != StatusType.DONOTADVANCE
             if runtime > self.par_factor * cutoff:
                 self.logger.warning("Returned running time is larger "
                                     "than {0} times the passed cutoff time. "
