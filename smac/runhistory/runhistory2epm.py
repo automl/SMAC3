@@ -98,6 +98,9 @@ class AbstractRunHistory2EPM(object):
 
         if impute_state is None and impute_censored_data:
             raise TypeError("impute_state not given")
+        elif impute_state is None:
+            # please mypy
+            self.impute_state = []  # type: typing.List[StatusType]
         else:
             self.impute_state = impute_state
 
