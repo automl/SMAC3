@@ -136,6 +136,56 @@ class TestSMBO(unittest.TestCase):
         smbo = get_smbo(1.2)
         self.assertRaises(ValueError, smbo.run)
 
+    def test_update_intensification_percentage(self):
+        """
+        This test checks the insification time bound is updated in subsequent iterations as long as
+        num_runs of the intensifier is not reset to zero.
+        """
+
+        def target(x):
+            return 5
+
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification'})
+        self.output_dirs.append(scen.output_dir)
+        solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
+
+        solver.stats.is_budget_exhausted = unittest.mock.Mock()
+        solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
+
+        solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
+
+        class SideEffect:
+            def __init__(self, intensifier):
+                self.intensifier = intensifier
+                self.counter = 0
+
+            def __call__(self, *args, **kwargs):
+                self.counter += 1
+                if self.counter % 4 == 0:
+                    self.intensifier.num_run = 0
+
+        solver.intensifier.get_next_challenger = unittest.mock.Mock(
+            wraps=solver.intensifier.get_next_challenger,
+            side_effect=SideEffect(solver.intensifier),
+        )
+
+        solver.run()
+
+        get_timebound_mock = solver._get_timebound_for_intensification
+        self.assertEqual(get_timebound_mock.call_count, 6)
+        self.assertFalse(get_timebound_mock.call_args_list[0][1]['update'])
+        self.assertFalse(get_timebound_mock.call_args_list[1][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[2][1]['update'])
+        self.assertFalse(get_timebound_mock.call_args_list[3][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[4][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[5][1]['update'])
+
+        self.assertGreater(get_timebound_mock.call_args_list[2][0][0], get_timebound_mock.call_args_list[1][0][0])
+        self.assertLess(get_timebound_mock.call_args_list[3][0][0], get_timebound_mock.call_args_list[2][0][0])
+        self.assertGreater(get_timebound_mock.call_args_list[4][0][0], get_timebound_mock.call_args_list[3][0][0])
+        self.assertGreater(get_timebound_mock.call_args_list[5][0][0], get_timebound_mock.call_args_list[4][0][0])
+
     def test_validation(self):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format",
                                return_value=None):
