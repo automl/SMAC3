@@ -400,25 +400,25 @@ class RunhistoryTest(unittest.TestCase):
                     additional_info=None)
         self.rh.add(config=self.config4, cost=4, time=4,
                     status=StatusType.DONOTADVANCE, instance_id=1,
-                    seed=None, budget=2,
+                    seed=None, budget=3,
                     additional_info=None)
-        self.rh.add(config=self.config5, cost=5, time=5,
+        self.rh.add(config=self.config5, cost=20, time=20,
                     status=StatusType.TIMEOUT, instance_id=1,
-                    seed=None, budget=2,
+                    seed=None, budget=4,
                     additional_info=None)
 
         for s, v in [(StatusType.SUCCESS, 1), (StatusType.CRASHED, 2), (StatusType.MEMOUT, 3),
-                     (StatusType.DONOTADVANCE, 4), (StatusType.TIMEOUT, 5), ]:
+                     (StatusType.DONOTADVANCE, 4), ]:
             rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                         success_states=[s, ],
                                                         impute_censored_data=False,
                                                         scenario=self.scen)
             X, y = rh2epm.transform(self.rh, budget_subset=None)
-            self.assertTrue(np.allclose(y, np.array([[v]])))
+            self.assertSetEqual(set(y.flatten()), {v, 20})
 
-        for s, v in [(StatusType.SUCCESS, [1, 4]), (StatusType.CRASHED, [4, ]),
-                     (StatusType.MEMOUT, [4, ]), (StatusType.DONOTADVANCE, [4, ]),
-                     (StatusType.TIMEOUT, [4, ]), ]:
+        for s, v in [(StatusType.SUCCESS, [1, ]), (StatusType.CRASHED, []),
+                     (StatusType.MEMOUT, []), (StatusType.DONOTADVANCE, []),
+                     (StatusType.TIMEOUT, []), ]:
             rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                         success_states=[s, ],
                                                         impute_censored_data=False,
@@ -426,6 +426,37 @@ class RunhistoryTest(unittest.TestCase):
             X, y = rh2epm.transform(self.rh, budget_subset=[1])
             self.assertSetEqual(set(y.flatten()), set(v))
 
+        # Test defaults set in SMAC facade
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS,
+                                                                    StatusType.CRASHED,
+                                                                    StatusType.MEMOUT,
+                                                                    StatusType.DONOTADVANCE,
+                                                                    ],
+                                                    consider_for_higher_budgets_state=[
+                                                        StatusType.TIMEOUT,
+                                                        StatusType.CRASHED,
+                                                        StatusType.MEMOUT,
+                                                        StatusType.DONOTADVANCE,
+                                                    ],
+                                                    impute_censored_data=False,
+                                                    scenario=self.scen)
+        X, y = rh2epm.transform(self.rh, budget_subset=[1])
+        self.assertSetEqual(set(y.flatten()), {1, })
+        self.assertTrue(len(y) == 1)
+        X, y = rh2epm.transform(self.rh, budget_subset=[2])
+        self.assertSetEqual(set(y.flatten()), {2, 3})
+        self.assertTrue(len(y) == 2)
+        X, y = rh2epm.transform(self.rh, budget_subset=[3])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4})
+        self.assertTrue(len(y) == 3)
+        X, y = rh2epm.transform(self.rh, budget_subset=[4])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4, 20})
+        self.assertTrue(len(y) == 4)
+        X, y = rh2epm.transform(self.rh, budget_subset=[5])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4, 20})
+        self.assertTrue(len(y) == 4)
+        self.assertRaises(ValueError, rh2epm.transform, self.rh, budget_subset=[4, 5])
 
 if __name__ == "__main__":
     unittest.main()

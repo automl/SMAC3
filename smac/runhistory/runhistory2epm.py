@@ -201,13 +201,15 @@ class AbstractRunHistory2EPM(object):
 
         # Get only successfully finished runs
         if budget_subset is not None:
+            if len(budget_subset) != 1:
+                raise ValueError("Cannot yet handle getting runs from multiple budgets")
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                           if run.budget in budget_subset
                           and runhistory.data[run].status in self.success_states}
             # Additionally add these states from lower budgets
             add = {run: runhistory.data[run] for run in runhistory.data.keys()
                    if runhistory.data[run].status in self.consider_for_higher_budgets_state
-                   and run.budget < budget_subset}
+                   and run.budget < budget_subset[0]}
             s_run_dict.update(add)
         else:
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()

@@ -498,7 +498,8 @@ class SMAC4AC(object):
         if isinstance(intensifier, SuccessiveHalving) or isinstance(intensifier, Hyperband) \
                 and scenario.run_obj == "quality":
             r2e_def_kwargs.update({
-                'success_states': [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
+                'success_states': [StatusType.SUCCESS, StatusType.CRASHED,
+                                   StatusType.MEMOUT, StatusType.DONOTADVANCE],
                 'consider_for_higher_budgets_state': [StatusType.DONOTADVANCE, StatusType.TIMEOUT,
                                                       StatusType.CRASHED, StatusType.MEMOUT],
             })
