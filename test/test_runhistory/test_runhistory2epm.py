@@ -458,5 +458,6 @@ class RunhistoryTest(unittest.TestCase):
         self.assertTrue(len(y) == 4)
         self.assertRaises(ValueError, rh2epm.transform, self.rh, budget_subset=[4, 5])
 
+
 if __name__ == "__main__":
     unittest.main()
