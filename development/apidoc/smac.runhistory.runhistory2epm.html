@@ -290,7 +290,7 @@
 <span id="smac-runhistory-runhistory2epm-module"></span><h1>smac.runhistory.runhistory2epm module<a class="headerlink" href="#module-smac.runhistory.runhistory2epm" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constructor</p>
 <dl class="field-list simple">
@@ -301,6 +301,7 @@
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -338,7 +339,8 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
 <code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format
+Note: This function should not be used as it does not consider all available StatusTypes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</p>
@@ -397,7 +399,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -409,6 +411,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -465,7 +468,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -477,6 +480,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -527,6 +531,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -559,7 +564,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -571,6 +576,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -603,7 +609,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -615,6 +621,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -648,7 +655,7 @@ transformation.</p>
 
 <dl class="class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4ScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4ScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, num_params: int, success_states: List[smac.tae.execute_ta_run.StatusType], impute_censored_data: bool = False, impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, consider_for_higher_budgets_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None, imputor: Optional[smac.epm.base_imputor.BaseImputor] = None, scale_perc: int = 5, rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -660,6 +667,7 @@ transformation.</p>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -704,6 +712,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time

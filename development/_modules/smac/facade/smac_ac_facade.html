@@ -310,6 +310,7 @@
 
 <span class="c1"># intensification</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="c1"># optimizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
@@ -769,10 +770,21 @@
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span>
             <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-                <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">],</span>
+                <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span><span class="p">],</span>
                 <span class="s1">&#39;impute_censored_data&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s1">&#39;impute_state&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">})</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier_instance</span><span class="p">,</span> <span class="n">SuccessiveHalving</span><span class="p">)</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span><span class="p">:</span>
+            <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span>
+                                   <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">,</span>
+                                   <span class="p">],</span>
+                <span class="s1">&#39;consider_for_higher_budgets_state&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span>
+                                                      <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span><span class="p">,</span>
+                                                      <span class="p">],</span>
+            <span class="p">})</span>
+
         <span class="k">if</span> <span class="n">runhistory2epm_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">runhistory2epm_kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">runhistory2epm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

@@ -325,7 +325,7 @@
 <span class="sd">        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.</span>
 
 <span class="sd">    Examples for successive halving (and hyperband) can be found here:</span>
-<span class="sd">    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_spear_qcp.py`</span>
+<span class="sd">    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`</span>
 <span class="sd">    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`</span>
 <span class="sd">    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`</span>
 
@@ -475,7 +475,7 @@
         <span class="c1"># Define state variables to please mypy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># type: typing.Set[Configuration]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -654,16 +654,15 @@
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span>
 
             <span class="c1"># adding challengers to the list of evaluated challengers</span>
-            <span class="c1">#  - should not capped</span>
-            <span class="c1">#  - should be successful in at least 1 run</span>
+            <span class="c1">#  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)</span>
+            <span class="c1">#  - Advance to next stage: SUCCESS</span>
             <span class="c1"># curr_challengers is a set, so &quot;at least 1&quot; success can be counted by set addition (no duplicates)</span>
             <span class="c1"># If a configuration is successful, it is added to curr_challengers.</span>
-            <span class="c1"># if it fails after, it is added to fail_challengers too.</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span><span class="p">)</span> <span class="ow">and</span> \
-                    <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># successful configs</span>
+            <span class="c1"># if it fails it is added to fail_challengers.</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span><span class="p">)</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># successful configs</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># capped/crashed configs</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>  <span class="c1"># capped/crashed/do not advance configs</span>
 
             <span class="c1"># get incumbent if all instances have been evaluated</span>
             <span class="k">if</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
@@ -677,13 +676,13 @@
                               <span class="s2">&quot;Interrupting optimization run and returning current incumbent&quot;</span><span class="p">)</span>
 
         <span class="c1"># if all configurations for the current stage have been evaluated, reset stage</span>
-        <span class="n">num_chal_evaluated</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span>
+        <span class="n">num_chal_evaluated</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">))</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span>
         <span class="k">if</span> <span class="n">num_chal_evaluated</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span> <span class="ow">and</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successive Halving iteration-step: </span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1"> with &#39;</span>
                              <span class="s1">&#39;budget [</span><span class="si">%.2f</span><span class="s1"> / </span><span class="si">%d</span><span class="s1">] - evaluated </span><span class="si">%d</span><span class="s1"> challenger(s)&#39;</span> <span class="o">%</span>
-                             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]))</span>
+                             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_stage</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">)</span>
 
@@ -789,14 +788,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>   <span class="c1"># capped configs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># capped configs</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="c1"># only uncapped challengers are considered valid for the next iteration</span>
-            <span class="n">valid_challengers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">)</span>
+            <span class="n">valid_challengers</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">)</span> <span class="ow">and</span> \
                     <span class="nb">len</span><span class="p">(</span><span class="n">valid_challengers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -836,7 +835,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">)</span>
 
         <span class="c1"># to track configurations for the next stage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">curr_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># successful configs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>  <span class="c1"># capped/failed configs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span></div>

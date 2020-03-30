@@ -310,6 +310,11 @@
     <span class="n">ABORT</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">MEMOUT</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">CAPPED</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="c1"># Only relevant for SH/HB. Run might have a results, but should not be considered further.</span>
+    <span class="c1"># By default, these runs will always be considered for building the model. Potential use cases:</span>
+    <span class="c1"># 1) The run has converged and does not benefit from a higher budget</span>
+    <span class="c1"># 2) The run has exhausted given resources and will not benefit from higher budgets</span>
+    <span class="n">DONOTADVANCE</span> <span class="o">=</span> <span class="mi">7</span>
 
 <div class="viewcode-block" id="StatusType.enum_hook"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType.enum_hook">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
@@ -474,7 +479,9 @@
                                                           <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
                                                           <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
                                                           <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot handle DONOTADVANCE state when using intensify or SH/HB on &quot;</span>
+                             <span class="s2">&quot;instances.&quot;</span><span class="p">)</span>
         <span class="c1"># update SMAC stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
