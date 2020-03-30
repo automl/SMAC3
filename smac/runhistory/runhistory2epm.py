@@ -48,6 +48,7 @@ class AbstractRunHistory2EPM(object):
         success_states: typing.List[StatusType] = None,
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
+        consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
@@ -65,6 +66,8 @@ class AbstractRunHistory2EPM(object):
             If None, set to [StatusType.SUCCESS, ]
         impute_censored_data: bool, optional
             Should we impute data?
+        consider_for_higher_budgets_state: list, optional
+            Additionally consider all runs with these states for budget < current budget
         imputor: epm.base_imputor Instance
             Object to impute censored data
         impute_state: list, optional
@@ -105,6 +108,12 @@ class AbstractRunHistory2EPM(object):
         else:
             self.impute_state = impute_state
 
+        if consider_for_higher_budgets_state is None:
+            # please mypy
+            self.consider_for_higher_budgets_state = []  # type: typing.List[StatusType]
+        else:
+            self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
+
         if success_states is None:
             raise TypeError("success_states not given")
 
@@ -125,7 +134,7 @@ class AbstractRunHistory2EPM(object):
 
         # Check imputor stuff
         if impute_censored_data and self.imputor is None:
-            self.logger.critical("You want me to impute cencored data, but "
+            self.logger.critical("You want me to impute censored data, but "
                                  "I don't know how. Imputor is None")
             raise ValueError("impute_censored data, but no imputor given")
         elif impute_censored_data and not \
@@ -195,10 +204,10 @@ class AbstractRunHistory2EPM(object):
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
                           if run.budget in budget_subset
                           and runhistory.data[run].status in self.success_states}
-            # Also add converged runs from all budgets
+            # Additionally add these states from lower budgets
             add = {run: runhistory.data[run] for run in runhistory.data.keys()
-                   if runhistory.data[run].status == StatusType.DONOTADVANCE}
-            print(add)
+                   if runhistory.data[run].status in self.consider_for_higher_budgets_state
+                   and run.budget < budget_subset}
             s_run_dict.update(add)
         else:
             s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()

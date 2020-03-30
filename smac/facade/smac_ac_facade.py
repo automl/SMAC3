@@ -29,6 +29,8 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -492,6 +494,15 @@ class SMAC4AC(object):
                 'impute_censored_data': False,
                 'impute_state': None,
             })
+
+        if isinstance(intensifier, SuccessiveHalving) or isinstance(intensifier, Hyperband) \
+                and scenario.run_obj == "quality":
+            r2e_def_kwargs.update({
+                'success_states': [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
+                'consider_for_higher_budgets_state': [StatusType.DONOTADVANCE, StatusType.TIMEOUT,
+                                                      StatusType.CRASHED, StatusType.MEMOUT],
+            })
+
         if runhistory2epm_kwargs is not None:
             r2e_def_kwargs.update(runhistory2epm_kwargs)
         if runhistory2epm is None:
