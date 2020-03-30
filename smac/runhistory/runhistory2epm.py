@@ -45,7 +45,7 @@ class AbstractRunHistory2EPM(object):
         self,
         scenario: Scenario,
         num_params: int,
-        success_states: typing.List[StatusType] = None,
+        success_states: typing.List[StatusType],
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
         consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,

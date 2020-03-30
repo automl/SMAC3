@@ -106,10 +106,12 @@ class TestSMACFacade(unittest.TestCase):
                            intensifier_kwargs=self.sh_intensifier_kwargs)
             self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
             self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.success_states),
-                                {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT})
+                                {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT,
+                                 StatusType.DONOTADVANCE})
             self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state), set())
             self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state),
-                                set())
+                                set([StatusType.DONOTADVANCE, StatusType.TIMEOUT,
+                                     StatusType.CRASHED, StatusType.MEMOUT]))
 
         self.scenario.run_obj = "runtime"
         smbo = SMAC4AC(self.scenario)
