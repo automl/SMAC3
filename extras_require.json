@@ -9,6 +9,6 @@
   "documentation": [
     "sphinx",
     "sphinx_rtd_theme",
-    "sphinx-gallery"
+    "sphinx-gallery==0.5.0"
   ]
 }
