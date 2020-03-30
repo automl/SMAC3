@@ -41,7 +41,7 @@ echo '##########################################################################
 echo '###############################################################################'
 echo "Starting to test Spear QCP Successive halving"
 echo '###############################################################################'
-python SMAC4AC_spear_qcp.py
+python SMAC4AC_SH_spear_qcp.py
 rval=$?
 if [ "$rval" != 0 ]; then
     echo "Error running python example QCP"

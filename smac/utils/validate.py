@@ -320,12 +320,17 @@ class Validator(object):
                                        model=epm)
                 impute_censored_data = True
                 impute_state = [StatusType.CAPPED]
+                success_states = [StatusType.SUCCESS, ]
+            else:
+                success_states = [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT]
+
             # Transform training data (from given rh)
             rh2epm = RunHistory2EPM4Cost(num_params=len(self.scen.cs.get_hyperparameters()),  # type: ignore[attr-defined] # noqa F821
                                          scenario=self.scen, rng=self.rng,
                                          impute_censored_data=impute_censored_data,
                                          imputor=imputor,
-                                         impute_state=impute_state)
+                                         impute_state=impute_state,
+                                         success_states=success_states)
             assert runhistory is not None  # please mypy
             X, y = rh2epm.transform(runhistory)
             self.logger.debug("Training model with data of shape X: %s, y:%s",

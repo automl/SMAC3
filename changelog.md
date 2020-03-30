@@ -6,8 +6,11 @@
 
 * Upgrade the minimal scikit-learn dependency to 0.22.X.
 * Allow passing `tae_runner_kwargs` to `ROAR`.
+* Add a new StatusType `DONOTADVANCE` for runs that would not benefit from a higher budgets. Such runs are always used 
+  to build a model for SH/HB (#632)
 
 ## Bug Fixes
+* Fixes a bug which caused SH/HB to consider TIMEOUTS on all budgets for model building (#632)
 
 # 0.12.0
 
