@@ -88,11 +88,11 @@ class EPMChooser(object):
         self.min_samples_model = min_samples_model
         self.currently_considered_budgets = [0.0, ]
 
-    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
-        for i in self.runhistory.data.keys():
-            available_budgets.append(i.budget)
+        for run_key in self.runhistory.data.keys():
+            available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
         available_budgets = sorted(list(set(available_budgets)), reverse=True)
@@ -102,9 +102,19 @@ class EPMChooser(object):
             X, Y = self.rh2EPM.transform(self.runhistory, budget_subset=[b, ])
             if X.shape[0] >= self.min_samples_model:
                 self.currently_considered_budgets = [b, ]
-                return X, Y
+                config_ids = {run.config_id for run in self.runhistory.data.keys()
+                              if run.budget == b
+                              and self.runhistory.data[run].status in self.rh2EPM.success_states}
+                # Additionally add these states from lower budgets
+                add = {run.config_id for run in self.runhistory.data.keys()
+                       if self.runhistory.data[run].status in self.rh2EPM.consider_for_higher_budgets_state
+                       and run.budget < b}
+                config_ids.update(add)
+                configurations = [self.runhistory.ids_config[config_id] for config_id in config_ids]
+                configs_array = convert_configurations_to_array(configurations)
+                return X, Y, configs_array
 
-        return np.empty(shape=[0, 0]), np.empty(shape=[0, ])
+        return np.empty(shape=[0, 0]), np.empty(shape=[0, ]), np.empty(shape=[0, 0])
 
     def _get_evaluated_configs(self) -> typing.List[Configuration]:
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
@@ -127,7 +137,7 @@ class EPMChooser(object):
         """
 
         self.logger.debug("Search for next configuration")
-        X, Y = self._collect_data_to_train_model()
+        X, Y, X_configurations = self._collect_data_to_train_model()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
@@ -144,14 +154,14 @@ class EPMChooser(object):
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X)
+            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
 
         self.acquisition_func.update(
             model=self.model,
             eta=best_observation,
             incumbent_array=x_best_array,
             num_data=len(self._get_evaluated_configs()),
-            X=X,
+            X=X_configurations,
         )
 
         challengers = self.acq_optimizer.maximize(

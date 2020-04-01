@@ -77,9 +77,10 @@ class TestEPMChooser(unittest.TestCase):
         smbo.epm_chooser.min_samples_model = 2
 
         # Return two configurations evaluated with budget==2
-        x, y = smbo.epm_chooser._collect_data_to_train_model()
-        self.assertListEqual(list(y.flatten()), [2, 3])
-        self.assertEqual(x.shape[0], 2)
+        X, Y, X_configurations = smbo.epm_chooser._collect_data_to_train_model()
+        self.assertListEqual(list(Y.flatten()), [2, 3])
+        self.assertEqual(X.shape[0], 2)
+        self.assertEqual(X_configurations.shape[0], 2)
 
     def test_choose_next_w_empty_rh(self):
         seed = 42

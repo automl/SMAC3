@@ -195,6 +195,7 @@ class SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = 0
         self.running_challenger = None
         self.success_challengers = set()  # type: typing.Set[Configuration]
+        self.do_not_advance_challengers = set()  # type: typing.Set[Configuration]
         self.fail_challengers = set()  # type: typing.Set[Configuration]
         self.fail_chal_offset = 0
 
@@ -509,13 +510,16 @@ class SuccessiveHalving(AbstractRacer):
             self.curr_inst_idx = 0
             self.running_challenger = None
             self.success_challengers = set()  # successful configs
-            self.fail_challengers = set()  # capped configs
+            self.do_not_advance_challengers = set()  # configs which are successful, but should not be advanced
+            self.fail_challengers = set()  # capped configs and other failures
             self.fail_chal_offset = 0
 
         else:
             self.stage += 1
             # only uncapped challengers are considered valid for the next iteration
-            valid_challengers = self.success_challengers - self.fail_challengers
+            valid_challengers = list(
+                (self.success_challengers | self.do_not_advance_challengers) - self.fail_challengers
+            )
 
             if self.stage < len(self.all_budgets) and len(valid_challengers) > 0:
                 # if this is the next stage in same iteration,
@@ -524,11 +528,13 @@ class SuccessiveHalving(AbstractRacer):
                 # determine 'k' for the next iteration - at least 1
                 next_n_chal = int(max(1, self.n_configs_in_stage[self.stage]))
                 # selecting the top 'k' challengers for the next iteration
-                all_challengers = list(self.success_challengers | self.fail_challengers)
-                configs_to_run = self._top_k(configs=all_challengers,
+                configs_to_run = self._top_k(configs=valid_challengers,
                                              run_history=run_history,
                                              k=next_n_chal)
-                self.configs_to_run = [config for config in configs_to_run if config not in self.fail_challengers]
+                self.configs_to_run = [
+                    config for config in configs_to_run
+                    if config not in self.do_not_advance_challengers
+                ]
                 # if some runs were capped, top_k returns less than the required configurations
                 # to handle that, we keep track of how many configurations are missing
                 # (since they are technically failed here too)
