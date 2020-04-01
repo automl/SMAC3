@@ -190,7 +190,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                     status=StatusType.SUCCESS, instance_id=2, seed=None,
                     additional_info=None)
 
-        with self.assertRaisesRegex(AssertionError, 'Cannot compare configs'):
+        with self.assertRaisesRegex(ValueError, 'Cannot compare configs'):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
 
