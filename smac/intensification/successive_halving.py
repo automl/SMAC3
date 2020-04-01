@@ -381,6 +381,8 @@ class SuccessiveHalving(AbstractRacer):
             # if it fails it is added to fail_challengers.
             if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
                 self.success_challengers.add(challenger)  # successful configs
+            elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
+                self.do_not_advance_challengers.add(challenger)
             else:
                 self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
 
@@ -396,7 +398,10 @@ class SuccessiveHalving(AbstractRacer):
                               "Interrupting optimization run and returning current incumbent")
 
         # if all configurations for the current stage have been evaluated, reset stage
-        num_chal_evaluated = len(self.success_challengers.union(self.fail_challengers)) + self.fail_chal_offset
+        num_chal_evaluated = (
+            len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
+            + self.fail_chal_offset
+        )
         if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
 
             self.logger.info('Successive Halving iteration-step: %d-%d with '
@@ -475,7 +480,6 @@ class SuccessiveHalving(AbstractRacer):
                 challenger = self.configs_to_run.pop(0)
                 new_challenger = False
             except IndexError:
-                print('Index error')
                 challenger = None
                 new_challenger = False
 
@@ -546,7 +550,7 @@ class SuccessiveHalving(AbstractRacer):
                 if next_n_chal == missing_challengers:
                     next_stage = True
                     self.logger.info('Successive Halving iteration-step: %d-%d with '
-                                     'budget [%.2f / %d] - evaluated %d challenger(s) - '
+                                     'budget [%.2f / %d] - expected %d new challenger(s), but '
                                      'no configurations propagated to the next budget.',
                                      self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage],
                                      self.max_budget, self.n_configs_in_stage[self.stage])
@@ -576,6 +580,7 @@ class SuccessiveHalving(AbstractRacer):
 
         # to track configurations for the next stage
         self.success_challengers = set()  # successful configs
+        self.do_not_advance_challengers = set()  # successful, but should not be advanced to the next budget/stage
         self.fail_challengers = set()  # capped/failed configs
         self.curr_inst_idx = 0
         self.running_challenger = None
@@ -773,7 +778,10 @@ class SuccessiveHalving(AbstractRacer):
             # ensuring that all configurations being compared are run on the same set of instance, seed & budget
             cur_run_key = run_history.get_runs_for_config(c, only_max_observed_budget=True)
             if cur_run_key != run_key:
-                raise AssertionError('Cannot compare configs that were run on different instances-seeds-budgets')
+                raise ValueError(
+                    'Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s'
+                    % (run_key, cur_run_key)
+                )
             config_costs[c] = run_history.get_cost(c)
 
         configs_sorted = sorted(config_costs, key=config_costs.get)
