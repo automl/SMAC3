@@ -473,7 +473,8 @@ class SuccessiveHalving(AbstractRacer):
             try:
                 challenger = self.configs_to_run.pop(0)
                 new_challenger = False
-            except StopIteration:
+            except IndexError:
+                print('Index error')
                 challenger = None
                 new_challenger = False
 
@@ -514,27 +515,41 @@ class SuccessiveHalving(AbstractRacer):
         else:
             self.stage += 1
             # only uncapped challengers are considered valid for the next iteration
-            valid_challengers = list(self.success_challengers - self.fail_challengers)
+            valid_challengers = self.success_challengers - self.fail_challengers
 
-            if self.stage < len(self.all_budgets) and \
-                    len(valid_challengers) > 0:
+            if self.stage < len(self.all_budgets) and len(valid_challengers) > 0:
                 # if this is the next stage in same iteration,
                 # use top 'k' from the evaluated configurations for next iteration
 
                 # determine 'k' for the next iteration - at least 1
-                next_n_chal = max(1, self.n_configs_in_stage[self.stage])
+                next_n_chal = int(max(1, self.n_configs_in_stage[self.stage]))
                 # selecting the top 'k' challengers for the next iteration
-                self.configs_to_run = self._top_k(configs=valid_challengers,
-                                                  run_history=run_history,
-                                                  k=int(next_n_chal))
+                all_challengers = list(self.success_challengers | self.fail_challengers)
+                configs_to_run = self._top_k(configs=all_challengers,
+                                             run_history=run_history,
+                                             k=next_n_chal)
+                self.configs_to_run = [config for config in configs_to_run if config not in self.fail_challengers]
                 # if some runs were capped, top_k returns less than the required configurations
-                # to handle that, we keep some failed configurations (since they are technically failed here too)
+                # to handle that, we keep track of how many configurations are missing
+                # (since they are technically failed here too)
                 missing_challengers = int(self.n_configs_in_stage[self.stage]) - len(self.configs_to_run)
                 if missing_challengers > 0:
                     self.fail_chal_offset = missing_challengers
                 else:
                     self.fail_chal_offset = 0
+                if next_n_chal == missing_challengers:
+                    next_stage = True
+                    self.logger.info('Successive Halving iteration-step: %d-%d with '
+                                     'budget [%.2f / %d] - evaluated %d challenger(s) - '
+                                     'no configurations propagated to the next budget.',
+                                     self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage],
+                                     self.max_budget, self.n_configs_in_stage[self.stage])
+                else:
+                    next_stage = False
             else:
+                next_stage = True
+
+            if next_stage:
                 # update stats for the prev iteration
                 self.stats.update_average_configs_per_intensify(n_configs=self._chall_indx)
 
@@ -640,7 +655,7 @@ class SuccessiveHalving(AbstractRacer):
                                            incumbent=challenger, budget=curr_budget)
             return challenger
 
-        # compare challenger and incumbent based on cost
+        # incumbent and challenger were both evaluated on the same budget, compare them based on their cost
         chall_cost = run_history.get_cost(challenger)
         inc_cost = run_history.get_cost(incumbent)
         if chall_cost < inc_cost:
