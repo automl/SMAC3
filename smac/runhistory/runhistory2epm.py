@@ -176,6 +176,72 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError()
 
+    def _get_s_run_dict(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
+        # Get only successfully finished runs
+        if budget_subset is not None:
+            if len(budget_subset) != 1:
+                raise ValueError("Cannot yet handle getting runs from multiple budgets")
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if run.budget in budget_subset
+                          and runhistory.data[run].status in self.success_states}
+            # Additionally add these states from lower budgets
+            add = {run: runhistory.data[run] for run in runhistory.data.keys()
+                   if runhistory.data[run].status in self.consider_for_higher_budgets_state
+                   and run.budget < budget_subset[0]}
+            s_run_dict.update(add)
+        else:
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status in self.success_states}
+        return s_run_dict
+
+    def _get_t_run_dict(
+            self,
+            runhistory: RunHistory,
+            budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
+        if budget_subset is not None:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time
+                          and run.budget in budget_subset}
+        else:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time}
+        return t_run_dict
+
+    def get_configurations(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> np.ndarray:
+        """Returns vector representation of only the configurations.
+
+        Instance features are not appended and cost values are not taken into account.
+
+        Parameters
+        ----------
+        runhistory : smac.runhistory.runhistory.RunHistory
+            Runhistory containing all evaluated configurations/instances
+        budget_subset : list of budgets to consider
+
+        Returns
+        -------
+        numpy.ndarray
+        """
+        s_runs = self._get_s_run_dict(runhistory, budget_subset)
+        s_config_ids = set(s_run.config_id for s_run in s_runs)
+        t_runs = self._get_t_run_dict(runhistory, budget_subset)
+        t_config_ids = set(t_run.config_id for t_run in t_runs)
+        config_ids = s_config_ids | t_config_ids
+        configurations = [runhistory.ids_config[config_id] for config_id in config_ids]
+        configs_array = convert_configurations_to_array(configurations)
+        return configs_array
+
     def transform(
         self,
         runhistory: RunHistory,
@@ -199,37 +265,14 @@ class AbstractRunHistory2EPM(object):
         """
         self.logger.debug("Transform runhistory into X,y format")
 
-        # Get only successfully finished runs
-        if budget_subset is not None:
-            if len(budget_subset) != 1:
-                raise ValueError("Cannot yet handle getting runs from multiple budgets")
-            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if run.budget in budget_subset
-                          and runhistory.data[run].status in self.success_states}
-            # Additionally add these states from lower budgets
-            add = {run: runhistory.data[run] for run in runhistory.data.keys()
-                   if runhistory.data[run].status in self.consider_for_higher_budgets_state
-                   and run.budget < budget_subset[0]}
-            s_run_dict.update(add)
-        else:
-            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status in self.success_states}
-
+        s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
         # Store a list of instance IDs
         s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
                                   instances=s_instance_id_list, store_statistics=True)
 
         # Get real TIMEOUT runs
-        if budget_subset is not None:
-            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status == StatusType.TIMEOUT
-                          and runhistory.data[run].time >= self.cutoff_time
-                          and run.budget in budget_subset}
-        else:
-            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status == StatusType.TIMEOUT
-                          and runhistory.data[run].time >= self.cutoff_time}
+        t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
 
         # use penalization (e.g. PAR10) for EPM training

@@ -14,7 +14,6 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import StatusType
 
 
 class EPMChooser(object):
@@ -103,21 +102,8 @@ class EPMChooser(object):
             X, Y = self.rh2EPM.transform(self.runhistory, budget_subset=[b, ])
             if X.shape[0] >= self.min_samples_model:
                 self.currently_considered_budgets = [b, ]
-                config_ids = {run.config_id for run in self.runhistory.data.keys()
-                              if run.budget == b
-                              and self.runhistory.data[run].status in self.rh2EPM.success_states}
-                # Additionally add these states from lower budgets
-                add = {run.config_id for run in self.runhistory.data.keys()
-                       if self.runhistory.data[run].status in self.rh2EPM.consider_for_higher_budgets_state
-                       and run.budget < b}
-                config_ids.update(add)
-                add2 = {run.config_id for run in self.runhistory.data.keys()
-                        if self.runhistory.data[run].status == StatusType.TIMEOUT
-                        and self.runhistory.data[run].time >= self.rh2EPM.cutoff_time
-                        and run.budget == b}
-                config_ids.update(add2)
-                configurations = [self.runhistory.ids_config[config_id] for config_id in config_ids]
-                configs_array = convert_configurations_to_array(configurations)
+                configs_array = self.rh2EPM.get_configurations(
+                    self.runhistory, budget_subset=self.currently_considered_budgets)
                 return X, Y, configs_array
 
         return np.empty(shape=[0, 0]), np.empty(shape=[0, ]), np.empty(shape=[0, 0])
