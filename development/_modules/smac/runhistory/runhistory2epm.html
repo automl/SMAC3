@@ -432,7 +432,6 @@
 <div class="viewcode-block" id="AbstractRunHistory2EPM._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                      <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">return_time_as_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                       <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Builds x,y matrixes from selected runs from runhistory</span>
@@ -443,8 +442,6 @@
 <span class="sd">            dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            runhistory object</span>
-<span class="sd">        instances: list</span>
-<span class="sd">            list of instances</span>
 <span class="sd">        return_time_as_y: bool</span>
 <span class="sd">            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</span>
 <span class="sd">        store_statistics: bool</span>
@@ -547,19 +544,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Transform runhistory into X,y format&quot;</span><span class="p">)</span>
 
         <span class="n">s_run_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_s_run_dict</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">budget_subset</span><span class="p">)</span>
-        <span class="c1"># Store a list of instance IDs</span>
-        <span class="n">s_instance_id_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">s_run_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">s_run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                  <span class="n">instances</span><span class="o">=</span><span class="n">s_instance_id_list</span><span class="p">,</span> <span class="n">store_statistics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                  <span class="n">store_statistics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Get real TIMEOUT runs</span>
         <span class="n">t_run_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_t_run_dict</span><span class="p">(</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">budget_subset</span><span class="p">)</span>
-        <span class="n">t_instance_id_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">s_run_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-
         <span class="c1"># use penalization (e.g. PAR10) for EPM training</span>
         <span class="n">store_statistics</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_y</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span>
         <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">t_run_dict</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                    <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span> <span class="n">store_statistics</span><span class="o">=</span><span class="n">store_statistics</span><span class="p">)</span>
+                                    <span class="n">store_statistics</span><span class="o">=</span><span class="n">store_statistics</span><span class="p">)</span>
 
         <span class="c1"># if we don&#39;t have successful runs,</span>
         <span class="c1"># we have to return all timeout runs</span>
@@ -584,21 +577,17 @@
                 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="p">,</span> <span class="n">tX</span><span class="p">))</span>
                 <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">Y</span><span class="p">,</span> <span class="n">tY</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Store a list of instance IDs</span>
-                <span class="n">c_instance_id_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">c_run_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
 
                 <span class="c1"># better empirical results by using PAR1 instead of PAR10</span>
                 <span class="c1"># for censored data imputation</span>
                 <span class="n">cen_X</span><span class="p">,</span> <span class="n">cen_Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">c_run_dict</span><span class="p">,</span>
                                                   <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                                  <span class="n">instances</span><span class="o">=</span><span class="n">c_instance_id_list</span><span class="p">,</span>
                                                   <span class="n">return_time_as_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                                   <span class="n">store_statistics</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
 
                 <span class="c1"># Also impute TIMEOUTS</span>
                 <span class="n">tX</span><span class="p">,</span> <span class="n">tY</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_matrix</span><span class="p">(</span><span class="n">run_dict</span><span class="o">=</span><span class="n">t_run_dict</span><span class="p">,</span>
                                             <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                                            <span class="n">instances</span><span class="o">=</span><span class="n">t_instance_id_list</span><span class="p">,</span>
                                             <span class="n">return_time_as_y</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                             <span class="n">store_statistics</span><span class="o">=</span><span class="kc">False</span><span class="p">,)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2"> TIMEOUTS, </span><span class="si">%d</span><span class="s2"> CAPPED, </span><span class="si">%d</span><span class="s2"> SUCC&quot;</span> <span class="o">%</span>
@@ -678,7 +667,6 @@
 
 <div class="viewcode-block" id="RunHistory2EPM4Cost._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
                       <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                      <span class="n">instances</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">return_time_as_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                       <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;&quot;Builds X,y matrixes from selected runs from runhistory</span>
@@ -689,8 +677,6 @@
 <span class="sd">            dictionary from RunHistory.RunKey to RunHistory.RunValue</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            runhistory object</span>
-<span class="sd">        instances: list</span>
-<span class="sd">            list of instances</span>
 <span class="sd">        return_time_as_y: bool</span>
 <span class="sd">            Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</span>
 <span class="sd">        store_statistics: bool</span>
@@ -907,7 +893,7 @@
     <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RunHistory2EPM4EIPS._build_matrix"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_build_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_dict</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">],</span>
-                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                      <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                       <span class="n">return_time_as_y</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                       <span class="n">store_statistics</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;TODO&quot;&quot;&quot;</span>
