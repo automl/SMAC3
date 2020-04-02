@@ -324,7 +324,7 @@ RandomForestWithInstances)</p>
 </ul>
 <dl class="method">
 <dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">
-<code class="sig-name descname">_collect_data_to_train_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._collect_data_to_train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_collect_data_to_train_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._collect_data_to_train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -334,7 +334,7 @@ RandomForestWithInstances)</p>
 
 <dl class="method">
 <dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">
-<code class="sig-name descname">_get_x_best</code><span class="sig-paren">(</span><em class="sig-param">predict: bool</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray, ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_x_best</code><span class="sig-paren">(</span><em class="sig-param">predict: bool</em>, <em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray]<a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get value, configuration, and array representation of the “best” configuration.</p>
 <p>The definition of best varies depending on the argument <code class="docutils literal notranslate"><span class="pre">predict</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
 this function will return the stats of the best configuration as predicted by the model,

@@ -369,11 +369,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="n">min_samples_model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">]</span>
 
-<div class="viewcode-block" id="EPMChooser._collect_data_to_train_model"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="EPMChooser._collect_data_to_train_model"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
         <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">available_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">run_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">available_budgets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">run_key</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
 
         <span class="c1"># Sort available budgets from highest to lowest budget</span>
         <span class="n">available_budgets</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">available_budgets</span><span class="p">)),</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -383,9 +383,11 @@
             <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">budget_subset</span><span class="o">=</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">])</span>
             <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_samples_model</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="p">]</span>
-                <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+                <span class="n">configs_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">get_configurations</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span> <span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">configs_array</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">])</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="EPMChooser._get_evaluated_configs"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span></div>
@@ -408,7 +410,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Search for next configuration&quot;</span><span class="p">)</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_data_to_train_model</span><span class="p">()</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">X_configurations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_data_to_train_model</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># Only return a single point to avoid an overly high number of</span>
@@ -420,21 +422,19 @@
 
         <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">best_observation</span> <span class="o">=</span> <span class="n">incumbent_value</span>
-            <span class="n">x_best</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[Configuration]</span>
             <span class="n">x_best_array</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[np.ndarray]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span>
                                  <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
-            <span class="n">x_best</span><span class="p">,</span> <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_x_best</span><span class="p">)</span>
+            <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predict_x_best</span><span class="p">,</span> <span class="n">X_configurations</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
             <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">eta</span><span class="o">=</span><span class="n">best_observation</span><span class="p">,</span>
-            <span class="n">incumbent</span><span class="o">=</span><span class="n">x_best</span><span class="p">,</span>
             <span class="n">incumbent_array</span><span class="o">=</span><span class="n">x_best_array</span><span class="p">,</span>
             <span class="n">num_data</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_evaluated_configs</span><span class="p">()),</span>
-            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X_configurations</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="n">challengers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">acq_optimizer</span><span class="o">.</span><span class="n">maximize</span><span class="p">(</span>
@@ -445,7 +445,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-<div class="viewcode-block" id="EPMChooser._get_x_best"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">[docs]</a>    <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="EPMChooser._get_x_best"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">[docs]</a>    <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the &quot;best&quot; configuration.</span>
 
 <span class="sd">        The definition of best varies depending on the argument ``predict``. If set to ``True``,</span>
@@ -463,23 +463,20 @@
 <span class="sd">        np.ndarry</span>
 <span class="sd">        Configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">predict</span><span class="p">:</span>
-            <span class="n">configs_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">(</span><span class="n">all_configs</span><span class="p">)</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">input_</span><span class="p">:</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                    <span class="n">input_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">input_</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict_marginalized_over_instances</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">x</span><span class="p">,</span>
                 <span class="p">),</span>
-                <span class="nb">zip</span><span class="p">(</span><span class="n">configs_array</span><span class="p">,</span> <span class="n">all_configs</span><span class="p">),</span>
+                <span class="n">X</span><span class="p">,</span>
             <span class="p">))</span>
             <span class="n">costs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">x_best</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
             <span class="n">x_best_array</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">best_observation</span> <span class="o">=</span> <span class="n">costs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="c1"># won&#39;t need log(y) if EPM was already trained on log(y)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="n">all_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
             <span class="n">x_best</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span>
             <span class="n">x_best_array</span> <span class="o">=</span> <span class="n">convert_configurations_to_array</span><span class="p">([</span><span class="n">all_configs</span><span class="p">])</span>
             <span class="n">best_observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">x_best</span><span class="p">)</span>
@@ -489,7 +486,7 @@
             <span class="n">best_observation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh2EPM</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">best_observation_as_array</span><span class="p">)</span>
             <span class="n">best_observation</span> <span class="o">=</span> <span class="n">best_observation</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">x_best</span><span class="p">,</span> <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span></div></div>
+        <span class="k">return</span> <span class="n">x_best_array</span><span class="p">,</span> <span class="n">best_observation</span></div></div>
 </pre></div>
 
            </div>

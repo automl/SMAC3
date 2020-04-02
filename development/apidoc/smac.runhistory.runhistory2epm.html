@@ -337,6 +337,16 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dd></dl>
 
 <dl class="method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_s_run_dict">
+<code class="sig-name descname">_get_s_run_dict</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span> &#x2192; Dict[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._get_s_run_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_s_run_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_t_run_dict">
+<code class="sig-name descname">_get_t_run_dict</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span> &#x2192; Dict[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._get_t_run_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_t_run_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
 <code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple interface to obtain all data in runhistory in X, y format
@@ -352,6 +362,27 @@ Note: This function should not be used as it does not consider all available Sta
 <li><p><strong>cen</strong> (<em>numpy.ndarray</em>) – vector of bools indicating whether the y-value is censored</p></li>
 </ul>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_configurations">
+<code class="sig-name descname">get_configurations</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_configurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of only the configurations.</p>
+<p>Instance features are not appended and cost values are not taken into account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</p></li>
+<li><p><strong>budget_subset</strong> (<em>list of budgets to consider</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
