@@ -151,7 +151,6 @@ class AbstractRunHistory2EPM(object):
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
-                      instances: list = None,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory
@@ -162,8 +161,6 @@ class AbstractRunHistory2EPM(object):
             dictionary from RunHistory.RunKey to RunHistory.RunValue
         runhistory: RunHistory
             runhistory object
-        instances: list
-            list of instances
         return_time_as_y: bool
             Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
         store_statistics: bool
@@ -266,19 +263,15 @@ class AbstractRunHistory2EPM(object):
         self.logger.debug("Transform runhistory into X,y format")
 
         s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
-        # Store a list of instance IDs
-        s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
-                                  instances=s_instance_id_list, store_statistics=True)
+                                  store_statistics=True)
 
         # Get real TIMEOUT runs
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
-        t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
-
         # use penalization (e.g. PAR10) for EPM training
         store_statistics = True if np.isnan(self.min_y) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list, store_statistics=store_statistics)
+                                    store_statistics=store_statistics)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -303,21 +296,17 @@ class AbstractRunHistory2EPM(object):
                 X = np.vstack((X, tX))
                 Y = np.concatenate((Y, tY))
             else:
-                # Store a list of instance IDs
-                c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
 
                 # better empirical results by using PAR1 instead of PAR10
                 # for censored data imputation
                 cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
                                                   runhistory=runhistory,
-                                                  instances=c_instance_id_list,
                                                   return_time_as_y=True,
                                                   store_statistics=False,)
 
                 # Also impute TIMEOUTS
                 tX, tY = self._build_matrix(run_dict=t_run_dict,
                                             runhistory=runhistory,
-                                            instances=t_instance_id_list,
                                             return_time_as_y=True,
                                             store_statistics=False,)
                 self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" %
@@ -397,7 +386,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
-                      instances: list = None,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """"Builds X,y matrixes from selected runs from runhistory
@@ -408,8 +396,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             dictionary from RunHistory.RunKey to RunHistory.RunValue
         runhistory: RunHistory
             runhistory object
-        instances: list
-            list of instances
         return_time_as_y: bool
             Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
         store_statistics: bool
@@ -626,7 +612,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str] = None,
+                      runhistory: RunHistory,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
