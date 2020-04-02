@@ -296,8 +296,6 @@ class AbstractRunHistory2EPM(object):
                 X = np.vstack((X, tX))
                 Y = np.concatenate((Y, tY))
             else:
-                # Store a list of instance IDs
-                c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
 
                 # better empirical results by using PAR1 instead of PAR10
                 # for censored data imputation
