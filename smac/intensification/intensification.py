@@ -231,15 +231,13 @@ class Intensifier(AbstractRacer):
                 self._next_iteration()
 
             if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
-                self.logger.debug("Wallclock time limit for intensification reached ("
-                                  "used: %f sec, available: %f sec)" %
-                                  (self.elapsed_time, time_bound))
+                self.logger.info("Wallclock time limit for intensification reached (used: %f sec, available: %f sec)",
+                                 self.elapsed_time, time_bound)
                 self._next_iteration()
 
             elif self._ta_time - time_bound >= 0:
-                self.logger.debug("TA time limit for intensification reached ("
-                                  "used: %f sec, available: %f sec)" %
-                                  (self._ta_time, time_bound))
+                self.logger.info("TA time limit for intensification reached (used: %f sec, available: %f sec)",
+                                 self._ta_time, time_bound)
                 self._next_iteration()
 
         inc_perf = run_history.get_cost(incumbent)

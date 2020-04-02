@@ -190,7 +190,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                     status=StatusType.SUCCESS, instance_id=2, seed=None,
                     additional_info=None)
 
-        with self.assertRaisesRegex(AssertionError, 'Cannot compare configs'):
+        with self.assertRaisesRegex(ValueError, 'Cannot compare configs'):
             intensifier._top_k(configs=[self.config2, self.config1, self.config3],
                                k=1, run_history=self.rh)
 
@@ -338,6 +338,62 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertIsInstance(intensifier.configs_to_run, list)
         self.assertEqual(len(intensifier.configs_to_run), 0)
+
+    @unittest.mock.patch.object(SuccessiveHalving, '_top_k')
+    def test_update_stage_2(self, top_k_mock):
+        """
+            test update_stage - everything good is in state do not advance
+        """
+
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, initial_budget=1, max_budget=4, eta=2, instances=None)
+
+        # update variables
+        intensifier._update_stage(run_history=None)
+
+        intensifier.success_challengers.add(self.config1)
+        intensifier.success_challengers.add(self.config2)
+        intensifier.do_not_advance_challengers.add(self.config3)
+        intensifier.do_not_advance_challengers.add(self.config4)
+
+        top_k_mock.return_value = [self.config1, self.config3]
+
+        # Test that we update the stage as there is one configuration advanced to the next budget
+        self.assertEqual(intensifier.stage, 0)
+        intensifier._update_stage(run_history=None)
+        self.assertEqual(intensifier.stage, 1)
+        self.assertEqual(intensifier.configs_to_run, [self.config1])
+        self.assertEqual(intensifier.fail_chal_offset, 1)
+        self.assertEqual(len(intensifier.success_challengers), 0)
+        self.assertEqual(len(intensifier.do_not_advance_challengers), 0)
+
+        intensifier = SuccessiveHalving(
+            tae_runner=None, stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            cutoff=1, initial_budget=1, max_budget=4, eta=2, instances=None)
+
+        # update variables
+        intensifier._update_stage(run_history=None)
+
+        intensifier.success_challengers.add(self.config1)
+        intensifier.success_challengers.add(self.config2)
+        intensifier.do_not_advance_challengers.add(self.config3)
+        intensifier.do_not_advance_challengers.add(self.config4)
+
+        top_k_mock.return_value = [self.config3, self.config4]
+
+        # Test that we update the stage as there is no configuration advanced to the next budget
+        self.assertEqual(intensifier.stage, 0)
+        intensifier._update_stage(run_history=None)
+        self.assertEqual(intensifier.stage, 0)
+        self.assertEqual(intensifier.configs_to_run, [])
+        self.assertEqual(intensifier.fail_chal_offset, 0)
+        self.assertEqual(len(intensifier.success_challengers), 0)
+        self.assertEqual(len(intensifier.do_not_advance_challengers), 0)
+
+        top_k_mock.return_value = []
 
     def test_eval_challenger_1(self):
         """
