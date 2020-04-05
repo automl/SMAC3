@@ -9,6 +9,7 @@ smac.intensification package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.intensification.abstract_racer
    smac.intensification.hyperband

@@ -9,6 +9,7 @@ smac.runhistory package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.runhistory.runhistory
    smac.runhistory.runhistory2epm

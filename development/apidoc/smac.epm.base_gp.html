@@ -288,29 +288,29 @@
             
   <div class="section" id="module-smac.epm.base_gp">
 <span id="smac-epm-base-gp-module"></span><h1>smac.epm.base_gp module<a class="headerlink" href="#module-smac.epm.base_gp" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.epm.base_gp.BaseModel">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fbf722fc5d0&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f2251f4f8d0&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Abstract base class for all Gaussian process models.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._get_all_priors">
-<code class="sig-name descname">_get_all_priors</code><span class="sig-paren">(</span><em class="sig-param">add_bound_priors: bool = True</em>, <em class="sig-param">add_soft_bounds: bool = False</em><span class="sig-paren">)</span> &#x2192; List[List[smac.epm.gp_base_prior.Prior]]<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_all_priors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_all_priors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_all_priors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">add_bound_priors</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">add_soft_bounds</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.Prior" title="smac.epm.gp_base_prior.Prior">smac.epm.gp_base_prior.Prior</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_all_priors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_all_priors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._get_gp">
-<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7fbf722fc6d0&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7f2251f4f9d0&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._impute_inactive">
-<code class="sig-name descname">_impute_inactive</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._impute_inactive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._impute_inactive" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_impute_inactive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._impute_inactive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._impute_inactive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._normalize_y">
-<code class="sig-name descname">_normalize_y</code><span class="sig-paren">(</span><em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._normalize_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._normalize_y" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_normalize_y</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._normalize_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._normalize_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize data to zero mean unit standard deviation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -325,14 +325,14 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._set_has_conditions">
 <code class="sig-name descname">_set_has_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._set_has_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._set_has_conditions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._untransform_y">
-<code class="sig-name descname">_untransform_y</code><span class="sig-paren">(</span><em class="sig-param">y: numpy.ndarray</em>, <em class="sig-param">var: Optional[numpy.ndarray] = None</em><span class="sig-paren">)</span> &#x2192; Union[numpy.ndarray, Tuple[numpy.ndarray, numpy.ndarray]]<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._untransform_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._untransform_y" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_untransform_y</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">var</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>numpy.ndarray<span class="p">, </span>Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._untransform_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._untransform_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform zeromean unit standard deviation data into the regular space.</p>
 <p>This function should be used after a prediction with the Gaussian process which was trained on normalized data.</p>
 <dl class="field-list simple">

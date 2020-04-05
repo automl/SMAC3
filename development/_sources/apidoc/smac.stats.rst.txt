@@ -9,5 +9,6 @@ smac.stats package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.stats.stats

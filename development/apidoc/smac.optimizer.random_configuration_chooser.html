@@ -288,9 +288,9 @@
             
   <div class="section" id="module-smac.optimizer.random_configuration_chooser">
 <span id="smac-optimizer-random-configuration-chooser-module"></span><h1>smac.optimizer.random_configuration_chooser module<a class="headerlink" href="#module-smac.optimizer.random_configuration_chooser" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserCosineAnnealing</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">prob_max: float</em>, <em class="sig-param">prob_min: float</em>, <em class="sig-param">restart_iteration: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserCosineAnnealing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">prob_max</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">prob_min</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">restart_iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability which is decreased according to a cosine
 annealing schedule.</p>
@@ -304,18 +304,18 @@ annealing schedule.</p>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.next_smbo_iteration">
 <code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
@@ -323,9 +323,9 @@ annealing schedule.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserLinearCoolDown</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">start_modulus: float = 2.0</em>, <em class="sig-param">modulus_increment: float = 0.3</em>, <em class="sig-param">end_modulus: float = inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserLinearCoolDown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">start_modulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2.0</span></em>, <em class="sig-param"><span class="n">modulus_increment</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.3</span></em>, <em class="sig-param"><span class="n">end_modulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration, decreasing the fraction of random configurations over time.</p>
 <dl class="field-list simple">
@@ -339,18 +339,18 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration">
 <code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
@@ -358,9 +358,9 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserNoCoolDown</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">modulus: float = 2.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserNoCoolDown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">modulus</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration after a constant number of configurations found by Bayesian optimization.</p>
 <dl class="field-list simple">
@@ -368,18 +368,18 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 <dd class="field-odd"><p><strong>modulus</strong> (<em>float</em>) – Every modulus-th configuration will be at random.</p>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration">
 <code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
@@ -387,9 +387,9 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProb">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserProb</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">prob: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserProb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">prob</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability.</p>
 <dl class="field-list simple">
@@ -400,18 +400,18 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProb._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProb.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProb.next_smbo_iteration">
 <code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
@@ -419,9 +419,9 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserProbCoolDown</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">prob: float</em>, <em class="sig-param">cool_down_fac: float</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">ChooserProbCoolDown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">prob</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">cool_down_fac</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability which is decreased over time.</p>
 <dl class="field-list simple">
@@ -433,18 +433,18 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check">
-<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.next_smbo_iteration">
 <code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
@@ -452,24 +452,24 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">RandomConfigurationChooser</code><span class="sig-paren">(</span><em class="sig-param">rng: numpy.random.mtrand.RandomState</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.random_configuration_chooser.</code><code class="sig-name descname">RandomConfigurationChooser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Abstract base of helper classes to configure interleaving of
 random configurations in a list of challengers.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser._abc_impl">
 <code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check">
-<em class="property">abstract </em><code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param">iteration: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iteration</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration">
 <em class="property">abstract </em><code class="sig-name descname">next_smbo_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser.next_smbo_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>

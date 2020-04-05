@@ -290,81 +290,81 @@
             
   <div class="section" id="module-smac.utils.io.traj_logging">
 <span id="smac-utils-io-traj-logging-module"></span><h1>smac.utils.io.traj_logging module<a class="headerlink" href="#module-smac.utils.io.traj_logging" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.utils.io.traj_logging.TrajEntry">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajEntry</code><span class="sig-paren">(</span><em class="sig-param">train_perf</em>, <em class="sig-param">incumbent_id</em>, <em class="sig-param">incumbent</em>, <em class="sig-param">ta_runs</em>, <em class="sig-param">ta_time_used</em>, <em class="sig-param">wallclock_time</em>, <em class="sig-param">budget</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajEntry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_perf</span></em>, <em class="sig-param"><span class="n">incumbent_id</span></em>, <em class="sig-param"><span class="n">incumbent</span></em>, <em class="sig-param"><span class="n">ta_runs</span></em>, <em class="sig-param"><span class="n">ta_time_used</span></em>, <em class="sig-param"><span class="n">wallclock_time</span></em>, <em class="sig-param"><span class="n">budget</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <p>Create new instance of TrajEntry(train_perf, incumbent_id, incumbent, ta_runs, ta_time_used, wallclock_time, budget)</p>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry._asdict">
 <code class="sig-name descname">_asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._asdict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new OrderedDict which maps field names to their values.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajEntry._field_defaults">
 <code class="sig-name descname">_field_defaults</code><em class="property"> = {}</em><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._field_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajEntry._fields">
 <code class="sig-name descname">_fields</code><em class="property"> = ('train_perf', 'incumbent_id', 'incumbent', 'ta_runs', 'ta_time_used', 'wallclock_time', 'budget')</em><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajEntry._fields_defaults">
 <code class="sig-name descname">_fields_defaults</code><em class="property"> = {}</em><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._fields_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry._make">
-<em class="property">classmethod </em><code class="sig-name descname">_make</code><span class="sig-paren">(</span><em class="sig-param">iterable</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._make" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="sig-name descname">_make</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._make" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a new TrajEntry object from a sequence or iterable</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry._replace">
-<code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._replace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry._replace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a new TrajEntry object replacing specified fields with new values</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.budget">
 <em class="property">property </em><code class="sig-name descname">budget</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.budget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 6</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent">
 <em class="property">property </em><code class="sig-name descname">incumbent</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.incumbent_id">
 <em class="property">property </em><code class="sig-name descname">incumbent_id</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.incumbent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.ta_runs">
 <em class="property">property </em><code class="sig-name descname">ta_runs</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 3</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.ta_time_used">
 <em class="property">property </em><code class="sig-name descname">ta_time_used</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.ta_time_used" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 4</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.train_perf">
 <em class="property">property </em><code class="sig-name descname">train_perf</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.train_perf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajEntry.wallclock_time">
 <em class="property">property </em><code class="sig-name descname">wallclock_time</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajEntry.wallclock_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 5</p>
@@ -372,37 +372,37 @@
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.utils.io.traj_logging.TrajLogger">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajLogger</code><span class="sig-paren">(</span><em class="sig-param">output_dir: Optional[str], stats: smac.stats.stats.Stats</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.traj_logging.</code><code class="sig-name descname">TrajLogger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writes trajectory logs files and creates output directory if not exists already</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.stats">
 <code class="sig-name descname">stats</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.logger">
 <code class="sig-name descname">logger</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.output_dir">
 <code class="sig-name descname">output_dir</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.output_dir" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn">
 <code class="sig-name descname">aclib_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.old_traj_fn">
 <code class="sig-name descname">old_traj_fn</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.old_traj_fn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.io.traj_logging.TrajLogger.trajectory">
 <code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -416,9 +416,9 @@
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger._add_in_aclib_format">
-<code class="sig-name descname">_add_in_aclib_format</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">ta_time_used: float</em>, <em class="sig-param">wallclock_time: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_aclib_format" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_in_aclib_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_perf</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">incumbent_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">ta_time_used</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">wallclock_time</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_aclib_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to AClib2-like trajectory file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -433,9 +433,9 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format">
-<code class="sig-name descname">_add_in_alljson_format</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">budget: float</em>, <em class="sig-param">ta_time_used: float</em>, <em class="sig-param">wallclock_time: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_in_alljson_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_perf</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">incumbent_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">ta_time_used</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">wallclock_time</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_alljson_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to AClib2-like (but with configs as json) trajectory file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -451,9 +451,9 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger._add_in_old_format">
-<code class="sig-name descname">_add_in_old_format</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">ta_time_used: float</em>, <em class="sig-param">wallclock_time: float</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_old_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_old_format" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_in_old_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_perf</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">incumbent_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">ta_time_used</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">wallclock_time</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._add_in_old_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._add_in_old_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to old SMAC2-like trajectory file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -468,9 +468,9 @@
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger._convert_dict_to_config">
-<em class="property">static </em><code class="sig-name descname">_convert_dict_to_config</code><span class="sig-paren">(</span><em class="sig-param">config_list: List[str], cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._convert_dict_to_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._convert_dict_to_config" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">_convert_dict_to_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_list</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">cs</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger._convert_dict_to_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger._convert_dict_to_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Since we save a configurations in a dictionary str-&gt;str we have to
 try to figure out the type (int, float, str) of each parameter value</p>
 <dl class="field-list simple">
@@ -483,9 +483,9 @@ try to figure out the type (int, float, str) of each parameter value</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.add_entry">
-<code class="sig-name descname">add_entry</code><span class="sig-paren">(</span><em class="sig-param">train_perf: float</em>, <em class="sig-param">incumbent_id: int</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">budget: float = 0</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_entry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">train_perf</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">incumbent_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.add_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.add_entry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds entries to trajectory files (several formats) with using the
 same timestamps for each entry</p>
 <dl class="field-list simple">
@@ -500,9 +500,9 @@ same timestamps for each entry</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format">
-<em class="property">static </em><code class="sig-name descname">read_traj_aclib_format</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span> &#x2192; List[Dict[str, Union[float, int, ConfigSpace.configuration_space.Configuration]]]<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">read_traj_aclib_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cs</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>float<span class="p">, </span>int<span class="p">, </span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_aclib_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_aclib_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads trajectory from file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -527,9 +527,9 @@ same timestamps for each entry</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format">
-<em class="property">static </em><code class="sig-name descname">read_traj_alljson_format</code><span class="sig-paren">(</span><em class="sig-param">fn: str</em>, <em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span> &#x2192; List[Dict[str, Union[float, int, ConfigSpace.configuration_space.Configuration]]]<a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">read_traj_alljson_format</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cs</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Dict<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>float<span class="p">, </span>int<span class="p">, </span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/io/traj_logging.html#TrajLogger.read_traj_alljson_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.traj_logging.TrajLogger.read_traj_alljson_format" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads trajectory from file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

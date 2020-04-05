@@ -288,12 +288,12 @@
             
   <div class="section" id="module-smac.epm.rf_with_instances">
 <span id="smac-epm-rf-with-instances-module"></span><h1>smac.epm.rf_with_instances module<a class="headerlink" href="#module-smac.epm.rf_with_instances" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.rf_with_instances.</code><code class="sig-name descname">RandomForestWithInstances</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, log_y: bool = False, num_trees: int = 10, do_bootstrapping: bool = True, n_points_per_tree: int = -1, ratio_features: float = 0.8333333333333334, min_samples_split: int = 3, min_samples_leaf: int = 3, max_depth: int = 1048576, eps_purity: float = 1e-08, max_num_nodes: int = 1048576, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.rf_with_instances.</code><code class="sig-name descname">RandomForestWithInstances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">types</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">bounds</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">log_y</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">num_trees</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">do_bootstrapping</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">n_points_per_tree</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">ratio_features</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.8333333333333334</span></em>, <em class="sig-param"><span class="n">min_samples_split</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">min_samples_leaf</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em>, <em class="sig-param"><span class="n">max_depth</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1048576</span></em>, <em class="sig-param"><span class="n">eps_purity</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-08</span></em>, <em class="sig-param"><span class="n">max_num_nodes</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1048576</span></em>, <em class="sig-param"><span class="n">instance_features</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pca_components</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_rf.html#smac.epm.base_rf.BaseModel" title="smac.epm.base_rf.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_rf.BaseModel</span></code></a></p>
 <p>Random forest that takes instance features into account.</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rf_opts">
 <code class="sig-name descname">rf_opts</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf_opts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random forest hyperparameter</p>
@@ -304,7 +304,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree">
 <code class="sig-name descname">n_points_per_tree</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -314,7 +314,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rf">
 <code class="sig-name descname">rf</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Only available after training</p>
@@ -325,7 +325,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.hypers">
 <code class="sig-name descname">hypers</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.hypers" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of random forest hyperparameters</p>
@@ -336,7 +336,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y">
 <code class="sig-name descname">unlog_y</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -346,7 +346,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.seed">
 <code class="sig-name descname">seed</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.seed" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -356,7 +356,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.types">
 <code class="sig-name descname">types</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.types" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -366,7 +366,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.bounds">
 <code class="sig-name descname">bounds</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.bounds" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -376,7 +376,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rng">
 <code class="sig-name descname">rng</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rng" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -386,7 +386,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.logger">
 <code class="sig-name descname">logger</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.logger" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -425,9 +425,9 @@ set n_feats (&gt; pca_dims).</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances._init_data_container">
-<code class="sig-name descname">_init_data_container</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; pyrfr.regression.default_data_container<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._init_data_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._init_data_container" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_init_data_container</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; pyrfr.regression.default_data_container<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._init_data_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._init_data_container" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fills a pyrfr default data container, s.t. the forest knows
 categoricals and bounds for continous data</p>
 <dl class="field-list simple">
@@ -446,9 +446,9 @@ categoricals and bounds for continous data</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -464,9 +464,9 @@ categoricals and bounds for continous data</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances._train">
-<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; smac.epm.rf_with_instances.RandomForestWithInstances<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances">smac.epm.rf_with_instances.RandomForestWithInstances</a><a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances._train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the random forest on X and y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -484,9 +484,9 @@ categoricals and bounds for continous data</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances">
-<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/rf_with_instances.html#RandomForestWithInstances.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>

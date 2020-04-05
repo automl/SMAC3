@@ -9,6 +9,7 @@ smac.epm package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.epm.base_epm
    smac.epm.base_gp

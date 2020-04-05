@@ -290,17 +290,17 @@
             
   <div class="section" id="module-smac.facade.experimental.psmac_facade">
 <span id="smac-facade-experimental-psmac-facade-module"></span><h1>smac.facade.experimental.psmac_facade module<a class="headerlink" href="#module-smac.facade.experimental.psmac_facade" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC">
 <em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">PSMAC</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], rng: Union[int, numpy.random.mtrand.RandomState, None] = None, run_id: int = 1, tae: Type[smac.tae.execute_ta_run.ExecuteTARun] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, shared_model: bool = True, validate: bool = True, n_optimizers: int = 2, val_set: Optional[List[str]] = None, n_incs: int = 1, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use PSMAC</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.logger">
 <code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.stats">
 <code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>loggs information about used resources</p>
@@ -311,7 +311,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.solver">
 <code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the actual algorithm calls</p>
@@ -322,7 +322,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.rh">
 <code class="sig-name descname">rh</code><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.rh" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
@@ -333,7 +333,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.portfolio">
 <code class="sig-name descname">portfolio</code><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
@@ -362,9 +362,9 @@ None =&gt; neither and return the full portfolio</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">
-<code class="sig-name descname">_get_mean_costs</code><span class="sig-paren">(</span><em class="sig-param">incs: List[ConfigSpace.configuration_space.Configuration], new_rh: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC._get_mean_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_mean_costs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incs</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_rh</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC._get_mean_costs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute mean cost per instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -383,9 +383,9 @@ None =&gt; neither and return the full portfolio</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids">
-<code class="sig-name descname">get_best_incumbents_ids</code><span class="sig-paren">(</span><em class="sig-param">incs: List[ConfigSpace.configuration_space.Configuration]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.get_best_incumbents_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_best_incumbents_ids</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incs</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.get_best_incumbents_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines the IDs and costs of the best configurations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -403,7 +403,7 @@ None =&gt; neither and return the full portfolio</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
@@ -418,17 +418,17 @@ None =&gt; neither and return the full portfolio</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC.validate_incs">
-<code class="sig-name descname">validate_incs</code><span class="sig-paren">(</span><em class="sig-param">incs: numpy.ndarray</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.validate_incs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.validate_incs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate_incs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incs</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC.validate_incs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.validate_incs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validation</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="smac.facade.experimental.psmac_facade.optimize">
-<code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], tae: Type[smac.tae.execute_ta_run.ExecuteTARun], tae_kwargs: Dict, rng: Union[numpy.random.mtrand.RandomState, int], output_dir: str, **kwargs</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">Dict</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">output_dir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unbound method to be called in a subprocess</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

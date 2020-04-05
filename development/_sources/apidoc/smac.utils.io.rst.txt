@@ -9,6 +9,7 @@ smac.utils.io package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.utils.io.cmd_reader
    smac.utils.io.input_reader

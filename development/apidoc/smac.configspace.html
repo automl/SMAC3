@@ -286,7 +286,7 @@
             
   <div class="section" id="module-smac.configspace">
 <span id="smac-configspace-package"></span><h1>smac.configspace package<a class="headerlink" href="#module-smac.configspace" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.ConfigurationSpace">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">ConfigurationSpace</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -306,69 +306,69 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._add_edge">
-<code class="sig-name descname">_add_edge</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_edge" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_edge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parent_node</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span></em>, <em class="sig-param"><span class="n">child_node</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span></em>, <em class="sig-param"><span class="n">condition</span><span class="p">:</span> <span class="n">ConfigSpace.conditions.ConditionComponent</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_edge" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._add_hyperparameter">
-<code class="sig-name descname">_add_hyperparameter</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_hyperparameter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_hyperparameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hyperparameter</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._add_hyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_condition">
-<code class="sig-name descname">_check_condition</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_condition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_condition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">child_node</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span></em>, <em class="sig-param"><span class="n">condition</span><span class="p">:</span> <span class="n">ConfigSpace.conditions.ConditionComponent</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_condition" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_configuration_rigorous">
-<code class="sig-name descname">_check_configuration_rigorous</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_configuration_rigorous" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_configuration_rigorous</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configuration</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">allow_inactive_with_values</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_configuration_rigorous" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_default_configuration">
-<code class="sig-name descname">_check_default_configuration</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_default_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_default_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_default_configuration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_edges">
-<code class="sig-name descname">_check_edges</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_edges" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">edges</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Tuple<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">, </span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Union<span class="p">[</span>float<span class="p">, </span>str<span class="p">, </span>int<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_edges" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_forbidden">
-<code class="sig-name descname">_check_forbidden</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_forbidden</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vector</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._check_forbidden_component">
-<code class="sig-name descname">_check_forbidden_component</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden_component" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_check_forbidden_component</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clause</span><span class="p">:</span> <span class="n">ConfigSpace.forbidden.AbstractForbiddenComponent</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._check_forbidden_component" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._create_tmp_dag">
-<code class="sig-name descname">_create_tmp_dag</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._create_tmp_dag" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_create_tmp_dag</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.nx.classes.digraph.DiGraph<a class="headerlink" href="#smac.configspace.ConfigurationSpace._create_tmp_dag" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._get_child_conditions_of">
-<code class="sig-name descname">_get_child_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_child_conditions_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_child_conditions_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.AbstractCondition<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_child_conditions_of" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._get_children_of">
-<code class="sig-name descname">_get_children_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_children_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_children_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_children_of" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._get_parent_conditions_of">
-<code class="sig-name descname">_get_parent_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parent_conditions_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_parent_conditions_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.AbstractCondition<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parent_conditions_of" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._get_parents_of">
-<code class="sig-name descname">_get_parents_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parents_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_parents_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._get_parents_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the parent hyperparameters of a given hyperparameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -383,19 +383,19 @@ Not used by the configuration space.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._sort_hyperparameters">
-<code class="sig-name descname">_sort_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._sort_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_sort_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace._sort_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace._update_cache">
-<code class="sig-name descname">_update_cache</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace._update_cache" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_update_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace._update_cache" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_condition">
-<code class="sig-name descname">add_condition</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_condition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_condition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">condition</span><span class="p">:</span> <span class="n">ConfigSpace.conditions.ConditionComponent</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.conditions.ConditionComponent<a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_condition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a condition to the configuration space.
 Check if adding the condition is legal:</p>
 <ul class="simple">
@@ -418,9 +418,9 @@ these edges are finally added at the end of the function.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_conditions">
-<code class="sig-name descname">add_conditions</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_conditions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_conditions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conditions</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.conditions.ConditionComponent<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.ConditionComponent<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_conditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a list of conditions to the configuration space.
 They must be legal. Take a look at
 <code class="xref py py-meth docutils literal notranslate"><span class="pre">add_condition()</span></code>.</p>
@@ -437,9 +437,9 @@ They must be legal. Take a look at
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_configuration_space">
-<code class="sig-name descname">add_configuration_space</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_configuration_space" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_configuration_space</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span><span class="p">:</span> <span class="n">unicode</span></em>, <em class="sig-param"><span class="n">configuration_space</span><span class="p">:</span> <span class="n">ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">delimiter</span><span class="p">:</span> <span class="n">unicode</span> <span class="o">=</span> <span class="default_value">':'</span></em>, <em class="sig-param"><span class="n">parent_hyperparameter</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; ConfigurationSpace<a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_configuration_space" title="Permalink to this definition">¶</a></dt>
 <dd><p>Combine two configuration space by adding one the other configuration
 space. The contents of the configuration space, which should be added,
 are renamed to <code class="docutils literal notranslate"><span class="pre">prefix</span></code> + <code class="docutils literal notranslate"><span class="pre">delimiter</span></code> + old_name.</p>
@@ -463,9 +463,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_forbidden_clause">
-<code class="sig-name descname">add_forbidden_clause</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_forbidden_clause" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_forbidden_clause</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clause</span><span class="p">:</span> <span class="n">ConfigSpace.forbidden.AbstractForbiddenComponent</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.forbidden.AbstractForbiddenComponent<a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_forbidden_clause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a forbidden clause to the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -480,9 +480,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_forbidden_clauses">
-<code class="sig-name descname">add_forbidden_clauses</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_forbidden_clauses" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_forbidden_clauses</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">clauses</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.forbidden.AbstractForbiddenComponent<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.forbidden.AbstractForbiddenComponent<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_forbidden_clauses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a list of forbidden clauses to the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -497,9 +497,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_hyperparameter">
-<code class="sig-name descname">add_hyperparameter</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_hyperparameter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_hyperparameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hyperparameter</span><span class="p">:</span> <span class="n">ConfigSpace.hyperparameters.Hyperparameter</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.hyperparameters.Hyperparameter<a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_hyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a hyperparameter to the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -514,9 +514,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.add_hyperparameters">
-<code class="sig-name descname">add_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hyperparameters</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.add_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add hyperparameters to the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -531,9 +531,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.check_configuration">
-<code class="sig-name descname">check_configuration</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.check_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_configuration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configuration</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace.check_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if a configuration is legal. Raises an error if not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -542,9 +542,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.check_configuration_vector_representation">
-<code class="sig-name descname">check_configuration_vector_representation</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.check_configuration_vector_representation" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_configuration_vector_representation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vector</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace.check_configuration_vector_representation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raise error if configuration in vector representation is not legal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -553,9 +553,9 @@ forbidden clauses</p></li>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.generate_all_continuous_from_bounds">
-<code class="sig-name descname">generate_all_continuous_from_bounds</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.generate_all_continuous_from_bounds" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_all_continuous_from_bounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span><span class="p">:</span> <span class="n">List<span class="p">[</span>List<span class="p">[</span>Any<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace.generate_all_continuous_from_bounds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate <code class="xref py py-class docutils literal notranslate"><span class="pre">UniformFloatHyperparameter</span></code>
 from a list containing lists with lower and upper bounds. The generated
 hyperparameters are added to the configuration space.</p>
@@ -566,9 +566,9 @@ hyperparameters are added to the configuration space.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_active_hyperparameters">
-<code class="sig-name descname">get_active_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_active_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_active_hyperparameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configuration</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em><span class="sig-paren">)</span> &#x2192; Set<a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_active_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a set of active hyperparameter for a given configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -583,9 +583,9 @@ hyperparameters are added to the configuration space.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_all_conditional_hyperparameters">
-<code class="sig-name descname">get_all_conditional_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_all_conditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_all_conditional_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_all_conditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with names of all conditional hyperparameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -597,9 +597,9 @@ hyperparameters are added to the configuration space.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters">
-<code class="sig-name descname">get_all_unconditional_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_all_unconditional_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with names of unconditional hyperparameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -611,9 +611,9 @@ hyperparameters are added to the configuration space.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_child_conditions_of">
-<code class="sig-name descname">get_child_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_child_conditions_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_child_conditions_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.AbstractCondition<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_child_conditions_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with conditions of all children of a given
 hyperparameter referenced by its <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 <dl class="field-list simple">
@@ -629,9 +629,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_children_of">
-<code class="sig-name descname">get_children_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_children_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_children_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_children_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all children of a given hyperparameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -646,9 +646,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_conditions">
-<code class="sig-name descname">get_conditions</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_conditions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.AbstractCondition<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_conditions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all conditions from the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -660,9 +660,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_default_configuration">
-<code class="sig-name descname">get_default_configuration</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_default_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_default_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_default_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a configuration containing hyperparameters with default values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -674,9 +674,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_forbiddens">
-<code class="sig-name descname">get_forbiddens</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_forbiddens" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_forbiddens</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.forbidden.AbstractForbiddenComponent<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_forbiddens" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all forbidden clauses from the configuration space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -688,9 +688,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_hyperparameter">
-<code class="sig-name descname">get_hyperparameter</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_hyperparameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.hyperparameters.Hyperparameter<a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gives the hyperparameter from the configuration space given its name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -705,9 +705,9 @@ hyperparameter referenced by its <code class="docutils literal notranslate"><spa
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_hyperparameter_by_idx">
-<code class="sig-name descname">get_hyperparameter_by_idx</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter_by_idx" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_hyperparameter_by_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">idx</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; unicode<a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter_by_idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the name of a hyperparameter from the configuration space given
 its id.</p>
 <dl class="field-list simple">
@@ -723,9 +723,9 @@ its id.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_hyperparameter_names">
-<code class="sig-name descname">get_hyperparameter_names</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter_names" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_hyperparameter_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameter_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all names of hyperparameter, which are contained in
 the configuration space object.</p>
 <dl class="field-list simple">
@@ -738,9 +738,9 @@ the configuration space object.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_hyperparameters">
-<code class="sig-name descname">get_hyperparameters</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_hyperparameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_hyperparameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with all the hyperparameter, which are contained in the
 configuration space object.</p>
 <dl class="field-list simple">
@@ -754,9 +754,9 @@ space object</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_idx_by_hyperparameter_name">
-<code class="sig-name descname">get_idx_by_hyperparameter_name</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_idx_by_hyperparameter_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_idx_by_hyperparameter_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">unicode</span></em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_idx_by_hyperparameter_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the id of a hyperparameter by its <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -771,9 +771,9 @@ space object</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_parent_conditions_of">
-<code class="sig-name descname">get_parent_conditions_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_parent_conditions_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_parent_conditions_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.conditions.AbstractCondition<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_parent_conditions_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list with conditions of all parents of a given hyperparameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -789,9 +789,9 @@ object</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.get_parents_of">
-<code class="sig-name descname">get_parents_of</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_parents_of" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_parents_of</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.hyperparameters.Hyperparameter<span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.get_parents_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the parent hyperparameters of a given hyperparameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -807,9 +807,9 @@ object</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.sample_configuration">
-<code class="sig-name descname">sample_configuration</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.sample_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sample_configuration</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">, </span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#smac.configspace.ConfigurationSpace.sample_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sample <code class="docutils literal notranslate"><span class="pre">size</span></code> configurations from the configuration space object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -824,9 +824,9 @@ object</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.ConfigurationSpace.seed">
-<code class="sig-name descname">seed</code><a class="headerlink" href="#smac.configspace.ConfigurationSpace.seed" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">seed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.ConfigurationSpace.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the random seed to a number.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -837,7 +837,7 @@ object</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.Configuration">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">Configuration</code><a class="headerlink" href="#smac.configspace.Configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -868,14 +868,14 @@ Default to None</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration._populate_values">
-<code class="sig-name descname">_populate_values</code><a class="headerlink" href="#smac.configspace.Configuration._populate_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_populate_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.Configuration._populate_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration.get">
-<code class="sig-name descname">get</code><a class="headerlink" href="#smac.configspace.Configuration.get" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span><span class="p">:</span> <span class="n">unicode</span></em>, <em class="sig-param"><span class="n">default</span><span class="p">:</span> <span class="n">Union[None, Any]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Union[None, Any]<a class="headerlink" href="#smac.configspace.Configuration.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return for a given hyperparameter name <code class="docutils literal notranslate"><span class="pre">item</span></code> the value of this
 hyperparameter. <code class="docutils literal notranslate"><span class="pre">default</span></code> if the hyperparameter <code class="docutils literal notranslate"><span class="pre">name</span></code> doesn’t exist.</p>
 <dl class="field-list simple">
@@ -894,9 +894,9 @@ hyperparameter. <code class="docutils literal notranslate"><span class="pre">def
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration.get_array">
-<code class="sig-name descname">get_array</code><a class="headerlink" href="#smac.configspace.Configuration.get_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#smac.configspace.Configuration.get_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the internal vector representation of the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>. All continuous
 values are scaled between zero and one.</p>
@@ -910,9 +910,9 @@ values are scaled between zero and one.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration.get_dictionary">
-<code class="sig-name descname">get_dictionary</code><a class="headerlink" href="#smac.configspace.Configuration.get_dictionary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_dictionary</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>str<span class="p">, </span>float<span class="p">, </span>int<span class="p">]</span><span class="p">]</span><a class="headerlink" href="#smac.configspace.Configuration.get_dictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a representation of the
 <code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code> in dictionary
 form.</p>
@@ -926,17 +926,17 @@ form.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration.is_valid_configuration">
-<code class="sig-name descname">is_valid_configuration</code><a class="headerlink" href="#smac.configspace.Configuration.is_valid_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">is_valid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#smac.configspace.Configuration.is_valid_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the object is a valid
 <code class="xref py py-class docutils literal notranslate"><span class="pre">Configuration</span></code>.
 Raise an error if configuration is not valid.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="smac.configspace.Configuration.keys">
-<code class="sig-name descname">keys</code><a class="headerlink" href="#smac.configspace.Configuration.keys" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="headerlink" href="#smac.configspace.Configuration.keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cache the keys to speed up the process of retrieving the keys.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -950,7 +950,7 @@ Raise an error if configuration is not valid.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.Constant">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">Constant</code><a class="headerlink" href="#smac.configspace.Constant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSpace.hyperparameters.Hyperparameter</span></code></p>
@@ -967,52 +967,52 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant._inverse_transform">
 <code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant._sample">
 <code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._sample" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant._transform">
 <code class="sig-name descname">_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant._transform_scalar">
 <code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform_scalar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant._transform_vector">
 <code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant._transform_vector" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant.get_neighbors">
 <code class="sig-name descname">get_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.get_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant.get_num_neighbors">
 <code class="sig-name descname">get_num_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.get_num_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant.has_neighbors">
 <code class="sig-name descname">has_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.has_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant.is_legal">
 <code class="sig-name descname">is_legal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.is_legal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.Constant.is_legal_vector">
 <code class="sig-name descname">is_legal_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.Constant.is_legal_vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the given value is a legal value for the vector
@@ -1030,14 +1030,14 @@ representation of this hyperparameter.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.Constant.value">
 <code class="sig-name descname">value</code><a class="headerlink" href="#smac.configspace.Constant.value" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.CategoricalHyperparameter">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">CategoricalHyperparameter</code><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSpace.hyperparameters.Hyperparameter</span></code></p>
@@ -1064,82 +1064,82 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._get_probabilities">
 <code class="sig-name descname">_get_probabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._get_probabilities" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._inverse_transform">
 <code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._sample">
 <code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._transform">
 <code class="sig-name descname">_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._transform_scalar">
 <code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter._transform_vector">
 <code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.allow_greater_less_comparison">
 <code class="sig-name descname">allow_greater_less_comparison</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.allow_greater_less_comparison" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.check_default">
 <code class="sig-name descname">check_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.check_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.CategoricalHyperparameter.choices">
 <code class="sig-name descname">choices</code><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.choices" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.compare">
 <code class="sig-name descname">compare</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.compare" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.compare_vector">
 <code class="sig-name descname">compare_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.compare_vector" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.get_neighbors">
 <code class="sig-name descname">get_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.get_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.get_num_neighbors">
 <code class="sig-name descname">get_num_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.get_num_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.has_neighbors">
 <code class="sig-name descname">has_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.has_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.is_legal">
 <code class="sig-name descname">is_legal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.is_legal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.CategoricalHyperparameter.is_legal_vector">
 <code class="sig-name descname">is_legal_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.is_legal_vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the given value is a legal value for the vector
@@ -1157,19 +1157,19 @@ representation of this hyperparameter.</p>
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.CategoricalHyperparameter.num_choices">
 <code class="sig-name descname">num_choices</code><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.num_choices" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.CategoricalHyperparameter.probabilities">
 <code class="sig-name descname">probabilities</code><a class="headerlink" href="#smac.configspace.CategoricalHyperparameter.probabilities" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.UniformFloatHyperparameter">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">UniformFloatHyperparameter</code><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSpace.hyperparameters.FloatHyperparameter</span></code></p>
@@ -1201,42 +1201,42 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter._inverse_transform">
 <code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter._sample">
 <code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter._transform_scalar">
 <code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter._transform_vector">
 <code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter.check_default">
 <code class="sig-name descname">check_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.check_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter.get_neighbors">
 <code class="sig-name descname">get_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.get_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter.is_legal">
 <code class="sig-name descname">is_legal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.is_legal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter.is_legal_vector">
 <code class="sig-name descname">is_legal_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.is_legal_vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the given value is a legal value for the vector
@@ -1254,14 +1254,14 @@ representation of this hyperparameter.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformFloatHyperparameter.to_integer">
 <code class="sig-name descname">to_integer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformFloatHyperparameter.to_integer" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.UniformIntegerHyperparameter">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">UniformIntegerHyperparameter</code><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSpace.hyperparameters.IntegerHyperparameter</span></code></p>
@@ -1293,52 +1293,52 @@ Not used by the configuration space.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter._inverse_transform">
 <code class="sig-name descname">_inverse_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter._sample">
 <code class="sig-name descname">_sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._sample" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter._transform_scalar">
 <code class="sig-name descname">_transform_scalar</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._transform_scalar" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter._transform_vector">
 <code class="sig-name descname">_transform_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter._transform_vector" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.check_default">
 <code class="sig-name descname">check_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.check_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.get_neighbors">
 <code class="sig-name descname">get_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.get_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.get_num_neighbors">
 <code class="sig-name descname">get_num_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.get_num_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.has_neighbors">
 <code class="sig-name descname">has_neighbors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.has_neighbors" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.is_legal">
 <code class="sig-name descname">is_legal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.is_legal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.UniformIntegerHyperparameter.is_legal_vector">
 <code class="sig-name descname">is_legal_vector</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.UniformIntegerHyperparameter.is_legal_vector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the given value is a legal value for the vector
@@ -1358,7 +1358,7 @@ representation of this hyperparameter.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.configspace.InCondition">
 <em class="property">class </em><code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">InCondition</code><a class="headerlink" href="#smac.configspace.InCondition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigSpace.conditions.AbstractCondition</span></code></p>
@@ -1390,24 +1390,24 @@ if the <em>InCondition</em> is satisfied</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.configspace.InCondition._evaluate">
 <code class="sig-name descname">_evaluate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.InCondition._evaluate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.InCondition.values">
 <code class="sig-name descname">values</code><a class="headerlink" href="#smac.configspace.InCondition.values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.configspace.InCondition.vector_values">
 <code class="sig-name descname">vector_values</code><a class="headerlink" href="#smac.configspace.InCondition.vector_values" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="smac.configspace.get_one_exchange_neighbourhood">
 <code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">get_one_exchange_neighbourhood</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.configspace.get_one_exchange_neighbourhood" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in a one-exchange neighborhood.</p>
@@ -1438,9 +1438,9 @@ the given configuration.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="smac.configspace.convert_configurations_to_array">
-<code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">convert_configurations_to_array</code><span class="sig-paren">(</span><em class="sig-param">configs: List[ConfigSpace.configuration_space.Configuration]</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/configspace/util.html#convert_configurations_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.configspace.convert_configurations_to_array" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.configspace.</code><code class="sig-name descname">convert_configurations_to_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configs</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/configspace/util.html#convert_configurations_to_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.configspace.convert_configurations_to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Impute inactive hyperparameters in configurations with their default.</p>
 <p>Necessary to apply an EPM to the data.</p>
 <dl class="field-list simple">

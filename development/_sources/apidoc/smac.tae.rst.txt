@@ -9,6 +9,7 @@ smac.tae package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.tae.execute_func
    smac.tae.execute_ta_run
