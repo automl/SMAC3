@@ -237,20 +237,20 @@ class RunHistory(object):
             self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
             if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
                 # add new inst-seed-key with budget to main dict
-                self._configid_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
+                self._configid_to_inst_seed_budget[k.config_id][is_k] = [float(k.budget)]
             elif k.budget not in is_k:
                 # append new budget to existing inst-seed-key dict
-                self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
+                self._configid_to_inst_seed_budget[k.config_id][is_k].append(float(k.budget))
 
             # if budget is used, then update cost instead of incremental updates
-            if not self.overwrite_existing_runs and k.budget == 0:
+            if not self.overwrite_existing_runs and float(k.budget) == 0:
                 # assumes an average across runs as cost function aggregation, this is used for algorithm configuration
                 # (incremental updates are used to save time as getting the cost for > 100 instances is high)
                 self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
                 # this is when budget > 0 (only successive halving and hyperband so far)
                 self.update_cost(config=self.ids_config[k.config_id])
-                if k.budget > 0:
+                if float(k.budget) > 0:
                     if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
                         raise ValueError('This should not happen!')
 
