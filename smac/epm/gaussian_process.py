@@ -237,7 +237,9 @@ class GaussianProcess(BaseModel):
                 theta_star = theta
         return theta_star
 
-    def _predict(self, X_test: np.ndarray, full_cov: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X_test: np.ndarray,
+                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -246,8 +248,13 @@ class GaussianProcess(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
-        full_cov: bool
-            If set to true than the whole covariance matrix between the test points is returned
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean.
+            Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
+            * None - only mean is returned
+            * diagonal_std - standard deviation at test points is returned
+            * diagonal_cov - diagonal of the covariance matrix is returned
+            * full_cov - whole covariance matrix between the test points is returned
 
         Returns
         ----------
@@ -261,9 +268,17 @@ class GaussianProcess(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        predict_kwargs = {'return_cov': False, 'return_std': True}
+        if cov_return_type is None:
+            predict_kwargs['return_std'] = False
+        if cov_return_type == 'full_cov':
+            predict_kwargs['return_cov'] = True
+
         X_test = self._impute_inactive(X_test)
-        mu, var = self.gp.predict(X_test, return_cov=True)
-        var = np.diag(var)
+        mu, var = self.gp.predict(X_test, **predict_kwargs)
+
+        if cov_return_type == 'diagonal_cov':
+            var = var ** 2  # since we get standard deviation for faster computation
 
         # Clip negative variances and set them to the smallest
         # positive float value
