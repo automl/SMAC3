@@ -33,10 +33,19 @@ class ExecuteTARunHydra(ExecuteTARun):
                 cost of oracle per instance
         '''
 
-        super().__init__(**kwargs)
+        super().__init__(ta=kwargs["ta"],
+                         stats=kwargs["stats"], run_obj=kwargs["run_obj"],
+                         runhistory=kwargs["runhistory"],
+                         par_factor=kwargs["par_factor"],
+                         cost_for_crash=kwargs["cost_for_crash"],
+                         abort_on_first_run_crash=kwargs["abort_on_first_run_crash"])
+
+        #super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
+        self.runner = tae(**kwargs)
+        """
         if tae is ExecuteTARunAClib:
-            self.runner = ExecuteTARunAClib(**kwargs)  # type: ExecuteTARun
+            self.runner = ExecuteTARunAClib(**kwargs)
         elif tae is ExecuteTARunOld:
             self.runner = ExecuteTARunOld(**kwargs)
         elif tae is ExecuteTAFuncDict:
@@ -45,6 +54,7 @@ class ExecuteTARunHydra(ExecuteTARun):
             self.runner = ExecuteTAFuncArray(**kwargs)
         else:
             raise Exception('TAE not supported')
+        """
 
     def run(self, config: Configuration,
             instance: str,
@@ -52,6 +62,7 @@ class ExecuteTARunHydra(ExecuteTARun):
             seed: int = 12345,
             budget: typing.Optional[float] = None,
             instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
+
         """ see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring
         """
 
