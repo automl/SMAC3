@@ -81,8 +81,8 @@ class RandomEPM(AbstractEPM):
         return self
 
     def _predict(self, X: np.ndarray,
-                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+                 cov_return_type: Optional[str] = 'diagonal_cov') \
+            -> Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
