@@ -169,7 +169,9 @@ class AbstractEPM(object):
         """
         raise NotImplementedError
 
-    def predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def predict(self, X: np.ndarray,
+                cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
@@ -177,6 +179,13 @@ class AbstractEPM(object):
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
             Training samples
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. (Applies to only Gaussian Process for now)
+            Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
+            * None - only mean is returned
+            * diagonal_std - standard deviation at test points is returned
+            * diagonal_cov - diagonal of the covariance matrix is returned
+            * full_cov - whole covariance matrix between the test points is returned
 
         Returns
         -------
@@ -202,16 +211,18 @@ class AbstractEPM(object):
         if X.shape[1] != len(self.types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
 
-        mean, var = self._predict(X)
+        mean, var = self._predict(X, cov_return_type)
 
         if len(mean.shape) == 1:
             mean = mean.reshape((-1, 1))
-        if len(var.shape) == 1:
+        if var is not None and len(var.shape) == 1:
             var = var.reshape((-1, 1))
 
         return mean, var
 
-    def _predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray,
+                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
@@ -219,6 +230,8 @@ class AbstractEPM(object):
         ----------
         X : np.ndarray
             [n_samples, n_features (config + instance features)]
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         -------

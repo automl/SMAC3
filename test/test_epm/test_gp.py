@@ -294,6 +294,12 @@ class TestGP(unittest.TestCase):
         # There's a slight difference between my local installation and travis
         self.assertLess(abs(var_hat[0][0] - 1121.8409184001594), 2)
 
+        # test other covariance results
+        _, var_hat = model.predict(X, cov_return_type='full_cov')
+        self.assertEqual(var_hat.shape, (8, 8))
+        _, var_hat = model.predict(np.array([[10, 10, 10]]), cov_return_type=None)
+        self.assertIsNone(var_hat)
+
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
         # Normalize such that the bounds in get_gp (10) hold

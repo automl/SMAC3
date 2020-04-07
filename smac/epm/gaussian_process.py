@@ -249,18 +249,13 @@ class GaussianProcess(BaseModel):
         X_test: np.ndarray (N, D)
             Input test points
         cov_return_type: typing.Optional[str]
-            Specifies what to return along with the mean.
-            Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
-            * None - only mean is returned
-            * diagonal_std - standard deviation at test points is returned
-            * diagonal_cov - diagonal of the covariance matrix is returned
-            * full_cov - whole covariance matrix between the test points is returned
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         ----------
         np.array(N,)
             predictive mean
-        np.array(N,) or np.array(N, N) if full_cov == True
+        np.array(N,) or np.array(N, N) if cov_return_type == full_cov
             predictive variance
 
         """
@@ -268,24 +263,31 @@ class GaussianProcess(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
-        predict_kwargs = {'return_cov': False, 'return_std': True}
-        if cov_return_type is None:
-            predict_kwargs['return_std'] = False
-        if cov_return_type == 'full_cov':
-            predict_kwargs['return_cov'] = True
-
         X_test = self._impute_inactive(X_test)
-        mu, var = self.gp.predict(X_test, **predict_kwargs)
 
-        if cov_return_type == 'diagonal_cov':
-            var = var ** 2  # since we get standard deviation for faster computation
+        predict_kwargs = {'return_cov': False, 'return_std': True}
+        if cov_return_type == 'full_cov':
+            predict_kwargs = {'return_cov': True, 'return_std': False}
 
-        # Clip negative variances and set them to the smallest
-        # positive float value
-        var = np.clip(var, VERY_SMALL_NUMBER, np.inf)
+        if cov_return_type is None:
+            mu = self.gp.predict(X_test)
+            var = None
 
-        if self.normalize_y:
-            mu, var = self._untransform_y(mu, var)
+            if self.normalize_y:
+                mu = self._untransform_y(mu)
+
+        else:
+            mu, var = self.gp.predict(X_test, **predict_kwargs)
+
+            if cov_return_type == 'diagonal_cov':
+                var = var ** 2  # since we get standard deviation for faster computation
+
+            # Clip negative variances and set them to the smallest
+            # positive float value
+            var = np.clip(var, VERY_SMALL_NUMBER, np.inf)
+
+            if self.normalize_y:
+                mu, var = self._untransform_y(mu, var)
 
         return mu, var
 
