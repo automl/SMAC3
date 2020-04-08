@@ -99,6 +99,9 @@ class RandomEPM(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

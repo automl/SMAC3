@@ -212,6 +212,8 @@ class RandomForestWithInstances(BaseModel):
                 'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != len(self.types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         X = self._impute_inactive(X)
 

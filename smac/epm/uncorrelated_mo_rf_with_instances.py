@@ -111,6 +111,9 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         mean = np.zeros((X.shape[0], self.num_targets))
         var = np.zeros((X.shape[0], self.num_targets))
         for i, estimator in enumerate(self.estimators):

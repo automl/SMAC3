@@ -171,7 +171,7 @@ class AbstractEPM(object):
 
     def predict(self, X: np.ndarray,
                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
         """
         Predict means and variances for given X.
 
@@ -222,7 +222,7 @@ class AbstractEPM(object):
 
     def _predict(self, X: np.ndarray,
                  cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
         """
         Predict means and variances for given X.
 

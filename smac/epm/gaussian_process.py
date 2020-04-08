@@ -239,7 +239,7 @@ class GaussianProcess(BaseModel):
 
     def _predict(self, X_test: np.ndarray,
                  cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -255,8 +255,8 @@ class GaussianProcess(BaseModel):
         ----------
         np.array(N,)
             predictive mean
-        np.array(N,) or np.array(N, N) if cov_return_type == full_cov
-            predictive variance
+        np.array(N,) or np.array(N, N) or None
+            predictive variance or standard deviation
 
         """
 
@@ -264,10 +264,6 @@ class GaussianProcess(BaseModel):
             raise Exception('Model has to be trained first!')
 
         X_test = self._impute_inactive(X_test)
-
-        predict_kwargs = {'return_cov': False, 'return_std': True}
-        if cov_return_type == 'full_cov':
-            predict_kwargs = {'return_cov': True, 'return_std': False}
 
         if cov_return_type is None:
             mu = self.gp.predict(X_test)
@@ -277,10 +273,12 @@ class GaussianProcess(BaseModel):
                 mu = self._untransform_y(mu)
 
         else:
-            mu, var = self.gp.predict(X_test, **predict_kwargs)
+            predict_kwargs = {'return_cov': False, 'return_std': True}
+            if cov_return_type == 'full_cov':
+                predict_kwargs = {'return_cov': True, 'return_std': False}
 
-            if cov_return_type == 'diagonal_cov':
-                var = var ** 2  # since we get standard deviation for faster computation
+            mu, var = self.gp.predict(X_test, **predict_kwargs)
+            var = var ** 2  # since we get standard deviation for faster computation
 
             # Clip negative variances and set them to the smallest
             # positive float value
@@ -288,6 +286,9 @@ class GaussianProcess(BaseModel):
 
             if self.normalize_y:
                 mu, var = self._untransform_y(mu, var)
+
+            if cov_return_type == 'diagonal_std':
+                var = np.sqrt(var)  # converting variance to std deviation if specified
 
         return mu, var
 

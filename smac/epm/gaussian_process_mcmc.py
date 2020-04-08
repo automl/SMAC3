@@ -403,6 +403,9 @@ class GaussianProcessMCMC(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         X_test = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
