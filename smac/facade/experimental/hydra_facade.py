@@ -214,7 +214,6 @@ class Hydra(object):
             else:
                 to_keep_ids = est_ids[:self.incs_per_round]
             config_cost_per_inst = {}
-            #incs = incs[to_keep_ids]
             incs = [incs[i] for i in to_keep_ids]
             self.logger.info('Kept incumbents')
             for inc in incs:

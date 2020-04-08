@@ -40,21 +40,8 @@ class ExecuteTARunHydra(ExecuteTARun):
                          cost_for_crash=kwargs["cost_for_crash"],
                          abort_on_first_run_crash=kwargs["abort_on_first_run_crash"])
 
-        #super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
         self.runner = tae(**kwargs)
-        """
-        if tae is ExecuteTARunAClib:
-            self.runner = ExecuteTARunAClib(**kwargs)
-        elif tae is ExecuteTARunOld:
-            self.runner = ExecuteTARunOld(**kwargs)
-        elif tae is ExecuteTAFuncDict:
-            self.runner = ExecuteTAFuncDict(**kwargs)
-        elif tae is ExecuteTAFuncArray:
-            self.runner = ExecuteTAFuncArray(**kwargs)
-        else:
-            raise Exception('TAE not supported')
-        """
 
     def run(self, config: Configuration,
             instance: str,
