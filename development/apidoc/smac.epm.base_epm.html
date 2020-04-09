@@ -409,16 +409,19 @@ set n_feats (&gt; pca_dims).</p></li>
 </dl>
 <dl class="py method">
 <dt id="smac.epm.base_epm.AbstractEPM._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config + instance features)]</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – [n_samples, n_features (config + instance features)]</p></li>
+<li><p><strong>cov_return_type</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. Refer <code class="docutils literal notranslate"><span class="pre">predict()</span></code> for more information.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
+<li><p><strong>vars</strong> (<em>None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]</em>) – Predictive variance or standard deviation</p></li>
 </ul>
 </p>
 </dd>
@@ -448,16 +451,24 @@ number of target names specified in the constructor.</p></li>
 
 <dl class="py method">
 <dt id="smac.epm.base_epm.AbstractEPM.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – Training samples</p></li>
+<li><p><strong>cov_return_type</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. (Applies to only Gaussian Process for now)
+Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
+* None - only mean is returned
+* diagonal_std - standard deviation at test points is returned
+* diagonal_cov - diagonal of the covariance matrix is returned
+* full_cov - whole covariance matrix between the test points is returned</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
-<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
+<li><p><strong>vars</strong> (<em>None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]</em>) – Predictive variance or standard deviation</p></li>
 </ul>
 </p>
 </dd>

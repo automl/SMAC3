@@ -362,20 +362,20 @@ hyperparameter configuration theta.</p>
 
 <dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X_test</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">full_cov</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X_test</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the predictive mean and variance of the objective function at
 the given test points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X_test</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input test points</p></li>
-<li><p><strong>full_cov</strong> (<em>bool</em>) – If set to true than the whole covariance matrix between the test points is returned</p></li>
+<li><p><strong>cov_return_type</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. Refer <code class="docutils literal notranslate"><span class="pre">predict()</span></code> for more information.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>np.array(N,)</em> – predictive mean</p></li>
-<li><p><em>np.array(N,) or np.array(N, N) if full_cov == True</em> – predictive variance</p></li>
+<li><p><em>np.array(N,) or np.array(N, N) or None</em> – predictive variance or standard deviation</p></li>
 </ul>
 </p>
 </dd>

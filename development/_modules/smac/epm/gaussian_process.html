@@ -518,7 +518,9 @@
                 <span class="n">theta_star</span> <span class="o">=</span> <span class="n">theta</span>
         <span class="k">return</span> <span class="n">theta_star</span></div>
 
-<div class="viewcode-block" id="GaussianProcess._predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">full_cov</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="GaussianProcess._predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.gaussian_process.html#smac.epm.gaussian_process.GaussianProcess._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">cov_return_type</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;diagonal_cov&#39;</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the predictive mean and variance of the objective function at</span>
 <span class="sd">        the given test points.</span>
@@ -527,15 +529,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">        X_test: np.ndarray (N, D)</span>
 <span class="sd">            Input test points</span>
-<span class="sd">        full_cov: bool</span>
-<span class="sd">            If set to true than the whole covariance matrix between the test points is returned</span>
+<span class="sd">        cov_return_type: typing.Optional[str]</span>
+<span class="sd">            Specifies what to return along with the mean. Refer ``predict()`` for more information.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        ----------</span>
 <span class="sd">        np.array(N,)</span>
 <span class="sd">            predictive mean</span>
-<span class="sd">        np.array(N,) or np.array(N, N) if full_cov == True</span>
-<span class="sd">            predictive variance</span>
+<span class="sd">        np.array(N,) or np.array(N, N) or None</span>
+<span class="sd">            predictive variance or standard deviation</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -543,15 +545,33 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Model has to be trained first!&#39;</span><span class="p">)</span>
 
         <span class="n">X_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_impute_inactive</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-        <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">return_cov</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
 
-        <span class="c1"># Clip negative variances and set them to the smallest</span>
-        <span class="c1"># positive float value</span>
-        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">VERY_SMALL_NUMBER</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cov_return_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">:</span>
-            <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_untransform_y</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">:</span>
+                <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_untransform_y</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">predict_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;return_cov&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;return_std&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+            <span class="k">if</span> <span class="n">cov_return_type</span> <span class="o">==</span> <span class="s1">&#39;full_cov&#39;</span><span class="p">:</span>
+                <span class="n">predict_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;return_cov&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;return_std&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+
+            <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="o">**</span><span class="n">predict_kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">cov_return_type</span> <span class="o">!=</span> <span class="s1">&#39;full_cov&#39;</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="n">var</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># since we get standard deviation for faster computation</span>
+
+            <span class="c1"># Clip negative variances and set them to the smallest</span>
+            <span class="c1"># positive float value</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">VERY_SMALL_NUMBER</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize_y</span><span class="p">:</span>
+                <span class="n">mu</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_untransform_y</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">cov_return_type</span> <span class="o">==</span> <span class="s1">&#39;diagonal_std&#39;</span><span class="p">:</span>
+                <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>  <span class="c1"># converting variance to std deviation if specified</span>
 
         <span class="k">return</span> <span class="n">mu</span><span class="p">,</span> <span class="n">var</span></div>
 

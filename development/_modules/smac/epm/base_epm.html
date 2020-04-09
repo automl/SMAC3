@@ -450,7 +450,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
-<div class="viewcode-block" id="AbstractEPM.predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEPM.predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                <span class="n">cov_return_type</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;diagonal_cov&#39;</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict means and variances for given X.</span>
 
@@ -458,13 +460,20 @@
 <span class="sd">        ----------</span>
 <span class="sd">        X : np.ndarray of shape = [n_samples, n_features (config + instance features)]</span>
 <span class="sd">            Training samples</span>
+<span class="sd">        cov_return_type: typing.Optional[str]</span>
+<span class="sd">            Specifies what to return along with the mean. (Applies to only Gaussian Process for now)</span>
+<span class="sd">            Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]</span>
+<span class="sd">            * None - only mean is returned</span>
+<span class="sd">            * diagonal_std - standard deviation at test points is returned</span>
+<span class="sd">            * diagonal_cov - diagonal of the covariance matrix is returned</span>
+<span class="sd">            * full_cov - whole covariance matrix between the test points is returned</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        means : np.ndarray of shape = [n_samples, n_objectives]</span>
 <span class="sd">            Predictive mean</span>
-<span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive variance</span>
+<span class="sd">        vars : None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]</span>
+<span class="sd">            Predictive variance or standard deviation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected 2d array, got </span><span class="si">%d</span><span class="s1">d array!&#39;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
@@ -483,16 +492,18 @@
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Rows in X should have </span><span class="si">%d</span><span class="s1"> entries but have </span><span class="si">%d</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
-        <span class="n">mean</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">mean</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">cov_return_type</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span></div>
 
-<div class="viewcode-block" id="AbstractEPM._predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="AbstractEPM._predict"><a class="viewcode-back" href="../../../apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM._predict">[docs]</a>    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">cov_return_type</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;diagonal_cov&#39;</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Predict means and variances for given X.</span>
 
@@ -500,13 +511,15 @@
 <span class="sd">        ----------</span>
 <span class="sd">        X : np.ndarray</span>
 <span class="sd">            [n_samples, n_features (config + instance features)]</span>
+<span class="sd">        cov_return_type: typing.Optional[str]</span>
+<span class="sd">            Specifies what to return along with the mean. Refer ``predict()`` for more information.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        means : np.ndarray of shape = [n_samples, n_objectives]</span>
 <span class="sd">            Predictive mean</span>
-<span class="sd">        vars : np.ndarray  of shape = [n_samples, n_objectives]</span>
-<span class="sd">            Predictive variance</span>
+<span class="sd">        vars : None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]</span>
+<span class="sd">            Predictive variance or standard deviation</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
@@ -538,6 +551,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> \
                 <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mean</span><span class="p">,</span> <span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
+
             <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
             <span class="n">var</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">var</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
             <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span>
@@ -550,6 +565,7 @@
             <span class="n">X_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
                 <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">n_instances</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">))</span>
             <span class="n">means</span><span class="p">,</span> <span class="nb">vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
             <span class="c1"># VAR[1/n (X_1 + ... + X_n)] =</span>
             <span class="c1"># 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))</span>
             <span class="c1"># for independent X_1 ... X_n</span>

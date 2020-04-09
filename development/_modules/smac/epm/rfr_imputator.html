@@ -399,6 +399,8 @@
 
             <span class="c1"># predict censored y values</span>
             <span class="n">y_mean</span><span class="p">,</span> <span class="n">y_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">censored_X</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">y_var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
+
             <span class="n">y_var</span><span class="p">[</span><span class="n">y_var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
             <span class="n">y_stdev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">y_var</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
             <span class="n">y_mean</span> <span class="o">=</span> <span class="n">y_mean</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>

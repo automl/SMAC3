@@ -315,11 +315,14 @@ set n_feats (&gt; pca_dims).</p></li>
 </dl>
 <dl class="py method">
 <dt id="smac.epm.random_epm.RandomEPM._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM._predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/random_epm.html#RandomEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.random_epm.RandomEPM._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_samples</em><em>, </em><em>n_features</em><em> (</em><em>config + instance features</em><em>)</em><em>]</em>) – </p></li>
+<li><p><strong>cov_return_type</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. Refer <code class="docutils literal notranslate"><span class="pre">predict()</span></code> for more information.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
