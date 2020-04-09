@@ -92,13 +92,17 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
         return self
 
-    def _predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray,
+                 cov_return_type: Optional[str] = 'diagonal_cov') \
+            -> Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance
         features)]
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         -------
@@ -107,10 +111,14 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         mean = np.zeros((X.shape[0], self.num_targets))
         var = np.zeros((X.shape[0], self.num_targets))
         for i, estimator in enumerate(self.estimators):
             m, v = estimator.predict(X)
+            assert v is not None  # please mypy
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
         return mean, var

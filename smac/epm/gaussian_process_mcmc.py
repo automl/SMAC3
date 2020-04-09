@@ -374,7 +374,9 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return lml, grad
 
-    def _predict(self, X_test: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X_test: np.ndarray,
+                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -387,6 +389,8 @@ class GaussianProcessMCMC(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         ----------
@@ -399,12 +403,16 @@ class GaussianProcessMCMC(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         X_test = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
             mu_tmp, var_tmp = model.predict(X_test)
+            assert var_tmp is not None  # please mypy
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
 

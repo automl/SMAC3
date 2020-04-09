@@ -80,13 +80,17 @@ class RandomEPM(AbstractEPM):
         self.logger.debug("(Pseudo) Fit model to data")
         return self
 
-    def _predict(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray,
+                 cov_return_type: Optional[str] = 'diagonal_cov') \
+            -> Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         -------
@@ -95,6 +99,9 @@ class RandomEPM(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
         return self.rng.rand(len(X), 1), self.rng.rand(len(X), 1)

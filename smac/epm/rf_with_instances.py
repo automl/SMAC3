@@ -188,13 +188,17 @@ class RandomForestWithInstances(BaseModel):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray,
+                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples,
                                    n_features (config + instance features)]
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         -------
@@ -208,6 +212,8 @@ class RandomForestWithInstances(BaseModel):
                 'Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != len(self.types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         X = self._impute_inactive(X)
 
@@ -276,6 +282,8 @@ class RandomForestWithInstances(BaseModel):
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
             mean_, var = self.predict(X)
+            assert var is not None  # please mypy
+
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
             return mean_, var
