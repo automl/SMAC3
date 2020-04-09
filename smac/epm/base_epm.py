@@ -171,7 +171,7 @@ class AbstractEPM(object):
 
     def predict(self, X: np.ndarray,
                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
+            -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
         """
         Predict means and variances for given X.
 
@@ -191,8 +191,8 @@ class AbstractEPM(object):
         -------
         means : np.ndarray of shape = [n_samples, n_objectives]
             Predictive mean
-        vars : np.ndarray  of shape = [n_samples, n_objectives]
-            Predictive variance
+        vars : None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]
+            Predictive variance or standard deviation
         """
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
@@ -222,7 +222,7 @@ class AbstractEPM(object):
 
     def _predict(self, X: np.ndarray,
                  cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
+            -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
         """
         Predict means and variances for given X.
 
@@ -237,8 +237,8 @@ class AbstractEPM(object):
         -------
         means : np.ndarray of shape = [n_samples, n_objectives]
             Predictive mean
-        vars : np.ndarray  of shape = [n_samples, n_objectives]
-            Predictive variance
+        vars : None or np.ndarray of shape = [n_samples, n_objectives] or [n_samples, n_samples]
+            Predictive variance or standard deviation
         """
         raise NotImplementedError()
 

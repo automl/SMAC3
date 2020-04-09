@@ -239,7 +239,7 @@ class GaussianProcess(BaseModel):
 
     def _predict(self, X_test: np.ndarray,
                  cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Union[np.ndarray, typing.Tuple[np.ndarray, np.ndarray]]:
+            -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -278,7 +278,9 @@ class GaussianProcess(BaseModel):
                 predict_kwargs = {'return_cov': True, 'return_std': False}
 
             mu, var = self.gp.predict(X_test, **predict_kwargs)
-            var = var ** 2  # since we get standard deviation for faster computation
+
+            if cov_return_type != 'full_cov':
+                var = var ** 2  # since we get standard deviation for faster computation
 
             # Clip negative variances and set them to the smallest
             # positive float value
