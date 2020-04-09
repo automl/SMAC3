@@ -412,7 +412,7 @@ class GaussianProcessMCMC(BaseModel):
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
             mu_tmp, var_tmp = model.predict(X_test)
-            assert var is not None  # please mypy
+            assert var_tmp is not None  # please mypy
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
 

@@ -284,6 +284,7 @@ class AbstractEPM(object):
             X_ = np.hstack(
                 (np.tile(x, (n_instances, 1)), self.instance_features))
             means, vars = self.predict(X_)
+            assert vars is not None  # please mypy
             # VAR[1/n (X_1 + ... + X_n)] =
             # 1/n^2 * ( VAR(X_1) + ... + VAR(X_n))
             # for independent X_1 ... X_n
