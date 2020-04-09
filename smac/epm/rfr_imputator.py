@@ -118,6 +118,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
+            assert y_var is not None  # please mypy
+
             y_var[y_var < self.var_threshold] = self.var_threshold
             y_stdev = np.sqrt(y_var)[:, 0]
             y_mean = y_mean[:, 0]

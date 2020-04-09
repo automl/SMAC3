@@ -270,6 +270,8 @@ class AbstractEPM(object):
         if self.instance_features is None or \
                 len(self.instance_features) == 0:
             mean, var = self.predict(X)
+            assert var is not None  # please mypy
+
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
             return mean, var

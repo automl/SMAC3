@@ -118,6 +118,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         var = np.zeros((X.shape[0], self.num_targets))
         for i, estimator in enumerate(self.estimators):
             m, v = estimator.predict(X)
+            assert v is not None  # please mypy
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
         return mean, var

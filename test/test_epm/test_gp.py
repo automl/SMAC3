@@ -305,7 +305,7 @@ class TestGP(unittest.TestCase):
         _, var_fc = model.predict(np.array([[10, 10, 10]]), cov_return_type='full_cov')
         self.assertAlmostEqual(var_fc[0][0], var_hat[0][0])
         _, var_sd = model.predict(np.array([[10, 10, 10]]), cov_return_type='diagonal_std')
-        self.assertAlmostEqual(var_sd ** 2, var_hat)
+        self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)
