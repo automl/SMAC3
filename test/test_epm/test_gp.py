@@ -143,16 +143,16 @@ class TestGP(unittest.TestCase):
 
         for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
             X = rs.rand(10)
-            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
+                                   model.predict, X)
             X = rs.rand(10, 10, 10)
-            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
+                                   model.predict, X)
 
             X = rs.rand(10, 5)
-            self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
-                                                "but have 5!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
+                                               "but have 5!",
+                                   model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
