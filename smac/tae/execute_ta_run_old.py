@@ -100,16 +100,16 @@ class ExecuteTARunOld(ExecuteTARun):
         elif status_string.upper() in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
-            self.logger.warn("Could not parse output of target algorithm. Expected format: "
-                             "\"Result of this algorithm run: <status>,<runtime>,<quality>,<seed>\"; "
-                             "Treating as CRASHED run.")
+            self.logger.warning("Could not parse output of target algorithm. Expected format: "
+                                "\"Result of this algorithm run: <status>,<runtime>,<quality>,<seed>\"; "
+                                "Treating as CRASHED run.")
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
-            self.logger.warn(
+            self.logger.warning(
                 "Target algorithm crashed. Last 5 lines of stdout and stderr")
-            self.logger.warn("\n".join(stdout_.split("\n")[-5:]))
-            self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
+            self.logger.warning("\n".join(stdout_.split("\n")[-5:]))
+            self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
         if self.run_obj == "runtime":
             cost = runtime
