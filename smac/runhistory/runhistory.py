@@ -2,7 +2,6 @@ import collections
 from enum import Enum
 import json
 import typing
-import warnings
 
 import numpy as np
 
