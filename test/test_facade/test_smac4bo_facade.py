@@ -1,6 +1,5 @@
 import contextlib
 import shutil
-import unittest
 import unittest.mock
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter

@@ -1,5 +1,6 @@
 import copy
 import typing
+import warnings
 
 import numpy as np
 
@@ -211,7 +212,9 @@ class AbstractEPM(object):
         if X.shape[1] != len(self.types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
 
-        mean, var = self._predict(X, cov_return_type)
+        with warnings.catch_warnings():
+            warnings.filterwarnings('ignore', 'Predicted variances smaller than 0. Setting those variances to 0.')
+            mean, var = self._predict(X, cov_return_type)
 
         if len(mean.shape) == 1:
             mean = mean.reshape((-1, 1))

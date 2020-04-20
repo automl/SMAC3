@@ -128,7 +128,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             # since we handle them appropriately
             with warnings.catch_warnings():
                 warnings.filterwarnings(
-                    'ignore', r'invalid value encountered in (subtract|true_divide).*')
+                    'ignore', r'invalid value encountered in (subtract|true_divide|power).*')
                 warnings.filterwarnings(
                     'ignore', r'divide by zero encountered in (true_divide|log).*')
                 imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
