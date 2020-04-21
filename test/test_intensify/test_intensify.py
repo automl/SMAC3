@@ -469,7 +469,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         self.assertEqual(list(self.rh.data.values())[4][2], StatusType.CAPPED)
         self.assertEqual(intensifier.n_iters, 1)  # iteration continues as `min_chall` condition is not met
-        self.assertIsInstance(intensifier.configs_to_run, collections.Iterator)
+        self.assertIsInstance(intensifier.configs_to_run, collections.abc.Iterator)
         # no configs should be left at the end
         with self.assertRaises(StopIteration):
             next(intensifier.configs_to_run)

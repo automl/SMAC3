@@ -596,7 +596,11 @@ class RunHistory(object):
         Cost: float
             Average cost
         """
-        return float(np.mean(self._cost(config, instance_seed_budget_keys)))
+        costs = self._cost(config, instance_seed_budget_keys)
+        if costs:
+            return float(np.mean(costs))
+
+        return np.nan
 
     def sum_cost(
         self,
@@ -644,7 +648,11 @@ class RunHistory(object):
         min_cost: float
             minimum cost of config
         """
-        return float(np.min(self._cost(config, instance_seed_budget_keys)))
+        costs = self._cost(config, instance_seed_budget_keys)
+        if costs:
+            return float(np.min(costs))
+
+        return np.nan
 
     def compute_all_costs(self, instances: typing.Optional[typing.List[str]] = None) -> None:
         """Computes the cost of all configurations from scratch and overwrites

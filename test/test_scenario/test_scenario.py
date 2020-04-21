@@ -93,40 +93,40 @@ class ScenarioTest(unittest.TestCase):
     def test_string_scenario(self):
         scenario = Scenario('test/test_files/scenario_test/scenario.txt')
 
-        self.assertEquals(scenario.ta, ['echo', 'Hello'])
-        self.assertEquals(scenario.execdir, '.')
+        self.assertEqual(scenario.ta, ['echo', 'Hello'])
+        self.assertEqual(scenario.execdir, '.')
         self.assertFalse(scenario.deterministic)
-        self.assertEquals(
+        self.assertEqual(
             scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
-        self.assertEquals(scenario.overall_obj, 'mean10')
-        self.assertEquals(scenario.cutoff, 5.)
-        self.assertEquals(scenario.algo_runs_timelimit, np.inf)
-        self.assertEquals(scenario.wallclock_limit, 18000)
-        self.assertEquals(scenario.par_factor, 10)
-        self.assertEquals(scenario.train_insts, ['d', 'e', 'f'])
-        self.assertEquals(scenario.test_insts, ['a', 'b', 'c'])
+        self.assertEqual(scenario.overall_obj, 'mean10')
+        self.assertEqual(scenario.cutoff, 5.)
+        self.assertEqual(scenario.algo_runs_timelimit, np.inf)
+        self.assertEqual(scenario.wallclock_limit, 18000)
+        self.assertEqual(scenario.par_factor, 10)
+        self.assertEqual(scenario.train_insts, ['d', 'e', 'f'])
+        self.assertEqual(scenario.test_insts, ['a', 'b', 'c'])
         test_dict = {'d': 1, 'e': 2, 'f': 3}
-        self.assertEquals(scenario.feature_dict, test_dict)
-        self.assertEquals(scenario.feature_array[0], 1)
+        self.assertEqual(scenario.feature_dict, test_dict)
+        self.assertEqual(scenario.feature_array[0], 1)
 
     def test_dict_scenario(self):
         scenario = Scenario(self.test_scenario_dict)
 
-        self.assertEquals(scenario.ta, ['echo', 'Hello'])
-        self.assertEquals(scenario.execdir, '.')
+        self.assertEqual(scenario.ta, ['echo', 'Hello'])
+        self.assertEqual(scenario.execdir, '.')
         self.assertFalse(scenario.deterministic)
-        self.assertEquals(
+        self.assertEqual(
             scenario.pcs_fn, 'test/test_files/scenario_test/param.pcs')
-        self.assertEquals(scenario.overall_obj, 'mean10')
-        self.assertEquals(scenario.cutoff, 5.)
-        self.assertEquals(scenario.algo_runs_timelimit, np.inf)
-        self.assertEquals(scenario.wallclock_limit, 18000)
-        self.assertEquals(scenario.par_factor, 10)
-        self.assertEquals(scenario.train_insts, ['d', 'e', 'f'])
-        self.assertEquals(scenario.test_insts, ['a', 'b', 'c'])
+        self.assertEqual(scenario.overall_obj, 'mean10')
+        self.assertEqual(scenario.cutoff, 5.)
+        self.assertEqual(scenario.algo_runs_timelimit, np.inf)
+        self.assertEqual(scenario.wallclock_limit, 18000)
+        self.assertEqual(scenario.par_factor, 10)
+        self.assertEqual(scenario.train_insts, ['d', 'e', 'f'])
+        self.assertEqual(scenario.test_insts, ['a', 'b', 'c'])
         test_dict = {'d': 1, 'e': 2, 'f': 3}
-        self.assertEquals(scenario.feature_dict, test_dict)
-        self.assertEquals(scenario.feature_array[0], 1)
+        self.assertEqual(scenario.feature_dict, test_dict)
+        self.assertEqual(scenario.feature_array[0], 1)
 
     def unknown_parameter_in_scenario(self):
         self.assertRaisesRegex(ValueError,
@@ -310,8 +310,8 @@ class ScenarioTest(unittest.TestCase):
         }
         scenario = Scenario(self.test_scenario_dict,
                             cmd_options=cmd_options)
-        self.assertEquals(scenario.feature_names,
-                          ['feature1', 'feature2', 'feature3'])
+        self.assertEqual(scenario.feature_names,
+                         ['feature1', 'feature2', 'feature3'])
 
 
 if __name__ == "__main__":

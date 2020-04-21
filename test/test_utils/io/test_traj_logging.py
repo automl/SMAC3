@@ -102,34 +102,34 @@ class TrajLoggerTest(unittest.TestCase):
 
         # Check old format
         header = data[0].split(',')
-        self.assertEquals(header[0], '"CPU Time Used"')
-        self.assertEquals(header[-1], '"Configuration..."')
+        self.assertEqual(header[0], '"CPU Time Used"')
+        self.assertEqual(header[-1], '"Configuration..."')
 
         data = list(map(lambda x: x.split(', '), data[1:]))
         frmt_str = '%1.6f'
-        self.assertEquals(frmt_str % 0.5, data[0][0])
-        self.assertEquals(frmt_str % 0.9, data[0][1])
-        self.assertEquals(frmt_str % 0.5, data[0][4])
+        self.assertEqual(frmt_str % 0.5, data[0][0])
+        self.assertEqual(frmt_str % 0.9, data[0][1])
+        self.assertEqual(frmt_str % 0.5, data[0][4])
 
-        self.assertEquals(frmt_str % 0, data[1][0])
-        self.assertEquals(frmt_str % 1.3, data[1][1])
-        self.assertEquals(frmt_str % 2, data[1][4])
+        self.assertEqual(frmt_str % 0, data[1][0])
+        self.assertEqual(frmt_str % 1.3, data[1][1])
+        self.assertEqual(frmt_str % 2, data[1][4])
 
-        self.assertEquals(frmt_str % 0, data[2][0])
-        self.assertEquals(frmt_str % .7, data[2][1])
-        self.assertEquals(frmt_str % 3, data[2][4])
+        self.assertEqual(frmt_str % 0, data[2][0])
+        self.assertEqual(frmt_str % .7, data[2][1])
+        self.assertEqual(frmt_str % 3, data[2][4])
 
         # Check aclib2-format
-        self.assertEquals(json_dicts_aclib2[0]['cpu_time'], .5)
-        self.assertEquals(json_dicts_aclib2[0]['cost'], 0.9)
-        self.assertEquals(len(json_dicts_aclib2[0]['incumbent']), 4)
+        self.assertEqual(json_dicts_aclib2[0]['cpu_time'], .5)
+        self.assertEqual(json_dicts_aclib2[0]['cost'], 0.9)
+        self.assertEqual(len(json_dicts_aclib2[0]['incumbent']), 4)
         self.assertTrue("param_a='0.5'" in json_dicts_aclib2[0]['incumbent'])
         self.assertTrue("param_a='0.0'" in json_dicts_aclib2[2]['incumbent'])
 
         # Check alljson-format
-        self.assertEquals(json_dicts_alljson[0]['cpu_time'], .5)
-        self.assertEquals(json_dicts_alljson[0]['cost'], 0.9)
-        self.assertEquals(len(json_dicts_alljson[0]['incumbent']), 4)
+        self.assertEqual(json_dicts_alljson[0]['cpu_time'], .5)
+        self.assertEqual(json_dicts_alljson[0]['cost'], 0.9)
+        self.assertEqual(len(json_dicts_alljson[0]['incumbent']), 4)
         self.assertTrue(json_dicts_alljson[0]["incumbent"]["param_a"] == 0.5)
         self.assertTrue(json_dicts_alljson[2]["incumbent"]["param_a"] == 0.0)
         self.assertEqual(json_dicts_alljson[0]['budget'], 0)

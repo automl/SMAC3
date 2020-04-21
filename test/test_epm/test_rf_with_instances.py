@@ -31,16 +31,16 @@ class TestRFWithInstances(unittest.TestCase):
             seed=1,
         )
         X = rs.rand(10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
-                                model.predict, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
+                               model.predict, X)
         X = rs.rand(10, 10, 10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                model.predict, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
+                               model.predict, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
-                                            "but have 5!",
-                                model.predict, X)
+        self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
+                                           "but have 5!",
+                               model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -88,11 +88,11 @@ class TestRFWithInstances(unittest.TestCase):
             bounds=list(map(lambda x: (0, 10), range(10))),
         )
         X = rs.rand(10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
-                                model.predict_marginalized_over_instances, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
+                               model.predict_marginalized_over_instances, X)
         X = rs.rand(10, 10, 10)
-        self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                model.predict_marginalized_over_instances, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
+                               model.predict_marginalized_over_instances, X)
 
     @unittest.mock.patch.object(RandomForestWithInstances, 'predict')
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):

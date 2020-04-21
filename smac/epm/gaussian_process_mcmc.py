@@ -1,6 +1,7 @@
 from copy import deepcopy
 import logging
 import typing
+import warnings
 
 import emcee
 import numpy as np
@@ -170,17 +171,20 @@ class GaussianProcessMCMC(BaseModel):
                     self.p0 = np.vstack(dim_samples).transpose()
 
                     # Run MCMC sampling
-                    self.p0, _, _ = sampler.run_mcmc(self.p0,
-                                                     self.burnin_steps,
-                                                     rstate0=self.rng)
+                    with warnings.catch_warnings():
+                        warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
+                        self.p0, _, _ = sampler.run_mcmc(self.p0,
+                                                         self.burnin_steps)
 
                     self.burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
-                self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length, rstate0=self.rng)
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
+                    self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
 
                 # Take the last samples from each walker
-                self.hypers = sampler.chain[:, -1]
+                self.hypers = sampler.get_chain()[:, -1]
             elif self.mcmc_sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
