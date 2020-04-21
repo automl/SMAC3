@@ -409,7 +409,7 @@
             <span class="c1"># since we handle them appropriately</span>
             <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
-                    <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;invalid value encountered in (subtract|true_divide).*&#39;</span><span class="p">)</span>
+                    <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;invalid value encountered in (subtract|true_divide|power).*&#39;</span><span class="p">)</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
                     <span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;divide by zero encountered in (true_divide|log).*&#39;</span><span class="p">)</span>
                 <span class="n">imputed_y</span> <span class="o">=</span> <span class="n">truncnorm</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="p">(</span><span class="n">censored_y</span> <span class="o">-</span> <span class="n">y_mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_stdev</span><span class="p">,</span>

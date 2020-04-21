@@ -521,7 +521,7 @@ integrate over.</p></li>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the lower confidence bound for a given x over the best so far value as
 acquisition value.</p>
-<p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(eta_t)\sigma(\mathbf{X})\)</span></p>
+<p><span class="math notranslate nohighlight">\(LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})\)</span></p>
 <p>Returns -LCB(X) as the acquisition_function optimizer maximizes the acquisition value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -613,24 +613,24 @@ dimensions of one X.</p>
 <dt id="smac.optimizer.acquisition.PI">
 <em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">PI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
-<dl>
-<dt>Computes the probability of improvement for a given x over the best so far value as</dt><dd><p>acquisition value.</p>
-<p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>P(f_{t+1}(mathbf{X})geq f(mathbf{X^+})) :=
-Phi(</p>
-</dd>
-<dt>rac{mu(mathbf{X}) - f(mathbf{X^+})}{sigma(mathbf{X})})`,</dt><dd><p>with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
-<dl class="simple">
-<dt>model<span class="classifier">AbstractEPM</span></dt><dd><dl class="simple">
-<dt>A model that implements at least</dt><dd><ul class="simple">
+<p>Computes the probability of improvement for a given x over the best so far value as
+acquisition value.</p>
+<p><span class="math notranslate nohighlight">\(P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
+\Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})\)</span>,
+with <span class="math notranslate nohighlight">\(f(X^+)\)</span> as the best location and <span class="math notranslate nohighlight">\(\Phi\)</span> the cdf of the standard normal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – <dl class="simple">
+<dt>A model that implements at least</dt><dd><ul>
 <li><p>predict_marginalized_over_instances(X)</p></li>
 </ul>
 </dd>
 </dl>
-</dd>
-<dt>par<span class="classifier">float, default=0.0</span></dt><dd><p>Controls the balance between exploration and exploitation of the
-acquisition function.</p>
-</dd>
-</dl>
+</p></li>
+<li><p><strong>par</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – Controls the balance between exploration and exploitation of the
+acquisition function.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py attribute">

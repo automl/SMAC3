@@ -877,7 +877,11 @@
 <span class="sd">        Cost: float</span>
 <span class="sd">            Average cost</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">)))</span></div>
+        <span class="n">costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">costs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
 <div class="viewcode-block" id="RunHistory.sum_cost"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.sum_cost">[docs]</a>    <span class="k">def</span> <span class="nf">sum_cost</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -925,7 +929,11 @@
 <span class="sd">        min_cost: float</span>
 <span class="sd">            minimum cost of config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">)))</span></div>
+        <span class="n">costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">costs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">costs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
 
 <div class="viewcode-block" id="RunHistory.compute_all_costs"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.compute_all_costs">[docs]</a>    <span class="k">def</span> <span class="nf">compute_all_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Computes the cost of all configurations from scratch and overwrites</span>
