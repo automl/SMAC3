@@ -5,12 +5,16 @@
 ## Minor Changes
 
 * Upgrade the minimal scikit-learn dependency to 0.22.X.
+* Make GP predictions faster (#638)
 * Allow passing `tae_runner_kwargs` to `ROAR`.
 * Add a new StatusType `DONOTADVANCE` for runs that would not benefit from a higher budgets. Such runs are always used 
   to build a model for SH/HB (#632)
+* Add facades/examples for HB/SH (#610)
+* Compute acquisition function only if necessary (#627,#629)
 
 ## Bug Fixes
 * Fixes a bug which caused SH/HB to consider TIMEOUTS on all budgets for model building (#632)
+* Fixed a bug in adaptive capping for SH (#619,#622)
 
 # 0.12.0
 
