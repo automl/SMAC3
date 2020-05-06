@@ -120,11 +120,11 @@ class TestSMBO(unittest.TestCase):
             return SMAC4AC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
         smbo = get_smbo(0.3)
-        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0))
+        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0, update=False))
         smbo = get_smbo(0.5)
-        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03))
+        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03, update=False))
         smbo = get_smbo(0.7)
-        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6))
+        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6, update=False))
         # Test for invalid <= 0
         smbo = get_smbo(0)
         self.assertRaises(ValueError, smbo.run)
@@ -135,6 +135,56 @@ class TestSMBO(unittest.TestCase):
         self.assertRaises(ValueError, smbo.run)
         smbo = get_smbo(1.2)
         self.assertRaises(ValueError, smbo.run)
+
+    def test_update_intensification_percentage(self):
+        """
+        This test checks the insification time bound is updated in subsequent iterations as long as
+        num_runs of the intensifier is not reset to zero.
+        """
+
+        def target(x):
+            return 5
+
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification'})
+        self.output_dirs.append(scen.output_dir)
+        solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
+
+        solver.stats.is_budget_exhausted = unittest.mock.Mock()
+        solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
+
+        solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
+
+        class SideEffect:
+            def __init__(self, intensifier, get_next_challenger):
+                self.intensifier = intensifier
+                self.get_next_challenger = get_next_challenger
+                self.counter = 0
+
+            def __call__(self, *args, **kwargs):
+                self.counter += 1
+                if self.counter % 4 == 0:
+                    self.intensifier.num_run = 0
+                return self.get_next_challenger(*args, **kwargs)
+
+        solver.intensifier.get_next_challenger = unittest.mock.Mock(
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_challenger))
+
+        solver.run()
+
+        get_timebound_mock = solver._get_timebound_for_intensification
+        self.assertEqual(get_timebound_mock.call_count, 6)
+        self.assertFalse(get_timebound_mock.call_args_list[0][1]['update'])
+        self.assertFalse(get_timebound_mock.call_args_list[1][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[2][1]['update'])
+        self.assertFalse(get_timebound_mock.call_args_list[3][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[4][1]['update'])
+        self.assertTrue(get_timebound_mock.call_args_list[5][1]['update'])
+
+        self.assertGreater(get_timebound_mock.call_args_list[2][0][0], get_timebound_mock.call_args_list[1][0][0])
+        self.assertLess(get_timebound_mock.call_args_list[3][0][0], get_timebound_mock.call_args_list[2][0][0])
+        self.assertGreater(get_timebound_mock.call_args_list[4][0][0], get_timebound_mock.call_args_list[3][0][0])
+        self.assertGreater(get_timebound_mock.call_args_list[5][0][0], get_timebound_mock.call_args_list[4][0][0])
 
     def test_validation(self):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format",

@@ -23,6 +23,7 @@ if __name__ == '__main__':
                           # non-deterministic target algorithm
                           'initial_budget': 1,
                           'eta': 3,
+                          'min_chall': 1  # because successive halving cannot handle min_chall > 1
                           }
 
     smac = SMAC4AC(scenario=scenario,  # scenario object

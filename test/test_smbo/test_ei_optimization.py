@@ -41,6 +41,72 @@ def rosenbrock_4d(cfg):
     return(val)
 
 
+class TestEIMaximization(unittest.TestCase):
+    @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
+    @unittest.mock.patch.object(EI, '__call__')
+    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
+    def test_challenger_list_callback(self, patch_sample, patch_ei, patch_impute):
+        values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
+        patch_sample.return_value = ConfigurationMock(1)
+        patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
+        patch_impute.side_effect = lambda l: values
+        cs = ConfigurationSpace()
+        ei = EI(None)
+        rs = RandomSearch(ei, cs)
+        rs._maximize = unittest.mock.Mock()
+        rs._maximize.return_value = [(0, 0)]
+
+        rval = rs.maximize(
+            runhistory=None, stats=None, num_points=10,
+        )
+        self.assertEqual(rs._maximize.call_count, 0)
+        next(rval)
+        self.assertEqual(rs._maximize.call_count, 1)
+
+        random_configuration_chooser = unittest.mock.Mock()
+        random_configuration_chooser.check.side_effect = [True, False, False, False]
+        rs._maximize = unittest.mock.Mock()
+        rs._maximize.return_value = [(0, 0), (1, 1)]
+
+        rval = rs.maximize(
+            runhistory=None, stats=None, num_points=10, random_configuration_chooser=random_configuration_chooser,
+        )
+        self.assertEqual(rs._maximize.call_count, 0)
+        # The first configuration is chosen at random (see the random_configuration_chooser mock)
+        conf = next(rval)
+        self.assertIsInstance(conf, ConfigurationMock)
+        self.assertEqual(rs._maximize.call_count, 0)
+        # The 2nd configuration triggers the call to the callback (see the random_configuration_chooser mock)
+        conf = next(rval)
+        self.assertEqual(rs._maximize.call_count, 1)
+        self.assertEqual(conf, 0)
+        # The 3rd configuration doesn't trigger the callback any more
+        conf = next(rval)
+        self.assertEqual(rs._maximize.call_count, 1)
+        self.assertEqual(conf, 1)
+
+        with self.assertRaises(StopIteration):
+            next(rval)
+
+    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
+    def test_get_next_by_random_search(self, patch):
+        def side_effect(size):
+            return [ConfigurationMock()] * size
+
+        patch.side_effect = side_effect
+        cs = ConfigurationSpace()
+        ei = EI(None)
+        rs = RandomSearch(ei, cs)
+        rval = rs._maximize(
+            runhistory=None, stats=None, num_points=10, _sorted=False
+        )
+        self.assertEqual(len(rval), 10)
+        for i in range(10):
+            self.assertIsInstance(rval[i][1], ConfigurationMock)
+            self.assertEqual(rval[i][1].origin, 'Random Search')
+            self.assertEqual(rval[i][0], 0)
+
+
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.dirname(__file__)
@@ -186,6 +252,35 @@ class TestLocalSearch(unittest.TestCase):
         minimizer = ls.maximize(runhistory, None, 10)
         minima = [-rosenbrock_4d(m) for m in minimizer]
         self.assertGreater(minima[0], -0.05)
+
+    def test_get_initial_points_moo(self):
+        class Model:
+
+            def predict_marginalized_over_instances(self, X):
+                return X, X
+
+        class AcquisitionFunction:
+
+            model = Model()
+
+            def __call__(self, X):
+                return np.array([x.get_array().sum() for x in X]).reshape((-1, 1))
+
+        ls = LocalSearch(
+            acquisition_function=AcquisitionFunction(),
+            config_space=self.cs,
+            n_steps_plateau_walk=10,
+            max_steps=np.inf,
+        )
+
+        runhistory = RunHistory()
+        random_configs = self.cs.sample_configuration(size=100)
+        costs = np.array([rosenbrock_4d(random_config) for random_config in random_configs])
+        for random_config, cost in zip(random_configs, costs):
+            runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
+
+        points = ls._get_initial_points(num_points=5, runhistory=runhistory, additional_start_points=None)
+        self.assertEqual(len(points), 10)
 
 
 class TestRandomSearch(unittest.TestCase):

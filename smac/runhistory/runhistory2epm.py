@@ -45,9 +45,10 @@ class AbstractRunHistory2EPM(object):
         self,
         scenario: Scenario,
         num_params: int,
-        success_states: typing.Optional[typing.List[StatusType]] = None,
+        success_states: typing.List[StatusType],
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
+        consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
@@ -65,6 +66,8 @@ class AbstractRunHistory2EPM(object):
             If None, set to [StatusType.SUCCESS, ]
         impute_censored_data: bool, optional
             Should we impute data?
+        consider_for_higher_budgets_state: list, optional
+            Additionally consider all runs with these states for budget < current budget
         imputor: epm.base_imputor Instance
             Object to impute censored data
         impute_state: list, optional
@@ -96,15 +99,25 @@ class AbstractRunHistory2EPM(object):
         if rng is None:
             self.rng = np.random.RandomState(seed=1)
 
+        if impute_state is None and impute_censored_data:
+            raise TypeError("impute_state not given")
+
         if impute_state is None:
-            self.impute_state = [StatusType.CAPPED, ]
+            # please mypy
+            self.impute_state = []  # type: typing.List[StatusType]
         else:
             self.impute_state = impute_state
 
-        if success_states is None:
-            self.success_states = [StatusType.SUCCESS, ]
+        if consider_for_higher_budgets_state is None:
+            # please mypy
+            self.consider_for_higher_budgets_state = []  # type: typing.List[StatusType]
         else:
-            self.success_states = success_states
+            self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
+
+        if success_states is None:
+            raise TypeError("success_states not given")
+
+        self.success_states = success_states
 
         self.instance_features = scenario.feature_dict
         self.n_feats = scenario.n_features
@@ -121,7 +134,7 @@ class AbstractRunHistory2EPM(object):
 
         # Check imputor stuff
         if impute_censored_data and self.imputor is None:
-            self.logger.critical("You want me to impute cencored data, but "
+            self.logger.critical("You want me to impute censored data, but "
                                  "I don't know how. Imputor is None")
             raise ValueError("impute_censored data, but no imputor given")
         elif impute_censored_data and not \
@@ -138,7 +151,6 @@ class AbstractRunHistory2EPM(object):
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
-                      instances: list = None,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory
@@ -149,8 +161,6 @@ class AbstractRunHistory2EPM(object):
             dictionary from RunHistory.RunKey to RunHistory.RunValue
         runhistory: RunHistory
             runhistory object
-        instances: list
-            list of instances
         return_time_as_y: bool
             Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
         store_statistics: bool
@@ -162,6 +172,72 @@ class AbstractRunHistory2EPM(object):
         Y: np.ndarray
         """
         raise NotImplementedError()
+
+    def _get_s_run_dict(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
+        # Get only successfully finished runs
+        if budget_subset is not None:
+            if len(budget_subset) != 1:
+                raise ValueError("Cannot yet handle getting runs from multiple budgets")
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if run.budget in budget_subset
+                          and runhistory.data[run].status in self.success_states}
+            # Additionally add these states from lower budgets
+            add = {run: runhistory.data[run] for run in runhistory.data.keys()
+                   if runhistory.data[run].status in self.consider_for_higher_budgets_state
+                   and run.budget < budget_subset[0]}
+            s_run_dict.update(add)
+        else:
+            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status in self.success_states}
+        return s_run_dict
+
+    def _get_t_run_dict(
+            self,
+            runhistory: RunHistory,
+            budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
+        if budget_subset is not None:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time
+                          and run.budget in budget_subset}
+        else:
+            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                          if runhistory.data[run].status == StatusType.TIMEOUT
+                          and runhistory.data[run].time >= self.cutoff_time}
+        return t_run_dict
+
+    def get_configurations(
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> np.ndarray:
+        """Returns vector representation of only the configurations.
+
+        Instance features are not appended and cost values are not taken into account.
+
+        Parameters
+        ----------
+        runhistory : smac.runhistory.runhistory.RunHistory
+            Runhistory containing all evaluated configurations/instances
+        budget_subset : list of budgets to consider
+
+        Returns
+        -------
+        numpy.ndarray
+        """
+        s_runs = self._get_s_run_dict(runhistory, budget_subset)
+        s_config_ids = set(s_run.config_id for s_run in s_runs)
+        t_runs = self._get_t_run_dict(runhistory, budget_subset)
+        t_config_ids = set(t_run.config_id for t_run in t_runs)
+        config_ids = s_config_ids | t_config_ids
+        configurations = [runhistory.ids_config[config_id] for config_id in config_ids]
+        configs_array = convert_configurations_to_array(configurations)
+        return configs_array
 
     def transform(
         self,
@@ -186,30 +262,16 @@ class AbstractRunHistory2EPM(object):
         """
         self.logger.debug("Transform runhistory into X,y format")
 
-        # consider only successfully finished runs
-        s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                      if runhistory.data[run].status in self.success_states}
-
-        # consider only runs on a given budget
-        if budget_subset is not None:
-            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if run.budget in budget_subset}
-
-        # Store a list of instance IDs
-        s_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
+        s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
-                                  instances=s_instance_id_list, store_statistics=True)
+                                  store_statistics=True)
 
-        # Also get TIMEOUT runs
-        t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                      if runhistory.data[
-                          run].status == StatusType.TIMEOUT and runhistory.data[run].time >= self.cutoff_time}
-        t_instance_id_list = [k.instance_id for k in s_run_dict.keys()]
-
+        # Get real TIMEOUT runs
+        t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
         store_statistics = True if np.isnan(self.min_y) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    instances=t_instance_id_list, store_statistics=store_statistics)
+                                    store_statistics=store_statistics)
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -218,39 +280,41 @@ class AbstractRunHistory2EPM(object):
 
         if self.impute_censored_data:
             # Get all censored runs
-            c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[
-                              run].status in self.impute_state and runhistory.data[run].time < self.cutoff_time}
+            if budget_subset is not None:
+                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                              if runhistory.data[run].status in self.impute_state
+                              and runhistory.data[run].time < self.cutoff_time
+                              and run.budget in budget_subset}
+            else:
+                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
+                              if runhistory.data[run].status in self.impute_state
+                              and runhistory.data[run].time < self.cutoff_time}
+
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
                 # If we do not impute, we also return TIMEOUT data
                 X = np.vstack((X, tX))
                 Y = np.concatenate((Y, tY))
             else:
-                # Store a list of instance IDs
-                c_instance_id_list = [k.instance_id for k in c_run_dict.keys()]
 
                 # better empirical results by using PAR1 instead of PAR10
                 # for censored data imputation
                 cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
                                                   runhistory=runhistory,
-                                                  instances=c_instance_id_list,
                                                   return_time_as_y=True,
                                                   store_statistics=False,)
 
                 # Also impute TIMEOUTS
                 tX, tY = self._build_matrix(run_dict=t_run_dict,
                                             runhistory=runhistory,
-                                            instances=t_instance_id_list,
                                             return_time_as_y=True,
                                             store_statistics=False,)
+                self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" %
+                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
-                self.logger.debug("%d TIMOUTS, %d censored, %d regular" %
-                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
 
-                # return imp_Y in PAR depending on the used threshold in
-                # imputor
+                # return imp_Y in PAR depending on the used threshold in imputor
                 assert isinstance(self.imputor, BaseImputor)  # please mypy
                 imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
                                             uncensored_X=X, uncensored_y=Y)
@@ -283,6 +347,7 @@ class AbstractRunHistory2EPM(object):
 
     def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Simple interface to obtain all data in runhistory in X, y format
+        Note: This function should not be used as it does not consider all available StatusTypes
 
         Parameters
         ----------
@@ -298,6 +363,7 @@ class AbstractRunHistory2EPM(object):
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
         """
+        self.logger.warning("This function is not tested and might not work as expected!")
         X = []
         y = []
         cen = []
@@ -320,7 +386,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
                       runhistory: RunHistory,
-                      instances: list = None,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """"Builds X,y matrixes from selected runs from runhistory
@@ -331,8 +396,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             dictionary from RunHistory.RunKey to RunHistory.RunValue
         runhistory: RunHistory
             runhistory object
-        instances: list
-            list of instances
         return_time_as_y: bool
             Return the time instead of cost as y value. Necessary to access the raw y values for imputation.
         store_statistics: bool
@@ -549,14 +612,15 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
 
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory, instances: typing.List[str] = None,
+                      runhistory: RunHistory,
                       return_time_as_y: bool = False,
                       store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
-            raise NotImplementedError()
+            # store_statistics is currently not necessary
+            pass
 
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)

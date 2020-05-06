@@ -423,7 +423,7 @@ class PI(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float = 0.0):
 
-        """Computes the probability of improvement for a given x over the best so far value as
+        r"""Computes the probability of improvement for a given x over the best so far value as
         acquisition value.
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=
@@ -475,7 +475,7 @@ class LCB(AbstractAcquisitionFunction):
                  model: AbstractEPM,
                  par: float = 1.0):
 
-        """Computes the lower confidence bound for a given x over the best so far value as
+        r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
         :math:`LCB(X) = \mu(\mathbf{X}) - \sqrt(\beta_t)\sigma(\mathbf{X})`

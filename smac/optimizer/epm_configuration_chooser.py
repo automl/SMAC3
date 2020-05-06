@@ -88,11 +88,11 @@ class EPMChooser(object):
         self.min_samples_model = min_samples_model
         self.currently_considered_budgets = [0.0, ]
 
-    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
-        for i in self.runhistory.data.keys():
-            available_budgets.append(i.budget)
+        for run_key in self.runhistory.data.keys():
+            available_budgets.append(run_key.budget)
 
         # Sort available budgets from highest to lowest budget
         available_budgets = sorted(list(set(available_budgets)), reverse=True)
@@ -102,9 +102,11 @@ class EPMChooser(object):
             X, Y = self.rh2EPM.transform(self.runhistory, budget_subset=[b, ])
             if X.shape[0] >= self.min_samples_model:
                 self.currently_considered_budgets = [b, ]
-                return X, Y
+                configs_array = self.rh2EPM.get_configurations(
+                    self.runhistory, budget_subset=self.currently_considered_budgets)
+                return X, Y, configs_array
 
-        return np.empty(shape=[0, 0]), np.empty(shape=[0, ])
+        return np.empty(shape=[0, 0]), np.empty(shape=[0, ]), np.empty(shape=[0, 0])
 
     def _get_evaluated_configs(self) -> typing.List[Configuration]:
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
@@ -127,7 +129,7 @@ class EPMChooser(object):
         """
 
         self.logger.debug("Search for next configuration")
-        X, Y = self._collect_data_to_train_model()
+        X, Y, X_configurations = self._collect_data_to_train_model()
 
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
@@ -139,21 +141,19 @@ class EPMChooser(object):
 
         if incumbent_value is not None:
             best_observation = incumbent_value
-            x_best = None  # type: typing.Optional[Configuration]
             x_best_array = None  # type: typing.Optional[np.ndarray]
         else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of "
                                  "the incumbent is unknown.")
-            x_best, x_best_array, best_observation = self._get_x_best(self.predict_x_best)
+            x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
 
         self.acquisition_func.update(
             model=self.model,
             eta=best_observation,
-            incumbent=x_best,
             incumbent_array=x_best_array,
             num_data=len(self._get_evaluated_configs()),
-            X=X,
+            X=X_configurations,
         )
 
         challengers = self.acq_optimizer.maximize(
@@ -164,7 +164,7 @@ class EPMChooser(object):
         )
         return challengers
 
-    def _get_x_best(self, predict: bool) -> typing.Tuple[float, np.ndarray, Configuration]:
+    def _get_x_best(self, predict: bool, X: np.ndarray) -> typing.Tuple[float, np.ndarray]:
         """Get value, configuration, and array representation of the "best" configuration.
 
         The definition of best varies depending on the argument ``predict``. If set to ``True``,
@@ -182,23 +182,20 @@ class EPMChooser(object):
         np.ndarry
         Configuration
         """
-        all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
-
         if predict:
-            configs_array = convert_configurations_to_array(all_configs)
             costs = list(map(
-                lambda input_: (
-                    self.model.predict_marginalized_over_instances(input_[0].reshape((1, -1)))[0][0][0],
-                    input_[0], input_[1],
+                lambda x: (
+                    self.model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
+                    x,
                 ),
-                zip(configs_array, all_configs),
+                X,
             ))
             costs = sorted(costs, key=lambda t: t[0])
-            x_best = costs[0][2]
             x_best_array = costs[0][1]
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
+            all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
             x_best = self.incumbent
             x_best_array = convert_configurations_to_array([all_configs])
             best_observation = self.runhistory.get_cost(x_best)
@@ -208,4 +205,4 @@ class EPMChooser(object):
             best_observation = self.rh2EPM.transform_response_values(best_observation_as_array)
             best_observation = best_observation[0][0]
 
-        return x_best, x_best_array, best_observation
+        return x_best_array, best_observation

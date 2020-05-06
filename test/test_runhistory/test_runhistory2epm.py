@@ -44,7 +44,10 @@ class RunhistoryTest(unittest.TestCase):
                                      values={'a': 100, 'b': 0})
         self.config3 = Configuration(self.cs,
                                      values={'a': 100, 'b': 100})
-
+        self.config4 = Configuration(self.cs,
+                                     values={'a': 23, 'b': 23})
+        self.config5 = Configuration(self.cs,
+                                     values={'a': 5, 'b': 10})
         self.scen = Scenario({'run_obj': 'runtime', 'cutoff_time': 20,
                               'cs': self.cs})
         self.types, self.bounds = get_types(self.cs, None)
@@ -72,8 +75,8 @@ class RunhistoryTest(unittest.TestCase):
         rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
                                                        scenario=self.scen,
                                                        impute_censored_data=True,
-                                                       impute_state=[
-                                                           StatusType.TIMEOUT],
+                                                       impute_state=[StatusType.TIMEOUT, ],
+                                                       success_states=[StatusType.SUCCESS, ],
                                                        imputor=self.imputor)
 
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -117,6 +120,8 @@ class RunhistoryTest(unittest.TestCase):
         '''
 
         rh2epm = runhistory2epm.RunHistory2EPM4LogCost(num_params=2,
+                                                       success_states=[StatusType.SUCCESS, ],
+                                                       impute_censored_data=False,
                                                        scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -175,8 +180,8 @@ class RunhistoryTest(unittest.TestCase):
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
                                                     scenario=self.scen,
                                                     impute_censored_data=True,
-                                                    impute_state=[
-                                                        StatusType.TIMEOUT],
+                                                    success_states=[StatusType.SUCCESS, ],
+                                                    impute_state=[StatusType.TIMEOUT],
                                                     imputor=self.imputor)
 
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -217,7 +222,12 @@ class RunhistoryTest(unittest.TestCase):
             adding some rundata to RunHistory2EPM4Cost without imputation
         '''
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2, scenario=self.scen)
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS,
+                                                                    StatusType.CRASHED,
+                                                                    StatusType.MEMOUT],
+                                                    impute_censored_data=False,
+                                                    scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=23,
@@ -259,6 +269,10 @@ class RunhistoryTest(unittest.TestCase):
                               'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS,
+                                                                    StatusType.CRASHED,
+                                                                    StatusType.MEMOUT],
+                                                    impute_censored_data=False,
                                                     scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=10,
@@ -300,6 +314,9 @@ class RunhistoryTest(unittest.TestCase):
                               'output_dir': ''})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS, ],
+                                                    impute_state=[StatusType.CAPPED, ],
+                                                    impute_censored_data=False,
                                                     scenario=self.scen)
 
         self.rh.add(config=self.config1, cost=1, time=10,
@@ -324,8 +341,6 @@ class RunhistoryTest(unittest.TestCase):
 
         X, y, c = rh2epm.get_X_y(self.rh)
 
-        print(X, y, c)
-
         X_sol = np.array([[0, 100, 1, 1],
                           [0, 100, 2, 2],
                           [100, 0, 1, 1],
@@ -337,6 +352,111 @@ class RunhistoryTest(unittest.TestCase):
 
         c_sol = np.array([False, False, True, True])
         self.assertTrue(np.all(c == c_sol))
+
+    def test_budget_selection(self):
+        '''
+            adding some rundata and check budget selection
+        '''
+
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS,
+                                                                    StatusType.CRASHED,
+                                                                    StatusType.MEMOUT],
+                                                    impute_censored_data=False,
+                                                    scenario=self.scen)
+
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=1,
+                    additional_info=None)
+        self.rh.add(config=self.config1, cost=2, time=2,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+
+        X, y = rh2epm.transform(self.rh, budget_subset=[1])
+        self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
+        self.assertTrue(np.allclose(y, np.array([[1]])))
+
+        X, y = rh2epm.transform(self.rh, budget_subset=[2])
+        self.assertTrue(np.allclose(X, np.array([[0.005, 0.995]]), atol=0.001))
+        self.assertTrue(np.allclose(y, np.array([[2]])))
+
+    def test_run_selection(self):
+        '''
+            adding some rundata and check budget selection
+        '''
+        self.rh.add(config=self.config1, cost=1, time=1,
+                    status=StatusType.SUCCESS, instance_id=1,
+                    seed=None, budget=1,
+                    additional_info=None)
+        self.rh.add(config=self.config2, cost=2, time=2,
+                    status=StatusType.CRASHED, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+        self.rh.add(config=self.config3, cost=3, time=3,
+                    status=StatusType.MEMOUT, instance_id=1,
+                    seed=None, budget=2,
+                    additional_info=None)
+        self.rh.add(config=self.config4, cost=4, time=4,
+                    status=StatusType.DONOTADVANCE, instance_id=1,
+                    seed=None, budget=3,
+                    additional_info=None)
+        self.rh.add(config=self.config5, cost=20, time=20,
+                    status=StatusType.TIMEOUT, instance_id=1,
+                    seed=None, budget=4,
+                    additional_info=None)
+
+        for s, v in [(StatusType.SUCCESS, 1), (StatusType.CRASHED, 2), (StatusType.MEMOUT, 3),
+                     (StatusType.DONOTADVANCE, 4), ]:
+            rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                        success_states=[s, ],
+                                                        impute_censored_data=False,
+                                                        scenario=self.scen)
+            X, y = rh2epm.transform(self.rh, budget_subset=None)
+            self.assertSetEqual(set(y.flatten()), {v, 20})
+
+        for s, v in [(StatusType.SUCCESS, [1, ]), (StatusType.CRASHED, []),
+                     (StatusType.MEMOUT, []), (StatusType.DONOTADVANCE, []),
+                     (StatusType.TIMEOUT, []), ]:
+            rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                        success_states=[s, ],
+                                                        impute_censored_data=False,
+                                                        scenario=self.scen)
+            X, y = rh2epm.transform(self.rh, budget_subset=[1])
+            self.assertSetEqual(set(y.flatten()), set(v))
+
+        # Test defaults set in SMAC facade
+        rh2epm = runhistory2epm.RunHistory2EPM4Cost(num_params=2,
+                                                    success_states=[StatusType.SUCCESS,
+                                                                    StatusType.CRASHED,
+                                                                    StatusType.MEMOUT,
+                                                                    StatusType.DONOTADVANCE,
+                                                                    ],
+                                                    consider_for_higher_budgets_state=[
+                                                        StatusType.TIMEOUT,
+                                                        StatusType.CRASHED,
+                                                        StatusType.MEMOUT,
+                                                        StatusType.DONOTADVANCE,
+                                                    ],
+                                                    impute_censored_data=False,
+                                                    scenario=self.scen)
+        X, y = rh2epm.transform(self.rh, budget_subset=[1])
+        self.assertSetEqual(set(y.flatten()), {1, })
+        self.assertTrue(len(y) == 1)
+        X, y = rh2epm.transform(self.rh, budget_subset=[2])
+        self.assertSetEqual(set(y.flatten()), {2, 3})
+        self.assertTrue(len(y) == 2)
+        X, y = rh2epm.transform(self.rh, budget_subset=[3])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4})
+        self.assertTrue(len(y) == 3)
+        X, y = rh2epm.transform(self.rh, budget_subset=[4])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4, 20})
+        self.assertTrue(len(y) == 4)
+        X, y = rh2epm.transform(self.rh, budget_subset=[5])
+        self.assertSetEqual(set(y.flatten()), {2, 3, 4, 20})
+        self.assertTrue(len(y) == 4)
+        self.assertRaises(ValueError, rh2epm.transform, self.rh, budget_subset=[4, 5])
 
 
 if __name__ == "__main__":

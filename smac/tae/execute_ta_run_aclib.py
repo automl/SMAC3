@@ -81,20 +81,20 @@ class ExecuteTARunAClib(ExecuteTARun):
         elif results["status"] in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
-            self.logger.warn("Could not identify status; should be one of the following: "
-                             "SAT, UNSAT, SUCCESS, TIMEOUT, CRASHED, ABORT or MEMOUT; "
-                             "Treating as CRASHED run.")
+            self.logger.warning("Could not identify status; should be one of the following: "
+                                "SAT, UNSAT, SUCCESS, TIMEOUT, CRASHED, ABORT or MEMOUT; "
+                                "Treating as CRASHED run.")
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
-            self.logger.warn(
+            self.logger.warning(
                 "Target algorithm crashed. Last 5 lines of stdout and stderr")
-            self.logger.warn("\n".join(stdout_.split("\n")[-5:]))
-            self.logger.warn("\n".join(stderr_.split("\n")[-5:]))
+            self.logger.warning("\n".join(stdout_.split("\n")[-5:]))
+            self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
         if results.get("runtime") is None:
-            self.logger.warn("The target algorithm has not returned a"
-                             " runtime -- imputed by 0.")
+            self.logger.warning("The target algorithm has not returned a"
+                                " runtime -- imputed by 0.")
             # (TODO) Check 0
             results["runtime"] = 0
 

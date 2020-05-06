@@ -54,6 +54,18 @@ class RunhistoryTest(unittest.TestCase):
             loaded_rh = pickle.load(fh)
         self.assertEqual(loaded_rh.data, rh.data)
 
+    def test_illegal_input(self):
+        rh = RunHistory()
+
+        with self.assertRaisesRegex(TypeError, 'Configuration to add to the runhistory must not be None'):
+            rh.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
+
+        with self.assertRaisesRegex(
+            TypeError,
+            "Configuration to add to the runhistory is not of type Configuration, but <class 'str'>",
+        ):
+            rh.add(config='abc', cost=1.23, time=2.34, status=StatusType.SUCCESS)
+
     def test_add_multiple_times(self):
         rh = RunHistory()
         cs = get_config_space()
@@ -146,12 +158,12 @@ class RunhistoryTest(unittest.TestCase):
 
         rh.compute_all_costs()
         updated_cost_config2 = rh.get_cost(config2)
-        self.assertTrue(cost_config2 == updated_cost_config2)
+        self.assertEqual(cost_config2, updated_cost_config2)
 
         rh.compute_all_costs(instances=[2])
         updated_cost_config2 = rh.get_cost(config2)
-        self.assertTrue(cost_config2 != updated_cost_config2)
-        self.assertTrue(updated_cost_config2 == 20)
+        self.assertNotEqual(cost_config2, updated_cost_config2)
+        self.assertEqual(updated_cost_config2, 20)
 
     def test_incremental_update(self):
 
@@ -164,13 +176,13 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.SUCCESS, instance_id=1,
                seed=1)
 
-        self.assertTrue(rh.get_cost(config1) == 10)
+        self.assertEqual(rh.get_cost(config1), 10)
 
         rh.add(config=config1, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=2,
                seed=1)
 
-        self.assertTrue(rh.get_cost(config1) == 15)
+        self.assertEqual(rh.get_cost(config1), 15)
 
     def test_multiple_budgets(self):
 
@@ -183,14 +195,40 @@ class RunhistoryTest(unittest.TestCase):
                status=StatusType.SUCCESS, instance_id=1,
                seed=1, budget=1)
 
-        self.assertTrue(rh.get_cost(config1) == 10)
+        self.assertEqual(rh.get_cost(config1), 10)
 
         # only the higher budget gets included in the config cost
         rh.add(config=config1, cost=20, time=20,
                status=StatusType.SUCCESS, instance_id=1,
                seed=1, budget=2)
 
-        self.assertTrue(rh.get_cost(config1) == 20)
+        self.assertEqual(rh.get_cost(config1), 20)
+        self.assertEqual(rh.get_min_cost(config1), 10)
+
+    def test_get_configs_per_budget(self):
+
+        rh = RunHistory()
+        cs = get_config_space()
+
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 1})
+        rh.add(config=config1, cost=10, time=10,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        config2 = Configuration(cs,
+                                values={'a': 2, 'b': 2})
+        rh.add(config=config2, cost=20, time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        config3 = Configuration(cs,
+                                values={'a': 3, 'b': 3})
+        rh.add(config=config3, cost=30, time=30,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=3)
+
+        self.assertListEqual(rh.get_all_configs_per_budget([1]), [config1, config2])
 
     def test_json_origin(self):
 

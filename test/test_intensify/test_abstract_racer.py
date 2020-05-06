@@ -26,7 +26,7 @@ def get_config_space():
     return cs
 
 
-class TestAbstractIntensifier(unittest.TestCase):
+class TestAbstractRacer(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)

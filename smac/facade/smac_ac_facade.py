@@ -29,6 +29,7 @@ from smac.initial_design.sobol_design import SobolDesign
 
 # intensification
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -71,22 +72,22 @@ class SMAC4AC(object):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: Optional[Union[Type[ExecuteTARun], Callable]] = None,
-                 tae_runner_kwargs: Optional[dict] = None,
+                 tae_runner_kwargs: Optional[Dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
-                 runhistory_kwargs: Optional[dict] = None,
+                 runhistory_kwargs: Optional[Dict] = None,
                  intensifier: Optional[Type[AbstractRacer]] = None,
-                 intensifier_kwargs: Optional[dict] = None,
+                 intensifier_kwargs: Optional[Dict] = None,
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
-                 acquisition_function_kwargs: Optional[dict] = None,
+                 acquisition_function_kwargs: Optional[Dict] = None,
                  integrate_acquisition_function: bool = False,
                  acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
-                 acquisition_function_optimizer_kwargs: Optional[dict] = None,
+                 acquisition_function_optimizer_kwargs: Optional[Dict] = None,
                  model: Optional[Type[AbstractEPM]] = None,
-                 model_kwargs: Optional[dict] = None,
+                 model_kwargs: Optional[Dict] = None,
                  runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
-                 runhistory2epm_kwargs: Optional[dict] = None,
+                 runhistory2epm_kwargs: Optional[Dict] = None,
                  initial_design: Optional[Type[InitialDesign]] = None,
-                 initial_design_kwargs: Optional[dict] = None,
+                 initial_design_kwargs: Optional[Dict] = None,
                  initial_configurations: Optional[List[Configuration]] = None,
                  stats: Optional[Stats] = None,
                  restore_incumbent: Optional[Configuration] = None,
@@ -94,7 +95,7 @@ class SMAC4AC(object):
                  smbo_class: Optional[Type[SMBO]] = None,
                  run_id: Optional[int] = None,
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
-                 random_configuration_chooser_kwargs: Optional[dict] = None
+                 random_configuration_chooser_kwargs: Optional[Dict] = None
                  ):
         """
         Constructor
@@ -110,24 +111,24 @@ class SMAC4AC(object):
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        tae_runner_kwargs: Optional[dict]
+        tae_runner_kwargs: Optional[Dict]
             arguments passed to constructor of '~tae_runner'
         runhistory : RunHistory
             runhistory to store all algorithm runs
-        runhistory_kwargs : Optional[dict]
+        runhistory_kwargs : Optional[Dict]
             arguments passed to constructor of runhistory.
             We strongly advise against changing the aggregation function,
             since it will break some code assumptions
         intensifier : Intensifier
             intensification object to issue a racing to decide the current
             incumbent
-        intensifier_kwargs: Optional[dict]
+        intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
             Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
             `~acquisition_function_kwargs` is passed to the class constructor.
-        acquisition_function_kwargs : Optional[dict]
+        acquisition_function_kwargs : Optional[Dict]
             dictionary to pass specific arguments to ~acquisition_function
         integrate_acquisition_function : bool, default=False
             Whether to integrate the acquisition function. Works only with models which can sample their
@@ -135,12 +136,12 @@ class SMAC4AC(object):
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
-        acquisition_function_optimizer_kwargs: Optional[dict]
+        acquisition_function_optimizer_kwargs: Optional[Dict]
             Arguments passed to constructor of '~acquisition_function_optimizer'
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-        model_kwargs : Optional[dict]
+        model_kwargs : Optional[Dict]
             Arguments passed to constructor of '~model'
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
@@ -148,11 +149,11 @@ class SMAC4AC(object):
             if objective is cost or
             :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
             if objective is runtime.
-        runhistory2epm_kwargs: Optional[dict]
+        runhistory2epm_kwargs: Optional[Dict]
             Arguments passed to the constructor of '~runhistory2epm'
         initial_design : InitialDesign
             initial sampling design
-        initial_design_kwargs: Optional[dict]
+        initial_design_kwargs: Optional[Dict]
             arguments passed to constructor of `~initial_design'
         initial_configurations : List[Configuration]
             list of initial configurations for initial design --
@@ -171,7 +172,7 @@ class SMAC4AC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
-        random_configuration_chooser_kwargs : Optional[dict]
+        random_configuration_chooser_kwargs : Optional[Dict]
             arguments of constructor for '~random_configuration_chooser'
 
         """
@@ -414,7 +415,7 @@ class SMAC4AC(object):
             intensifier_instance = intensifier(**intensifier_def_kwargs)  # type: ignore[arg-type] # noqa F821
         else:
             raise TypeError(
-                "Argument intensifier must be None or an object implementing the Intensifier, but is '%s'" %
+                "Argument intensifier must be None or an object implementing the AbstractRacer, but is '%s'" %
                 type(intensifier)
             )
 
@@ -488,10 +489,21 @@ class SMAC4AC(object):
         }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
-                'success_states': [StatusType.SUCCESS, StatusType.CRASHED],
+                'success_states': [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
                 'impute_censored_data': False,
                 'impute_state': None,
             })
+
+        if isinstance(intensifier_instance, SuccessiveHalving) and scenario.run_obj == "quality":
+            r2e_def_kwargs.update({
+                'success_states': [StatusType.SUCCESS, StatusType.CRASHED,
+                                   StatusType.MEMOUT, StatusType.DONOTADVANCE,
+                                   ],
+                'consider_for_higher_budgets_state': [StatusType.DONOTADVANCE, StatusType.TIMEOUT,
+                                                      StatusType.CRASHED, StatusType.MEMOUT,
+                                                      ],
+            })
+
         if runhistory2epm_kwargs is not None:
             r2e_def_kwargs.update(runhistory2epm_kwargs)
         if runhistory2epm is None:

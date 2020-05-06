@@ -10,7 +10,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.ei_optimization import RandomSearch, AcquisitionFunctionMaximizer
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost, AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_ta_run import ExecuteTARun
@@ -39,8 +39,10 @@ class ROAR(SMAC4AC):
                  tae_runner: typing.Optional[
                      typing.Union[typing.Type[ExecuteTARun], typing.Callable]
                  ] = None,
+                 tae_runner_kwargs: typing.Optional[typing.Dict] = None,
                  runhistory: RunHistory = None,
                  intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
+                 intensifier_kwargs: typing.Optional[typing.Dict] = None,
                  acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
                  initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
@@ -63,10 +65,14 @@ class ROAR(SMAC4AC):
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
             :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+        tae_runner_kwargs: Optional[Dict]
+            arguments passed to constructor of '~tae_runner'
         runhistory: RunHistory
             Runhistory to store all algorithm runs
         intensifier: AbstractRacer
             intensification object to issue a racing to decide the current incumbent
+        intensifier_kwargs: Optional[Dict]
+            arguments passed to the constructor of '~intensifier'
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used
@@ -95,13 +101,21 @@ class ROAR(SMAC4AC):
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = RandomSearch
 
+        if scenario.run_obj == "runtime":
+            # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
+            runhistory2epm = RunHistory2EPM4LogCost  # type: typing.Type[AbstractRunHistory2EPM]
+        else:
+            runhistory2epm = RunHistory2EPM4Cost
+
         # use SMAC facade
         super().__init__(
             scenario=scenario,
             tae_runner=tae_runner,
+            tae_runner_kwargs=tae_runner_kwargs,
             runhistory=runhistory,
             intensifier=intensifier,
-            runhistory2epm=RunHistory2EPM4Cost,
+            intensifier_kwargs=intensifier_kwargs,
+            runhistory2epm=runhistory2epm,
             initial_design=initial_design,
             initial_design_kwargs=initial_design_kwargs,
             initial_configurations=initial_configurations,

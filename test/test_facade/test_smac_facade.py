@@ -22,12 +22,16 @@ from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.sobol_design import SobolDesign
 from smac.intensification.intensification import Intensifier
+from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
+from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS, RunHistory2EPM4Cost, \
+    RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_ta_run import StatusType
 
 
 class TestSMACFacade(unittest.TestCase):
@@ -36,6 +40,12 @@ class TestSMACFacade(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
                                   'output_dir': ''})
+        self.sh_intensifier_kwargs = {'n_seeds': 1,
+                                      'initial_budget': 1,
+                                      'eta': 3,
+                                      'min_chall': 1,
+                                      'max_budget': 100,
+                                      }
         self.output_dirs = []
 
     def tearDown(self):
@@ -80,6 +90,38 @@ class TestSMACFacade(unittest.TestCase):
             tae_runner_kwargs={'run_obj': 'runtime'},
             scenario=self.scenario,
         )
+
+    def test_construct_runhistory2epm(self):
+        """Check default setup up for consistency"""
+        smbo = SMAC4AC(self.scenario)
+        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.success_states),
+                            {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT})
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state), set())
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state),
+                            set())
+
+        for intensifier in (SuccessiveHalving, Hyperband):
+            smbo = SMAC4AC(self.scenario, intensifier=intensifier,
+                           intensifier_kwargs=self.sh_intensifier_kwargs)
+            self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
+            self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.success_states),
+                                {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT,
+                                 StatusType.DONOTADVANCE})
+            self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state), set())
+            self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state),
+                                set([StatusType.DONOTADVANCE, StatusType.TIMEOUT,
+                                     StatusType.CRASHED, StatusType.MEMOUT]))
+
+        self.scenario.run_obj = "runtime"
+        smbo = SMAC4AC(self.scenario)
+        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4LogCost)
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.success_states),
+                            {StatusType.SUCCESS, })
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state),
+                            {StatusType.CAPPED, })
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state),
+                            set())
 
     def test_construct_runhistory(self):
 

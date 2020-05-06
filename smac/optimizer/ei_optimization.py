@@ -5,7 +5,7 @@ import logging
 import time
 import numpy as np
 
-from typing import List, Union, Tuple, Optional, Set, Iterator
+from typing import List, Union, Tuple, Optional, Set, Iterator, Callable
 
 from smac.configspace import (
     get_one_exchange_neighbourhood,
@@ -88,7 +88,8 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         iterable
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
-        next_configs_by_acq_value = [t[1] for t in self._maximize(runhistory, stats, num_points)]
+        def next_configs_by_acq_value() -> List[Configuration]:
+            return [t[1] for t in self._maximize(runhistory, stats, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value,
                                      self.config_space,
@@ -262,6 +263,16 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             if self.acquisition_function.model is not None:
                 conf_array = convert_configurations_to_array(configs_previous_runs)
                 costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
+                assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
+
+                # In case of the predictive model returning the prediction for more than one objective per configuration
+                # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+                # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+                if len(costs.shape) == 2 and costs.shape[1] > 1:
+                    weights = np.array([self.rng.rand() for _ in range(costs.shape[1])])
+                    weights = weights / np.sum(weights)
+                    costs = costs @ weights
+
                 # From here
                 # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
                 random = self.rng.rand(len(costs))
@@ -548,7 +559,6 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             An iterable consistng of
             tuple(acqusition_value, :class:`smac.configspace.Configuration`).
         """
-
         if num_points > 1:
             rand_configs = self.config_space.sample_configuration(
                 size=num_points)
@@ -661,8 +671,9 @@ class ChallengerList(Iterator):
 
     Parameters
     ----------
-    challengers : list
-        List of challengers (without interleaved random configurations)
+    challenger_callback : Callable
+        Callback function which returns a list of challengers (without interleaved random configurations, must a be a
+        closure: https://www.programiz.com/python-programming/closure)
 
     configuration_space : ConfigurationSpace
         ConfigurationSpace from which to sample new random configurations.
@@ -670,20 +681,23 @@ class ChallengerList(Iterator):
 
     def __init__(
         self,
-        challengers: List[Configuration],
+        challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
         random_configuration_chooser: Optional[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
     ):
-        self.challengers = challengers
+        self.challengers_callback = challenger_callback
+        self.challengers = None  # type: Optional[List[Configuration]]
         self.configuration_space = configuration_space
         self._index = 0
         self._iteration = 1  # 1-based to prevent from starting with a random configuration
         self.random_configuration_chooser = random_configuration_chooser
 
     def __next__(self) -> Configuration:
-        if self._index == len(self.challengers):
+        if self.challengers is not None and self._index == len(self.challengers):
             raise StopIteration
         elif self.random_configuration_chooser is None:
+            if self.challengers is None:
+                self.challengers = self.challengers_callback()
             config = self.challengers[self._index]
             self._index += 1
             return config
@@ -692,12 +706,16 @@ class ChallengerList(Iterator):
                 config = self.configuration_space.sample_configuration()
                 config.origin = 'Random Search'
             else:
+                if self.challengers is None:
+                    self.challengers = self.challengers_callback()
                 config = self.challengers[self._index]
                 self._index += 1
             self._iteration += 1
             return config
 
     def __len__(self) -> int:
+        if self.challengers is None:
+            self.challengers = self.challengers_callback()
         return len(self.challengers) - self._index
 
 

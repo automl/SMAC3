@@ -120,7 +120,7 @@ class TestHyperband(unittest.TestCase):
                     seed=0, budget=0.5)
         self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
-        intensifier.sh_intensifier.curr_challengers = {self.config2, self.config3}
+        intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
 
         # evaluation should change the incumbent to config2

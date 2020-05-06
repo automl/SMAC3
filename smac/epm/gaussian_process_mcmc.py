@@ -1,6 +1,7 @@
 from copy import deepcopy
 import logging
 import typing
+import warnings
 
 import emcee
 import numpy as np
@@ -10,14 +11,8 @@ from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import Prior
 
-if typing.TYPE_CHECKING:
-    from skopt.learning.gaussian_process.kernels import Kernel
-    from skopt.learning.gaussian_process import GaussianProcessRegressor
-else:
-    from lazy_import import lazy_callable
-    Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
-    GaussianProcessRegressor = lazy_callable(
-        'skopt.learning.gaussian_process.GaussianProcessRegressor')
+from skopt.learning.gaussian_process.kernels import Kernel
+from skopt.learning.gaussian_process import GaussianProcessRegressor
 
 logger = logging.getLogger(__name__)
 
@@ -176,17 +171,20 @@ class GaussianProcessMCMC(BaseModel):
                     self.p0 = np.vstack(dim_samples).transpose()
 
                     # Run MCMC sampling
-                    self.p0, _, _ = sampler.run_mcmc(self.p0,
-                                                     self.burnin_steps,
-                                                     rstate0=self.rng)
+                    with warnings.catch_warnings():
+                        warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
+                        self.p0, _, _ = sampler.run_mcmc(self.p0,
+                                                         self.burnin_steps)
 
                     self.burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
-                self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length, rstate0=self.rng)
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
+                    self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
 
                 # Take the last samples from each walker
-                self.hypers = sampler.chain[:, -1]
+                self.hypers = sampler.get_chain()[:, -1]
             elif self.mcmc_sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
@@ -380,7 +378,9 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return lml, grad
 
-    def _predict(self, X_test: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X_test: np.ndarray,
+                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
+            -> typing.Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -393,6 +393,8 @@ class GaussianProcessMCMC(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
+        cov_return_type: typing.Optional[str]
+            Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
         ----------
@@ -405,12 +407,16 @@ class GaussianProcessMCMC(BaseModel):
         if not self.is_trained:
             raise Exception('Model has to be trained first!')
 
+        if cov_return_type != 'diagonal_cov':
+            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
+
         X_test = self._impute_inactive(X_test)
 
         mu = np.zeros([len(self.models), X_test.shape[0]])
         var = np.zeros([len(self.models), X_test.shape[0]])
         for i, model in enumerate(self.models):
             mu_tmp, var_tmp = model.predict(X_test)
+            assert var_tmp is not None  # please mypy
             mu[i] = mu_tmp.flatten()
             var[i] = var_tmp.flatten()
 

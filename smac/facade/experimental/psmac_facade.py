@@ -245,7 +245,11 @@ class PSMAC(object):
         for incumbent in incs:
             cost_per_inst = new_rh.get_instance_costs_for_config(config=incumbent)
             config_cost_per_inst[incumbent] = cost_per_inst
-            results.append(np.mean(list(cost_per_inst.values())))
+            values = list(cost_per_inst.values())
+            if values:
+                results.append(np.mean(values))
+            else:
+                results.append(np.nan)
         return results, config_cost_per_inst
 
     def validate_incs(self, incs: np.ndarray):

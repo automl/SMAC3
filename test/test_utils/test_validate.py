@@ -5,6 +5,7 @@ import shutil
 
 import numpy as np
 
+from smac.configspace import Configuration
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType
@@ -159,20 +160,19 @@ class ValidationTest(unittest.TestCase):
         validator = Validator(scen, self.trajectory, self.rng)
 
         # Get runhistory
-        old_configs = ['config1', 'config2', 'config3',
-                       'config4', 'config5', 'config6']
+        old_configs = [Configuration(scen.cs, values={'x1': i, 'x2': i}) for i in range(1, 7)]
         old_rh = RunHistory()
-        old_rh.add('config1', 1, 1, StatusType.SUCCESS, instance_id='0', seed=0)
-        old_rh.add('config2', 1, 1, StatusType.TIMEOUT, instance_id='0', seed=0)
-        old_rh.add('config3', 1, 1, StatusType.CRASHED, instance_id='0', seed=0)
-        old_rh.add('config4', 1, 1, StatusType.ABORT, instance_id='0', seed=0)
-        old_rh.add('config5', 1, 1, StatusType.MEMOUT, instance_id='0', seed=0)
-        old_rh.add('config6', 1, 1, StatusType.CAPPED, instance_id='0', seed=0)
+        old_rh.add(old_configs[0], 1, 1, StatusType.SUCCESS, instance_id='0', seed=0)
+        old_rh.add(old_configs[1], 1, 1, StatusType.TIMEOUT, instance_id='0', seed=0)
+        old_rh.add(old_configs[2], 1, 1, StatusType.CRASHED, instance_id='0', seed=0)
+        old_rh.add(old_configs[3], 1, 1, StatusType.ABORT, instance_id='0', seed=0)
+        old_rh.add(old_configs[4], 1, 1, StatusType.MEMOUT, instance_id='0', seed=0)
+        old_rh.add(old_configs[5], 1, 1, StatusType.CAPPED, instance_id='0', seed=0)
 
         # Get multiple configs
-        expected = [_Run(inst_specs='0', seed=0, inst='0', config='config3'),
-                    _Run(inst_specs='0', seed=0, inst='0', config='config4'),
-                    _Run(inst_specs='0', seed=0, inst='0', config='config6')]
+        expected = [_Run(inst_specs='0', seed=0, inst='0', config=old_configs[2]),
+                    _Run(inst_specs='0', seed=0, inst='0', config=old_configs[3]),
+                    _Run(inst_specs='0', seed=0, inst='0', config=old_configs[5])]
 
         runs = validator._get_runs(old_configs, ['0'], repetitions=1, runhistory=old_rh)
         self.assertEqual(runs[0], expected)

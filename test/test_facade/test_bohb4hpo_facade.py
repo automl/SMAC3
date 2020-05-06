@@ -11,7 +11,7 @@ from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.scenario.scenario import Scenario
 
 
-class TestSMACFacade(unittest.TestCase):
+class TestBOHBFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
@@ -39,4 +39,5 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
         # ensure number of samples required is D+1
         self.assertEqual(facade.solver.epm_chooser.min_samples_model, 41)
+        self.assertEqual(facade.solver.intensifier.min_chall, 1)
         self.output_dirs.append(scenario.output_dir)

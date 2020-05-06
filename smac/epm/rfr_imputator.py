@@ -64,7 +64,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.change_threshold = change_threshold
         self.cutoff = cutoff
         self.threshold = threshold
-        self.seed = rng.random_integers(low=0, high=1000)
+        self.seed = rng.randint(low=0, high=1000)
 
         self.model = model
 
@@ -118,6 +118,8 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
 
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
+            assert y_var is not None  # please mypy
+
             y_var[y_var < self.var_threshold] = self.var_threshold
             y_stdev = np.sqrt(y_var)[:, 0]
             y_mean = y_mean[:, 0]
@@ -126,7 +128,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             # since we handle them appropriately
             with warnings.catch_warnings():
                 warnings.filterwarnings(
-                    'ignore', r'invalid value encountered in (subtract|true_divide).*')
+                    'ignore', r'invalid value encountered in (subtract|true_divide|power).*')
                 warnings.filterwarnings(
                     'ignore', r'divide by zero encountered in (true_divide|log).*')
                 imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,

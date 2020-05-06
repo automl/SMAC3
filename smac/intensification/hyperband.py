@@ -62,6 +62,12 @@ class Hyperband(SuccessiveHalving):
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
+    incumbent_selection: str
+        How to select incumbent in successive halving. Only active for real-valued budgets.
+        Can be set to: [highest_executed_budget, highest_budget, any_budget]
+        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
+        * highest_budget - incumbent is selected only based on the highest budget
+        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
 
     def __init__(self,
@@ -80,7 +86,9 @@ class Hyperband(SuccessiveHalving):
                  n_seeds: typing.Optional[int] = None,
                  instance_order: str = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,) -> None:
+                 min_chall: int = 1,
+                 incumbent_selection: str = 'highest_executed_budget',
+                 ) -> None:
 
         super().__init__(tae_runner=tae_runner,
                          stats=stats,
@@ -98,7 +106,8 @@ class Hyperband(SuccessiveHalving):
                          n_seeds=n_seeds,
                          instance_order=instance_order,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,)
+                         min_chall=min_chall,
+                         incumbent_selection=incumbent_selection,)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -145,6 +154,7 @@ class Hyperband(SuccessiveHalving):
                                                                   run_history=run_history,
                                                                   time_bound=time_bound,
                                                                   log_traj=log_traj)
+        self.num_run += 1
 
         # reset if SH iteration is over, else update for next iteration
         if self.sh_intensifier.iteration_done:
@@ -217,6 +227,7 @@ class Hyperband(SuccessiveHalving):
             self.s = self.s_max
             self.hb_iters += 1
             self.iteration_done = True
+            self.num_run = 0
         else:
             # update for next iteration
             self.s -= 1

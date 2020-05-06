@@ -143,16 +143,16 @@ class TestGP(unittest.TestCase):
 
         for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
             X = rs.rand(10)
-            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 1d array!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
+                                   model.predict, X)
             X = rs.rand(10, 10, 10)
-            self.assertRaisesRegexp(ValueError, "Expected 2d array, got 3d array!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
+                                   model.predict, X)
 
             X = rs.rand(10, 5)
-            self.assertRaisesRegexp(ValueError, "Rows in X should have 10 entries "
-                                                "but have 5!",
-                                    model.predict, X)
+            self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
+                                               "but have 5!",
+                                   model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -222,7 +222,7 @@ class TestGP(unittest.TestCase):
         class Dummy:
             counter = 0
 
-            def __call__(self, X, eval_gradient=True):
+            def __call__(self, X, eval_gradient=True, clone_kernel=True):
                 # If this is not aligned with the GP an error will be raised that None is not iterable
                 if self.counter == 13:
                     return None
@@ -293,6 +293,19 @@ class TestGP(unittest.TestCase):
         self.assertAlmostEqual(mu_hat[0][0], 54.612500000000004)
         # There's a slight difference between my local installation and travis
         self.assertLess(abs(var_hat[0][0] - 1121.8409184001594), 2)
+
+        # test other covariance results
+        _, var_fc = model.predict(X, cov_return_type='full_cov')
+        self.assertEqual(var_fc.shape, (8, 8))
+        _, var_sd = model.predict(X, cov_return_type='diagonal_std')
+        self.assertEqual(var_sd.shape, (8, 1))
+        _, var_no = model.predict(np.array([[10, 10, 10]]), cov_return_type=None)
+        self.assertIsNone(var_no)
+        # check values
+        _, var_fc = model.predict(np.array([[10, 10, 10]]), cov_return_type='full_cov')
+        self.assertAlmostEqual(var_fc[0][0], var_hat[0][0])
+        _, var_sd = model.predict(np.array([[10, 10, 10]]), cov_return_type='diagonal_std')
+        self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
     def test_gp_on_sklearn_data(self):
         X, y = sklearn.datasets.load_boston(return_X_y=True)

@@ -124,12 +124,6 @@ class ImputorTest(unittest.TestCase):
                                                                  lower=0, upper=1, default_value=0.5))
 
             types, bounds = get_types(cs, None)
-            print(types)
-            print(bounds)
-            print('#' * 120)
-            print(cen_X)
-            print(uncen_X)
-            print('~' * 120)
             self.model = RandomForestWithInstances(
                 configspace=cs,
                 types=types,
