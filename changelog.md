@@ -1,3 +1,11 @@
+# 0.12.2
+
+## Major Changes
+
+## Minor Changes
+
+## Bug Fixes
+
 # 0.12.1
 
 ## Major Changes
