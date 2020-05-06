@@ -9,5 +9,6 @@ smac.configspace package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.configspace.util

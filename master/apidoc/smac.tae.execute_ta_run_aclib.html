@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_ta_run_aclib module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.tae.execute_ta_run_aclib module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.tae.execute_ta_run_aclib">
 <span id="smac-tae-execute-ta-run-aclib-module"></span><h1>smac.tae.execute_ta_run_aclib module<a class="headerlink" href="#module-smac.tae.execute_ta_run_aclib" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_ta_run_aclib.</code><code class="sig-name descname">ExecuteTARunAClib</code><span class="sig-paren">(</span><em class="sig-param">ta: Union[List[str], Callable], stats: smac.stats.stats.Stats, runhistory: Optional[RunHistory] = None, run_obj: str = 'runtime', par_factor: int = 1, cost_for_crash: float = 2147483647.0, abort_on_first_run_crash: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_ta_run_aclib.</code><code class="sig-name descname">ExecuteTARunAClib</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>RunHistory<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'runtime'</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
 <p>Executes a target algorithm run with a given configuration on a given
 instance and some resource limitations. Uses the AClib 2.0 style</p>
@@ -307,14 +309,14 @@ that returned NaN or inf)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib._call_ta">
-<code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">instance_specific: str</em>, <em class="sig-param">cutoff: float</em>, <em class="sig-param">seed: int</em><span class="sig-paren">)</span> &#x2192; Tuple[Dict, str, str]<a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib._call_ta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Dict<span class="p">, </span>str<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib._call_ta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">instance: str</em>, <em class="sig-param">cutoff: Optional[float] = None</em>, <em class="sig-param">seed: int = 12345</em>, <em class="sig-param">budget: Optional[float] = None</em>, <em class="sig-param">instance_specific: str = '0'</em><span class="sig-paren">)</span> &#x2192; Tuple[smac.tae.execute_ta_run.StatusType, float, float, Dict]<a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_aclib.html#ExecuteTARunAClib.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>

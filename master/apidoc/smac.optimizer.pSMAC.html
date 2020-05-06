@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.pSMAC module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.optimizer.pSMAC module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.optimizer.pSMAC">
 <span id="smac-optimizer-psmac-module"></span><h1>smac.optimizer.pSMAC module<a class="headerlink" href="#module-smac.optimizer.pSMAC" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="smac.optimizer.pSMAC.read">
-<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory, output_dirs: Union[str, List[str]], configuration_space: ConfigSpace.configuration_space.ConfigurationSpace, logger: logging.Logger</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.read" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">output_dirs</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">configuration_space</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">logging.Logger</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.read" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update runhistory with run results from concurrent runs of pSMAC.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -306,9 +308,9 @@ for files matching the runhistory regular expression.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="smac.optimizer.pSMAC.write">
-<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">output_directory: str</em>, <em class="sig-param">logger: logging.Logger</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.write" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.optimizer.pSMAC.</code><code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">output_directory</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">logging.Logger</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/pSMAC.html#write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.pSMAC.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the runhistory to the output directory.</p>
 <p>Overwrites previously outputted runhistories.</p>
 <dl class="field-list simple">

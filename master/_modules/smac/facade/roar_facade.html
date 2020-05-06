@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.roar_facade &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.facade.roar_facade &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -127,6 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -207,8 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -289,7 +291,7 @@
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">RandomSearch</span><span class="p">,</span> <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">,</span> <span class="n">RunHistory2EPM4LogCost</span><span class="p">,</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
@@ -318,8 +320,10 @@
                  <span class="n">tae_runner</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span>
                      <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">]</span>
                  <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tae_runner_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">intensifier</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">AbstractRacer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">intensifier_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">initial_design</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">InitialDesign</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -342,10 +346,14 @@
 <span class="sd">            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.</span>
 <span class="sd">            If not set, it will be initialized with the</span>
 <span class="sd">            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.</span>
+<span class="sd">        tae_runner_kwargs: Optional[Dict]</span>
+<span class="sd">            arguments passed to constructor of &#39;~tae_runner&#39;</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            Runhistory to store all algorithm runs</span>
 <span class="sd">        intensifier: AbstractRacer</span>
 <span class="sd">            intensification object to issue a racing to decide the current incumbent</span>
+<span class="sd">        intensifier_kwargs: Optional[Dict]</span>
+<span class="sd">            arguments passed to the constructor of &#39;~intensifier&#39;</span>
 <span class="sd">        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span>
 <span class="sd">            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.</span>
 <span class="sd">            Will use :class:`smac.optimizer.ei_optimization.RandomSearch` if not set. Can be used</span>
@@ -374,13 +382,21 @@
         <span class="k">if</span> <span class="n">acquisition_function_optimizer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">acquisition_function_optimizer</span> <span class="o">=</span> <span class="n">RandomSearch</span>
 
+        <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">:</span>
+            <span class="c1"># We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)</span>
+            <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4LogCost</span>  <span class="c1"># type: typing.Type[AbstractRunHistory2EPM]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">runhistory2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span>
+
         <span class="c1"># use SMAC facade</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
             <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span>
+            <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="n">tae_runner_kwargs</span><span class="p">,</span>
             <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
             <span class="n">intensifier</span><span class="o">=</span><span class="n">intensifier</span><span class="p">,</span>
-            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">RunHistory2EPM4Cost</span><span class="p">,</span>
+            <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>
+            <span class="n">runhistory2epm</span><span class="o">=</span><span class="n">runhistory2epm</span><span class="p">,</span>
             <span class="n">initial_design</span><span class="o">=</span><span class="n">initial_design</span><span class="p">,</span>
             <span class="n">initial_design_kwargs</span><span class="o">=</span><span class="n">initial_design_kwargs</span><span class="p">,</span>
             <span class="n">initial_configurations</span><span class="o">=</span><span class="n">initial_configurations</span><span class="p">,</span>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.validate module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.utils.validate module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.utils.validate">
 <span id="smac-utils-validate-module"></span><h1>smac.utils.validate module<a class="headerlink" href="#module-smac.utils.validate" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.utils.validate.Validator">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.validate.</code><code class="sig-name descname">Validator</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario, trajectory: Optional[List], rng: Union[numpy.random.mtrand.RandomState, int, None] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.utils.validate.</code><code class="sig-name descname">Validator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">trajectory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Union[numpy.random.mtrand.RandomState, int, None]</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Validator for the output of SMAC-scenarios.
 Evaluates specified configurations on specified instances.</p>
@@ -302,9 +304,9 @@ Evaluates specified configurations on specified instances.</p>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._get_configs">
-<code class="sig-name descname">_get_configs</code><span class="sig-paren">(</span><em class="sig-param">mode: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_configs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_configs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return desired configs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -325,9 +327,9 @@ with max_time being the highest recorded time</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._get_instances">
-<code class="sig-name descname">_get_instances</code><span class="sig-paren">(</span><em class="sig-param">mode: str</em><span class="sig-paren">)</span> &#x2192; List[str]<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_instances" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_instances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get desired instances</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -342,9 +344,9 @@ with max_time being the highest recorded time</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._get_runs">
-<code class="sig-name descname">_get_runs</code><span class="sig-paren">(</span><em class="sig-param">configs: Union[str, List[ConfigSpace.configuration_space.Configuration]], insts: Union[str, List[str]], repetitions: int = 1, runhistory: smac.runhistory.runhistory.RunHistory = None</em><span class="sig-paren">)</span> &#x2192; Tuple[List[smac.utils.validate.Run], smac.runhistory.runhistory.RunHistory]<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_runs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configs</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">insts</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">repetitions</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>smac.utils.validate.Run<span class="p">]</span><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._get_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._get_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate list of SMAC-TAE runs to be executed. This means
 combinations of configs with all instances on a certain number of seeds.</p>
 <p>side effect: Adds runs that don’t need to be reevaluated to self.rh!</p>
@@ -380,9 +382,9 @@ with max_time being the highest recorded time</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._process_runhistory">
-<code class="sig-name descname">_process_runhistory</code><span class="sig-paren">(</span><em class="sig-param">configs: List[ConfigSpace.configuration_space.Configuration], insts: Sequence[Optional[str]], runhistory: Optional[smac.runhistory.runhistory.RunHistory]</em><span class="sig-paren">)</span> &#x2192; Dict[str, List[Tuple[int, List[ConfigSpace.configuration_space.Configuration]]]]<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._process_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._process_runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_process_runhistory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configs</span><span class="p">:</span> <span class="n">List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">insts</span><span class="p">:</span> <span class="n">Sequence<span class="p">[</span>Optional<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>Tuple<span class="p">[</span>int<span class="p">, </span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._process_runhistory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._process_runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes runhistory from self._get_runs by extracting already evaluated
 (relevant) config-inst-seed tuples.</p>
 <dl class="field-list simple">
@@ -404,9 +406,9 @@ on, sorted by the number of configs</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._save_results">
-<code class="sig-name descname">_save_results</code><span class="sig-paren">(</span><em class="sig-param">rh: smac.runhistory.runhistory.RunHistory, output_fn: Optional[str], backup_fn: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._save_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._save_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_save_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rh</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">output_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">backup_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._save_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._save_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to save results to file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -422,9 +424,9 @@ argument is ignored)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator._validate_parallel">
-<code class="sig-name descname">_validate_parallel</code><span class="sig-paren">(</span><em class="sig-param">tae: smac.tae.execute_ta_run.ExecuteTARun, runs: List[smac.utils.validate.Run], n_jobs: int, backend: str</em><span class="sig-paren">)</span> &#x2192; List[Tuple[smac.tae.execute_ta_run.StatusType, float, float, Dict]]<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._validate_parallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._validate_parallel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_validate_parallel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span></em>, <em class="sig-param"><span class="n">runs</span><span class="p">:</span> <span class="n">List<span class="p">[</span>smac.utils.validate.Run<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">backend</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator._validate_parallel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator._validate_parallel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate runs with joblibs Parallel-interface</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -445,9 +447,9 @@ argument is ignored)</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param">config_mode: Union[str</em>, <em class="sig-param">List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em class="sig-param">instance_mode: Union[str</em>, <em class="sig-param">List[str]] = 'test'</em>, <em class="sig-param">repetitions: int = 1</em>, <em class="sig-param">n_jobs: int = 1</em>, <em class="sig-param">backend: str = 'threading'</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory = None</em>, <em class="sig-param">tae: smac.tae.execute_ta_run.ExecuteTARun = None</em>, <em class="sig-param">output_fn: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_mode</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'def'</span></em>, <em class="sig-param"><span class="n">instance_mode</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'test'</span></em>, <em class="sig-param"><span class="n">repetitions</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">n_jobs</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">backend</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'threading'</span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate configs on instances and save result in runhistory.
 If a runhistory is provided as input it is important that you run it on the same/comparable hardware.</p>
 <p>side effect: if output is specified, saves runhistory to specified
@@ -481,9 +483,9 @@ be interpreted as directory and filename will be
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.utils.validate.Validator.validate_epm">
-<code class="sig-name descname">validate_epm</code><span class="sig-paren">(</span><em class="sig-param">config_mode: Union[str</em>, <em class="sig-param">List[ConfigSpace.configuration_space.Configuration]] = 'def'</em>, <em class="sig-param">instance_mode: Union[str</em>, <em class="sig-param">List[str]] = 'test'</em>, <em class="sig-param">repetitions: int = 1</em>, <em class="sig-param">runhistory: Optional[smac.runhistory.runhistory.RunHistory] = None</em>, <em class="sig-param">output_fn: Optional[str] = None</em>, <em class="sig-param">reuse_epm: bool = True</em><span class="sig-paren">)</span> &#x2192; smac.runhistory.runhistory.RunHistory<a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate_epm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate_epm" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">validate_epm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_mode</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'def'</span></em>, <em class="sig-param"><span class="n">instance_mode</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'test'</span></em>, <em class="sig-param"><span class="n">repetitions</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output_fn</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">reuse_epm</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><a class="reference internal" href="../_modules/smac/utils/validate.html#Validator.validate_epm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate.Validator.validate_epm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use EPM to predict costs/runtimes for unknown config/inst-pairs.</p>
 <p>side effect: if output is specified, saves runhistory to specified
 output directory.</p>
@@ -514,15 +516,15 @@ time evaluates at cpu- or wallclock-timesteps of:
 
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.utils.validate._Run">
 <code class="sig-prename descclassname">smac.utils.validate.</code><code class="sig-name descname">_Run</code><a class="headerlink" href="#smac.utils.validate._Run" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.utils.validate.Run</span></code></p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="smac.utils.validate._unbound_tae_starter">
-<code class="sig-prename descclassname">smac.utils.validate.</code><code class="sig-name descname">_unbound_tae_starter</code><span class="sig-paren">(</span><em class="sig-param">tae: smac.tae.execute_ta_run.ExecuteTARun</em>, <em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; Tuple[smac.tae.execute_ta_run.StatusType, float, float, Dict]<a class="reference internal" href="../_modules/smac/utils/validate.html#_unbound_tae_starter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate._unbound_tae_starter" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.utils.validate.</code><code class="sig-name descname">_unbound_tae_starter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/validate.html#_unbound_tae_starter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.validate._unbound_tae_starter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unbound function to be used by joblibs Parallel, since directly passing the
 TAE results in pickling-problems.</p>
 <dl class="field-list simple">

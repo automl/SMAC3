@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.intensification.intensification module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.intensification.intensification module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.intensification.intensification">
 <span id="smac-intensification-intensification-module"></span><h1>smac.intensification.intensification module<a class="headerlink" href="#module-smac.intensification.intensification" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.intensification.intensification.Intensifier">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.intensification.</code><code class="sig-name descname">Intensifier</code><span class="sig-paren">(</span><em class="sig-param">tae_runner: smac.tae.execute_ta_run.ExecuteTARun, stats: smac.stats.stats.Stats, traj_logger: smac.utils.io.traj_logging.TrajLogger, rng: numpy.random.mtrand.RandomState, instances: List[str], instance_specifics: Mapping[str, numpy.ndarray] = None, cutoff: int = None, deterministic: bool = False, run_obj_time: bool = True, always_race_against: ConfigSpace.configuration_space.Configuration = None, run_limit: int = 2147483647, use_ta_time_bound: bool = False, minR: int = 1, maxR: int = 2000, adaptive_capping_slackfactor: float = 1.2, min_chall: int = 2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.intensification.</code><code class="sig-name descname">Intensifier</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tae_runner</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">traj_logger</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger">smac.utils.io.traj_logging.TrajLogger</a></span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">instances</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">instance_specifics</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span>str<span class="p">, </span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deterministic</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">run_obj_time</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">always_race_against</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_limit</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2147483647</span></em>, <em class="sig-param"><span class="n">use_ta_time_bound</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">minR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">maxR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2000</span></em>, <em class="sig-param"><span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.2</span></em>, <em class="sig-param"><span class="n">min_chall</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.abstract_racer.AbstractRacer</span></code></a></p>
 <p>Races challengers against an incumbent (a.k.a. SMAC’s intensification
 procedure).</p>
@@ -318,9 +320,9 @@ intensify).</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier._add_inc_run">
-<code class="sig-name descname">_add_inc_run</code><span class="sig-paren">(</span><em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._add_inc_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._add_inc_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_add_inc_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._add_inc_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._add_inc_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add new run for incumbent</p>
 <p><em>Side effect:</em> adds runs to &lt;run_history&gt;</p>
 <dl class="field-list simple">
@@ -328,14 +330,15 @@ intensify).</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – best configuration so far</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – Whether to log changes of incumbents in trajectory</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier._generate_challengers">
-<code class="sig-name descname">_generate_challengers</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser]</em><span class="sig-paren">)</span> &#x2192; Iterator[Optional[ConfigSpace.configuration_space.Configuration]]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_generate_challengers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challengers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chooser</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser">smac.optimizer.epm_configuration_chooser.EPMChooser</a><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retuns a sequence of challengers to use in intensification
 If challengers are not provided, then optimizer will be used to generate the challenger list</p>
 <dl class="field-list simple">
@@ -354,9 +357,9 @@ If challengers are not provided, then optimizer will be used to generate the cha
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier._get_instances_to_run">
-<code class="sig-name descname">_get_instances_to_run</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">N: int</em><span class="sig-paren">)</span> &#x2192; Tuple[List[smac.runhistory.runhistory.InstSeedBudgetKey], float]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._get_instances_to_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._get_instances_to_run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_instances_to_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">N</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey">smac.runhistory.runhistory.InstSeedBudgetKey</a><span class="p">]</span><span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._get_instances_to_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._get_instances_to_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the minimum list of &lt;instance, seed&gt; pairs to run the challenger on
 before comparing it with the incumbent</p>
 <dl class="field-list simple">
@@ -378,9 +381,15 @@ before comparing it with the incumbent</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="smac.intensification.intensification.Intensifier._next_iteration">
+<code class="sig-name descname">_next_iteration</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._next_iteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._next_iteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates tracking variables at the end of an intensification run</p>
+</dd></dl>
+
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier._race_challenger">
-<code class="sig-name descname">_race_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">incumbent: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">run_history: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._race_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._race_challenger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_race_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._race_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._race_challenger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aggressively race challenger against incumbent</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -400,15 +409,9 @@ before comparing it with the incumbent</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="smac.intensification.intensification.Intensifier._update_trackers">
-<code class="sig-name descname">_update_trackers</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._update_trackers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._update_trackers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates tracking variables at the end of an intensification run</p>
-</dd></dl>
-
-<dl class="method">
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier.eval_challenger">
-<code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param">challenger: ConfigSpace.configuration_space.Configuration, incumbent: Optional[ConfigSpace.configuration_space.Configuration], run_history: smac.runhistory.runhistory.RunHistory, time_bound: float = 2147483647.0, log_traj: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[ConfigSpace.configuration_space.Configuration, float]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.eval_challenger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">time_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.eval_challenger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Running intensification to determine the incumbent configuration.
 <em>Side effect:</em> adds runs to run_history</p>
 <p>Implementation of Procedure 2 in Hutter et al. (2011).</p>
@@ -434,9 +437,9 @@ If both arguments are given, then the optimizer will be used.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.intensification.intensification.Intensifier.get_next_challenger">
-<code class="sig-name descname">get_next_challenger</code><span class="sig-paren">(</span><em class="sig-param">challengers: Optional[List[ConfigSpace.configuration_space.Configuration]], chooser: Optional[smac.optimizer.epm_configuration_chooser.EPMChooser], run_history: Optional[smac.runhistory.runhistory.RunHistory] = None, repeat_configs: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[Optional[ConfigSpace.configuration_space.Configuration], bool]<a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.get_next_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.get_next_challenger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_next_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challengers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chooser</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser">smac.optimizer.epm_configuration_chooser.EPMChooser</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">repeat_configs</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">, </span>bool<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.get_next_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.get_next_challenger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selects which challenger to use based on the iteration stage and set the iteration parameters.
 First iteration will choose configurations from the <code class="docutils literal notranslate"><span class="pre">chooser</span></code> or input challengers,
 while the later iterations pick top configurations from the previously selected challengers in that iteration</p>
@@ -461,22 +464,27 @@ while the later iterations pick top configurations from the previously selected 
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.intensification.intensification.IntensifierStage">
 <em class="property">class </em><code class="sig-prename descclassname">smac.intensification.intensification.</code><code class="sig-name descname">IntensifierStage</code><a class="reference internal" href="../_modules/smac/intensification/intensification.html#IntensifierStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Class to define different stages of intensifier</p>
-<dl class="attribute">
+<dl class="py attribute">
+<dt id="smac.intensification.intensification.IntensifierStage.RUN_BASIS">
+<code class="sig-name descname">RUN_BASIS</code><em class="property"> = 3</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_BASIS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt id="smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER">
 <code class="sig-name descname">RUN_CHALLENGER</code><em class="property"> = 2</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_CHALLENGER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="smac.intensification.intensification.IntensifierStage.RUN_DEFAULT">
-<code class="sig-name descname">RUN_DEFAULT</code><em class="property"> = 3</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_DEFAULT" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt id="smac.intensification.intensification.IntensifierStage.RUN_FIRST_CONFIG">
+<code class="sig-name descname">RUN_FIRST_CONFIG</code><em class="property"> = 0</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_FIRST_CONFIG" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.intensification.intensification.IntensifierStage.RUN_INCUMBENT">
 <code class="sig-name descname">RUN_INCUMBENT</code><em class="property"> = 1</em><a class="headerlink" href="#smac.intensification.intensification.IntensifierStage.RUN_INCUMBENT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>

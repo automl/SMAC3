@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.epm.gaussian_process module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.epm.gaussian_process module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.epm.gaussian_process">
 <span id="smac-epm-gaussian-process-module"></span><h1>smac.epm.gaussian_process module<a class="headerlink" href="#module-smac.epm.gaussian_process" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.epm.gaussian_process.GaussianProcess">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process.</code><code class="sig-name descname">GaussianProcess</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fc8f8757550&gt;, normalize_y: bool = True, n_opt_restarts: int = 10, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.gaussian_process.</code><code class="sig-name descname">GaussianProcess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">types</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">bounds</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">kernel</span><span class="p">:</span> <span class="n">skopt.learning.gaussian_process.kernels.Kernel</span></em>, <em class="sig-param"><span class="n">normalize_y</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">n_opt_restarts</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">instance_features</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pca_components</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
@@ -318,14 +320,14 @@ set n_feats (&gt; pca_dims).</p></li>
 </dd>
 </dl>
 <p>Abstract base class for all Gaussian process models.</p>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._get_gp">
-<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7fc8f8757650&gt;<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._get_gp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; skopt.learning.gaussian_process.gpr.GaussianProcessRegressor<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._get_gp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._nll">
-<code class="sig-name descname">_nll</code><span class="sig-paren">(</span><em class="sig-param">theta: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[float, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._nll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._nll" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_nll</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">theta</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._nll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._nll" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the negative marginal log likelihood (+ the prior) for
 a hyperparameter configuration theta.
 (negative because we use scipy minimize for optimization)</p>
@@ -343,7 +345,7 @@ on a log scale.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._optimize">
 <code class="sig-name descname">_optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the marginal log likelihood and returns the best found
@@ -358,31 +360,31 @@ hyperparameter configuration theta.</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param">X_test: numpy.ndarray</em>, <em class="sig-param">full_cov: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._predict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X_test</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the predictive mean and variance of the objective function at
 the given test points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X_test</strong> (<em>np.ndarray</em><em> (</em><em>N</em><em>, </em><em>D</em><em>)</em>) – Input test points</p></li>
-<li><p><strong>full_cov</strong> (<em>bool</em>) – If set to true than the whole covariance matrix between the test points is returned</p></li>
+<li><p><strong>cov_return_type</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – Specifies what to return along with the mean. Refer <code class="docutils literal notranslate"><span class="pre">predict()</span></code> for more information.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>np.array(N,)</em> – predictive mean</p></li>
-<li><p><em>np.array(N,) or np.array(N, N) if full_cov == True</em> – predictive variance</p></li>
+<li><p><em>np.array(N,) or np.array(N, N) or None</em> – predictive variance or standard deviation</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess._train">
-<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param">X: numpy.ndarray</em>, <em class="sig-param">y: numpy.ndarray</em>, <em class="sig-param">do_optimize: bool = True</em><span class="sig-paren">)</span> &#x2192; smac.epm.gaussian_process.GaussianProcess<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">do_optimize</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#smac.epm.gaussian_process.GaussianProcess" title="smac.epm.gaussian_process.GaussianProcess">smac.epm.gaussian_process.GaussianProcess</a><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess._train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Cholesky decomposition of the covariance of X and
 estimates the GP hyperparameters by optimizing the marginal
 loglikelihood. The prior mean of the GP is set to the empirical
@@ -400,9 +402,9 @@ the default hyperparameters of the kernel are used.</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.epm.gaussian_process.GaussianProcess.sample_functions">
-<code class="sig-name descname">sample_functions</code><span class="sig-paren">(</span><em class="sig-param">X_test: numpy.ndarray</em>, <em class="sig-param">n_funcs: int = 1</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess.sample_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess.sample_functions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sample_functions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X_test</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">n_funcs</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess.sample_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess.sample_functions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Samples F function values from the current posterior at the N
 specified test points.</p>
 <dl class="field-list simple">

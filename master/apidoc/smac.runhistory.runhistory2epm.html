@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.runhistory.runhistory2epm module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.runhistory.runhistory2epm module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,9 +288,9 @@
             
   <div class="section" id="module-smac.runhistory.runhistory2epm">
 <span id="smac-runhistory-runhistory2epm-module"></span><h1>smac.runhistory.runhistory2epm module<a class="headerlink" href="#module-smac.runhistory.runhistory2epm" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">AbstractRunHistory2EPM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Constructor</p>
 <dl class="field-list simple">
@@ -299,6 +301,7 @@
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -309,16 +312,15 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix">
-<em class="property">abstract </em><code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: list = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_dict</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey">smac.runhistory.runhistory.RunKey</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">return_time_as_y</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">store_statistics</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._build_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Builds x,y matrixes from selected runs from runhistory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>run_dict</strong> (<em>dict</em><em>(</em><em>RunKey -&gt; RunValue</em><em>)</em>) – dictionary from RunHistory.RunKey to RunHistory.RunValue</p></li>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>instances</strong> (<em>list</em>) – list of instances</p></li>
 <li><p><strong>return_time_as_y</strong> (<em>bool</em>) – Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</p></li>
 <li><p><strong>store_statistics</strong> (<em>bool</em>) – Whether to store statistics about the data (to be used at subsequent calls)</p></li>
 </ul>
@@ -333,10 +335,21 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_s_run_dict">
+<code class="sig-name descname">_get_s_run_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">budget_subset</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey">smac.runhistory.runhistory.RunKey</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._get_s_run_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_s_run_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_t_run_dict">
+<code class="sig-name descname">_get_t_run_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">budget_subset</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey">smac.runhistory.runhistory.RunKey</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM._get_t_run_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_t_run_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y">
-<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
-<dd><p>Simple interface to obtain all data in runhistory in X, y format</p>
+<code class="sig-name descname">get_X_y</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_X_y"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_X_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple interface to obtain all data in runhistory in X, y format
+Note: This function should not be used as it does not consider all available StatusTypes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory of all evaluated configurations x instances</p>
@@ -352,9 +365,30 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_configurations">
+<code class="sig-name descname">get_configurations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">budget_subset</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.get_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.get_configurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns vector representation of only the configurations.</p>
+<p>Instance features are not appended and cost values are not taken into account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – Runhistory containing all evaluated configurations/instances</p></li>
+<li><p><strong>budget_subset</strong> (<em>list of budgets to consider</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform">
-<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">budget_subset: Optional[List] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">budget_subset</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns vector representation of runhistory; if imputation is
 disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <dl class="field-list simple">
@@ -374,9 +408,9 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform_response_values">
-<em class="property">abstract </em><code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#AbstractRunHistory2EPM.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -393,9 +427,9 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4Cost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -407,6 +441,7 @@ disabled, censored (TIMEOUT with time &lt; cutoff) will be skipped</p>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -417,16 +452,15 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix">
-<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: list = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_dict</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey">smac.runhistory.runhistory.RunKey</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">return_time_as_y</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">store_statistics</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost._build_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>“Builds X,y matrixes from selected runs from runhistory</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>run_dict</strong> (<em>dict: RunKey -&gt; RunValue</em>) – dictionary from RunHistory.RunKey to RunHistory.RunValue</p></li>
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory object</p></li>
-<li><p><strong>instances</strong> (<em>list</em>) – list of instances</p></li>
 <li><p><strong>return_time_as_y</strong> (<em>bool</em>) – Return the time instead of cost as y value. Necessary to access the raw y values for imputation.</p></li>
 <li><p><strong>store_statistics</strong> (<em>bool</em>) – Whether to store statistics about the data (to be used at subsequent calls)</p></li>
 </ul>
@@ -441,9 +475,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4Cost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Returns the input values.</p>
 <dl class="field-list simple">
@@ -461,9 +495,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4EIPS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM" title="smac.runhistory.runhistory2epm.AbstractRunHistory2EPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -475,6 +509,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -485,15 +520,15 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix">
-<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param">run_dict: Mapping[smac.runhistory.runhistory.RunKey, smac.runhistory.runhistory.RunValue], runhistory: smac.runhistory.runhistory.RunHistory, instances: List[str] = None, return_time_as_y: bool = False, store_statistics: bool = False</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray, numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_build_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_dict</span><span class="p">:</span> <span class="n">Mapping<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey">smac.runhistory.runhistory.RunKey</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">return_time_as_y</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">store_statistics</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS._build_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS._build_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; Tuple[numpy.ndarray]<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4EIPS.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transform the runtimes by a log transformation (log(1 + runtime).</p>
 <dl class="field-list simple">
@@ -511,9 +546,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4InvScaledCost</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4InvScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4InvScaledCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4InvScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -525,6 +560,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -535,9 +571,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4InvScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4InvScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4InvScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transform the response values by linearly scaling them between zero and one and then using inverse scaling.</p>
 <dl class="field-list simple">
@@ -555,9 +591,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -569,6 +605,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -579,9 +616,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transforms the response values by using a log transformation.</p>
 <dl class="field-list simple">
@@ -599,9 +636,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4LogScaledCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -613,6 +650,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -623,9 +661,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4LogScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4LogScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transform the response values by linearly scaling them between zero and one and then using the log
 transformation.</p>
@@ -644,9 +682,9 @@ transformation.</p>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4ScaledCost</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">num_params: int</em>, <em class="sig-param">success_states: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">impute_censored_data: bool = False</em>, <em class="sig-param">impute_state: Optional[List[smac.tae.execute_ta_run.StatusType]] = None</em>, <em class="sig-param">imputor: Optional[smac.epm.base_imputor.BaseImputor] = None</em>, <em class="sig-param">scale_perc: int = 5</em>, <em class="sig-param">rng: Optional[numpy.random.mtrand.RandomState] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4ScaledCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">num_params</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">success_states</span><span class="p">:</span> <span class="n">List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">impute_censored_data</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">impute_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">consider_for_higher_budgets_state</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">imputor</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor">smac.epm.base_imputor.BaseImputor</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale_perc</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -658,6 +696,7 @@ transformation.</p>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -668,9 +707,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4ScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4ScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transforms the response values by linearly scaling them between zero and one.</p>
 <dl class="field-list simple">
@@ -688,9 +727,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4SqrtScaledCost</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4SqrtScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory2epm.</code><code class="sig-name descname">RunHistory2EPM4SqrtScaledCost</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4SqrtScaledCost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4Cost"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory2epm.RunHistory2EPM4Cost</span></code></a></p>
 <p>TODO</p>
 <p>Constructor</p>
@@ -702,6 +741,7 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 <li><p><strong>success_states</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states considered as successful (such as StatusType.SUCCESS)
 If None, set to [StatusType.SUCCESS, ]</p></li>
 <li><p><strong>impute_censored_data</strong> (<em>bool</em><em>, </em><em>optional</em>) – Should we impute data?</p></li>
+<li><p><strong>consider_for_higher_budgets_state</strong> (<em>list</em><em>, </em><em>optional</em>) – Additionally consider all runs with these states for budget &lt; current budget</p></li>
 <li><p><strong>imputor</strong> (<em>epm.base_imputor Instance</em>) – Object to impute censored data</p></li>
 <li><p><strong>impute_state</strong> (<em>list</em><em>, </em><em>optional</em>) – List of states that mark censored data (such as StatusType.TIMEOUT)
 in combination with runtime &lt; cutoff_time
@@ -712,9 +752,9 @@ only used by some subclasses of AbstractRunHistory2EPM</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost.transform_response_values">
-<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param">values: numpy.ndarray</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4SqrtScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform_response_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/runhistory/runhistory2epm.html#RunHistory2EPM4SqrtScaledCost.transform_response_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory2epm.RunHistory2EPM4SqrtScaledCost.transform_response_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform function response values.</p>
 <p>Transform the response values by linearly scaling them between zero and one and then using the square root.</p>
 <dl class="field-list simple">

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.validate &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.utils.validate &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -127,6 +127,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -207,8 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -599,12 +601,17 @@
                                        <span class="n">model</span><span class="o">=</span><span class="n">epm</span><span class="p">)</span>
                 <span class="n">impute_censored_data</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">impute_state</span> <span class="o">=</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">]</span>
+                <span class="n">success_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">success_states</span> <span class="o">=</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span><span class="p">]</span>
+
             <span class="c1"># Transform training data (from given rh)</span>
             <span class="n">rh2epm</span> <span class="o">=</span> <span class="n">RunHistory2EPM4Cost</span><span class="p">(</span><span class="n">num_params</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()),</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                                          <span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
                                          <span class="n">impute_censored_data</span><span class="o">=</span><span class="n">impute_censored_data</span><span class="p">,</span>
                                          <span class="n">imputor</span><span class="o">=</span><span class="n">imputor</span><span class="p">,</span>
-                                         <span class="n">impute_state</span><span class="o">=</span><span class="n">impute_state</span><span class="p">)</span>
+                                         <span class="n">impute_state</span><span class="o">=</span><span class="n">impute_state</span><span class="p">,</span>
+                                         <span class="n">success_states</span><span class="o">=</span><span class="n">success_states</span><span class="p">)</span>
             <span class="k">assert</span> <span class="n">runhistory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
             <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">rh2epm</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">runhistory</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Training model with data of shape X: </span><span class="si">%s</span><span class="s2">, y:</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>

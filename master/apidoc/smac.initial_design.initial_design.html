@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.initial_design.initial_design module &mdash; SMAC 0.12.0 documentation</title>
+  <title>smac.initial_design.initial_design module &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_sgd_hyperband_instances.html">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -286,12 +288,12 @@
             
   <div class="section" id="module-smac.initial_design.initial_design">
 <span id="smac-initial-design-initial-design-module"></span><h1>smac.initial_design.initial_design module<a class="headerlink" href="#module-smac.initial_design.initial_design" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="smac.initial_design.initial_design.InitialDesign">
-<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.initial_design.</code><code class="sig-name descname">InitialDesign</code><span class="sig-paren">(</span><em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">traj_logger: smac.utils.io.traj_logging.TrajLogger</em>, <em class="sig-param">ta_run_limit: int</em>, <em class="sig-param">configs: Optional[List[ConfigSpace.configuration_space.Configuration]] = None</em>, <em class="sig-param">n_configs_x_params: Optional[int] = 10</em>, <em class="sig-param">max_config_fracs: float = 0.25</em>, <em class="sig-param">init_budget: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.initial_design.initial_design.</code><code class="sig-name descname">InitialDesign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cs</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">traj_logger</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger">smac.utils.io.traj_logging.TrajLogger</a></span></em>, <em class="sig-param"><span class="n">ta_run_limit</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">configs</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">n_configs_x_params</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">10</span></em>, <em class="sig-param"><span class="n">max_config_fracs</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.25</span></em>, <em class="sig-param"><span class="n">init_budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for initial design strategies that evaluates multiple configurations</p>
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.initial_design.initial_design.InitialDesign.cs">
 <code class="sig-name descname">cs</code><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.cs" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -301,7 +303,7 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py attribute">
 <dt id="smac.initial_design.initial_design.InitialDesign.configs">
 <code class="sig-name descname">configs</code><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of configurations to be evaluated</p>
@@ -333,19 +335,19 @@ provided.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
+<dl class="py method">
 <dt id="smac.initial_design.initial_design.InitialDesign._select_configurations">
-<code class="sig-name descname">_select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign._select_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign._select_configurations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign._select_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign._select_configurations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.initial_design.initial_design.InitialDesign._transform_continuous_designs">
-<code class="sig-name descname">_transform_continuous_designs</code><span class="sig-paren">(</span><em class="sig-param">design: numpy.ndarray</em>, <em class="sig-param">origin: str</em>, <em class="sig-param">cs: ConfigSpace.configuration_space.ConfigurationSpace</em><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign._transform_continuous_designs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign._transform_continuous_designs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_transform_continuous_designs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">design</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">origin</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cs</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign._transform_continuous_designs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign._transform_continuous_designs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="smac.initial_design.initial_design.InitialDesign.select_configurations">
-<code class="sig-name descname">select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[ConfigSpace.configuration_space.Configuration]<a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign.select_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.select_configurations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">select_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/initial_design/initial_design.html#InitialDesign.select_configurations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.initial_design.initial_design.InitialDesign.select_configurations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

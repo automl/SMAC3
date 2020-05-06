@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Optimizing average cross-validation performance with HyperBand &mdash; SMAC 0.12.0 documentation</title>
+  <title>Optimizing an MLP with Hyperband &mdash; SMAC 0.12.1 documentation</title>
   
 
   
@@ -37,7 +37,7 @@
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimizing an MLP with HyperBand" href="SMAC4HPO_mlp_hyperband.html" />
+    <link rel="next" title="Optimizing average cross-validation performance with BOHB" href="BOHB4HPO_sgd_instances.html" />
     <link rel="prev" title="Optimize the hyperparameters of a support vector machine" href="SMAC4HPO_svm.html" /> 
 </head>
 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1
               </div>
             
           
@@ -129,6 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
@@ -209,8 +210,9 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing average cross-validation performance with HyperBand</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_mlp_hyperband.html">Optimizing an MLP with HyperBand</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -263,13 +265,13 @@
         
           <li><a href="index.html">Examples</a> &raquo;</li>
         
-      <li>Optimizing average cross-validation performance with HyperBand</li>
+      <li>Optimizing an MLP with Hyperband</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/examples/SMAC4HPO_sgd_hyperband_instances.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/hyperband_mlp.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -284,139 +286,118 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4hpo-sgd-hyperband-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-hyperband-mlp-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="optimizing-average-cross-validation-performance-with-hyperband">
-<span id="sphx-glr-examples-smac4hpo-sgd-hyperband-instances-py"></span><h1>Optimizing average cross-validation performance with HyperBand<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-hyperband" title="Permalink to this headline">¶</a></h1>
-<p>An example for the usage of Hyperband intensifier in SMAC with multiple instances.
-We optimize a SGD classifier on the digits dataset as multiple binary classification problems
-using “Hyperband” intensification. We split the digits dataset (10 classes) into 45 binary datasets.</p>
-<p>In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
-An “Instance” represents a specific scenario/condition (eg: different datasets, subsets, transformations)
-for the algorithm to run. SMAC then returns the algorithm that had the best performance across all the instances.
-In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">logging</span>
+<div class="sphx-glr-example-title section" id="optimizing-an-mlp-with-hyperband">
+<span id="sphx-glr-examples-hyperband-mlp-py"></span><h1>Optimizing an MLP with Hyperband<a class="headerlink" href="#optimizing-an-mlp-with-hyperband" title="Permalink to this headline">¶</a></h1>
+<p>An example for the usage of a model-free Hyperband intensifier in SMAC.
+The configurations are randomly sampled</p>
+<p>In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
+optimize the average accuracy on a 5-fold cross validation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> <span class="n">UniformFloatHyperparameter</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
+    <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">SGDClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
 
-<span class="c1"># Import ConfigSpace and different types of parameters</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
-<span class="c1"># Import SMAC-utilities</span>
+<span class="kn">from</span> <span class="nn">smac.facade.hyperband_facade</span> <span class="kn">import</span> <span class="n">HB4AC</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
-<span class="c1"># We load the MNIST-dataset (a widely used benchmark) and split it into a collection of binary datasets</span>
-<span class="n">digits</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span>
-<span class="n">instances</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)]</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
-
-
-<span class="k">def</span> <span class="nf">generate_instances</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to select data for binary classification from the digits dataset</span>
-<span class="sd">    a &amp; b are the two classes</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># get indices of both classes</span>
-    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">b</span> <span class="o">==</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">))</span>
-    <span class="c1"># get data</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
-    <span class="n">target</span> <span class="o">=</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span>
+<span class="n">digits</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
 
 
 <span class="c1"># Target Algorithm</span>
-<span class="k">def</span> <span class="nf">sgd_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Creates a SGD classifier based on a configuration and evaluates it on the</span>
-<span class="sd">    digits dataset using cross-validation.</span>
+<span class="c1"># The signature of the function determines what arguments are passed to it</span>
+<span class="c1"># i.e., budget is passed to the target algorithm if it is present in the signature</span>
+<span class="k">def</span> <span class="nf">mlp_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">budget</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a MLP classifier from sklearn and fits the given data on it.</span>
+<span class="sd">        This is the function-call we try to optimize. Chosen values are stored in</span>
+<span class="sd">        the configuration (cfg).</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    cfg: Configuration (ConfigSpace.ConfigurationSpace.Configuration)</span>
-<span class="sd">        Configuration containing the parameters.</span>
-<span class="sd">        Configurations are indexable!</span>
-<span class="sd">    seed: int or RandomState</span>
-<span class="sd">        used to initialize the svm&#39;s random generator</span>
-<span class="sd">    instance: str</span>
-<span class="sd">        used to represent the instance to use (the 2 classes to consider in this case)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cfg: Configuration</span>
+<span class="sd">            configuration chosen by smac</span>
+<span class="sd">        seed: int or RandomState</span>
+<span class="sd">            used to initialize the rf&#39;s random generator</span>
+<span class="sd">        instance: str</span>
+<span class="sd">            used to represent the instance to use (just a placeholder for this example)</span>
+<span class="sd">        budget: float</span>
+<span class="sd">            used to set max iterations for the MLP</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    float</span>
-<span class="sd">        A crossvalidated mean score for the SGD classifier on the loaded data-set.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
 
-        <span class="c1"># SGD classifier using given configuration</span>
-        <span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;l1_ratio&#39;</span><span class="p">],</span>
-                            <span class="n">learning_rate</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">],</span> <span class="n">eta0</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;eta0&#39;</span><span class="p">],</span>
-                            <span class="n">max_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span>
+            <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;n_neurons&quot;</span><span class="p">]]</span> <span class="o">*</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;n_layer&quot;</span><span class="p">],</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
+            <span class="n">activation</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">],</span>
+            <span class="n">learning_rate_init</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;learning_rate_init&#39;</span><span class="p">],</span>
+            <span class="n">max_iter</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">budget</span><span class="p">)),</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
-        <span class="c1"># get instance</span>
-        <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">generate_instances</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="c1"># returns the cross validation accuracy</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
 
-        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>  <span class="c1"># Because minimize!</span>
 
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Hyperband-instances-example&quot;</span><span class="p">)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>  <span class="c1"># logging.DEBUG for debug output</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;MLP-example&quot;</span><span class="p">)</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
-<span class="c1"># Build Configuration Space which defines all parameters and their ranges</span>
+<span class="c1"># Build Configuration Space which defines all parameters and their ranges.</span>
+<span class="c1"># To illustrate different parameter types,</span>
+<span class="c1"># we use continuous, integer and categorical parameters.</span>
 <span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
 
-<span class="c1"># We define a few possible parameters for the SGD classifier</span>
-<span class="n">alpha</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">l1_ratio</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;l1_ratio&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="n">learning_rate</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;learning_rate&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="s1">&#39;invscaling&#39;</span><span class="p">,</span> <span class="s1">&#39;adaptive&#39;</span><span class="p">],</span>
-                                          <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
-<span class="n">eta0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;eta0&quot;</span><span class="p">,</span> <span class="mf">0.00001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># Add the parameters to configuration space</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">alpha</span><span class="p">,</span> <span class="n">l1_ratio</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">,</span> <span class="n">eta0</span><span class="p">])</span>
+<span class="c1"># We can add multiple hyperparameters at once:</span>
+<span class="n">n_layer</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;n_layer&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n_neurons</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;n_neurons&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">activation</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;activation&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;logistic&#39;</span><span class="p">,</span> <span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="s1">&#39;relu&#39;</span><span class="p">],</span>
+                                       <span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">)</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s1">&#39;batch_size&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">learning_rate_init</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s1">&#39;learning_rate_init&#39;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">n_layer</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">learning_rate_init</span><span class="p">])</span>
 
 <span class="c1"># SMAC scenario object</span>
 <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>  <span class="c1"># we optimize quality (alternative to runtime)</span>
                      <span class="s2">&quot;wallclock-limit&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># max duration to run the optimization (in seconds)</span>
                      <span class="s2">&quot;cs&quot;</span><span class="p">:</span> <span class="n">cs</span><span class="p">,</span>  <span class="c1"># configuration space</span>
-                     <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                     <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
                      <span class="s2">&quot;limit_resources&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># Uses pynisher to limit memory and runtime</span>
+                     <span class="c1"># Alternatively, you can also disable this.</span>
+                     <span class="c1"># Then you should handle runtime and memory yourself in the TA</span>
+                     <span class="s2">&quot;cutoff&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="c1"># runtime limit for target algorithm</span>
                      <span class="s2">&quot;memory_limit&quot;</span><span class="p">:</span> <span class="mi">3072</span><span class="p">,</span>  <span class="c1"># adapt this to reasonable value for your hardware</span>
-                     <span class="s2">&quot;cutoff&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>  <span class="c1"># runtime limit for the target algorithm</span>
-                     <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="n">instances</span>  <span class="c1"># Optimize across all given instances</span>
                      <span class="p">})</span>
 
+<span class="c1"># max budget for hyperband can be anything. Here, we set it to maximum no. of epochs to train the MLP for</span>
+<span class="n">max_iters</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="c1"># intensifier parameters</span>
-<span class="c1"># if no argument provided for budgets, hyperband decides them based on the number of instances available</span>
-<span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;max_budget&#39;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-                      <span class="s1">&#39;instance_order&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># You can also shuffle the order of using instances by this parameter.</span>
-                      <span class="c1"># &#39;shuffle&#39; will shuffle instances before each SH run and</span>
-                      <span class="c1"># &#39;shuffle_once&#39; will shuffle instances once before the 1st</span>
-                      <span class="c1"># SH iteration begins</span>
-                      <span class="p">}</span>
-
+<span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_budget&#39;</span><span class="p">:</span> <span class="n">max_iters</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
-                <span class="n">tae_runner</span><span class="o">=</span><span class="n">sgd_from_cfg</span><span class="p">,</span>
-                <span class="n">intensifier</span><span class="o">=</span><span class="n">Hyperband</span><span class="p">,</span>  <span class="c1"># you can also change the intensifier to use like this!</span>
-                <span class="c1"># This example currently uses Hyperband intensification,</span>
-                <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all parameters related to intensifier can be passed like this</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">HB4AC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+             <span class="n">tae_runner</span><span class="o">=</span><span class="n">mlp_from_cfg</span><span class="p">,</span>
+             <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all arguments related to intensifier can be passed like this</span>
 
-<span class="c1"># Example call of the function</span>
+<span class="c1"># Example call of the function with default values</span>
 <span class="c1"># It returns: Status, Cost, Runtime, Additional Infos</span>
-<span class="n">def_costs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
-    <span class="n">cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">def_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Value for default configuration: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">def_costs</span><span class="p">)))</span>
+<span class="n">def_value</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span>
+                                      <span class="n">instance</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">max_iters</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Value for default configuration: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">def_value</span><span class="p">)</span>
 
 <span class="c1"># Start optimization</span>
 <span class="k">try</span><span class="p">:</span>
@@ -424,20 +405,18 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 <span class="k">finally</span><span class="p">:</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span>
 
-<span class="n">inc_costs</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
-    <span class="n">cost</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">inc_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">inc_costs</span><span class="p">)))</span>
+<span class="n">inc_value</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
+                                      <span class="n">budget</span><span class="o">=</span><span class="n">max_iters</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">inc_value</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4hpo-sgd-hyperband-instances-py">
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-hyperband-mlp-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/526ec788f3e4e8ad3775d3d3c434d665/SMAC4HPO_sgd_hyperband_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4HPO_sgd_hyperband_instances.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/017ff67e218f3b85b1011dfa7c5c26ac/hyperband_mlp.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">hyperband_mlp.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/a1b76e7cd94aea70ae184ce018455641/SMAC4HPO_sgd_hyperband_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4HPO_sgd_hyperband_instances.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/aa0a2bad19ec60efd404706918ccf996/hyperband_mlp.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">hyperband_mlp.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -451,7 +430,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="SMAC4HPO_mlp_hyperband.html" class="btn btn-neutral float-right" title="Optimizing an MLP with HyperBand" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-right" title="Optimizing average cross-validation performance with BOHB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="SMAC4HPO_svm.html" class="btn btn-neutral float-left" title="Optimize the hyperparameters of a support vector machine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

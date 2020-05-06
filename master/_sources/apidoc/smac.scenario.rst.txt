@@ -9,5 +9,6 @@ smac.scenario package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.scenario.scenario

@@ -9,6 +9,7 @@ smac.optimizer package
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.optimizer.acquisition
    smac.optimizer.ei_optimization

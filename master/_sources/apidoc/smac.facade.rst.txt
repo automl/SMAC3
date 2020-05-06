@@ -10,13 +10,16 @@ smac.facade package
 Subpackages
 
 .. toctree::
+   :maxdepth: 4
 
    smac.facade.experimental
 
 
 .. toctree::
+   :maxdepth: 4
 
    smac.facade.func_facade
+   smac.facade.hyperband_facade
    smac.facade.roar_facade
    smac.facade.smac_ac_facade
    smac.facade.smac_bo_facade
