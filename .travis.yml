@@ -55,10 +55,10 @@ before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
 before_install:
-  - ci_scripts/install_env.sh
+  - source ci_scripts/install_env.sh
 
 install:
-  - ci_scripts/install.sh
+  - source ci_scripts/install.sh
 
 script:
   - ci_scripts/$TESTSUITE
