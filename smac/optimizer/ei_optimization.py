@@ -751,4 +751,6 @@ class FixedSet(AcquisitionFunctionMaximizer):
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
         configurations = copy.deepcopy(self.configurations)
+        for config in configurations:
+            config.origin = 'Fixed Set'
         return self._sort_configs_by_acq_value(configurations)
