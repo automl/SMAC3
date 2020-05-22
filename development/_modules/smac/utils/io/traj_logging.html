@@ -604,7 +604,7 @@
                             <span class="k">continue</span>
 
                 <span class="c1"># Second, check if it&#39;s in the choices / the correct type.</span>
-                <span class="n">legal</span> <span class="o">=</span> <span class="p">{</span><span class="n">l</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">interpretations</span> <span class="k">if</span> <span class="n">hp</span><span class="o">.</span><span class="n">is_legal</span><span class="p">(</span><span class="n">l</span><span class="p">)}</span>
+                <span class="n">legal</span> <span class="o">=</span> <span class="p">{</span><span class="n">interpretation</span> <span class="k">for</span> <span class="n">interpretation</span> <span class="ow">in</span> <span class="n">interpretations</span> <span class="k">if</span> <span class="n">hp</span><span class="o">.</span><span class="n">is_legal</span><span class="p">(</span><span class="n">interpretation</span><span class="p">)}</span>
 
                 <span class="c1"># Third, issue warnings if the interpretation is ambigious</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">legal</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
