@@ -323,7 +323,7 @@ class TrajLogger(object):
                             continue
 
                 # Second, check if it's in the choices / the correct type.
-                legal = {l for l in interpretations if hp.is_legal(l)}
+                legal = {interpretation for interpretation in interpretations if hp.is_legal(interpretation)}
 
                 # Third, issue warnings if the interpretation is ambigious
                 if len(legal) != 1:
