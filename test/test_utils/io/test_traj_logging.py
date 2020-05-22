@@ -96,9 +96,9 @@ class TrajLoggerTest(unittest.TestCase):
             with open(os.path.join(tmpdir, 'traj_old.csv')) as to:
                 data = to.read().split('\n')
             with open(os.path.join(tmpdir, 'traj_aclib2.json')) as js_aclib:
-                json_dicts_aclib2 = [json.loads(l) for l in js_aclib.read().splitlines()]
+                json_dicts_aclib2 = [json.loads(line) for line in js_aclib.read().splitlines()]
             with open(os.path.join(tmpdir, 'traj.json')) as js:
-                json_dicts_alljson = [json.loads(l) for l in js.read().splitlines()]
+                json_dicts_alljson = [json.loads(line) for line in js.read().splitlines()]
 
         # Check old format
         header = data[0].split(',')

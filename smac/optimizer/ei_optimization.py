@@ -574,13 +574,13 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
 
-class InterleavedLocalAndRandomSearch(AcquisitionFunctionMaximizer):
+class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
     """Implements SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points
     according, to the acquisition function, uses the acquisition function to
-    sort randomly sampled configurations and interleaves unsorted, randomly
-    sampled configurations in between.
+    sort randomly sampled configurations. Random configurations are
+    interleaved by the main SMAC code.
 
     Parameters
     ----------
@@ -751,4 +751,6 @@ class FixedSet(AcquisitionFunctionMaximizer):
         num_points: int,
     ) -> List[Tuple[float, Configuration]]:
         configurations = copy.deepcopy(self.configurations)
+        for config in configurations:
+            config.origin = 'Fixed Set'
         return self._sort_configs_by_acq_value(configurations)
