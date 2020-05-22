@@ -34,7 +34,7 @@ from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
-from smac.optimizer.ei_optimization import InterleavedLocalAndRandomSearch, \
+from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
 # epm
@@ -135,7 +135,7 @@ class SMAC4AC(object):
             hyperparameters (i.e. GaussianProcessMCMC).
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
-            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
+            Will use :class:`smac.optimizer.ei_optimization.LocalAndSortedRandomSearch` if not set.
         acquisition_function_optimizer_kwargs: Optional[Dict]
             Arguments passed to constructor of '~acquisition_function_optimizer'
         model : AbstractEPM
@@ -332,7 +332,7 @@ class SMAC4AC(object):
                 if key not in acq_func_opt_kwargs:
                     acq_func_opt_kwargs[key] = value
             acquisition_function_optimizer_instance = (
-                InterleavedLocalAndRandomSearch(**acq_func_opt_kwargs)  # type: ignore[arg-type] # noqa F821
+                LocalAndSortedRandomSearch(**acq_func_opt_kwargs)  # type: ignore[arg-type] # noqa F821
             )  # type: AcquisitionFunctionMaximizer
         elif inspect.isclass(acquisition_function_optimizer):
             acquisition_function_optimizer_instance = acquisition_function_optimizer(**acq_func_opt_kwargs)  # type: ignore[arg-type] # noqa F821
