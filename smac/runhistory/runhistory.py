@@ -168,7 +168,7 @@ class RunHistory(object):
         status: StatusType,
         instance_id: typing.Optional[str] = None,
         seed: typing.Optional[int] = None,
-        budget: float = 0,
+        budget: float = 0.0,
         additional_info: typing.Optional[typing.Dict] = None,
         origin: DataOrigin = DataOrigin.INTERNAL,
     ) -> None:
