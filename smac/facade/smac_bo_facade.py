@@ -86,8 +86,8 @@ class SMAC4BO(SMAC4AC):
                 prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rng),
             )
 
-            cont_dims = np.nonzero(types == 0)[0]
-            cat_dims = np.nonzero(types != 0)[0]
+            cont_dims = np.where(np.array(types) == 0)[0]
+            cat_dims = np.where(np.array(types) != 0)[0]
 
             if len(cont_dims) > 0:
                 exp_kernel = Matern(
@@ -103,6 +103,8 @@ class SMAC4BO(SMAC4AC):
                     [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cat_dims))],
                     operate_on=cat_dims,
                 )
+
+            assert len(cont_dims + len(cat_dims)) == len(scenario.cs.get_hyperparameters())
 
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
