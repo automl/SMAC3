@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.intensification.intensification &mdash; SMAC 0.12.1 documentation</title>
+  <title>smac.intensification.intensification &mdash; SMAC 0.12.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
             
           
@@ -407,6 +407,7 @@
 
         <span class="c1"># challenger related variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_chall_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_challenger</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">continue_challenger</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([])</span>  <span class="c1"># type: _config_to_run_type</span>
@@ -506,7 +507,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
 
         <span class="c1"># check if 1 intensification run is complete - line 18</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_chall</span><span class="p">:</span>
+        <span class="c1"># this is different to regular SMAC as it requires at least successful challenger run,</span>
+        <span class="c1"># which is necessary to work on a fixed grid of configurations.</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_chall</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_chall_run</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_limit</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Maximum #runs for intensification reached&quot;</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_next_iteration</span><span class="p">()</span>
@@ -575,6 +582,7 @@
                 <span class="n">next_seed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">if</span> <span class="n">available_insts</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="c1"># Line 5 (here for easier code)</span>
                 <span class="n">next_instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">available_insts</span><span class="p">)</span>
                 <span class="c1"># Line 7</span>
@@ -586,7 +594,6 @@
                     <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
                     <span class="n">instance_specific</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_specifics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">next_instance</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">))</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">+=</span> <span class="n">dur</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No further instance-seed pairs for &quot;</span>
                                   <span class="s2">&quot;incumbent available.&quot;</span><span class="p">)</span>
@@ -673,6 +680,9 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Add run of challenger&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_chall_run</span> <span class="o">+=</span> <span class="mi">1</span>
+
                 <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">start</span><span class="p">(</span>
                     <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
                     <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
@@ -682,7 +692,6 @@
                     <span class="c1"># Cutoff might be None if self.cutoff is None, but then the first if statement prevents</span>
                     <span class="c1"># evaluation of the second if statement</span>
                     <span class="n">capped</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cutoff</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">))</span>  <span class="c1"># type: ignore[operator] # noqa F821</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">+=</span> <span class="n">dur</span>
 
             <span class="k">except</span> <span class="n">CappedRunException</span><span class="p">:</span>
@@ -906,6 +915,7 @@
 
         <span class="c1"># reset for a new iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_chall_run</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elapsed_time</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="mf">0.0</span>

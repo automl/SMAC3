@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_ac_facade &mdash; SMAC 0.12.1 documentation</title>
+  <title>smac.facade.smac_ac_facade &mdash; SMAC 0.12.2 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
             
           
@@ -315,7 +315,7 @@
 <span class="c1"># optimizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">EI</span><span class="p">,</span> <span class="n">LogEI</span><span class="p">,</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="n">IntegratedAcquisitionFunction</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">LocalAndSortedRandomSearch</span><span class="p">,</span> \
     <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">RandomConfigurationChooser</span><span class="p">,</span> <span class="n">ChooserProb</span>
 <span class="c1"># epm</span>
@@ -416,7 +416,7 @@
 <span class="sd">            hyperparameters (i.e. GaussianProcessMCMC).</span>
 <span class="sd">        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span>
 <span class="sd">            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.</span>
-<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.</span>
+<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.LocalAndSortedRandomSearch` if not set.</span>
 <span class="sd">        acquisition_function_optimizer_kwargs: Optional[Dict]</span>
 <span class="sd">            Arguments passed to constructor of &#39;~acquisition_function_optimizer&#39;</span>
 <span class="sd">        model : AbstractEPM</span>
@@ -613,7 +613,7 @@
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">acq_func_opt_kwargs</span><span class="p">:</span>
                     <span class="n">acq_func_opt_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="n">acquisition_function_optimizer_instance</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">InterleavedLocalAndRandomSearch</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
+                <span class="n">LocalAndSortedRandomSearch</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
             <span class="p">)</span>  <span class="c1"># type: AcquisitionFunctionMaximizer</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">acquisition_function_optimizer</span><span class="p">):</span>
             <span class="n">acquisition_function_optimizer_instance</span> <span class="o">=</span> <span class="n">acquisition_function_optimizer</span><span class="p">(</span><span class="o">**</span><span class="n">acq_func_opt_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>

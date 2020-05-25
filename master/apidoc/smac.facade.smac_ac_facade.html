@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_ac_facade module &mdash; SMAC 0.12.1 documentation</title>
+  <title>smac.facade.smac_ac_facade module &mdash; SMAC 0.12.2 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
             
           
@@ -366,7 +366,7 @@ Will use <a class="reference internal" href="smac.optimizer.acquisition.html#sma
 <li><p><strong>integrate_acquisition_function</strong> (<em>bool</em><em>, </em><em>default=False</em>) – Whether to integrate the acquisition function. Works only with models which can sample their
 hyperparameters (i.e. GaussianProcessMCMC).</p></li>
 <li><p><strong>acquisition_function_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>AcquisitionFunctionMaximizer</em></a>) – Object that implements the <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AcquisitionFunctionMaximizer</span></code></a>.
-Will use <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch" title="smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch</span></code></a> if not set.</p></li>
+Will use <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalAndSortedRandomSearch" title="smac.optimizer.ei_optimization.LocalAndSortedRandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.LocalAndSortedRandomSearch</span></code></a> if not set.</p></li>
 <li><p><strong>acquisition_function_optimizer_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – Arguments passed to constructor of ‘~acquisition_function_optimizer’</p></li>
 <li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><em>AbstractEPM</em></a>) – Model that implements train() and predict(). Will use a
 <a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><code class="xref py py-class docutils literal notranslate"><span class="pre">RandomForestWithInstances</span></code></a> if not set.</p></li>

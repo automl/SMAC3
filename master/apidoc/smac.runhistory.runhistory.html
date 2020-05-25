@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.runhistory.runhistory module &mdash; SMAC 0.12.1 documentation</title>
+  <title>smac.runhistory.runhistory module &mdash; SMAC 0.12.2 documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.12.1
+                0.12.2
               </div>
             
           
@@ -606,7 +606,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt id="smac.runhistory.runhistory.RunHistory.add">
-<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">cost: float</em>, <em class="sig-param">time: float</em>, <em class="sig-param">status: smac.tae.execute_ta_run.StatusType</em>, <em class="sig-param">instance_id: Optional[str] = None</em>, <em class="sig-param">seed: Optional[int] = None</em>, <em class="sig-param">budget: float = 0</em>, <em class="sig-param">additional_info: Optional[Dict] = None</em>, <em class="sig-param">origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.INTERNAL: 1&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">config: ConfigSpace.configuration_space.Configuration</em>, <em class="sig-param">cost: float</em>, <em class="sig-param">time: float</em>, <em class="sig-param">status: smac.tae.execute_ta_run.StatusType</em>, <em class="sig-param">instance_id: Optional[str] = None</em>, <em class="sig-param">seed: Optional[int] = None</em>, <em class="sig-param">budget: float = 0.0</em>, <em class="sig-param">additional_info: Optional[Dict] = None</em>, <em class="sig-param">origin: smac.runhistory.runhistory.DataOrigin = &lt;DataOrigin.INTERNAL: 1&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a data of a new target algorithm (TA) run;
 it will update data if the same key values are used
 (config, instance_id, seed)</p>
