@@ -1,6 +1,13 @@
-# 0.12.1
+# 0.12.2
 
-## Major Changes
+## Bug Fixes
+
+* Fixes the docstring of SMAC's default acquisition function optimizer (#653)
+* Correctly attributes the configurations' origin if using the `FixedSet` acquisition function optimizer (#653)
+* Fixes an infinite loop which could occur if using only a single configuration per iteration (#654)
+* Fixes a bug in the kernel construction of the `BOFacade` (#655)
+
+# 0.12.1
 
 ## Minor Changes
 
