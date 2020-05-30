@@ -35,12 +35,12 @@ class RunhistoryTest(unittest.TestCase):
 
         rh.add(config=config, cost=10, time=20,
                status=StatusType.SUCCESS, instance_id=None,
-               seed=None,
+               seed=None, starttime=100, endtime=120,
                additional_info=None)
 
         rh.add(config=config, cost=10, time=20,
                status=StatusType.SUCCESS, instance_id=1,
-               seed=12354,
+               seed=12354, starttime=10, endtime=30,
                additional_info={"start_time": 10})
 
         self.assertFalse(rh.empty())

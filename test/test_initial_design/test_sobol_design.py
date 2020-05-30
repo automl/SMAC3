@@ -31,7 +31,7 @@ class TestSobol(unittest.TestCase):
         cs.add_hyperparameter(UniformFloatHyperparameter('x41', 0, 1))
         with self.assertRaisesRegex(
                 Exception,
-                "('NoneType' object is not iterable)|(cannot unpack non-iterable NoneType object)",
+                "list index out of range",
         ):
             SobolDesign(
                 cs=cs,

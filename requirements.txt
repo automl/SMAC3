@@ -5,6 +5,5 @@ pynisher>=0.4.1
 ConfigSpace>=0.4.9,<0.5
 scikit-learn>=0.22.0
 pyrfr>=0.8.0
-sobol_seq
 joblib
 lazy_import
