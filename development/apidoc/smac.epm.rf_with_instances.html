@@ -25,7 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -295,106 +295,56 @@
 <p>Random forest that takes instance features into account.</p>
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rf_opts">
-<code class="sig-name descname">rf_opts</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf_opts" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rf_opts</code><em class="property">: regression.rf_opts</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf_opts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Random forest hyperparameter</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>regression.rf_opts</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree">
-<code class="sig-name descname">n_points_per_tree</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">n_points_per_tree</code><em class="property">: int</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.n_points_per_tree" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rf">
-<code class="sig-name descname">rf</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rf</code><em class="property">: regression.binary_rss_forest</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Only available after training</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>regression.binary_rss_forest</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.hypers">
-<code class="sig-name descname">hypers</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.hypers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">hypers</code><em class="property">: list</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.hypers" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of random forest hyperparameters</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y">
-<code class="sig-name descname">unlog_y</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">unlog_y</code><em class="property">: bool</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.seed">
-<code class="sig-name descname">seed</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.seed" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">seed</code><em class="property">: int</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.seed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.types">
-<code class="sig-name descname">types</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.types" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">types</code><em class="property">: np.ndarray</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.bounds">
-<code class="sig-name descname">bounds</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.bounds" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">bounds</code><em class="property">: list</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.bounds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.rng">
-<code class="sig-name descname">rng</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rng" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.random.RandomState</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">rng</code><em class="property">: np.random.RandomState</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.rng" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.rf_with_instances.RandomForestWithInstances.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.logger" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>logging.logger</p>
-</dd>
-</dl>
-</dd></dl>
+<code class="sig-name descname">logger</code><em class="property">: logging.logger</em><a class="headerlink" href="#smac.epm.rf_with_instances.RandomForestWithInstances.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

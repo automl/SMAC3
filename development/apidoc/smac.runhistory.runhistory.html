@@ -25,7 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -290,7 +290,7 @@
 <span id="smac-runhistory-runhistory-module"></span><h1>smac.runhistory.runhistory module<a class="headerlink" href="#module-smac.runhistory.runhistory" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.runhistory.runhistory.DataOrigin">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">DataOrigin</code><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#DataOrigin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">DataOrigin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#DataOrigin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Definition of how data in the runhistory is used.</p>
 <ul class="simple">
@@ -520,46 +520,26 @@ neither used nor tested.</p></li>
 </div>
 <dl class="py attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.data">
-<code class="sig-name descname">data</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">data</code><em class="property">: collections.OrderedDict()</em><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>collections.OrderedDict()</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.config_ids">
-<code class="sig-name descname">config_ids</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">config_ids</code><em class="property">: dict</em><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.config_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config -&gt; id</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.ids_config">
-<code class="sig-name descname">ids_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ids_config</code><em class="property">: dict</em><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.ids_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps id -&gt; config</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.runhistory.runhistory.RunHistory.num_runs_per_config">
-<code class="sig-name descname">num_runs_per_config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.num_runs_per_config" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">num_runs_per_config</code><em class="property">: dict</em><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.num_runs_per_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Maps config_id -&gt; number of runs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="field-list simple">
@@ -933,7 +913,7 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 
 <dl class="py class">
 <dt id="smac.runhistory.runhistory.RunKey">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunKey</code><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunKey" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunKey</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">instance_id</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory.RunKey</span></code></a></p>
 <p>Create new instance of RunKey(config_id, instance_id, seed, budget)</p>
 </dd></dl>
