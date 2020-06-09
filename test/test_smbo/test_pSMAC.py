@@ -28,17 +28,17 @@ class TestPSMAC(unittest.TestCase):
     def test_write(self):
         # The nulls make sure that we correctly emit the python None value
         fixture = '{"data": [[[1, "branin", 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]], ' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                   '[[1, "branini", 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]], ' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                   '[[2, "branini", 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]], ' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                   '[[2, null, 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]], ' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                   '[[3, "branin-hoo", 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]], ' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                   '[[4, null, 1, 0.0], [1, 1, {"__enum__": ' \
-                  '"StatusType.SUCCESS"}, null]]],' \
+                  '"StatusType.SUCCESS"}, 0.0, 0.0, null]]],' \
                   '"config_origins": {},' \
                   '"configs": {' \
                   '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
@@ -97,17 +97,17 @@ class TestPSMAC(unittest.TestCase):
         configuration_space = test_helpers.get_branin_config_space()
 
         other_runhistory = '{"data": [[[2, "branini", 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                            '[[1, "branin", 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                            '[[3, "branin-hoo", 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                            '[[2, null, 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                            '[[1, "branini", 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]], ' \
                            '[[4, null, 1], [1, 1,' \
-                           '{"__enum__": "StatusType.SUCCESS"}, null]]], ' \
+                           '{"__enum__": "StatusType.SUCCESS"}, 0.0, 0.0, null]]], ' \
                            '"configs": {' \
                            '"4": {"x": -2.2060968293349363, "y": 5.183410905645716}, ' \
                            '"3": {"x": -2.7986616377433045, "y": 1.385078921531967}, ' \

@@ -1,5 +1,6 @@
 import logging
 import math
+import time
 from enum import Enum
 import typing
 
@@ -114,7 +115,7 @@ class ExecuteTARun(object):
             run objective of SMAC
         par_factor: int
             penalization factor
-        crash_cost : float
+        cost_for_crash : float
             cost that is used in case of crashed runs (including runs
             that returned NaN or inf)
         abort_on_first_run_crash: bool
@@ -192,12 +193,15 @@ class ExecuteTARun(object):
                              "(run objective), a cutoff time is required, "
                              "but not given to this call.")
 
+        start = time.time()
         status, cost, runtime, additional_info = self.run(config=config,
                                                           instance=instance,
                                                           cutoff=cutoff,
                                                           seed=seed,
                                                           budget=budget,
                                                           instance_specific=instance_specific)
+        end = time.time()
+
         if budget == 0 and status == StatusType.DONOTADVANCE:
             raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on "
                              "instances.")
@@ -250,7 +254,7 @@ class ExecuteTARun(object):
             self.runhistory.add(config=config,
                                 cost=cost, time=runtime, status=status,
                                 instance_id=instance, seed=seed,
-                                budget=budget,
+                                budget=budget, starttime=start, endtime=end,
                                 additional_info=additional_info)
             self.stats.n_configs = len(self.runhistory.config_ids)
 

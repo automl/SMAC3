@@ -32,6 +32,11 @@ class TestDeterministicSMAC(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
         os.chdir(self.current_dir)
 
+    def ignore_timestamps(self, rh):
+        for i, (k, val) in enumerate(rh['data']):
+            rh['data'][i][1] = [v for j, v in enumerate(val) if j not in [3, 4]]  # 3, 4 are start and end timestamps
+        return rh
+
     @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
     def test_deterministic(self, patch):
         """
@@ -71,8 +76,8 @@ class TestDeterministicSMAC(unittest.TestCase):
         h1 = json.load(open(self.output_dir_1 + '/run_1/runhistory.json'))
         h2 = json.load(open(self.output_dir_2 + '/run_1/runhistory.json'))
         h3 = json.load(open(self.output_dir_3 + '/run_2/runhistory.json'))
-        self.assertEqual(h1, h2)
-        self.assertNotEqual(h1, h3)
+        self.assertEqual(self.ignore_timestamps(h1), self.ignore_timestamps(h2))
+        self.assertNotEqual(self.ignore_timestamps(h1), self.ignore_timestamps(h3))
 
     def test_modes(self):
         """
