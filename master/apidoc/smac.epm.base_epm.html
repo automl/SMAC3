@@ -25,7 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -298,93 +298,53 @@ of all predictions (also called <code class="docutils literal notranslate"><span
 implementation of this abstract class.</p>
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.instance_features">
-<code class="sig-name descname">instance_features</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">instance_features</code><em class="property">: np.ndarray(I, K)</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains the K dimensional instance features
 of the I different instances</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>np.ndarray(I, K)</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.pca">
-<code class="sig-name descname">pca</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pca</code><em class="property">: sklearn.decomposition.PCA</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to perform PCA</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>sklearn.decomposition.PCA</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.pca_components">
-<code class="sig-name descname">pca_components</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pca_components</code><em class="property">: float</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of components to keep or None</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.n_feats">
-<code class="sig-name descname">n_feats</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">n_feats</code><em class="property">: int</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of instance features</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.n_params">
-<code class="sig-name descname">n_params</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">n_params</code><em class="property">: int</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of parameters in a configuration (only available after train has
 been called)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.scaler">
-<code class="sig-name descname">scaler</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">scaler</code><em class="property">: sklearn.preprocessing.MinMaxScaler</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to scale data to be withing [0, 1]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>sklearn.preprocessing.MinMaxScaler</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.var_threshold">
-<code class="sig-name descname">var_threshold</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">var_threshold</code><em class="property">: float</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lower bound vor variance. If estimated variance &lt; var_threshold, the set
 to var_threshold</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.epm.base_epm.AbstractEPM.types">
-<code class="sig-name descname">types</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">types</code><em class="property">: list</em><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
 <dd><p>If set, contains a list with feature types (cat,const) of input vector</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
 </dd></dl>
 
 <p>Constructor</p>

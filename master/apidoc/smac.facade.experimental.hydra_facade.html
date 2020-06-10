@@ -25,7 +25,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -292,7 +292,7 @@
 <span id="smac-facade-experimental-hydra-facade-module"></span><h1>smac.facade.experimental.hydra_facade module<a class="headerlink" href="#module-smac.facade.experimental.hydra_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.facade.experimental.hydra_facade.Hydra">
-<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.hydra_facade.</code><code class="sig-name descname">Hydra</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], n_iterations: int, val_set: str = 'train', incs_per_round: int = 1, n_optimizers: int = 1, rng: Union[int, numpy.random.mtrand.RandomState, None] = None, run_id: int = 1, tae: Type[smac.tae.execute_ta_run.ExecuteTARun] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.hydra_facade.</code><code class="sig-name descname">Hydra</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], n_iterations: int, val_set: str = 'train', incs_per_round: int = 1, n_optimizers: int = 1, rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.execute_ta_run.ExecuteTARun] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use Hydra default mode</p>
 <dl class="py attribute">
@@ -302,46 +302,26 @@
 
 <dl class="py attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.stats">
-<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stats</code><em class="property">: Stats</em><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>loggs information about used resources</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.solver">
-<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.solver" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">solver</code><em class="property">: SMBO</em><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the actual algorithm calls</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.rh">
-<code class="sig-name descname">rh</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.rh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rh</code><em class="property">: RunHistory</em><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.rh" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.experimental.hydra_facade.Hydra.portfolio">
-<code class="sig-name descname">portfolio</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.portfolio" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">portfolio</code><em class="property">: list</em><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
 </dd></dl>
 
 <p>Constructor</p>
