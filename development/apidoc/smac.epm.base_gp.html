@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -30,11 +36,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.epm.base_imputor module" href="smac.epm.base_imputor.html" />
@@ -52,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> SMAC
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> SMAC
           
 
           
@@ -82,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -223,6 +225,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -261,7 +264,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
@@ -290,7 +293,7 @@
 <span id="smac-epm-base-gp-module"></span><h1>smac.epm.base_gp module<a class="headerlink" href="#module-smac.epm.base_gp" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.epm.base_gp.BaseModel">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7fe327291a50&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_gp.</code><code class="sig-name descname">BaseModel</code><span class="sig-paren">(</span><em class="sig-param">configspace: ConfigSpace.configuration_space.ConfigurationSpace, types: List[int], bounds: List[Tuple[float, float]], seed: int, kernel: &lt;lazy_import.LazyCallable object at 0x7f2ce3e550d0&gt;, instance_features: Optional[numpy.ndarray] = None, pca_components: Optional[int] = None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
 <p>Abstract base class for all Gaussian process models.</p>
 <dl class="py method">
@@ -300,7 +303,7 @@
 
 <dl class="py method">
 <dt id="smac.epm.base_gp.BaseModel._get_gp">
-<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7fe327291b10&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">_get_gp</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; &lt;lazy_import.LazyCallable object at 0x7f2cd22c4190&gt;<a class="reference internal" href="../_modules/smac/epm/base_gp.html#BaseModel._get_gp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_gp.BaseModel._get_gp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -375,11 +378,19 @@
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -390,7 +401,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
