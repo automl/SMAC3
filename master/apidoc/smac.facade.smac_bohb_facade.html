@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -30,11 +36,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.facade.smac_hpo_facade module" href="smac.facade.smac_hpo_facade.html" />
@@ -52,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> SMAC
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> SMAC
           
 
           
@@ -82,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -223,6 +225,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -261,7 +264,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
@@ -302,24 +305,44 @@ This facade overwrites options available via the SMAC facade</p>
 
 <dl class="py attribute">
 <dt id="smac.facade.smac_bohb_facade.BOHB4HPO.stats">
-<code class="sig-name descname">stats</code><em class="property">: Stats</em><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.stats" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.smac_bohb_facade.BOHB4HPO.solver">
-<code class="sig-name descname">solver</code><em class="property">: SMBO</em><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.solver" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.solver" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">
-<code class="sig-name descname">runhistory</code><em class="property">: RunHistory</em><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">
-<code class="sig-name descname">trajectory</code><em class="property">: list</em><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">trajectory</code><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <p>Constructor
@@ -348,11 +371,19 @@ see ~smac.facade.smac_facade for documentation</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -363,7 +394,6 @@ see ~smac.facade.smac_facade for documentation</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

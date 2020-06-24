@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,19 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,11 +36,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Target Algorithm Evaluator" href="tae.html" />
@@ -52,7 +53,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> SMAC
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> SMAC
           
 
           
@@ -82,6 +83,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -223,6 +225,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -261,7 +264,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="manual.html">Manual</a> &raquo;</li>
         
@@ -382,7 +385,7 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <dd class="field-odd"><p>Minimum number of calls per configuration. Default: 1.</p>
 </dd>
 <dt class="field-even">output_dir</dt>
-<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2020-06-10_14:34:45_957046.</p>
+<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2020-06-24_14:34:58_227075.</p>
 </dd>
 <dt class="field-odd">rand_prob</dt>
 <dd class="field-odd"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
@@ -593,11 +596,19 @@ seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -608,7 +619,6 @@ seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
