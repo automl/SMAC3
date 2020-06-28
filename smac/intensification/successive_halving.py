@@ -8,8 +8,8 @@ from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import BudgetExhaustedException, CappedRunException, ExecuteTARun, StatusType
+from smac.runhistory.runhistory import RunHistory, RunInfo
+from smac.tae.execute_ta_run import ExecuteTARun, StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -273,34 +273,194 @@ class SuccessiveHalving(AbstractRacer):
                                                                      -np.linspace(0, max_sh_iter, max_sh_iter + 1))
         self.n_configs_in_stage = self.n_configs_in_stage.tolist()
 
-    def eval_challenger(self,
+    def process_results(self,
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        time_bound: float = float(MAXINT),
-                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+                        elapsed_time: float,
+                        time_bound: float,
+                        status: StatusType,
+                        runtime: float,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[typing.Optional[Configuration], float]:
         """
-        Running intensification via successive halving to determine the incumbent configuration.
-        *Side effect:* adds runs to run_history
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+        Also, a incumbent will be determined.
 
         Parameters
         ----------
         challenger : Configuration
-            promising configuration
-        incumbent : typing.Optional[Configuration]
-            best configuration so far, None in 1st run
-        run_history : smac.runhistory.runhistory.RunHistory
+            A configuration to challenge the incumbent. Can even be the incumbent
+            to gain more confidence on it.
+        incumbet : Configuration
+            Best configuration seen so far
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
+            if False, an evaluated configuration will not be generated again
+        elapsed_time:
+            The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        log_traj : bool
-            whether to log changes of incumbents in trajectory
+        status: StatusType
+            The status of the execution of a given config
+        runtime:
+            The elapsed time according to the ta runner
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
 
         Returns
         -------
-        typing.Tuple[Configuration, float]
-            incumbent and incumbent cost
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
+            empirical performance of incumbent configuration
         """
+
+        # If The incumbent is None and it is the first run, we use the challenger
+        if not incumbent and self.first_run:
+            self.logger.info(
+                "First run, no incumbent provided; challenger is assumed to be the incumbent"
+            )
+            incumbent = challenger
+            self.first_run = False
+
+        # selecting instance-seed subset for this budget, depending on the kind of budget
+        curr_budget = self.all_budgets[self.stage]
+        if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+            curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
+        else:
+            curr_insts = self.inst_seed_pairs
+        n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
+
+        if challenger:
+
+            # Make sure that there is no Budget exhausted
+            if status:
+                if status == StatusType.CAPPED:
+                    self.curr_inst_idx = np.inf
+                    n_insts_remaining = 0
+                else:
+                    self._ta_time += runtime
+                    self.num_run += 1
+                    self.curr_inst_idx += 1
+
+                # adding challengers to the list of evaluated challengers
+                #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
+                #  - Advance to next stage: SUCCESS
+                # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
+                # If a configuration is successful, it is added to curr_challengers.
+                # if it fails it is added to fail_challengers.
+                if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
+                    self.success_challengers.add(challenger)  # successful configs
+                elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
+                    self.do_not_advance_challengers.add(challenger)
+                else:
+                    self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
+
+                # get incumbent if all instances have been evaluated
+                if n_insts_remaining <= 0:
+                    incumbent = self._compare_configs(challenger=challenger,
+                                                      incumbent=incumbent,
+                                                      run_history=run_history,
+                                                      log_traj=log_traj)
+            # if all configurations for the current stage have been evaluated, reset stage
+            num_chal_evaluated = (
+                len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
+                + self.fail_chal_offset
+            )
+            if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
+
+                self.logger.info('Successive Halving iteration-step: %d-%d with '
+                                 'budget [%.2f / %d] - evaluated %d challenger(s)' %
+                                 (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
+                                  self.n_configs_in_stage[self.stage]))
+
+                self._update_stage(run_history=run_history)
+
+        # get incumbent cost
+        inc_perf = run_history.get_cost(incumbent)
+
+        return incumbent, inc_perf
+
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
+                            incumbent: Configuration,
+                            chooser: typing.Optional[EPMChooser],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True,
+                            ) -> RunInfo:
+        """
+        Selects which challenger to use based on the iteration stage and set the iteration parameters.
+        First iteration will choose configurations from the ``chooser`` or input challengers,
+        while the later iterations pick top configurations from the previously selected challengers in that iteration
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        incumbent: Configuration
+            incumbent configuration
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
+            optimizer that generates next configurations to use for racing
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        run_info: RunInfo
+            An object that encapsulates the minimum information to
+            evaluate a configuration
+         """
+        # if this is the first run, then initialize tracking variables
+        if not hasattr(self, 'stage'):
+            self._update_stage(run_history=run_history)
+
+        # sampling from next challenger marks the beginning of a new iteration
+        self.iteration_done = False
+
+        curr_budget = int(self.all_budgets[self.stage])
+
+        # if all instances have been executed, then reset and move on to next config
+        if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+            n_insts = (curr_budget - prev_budget)
+        else:
+            n_insts = len(self.inst_seed_pairs)
+        n_insts_remaining = n_insts - self.curr_inst_idx
+
+        # if there are instances pending, finish running configuration
+        if self.running_challenger and n_insts_remaining > 0:
+            challenger = self.running_challenger
+            new_challenger = False
+        else:
+            # select next configuration
+            if self.stage == 0:
+                # first stage, so sample from configurations/chooser provided
+                challenger = self._next_challenger(challengers=challengers,
+                                                   chooser=chooser,
+                                                   run_history=run_history,
+                                                   repeat_configs=repeat_configs)
+                new_challenger = True
+            else:
+                # sample top configs from previously sampled configurations
+                try:
+                    challenger = self.configs_to_run.pop(0)
+                    new_challenger = False
+                except IndexError:
+                    challenger = None
+                    new_challenger = False
+
+            if challenger:
+                # reset instance index for the new challenger
+                self.curr_inst_idx = 0
+                self._chall_indx += 1
+                self.running_challenger = challenger
+
         # calculating the incumbent's performance for adaptive capping
         # this check is required because:
         #   - there is no incumbent performance for the first ever 'intensify' run (from initial design)
@@ -313,7 +473,6 @@ class SuccessiveHalving(AbstractRacer):
             if self.first_run:
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
-                self.first_run = False
 
         # select which instance to run current config on
         curr_budget = self.all_budgets[self.stage]
@@ -344,152 +503,14 @@ class SuccessiveHalving(AbstractRacer):
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
-        try:
-            # run target algorithm for each instance-seed pair
-            self.logger.debug("Execute target algorithm")
-
-            try:
-                status, cost, dur, res = self.tae_runner.start(
-                    config=challenger,
-                    instance=instance,
-                    seed=seed,
-                    cutoff=cutoff,
-                    budget=0.0 if self.instance_as_budget else curr_budget,
-                    instance_specific=self.instance_specifics.get(instance, "0"),
-                    # Cutoff might be None if self.cutoff is None, but then the first if statement prevents
-                    # evaluation of the second if statement
-                    capped=(self.cutoff is not None) and (cutoff < self.cutoff)  # type: ignore[operator] # noqa F821
-                )
-                self._ta_time += dur
-                self.num_run += 1
-                self.curr_inst_idx += 1
-
-            except CappedRunException:
-                # We move on to the next configuration if a configuration is capped
-                self.logger.debug("Budget exhausted by adaptive capping; "
-                                  "Interrupting current challenger and moving on to the next one")
-                # ignore all pending instances
-                self.curr_inst_idx = np.inf
-                n_insts_remaining = 0
-                status = StatusType.CAPPED
-
-            # adding challengers to the list of evaluated challengers
-            #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
-            #  - Advance to next stage: SUCCESS
-            # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
-            # If a configuration is successful, it is added to curr_challengers.
-            # if it fails it is added to fail_challengers.
-            if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
-                self.success_challengers.add(challenger)  # successful configs
-            elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
-                self.do_not_advance_challengers.add(challenger)
-            else:
-                self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
-
-            # get incumbent if all instances have been evaluated
-            if n_insts_remaining <= 0:
-                incumbent = self._compare_configs(challenger=challenger,
-                                                  incumbent=incumbent,
-                                                  run_history=run_history,
-                                                  log_traj=log_traj)
-        except BudgetExhaustedException:
-            # Returning the final incumbent selected so far because we ran out of optimization budget
-            self.logger.debug("Budget exhausted; "
-                              "Interrupting optimization run and returning current incumbent")
-
-        # if all configurations for the current stage have been evaluated, reset stage
-        num_chal_evaluated = (
-            len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
-            + self.fail_chal_offset
+        return RunInfo(
+            config=challenger,
+            new=new_challenger,
+            instance=instance,
+            seed=seed,
+            cutoff=cutoff,
+            budget=0.0 if self.instance_as_budget else curr_budget,
         )
-        if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
-
-            self.logger.info('Successive Halving iteration-step: %d-%d with '
-                             'budget [%.2f / %d] - evaluated %d challenger(s)' %
-                             (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
-                              self.n_configs_in_stage[self.stage]))
-
-            self._update_stage(run_history=run_history)
-
-        # get incumbent cost
-        inc_perf = run_history.get_cost(incumbent)
-
-        return incumbent, inc_perf
-
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True) -> \
-            typing.Tuple[typing.Optional[Configuration], bool]:
-        """
-        Selects which challenger to use based on the iteration stage and set the iteration parameters.
-        First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations pick top configurations from the previously selected challengers in that iteration
-
-        Parameters
-        ----------
-        challengers : typing.List[Configuration]
-            promising configurations
-        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
-            optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        repeat_configs : bool
-            if False, an evaluated configuration will not be generated again
-
-        Returns
-        -------
-        typing.Optional[Configuration]
-            next configuration to evaluate
-        bool
-            flag telling if the configuration is newly sampled or one currently being tracked
-        """
-        # if this is the first run, then initialize tracking variables
-        if not hasattr(self, 'stage'):
-            self._update_stage(run_history=run_history)
-
-        # sampling from next challenger marks the beginning of a new iteration
-        self.iteration_done = False
-
-        curr_budget = int(self.all_budgets[self.stage])
-
-        # if all instances have been executed, then reset and move on to next config
-        if self.instance_as_budget:
-            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            n_insts = (curr_budget - prev_budget)
-        else:
-            n_insts = len(self.inst_seed_pairs)
-        n_insts_remaining = n_insts - self.curr_inst_idx
-
-        # if there are instances pending, finish running configuration
-        if self.running_challenger and n_insts_remaining > 0:
-            return self.running_challenger, False
-
-        # select next configuration
-        if self.stage == 0:
-            # first stage, so sample from configurations/chooser provided
-            challenger = self._next_challenger(challengers=challengers,
-                                               chooser=chooser,
-                                               run_history=run_history,
-                                               repeat_configs=repeat_configs)
-            new_challenger = True
-        else:
-            # sample top configs from previously sampled configurations
-            try:
-                challenger = self.configs_to_run.pop(0)
-                new_challenger = False
-            except IndexError:
-                challenger = None
-                new_challenger = False
-
-        if challenger:
-            # reset instance index for the new challenger
-            self.curr_inst_idx = 0
-            self._chall_indx += 1
-            self.running_challenger = challenger
-
-        return challenger, new_challenger
 
     def _update_stage(self, run_history: RunHistory) -> None:
         """

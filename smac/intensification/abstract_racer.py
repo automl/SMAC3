@@ -10,8 +10,8 @@ from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.runhistory.runhistory import RunHistory, RunInfo, StatusType
+from smac.tae.execute_ta_run import ExecuteTARun, CappedRunException, BudgetExhaustedException
 from smac.utils.io.traj_logging import TrajLogger
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
@@ -117,43 +117,75 @@ class AbstractRacer(object):
         # to mark the end of an iteration
         self.iteration_done = False
 
-    def eval_challenger(self,
-                        challenger: Configuration,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float = float(MAXINT),
-                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
-        """
-        Runs intensification by evaluating one configuration-instance at a time
+    def eval_challenger(
+        self,
+        run_info: RunInfo,
+        time_bound: float = float(MAXINT),
+    ) -> typing.Tuple[StatusType, typing.Any, float, dict]:
+        """Runs a configuration with the provided input.
         *Side effect:* adds runs to run_history
 
         Parameters
         ----------
-        challenger : Configuration
-            promising configuration
-        incumbent : typing.Optional[Configuration]
-            best configuration so far, None in 1st run
-        run_history : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
+        run_info : RunInfo
+            An object that specifies the inputs to a tae runner
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        log_traj : bool
-            whether to log changes of incumbents in trajectory
 
         Returns
         -------
-        typing.Tuple[Configuration, float]
-            incumbent and incumbent cost
+        status: StatusType
+            The status of the execution of a given config
+            {SUCCESS, TIMEOUT/CAPPED, CRASHED, ABORT}
+        cost: typing.Any
+            cost/regret/quality (typing.Any)
+        duration: float
+            runtime (None if not returned by TA)
+        res: Dict
+            additional info
         """
 
-        raise NotImplementedError()
+        if time_bound < self._min_time:
+            raise ValueError("time_bound must be >= %f" % self._min_time)
+
+        if run_info.config is None or run_info.config is None:
+            raise ValueError("Call to eval configurations without any valid config")
+
+        try:
+            # Cap makes sense only in challenger. For incumbent runs, capped will be
+            # false. For a challenger, the run_info.cutoff will be smaller than self.cutoff
+            capped = False
+            if (self.cutoff is not None) and (run_info.cutoff < self.cutoff):
+                capped = True
+
+            status, cost, dur, res = self.tae_runner.start(
+                config=run_info.config,
+                instance=run_info.instance,
+                seed=run_info.seed,
+                cutoff=run_info.cutoff,
+                budget=run_info.budget,
+                instance_specific=self.instance_specifics.get(run_info.instance, "0"),
+                capped=capped
+            )
+
+        except CappedRunException:
+            self.logger.debug("Challenger itensification timed out due "
+                              "to adaptive capping.")
+            status, cost, dur, res = StatusType.CAPPED, float(MAXINT), 0.0, {}
+
+        except BudgetExhaustedException:
+            # SMBO stops due to its own budget checks
+            self.logger.debug("Budget exhausted; Return incumbent")
+            status, cost, dur, res = StatusType.CRASHED, float(MAXINT), 0.0, {}
+
+        return status, cost, dur, res
 
     def get_next_challenger(self,
                             challengers: typing.Optional[typing.List[Configuration]],
+                            incumbent: Configuration,
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> \
-            typing.Tuple[typing.Optional[Configuration], bool]:
+                            repeat_configs: bool = True) -> RunInfo:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
@@ -162,6 +194,8 @@ class AbstractRacer(object):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        incumbent: Configuration
+             incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : smac.runhistory.runhistory.RunHistory
@@ -171,16 +205,56 @@ class AbstractRacer(object):
 
         Returns
         -------
-        typing.Optional[Configuration]
-            next configuration to evaluate
-        bool
-            flag telling if the configuration is newly sampled or one currently being tracked
+        run_info: RunInfo
+            An object that encapsulates necessary information for a config run
         """
-        challenger = self._next_challenger(challengers=challengers,
-                                           chooser=chooser,
-                                           run_history=run_history,
-                                           repeat_configs=repeat_configs)
-        return challenger, True
+        raise NotImplementedError()
+
+    def process_results(self,
+                        challenger: Configuration,
+                        incumbent: typing.Optional[Configuration],
+                        run_history: RunHistory,
+                        elapsed_time: float,
+                        time_bound: float,
+                        status: StatusType,
+                        runtime: float,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[Configuration, float]:
+        """
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+        Also, a incumbent will be determined.
+
+        Parameters
+        ----------
+        challenger : Configuration
+            A configuration to challenge the incumbent. Can even be the incumbent
+            to gain more confidence on it.
+        incumbet : Configuration
+            Best configuration seen so far
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+            stores all runs we ran so far
+            if False, an evaluated configuration will not be generated again
+        elapsed_time:
+            The tracked time of a configuration execution
+        time_bound : float, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+        status: StatusType
+            The status of the execution of a given config
+        runtime:
+            The elapsed time according to the ta runner
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
+            empirical performance of incumbent configuration
+        """
+        raise NotImplementedError()
 
     def _next_challenger(self,
                          challengers: typing.Optional[typing.List[Configuration]],

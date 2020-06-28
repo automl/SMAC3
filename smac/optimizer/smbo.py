@@ -17,7 +17,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import FirstRunCrashedException
+from smac.tae.execute_ta_run import FirstRunCrashedException, StatusType
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -184,15 +184,16 @@ class SMBO(object):
 
             # sample next configuration for intensification
             # Initial design runs are also included in the BO loop now.
-            challenger, new_challenger = self.intensifier.get_next_challenger(
+            run_info = self.intensifier.get_next_challenger(
                 challengers=self.initial_design_configs,
+                incumbent=self.incumbent,
                 chooser=self.epm_chooser,
                 run_history=self.runhistory,
-                repeat_configs=self.intensifier.repeat_configs
+                repeat_configs=self.intensifier.repeat_configs,
             )
 
             # remove config from initial design challengers to not repeat it again
-            self.initial_design_configs = [c for c in self.initial_design_configs if c != challenger]
+            self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
 
             # update timebound only if a 'new' configuration is sampled as the challenger
             if self.intensifier.num_run == 0:
@@ -205,18 +206,38 @@ class SMBO(object):
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
                 self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
-            if challenger:
+            # An instance can be None in the first run. so at least a seed
+            # or instance needs to be provded
+            elapsed_time, runtime = 0.0, 0.0
+            status = StatusType.CRASHED
+            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
 
                 try:
-                    self.incumbent, inc_perf = self.intensifier.eval_challenger(
-                        challenger=challenger,
-                        incumbent=self.incumbent,
-                        run_history=self.runhistory,
+
+                    start_time = time.time()
+                    status, cost, runtime, res = self.intensifier.eval_challenger(
+                        run_info=run_info,
                         time_bound=max(self.intensifier._min_time, time_left))
+                    elapsed_time = time.time() - start_time
 
                 except FirstRunCrashedException:
                     if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
                         raise
+
+            # Process the results from the run
+            # Has to be executed regardless the config to run is None,
+            # as the control logic has to prepare for the next iteration
+            self.incumbent, inc_perf = self.intensifier.process_results(
+                challenger=run_info.config,
+                incumbent=self.incumbent,
+                run_history=self.runhistory,
+                elapsed_time=elapsed_time,
+                time_bound=max(self.intensifier._min_time, time_left),
+                status=status,
+                runtime=runtime,
+            )
+
+            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
                 if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                     assert self.scenario.output_dir_for_this_run is not None  # please mypy
                     pSMAC.write(run_history=self.runhistory,

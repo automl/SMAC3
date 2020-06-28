@@ -222,7 +222,6 @@ class TestSuccessiveHalving(unittest.TestCase):
             rng=np.random.RandomState(12345), eta=2, num_initial_challengers=4,
             instances=[1], initial_budget=1, max_budget=10)
         intensifier._update_stage(self.rh)
-        print(intensifier.stage)
         self.rh.add(config=self.config1, cost=1, time=1,
                     status=StatusType.SUCCESS, instance_id=1, seed=None, budget=1,
                     additional_info=None)
@@ -267,22 +266,50 @@ class TestSuccessiveHalving(unittest.TestCase):
             cutoff=1, instances=[1, 2], initial_budget=1, max_budget=2, eta=2)
 
         # next challenger from a list
-        config, new = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
-        self.assertEqual(config, self.config1)
-        self.assertTrue(new)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config1],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+        self.assertEqual(run_info.config, self.config1)
+        self.assertTrue(run_info.new)
 
         # until evaluated, does not pick new challenger
-        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
-        self.assertEqual(config, self.config1)
-        self.assertEqual(intensifier.running_challenger, config)
-        self.assertFalse(new)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+        self.assertEqual(run_info.config, self.config1)
+        self.assertEqual(intensifier.running_challenger, run_info.config)
+        self.assertFalse(run_info.new)
 
         # evaluating configuration
-        _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, log_traj=False)
-        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
-        self.assertEqual(config, self.config2)
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=None,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+            log_traj=False,
+        )
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        self.assertEqual(run_info.config, self.config2)
         self.assertEqual(len(intensifier.success_challengers), 1)
-        self.assertTrue(new)
+        self.assertTrue(run_info.new)
 
     def test_get_next_challenger_2(self):
         """
@@ -298,10 +325,15 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.configs_to_run = [self.config1]
 
         # next challenger should come from configs to run
-        config, new = intensifier.get_next_challenger(challengers=None, chooser=None, run_history=self.rh)
-        self.assertEqual(config, self.config1)
+        run_info = intensifier.get_next_challenger(
+            challengers=None,
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+        self.assertEqual(run_info.config, self.config1)
         self.assertEqual(len(intensifier.configs_to_run), 0)
-        self.assertFalse(new)
+        self.assertFalse(run_info.new)
 
     def test_update_stage(self):
         """
@@ -423,9 +455,25 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.success_challengers = {self.config2, self.config3}
         intensifier._update_stage(run_history=self.rh)
 
-        inc, inc_value = intensifier.eval_challenger(challenger=self.config2,
-                                                     incumbent=self.config1,
-                                                     run_history=self.rh,)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
         self.assertEqual(inc, self.config2)
         self.assertEqual(inc_value, 0.05)
@@ -453,30 +501,75 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
 
         # config1 should be executed successfully and selected as incumbent
-        config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
-                                             run_history=self.rh, )
-        self.assertEqual(config, self.config1)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=None,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
+        self.assertEqual(run_info.config, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(self.stats.inc_changed, 1)
 
         # config2 should be capped and config1 should still be the incumbent
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=inc,
-                                             run_history=self.rh,)
 
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 1)
         self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
 
         # config1 is selected for the next stage and allowed to timeout since this is the 1st run for this instance
-        config, _ = intensifier.get_next_challenger(challengers=[], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=inc,
-                                             run_history=self.rh, )
+        run_info = intensifier.get_next_challenger(
+            challengers=[],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 3)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
@@ -510,24 +603,50 @@ class TestSuccessiveHalving(unittest.TestCase):
                         additional_info=None)
 
         # provide configurations
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2],
-                                                    chooser=None, run_history=self.rh)
-        # config2 should be capped and config1 should still be the incumbent
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=self.config1,
-                                             run_history=self.rh, )
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CRASHED)
         self.assertEqual(len(intensifier.success_challengers), 0)
 
         # provide configurations
-        config, _ = intensifier.get_next_challenger(challengers=[self.config3],
-                                                    chooser=None, run_history=self.rh)
-        # config3 should also be capped and config1 should be the incumbent
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=self.config1,
-                                             run_history=self.rh, )
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config3],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 0)
@@ -542,8 +661,12 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # should raise an error as this is a new iteration but no configs were provided
         with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
-            config, _ = intensifier.get_next_challenger(challengers=None,
-                                                        chooser=None, run_history=self.rh)
+            run_info = intensifier.get_next_challenger(
+                challengers=None,
+                chooser=None,
+                incumbent=self.config1,
+                run_history=self.rh
+            )
 
     def test_eval_challenger_capping_2(self):
         """
@@ -564,16 +687,48 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[1, 2], n_seeds=2, initial_budget=1, max_budget=4, eta=2, instance_order=None)
 
         # first configuration run
-        config, _ = intensifier.get_next_challenger(challengers=[self.config4],
-                                                    chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=None, run_history=self.rh, )
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config4],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=None,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(inc, self.config4)
 
         # remaining 3 runs should be capped
         for i in [self.config1, self.config2, self.config3]:
-            config, _ = intensifier.get_next_challenger(challengers=[i],
-                                                        chooser=None, run_history=self.rh)
-            inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+            run_info = intensifier.get_next_challenger(
+                challengers=[i],
+                chooser=None,
+                incumbent=inc,
+                run_history=self.rh
+            )
+            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+                status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            else:
+                status, cost, dur, res = None, None, None, None  # noqa: F841
+            inc, inc_value = intensifier.process_results(
+                challenger=run_info.config,
+                incumbent=inc,
+                run_history=self.rh,
+                time_bound=np.inf,
+                status=status,
+                runtime=dur,
+                elapsed_time=dur,
+            )
 
         self.assertEqual(inc, self.config4)
         self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
@@ -584,19 +739,51 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # run next stage - should run only 1 configuration since other 3 were capped
         # 1 runs for config1
-        config, _ = intensifier.get_next_challenger(challengers=[],
-                                                    chooser=None, run_history=self.rh)
-        self.assertEqual(config, self.config4)
-        inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+        run_info = intensifier.get_next_challenger(
+            challengers=[],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        self.assertEqual(run_info.config, self.config4)
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
         self.assertEqual(intensifier.stage, 2)
 
         # run next stage with only config1
         # should go to next iteration since no more configurations left
         for _ in range(2):
-            config, _ = intensifier.get_next_challenger(challengers=[],
-                                                        chooser=None, run_history=self.rh)
-            self.assertEqual(config, self.config4)
-            inc, _ = intensifier.eval_challenger(challenger=config, incumbent=inc, run_history=self.rh, )
+            run_info = intensifier.get_next_challenger(
+                challengers=[],
+                chooser=None,
+                incumbent=inc,
+                run_history=self.rh
+            )
+            self.assertEqual(run_info.config, self.config4)
+            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+                status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            else:
+                status, cost, dur, res = None, None, None, None  # noqa: F841
+            inc, inc_value = intensifier.process_results(
+                challenger=run_info.config,
+                incumbent=inc,
+                run_history=self.rh,
+                time_bound=np.inf,
+                status=status,
+                runtime=dur,
+                elapsed_time=dur,
+            )
 
         self.assertEqual(inc, self.config4)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config4, only_max_observed_budget=True)), 4)
@@ -604,7 +791,12 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.stage, 0)
 
         with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
-            intensifier.get_next_challenger(challengers=[], chooser=None, run_history=self.rh)
+            intensifier.get_next_challenger(
+                challengers=[],
+                chooser=None,
+                incumbent=inc,
+                run_history=self.rh
+            )
 
     def test_eval_challenger_3(self):
         """
@@ -628,30 +820,75 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
-        config, _ = intensifier.get_next_challenger(challengers=[self.config1], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=None,
-                                             run_history=self.rh,)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=None,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
         self.assertEqual(inc, self.config1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.configs_to_run, [])
         self.assertEqual(intensifier.stage, 0)
 
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=inc,
-                                             run_history=self.rh,)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
         self.assertEqual(inc, self.config1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
-        config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=inc,
-                                             run_history=self.rh,)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config3],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
         self.assertEqual(inc, self.config1)
 
@@ -664,12 +901,27 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(1, 0), (0, 0)])
 
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2], chooser=None, run_history=self.rh)
-        inc, _ = intensifier.eval_challenger(challenger=config,
-                                             incumbent=inc,
-                                             run_history=self.rh)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=inc,
+            run_history=self.rh
+        )
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=inc,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
-        self.assertEqual(config, self.config2)
+        self.assertEqual(run_info.config, self.config2)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
 
     def test_incumbent_selection_default(self):

@@ -6,9 +6,9 @@ import numpy as np
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunInfo, StatusType  # noqa: F401
 from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
@@ -116,43 +116,59 @@ class Hyperband(SuccessiveHalving):
         self.hb_iters = 0
         self.sh_intensifier = None  # type: SuccessiveHalving # type: ignore[assignment]
 
-    def eval_challenger(self,
+    def process_results(self,
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        time_bound: float = float(MAXINT),
-                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+                        elapsed_time: float,
+                        time_bound: float,
+                        status: StatusType,
+                        runtime: float,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[typing.Optional[Configuration], float]:
         """
-        Running intensification via hyperband to determine the incumbent configuration.
-        *Side effect:* adds runs to run_history
-
-        Implementation of hyperband (Li et al., 2018)
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+        Also, a incumbent will be determined.
 
         Parameters
         ----------
         challenger : Configuration
-            promising configuration
-        incumbent : typing.Optional[Configuration]
-            best configuration so far, None in 1st run
-        run_history : smac.runhistory.runhistory.RunHistory
+            A configuration to challenge the incumbent. Can even be the incumbent
+            to gain more confidence on it.
+        incumbet : Configuration
+            Best configuration seen so far
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
+            if False, an evaluated configuration will not be generated again
+        elapsed_time:
+            The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
+        status: StatusType
+            The status of the execution of a given config
+        runtime:
+            The elapsed time according to the ta runner
         log_traj: bool
-            whether to log changes of incumbents in trajectory
+            Whether to log changes of incumbents in trajectory
 
         Returns
         -------
-        Configuration
-            new incumbent configuration
-        float
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
             empirical performance of incumbent configuration
         """
+
         # run 1 iteration of successive halving
-        incumbent, inc_perf = self.sh_intensifier.eval_challenger(challenger=challenger,
+        incumbent, inc_perf = self.sh_intensifier.process_results(challenger=challenger,
                                                                   incumbent=incumbent,
                                                                   run_history=run_history,
+                                                                  elapsed_time=elapsed_time,
                                                                   time_bound=time_bound,
+                                                                  status=status,
+                                                                  runtime=runtime,
                                                                   log_traj=log_traj)
         self.num_run += 1
 
@@ -164,10 +180,10 @@ class Hyperband(SuccessiveHalving):
 
     def get_next_challenger(self,
                             challengers: typing.Optional[typing.List[Configuration]],
+                            incumbent: Configuration,
                             chooser: typing.Optional[EPMChooser],
                             run_history: RunHistory,
-                            repeat_configs: bool = True) -> \
-            typing.Tuple[typing.Optional[Configuration], bool]:
+                            repeat_configs: bool = True) -> RunInfo:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -177,6 +193,8 @@ class Hyperband(SuccessiveHalving):
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        incumbent: Configuration
+               incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : smac.runhistory.runhistory.RunHistory
@@ -186,10 +204,8 @@ class Hyperband(SuccessiveHalving):
 
         Returns
         -------
-        typing.Optional[Configuration]
-            next configuration to evaluate
-        bool
-            flag telling if the configuration is newly sampled or one currently being tracked
+        run_info: RunInfo
+               An object that encapsulates necessary information for a config run
         """
 
         if not hasattr(self, 's'):
@@ -199,13 +215,14 @@ class Hyperband(SuccessiveHalving):
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        challenger, new_challenger = self.sh_intensifier.get_next_challenger(
+        run_info = self.sh_intensifier.get_next_challenger(
             challengers=challengers,
+            incumbent=incumbent,
             chooser=chooser,
             run_history=run_history,
             repeat_configs=self.sh_intensifier.repeat_configs
         )
-        return challenger, new_challenger
+        return run_info
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
         """

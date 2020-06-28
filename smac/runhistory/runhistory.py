@@ -32,6 +32,10 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
+RunInfo = collections.namedtuple(
+    'RunInfo', ['config', 'new', 'instance', 'seed', 'cutoff', 'budget'])
+
+
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
 

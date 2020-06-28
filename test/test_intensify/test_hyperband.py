@@ -105,10 +105,13 @@ class TestHyperband(unittest.TestCase):
         self.assertFalse(hasattr(intensifier, 's'))
 
         # Testing get_next_challenger - get next configuration
-        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3],
-                                                    chooser=None, run_history=self.rh)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2, self.config3],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh)
         self.assertEqual(intensifier.s, intensifier.s_max)
-        self.assertEqual(config, self.config2)
+        self.assertEqual(run_info.config, self.config2)
 
         # update to the last SH iteration of the given HB stage
         self.assertEqual(intensifier.s, 1)
@@ -122,11 +125,26 @@ class TestHyperband(unittest.TestCase):
                     seed=0, budget=0.5)
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2, self.config3],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh)
 
         # evaluation should change the incumbent to config2
-        inc, inc_value = intensifier.eval_challenger(challenger=self.config2,
-                                                     incumbent=self.config1,
-                                                     run_history=self.rh)
+        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+        else:
+            status, cost, dur, res = None, None, None, None  # noqa: F841
+        inc, inc_value = intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=dur,
+        )
 
         self.assertEqual(inc, self.config2)
         self.assertEqual(intensifier.s, 0)
