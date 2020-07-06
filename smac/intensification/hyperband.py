@@ -9,7 +9,6 @@ from smac.stats.stats import Stats
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory import RunInfo, StatusType  # noqa: F401
-from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -27,8 +26,6 @@ class Hyperband(SuccessiveHalving):
 
     Parameters
     ----------
-    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
-        target algorithm run executor
     stats: smac.stats.stats.Stats
         stats object
     traj_logger: smac.utils.io.traj_logging.TrajLogger
@@ -71,7 +68,6 @@ class Hyperband(SuccessiveHalving):
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -90,8 +86,7 @@ class Hyperband(SuccessiveHalving):
                  incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
 
-        super().__init__(tae_runner=tae_runner,
-                         stats=stats,
+        super().__init__(stats=stats,
                          traj_logger=traj_logger,
                          rng=rng,
                          instances=instances,
@@ -135,8 +130,8 @@ class Hyperband(SuccessiveHalving):
         Parameters
         ----------
         challenger : Configuration
-            A configuration to challenge the incumbent. Can even be the incumbent
-            to gain more confidence on it.
+            A configuration that was previously executed, and whose status
+            will be used to define the next stage.
         incumbet : Configuration
             Best configuration seen so far
         run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
@@ -146,8 +141,10 @@ class Hyperband(SuccessiveHalving):
             The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        status: StatusType
+        status: typing.Optional[StatusType]
             The status of the execution of a given config
+            If None, it is assumed that the previous run was not completely
+            executed, for example when there is no more budget
         runtime:
             The elapsed time according to the ta runner
         log_traj: bool
@@ -222,6 +219,10 @@ class Hyperband(SuccessiveHalving):
             run_history=run_history,
             repeat_configs=self.sh_intensifier.repeat_configs
         )
+
+        # For debug purposes, set this flag
+        self.new_challenger = self.sh_intensifier.new_challenger
+
         return run_info
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
@@ -259,7 +260,6 @@ class Hyperband(SuccessiveHalving):
 
         # creating a new Successive Halving intensifier with the current running budget
         self.sh_intensifier = SuccessiveHalving(
-            tae_runner=self.tae_runner,
             stats=self.stats,
             traj_logger=self.traj_logger,
             rng=self.rs,

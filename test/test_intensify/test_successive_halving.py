@@ -15,6 +15,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
+from smac.optimizer.smbo import SMBO
 
 
 def get_config_space():
@@ -57,7 +58,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test parameter initializations for successive halving - instance as budget
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=False, run_obj_time=False,
             instances=[1, 2, 3], n_seeds=2, initial_budget=None, max_budget=None, eta=2)
@@ -75,7 +76,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test parameter initialiations for successive halving - real-valued budget
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=10, eta=2)
@@ -93,7 +94,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test parameter initialiations for successive halving - real-valued budget, high initial budget
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], initial_budget=9, max_budget=10, eta=2)
@@ -115,7 +116,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,
                                     "requires parameters initial_budget and max_budget for intensification!"):
             SuccessiveHalving(
-                tae_runner=None, stats=self.stats,
+                stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1])
@@ -123,7 +124,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         # eta < 1
         with self.assertRaisesRegex(ValueError, "eta must be greater than 1"):
             SuccessiveHalving(
-                tae_runner=None, stats=self.stats,
+                stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1], eta=0)
@@ -132,7 +133,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,
                                     "Max budget cannot be greater than the number of instance-seed pairs"):
             SuccessiveHalving(
-                tae_runner=None, stats=self.stats,
+                stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
                 rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
                 cutoff=10, instances=[1, 2, 3], initial_budget=1, max_budget=5, n_seeds=1)
@@ -142,7 +143,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test _top_k() for configs with same instance-seed-budget keys
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
             instances=[1, 2], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -180,7 +181,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test _top_k() for configs with different instance-seed-budget keys
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
             instances=[1, 2], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -199,7 +200,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test _top_k() for not enough configs to generate for the next budget
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
             instances=[1], initial_budget=1)
         self.rh.add(config=self.config1, cost=1, time=1,
@@ -218,7 +219,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test _top_k() for not enough configs to generate for the next budget
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None, run_obj_time=False,
+            stats=self.stats, traj_logger=None, run_obj_time=False,
             rng=np.random.RandomState(12345), eta=2, num_initial_challengers=4,
             instances=[1], initial_budget=1, max_budget=10)
         intensifier._update_stage(self.rh)
@@ -258,10 +259,11 @@ class TestSuccessiveHalving(unittest.TestCase):
             return 1
 
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1, 2], initial_budget=1, max_budget=2, eta=2)
 
@@ -273,7 +275,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             incumbent=None,
         )
         self.assertEqual(run_info.config, self.config1)
-        self.assertTrue(run_info.new)
+        self.assertTrue(intensifier.new_challenger)
 
         # until evaluated, does not pick new challenger
         run_info = intensifier.get_next_challenger(
@@ -284,11 +286,11 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         self.assertEqual(run_info.config, self.config1)
         self.assertEqual(intensifier.running_challenger, run_info.config)
-        self.assertFalse(run_info.new)
+        self.assertFalse(intensifier.new_challenger)
 
         # evaluating configuration
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -309,14 +311,14 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         self.assertEqual(run_info.config, self.config2)
         self.assertEqual(len(intensifier.success_challengers), 1)
-        self.assertTrue(run_info.new)
+        self.assertTrue(intensifier.new_challenger)
 
     def test_get_next_challenger_2(self):
         """
             test get_next_challenger for higher stages of SH iteration
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1], initial_budget=1, max_budget=2, eta=2)
 
@@ -333,14 +335,14 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         self.assertEqual(run_info.config, self.config1)
         self.assertEqual(len(intensifier.configs_to_run), 0)
-        self.assertFalse(run_info.new)
+        self.assertFalse(intensifier.new_challenger)
 
     def test_update_stage(self):
         """
             test update_stage - initializations for all tracking variables
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[1], initial_budget=1, max_budget=2, eta=2)
 
@@ -378,7 +380,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """
 
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, initial_budget=1, max_budget=4, eta=2, instances=None)
 
@@ -402,7 +404,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.do_not_advance_challengers), 0)
 
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, initial_budget=1, max_budget=4, eta=2, instances=None)
 
@@ -439,7 +441,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             cutoff=1, instances=[None], initial_budget=0.25, max_budget=0.5, eta=2)
@@ -462,7 +464,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -495,7 +497,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
@@ -508,7 +510,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -533,7 +535,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -558,7 +560,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -592,7 +594,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, cutoff=1,
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
@@ -610,7 +612,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -635,7 +637,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -681,7 +683,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=False, cutoff=1,
             instances=[1, 2], n_seeds=2, initial_budget=1, max_budget=4, eta=2, instance_order=None)
@@ -694,7 +696,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -717,7 +719,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 run_history=self.rh
             )
             if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-                status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+                status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
             else:
                 status, cost, dur, res = None, None, None, None  # noqa: F841
             inc, inc_value = intensifier.process_results(
@@ -747,7 +749,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         self.assertEqual(run_info.config, self.config4)
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -772,7 +774,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             )
             self.assertEqual(run_info.config, self.config4)
             if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-                status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+                status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
             else:
                 status, cost, dur, res = None, None, None, None  # noqa: F841
             inc, inc_value = intensifier.process_results(
@@ -810,7 +812,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = SuccessiveHalving(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[0, 1], instance_order='shuffle', eta=2,
@@ -827,7 +829,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -852,7 +854,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -877,7 +879,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -908,7 +910,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh
         )
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
@@ -929,7 +931,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             test _compare_config for default incumbent selection design (highest budget so far)
         """
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=2, eta=2)
         intensifier.stage = 0
@@ -973,7 +975,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # Test that the state is only based on the runhistory
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345),
             instances=[1], initial_budget=1)
         intensifier.stage = 0
@@ -997,7 +999,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # select best on any budget
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=2, eta=2, incumbent_selection='any_budget')
         intensifier.stage = 0
@@ -1020,7 +1022,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # select best on highest budget only
         intensifier = SuccessiveHalving(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), run_obj_time=False,
             instances=[1], initial_budget=1, max_budget=4, eta=2, incumbent_selection='highest_budget')
         intensifier.stage = 0

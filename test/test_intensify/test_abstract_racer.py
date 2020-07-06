@@ -49,7 +49,7 @@ class TestAbstractRacer(unittest.TestCase):
 
     def test_compare_configs_no_joint_set(self):
         intensifier = AbstractRacer(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None, instances=[1])
 
@@ -84,7 +84,7 @@ class TestAbstractRacer(unittest.TestCase):
             challenger is better
         """
         intensifier = AbstractRacer(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
             instances=[1])
@@ -111,7 +111,7 @@ class TestAbstractRacer(unittest.TestCase):
             incumbent is better
         """
         intensifier = AbstractRacer(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
             instances=[1])
@@ -139,7 +139,7 @@ class TestAbstractRacer(unittest.TestCase):
             -> no decision (None)
         """
         intensifier = AbstractRacer(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=None,
             instances=[1])
@@ -171,7 +171,7 @@ class TestAbstractRacer(unittest.TestCase):
             test _adapt_cutoff()
         """
         intensifier = AbstractRacer(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=list(range(5)),

@@ -13,13 +13,23 @@ from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
 from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import FirstRunCrashedException, StatusType
+from smac.utils.constants import MAXINT
+from smac.tae.execute_ta_run import (
+    FirstRunCrashedException,
+    StatusType,
+    ExecuteTARun,
+    CappedRunException,
+    BudgetExhaustedException
+)
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+
+from logging import Logger
+
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -43,6 +53,7 @@ class SMBO(object):
     rng
     initial_design_configs
     epm_chooser
+    tae_runner
     """
 
     def __init__(self,
@@ -57,6 +68,7 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
+                 tae_runner: ExecuteTARun,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
@@ -92,6 +104,8 @@ class SMBO(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
+        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
+            target algorithm run executor
         random_configuration_chooser
             Chooser for random configuration -- one of
             * ChooserNoCoolDown(modulus)
@@ -114,6 +128,9 @@ class SMBO(object):
         self.intensifier = intensifier
         self.num_run = num_run
         self.rng = rng
+        self._min_time = 10 ** -5
+
+        self.tae_runner = tae_runner
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
@@ -210,14 +227,17 @@ class SMBO(object):
             # or instance needs to be provded
             elapsed_time, runtime = 0.0, 0.0
             status = StatusType.CRASHED
-            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
+            if run_info.config:
 
                 try:
 
                     start_time = time.time()
-                    status, cost, runtime, res = self.intensifier.eval_challenger(
+                    status, cost, runtime, res = self.eval_challenger(
                         run_info=run_info,
-                        time_bound=max(self.intensifier._min_time, time_left))
+                        time_bound=max(self._min_time, time_left),
+                        tae_runner=self.tae_runner,
+                        logger=self.logger,
+                    )
                     elapsed_time = time.time() - start_time
 
                 except FirstRunCrashedException:
@@ -232,7 +252,7 @@ class SMBO(object):
                 incumbent=self.incumbent,
                 run_history=self.runhistory,
                 elapsed_time=elapsed_time,
-                time_bound=max(self.intensifier._min_time, time_left),
+                time_bound=max(self._min_time, time_left),
                 status=status,
                 runtime=runtime,
             )
@@ -257,6 +277,70 @@ class SMBO(object):
                 self.stats.print_stats(debug_out=True)
 
         return self.incumbent
+
+    @staticmethod
+    def eval_challenger(
+        run_info: RunInfo,
+        tae_runner: ExecuteTARun,
+        time_bound: float = float(MAXINT),
+        logger: typing.Optional[Logger] = None,
+    ) -> typing.Tuple[StatusType, typing.Optional[float], float, typing.Dict]:
+        """Runs a configuration with the provided input.
+        *Side effect:* adds runs to run_history
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            An object that specifies the inputs to a tae runner
+        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
+            target algorithm run executor
+        time_bound: float, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+
+        Returns
+        -------
+        status: typing.Optional[StatusType]
+            The status of the execution of a given config
+            If None, it is assumed that the previous run was not completely
+            executed, for example when there is no more budget
+        cost: typing.Optional[float]
+            cost/regret/quality (typing.Any)
+        duration: float
+            runtime (None if not returned by TA)
+        res: typing.Dict
+            additional info
+        """
+
+        if run_info.config is None:
+            raise ValueError("Call to eval configurations without any valid config")
+
+        try:
+
+            status, cost, dur, res = tae_runner.start(
+                config=run_info.config,
+                instance=run_info.instance,
+                seed=run_info.seed,
+                cutoff=run_info.cutoff,
+                budget=run_info.budget,
+                instance_specific=run_info.instance_specific,
+                capped=run_info.capped
+            )
+
+        except CappedRunException:
+            if logger:
+                logger.debug(
+                    "Challenger itensification timed out due "
+                    "to adaptive capping."
+                )
+            status, cost, dur, res = StatusType.CAPPED, float(MAXINT), run_info.cutoff, {}
+
+        except BudgetExhaustedException:
+            # SMBO stops due to its own budget checks
+            if logger:
+                logger.debug("Budget exhausted; Return incumbent")
+            status, cost, dur, res = StatusType.BUDGETEXHAUSTED, float(MAXINT), 0.0, {}
+
+        return status, cost, dur, res
 
     def validate(self,
                  config_mode: typing.Union[str, typing.List[Configuration]] = 'inc',
@@ -314,7 +398,7 @@ class SMBO(object):
         else:
             new_rh = validator.validate(config_mode, instance_mode, repetitions,
                                         n_jobs, backend, self.runhistory,
-                                        self.intensifier.tae_runner,
+                                        self.tae_runner,
                                         output_fn=new_rh_path)
         return new_rh
 

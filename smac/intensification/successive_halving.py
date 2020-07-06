@@ -9,7 +9,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo
-from smac.tae.execute_ta_run import ExecuteTARun, StatusType
+from smac.tae.execute_ta_run import StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -50,8 +50,6 @@ class SuccessiveHalving(AbstractRacer):
 
     Parameters
     ----------
-    tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
-        target algorithm run executor
     stats: smac.stats.stats.Stats
         stats object
     traj_logger: smac.utils.io.traj_logging.TrajLogger
@@ -98,7 +96,6 @@ class SuccessiveHalving(AbstractRacer):
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -119,8 +116,7 @@ class SuccessiveHalving(AbstractRacer):
                  incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
 
-        super().__init__(tae_runner=tae_runner,
-                         stats=stats,
+        super().__init__(stats=stats,
                          traj_logger=traj_logger,
                          rng=rng,
                          instances=instances,
@@ -292,9 +288,9 @@ class SuccessiveHalving(AbstractRacer):
         Parameters
         ----------
         challenger : Configuration
-            A configuration to challenge the incumbent. Can even be the incumbent
-            to gain more confidence on it.
-        incumbet : Configuration
+            A configuration that was previously executed, and whose status
+            will be used to define the next stage.
+        incumbent : Configuration
             Best configuration seen so far
         run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
@@ -303,8 +299,10 @@ class SuccessiveHalving(AbstractRacer):
             The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        status: StatusType
+        status: typing.Optional[StatusType]
             The status of the execution of a given config
+            If None, it is assumed that the previous run was not completely
+            executed, for example when there is no more budget
         runtime:
             The elapsed time according to the ta runner
         log_traj: bool
@@ -338,7 +336,7 @@ class SuccessiveHalving(AbstractRacer):
         if challenger:
 
             # Make sure that there is no Budget exhausted
-            if status:
+            if not status == StatusType.BUDGETEXHAUSTED:
                 if status == StatusType.CAPPED:
                     self.curr_inst_idx = np.inf
                     n_insts_remaining = 0
@@ -452,8 +450,15 @@ class SuccessiveHalving(AbstractRacer):
                     challenger = self.configs_to_run.pop(0)
                     new_challenger = False
                 except IndexError:
-                    challenger = None
-                    new_challenger = False
+                    # If there are no new challengers, try a new call
+                    # so that a new iteration is triggered
+                    return self.get_next_challenger(
+                        challengers=challengers,
+                        incumbent=incumbent,
+                        chooser=chooser,
+                        run_history=run_history,
+                        repeat_configs=repeat_configs,
+                    )
 
             if challenger:
                 # reset instance index for the new challenger
@@ -503,12 +508,20 @@ class SuccessiveHalving(AbstractRacer):
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
+        # For debug purposes
+        self.new_challenger = new_challenger
+
+        capped = False
+        if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
+            capped = True
+
         return RunInfo(
             config=challenger,
-            new=new_challenger,
             instance=instance,
+            instance_specific=self.instance_specifics.get(instance, "0"),
             seed=seed,
             cutoff=cutoff,
+            capped=capped,
             budget=0.0 if self.instance_as_budget else curr_budget,
         )
 

@@ -9,7 +9,6 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, InstSeedBudgetKey, RunInfo, StatusType
-from smac.tae.execute_ta_run import ExecuteTARun
 from smac.utils.io.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import AbstractRacer, _config_to_run_type
 from smac.optimizer.epm_configuration_chooser import EPMChooser
@@ -33,8 +32,6 @@ class Intensifier(AbstractRacer):
 
     Parameters
     ----------
-    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
-        target algorithm run executor
     stats: Stats
         stats object
     traj_logger: TrajLogger
@@ -70,7 +67,7 @@ class Intensifier(AbstractRacer):
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
-    def __init__(self, tae_runner: ExecuteTARun,
+    def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -87,8 +84,7 @@ class Intensifier(AbstractRacer):
                  adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int = 2,):
 
-        super().__init__(tae_runner=tae_runner,
-                         stats=stats,
+        super().__init__(stats=stats,
                          traj_logger=traj_logger,
                          rng=rng,
                          instances=instances,
@@ -134,45 +130,183 @@ class Intensifier(AbstractRacer):
         # Status Tracking variables
         # To handle multi-stage transition
 
-        # When racing challengers, a a run set
-        # could become empty, which triggers
-        # a forced transition to IntensifierStage.RUN_INCUMBENT
-        self.to_run_empty = False
+        # When racing challengers, a
+        # challenger competes against incumbent
+        # We wait for the run to complete, and
+        # then post process the racer result
+        # this variable is an indicator to do that
+        self.added_challenger_run = False
 
-        # In the case of adding an incumbent, there could be
-        # the scenario that no more instances are available
-        # after a tae run
-        self.no_available_insts = False
-
-        # Because get challengers has to get the seed/intance,
-        # Need to check if the challenger is same as the incumbent
-        # before a transition from running challenger to another
-        # stage
-        self.challenger_same_as_incumbent = False
+        # To gain more confidence over the incumbent
+        # we run another instance on that configuration.
+        # When the run is complete, we need to compare the configs
+        # This variables indicates when to do so
+        self.added_incumbent_run = False
 
         # racing related variables
         self.to_run = []  # type: typing.List[InstSeedBudgetKey]
         self.inc_sum_cost = np.inf
         self.N = -1
 
-    def _add_inc_run(self,
-                     incumbent: Configuration,
-                     run_history: RunHistory,
-                     ) -> \
-            typing.Tuple[typing.Optional[Configuration], typing.Any, typing.Any, typing.Any]:
+    def process_results(self,
+                        challenger: Configuration,
+                        incumbent: typing.Optional[Configuration],
+                        run_history: RunHistory,
+                        elapsed_time: float,
+                        time_bound: float,
+                        status: StatusType,
+                        runtime: float,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[typing.Optional[Configuration], float]:
+        """
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+
+        During intensification, a the following can happen:
+        -> Challenger raced against incumbent. self.added_challenger_run
+           is set to true and that run result need to be processed
+        -> Also, during a challenger run, a capped exception
+           can be triggered, where no racer post processing is needed
+        -> A run on the incumbent for more confidence needs to
+           be processed, in such case self.added_incumbent_run is True
+
+        At the end of any run, checks are done to move to a new iteration.
+
+        Parameters
+        ----------
+        challenger : Configuration
+            a configuration that was previously executed, and whose status
+            will be used to define the next stage.
+        incumbet : typing.Optional[Configuration]
+            best configuration so far, None in 1st run
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+            stores all runs we ran so far
+            if False, an evaluated configuration will not be generated again
+        elapsed_time:
+            the tracked time of a configuration execution
+        time_bound : float, optional (default=2 ** 31 - 1)
+            time in [sec] available to perform intensify
+        status: typing.Optional[StatusType]
+            the status of the execution of a given configuration
+        runtime: typing.Optional[float]
+            the elapsed time according to the ta runner
+        log_traj: bool
+            whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
+            empirical performance of incumbent configuration
+        """
+        if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
+            if incumbent is None:
+                self.logger.info(
+                    "First run, no incumbent provided;"
+                    " challenger is assumed to be the incumbent"
+                )
+                incumbent = challenger
+
+        if self.added_incumbent_run:
+            self._ta_time += runtime
+            self.num_run += 1
+            self.added_incumbent_run = False
+            self._process_inc_run(
+                incumbent=incumbent,
+                run_history=run_history,
+                log_traj=log_traj,
+            )
+
+        if self.added_challenger_run:
+            self.num_run += 1
+            self.num_chall_run += 1
+            if status == StatusType.CAPPED:
+                # move on to the next iteration
+                self.logger.debug(
+                    "Challenger itensification timed out due "
+                    "to adaptive capping."
+                )
+                self.stage = IntensifierStage.RUN_INCUMBENT
+            else:
+
+                self._ta_time += runtime
+                self.added_challenger_run = False
+                incumbent = self._process_racer_results(
+                    challenger=challenger,
+                    incumbent=incumbent,
+                    run_history=run_history,
+                    log_traj=log_traj,
+                )
+
+        if not status == StatusType.BUDGETEXHAUSTED:
+            # check if 1 intensification run is complete - line 18
+            # this is different to regular SMAC as it requires at least successful challenger run,
+            # which is necessary to work on a fixed grid of configurations.
+            if (
+                self.stage == IntensifierStage.RUN_INCUMBENT
+                and self._chall_indx >= self.min_chall
+                and self.num_chall_run > 0
+            ):
+                if self.num_run > self.run_limit:
+                    self.logger.info("Maximum #runs for intensification reached")
+                    self._next_iteration()
+
+                if not self.use_ta_time_bound and elapsed_time - time_bound >= 0:
+                    self.logger.info(
+                        "Wallclock time limit for intensification reached "
+                        "(used: %f sec, available: %f sec)",
+                        elapsed_time,
+                        time_bound
+                    )
+
+                    self._next_iteration()
+
+                elif self._ta_time - time_bound >= 0:
+                    self.logger.info(
+                        "TA time limit for intensification reached (used: %f sec, available: %f sec)",
+                        self._ta_time, time_bound
+                    )
+
+                    self._next_iteration()
+
+        inc_perf = run_history.get_cost(incumbent)
+
+        return incumbent, inc_perf
+
+    def _get_next_inc(self,
+                      incumbent: Configuration,
+                      run_history: RunHistory,
+                      log_traj: bool = True,
+                      ) -> \
+            typing.Tuple[
+                typing.Optional[Configuration],
+                typing.Optional[str],
+                typing.Optional[float],
+                typing.Optional[float]]:
         """Method to extract the next seed/instance in which a
         incumbent run most be evaluated. Defaults to None if no new
         incumbent config can be found.
 
         Parameters
         ----------
-        new_incumbent: Configuration
+        incumbent: Configuration
             Either challenger or incumbent
-        instance: float
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        incumbent: typing.Optional[Configuration]
+            Best configuration seen so far
+        instance: typing.Optional[str]
             Next instance to evaluate
-        seed: float
+        seed: typing.Optional[float]
             Seed in which to evaluate the instance
-        cutoff: float
+        cutoff: typing.Optional[float]
             Max time for a given instance/seed pair
 
         """
@@ -225,25 +359,82 @@ class Intensifier(AbstractRacer):
                         next_instance
                     )
                 )
+                self.added_incumbent_run = True
             else:
                 self.logger.debug("No further instance-seed pairs for "
                                   "incumbent available.")
                 # stop incumbent runs
                 self.stage = IntensifierStage.RUN_CHALLENGER
-                self.no_available_insts = True
-
+                self._process_inc_run(
+                    incumbent=incumbent,
+                    run_history=run_history,
+                    log_traj=log_traj,
+                )
         else:
             # maximum runs for incumbent reached, do not run incumbent
             self.stage = IntensifierStage.RUN_CHALLENGER
+            self._compare_configs(
+                incumbent=incumbent,
+                challenger=incumbent,
+                run_history=run_history,
+                log_traj=log_traj
+            )
 
         return incumbent, next_instance, next_seed, self.cutoff
 
-    def _race_challenger(self,
-                         challenger: Configuration,
+    def _process_inc_run(self,
                          incumbent: Configuration,
                          run_history: RunHistory,
-                         ) -> Configuration:
-        """Methold to return the next config setting to
+                         log_traj: bool = True,
+                         ) -> None:
+        """Method to process the results of a challenger that races
+        an incumbent
+
+        Parameters
+        ----------
+        incumbent: Configuration
+            Either challenger or incumbent
+        run_history : smac.runhistory.runhistory.RunHistory
+            stores all runs we ran so far
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
+        """
+        # output estimated performance of incumbent
+        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        inc_perf = run_history.get_cost(incumbent)
+        self.logger.info("Updated estimated cost of incumbent on %d runs: %.4f"
+                         % (len(inc_runs), inc_perf))
+
+        # if running first configuration, go to next stage after 1st run
+        if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
+            self.stage = IntensifierStage.RUN_INCUMBENT
+            self._next_iteration()
+        else:
+            # Termination condition; after each run, this checks
+            # whether further runs are necessary due to minR
+            if len(inc_runs) >= self.minR or len(inc_runs) >= self.maxR:
+                self.stage = IntensifierStage.RUN_CHALLENGER
+
+        self._compare_configs(
+            incumbent=incumbent,
+            challenger=incumbent,
+            run_history=run_history,
+            log_traj=log_traj
+        )
+
+    def _get_next_racer(self,
+                        challenger: Configuration,
+                        incumbent: Configuration,
+                        run_history: RunHistory,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[
+                typing.Optional[Configuration],
+                typing.Optional[str],
+                typing.Optional[float],
+                typing.Optional[float]]:
+        """Method to return the next config setting to
         aggressively race challenger against incumbent.
 
         Parameters
@@ -254,16 +445,18 @@ class Intensifier(AbstractRacer):
             Best configuration so far
         run_history : smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
+        log_traj: bool
+               Whether to log changes of incumbents in trajectory
 
         Returns
         -------
-        new_incumbent: Configuration
+        new_incumbent: typing.Optional[Configuration]
             Either challenger or incumbent
-        instance: float
+        instance: typing.Optional[str]
             Next instance to evaluate
-        seed: float
+        seed: typing.Optional[float]
             Seed in which to evaluate the instance
-        cutoff: float
+        cutoff: typing.Optional[float]
             Max time for a given instance/seed pair
         """
 
@@ -275,21 +468,19 @@ class Intensifier(AbstractRacer):
                                                                         N=self.N)
         if len(self.to_run) == 0:
             self.logger.debug("No further runs for challenger available")
-            self.to_run_empty = True
+            self._process_racer_results(
+                challenger=challenger,
+                incumbent=incumbent,
+                run_history=run_history,
+                log_traj=log_traj,
+            )
+
             return incumbent, None, None, None
 
         else:
             # Line 12
             # Run challenger on all <instance, seed> to run
             instance, seed, _ = self.to_run.pop()
-
-            # In the case self.to_run is empty, this should trigger
-            # A stage change, that is based on the performance of a challenger
-            # run. (That is, run the incumbent instead of the challenger)
-            # This variable is a internal control to register this
-            # event.
-            if len(self.to_run) == 0:
-                self.to_run_empty = True
 
             cutoff = self.cutoff
             if self.run_obj_time:
@@ -310,7 +501,73 @@ class Intensifier(AbstractRacer):
             self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
             self.logger.debug("Add run of challenger")
+            self.added_challenger_run = True
             return incumbent, instance, seed, cutoff
+
+    def _process_racer_results(self,
+                               challenger: Configuration,
+                               incumbent: Configuration,
+                               run_history: RunHistory,
+                               log_traj: bool = True,
+                               ) -> typing.Optional[Configuration]:
+        """Process the result of a racing configuration against the
+        current incumbent. Might propose a new incumbent.
+
+        Parameters
+        ----------
+        challenger : Configuration
+            Configuration which challenges incumbent
+        incumbent : Configuration
+            Best configuration so far
+        run_history : smac.runhistory.runhistory.RunHistory
+            Stores all runs we ran so far
+
+        Returns
+        -------
+        new_incumbent: typing.Optional[Configuration]
+            Either challenger or incumbent
+        """
+        chal_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
+        chal_perf = run_history.get_cost(challenger)
+        # if all <instance, seed> have been run, compare challenger performance
+        if not self.to_run:
+            new_incumbent = self._compare_configs(
+                incumbent=incumbent, challenger=challenger,
+                run_history=run_history,
+                log_traj=log_traj)
+
+            # update intensification stage
+            if new_incumbent == incumbent:
+                # move on to the next iteration
+                self.stage = IntensifierStage.RUN_INCUMBENT
+                self.continue_challenger = False
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, but worse than incumbent',
+                                  len(chal_runs), chal_perf)
+
+            elif new_incumbent == challenger:
+                # New incumbent found
+                incumbent = challenger
+                self.continue_challenger = False
+                # compare against basis configuration if provided, else go to next iteration
+                if self.always_race_against and \
+                        self.always_race_against != challenger:
+                    self.stage = IntensifierStage.RUN_BASIS
+                else:
+                    self.stage = IntensifierStage.RUN_INCUMBENT
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, becomes new incumbent',
+                                  len(chal_runs), chal_perf)
+
+            else:  # Line 17
+                # challenger is not worse, continue
+                self.N = 2 * self.N
+                self.continue_challenger = True
+                self.logger.debug('Estimated cost of challenger on %d runs: %.4f, adding %d runs to the queue',
+                                  len(chal_runs), chal_perf, self.N / 2)
+        else:
+            self.logger.debug('Estimated cost of challenger on %d runs: %.4f, still %d runs to go (continue racing)',
+                              len(chal_runs), chal_perf, len(self.to_run))
+
+        return incumbent
 
     def _get_instances_to_run(self,
                               challenger: Configuration,
@@ -365,251 +622,23 @@ class Intensifier(AbstractRacer):
 
         return to_run, inc_sum_cost
 
-    def process_results(self,
-                        challenger: Configuration,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        elapsed_time: float,
-                        time_bound: float,
-                        status: StatusType,
-                        runtime: float,
-                        log_traj: bool = True,
-                        ) -> \
-            typing.Tuple[typing.Optional[Configuration], float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
-
-        Parameters
-        ----------
-        challenger : Configuration
-            A configuration to challenge the incumbent. Can even be the incumbent
-            to gain more confidence on it.
-        incumbet : Configuration
-            Best configuration seen so far
-        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
-            stores all runs we ran so far
-            if False, an evaluated configuration will not be generated again
-        elapsed_time:
-            The tracked time of a configuration execution
-        time_bound : float, optional (default=2 ** 31 - 1)
-            time in [sec] available to perform intensify
-        status: StatusType
-            The status of the execution of a given config
-        runtime:
-            The elapsed time according to the ta runner
-        log_traj: bool
-            Whether to log changes of incumbents in trajectory
-
-        Returns
-        -------
-        incumbent: Configuration()
-            current (maybe new) incumbent configuration
-        inc_perf: float
-            empirical performance of incumbent configuration
-        """
-        # ensure incumbent is not evaluated as challenger again
-        if self.challenger_same_as_incumbent:
-            self.logger.debug(
-                "Challenger was the same as the current incumbent; Skipping challenger"
-            )
-            inc_perf = run_history.get_cost(incumbent)
-            return incumbent, inc_perf
-
-        # Update control variables for the next iteration
-        if challenger is not None and runtime > 0.0:
-            self.num_run += 1
-            self._ta_time += runtime
-            self.elapsed_time += elapsed_time
-            if challenger != incumbent:
-                self.num_chall_run += 1
-
-        if self.stage == IntensifierStage.RUN_FIRST_CONFIG or \
-                self.stage == IntensifierStage.RUN_INCUMBENT or self.no_available_insts:
-
-            # Toggle the sub status variable for next iteration
-            # In the previous run maybe there where not available isntances
-            # for the incumbent, but this can change
-            self.no_available_insts = False
-
-            # if first ever run, then assume current challenger to be the incumbent
-            if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
-                if incumbent is None:
-                    self.logger.info(
-                        "First run, no incumbent provided;"
-                        " challenger is assumed to be the incumbent"
-                    )
-                    incumbent = challenger
-                else:
-                    inc_runs = run_history.get_runs_for_config(
-                        incumbent,
-                        only_max_observed_budget=True
-                    )
-
-                    if len(inc_runs) > 0:
-                        self.logger.debug(
-                            "Skipping RUN_FIRST_CONFIG stage since incumbent is already run before"
-                        )
-                        self.stage = IntensifierStage.RUN_INCUMBENT
-
-            # output estimated performance of incumbent
-            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            inc_perf = run_history.get_cost(incumbent)
-            self.logger.info("Updated estimated cost of incumbent on %d runs: %.4f"
-                             % (len(inc_runs), inc_perf))
-
-            # if running first configuration, go to next stage after 1st run
-            if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
-                self.stage = IntensifierStage.RUN_INCUMBENT
-                self._next_iteration()
-            else:
-                # Termination condition; after each run, this checks
-                # whether further runs are necessary due to minR
-                if len(inc_runs) >= self.minR or len(inc_runs) >= self.maxR:
-                    self.stage = IntensifierStage.RUN_CHALLENGER
-
-            # Compare the configs after an incumbent run
-            self._compare_configs(
-                incumbent=incumbent,
-                challenger=incumbent,
-                run_history=run_history,
-                log_traj=log_traj
-            )
-
-        elif self.stage == IntensifierStage.RUN_CHALLENGER or \
-                self.stage == IntensifierStage.RUN_BASIS:
-            if status == StatusType.CAPPED:
-                # move on to the next iteration
-                self.logger.debug(
-                    "Challenger itensification timed out due "
-                    "to adaptive capping."
-                )
-                self.stage = IntensifierStage.RUN_INCUMBENT
-            else:
-                # Lines 8-17
-                chal_runs = run_history.get_runs_for_config(
-                    challenger,
-                    only_max_observed_budget=True
-                )
-                chal_perf = run_history.get_cost(challenger)
-
-                # if all <instance, seed> have been run, compare challenger performance
-                if self.to_run_empty:
-
-                    # Control variable to check whether all instances are complete
-                    # Set to false for next iteration
-                    self.to_run_empty = False
-                    new_incumbent = self._compare_configs(
-                        incumbent=incumbent,
-                        challenger=challenger,
-                        run_history=run_history,
-                        log_traj=log_traj
-                    )
-
-                    # update intensification stage
-                    if new_incumbent == incumbent:
-                        # move on to the next iteration
-                        self.stage = IntensifierStage.RUN_INCUMBENT
-                        self.continue_challenger = False
-                        self.logger.debug(
-                            'Estimated cost of challenger on'
-                            '%d runs: %.4f, but worse than incumbent',
-                            len(chal_runs), chal_perf
-                        )
-
-                    elif new_incumbent == challenger:
-                        # New incumbent found
-                        incumbent = challenger
-                        self.continue_challenger = False
-                        # compare against basis configuration if provided,
-                        # else go to next iteration
-                        if self.always_race_against and \
-                                self.always_race_against != challenger:
-                            self.stage = IntensifierStage.RUN_BASIS
-                        else:
-                            self.stage = IntensifierStage.RUN_INCUMBENT
-                        self.logger.debug(
-                            'Estimated cost of challenger on '
-                            '%d runs: %.4f, becomes new incumbent',
-                            len(chal_runs),
-                            chal_perf
-                        )
-
-                    else:  # Line 17
-                        # challenger is not worse, continue
-                        self.N = 2 * self.N
-                        self.continue_challenger = True
-                        self.logger.debug(
-                            'Estimated cost of challenger on %d runs: %.4f, '
-                            'adding %d runs to the queue',
-                            len(chal_runs),
-                            chal_perf,
-                            self.N / 2
-                        )
-                else:
-                    self.logger.debug(
-                        'Estimated cost of challenger on %d runs: '
-                        '%.4f, still %d runs to go (continue racing)',
-                        len(chal_runs),
-                        chal_perf,
-                        len(self.to_run)
-                    )
-
-        # check if 1 intensification run is complete - line 18
-        # this is different to regular SMAC as it requires at least successful challenger run,
-        # which is necessary to work on a fixed grid of configurations.
-        if (
-            self.stage == IntensifierStage.RUN_INCUMBENT
-            and self._chall_indx >= self.min_chall
-            and self.num_chall_run > 0
-        ):
-            if self.num_run > self.run_limit:
-                self.logger.info("Maximum #runs for intensification reached")
-                self._next_iteration()
-
-            if not self.use_ta_time_bound and elapsed_time - time_bound >= 0:
-                self.logger.info(
-                    "Wallclock time limit for intensification reached "
-                    "(used: %f sec, available: %f sec)",
-                    elapsed_time,
-                    time_bound
-                )
-
-                self._next_iteration()
-
-            elif self._ta_time - time_bound >= 0:
-                self.logger.info(
-                    "TA time limit for intensification reached (used: %f sec, available: %f sec)",
-                    self._ta_time, time_bound
-                )
-
-                self._next_iteration()
-
-        inc_perf = run_history.get_cost(incumbent)
-        return incumbent, inc_perf
-
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            incumbent: Configuration,
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True,
-                            ) -> RunInfo:
+    def _query_next_challenger(self,
+                               challengers: typing.Optional[typing.List[Configuration]],
+                               chooser: typing.Optional[EPMChooser],
+                               run_history: typing.Optional[RunHistory] = None,
+                               repeat_configs: bool = True) -> \
+            typing.Tuple[typing.Optional[Configuration], bool]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
         while the later iterations pick top configurations from the previously selected challengers in that iteration
 
-        An object with all the information needed for a worker to exercise a job is returned.
-        For this, multiple stage transitions can happen internally.
+        This proposed challenger can be None, which marks the start of a new iteration.
 
         Parameters
         ----------
         challengers : typing.List[Configuration]
             promising configurations
-        incumbent: Configuration
-            incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
@@ -619,46 +648,23 @@ class Intensifier(AbstractRacer):
 
         Returns
         -------
-        run_info: RunInfo
-            An object that encapsulates necessary information for a config run
+        typing.Optional[Configuration]
+            next configuration to evaluate
+        bool
+            flag telling if the configuration is newly sampled or one currently being tracked
         """
 
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
-        self.challenger_same_as_incumbent = False
 
         # if in RUN_BASIS stage, return the basis configuration (i.e., `always_race_against`)
         if self.stage == IntensifierStage.RUN_BASIS:
             self.logger.debug("Race against basis configuration after incumbent change.")
-            incumbent, instance, seed, cutoff = self._race_challenger(
-                challenger=self.always_race_against,
-                incumbent=incumbent,
-                run_history=run_history,
-            )
-            return RunInfo(
-                config=self.always_race_against,
-                new=False,
-                instance=instance,
-                seed=seed,
-                cutoff=cutoff,
-                budget=0.0,
-            )
+            return self.always_race_against, False
 
         # if the current challenger could not be rejected, it is run again on more instances
         if self.current_challenger and self.continue_challenger:
-            incumbent, instance, seed, cutoff = self._race_challenger(
-                challenger=self.current_challenger,
-                incumbent=incumbent,
-                run_history=run_history,
-            )
-            return RunInfo(
-                config=self.current_challenger,
-                new=False,
-                instance=instance,
-                seed=seed,
-                cutoff=cutoff,
-                budget=0.0,
-            )
+            return self.current_challenger, False
 
         # select new configuration when entering 'race challenger' stage
         # or for the first run
@@ -675,17 +681,9 @@ class Intensifier(AbstractRacer):
             try:
                 challenger = next(self.configs_to_run)
             except StopIteration:
-
+                # out of challengers for the current iteration, start next incumbent iteration
                 self._next_iteration()
-
-                return RunInfo(
-                    config=None,
-                    new=False,
-                    instance=None,
-                    seed=None,
-                    cutoff=None,
-                    budget=0.0,
-                )
+                return None, False
 
             if challenger:
                 # reset instance index for the new challenger
@@ -694,21 +692,93 @@ class Intensifier(AbstractRacer):
                 self.N = max(1, self.minR)
                 self.to_run = []
 
-            new_challenger = True
-        else:
-            # return currently running challenger
-            challenger = self.current_challenger
-            new_challenger = False
+            return challenger, True
+
+        # return currently running challenger
+        return self.current_challenger, False
+
+    def get_next_challenger(self,
+                            challengers: typing.Optional[typing.List[Configuration]],
+                            incumbent: Configuration,
+                            chooser: typing.Optional[EPMChooser],
+                            run_history: RunHistory,
+                            repeat_configs: bool = True,
+                            ) -> RunInfo:
+        """
+        Wrapper around query challengers, to get the next configuration
+        to run, as well as updating the internal state of the intensifier.
+
+        If query challenger suggest a new iteration through a None challenger,
+        this function calls itself recursively until a valid configuration is
+        available.
+        If all runs are exhausted, a None configuration is returned as an indicator that
+        there are no more valid runs to launch
+
+
+        Parameters
+        ----------
+        challengers : typing.List[Configuration]
+            promising configurations
+        incumbent: Configuration
+            incumbent configuration
+        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
+            optimizer that generates next configurations to use for racing
+        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+            stores all runs we ran so far
+        repeat_configs : bool
+            if False, an evaluated configuration will not be generated again
+
+        Returns
+        -------
+        run_info: typing.Optional[RunInfo]
+            An object that encapsulates necessary information for a config run
+        """
+
+        challenger, self.new_challenger = self._query_next_challenger(
+            challengers=challengers,
+            chooser=chooser,
+            run_history=run_history,
+            repeat_configs=repeat_configs,
+        )
+
+        if challenger is None:
+            if challengers == [incumbent]:
+                self.logger.warn(
+                    "New iteration with only the incumbent {}, as "
+                    "valid challengers. The incumbent has already ran, and the next "
+                    "challenger is itself. Nothing more to do".format(
+                        incumbent
+                    )
+                )
+                return RunInfo(
+                    config=None,
+                    instance=None,
+                    instance_specific="0",
+                    seed=0,
+                    cutoff=self.cutoff,
+                    capped=False,
+                    budget=0.0,
+                )
+            return self.get_next_challenger(
+                challengers=challengers,
+                incumbent=incumbent,
+                chooser=chooser,
+                run_history=run_history,
+                repeat_configs=repeat_configs,
+            )
 
         if challenger == incumbent and self.stage == IntensifierStage.RUN_CHALLENGER:
             self.challenger_same_as_incumbent = True
             self.logger.debug(
                 "Challenger was the same as the current incumbent; Skipping challenger"
             )
-
-        # The "intensification" is designed to be spread across multiple
-        # ``eval_challenger()`` runs
-        # Lines 1 + 2 happen in the optimizer (SMBO)
+            return self.get_next_challenger(
+                challengers=challengers,
+                incumbent=incumbent,
+                chooser=chooser,
+                run_history=run_history,
+                repeat_configs=repeat_configs,
+            )
 
         # if first ever run, then assume current challenger to be the incumbent
         if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
@@ -739,44 +809,85 @@ class Intensifier(AbstractRacer):
         if self.stage == IntensifierStage.RUN_FIRST_CONFIG or \
                 self.stage == IntensifierStage.RUN_INCUMBENT:
             # Lines 3-7
-            incumbent, instance, seed, cutoff = self._add_inc_run(
+            incumbent, instance, seed, cutoff = self._get_next_inc(
                 incumbent=incumbent,
                 run_history=run_history,
             )
-            return RunInfo(
-                config=incumbent,
-                new=new_challenger,
-                instance=instance,
-                seed=seed,
-                cutoff=cutoff,
-                budget=0.0,
-            )
+
+            instance_specific = "0"
+            if instance is not None:
+                instance_specific = self.instance_specifics.get(instance, "0")
+
+            # If there is no instance, move to a new
+            # iteration
+            if instance is None and seed is None:
+                return self.get_next_challenger(
+                    challengers=challengers,
+                    incumbent=incumbent,
+                    chooser=chooser,
+                    run_history=run_history,
+                    repeat_configs=repeat_configs,
+                )
+            else:
+                return RunInfo(
+                    config=incumbent,
+                    instance=instance,
+                    instance_specific=instance_specific,
+                    seed=seed,
+                    cutoff=cutoff,
+                    capped=False,
+                    budget=0.0,
+                )
         elif self.stage == IntensifierStage.RUN_CHALLENGER or \
                 self.stage == IntensifierStage.RUN_BASIS:
             # Lines 8-17
-            incumbent, instance, seed, cutoff = self._race_challenger(
+            incumbent, instance, seed, cutoff = self._get_next_racer(
                 challenger=challenger,
                 incumbent=incumbent,
                 run_history=run_history,
             )
 
-            # ensure incumbent is not evaluated as challenger again
-            if self.challenger_same_as_incumbent:
-                return RunInfo(
-                    config=None,
-                    new=new_challenger,
-                    instance=None,
-                    seed=None,
-                    cutoff=None,
-                    budget=0.0,
+            capped = False
+            if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
+                capped = True
+
+            instance_specific = "0"
+            if instance is not None:
+                instance_specific = self.instance_specifics.get(instance, "0")
+
+            if instance is None and seed is None:
+                # Remove the challenger
+                if challengers:
+                    challengers = [c for c in challengers if c != challenger]
+                if not challengers:
+                    self.logger.warn(
+                        "Stage is RUN_CHALLENGER, yet no more challengers are "
+                        "available. "
+                    )
+                    return RunInfo(
+                        config=None,
+                        instance=None,
+                        instance_specific=instance_specific,
+                        seed=0,
+                        cutoff=self.cutoff,
+                        capped=False,
+                        budget=0.0,
+                    )
+                return self.get_next_challenger(
+                    challengers=challengers,
+                    incumbent=incumbent,
+                    chooser=chooser,
+                    run_history=run_history,
+                    repeat_configs=repeat_configs,
                 )
             else:
                 return RunInfo(
                     config=challenger,
-                    new=new_challenger,
                     instance=instance,
+                    instance_specific=instance_specific,
                     seed=seed,
                     cutoff=cutoff,
+                    capped=capped,
                     budget=0.0,
                 )
         else:
@@ -825,8 +936,6 @@ class Intensifier(AbstractRacer):
         self.iteration_done = True
         self.configs_to_run = iter([])
         self.update_configs_to_run = True
-        self.to_run_empty = False
-        self.no_available_insts = False
 
         # reset for a new iteration
         self.num_run = 0
@@ -837,3 +946,5 @@ class Intensifier(AbstractRacer):
 
         self.stats.update_average_configs_per_intensify(
             n_configs=self._chall_indx)
+        self.added_incumbent_run = False
+        self.added_challenger_run = False

@@ -1,5 +1,4 @@
 import collections
-import copy
 import unittest
 
 import logging
@@ -17,6 +16,7 @@ from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
 from smac.utils.io.traj_logging import TrajLogger
+from smac.optimizer.smbo import SMBO
 
 
 def get_config_space():
@@ -52,7 +52,7 @@ class TestIntensify(unittest.TestCase):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def test_race_challenger(self):
+    def test_race_challenger_1(self):
         """
            Makes sure that a racing configuration with better performance,
            is selected as incumbent
@@ -65,7 +65,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1], run_obj_time=False)
@@ -75,28 +75,23 @@ class TestIntensify(unittest.TestCase):
                     seed=None,
                     additional_info=None)
 
-        # For Race challenger to be called, the intensifier has
-        # to be in RUN_CHALLENGER STAGE. Also, the substatus
-        # cariable intensifier.to_run_empty is set to true
-        # which means that all challenger configurations are ready
-        # to be compared
         intensifier.N = 1
-        intensifier.stage = IntensifierStage.RUN_CHALLENGER
-        intensifier.to_run_empty = True
-        inc, instance, seed, cutoff = intensifier._race_challenger(
+        inc, instance, seed, cutoff = intensifier._get_next_racer(
             challenger=self.config2,
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config2,
-                new=True,
                 instance=instance,
-                seed=seed,
+                instance_specific="0",
                 cutoff=cutoff,
+                seed=seed,
+                capped=False,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config2,
@@ -125,7 +120,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1])
@@ -134,29 +129,25 @@ class TestIntensify(unittest.TestCase):
                     status=StatusType.SUCCESS, instance_id=1,
                     seed=12345,
                     additional_info=None)
-
-        # For Race challenger to be called, the intensifier has
-        # to be in RUN_CHALLENGER STAGE. Also, the substatus
-        # cariable intensifier.to_run_empty is set to true
-        # which means that all challenger configurations are ready
-        # to be compared
         intensifier.N = 1
-        intensifier.stage = IntensifierStage.RUN_CHALLENGER
-        intensifier.to_run_empty = True
-        inc, instance, seed, cutoff = intensifier._race_challenger(
+        # config2 should have a timeout (due to adaptive capping)
+        # and config1 should still be the incumbent
+        inc, instance, seed, cutoff = intensifier._get_next_racer(
             challenger=self.config2,
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config2,
-                new=True,
                 instance=instance,
+                instance_specific="0",
                 seed=seed,
                 cutoff=cutoff,
+                capped=True,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config2,
@@ -168,8 +159,6 @@ class TestIntensify(unittest.TestCase):
             elapsed_time=dur,
         )
 
-        # config2 should have a timeout (due to adaptive capping)
-        # and config1 should still be the incumbent
         self.assertEqual(inc, self.config1)
         self.assertEqual(intensifier.num_run, 1)
         self.assertEqual(intensifier.num_chall_run, 1)
@@ -189,7 +178,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             cutoff=2,
@@ -202,20 +191,28 @@ class TestIntensify(unittest.TestCase):
 
         # config2 should have a timeout (due to adaptive capping)
         # and config1 should still be the incumbent
-        run_info = intensifier.get_next_challenger(
+        config, _ = intensifier._query_next_challenger(
             challengers=[self.config2, self.config3],
-            incumbent=self.config1,
             run_history=self.rh,
             chooser=None
         )
-        inc, instance, seed, cutoff = intensifier._race_challenger(
-            challenger=run_info.config,
+        inc, instance, seed, cutoff = intensifier._get_next_racer(
+            challenger=config,
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        run_info = RunInfo(
+            config=config,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=True,
+            budget=0.0,
+        )
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
-            challenger=run_info.config,
+            challenger=config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
@@ -235,21 +232,24 @@ class TestIntensify(unittest.TestCase):
         # give config2 a second chance - now it should run on both instances
 
         # run on instance 1
-
-        run_info = intensifier.get_next_challenger(
-            challengers=[self.config2, self.config3],
-            incumbent=self.config1,
-            run_history=self.rh,
-            chooser=None
-        )
-        inc, instance, seed, cutoff = intensifier._race_challenger(
-            challenger=run_info.config,
+        config, _ = intensifier._query_next_challenger(challengers=[self.config2, self.config3], chooser=None)
+        inc, instance, seed, cutoff = intensifier._get_next_racer(
+            challenger=config,
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        run_info = RunInfo(
+            config=config,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
+        )
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
-            challenger=run_info.config,
+            challenger=config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
@@ -259,71 +259,46 @@ class TestIntensify(unittest.TestCase):
         )
 
         # run on instance 2
-        run_info = intensifier.get_next_challenger(
-            challengers=[self.config3],
-            incumbent=self.config1,
-            run_history=self.rh,
-            chooser=None
-        )
-
-        # Because the run is capped, the stage do a forced transition to
-        # IntensifierStage.RUN_INCUMBENT. So the challenger to run has to
-        # be the incumbent
-        self.assertEqual(run_info.config, self.config1)
-        self.assertFalse(intensifier.continue_challenger)
-
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
-            incumbent=self.config1,
-            run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=0,
-        )
-
-        # Add a test to make sure continue challenger is set to True
-        # If comparing against config 2, not enough runs have been
-        # performed. So continue challenger is true so that a new
-        # run is encouraged
-        inc, perf = intensifier.process_results(
-            challenger=self.config2,
-            incumbent=self.config1,
-            run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=0,
-        )
+        config, _ = intensifier._query_next_challenger(challengers=[self.config3], chooser=None)
+        self.assertEqual(config, self.config2)
         self.assertTrue(intensifier.continue_challenger)
+
+        inc, instance, seed, cutoff = intensifier._get_next_racer(
+            challenger=config,
+            incumbent=self.config1,
+            run_history=self.rh
+        )
+        run_info = RunInfo(
+            config=config,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
+        )
+
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
+        inc, perf = intensifier.process_results(
+            challenger=config,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            status=status,
+            runtime=dur,
+            elapsed_time=0,
+        )
 
         # the incumbent should still be config1 because
         # config2 should get on inst 1 a full timeout
         # such that c(config1) = 1.25 and c(config2) close to 1.3
         self.assertEqual(inc, self.config1)
-
         # the capped run should not be counted in runs_perf_config
-        # This is something handled by tae runner
-        num_runs_per_config_before = copy.deepcopy(self.rh.num_runs_per_config)
-        status, cost, dur, res = intensifier.eval_challenger(
-            RunInfo(
-                config=self.config2,
-                new=True,
-                instance=1,
-                seed=12345,
-                cutoff=0.5,
-                budget=0.0,
-            )
-        )
-        self.assertEqual(status, StatusType.CAPPED)
-        self.assertDictEqual(self.rh.num_runs_per_config, num_runs_per_config_before)
+        self.assertAlmostEqual(self.rh.num_runs_per_config[2], 2)
+        self.assertFalse(intensifier.continue_challenger)
 
         self.assertEqual(intensifier.num_run, 3)
-
-        # On capped runs, the incumbent is run. We do not expect
-        # 3 challenger runs to have executed, just 1
-        self.assertEqual(intensifier.num_chall_run, 1)
+        self.assertEqual(intensifier.num_chall_run, 3)
 
     def test_race_challenger_large(self):
         """
@@ -337,7 +312,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=list(range(10)), run_obj_time=False,
@@ -354,15 +329,28 @@ class TestIntensify(unittest.TestCase):
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            run_info = intensifier.get_next_challenger(
+            config, _ = intensifier._query_next_challenger(
                 challengers=[self.config2, self.config3],
-                incumbent=self.config1,
-                run_history=self.rh,
                 chooser=None
             )
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
+            inc, instance, seed, cutoff = intensifier._get_next_racer(
+                challenger=config,
+                incumbent=self.config1,
+                run_history=self.rh
+            )
+            run_info = RunInfo(
+                config=config,
+                instance=instance,
+                instance_specific="0",
+                seed=seed,
+                cutoff=cutoff,
+                capped=False,
+                budget=0.0,
+            )
+
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
             inc, perf = intensifier.process_results(
-                challenger=run_info.config,
+                challenger=config,
                 incumbent=self.config1,
                 run_history=self.rh,
                 time_bound=np.inf,
@@ -397,7 +385,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=list(range(10)), run_obj_time=False,
@@ -414,13 +402,25 @@ class TestIntensify(unittest.TestCase):
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            run_info = intensifier.get_next_challenger(
+            config, _ = intensifier._query_next_challenger(
                 challengers=[self.config2, self.config3],
-                incumbent=self.config1,
-                run_history=self.rh,
                 chooser=None
             )
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
+            inc, instance, seed, cutoff = intensifier._get_next_racer(
+                challenger=config,
+                incumbent=self.config1,
+                run_history=self.rh
+            )
+            run_info = RunInfo(
+                config=config,
+                instance=instance,
+                instance_specific="0",
+                seed=seed,
+                cutoff=cutoff,
+                capped=False,
+                budget=0.0,
+            )
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
             inc, perf = intensifier.process_results(
                 challenger=run_info.config,
                 incumbent=self.config1,
@@ -459,25 +459,27 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1],
             deterministic=True)
 
-        inc, instance, seed, cutoff = intensifier._add_inc_run(
+        inc, instance, seed, cutoff = intensifier._get_next_inc(
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config1,
-                new=False,
                 instance=instance,
+                instance_specific="0",
                 seed=seed,
                 cutoff=cutoff,
+                capped=False,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config1,
@@ -495,7 +497,7 @@ class TestIntensify(unittest.TestCase):
         # given only one instance
         # So the returned seed/instance is None so that a new
         # run to be triggered is not launched
-        inc, instance, seed, cutoff = intensifier._add_inc_run(
+        inc, instance, seed, cutoff = intensifier._get_next_inc(
             incumbent=self.config1,
             run_history=self.rh
         )
@@ -529,25 +531,27 @@ class TestIntensify(unittest.TestCase):
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, runhistory=self.rh, run_obj="solution_quality")
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1, 2],
             deterministic=False)
 
-        inc, instance, seed, cutoff = intensifier._add_inc_run(
+        inc, instance, seed, cutoff = intensifier._get_next_inc(
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config1,
-                new=False,
                 instance=instance,
+                instance_specific="0",
                 seed=seed,
                 cutoff=cutoff,
+                capped=False,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config1,
@@ -560,19 +564,21 @@ class TestIntensify(unittest.TestCase):
         )
         self.assertEqual(len(self.rh.data), 1, self.rh.data)
 
-        inc, instance, seed, cutoff = intensifier._add_inc_run(
+        inc, instance, seed, cutoff = intensifier._get_next_inc(
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config1,
-                new=False,
                 instance=instance,
+                instance_specific="0",
                 seed=seed,
                 cutoff=cutoff,
+                capped=False,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config1,
@@ -589,19 +595,21 @@ class TestIntensify(unittest.TestCase):
         self.assertIn(1, [runs[0].instance, runs[1].instance])
         self.assertIn(2, [runs[0].instance, runs[1].instance])
 
-        inc, instance, seed, cutoff = intensifier._add_inc_run(
+        inc, instance, seed, cutoff = intensifier._get_next_inc(
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = intensifier.eval_challenger(
+        status, cost, dur, res = SMBO.eval_challenger(
             RunInfo(
                 config=self.config1,
-                new=False,
                 instance=instance,
+                instance_specific="0",
                 seed=seed,
                 cutoff=cutoff,
+                capped=False,
                 budget=0.0,
-            )
+            ),
+            taf
         )
         inc, perf = intensifier.process_results(
             challenger=self.config1,
@@ -616,53 +624,36 @@ class TestIntensify(unittest.TestCase):
 
         # The number of runs performed should be 3
         # No Next iteration call as an incumbent is provided
-        self.assertEqual(intensifier.num_run, 3)
+        self.assertEqual(intensifier.num_run, 2)
         self.assertEqual(intensifier.num_chall_run, 0)
 
-    def test_get_next_challenger(self):
+    def test_query_next_challenger(self):
         """
             test get_next_challenger()
         """
         intensifier = Intensifier(
-            tae_runner=None, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1],
-            deterministic=True,
-            run_obj_time=False,
-        )
+            deterministic=True)
 
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # get a new challenger to evaluate
-        run_info = intensifier.get_next_challenger(
-            challengers=[self.config1, self.config2],
-            run_history=self.rh,
-            incumbent=self.config2,
-            chooser=None
-        )
+        config, new = intensifier._query_next_challenger(challengers=[self.config1, self.config2], chooser=None)
 
-        self.assertEqual(run_info.config, self.config1, intensifier.current_challenger)
+        self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
         self.assertEqual(intensifier.N, 1)
-        self.assertTrue(run_info.new)
+        self.assertTrue(new)
 
         # when already evaluating a challenger, return the same challenger
         intensifier.to_run = [(1, 1, 0)]
-        run_info = intensifier.get_next_challenger(
-            challengers=[self.config2],
-            run_history=self.rh,
-            incumbent=self.config1,
-            chooser=None,
-        )
-        self.assertEqual(self.config1, intensifier.current_challenger)
-
-        # During evaluation, if the challenger is the same as the
-        # Incumbent, the challenger is skipped, if the stage is
-        # Running challenger. In this case None is returned as next config
-        self.assertEqual(run_info.config, None)
+        config, new = intensifier._query_next_challenger(challengers=[self.config2], chooser=None)
+        self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
-        self.assertFalse(run_info.new)
+        self.assertFalse(new)
 
     def test_generate_challenger(self):
         """
@@ -670,7 +661,7 @@ class TestIntensify(unittest.TestCase):
         """
         # test get generator from a list of challengers
         intensifier = Intensifier(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), instances=[1],
             deterministic=True)
 
@@ -682,7 +673,7 @@ class TestIntensify(unittest.TestCase):
 
         # test get generator from a chooser - would return only 1 configuration
         intensifier = Intensifier(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), instances=[1],
             deterministic=True)
         chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
@@ -709,7 +700,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1, 2], run_obj_time=True, cutoff=2,
@@ -729,7 +720,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(run_info.config, self.config2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         # eval config 2 (=first run)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
@@ -753,7 +744,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(run_info.config, inc)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -774,7 +765,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -797,7 +788,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -821,7 +812,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_BASIS)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -850,7 +841,7 @@ class TestIntensify(unittest.TestCase):
                                                    run_history=self.rh,
                                                    chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -879,7 +870,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1], run_obj_time=False,
@@ -897,7 +888,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         # eval config 2 (=first run)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
@@ -913,31 +904,14 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.n_iters, 1)  # 1 intensification run complete!
 
         # regular intensification begins - run incumbent
-        run_info = intensifier.get_next_challenger(challengers=None,  # since incumbent is run, no configs required
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
-        self.assertEqual(run_info.config, inc)
-
-        # There is a transition from:
-        # IntensifierStage.RUN_FIRST_CONFIG-> IntensifierStage.RUN_INCUMBENT
-        # Because after the first run, incumbent is run.
-        # Nevertheless, there is now a transition:
-        # IntensifierStage.RUN_INCUMBENT->IntensifierStage.RUN_CHALLENGER
-        # because in add_inc_run, there are more available instance pairs
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
+        # Normally a challenger will be given, which in this case is the incumbent
+        # But no more instances are available. So to prevent cicles
+        # where No iteration happens, provide the challengers
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config2, self.config1],  # since incumbent is run, no configs required
             incumbent=inc,
             run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            chooser=None
         )
 
         # no new TA runs as there are no more instances to run
@@ -948,13 +922,10 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
         # run challenger now that the incumbent has been executed
-        run_info = intensifier.get_next_challenger(challengers=[self.config2, self.config1],
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+        # So this call happen above, to save one iteration
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config2)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -974,10 +945,8 @@ class TestIntensify(unittest.TestCase):
 
         # intensification continues running incumbent again in same iteration...
         # run incumbent
-        run_info = intensifier.get_next_challenger(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+        # Same here, No further instance-seed pairs for incumbent available
+        # so above call gets the new config to run
         self.assertEqual(run_info.config, self.config2)
 
         # There is a transition from:
@@ -986,12 +955,12 @@ class TestIntensify(unittest.TestCase):
         # Nevertheless, there is now a transition:
         # IntensifierStage.RUN_INCUMBENT->IntensifierStage.RUN_CHALLENGER
         # because in add_inc_run, there are more available instance pairs
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+        # FROM: IntensifierStage.RUN_INCUMBENT TO: IntensifierStage.RUN_INCUMBENT WHY: no more to run
+        # if all <instance, seed> have been run, compare challenger performance
+        # self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
+        self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
 
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -1009,7 +978,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(run_info.config, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -1043,7 +1012,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), instances=[1], run_obj_time=False,
             deterministic=False, always_race_against=None, run_limit=1)
@@ -1060,7 +1029,7 @@ class TestIntensify(unittest.TestCase):
                                                    incumbent=self.config1,
                                                    run_history=self.rh,
                                                    chooser=None)
-        status, cost, dur, res = intensifier.eval_challenger(run_info)
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=self.config1,
@@ -1085,7 +1054,7 @@ class TestIntensify(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
             instances=[1], run_obj_time=False,
@@ -1102,10 +1071,7 @@ class TestIntensify(unittest.TestCase):
                                                    chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
@@ -1120,59 +1086,31 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.n_iters, 1)  # 1 intensification run complete!
 
         # regular intensification begins - run incumbent
-        run_info = intensifier.get_next_challenger(challengers=None,  # since incumbent is run, no configs required
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
-        self.assertEqual(run_info.config, inc)
-        # There is a transition from:
-        # IntensifierStage.RUN_FIRST_CONFIG-> IntensifierStage.RUN_INCUMBENT
-        # Because after the first run, incumbent is run.
-        # Nevertheless, there is now a transition:
-        # IntensifierStage.RUN_INCUMBENT->IntensifierStage.RUN_CHALLENGER
-        # because in add_inc_run, there are more available instance pairs
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
-            incumbent=inc,
-            run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
-        )
-        self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        self.assertEqual(intensifier.n_iters, 1)
 
-        # Check that we don't walk into the next iteration if the challenger is passed again
-        run_info = intensifier.get_next_challenger(challengers=[self.config3],
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
+        # No further instance-seed pairs for incumbent available
+        # Here None challenger is suggested. Code jumps to next iteration
+        # This causes a transition from RUN_INCUMBENT->RUN_CHALLENGER
+        # But then, the next configuration to run is the incumbent
+        # We don't rerun the incumbent (see message):
+        # Challenger was the same as the current incumbent; Skipping challenger
+        # Then, we try to get more challengers, but below all challengers
+        # Provided are config3, the incumbent which means nothing more to run
+        run_info = intensifier.get_next_challenger(
+            challengers=[self.config3],  # since incumbent is run, no configs required
             incumbent=inc,
             run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            chooser=None
         )
+
+        self.assertEqual(run_info.config, None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        self.assertEqual(intensifier.n_iters, 1)
 
         intensifier._next_iteration()
 
         # Add a configuration, then try to execute it afterwards
-        self.assertEqual(intensifier.n_iters, 2)
+        # Above call to get next challenger tries to get a new configuration
+        self.assertEqual(intensifier.n_iters, 3)
+
         self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS,
                     instance_id=1, seed=0, additional_info=None)
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
@@ -1180,55 +1118,33 @@ class TestIntensify(unittest.TestCase):
                                                    incumbent=inc,
                                                    run_history=self.rh,
                                                    chooser=None)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
-            incumbent=inc,
-            run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
-        )
-        self.assertEqual(intensifier.n_iters, 2)
+
+        # In the above get next challenger, the stage is RUN_CHALLENGER
+        # So config1 is tried to be run. Nevertheless, there are no further
+        # runs for this challenger available, that is, race challenger
+        # can do nothing. Instead for returning None, the code tries
+        # to grab a new iteration, but all of them are exhausted
+        self.assertIsNone(run_info.config)
+        self.assertEqual(intensifier.n_iters, 3)
         self.assertEqual(intensifier.num_chall_run, 0)
 
         # This returns the config evaluating the incumbent again
-        run_info = intensifier.get_next_challenger(challengers=None,
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)
-        else:
-            status, cost, dur, res = None, None, None, None
-        inc, perf = intensifier.process_results(
-            challenger=run_info.config,
-            incumbent=inc,
-            run_history=self.rh,
-            time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
-        )
+        # Nevertheless No tae runner run is done because
+        # No further instance-seed pairs for incumbent available
+        config, _ = intensifier._query_next_challenger(challengers=None, chooser=None)
+        self.assertEqual(config, self.config1)
+
         # This doesn't return a config because the array of configs is exhausted
-        run_info = intensifier.get_next_challenger(challengers=None,
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
-        self.assertIsNone(run_info.config)
+        intensifier.stage = IntensifierStage.RUN_CHALLENGER
+        config, _ = intensifier._query_next_challenger(challengers=None,
+                                                       chooser=None)
+        self.assertIsNone(config)
         # This finally gives a runable configuration
         run_info = intensifier.get_next_challenger(challengers=[self.config2],
                                                    incumbent=inc,
                                                    run_history=self.rh,
                                                    chooser=None)
-        if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
-        else:
-            status, cost, dur, res = None, None, None, None  # noqa: F841
+        status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
@@ -1238,5 +1154,7 @@ class TestIntensify(unittest.TestCase):
             runtime=dur,
             elapsed_time=dur,
         )
-        self.assertEqual(intensifier.n_iters, 3)
+        # 4 Iterations due to the proactive runs
+        # of get next challenger
+        self.assertEqual(intensifier.n_iters, 4)
         self.assertEqual(intensifier.num_chall_run, 1)

@@ -14,6 +14,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
+from smac.optimizer.smbo import SMBO
 
 
 def get_config_space():
@@ -54,7 +55,7 @@ class TestHyperband(unittest.TestCase):
             test initialization of all parameters and tracking variables
         """
         intensifier = Hyperband(
-            tae_runner=None, stats=self.stats, traj_logger=None,
+            stats=self.stats, traj_logger=None,
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[1], initial_budget=0.1, max_budget=1, eta=2)
         intensifier._update_stage()
@@ -97,7 +98,7 @@ class TestHyperband(unittest.TestCase):
         taf.runhistory = self.rh
 
         intensifier = Hyperband(
-            tae_runner=taf, stats=self.stats,
+            stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
             instances=[None], initial_budget=0.5, max_budget=1, eta=2)
@@ -133,7 +134,7 @@ class TestHyperband(unittest.TestCase):
 
         # evaluation should change the incumbent to config2
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = intensifier.eval_challenger(run_info)  # noqa: F841
+            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(

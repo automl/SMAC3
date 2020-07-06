@@ -14,6 +14,7 @@ from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+from smac.optimizer.smbo import SMBO
 
 
 class ConfigurationMock(object):
@@ -79,7 +80,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(Intensifier, 'eval_challenger')
+    @mock.patch.object(SMBO, 'eval_challenger')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
