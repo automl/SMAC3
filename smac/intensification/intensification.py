@@ -697,13 +697,13 @@ class Intensifier(AbstractRacer):
         # return currently running challenger
         return self.current_challenger, False
 
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            incumbent: Configuration,
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True,
-                            ) -> RunInfo:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True,
+                     ) -> RunInfo:
         """
         Wrapper around query challengers, to get the next configuration
         to run, as well as updating the internal state of the intensifier.
@@ -759,7 +759,7 @@ class Intensifier(AbstractRacer):
                     capped=False,
                     budget=0.0,
                 )
-            return self.get_next_challenger(
+            return self.get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
                 chooser=chooser,
@@ -772,7 +772,7 @@ class Intensifier(AbstractRacer):
             self.logger.debug(
                 "Challenger was the same as the current incumbent; Skipping challenger"
             )
-            return self.get_next_challenger(
+            return self.get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
                 chooser=chooser,
@@ -821,7 +821,7 @@ class Intensifier(AbstractRacer):
             # If there is no instance, move to a new
             # iteration
             if instance is None and seed is None:
-                return self.get_next_challenger(
+                return self.get_next_run(
                     challengers=challengers,
                     incumbent=incumbent,
                     chooser=chooser,
@@ -873,7 +873,7 @@ class Intensifier(AbstractRacer):
                         capped=False,
                         budget=0.0,
                     )
-                return self.get_next_challenger(
+                return self.get_next_run(
                     challengers=challengers,
                     incumbent=incumbent,
                     chooser=chooser,

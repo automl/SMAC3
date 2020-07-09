@@ -110,15 +110,17 @@ class AbstractRacer(object):
         # to mark the end of an iteration
         self.iteration_done = False
 
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            incumbent: Configuration,
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True) -> RunInfo:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True) -> RunInfo:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
+
+        If no more challengers are available, the method should return None as configuration
 
         Parameters
         ----------
@@ -170,7 +172,7 @@ class AbstractRacer(object):
             The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        status:  typing.Optional[StatusType],
+        status:  typing.Optional[StatusType]
             The status of the execution of a given config
         runtime:
             The elapsed time according to the ta runner

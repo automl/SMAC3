@@ -36,6 +36,77 @@ __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
 
 
+def eval_challenger(
+    run_info: RunInfo,
+    tae_runner: ExecuteTARun,
+    time_bound: float = float(MAXINT),
+    logger: typing.Optional[Logger] = None,
+) -> typing.Tuple[StatusType, typing.Optional[float], float, typing.Dict]:
+    """Runs a configuration with the provided input.
+    *Side effect:* adds runs to run_history
+
+    Parameters
+    ----------
+    run_info: RunInfo
+        An object that specifies the inputs to a tae runner
+    tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
+        target algorithm run executor
+    time_bound: float, optional (default=2 ** 31 - 1)
+        time in [sec] available to perform intensify
+
+    Returns
+    -------
+    status: typing.Optional[StatusType]
+        The status of the execution of a given config
+        If None, it is assumed that the previous run was not completely
+        executed, for example when there is no more budget
+    cost: typing.Optional[float]
+        cost/regret/quality (typing.Any)
+    duration: float
+        runtime (None if not returned by TA)
+    res: typing.Dict
+        additional info
+    """
+
+    if run_info.config is None:
+        raise ValueError("Call to eval configurations without any valid config")
+
+    try:
+
+        status, cost, dur, res = tae_runner.start(
+            config=run_info.config,
+            instance=run_info.instance,
+            seed=run_info.seed,
+            cutoff=run_info.cutoff,
+            budget=run_info.budget,
+            instance_specific=run_info.instance_specific,
+            capped=run_info.capped
+        )
+
+    except CappedRunException:
+        if logger:
+            logger.debug(
+                "Challenger itensification timed out due "
+                "to adaptive capping."
+            )
+        status, cost, dur, res = StatusType.CAPPED, float(MAXINT), run_info.cutoff, {}
+
+    except BudgetExhaustedException:
+        # SMBO stops due to its own budget checks
+        if logger:
+            logger.debug("Budget exhausted; Return incumbent")
+
+        # In case there is a budget exhausted, return par_factor time.
+        # Cutoff can be None, and in such case not par factor can be taken
+        if run_info.cutoff is not None:
+            ehausted_dur = run_info.cutoff * tae_runner.par_factor
+        else:
+            ehausted_dur = run_info.cutoff
+        status, cost, dur, res = StatusType.BUDGETEXHAUSTED, ehausted_dur, 0.0, {}
+
+    return status, cost, dur, res
+
+
 class SMBO(object):
     """Interface that contains the main Bayesian optimization loop
 
@@ -201,7 +272,7 @@ class SMBO(object):
 
             # sample next configuration for intensification
             # Initial design runs are also included in the BO loop now.
-            run_info = self.intensifier.get_next_challenger(
+            run_info = self.intensifier.get_next_run(
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
                 chooser=self.epm_chooser,
@@ -223,16 +294,17 @@ class SMBO(object):
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
                 self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
-            # An instance can be None in the first run. so at least a seed
-            # or instance needs to be provded
-            elapsed_time, runtime = 0.0, 0.0
+            # Get next run returns always an available challenger, if any
+            # In the case no more challengers are available, a None configuration
+            # is returned
+            elapsed_time, runtime = float(MAXINT), float(MAXINT)
             status = StatusType.CRASHED
             if run_info.config:
 
                 try:
 
                     start_time = time.time()
-                    status, cost, runtime, res = self.eval_challenger(
+                    status, cost, runtime, res = eval_challenger(
                         run_info=run_info,
                         time_bound=max(self._min_time, time_left),
                         tae_runner=self.tae_runner,
@@ -240,24 +312,23 @@ class SMBO(object):
                     )
                     elapsed_time = time.time() - start_time
 
+                    # Process the results from the run
+                    # Has to be executed regardless the config to run is None,
+                    # as the control logic has to prepare for the next iteration
+                    self.incumbent, inc_perf = self.intensifier.process_results(
+                        challenger=run_info.config,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        elapsed_time=elapsed_time,
+                        time_bound=max(self._min_time, time_left),
+                        status=status,
+                        runtime=runtime,
+                    )
+
                 except FirstRunCrashedException:
                     if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
                         raise
 
-            # Process the results from the run
-            # Has to be executed regardless the config to run is None,
-            # as the control logic has to prepare for the next iteration
-            self.incumbent, inc_perf = self.intensifier.process_results(
-                challenger=run_info.config,
-                incumbent=self.incumbent,
-                run_history=self.runhistory,
-                elapsed_time=elapsed_time,
-                time_bound=max(self._min_time, time_left),
-                status=status,
-                runtime=runtime,
-            )
-
-            if run_info.config and (run_info.instance is not None or run_info.seed is not None):
                 if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                     assert self.scenario.output_dir_for_this_run is not None  # please mypy
                     pSMAC.write(run_history=self.runhistory,
@@ -277,70 +348,6 @@ class SMBO(object):
                 self.stats.print_stats(debug_out=True)
 
         return self.incumbent
-
-    @staticmethod
-    def eval_challenger(
-        run_info: RunInfo,
-        tae_runner: ExecuteTARun,
-        time_bound: float = float(MAXINT),
-        logger: typing.Optional[Logger] = None,
-    ) -> typing.Tuple[StatusType, typing.Optional[float], float, typing.Dict]:
-        """Runs a configuration with the provided input.
-        *Side effect:* adds runs to run_history
-
-        Parameters
-        ----------
-        run_info: RunInfo
-            An object that specifies the inputs to a tae runner
-        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
-            target algorithm run executor
-        time_bound: float, optional (default=2 ** 31 - 1)
-            time in [sec] available to perform intensify
-
-        Returns
-        -------
-        status: typing.Optional[StatusType]
-            The status of the execution of a given config
-            If None, it is assumed that the previous run was not completely
-            executed, for example when there is no more budget
-        cost: typing.Optional[float]
-            cost/regret/quality (typing.Any)
-        duration: float
-            runtime (None if not returned by TA)
-        res: typing.Dict
-            additional info
-        """
-
-        if run_info.config is None:
-            raise ValueError("Call to eval configurations without any valid config")
-
-        try:
-
-            status, cost, dur, res = tae_runner.start(
-                config=run_info.config,
-                instance=run_info.instance,
-                seed=run_info.seed,
-                cutoff=run_info.cutoff,
-                budget=run_info.budget,
-                instance_specific=run_info.instance_specific,
-                capped=run_info.capped
-            )
-
-        except CappedRunException:
-            if logger:
-                logger.debug(
-                    "Challenger itensification timed out due "
-                    "to adaptive capping."
-                )
-            status, cost, dur, res = StatusType.CAPPED, float(MAXINT), run_info.cutoff, {}
-
-        except BudgetExhaustedException:
-            # SMBO stops due to its own budget checks
-            if logger:
-                logger.debug("Budget exhausted; Return incumbent")
-            status, cost, dur, res = StatusType.BUDGETEXHAUSTED, float(MAXINT), 0.0, {}
-
-        return status, cost, dur, res
 
     def validate(self,
                  config_mode: typing.Union[str, typing.List[Configuration]] = 'inc',

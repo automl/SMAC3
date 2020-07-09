@@ -14,7 +14,7 @@ from smac.tae.execute_ta_run import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-from smac.optimizer.smbo import SMBO
+from smac.optimizer.smbo import eval_challenger
 
 
 class ConfigurationMock(object):
@@ -80,7 +80,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(SMBO, 'eval_challenger')
+    @mock.patch('smac.optimizer.smbo.eval_challenger')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
@@ -139,7 +139,7 @@ class TestSMBO(unittest.TestCase):
 
     def test_update_intensification_percentage(self):
         """
-        This test checks the insification time bound is updated in subsequent iterations as long as
+        This test checks the intensification time bound is updated in subsequent iterations as long as
         num_runs of the intensifier is not reset to zero.
         """
 
@@ -157,19 +157,19 @@ class TestSMBO(unittest.TestCase):
         solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
 
         class SideEffect:
-            def __init__(self, intensifier, get_next_challenger):
+            def __init__(self, intensifier, get_next_run):
                 self.intensifier = intensifier
-                self.get_next_challenger = get_next_challenger
+                self.get_next_run = get_next_run
                 self.counter = 0
 
             def __call__(self, *args, **kwargs):
                 self.counter += 1
                 if self.counter % 4 == 0:
                     self.intensifier.num_run = 0
-                return self.get_next_challenger(*args, **kwargs)
+                return self.get_next_run(*args, **kwargs)
 
-        solver.intensifier.get_next_challenger = unittest.mock.Mock(
-            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_challenger))
+        solver.intensifier.get_next_run = unittest.mock.Mock(
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_run))
 
         solver.run()
 

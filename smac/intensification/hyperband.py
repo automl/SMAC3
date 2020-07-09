@@ -175,16 +175,18 @@ class Hyperband(SuccessiveHalving):
 
         return incumbent, inc_perf
 
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            incumbent: Configuration,
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True) -> RunInfo:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True) -> RunInfo:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
         while the later iterations pick top configurations from the previously selected challengers in that iteration
+
+        If no new run is available, the method returns a configuration of None.
 
         Parameters
         ----------
@@ -212,7 +214,7 @@ class Hyperband(SuccessiveHalving):
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        run_info = self.sh_intensifier.get_next_challenger(
+        run_info = self.sh_intensifier.get_next_run(
             challengers=challengers,
             incumbent=incumbent,
             chooser=chooser,
@@ -220,7 +222,9 @@ class Hyperband(SuccessiveHalving):
             repeat_configs=self.sh_intensifier.repeat_configs
         )
 
-        # For debug purposes, set this flag
+        # For testing purposes, this attribute highlights whether a
+        # new challenger is proposed or not. Not required from a functional
+        # perspective
         self.new_challenger = self.sh_intensifier.new_challenger
 
         return run_info

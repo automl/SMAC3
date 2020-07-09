@@ -336,7 +336,7 @@ class SuccessiveHalving(AbstractRacer):
         if challenger:
 
             # Make sure that there is no Budget exhausted
-            if not status == StatusType.BUDGETEXHAUSTED:
+            if status != StatusType.BUDGETEXHAUSTED:
                 if status == StatusType.CAPPED:
                     self.curr_inst_idx = np.inf
                     n_insts_remaining = 0
@@ -383,13 +383,13 @@ class SuccessiveHalving(AbstractRacer):
 
         return incumbent, inc_perf
 
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            incumbent: Configuration,
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True,
-                            ) -> RunInfo:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True,
+                     ) -> RunInfo:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -452,7 +452,7 @@ class SuccessiveHalving(AbstractRacer):
                 except IndexError:
                     # If there are no new challengers, try a new call
                     # so that a new iteration is triggered
-                    return self.get_next_challenger(
+                    return self.get_next_run(
                         challengers=challengers,
                         incumbent=incumbent,
                         chooser=chooser,
@@ -508,7 +508,9 @@ class SuccessiveHalving(AbstractRacer):
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
-        # For debug purposes
+        # For testing purposes, this attribute highlights whether a
+        # new challenger is proposed or not. Not required from a functional
+        # perspective
         self.new_challenger = new_challenger
 
         capped = False

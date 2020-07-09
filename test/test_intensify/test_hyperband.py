@@ -14,7 +14,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
-from smac.optimizer.smbo import SMBO
+from smac.optimizer.smbo import eval_challenger
 
 
 def get_config_space():
@@ -87,7 +87,7 @@ class TestHyperband(unittest.TestCase):
 
     def test_eval_challenger(self):
         """
-            since hyperband uses eval_challenger and get_next_challenger of the internal successive halving,
+            since hyperband uses eval_challenger and get_next_run of the internal successive halving,
             we don't test these method extensively
         """
 
@@ -105,8 +105,8 @@ class TestHyperband(unittest.TestCase):
 
         self.assertFalse(hasattr(intensifier, 's'))
 
-        # Testing get_next_challenger - get next configuration
-        run_info = intensifier.get_next_challenger(
+        # Testing get_next_run - get next configuration
+        run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,
@@ -126,7 +126,7 @@ class TestHyperband(unittest.TestCase):
                     seed=0, budget=0.5)
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
-        run_info = intensifier.get_next_challenger(
+        run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,
@@ -134,7 +134,7 @@ class TestHyperband(unittest.TestCase):
 
         # evaluation should change the incumbent to config2
         if run_info.config and (run_info.instance is not None or run_info.seed is not None):
-            status, cost, dur, res = SMBO.eval_challenger(run_info, taf)  # noqa: F841
+            status, cost, dur, res = eval_challenger(run_info, taf)  # noqa: F841
         else:
             status, cost, dur, res = None, None, None, None  # noqa: F841
         inc, inc_value = intensifier.process_results(
