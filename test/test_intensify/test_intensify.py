@@ -739,9 +739,9 @@ class TestIntensify(unittest.TestCase):
         # intensification iteration #2
         # regular intensification begins - run incumbent first
         run_info = intensifier.get_next_run(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(run_info.config, inc)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -760,9 +760,9 @@ class TestIntensify(unittest.TestCase):
 
         # run challenger now that the incumbent has been executed
         run_info = intensifier.get_next_run(challengers=[self.config1],
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -783,9 +783,9 @@ class TestIntensify(unittest.TestCase):
 
         # run challenger again on the other instance
         run_info = intensifier.get_next_run(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -807,9 +807,9 @@ class TestIntensify(unittest.TestCase):
 
         # run basis configuration (`always_race_against`)
         run_info = intensifier.get_next_run(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_BASIS)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -837,9 +837,9 @@ class TestIntensify(unittest.TestCase):
 
         # intensification continues running incumbent again in same iteration...
         run_info = intensifier.get_next_run(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         status, cost, dur, res = eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
@@ -882,9 +882,9 @@ class TestIntensify(unittest.TestCase):
         # intensification iteration #1
         # run first config as incumbent if incumbent is None
         run_info = intensifier.get_next_run(challengers=[self.config3],
-                                                   incumbent=None,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=None,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         # eval config 2 (=first run)
@@ -973,9 +973,9 @@ class TestIntensify(unittest.TestCase):
 
         # run challenger
         run_info = intensifier.get_next_run(challengers=None,  # don't need a new list here as old one is cont'd
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(run_info.config, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -1026,9 +1026,9 @@ class TestIntensify(unittest.TestCase):
 
         # intensification - incumbent will be run, but not as RUN_FIRST_CONFIG stage
         run_info = intensifier.get_next_run(challengers=[self.config2],
-                                                   incumbent=self.config1,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=self.config1,
+                                            run_history=self.rh,
+                                            chooser=None)
         status, cost, dur, res = eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
@@ -1066,9 +1066,9 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
 
         run_info = intensifier.get_next_run(challengers=[self.config3],
-                                                   incumbent=None,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=None,
+                                            run_history=self.rh,
+                                            chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         status, cost, dur, res = eval_challenger(run_info, taf)
@@ -1115,9 +1115,9 @@ class TestIntensify(unittest.TestCase):
                     instance_id=1, seed=0, additional_info=None)
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
         run_info = intensifier.get_next_run(challengers=[self.config1],
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
 
         # In the above get next challenger, the stage is RUN_CHALLENGER
         # So config1 is tried to be run. Nevertheless, there are no further
@@ -1141,9 +1141,9 @@ class TestIntensify(unittest.TestCase):
         self.assertIsNone(config)
         # This finally gives a runable configuration
         run_info = intensifier.get_next_run(challengers=[self.config2],
-                                                   incumbent=inc,
-                                                   run_history=self.rh,
-                                                   chooser=None)
+                                            incumbent=inc,
+                                            run_history=self.rh,
+                                            chooser=None)
         status, cost, dur, res = eval_challenger(run_info, taf)  # noqa: F841
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
