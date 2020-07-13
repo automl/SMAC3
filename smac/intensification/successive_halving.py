@@ -333,50 +333,48 @@ class SuccessiveHalving(AbstractRacer):
             curr_insts = self.inst_seed_pairs
         n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
 
-        if challenger:
+        # Make sure that there is no Budget exhausted
+        if status != StatusType.BUDGETEXHAUSTED:
+            if status == StatusType.CAPPED:
+                self.curr_inst_idx = np.inf
+                n_insts_remaining = 0
+            else:
+                self._ta_time += runtime
+                self.num_run += 1
+                self.curr_inst_idx += 1
 
-            # Make sure that there is no Budget exhausted
-            if status != StatusType.BUDGETEXHAUSTED:
-                if status == StatusType.CAPPED:
-                    self.curr_inst_idx = np.inf
-                    n_insts_remaining = 0
-                else:
-                    self._ta_time += runtime
-                    self.num_run += 1
-                    self.curr_inst_idx += 1
+            # adding challengers to the list of evaluated challengers
+            #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
+            #  - Advance to next stage: SUCCESS
+            # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
+            # If a configuration is successful, it is added to curr_challengers.
+            # if it fails it is added to fail_challengers.
+            if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
+                self.success_challengers.add(challenger)  # successful configs
+            elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
+                self.do_not_advance_challengers.add(challenger)
+            else:
+                self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
 
-                # adding challengers to the list of evaluated challengers
-                #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
-                #  - Advance to next stage: SUCCESS
-                # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
-                # If a configuration is successful, it is added to curr_challengers.
-                # if it fails it is added to fail_challengers.
-                if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
-                    self.success_challengers.add(challenger)  # successful configs
-                elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
-                    self.do_not_advance_challengers.add(challenger)
-                else:
-                    self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
+            # get incumbent if all instances have been evaluated
+            if n_insts_remaining <= 0:
+                incumbent = self._compare_configs(challenger=challenger,
+                                                  incumbent=incumbent,
+                                                  run_history=run_history,
+                                                  log_traj=log_traj)
+        # if all configurations for the current stage have been evaluated, reset stage
+        num_chal_evaluated = (
+            len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
+            + self.fail_chal_offset
+        )
+        if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
 
-                # get incumbent if all instances have been evaluated
-                if n_insts_remaining <= 0:
-                    incumbent = self._compare_configs(challenger=challenger,
-                                                      incumbent=incumbent,
-                                                      run_history=run_history,
-                                                      log_traj=log_traj)
-            # if all configurations for the current stage have been evaluated, reset stage
-            num_chal_evaluated = (
-                len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
-                + self.fail_chal_offset
-            )
-            if num_chal_evaluated == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
+            self.logger.info('Successive Halving iteration-step: %d-%d with '
+                             'budget [%.2f / %d] - evaluated %d challenger(s)' %
+                             (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
+                              self.n_configs_in_stage[self.stage]))
 
-                self.logger.info('Successive Halving iteration-step: %d-%d with '
-                                 'budget [%.2f / %d] - evaluated %d challenger(s)' %
-                                 (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
-                                  self.n_configs_in_stage[self.stage]))
-
-                self._update_stage(run_history=run_history)
+            self._update_stage(run_history=run_history)
 
         # get incumbent cost
         inc_perf = run_history.get_cost(incumbent)
