@@ -8,7 +8,7 @@ from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory import RunInfo, StatusType  # noqa: F401
+from smac.runhistory.runhistory import RunValue, RunInfo, StatusType  # noqa: F401
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -115,10 +115,8 @@ class Hyperband(SuccessiveHalving):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        elapsed_time: float,
                         time_bound: float,
-                        status: StatusType,
-                        runtime: float,
+                        result: RunValue,
                         log_traj: bool = True,
                         ) -> \
             typing.Tuple[typing.Optional[Configuration], float]:
@@ -137,16 +135,11 @@ class Hyperband(SuccessiveHalving):
         run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
-        elapsed_time:
-            The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        status: typing.Optional[StatusType]
-            The status of the execution of a given config
-            If None, it is assumed that the previous run was not completely
-            executed, for example when there is no more budget
-        runtime:
-            The elapsed time according to the ta runner
+        result: RunValue
+            Contain the result (status and other methadata) of exercising
+            a challenger/incumbent.
         log_traj: bool
             Whether to log changes of incumbents in trajectory
 
@@ -162,10 +155,8 @@ class Hyperband(SuccessiveHalving):
         incumbent, inc_perf = self.sh_intensifier.process_results(challenger=challenger,
                                                                   incumbent=incumbent,
                                                                   run_history=run_history,
-                                                                  elapsed_time=elapsed_time,
                                                                   time_bound=time_bound,
-                                                                  status=status,
-                                                                  runtime=runtime,
+                                                                  result=result,
                                                                   log_traj=log_traj)
         self.num_run += 1
 

@@ -15,8 +15,8 @@ from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae.execute_ta_run import StatusType
+from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 from smac.utils.io.traj_logging import TrajLogger
-from smac.optimizer.smbo import eval_challenger
 
 
 def get_config_space():
@@ -52,6 +52,34 @@ class TestIntensify(unittest.TestCase):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
+    def _eval_challenger(self, run_info, taf):
+        """
+        Wrapper over challenger evaluation
+
+        SMBO objects handles run history now, but to keep
+        same testing functionality this function is a small
+        wrapper to launch the taf and add it to the history
+        """
+        # evaluating configuration
+        self.assertIsNotNone(run_info.config)
+        result = execute_ta_run_wrapper(
+            run_info=run_info,
+            tae_runner=taf,
+        )
+        self.stats.ta_runs += 1
+        self.stats.ta_time_used += float(result.time)
+        self.rh.add(
+            config=run_info.config,
+            cost=result.cost,
+            time=result.time,
+            status=result.status,
+            instance_id=run_info.instance,
+            seed=run_info.seed,
+            budget=run_info.budget,
+        )
+        self.stats.n_configs = len(self.rh.config_ids)
+        return result
+
     def test_race_challenger_1(self):
         """
            Makes sure that a racing configuration with better performance,
@@ -81,26 +109,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config2,
-                instance=instance,
-                instance_specific="0",
-                cutoff=cutoff,
-                seed=seed,
-                capped=False,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config2,
+            instance=instance,
+            instance_specific="0",
+            cutoff=cutoff,
+            seed=seed,
+            capped=False,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config2,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(inc, self.config2)
@@ -137,26 +161,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config2,
-                instance=instance,
-                instance_specific="0",
-                seed=seed,
-                cutoff=cutoff,
-                capped=True,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config2,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=True,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config2,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(inc, self.config1)
@@ -210,15 +230,13 @@ class TestIntensify(unittest.TestCase):
             capped=True,
             budget=0.0,
         )
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=0,
+            result=result,
         )
 
         self.assertEqual(inc, self.config1)
@@ -247,15 +265,13 @@ class TestIntensify(unittest.TestCase):
             capped=False,
             budget=0.0,
         )
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=0,
+            result=result,
         )
 
         # run on instance 2
@@ -278,15 +294,13 @@ class TestIntensify(unittest.TestCase):
             budget=0.0,
         )
 
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=0,
+            result=result,
         )
 
         # the incumbent should still be config1 because
@@ -348,15 +362,13 @@ class TestIntensify(unittest.TestCase):
                 budget=0.0,
             )
 
-            status, cost, dur, res = eval_challenger(run_info, taf)
+            result = self._eval_challenger(run_info, taf)
             inc, perf = intensifier.process_results(
                 challenger=config,
                 incumbent=self.config1,
                 run_history=self.rh,
                 time_bound=np.inf,
-                status=status,
-                runtime=dur,
-                elapsed_time=0,
+                result=result,
             )
 
             # stop when challenger evaluation is over
@@ -420,15 +432,13 @@ class TestIntensify(unittest.TestCase):
                 capped=False,
                 budget=0.0,
             )
-            status, cost, dur, res = eval_challenger(run_info, taf)
+            result = self._eval_challenger(run_info, taf)
             inc, perf = intensifier.process_results(
                 challenger=run_info.config,
                 incumbent=self.config1,
                 run_history=self.rh,
                 time_bound=np.inf,
-                status=status,
-                runtime=dur,
-                elapsed_time=0,
+                result=result,
             )
 
             # stop when challenger evaluation is over
@@ -469,26 +479,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config1,
-                instance=instance,
-                instance_specific="0",
-                seed=seed,
-                cutoff=cutoff,
-                capped=False,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config1,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config1,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(len(self.rh.data), 1, self.rh.data)
 
@@ -514,9 +520,7 @@ class TestIntensify(unittest.TestCase):
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(intensifier.num_run, 0)
         self.assertEqual(intensifier.num_chall_run, 0)
@@ -528,7 +532,7 @@ class TestIntensify(unittest.TestCase):
 
         def target(x):
             return (x['a'] + 1) / 1000.
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, runhistory=self.rh, run_obj="solution_quality")
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
 
         intensifier = Intensifier(
             stats=self.stats,
@@ -541,26 +545,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config1,
-                instance=instance,
-                instance_specific="0",
-                seed=seed,
-                cutoff=cutoff,
-                capped=False,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config1,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config1,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(len(self.rh.data), 1, self.rh.data)
 
@@ -568,26 +568,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config1,
-                instance=instance,
-                instance_specific="0",
-                seed=seed,
-                cutoff=cutoff,
-                capped=False,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config1,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config1,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(len(self.rh.data), 2, self.rh.data)
         runs = self.rh.get_runs_for_config(config=self.config1, only_max_observed_budget=True)
@@ -599,26 +595,22 @@ class TestIntensify(unittest.TestCase):
             incumbent=self.config1,
             run_history=self.rh
         )
-        status, cost, dur, res = eval_challenger(
-            RunInfo(
-                config=self.config1,
-                instance=instance,
-                instance_specific="0",
-                seed=seed,
-                cutoff=cutoff,
-                capped=False,
-                budget=0.0,
-            ),
-            taf
+        run_info = RunInfo(
+            config=self.config1,
+            instance=instance,
+            instance_specific="0",
+            seed=seed,
+            cutoff=cutoff,
+            capped=False,
+            budget=0.0,
         )
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=self.config1,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(len(self.rh.data), 3, self.rh.data)
 
@@ -720,15 +712,13 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(run_info.config, self.config2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         # eval config 2 (=first run)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(inc, self.config2)
@@ -744,15 +734,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(run_info.config, inc)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
@@ -765,15 +753,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         # challenger has a better performance, but not run on all instances yet. so incumbent stays the same
@@ -788,15 +774,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config1)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         # challenger better than incumbent in both instances. so incumbent changed
@@ -812,15 +796,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_BASIS)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         # the basis configuration (config3) not better than incumbent, so can move on
@@ -841,15 +823,13 @@ class TestIntensify(unittest.TestCase):
                                             run_history=self.rh,
                                             chooser=None)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(inc, self.config1)
@@ -888,15 +868,13 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
         # eval config 2 (=first run)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(inc, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
@@ -925,15 +903,13 @@ class TestIntensify(unittest.TestCase):
         # So this call happen above, to save one iteration
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(run_info.config, self.config2)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         # challenger has a better performance, so incumbent has changed
@@ -960,15 +936,13 @@ class TestIntensify(unittest.TestCase):
         # self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
 
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         # run challenger
@@ -978,15 +952,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(run_info.config, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(inc, self.config1)
@@ -1029,15 +1001,13 @@ class TestIntensify(unittest.TestCase):
                                             incumbent=self.config1,
                                             run_history=self.rh,
                                             chooser=None)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
 
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
@@ -1071,15 +1041,13 @@ class TestIntensify(unittest.TestCase):
                                             chooser=None)
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
-        status, cost, dur, res = eval_challenger(run_info, taf)
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         self.assertEqual(inc, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
@@ -1144,15 +1112,13 @@ class TestIntensify(unittest.TestCase):
                                             incumbent=inc,
                                             run_history=self.rh,
                                             chooser=None)
-        status, cost, dur, res = eval_challenger(run_info, taf)  # noqa: F841
+        result = self._eval_challenger(run_info, taf)
         inc, perf = intensifier.process_results(
             challenger=run_info.config,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
-            status=status,
-            runtime=dur,
-            elapsed_time=dur,
+            result=result,
         )
         # 4 Iterations due to the proactive runs
         # of get next challenger

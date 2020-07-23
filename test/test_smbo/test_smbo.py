@@ -78,8 +78,36 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch('smac.optimizer.smbo.eval_challenger')
+    @mock.patch('smac.optimizer.smbo.SMBO._incorporate_run_results')
     def test_abort_on_initial_design(self, patch):
+        def target(x):
+            return 5
+
+        # should raise an error if abort_on_first_run_crash is True
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': True})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(FirstRunCrashedException, smbo.run)
+
+        # should not raise an error if abort_on_first_run_crash is False
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': False, 'wallclock-limit': 1})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+
+        try:
+            smbo.start()
+            smbo.run()
+        except FirstRunCrashedException:
+            self.fail('Raises FirstRunCrashedException unexpectedly!')
+
+    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    def test_abort_on_runner(self, patch):
         def target(x):
             return 5
 

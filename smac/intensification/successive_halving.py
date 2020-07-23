@@ -8,7 +8,7 @@ from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, RunInfo
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.tae.execute_ta_run import StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
@@ -273,10 +273,8 @@ class SuccessiveHalving(AbstractRacer):
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        elapsed_time: float,
                         time_bound: float,
-                        status: StatusType,
-                        runtime: float,
+                        result: RunValue,
                         log_traj: bool = True,
                         ) -> \
             typing.Tuple[typing.Optional[Configuration], float]:
@@ -295,16 +293,11 @@ class SuccessiveHalving(AbstractRacer):
         run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
-        elapsed_time:
-            The tracked time of a configuration execution
         time_bound : float, optional (default=2 ** 31 - 1)
             time in [sec] available to perform intensify
-        status: typing.Optional[StatusType]
-            The status of the execution of a given config
-            If None, it is assumed that the previous run was not completely
-            executed, for example when there is no more budget
-        runtime:
-            The elapsed time according to the ta runner
+        result: RunValue
+            Contain the result (status and other methadata) of exercising
+            a challenger/incumbent.
         log_traj: bool
             Whether to log changes of incumbents in trajectory
 
@@ -334,12 +327,12 @@ class SuccessiveHalving(AbstractRacer):
         n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
 
         # Make sure that there is no Budget exhausted
-        if status != StatusType.BUDGETEXHAUSTED:
-            if status == StatusType.CAPPED:
+        if result.status != StatusType.BUDGETEXHAUSTED:
+            if result.status == StatusType.CAPPED:
                 self.curr_inst_idx = np.inf
                 n_insts_remaining = 0
             else:
-                self._ta_time += runtime
+                self._ta_time += result.time
                 self.num_run += 1
                 self.curr_inst_idx += 1
 
@@ -349,9 +342,9 @@ class SuccessiveHalving(AbstractRacer):
             # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
             # If a configuration is successful, it is added to curr_challengers.
             # if it fails it is added to fail_challengers.
-            if np.isfinite(self.curr_inst_idx) and status == StatusType.SUCCESS:
+            if np.isfinite(self.curr_inst_idx) and result.status == StatusType.SUCCESS:
                 self.success_challengers.add(challenger)  # successful configs
-            elif np.isfinite(self.curr_inst_idx) and status == StatusType.DONOTADVANCE:
+            elif np.isfinite(self.curr_inst_idx) and result.status == StatusType.DONOTADVANCE:
                 self.do_not_advance_challengers.add(challenger)
             else:
                 self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs

@@ -349,7 +349,6 @@ class SMAC4AC(object):
         tae_def_kwargs = {
             'stats': self.stats,
             'run_obj': scenario.run_obj,
-            'runhistory': runhistory,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821

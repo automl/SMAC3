@@ -13,7 +13,7 @@ from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
 from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.runhistory.runhistory import RunHistory, RunInfo
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -22,89 +22,15 @@ from smac.tae.execute_ta_run import (
     FirstRunCrashedException,
     StatusType,
     ExecuteTARun,
-    CappedRunException,
-    BudgetExhaustedException
 )
+from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
-
-from logging import Logger
 
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-
-
-def eval_challenger(
-    run_info: RunInfo,
-    tae_runner: ExecuteTARun,
-    time_bound: float = float(MAXINT),
-    logger: typing.Optional[Logger] = None,
-) -> typing.Tuple[StatusType, typing.Optional[float], float, typing.Dict]:
-    """Runs a configuration with the provided input.
-    *Side effect:* adds runs to run_history
-
-    Parameters
-    ----------
-    run_info: RunInfo
-        An object that specifies the inputs to a tae runner
-    tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
-        target algorithm run executor
-    time_bound: float, optional (default=2 ** 31 - 1)
-        time in [sec] available to perform intensify
-
-    Returns
-    -------
-    status: typing.Optional[StatusType]
-        The status of the execution of a given config
-        If None, it is assumed that the previous run was not completely
-        executed, for example when there is no more budget
-    cost: typing.Optional[float]
-        cost/regret/quality (typing.Any)
-    duration: float
-        runtime (None if not returned by TA)
-    res: typing.Dict
-        additional info
-    """
-
-    if run_info.config is None:
-        raise ValueError("Call to eval configurations without any valid config")
-
-    try:
-
-        status, cost, dur, res = tae_runner.start(
-            config=run_info.config,
-            instance=run_info.instance,
-            seed=run_info.seed,
-            cutoff=run_info.cutoff,
-            budget=run_info.budget,
-            instance_specific=run_info.instance_specific,
-            capped=run_info.capped
-        )
-
-    except CappedRunException:
-        if logger:
-            logger.debug(
-                "Challenger itensification timed out due "
-                "to adaptive capping."
-            )
-        status, cost, dur, res = StatusType.CAPPED, float(MAXINT), run_info.cutoff, {}
-
-    except BudgetExhaustedException:
-        # SMBO stops due to its own budget checks
-        if logger:
-            logger.debug("Budget exhausted; Return incumbent")
-
-        # In case there is a budget exhausted, return par_factor time.
-        # Cutoff can be None, and in such case not par factor can be taken
-        if run_info.cutoff is not None:
-            ehausted_dur = run_info.cutoff * tae_runner.par_factor
-        else:
-            ehausted_dur = run_info.cutoff
-        status, cost, dur, res = StatusType.BUDGETEXHAUSTED, ehausted_dur, 0.0, {}
-
-    return status, cost, dur, res
 
 
 class SMBO(object):
@@ -297,20 +223,29 @@ class SMBO(object):
             # Get next run returns always an available challenger, if any
             # In the case no more challengers are available, a None configuration
             # is returned
-            elapsed_time, runtime = float(MAXINT), float(MAXINT)
-            status = StatusType.CRASHED
             if run_info.config:
-
                 try:
-
-                    start_time = time.time()
-                    status, cost, runtime, res = eval_challenger(
+                    result = execute_ta_run_wrapper(
                         run_info=run_info,
-                        time_bound=max(self._min_time, time_left),
                         tae_runner=self.tae_runner,
                         logger=self.logger,
                     )
-                    elapsed_time = time.time() - start_time
+
+                    # Mimic adding this run as Running
+                    # When launched in a distributed fashion, the run history
+                    # will have this item as running. The self._incorporate_run_results
+                    # will update this status accordingly
+                    if self.runhistory:
+                        self.runhistory.add(
+                            config=run_info.config,
+                            cost=float(MAXINT),
+                            time=0.0,
+                            status=StatusType.RUNNING,
+                            instance_id=run_info.instance,
+                            seed=run_info.seed,
+                            budget=run_info.budget,
+                        )
+                    self._incorporate_run_results(run_info, result)
 
                     # Process the results from the run
                     # Has to be executed regardless the config to run is None,
@@ -319,12 +254,9 @@ class SMBO(object):
                         challenger=run_info.config,
                         incumbent=self.incumbent,
                         run_history=self.runhistory,
-                        elapsed_time=elapsed_time,
                         time_bound=max(self._min_time, time_left),
-                        status=status,
-                        runtime=runtime,
+                        result=result,
                     )
-
                 except FirstRunCrashedException:
                     if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
                         raise
@@ -341,6 +273,7 @@ class SMBO(object):
                 self.stats.get_remaining_ta_runs()))
 
             if self.stats.is_budget_exhausted():
+                self.logger.warn("Exhausted configuration budget")
                 break
 
             # print stats at the end of each intensification iteration
@@ -438,3 +371,60 @@ class SMBO(object):
                           "intensification: %.4f (%.2f)" %
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
+
+    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue) -> None:
+        """
+        The SMBO submit a config run request via a RunInfo object.
+        When that config run is completed, a RunValue, which contains
+        all the relevant information for a job, is returned.
+        This method incorporates the status of the run into
+        the stats/runhistory objects so that other consumers
+        can advance with their task.
+
+        Parameters
+        ----------
+        run_info: RunInfo
+            Describes the run (config) from which to process the results
+        result: RunValue
+            Contains relevant information regarding the execution of a config
+        """
+
+        # Change the status from RUNNING to budget exhausted,
+        # for tracking purposes. As there is no more budget, the
+        # SMBO optimize will finish
+        if result.status == StatusType.BUDGETEXHAUSTED:
+            return
+
+        # update SMAC stats
+        self.stats.ta_runs += 1
+        self.stats.ta_time_used += float(result.time)
+
+        self.logger.debug(
+            "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
+                result.status, result.cost, result.time, str(result.additional_info)
+            )
+        )
+
+        if self.runhistory:
+            self.runhistory.add(
+                config=run_info.config,
+                cost=result.cost,
+                time=result.time,
+                status=result.status,
+                instance_id=run_info.instance,
+                seed=run_info.seed,
+                budget=run_info.budget,
+                force_update=True
+            )
+            self.stats.n_configs = len(self.runhistory.config_ids)
+
+        if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
+            if self.stats.ta_runs == 1 and result.status == StatusType.CRASHED:
+                raise FirstRunCrashedException("First run crashed, abort. "
+                                               "Please check your setup -- "
+                                               "we assume that your default"
+                                               "configuration does not crashes. "
+                                               "(To deactivate this exception,"
+                                               " use the SMAC scenario option "
+                                               "'abort_on_first_run_crash')")
+        return

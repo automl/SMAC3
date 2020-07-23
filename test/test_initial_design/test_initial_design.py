@@ -28,7 +28,7 @@ class TestSingleInitialDesign(unittest.TestCase):
         })
         self.stats = Stats(scenario=self.scenario)
         self.rh = RunHistory()
-        self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2, stats=self.stats, runhistory=self.rh)
+        self.ta = ExecuteTAFuncDict(lambda x: x["x1"]**2, stats=self.stats)
 
     def test_single_default_config_design(self):
         self.stats.start_timing()
