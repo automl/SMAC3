@@ -14,8 +14,7 @@ import numpy as np
 
 from smac.configspace import ConfigurationSpace
 from smac.tae.execute_ta_run import ExecuteTARun, StatusType
-from smac.tae.execute_ta_run import BudgetExhaustedException, TAEAbortException
-from smac.tae.execute_ta_run import FirstRunCrashedException
+from smac.tae.execute_ta_run import TAEAbortException
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
@@ -59,7 +58,6 @@ class TaeTest(unittest.TestCase):
         ))
         self.assertEqual(result.status, StatusType.BUDGETEXHAUSTED)
 
-
     @mock.patch.object(ExecuteTARun, 'run')
     def test_start_tae_return_abort(self, test_run):
         '''
@@ -81,9 +79,10 @@ class TaeTest(unittest.TestCase):
         eta = ExecuteTARun(ta=lambda *args: None, stats=stats)
 
         with self.assertRaises(TAEAbortException):
-            execute_ta_run_wrapper(eta, RunInfo(
-                config=None, instance=1, instance_specific=None,
-                cutoff=30, seed=None, capped=False, budget=0.0
+            execute_ta_run_wrapper(
+                eta, RunInfo(
+                    config=None, instance=1, instance_specific=None,
+                    cutoff=30, seed=None, capped=False, budget=0.0
                 )
             )
 
