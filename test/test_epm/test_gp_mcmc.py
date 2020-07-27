@@ -87,6 +87,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(10, rs)
         np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
         model.train(X[:10], Y[:10])
+        self.assertEqual(len(model.models), 36)
 
         for base_model in model.models:
             theta = base_model.gp.kernel.theta
@@ -185,7 +186,7 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(X.shape[1], rs, noise=1e-10, normalize_y=True)
         cv = sklearn.model_selection.KFold(shuffle=True, random_state=rs, n_splits=2)
 
-        maes = [7.8774231707672667164, 8.645038495119097796]
+        maes = [6.841565457149357281, 7.4943401900804902144]
 
         for i, (train_split, test_split) in enumerate(cv.split(X, y)):
             X_train = X[train_split]

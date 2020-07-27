@@ -184,7 +184,7 @@ class GaussianProcessMCMC(BaseModel):
                     self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
 
                 # Take the last samples from each walker
-                self.hypers = sampler.get_chain()[:, -1]
+                self.hypers = sampler.get_chain()[-1]
             elif self.mcmc_sampler == 'nuts':
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
