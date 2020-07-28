@@ -104,7 +104,7 @@ class SMAC4BO(SMAC4AC):
                     operate_on=cat_dims,
                 )
 
-            assert len(cont_dims + len(cat_dims)) == len(scenario.cs.get_hyperparameters())
+            assert (len(cont_dims) + len(cat_dims)) == len(scenario.cs.get_hyperparameters())
 
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
