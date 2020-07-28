@@ -468,7 +468,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain_length</span><span class="p">)</span>
 
                 <span class="c1"># Take the last samples from each walker</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">get_chain</span><span class="p">()[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">hypers</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">get_chain</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcmc_sampler</span> <span class="o">==</span> <span class="s1">&#39;nuts&#39;</span><span class="p">:</span>
                 <span class="c1"># Originally published as:</span>
                 <span class="c1"># http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf</span>
