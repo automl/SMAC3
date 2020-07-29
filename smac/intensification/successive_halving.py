@@ -3,7 +3,7 @@ import typing
 
 import numpy as np
 
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.abstract_racer import AbstractRacer, IntensifierBehest
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -327,34 +327,33 @@ class SuccessiveHalving(AbstractRacer):
         n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
 
         # Make sure that there is no Budget exhausted
-        if result.status != StatusType.BUDGETEXHAUSTED:
-            if result.status == StatusType.CAPPED:
-                self.curr_inst_idx = np.inf
-                n_insts_remaining = 0
-            else:
-                self._ta_time += result.time
-                self.num_run += 1
-                self.curr_inst_idx += 1
+        if result.status == StatusType.CAPPED:
+            self.curr_inst_idx = np.inf
+            n_insts_remaining = 0
+        else:
+            self._ta_time += result.time
+            self.num_run += 1
+            self.curr_inst_idx += 1
 
-            # adding challengers to the list of evaluated challengers
-            #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
-            #  - Advance to next stage: SUCCESS
-            # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
-            # If a configuration is successful, it is added to curr_challengers.
-            # if it fails it is added to fail_challengers.
-            if np.isfinite(self.curr_inst_idx) and result.status == StatusType.SUCCESS:
-                self.success_challengers.add(challenger)  # successful configs
-            elif np.isfinite(self.curr_inst_idx) and result.status == StatusType.DONOTADVANCE:
-                self.do_not_advance_challengers.add(challenger)
-            else:
-                self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
+        # adding challengers to the list of evaluated challengers
+        #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
+        #  - Advance to next stage: SUCCESS
+        # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
+        # If a configuration is successful, it is added to curr_challengers.
+        # if it fails it is added to fail_challengers.
+        if np.isfinite(self.curr_inst_idx) and result.status == StatusType.SUCCESS:
+            self.success_challengers.add(challenger)  # successful configs
+        elif np.isfinite(self.curr_inst_idx) and result.status == StatusType.DONOTADVANCE:
+            self.do_not_advance_challengers.add(challenger)
+        else:
+            self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
 
-            # get incumbent if all instances have been evaluated
-            if n_insts_remaining <= 0:
-                incumbent = self._compare_configs(challenger=challenger,
-                                                  incumbent=incumbent,
-                                                  run_history=run_history,
-                                                  log_traj=log_traj)
+        # get incumbent if all instances have been evaluated
+        if n_insts_remaining <= 0:
+            incumbent = self._compare_configs(challenger=challenger,
+                                              incumbent=incumbent,
+                                              run_history=run_history,
+                                              log_traj=log_traj)
         # if all configurations for the current stage have been evaluated, reset stage
         num_chal_evaluated = (
             len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
@@ -380,7 +379,7 @@ class SuccessiveHalving(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
-                     ) -> RunInfo:
+                     ) -> typing.Tuple[IntensifierBehest, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -404,6 +403,8 @@ class SuccessiveHalving(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
+        behest: IntensifierBehest
+               Indicator of how to consume the RunInfo object
          """
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
@@ -508,7 +509,7 @@ class SuccessiveHalving(AbstractRacer):
         if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
             capped = True
 
-        return RunInfo(
+        return IntensifierBehest.RUN, RunInfo(
             config=challenger,
             instance=instance,
             instance_specific=self.instance_specifics.get(instance, "0"),

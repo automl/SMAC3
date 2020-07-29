@@ -7,7 +7,7 @@ import typing
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.abstract_racer import AbstractRacer, IntensifierBehest
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
@@ -198,13 +198,18 @@ class SMBO(object):
 
             # sample next configuration for intensification
             # Initial design runs are also included in the BO loop now.
-            run_info = self.intensifier.get_next_run(
+            behest, run_info = self.intensifier.get_next_run(
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
                 chooser=self.epm_chooser,
                 run_history=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
             )
+
+            # Check if no more configs,
+            if behest == IntensifierBehest.TERMINATE:
+                self.logger.warn("No more valid configurations to try during intensification")
+                break
 
             # remove config from initial design challengers to not repeat it again
             self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
@@ -220,43 +225,46 @@ class SMBO(object):
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
                 self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
-            # Get next run returns always an available challenger, if any
-            # In the case no more challengers are available, a None configuration
-            # is returned
-            if run_info.config:
+            # Skip the run if there was a request to do so.
+            # For example, during intensifier intensification, we
+            # don't want to rerun a config that was previously ran
+            if behest != IntensifierBehest.SKIP:
                 try:
+
+                    # Track the fact that a run was launched in the run
+                    # history
+                    self.runhistory.add(
+                        config=run_info.config,
+                        cost=float(MAXINT),
+                        time=0.0,
+                        status=StatusType.RUNNING,
+                        instance_id=run_info.instance,
+                        seed=run_info.seed,
+                        budget=run_info.budget,
+                    )
+
                     result = execute_ta_run_wrapper(
                         run_info=run_info,
                         tae_runner=self.tae_runner,
                         logger=self.logger,
                     )
 
-                    # Mimic adding this run as Running
-                    # When launched in a distributed fashion, the run history
-                    # will have this item as running. The self._incorporate_run_results
-                    # will update this status accordingly
-                    if self.runhistory:
-                        self.runhistory.add(
-                            config=run_info.config,
-                            cost=float(MAXINT),
-                            time=0.0,
-                            status=StatusType.RUNNING,
-                            instance_id=run_info.instance,
-                            seed=run_info.seed,
-                            budget=run_info.budget,
-                        )
-                    self._incorporate_run_results(run_info, result)
+                    if result.status != StatusType.BUDGETEXHAUSTED:
 
-                    # Process the results from the run
-                    # Has to be executed regardless the config to run is None,
-                    # as the control logic has to prepare for the next iteration
-                    self.incumbent, inc_perf = self.intensifier.process_results(
-                        challenger=run_info.config,
-                        incumbent=self.incumbent,
-                        run_history=self.runhistory,
-                        time_bound=max(self._min_time, time_left),
-                        result=result,
-                    )
+                        # Add the results of the run to the run history
+                        self._incorporate_run_results(run_info, result)
+
+
+                        # Update the intensifier with the result of the runs
+                        # Has to be executed regardless the config to run is None,
+                        # as the control logic has to prepare for the next iteration
+                        self.incumbent, inc_perf = self.intensifier.process_results(
+                            challenger=run_info.config,
+                            incumbent=self.incumbent,
+                            run_history=self.runhistory,
+                            time_bound=max(self._min_time, time_left),
+                            result=result,
+                        )
                 except FirstRunCrashedException:
                     if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
                         raise
@@ -389,12 +397,6 @@ class SMBO(object):
             Contains relevant information regarding the execution of a config
         """
 
-        # Change the status from RUNNING to budget exhausted,
-        # for tracking purposes. As there is no more budget, the
-        # SMBO optimize will finish
-        if result.status == StatusType.BUDGETEXHAUSTED:
-            return
-
         # update SMAC stats
         self.stats.ta_runs += 1
         self.stats.ta_time_used += float(result.time)
@@ -405,18 +407,17 @@ class SMBO(object):
             )
         )
 
-        if self.runhistory:
-            self.runhistory.add(
-                config=run_info.config,
-                cost=result.cost,
-                time=result.time,
-                status=result.status,
-                instance_id=run_info.instance,
-                seed=run_info.seed,
-                budget=run_info.budget,
-                force_update=True
-            )
-            self.stats.n_configs = len(self.runhistory.config_ids)
+        self.runhistory.add(
+            config=run_info.config,
+            cost=result.cost,
+            time=result.time,
+            status=result.status,
+            instance_id=run_info.instance,
+            seed=run_info.seed,
+            budget=run_info.budget,
+            force_update=True
+        )
+        self.stats.n_configs = len(self.runhistory.config_ids)
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
             if self.stats.ta_runs == 1 and result.status == StatusType.CRASHED:

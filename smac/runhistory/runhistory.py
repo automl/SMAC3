@@ -255,7 +255,7 @@ class RunHistory(object):
         # Capped data is added above
         # Do not register the cost until the run has completed
         if origin in (DataOrigin.INTERNAL, DataOrigin.EXTERNAL_SAME_INSTANCES) \
-                and (status != StatusType.CAPPED and status != StatusType.RUNNING):
+                and status not in [StatusType.CAPPED, StatusType.RUNNING]:
             # also add to fast data structure
             is_k = InstSeedKey(k.instance_id, k.seed)
             self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})

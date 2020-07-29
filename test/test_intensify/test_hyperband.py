@@ -12,9 +12,10 @@ from smac.intensification.hyperband import Hyperband
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.execute_ta_run import StatusType
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
+
+from .test_eval_utils import eval_challenger
 
 
 def get_config_space():
@@ -49,34 +50,6 @@ class TestHyperband(unittest.TestCase):
         self.stats.start_timing()
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
-    def _eval_challenger(self, run_info, taf):
-        """
-        Wrapper over challenger evaluation
-
-        SMBO objects handles run history now, but to keep
-        same testing functionality this function is a small
-        wrapper to launch the taf and add it to the history
-        """
-        # evaluating configuration
-        self.assertIsNotNone(run_info.config)
-        result = execute_ta_run_wrapper(
-            run_info=run_info,
-            tae_runner=taf,
-        )
-        self.stats.ta_runs += 1
-        self.stats.ta_time_used += float(result.time)
-        self.rh.add(
-            config=run_info.config,
-            cost=result.cost,
-            time=result.time,
-            status=result.status,
-            instance_id=run_info.instance,
-            seed=run_info.seed,
-            budget=run_info.budget,
-        )
-        self.stats.n_configs = len(self.rh.config_ids)
-        return result
 
     def test_update_stage(self):
         """
@@ -134,7 +107,7 @@ class TestHyperband(unittest.TestCase):
         self.assertFalse(hasattr(intensifier, 's'))
 
         # Testing get_next_run - get next configuration
-        run_info = intensifier.get_next_run(
+        behest, run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,
@@ -154,7 +127,7 @@ class TestHyperband(unittest.TestCase):
                     seed=0, budget=0.5)
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
-        run_info = intensifier.get_next_run(
+        behest, run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,
@@ -162,7 +135,7 @@ class TestHyperband(unittest.TestCase):
 
         # evaluation should change the incumbent to config2
         self.assertIsNotNone(run_info.config)
-        result = self._eval_challenger(run_info, taf)
+        result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
             challenger=run_info.config,
             incumbent=self.config1,

@@ -2,6 +2,7 @@ import logging
 import typing
 import time
 from collections import OrderedDict
+from enum import Enum
 
 import numpy as np
 
@@ -18,6 +19,19 @@ _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
+
+
+class IntensifierBehest(Enum):
+    """Class to define different request on how to process
+    the runinfo
+
+    Gives the flexibility to indicate whether no more configs
+    are available (TERMINATE in this case), no need to rerun
+    previous configurations (SKIP) or we simple should run
+    """
+    RUN = 0  # Normal run execution of a run info
+    SKIP = 1  # Skip running the run info
+    TERMINATE = 2  # No more configurations to try
 
 
 class AbstractRacer(object):
@@ -115,7 +129,8 @@ class AbstractRacer(object):
                      incumbent: Configuration,
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
-                     repeat_configs: bool = True) -> RunInfo:
+                     repeat_configs: bool = True
+                     ) -> typing.Tuple[IntensifierBehest, RunInfo]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
@@ -139,6 +154,8 @@ class AbstractRacer(object):
         -------
         run_info: RunInfo
             An object that encapsulates necessary information for a config run
+        behest: IntensifierBehest
+            Indicator of how to consume the RunInfo object
         """
         raise NotImplementedError()
 

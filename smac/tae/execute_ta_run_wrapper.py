@@ -106,31 +106,6 @@ def execute_ta_run_wrapper(
         # run. However, mypy assumes that the data type of cutoff is still Optional[int]
         assert cutoff is not None
         if runtime > tae_runner.par_factor * cutoff:
-            if logger:
-                logger.warning("Returned running time is larger "
-                               "than {0} times the passed cutoff time. "
-                               "Clamping to {0} x cutoff.".format(tae_runner.par_factor))
-            runtime = cutoff * tae_runner.par_factor
-            status = StatusType.TIMEOUT
-        if status == StatusType.SUCCESS:
-            cost = runtime
-        else:
-            cost = cutoff * tae_runner.par_factor
-        if status == StatusType.TIMEOUT and run_info.capped:
-            status = StatusType.CAPPED
-            # In case of a capped run, we expect the
-            # status to be:
-            # status, cost, dur, res = StatusType.CAPPED, float(MAXINT), run_info.cutoff, {}
-            # This is set by the TA callable
-    else:
-        if status == StatusType.CRASHED:
-            cost = tae_runner.cost_for_crash
-
-    if tae_runner.run_obj == "runtime":
-        # The following line pleases mypy - we already check for cutoff not being none above,    prior to calling
-        # run. However, mypy assumes that the data type of cutoff is still Optional[int]
-        assert cutoff is not None
-        if runtime > tae_runner.par_factor * cutoff:
             tae_runner.logger.warning(
                 "Returned running time is larger "
                 "than {0} times the passed cutoff time. "

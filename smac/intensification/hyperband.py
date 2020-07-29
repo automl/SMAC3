@@ -3,6 +3,7 @@ import typing
 
 import numpy as np
 
+from smac.intensification.abstract_racer import IntensifierBehest
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
@@ -171,7 +172,7 @@ class Hyperband(SuccessiveHalving):
                      incumbent: Configuration,
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
-                     repeat_configs: bool = True) -> RunInfo:
+                     repeat_configs: bool = True) -> typing.Tuple[IntensifierBehest, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -196,6 +197,8 @@ class Hyperband(SuccessiveHalving):
         -------
         run_info: RunInfo
                An object that encapsulates necessary information for a config run
+        behest: IntensifierBehest
+               Indicator of how to consume the RunInfo object
         """
 
         if not hasattr(self, 's'):
@@ -205,7 +208,7 @@ class Hyperband(SuccessiveHalving):
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        run_info = self.sh_intensifier.get_next_run(
+        behest, run_info = self.sh_intensifier.get_next_run(
             challengers=challengers,
             incumbent=incumbent,
             chooser=chooser,
@@ -218,7 +221,7 @@ class Hyperband(SuccessiveHalving):
         # perspective
         self.new_challenger = self.sh_intensifier.new_challenger
 
-        return run_info
+        return behest, run_info
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
         """

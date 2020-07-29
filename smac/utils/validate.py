@@ -28,7 +28,7 @@ __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
 def _unbound_tae_starter(
-    tae: ExecuteTARun, runhistory: RunHistory, run_info: RunInfo,
+    tae: ExecuteTARun, runhistory: typing.Optional[RunHistory], run_info: RunInfo,
     *args: typing.Any, **kwargs: typing.Any
 ) -> RunValue:
     """
@@ -153,7 +153,7 @@ class Validator(object):
                  repetitions: int = 1,
                  n_jobs: int = 1,
                  backend: str = 'threading',
-                 runhistory: RunHistory = None,
+                 runhistory: typing.Optional[RunHistory] = None,
                  tae: ExecuteTARun = None,
                  output_fn: typing.Optional[str] = None,
                  ) -> RunHistory:
@@ -245,7 +245,7 @@ class Validator(object):
         runs: typing.List[_Run],
         n_jobs: int,
         backend: str,
-        runhistory: RunHistory = None,
+        runhistory: typing.Optional[RunHistory] = None,
     ) -> typing.List[RunValue]:
         """
         Validate runs with joblibs Parallel-interface
