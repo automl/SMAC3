@@ -1,3 +1,14 @@
+# 0.12.3
+
+## Minor Changes
+
+* Use Scipy's Sobol sequence for the initial design instead of a 3rd-party package (#600)
+* Store start and end time of function evaluation (#647)
+
+## Bug Fixes
+
+* Fixes two issues in the Bayesian optimization facade (#666)
+
 # 0.12.2
 
 ## Bug Fixes
