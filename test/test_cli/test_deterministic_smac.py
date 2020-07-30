@@ -77,6 +77,8 @@ class TestDeterministicSMAC(unittest.TestCase):
         h2 = json.load(open(self.output_dir_2 + '/run_1/runhistory.json'))
         h3 = json.load(open(self.output_dir_3 + '/run_2/runhistory.json'))
         self.assertEqual(self.ignore_timestamps(h1), self.ignore_timestamps(h2))
+        # As h1 is changed inplace in the line above we need to reload it
+        h1 = json.load(open(self.output_dir_1 + '/run_1/runhistory.json'))
         self.assertNotEqual(self.ignore_timestamps(h1), self.ignore_timestamps(h3))
 
     def test_modes(self):

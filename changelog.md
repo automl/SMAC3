@@ -9,7 +9,7 @@
 
 * Fixes an issue in the Bayesian optimization facade which triggered an exception when tuning categorical 
   hyperparameters (#666)
-* Fixes an issue in the Gaussia process MCMC which resulted in reduced execution speed and reduced performance (#666)
+* Fixes an issue in the Gaussian process MCMC which resulted in reduced execution speed and reduced performance (#666)
 
 # 0.12.2
 
