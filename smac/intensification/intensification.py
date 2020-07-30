@@ -459,7 +459,7 @@ class Intensifier(AbstractRacer):
                         result: RunValue,
                         log_traj: bool = True,
                         ) -> \
-            typing.Tuple[typing.Optional[Configuration], float]:
+            typing.Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.

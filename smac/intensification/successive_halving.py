@@ -277,7 +277,7 @@ class SuccessiveHalving(AbstractRacer):
                         result: RunValue,
                         log_traj: bool = True,
                         ) -> \
-            typing.Tuple[typing.Optional[Configuration], float]:
+            typing.Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.
@@ -442,14 +442,20 @@ class SuccessiveHalving(AbstractRacer):
                     challenger = self.configs_to_run.pop(0)
                     new_challenger = False
                 except IndexError:
-                    # If there are no new challengers, try a new call
-                    # so that a new iteration is triggered
-                    return self.get_next_run(
-                        challengers=challengers,
-                        incumbent=incumbent,
-                        chooser=chooser,
-                        run_history=run_history,
-                        repeat_configs=repeat_configs,
+                    # self.configs_to_run is populated via update_stage,
+                    # which is triggered after the completion of a run
+                    # If by there are no more configs to run (which is the case
+                    # if we run into a IndexError),
+                    # then no new run will trigger update_stage,
+                    # so issue a terminate
+                    return IntensifierBehest.TERMINATE, RunInfo(
+                        config=None,
+                        instance=None,
+                        instance_specific="0",
+                        seed=0,
+                        cutoff=self.cutoff,
+                        capped=False,
+                        budget=0.0,
                     )
 
             if challenger:
