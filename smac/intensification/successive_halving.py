@@ -3,7 +3,7 @@ import typing
 
 import numpy as np
 
-from smac.intensification.abstract_racer import AbstractRacer, IntensifierBehest
+from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -288,12 +288,12 @@ class SuccessiveHalving(AbstractRacer):
         challenger : Configuration
             A configuration that was previously executed, and whose status
             will be used to define the next stage.
-        incumbent : Configuration
+        incumbent : typing.Optional[Configuration]
             Best configuration seen so far
-        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+        run_history : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
-        time_bound : float, optional (default=2 ** 31 - 1)
+        time_bound : float
             time in [sec] available to perform intensify
         result: RunValue
             Contain the result (status and other methadata) of exercising
@@ -379,7 +379,7 @@ class SuccessiveHalving(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
-                     ) -> typing.Tuple[IntensifierBehest, RunInfo]:
+                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -403,7 +403,7 @@ class SuccessiveHalving(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
-        behest: IntensifierBehest
+        intent: RunInfoIntent
                Indicator of how to consume the RunInfo object
          """
         # if this is the first run, then initialize tracking variables
@@ -448,7 +448,7 @@ class SuccessiveHalving(AbstractRacer):
                     # if we run into a IndexError),
                     # then no new run will trigger update_stage,
                     # so issue a terminate
-                    return IntensifierBehest.TERMINATE, RunInfo(
+                    return RunInfoIntent.STOP_ITERATION, RunInfo(
                         config=None,
                         instance=None,
                         instance_specific="0",
@@ -515,7 +515,7 @@ class SuccessiveHalving(AbstractRacer):
         if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
             capped = True
 
-        return IntensifierBehest.RUN, RunInfo(
+        return RunInfoIntent.RUN, RunInfo(
             config=challenger,
             instance=instance,
             instance_specific=self.instance_specifics.get(instance, "0"),

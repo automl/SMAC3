@@ -269,7 +269,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             cutoff=1, instances=[1, 2], initial_budget=1, max_budget=2, eta=2)
 
         # next challenger from a list
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             chooser=None,
             run_history=self.rh,
@@ -279,7 +279,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertTrue(intensifier.new_challenger)
 
         # until evaluated, does not pick new challenger
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             run_history=self.rh,
@@ -300,7 +300,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             result=result,
             log_traj=False,
         )
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=inc,
@@ -324,7 +324,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.configs_to_run = [self.config1]
 
         # next challenger should come from configs to run
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,
             chooser=None,
             run_history=self.rh,
@@ -454,7 +454,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         intensifier.success_challengers = {self.config2, self.config3}
         intensifier._update_stage(run_history=self.rh)
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             chooser=None,
             incumbent=self.config1,
@@ -495,7 +495,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[1, 2], initial_budget=1, max_budget=2, eta=2, instance_order=None)
 
         # config1 should be executed successfully and selected as incumbent
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             chooser=None,
             incumbent=None,
@@ -515,7 +515,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # config2 should be capped and config1 should still be the incumbent
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=inc,
@@ -535,7 +535,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
 
         # config1 is selected for the next stage and allowed to timeout since this is the 1st run for this instance
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[],
             chooser=None,
             incumbent=inc,
@@ -582,7 +582,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                         additional_info=None)
 
         # provide configurations
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=self.config1,
@@ -602,7 +602,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(intensifier.success_challengers), 0)
 
         # provide configurations
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config3],
             chooser=None,
             incumbent=self.config1,
@@ -630,7 +630,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # should raise an error as this is a new iteration but no configs were provided
         with self.assertRaisesRegex(ValueError, 'No configurations/chooser provided.'):
-            behest, run_info = intensifier.get_next_run(
+            intent, run_info = intensifier.get_next_run(
                 challengers=None,
                 chooser=None,
                 incumbent=self.config1,
@@ -656,7 +656,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             instances=[1, 2], n_seeds=2, initial_budget=1, max_budget=4, eta=2, instance_order=None)
 
         # first configuration run
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config4],
             chooser=None,
             incumbent=None,
@@ -674,7 +674,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # remaining 3 runs should be capped
         for i in [self.config1, self.config2, self.config3]:
-            behest, run_info = intensifier.get_next_run(
+            intent, run_info = intensifier.get_next_run(
                 challengers=[i],
                 chooser=None,
                 incumbent=inc,
@@ -698,7 +698,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # run next stage - should run only 1 configuration since other 3 were capped
         # 1 runs for config1
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[],
             chooser=None,
             incumbent=inc,
@@ -718,7 +718,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         # run next stage with only config1
         # should go to next iteration since no more configurations left
         for _ in range(2):
-            behest, run_info = intensifier.get_next_run(
+            intent, run_info = intensifier.get_next_run(
                 challengers=[],
                 chooser=None,
                 incumbent=inc,
@@ -769,7 +769,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             chooser=None,
             incumbent=None,
@@ -789,7 +789,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.configs_to_run, [])
         self.assertEqual(intensifier.stage, 0)
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=inc,
@@ -809,7 +809,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config3],
             chooser=None,
             incumbent=inc,
@@ -835,7 +835,7 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(intensifier.inst_seed_pairs, [(1, 0), (0, 0)])
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=inc,

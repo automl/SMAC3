@@ -8,6 +8,7 @@ import time
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
+from smac.intensification.abstract_racer import RunInfoIntent
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -184,9 +185,8 @@ class TestIntensify(unittest.TestCase):
 
         # config2 should have a timeout (due to adaptive capping)
         # and config1 should still be the incumbent
-        config, _ = intensifier._query_challenger(
+        config, _ = intensifier.get_next_challenger(
             challengers=[self.config2, self.config3],
-            run_history=self.rh,
             chooser=None
         )
         inc, instance, seed, cutoff = intensifier._get_next_racer(
@@ -223,7 +223,7 @@ class TestIntensify(unittest.TestCase):
         # give config2 a second chance - now it should run on both instances
 
         # run on instance 1
-        config, _ = intensifier._query_challenger(challengers=[self.config2, self.config3], chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config2, self.config3], chooser=None)
         inc, instance, seed, cutoff = intensifier._get_next_racer(
             challenger=config,
             incumbent=self.config1,
@@ -248,7 +248,7 @@ class TestIntensify(unittest.TestCase):
         )
 
         # run on instance 2
-        config, _ = intensifier._query_challenger(challengers=[self.config3], chooser=None)
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None)
         self.assertEqual(config, self.config2)
         self.assertTrue(intensifier.continue_challenger)
 
@@ -316,10 +316,13 @@ class TestIntensify(unittest.TestCase):
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            config, _ = intensifier._query_challenger(
-                challengers=[self.config2, self.config3],
-                chooser=None
-            )
+            if intensifier.continue_challenger:
+                config = intensifier.current_challenger
+            else:
+                config, _ = intensifier.get_next_challenger(
+                    challengers=[self.config2, self.config3],
+                    chooser=None
+                )
             inc, instance, seed, cutoff = intensifier._get_next_racer(
                 challenger=config,
                 incumbent=self.config1,
@@ -387,10 +390,13 @@ class TestIntensify(unittest.TestCase):
         # tie on first instances and then challenger should always win
         # and be returned as inc
         while True:
-            config, _ = intensifier._query_challenger(
-                challengers=[self.config2, self.config3],
-                chooser=None
-            )
+            if intensifier.continue_challenger:
+                config = intensifier.current_challenger
+            else:
+                config, _ = intensifier.get_next_challenger(
+                    challengers=[self.config2, self.config3],
+                    chooser=None
+                )
             inc, instance, seed, cutoff = intensifier._get_next_racer(
                 challenger=config,
                 incumbent=self.config1,
@@ -602,9 +608,9 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.num_run, 2)
         self.assertEqual(intensifier.num_chall_run, 0)
 
-    def test_query_challenger(self):
+    def testget_next_challenger(self):
         """
-            test _query_challenger()
+            test get_next_challenger()
         """
         intensifier = Intensifier(
             stats=self.stats,
@@ -616,7 +622,7 @@ class TestIntensify(unittest.TestCase):
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # get a new challenger to evaluate
-        config, new = intensifier._query_challenger(challengers=[self.config1, self.config2], chooser=None)
+        config, new = intensifier.get_next_challenger(challengers=[self.config1, self.config2], chooser=None)
 
         self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
@@ -625,7 +631,7 @@ class TestIntensify(unittest.TestCase):
 
         # when already evaluating a challenger, return the same challenger
         intensifier.to_run = [(1, 1, 0)]
-        config, new = intensifier._query_challenger(challengers=[self.config2], chooser=None)
+        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None)
         self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
         self.assertFalse(new)
@@ -686,7 +692,7 @@ class TestIntensify(unittest.TestCase):
 
         # intensification iteration #1
         # run first config as incumbent if incumbent is None
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             incumbent=None,
             run_history=self.rh,
             challengers=[self.config2],
@@ -711,7 +717,7 @@ class TestIntensify(unittest.TestCase):
 
         # intensification iteration #2
         # regular intensification begins - run incumbent first
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,  # don't need a new list here as old one is cont'd
             incumbent=inc,
             run_history=self.rh,
@@ -732,7 +738,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(self.stats.inc_changed, 1)
 
         # run challenger now that the incumbent has been executed
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             incumbent=inc,
             run_history=self.rh,
@@ -755,7 +761,7 @@ class TestIntensify(unittest.TestCase):
         self.assertTrue(intensifier.continue_challenger)
 
         # run challenger again on the other instance
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,  # don't need a new list here as old one is cont'd
             incumbent=inc,
             run_history=self.rh,
@@ -779,7 +785,7 @@ class TestIntensify(unittest.TestCase):
         self.assertFalse(intensifier.continue_challenger)
 
         # run basis configuration (`always_race_against`)
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,  # don't need a new list here as old one is cont'd
             incumbent=inc,
             run_history=self.rh,
@@ -809,7 +815,7 @@ class TestIntensify(unittest.TestCase):
             next(intensifier.configs_to_run)
 
         # intensification continues running incumbent again in same iteration...
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,  # don't need a new list here as old one is cont'd
             incumbent=inc,
             run_history=self.rh,
@@ -854,7 +860,7 @@ class TestIntensify(unittest.TestCase):
 
         # intensification iteration #1
         # run first config as incumbent if incumbent is None
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config3],
             incumbent=None,
             run_history=self.rh,
@@ -880,7 +886,7 @@ class TestIntensify(unittest.TestCase):
         # Normally a challenger will be given, which in this case is the incumbent
         # But no more instances are available. So to prevent cicles
         # where No iteration happens, provide the challengers
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config1],  # since incumbent is run, no configs required
             incumbent=inc,
             run_history=self.rh,
@@ -941,7 +947,7 @@ class TestIntensify(unittest.TestCase):
         )
 
         # run challenger
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=None,  # don't need a new list here as old one is cont'd
             incumbent=inc,
             run_history=self.rh,
@@ -994,7 +1000,7 @@ class TestIntensify(unittest.TestCase):
                     instance_id=1, seed=None, additional_info=None)
 
         # intensification - incumbent will be run, but not as RUN_FIRST_CONFIG stage
-        behest_, run_info = intensifier.get_next_run(
+        intent_, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             incumbent=self.config1,
             run_history=self.rh,
@@ -1034,7 +1040,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.n_iters, 0)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
 
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config3],
             incumbent=None,
             run_history=self.rh,
@@ -1064,7 +1070,7 @@ class TestIntensify(unittest.TestCase):
         # Challenger was the same as the current incumbent; Skipping challenger
         # Then, we try to get more challengers, but below all challengers
         # Provided are config3, the incumbent which means nothing more to run
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config3],  # since incumbent is run, no configs required
             incumbent=inc,
             run_history=self.rh,
@@ -1090,16 +1096,21 @@ class TestIntensify(unittest.TestCase):
         # to grab a new iteration, but all of them are exhausted
         # In this particular unit testing, no further new configurations
         # nor a chooser is provided, so we run into a value error
-        with self.assertRaisesRegex(ValueError, "No configurations/chooser provided"):
-            behest, run_info = intensifier.get_next_run(
-                challengers=[self.config1],
-                incumbent=inc,
-                run_history=self.rh,
-                chooser=None
-            )
+        intent, run_info = intensifier.get_next_run(
+            challengers=[self.config1],
+            incumbent=inc,
+            run_history=self.rh,
+            chooser=None
+        )
+        self.assertEqual(intent, RunInfoIntent.SKIP)
 
+        # This doesn't return a config because the array of configs is exhausted
+        intensifier.stage = IntensifierStage.RUN_CHALLENGER
+        config, _ = intensifier.get_next_challenger(challengers=None,
+                                                    chooser=None)
+        self.assertIsNone(config)
         # This finally gives a runable configuration
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             incumbent=inc,
             run_history=self.rh,

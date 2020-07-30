@@ -208,6 +208,8 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
             origin: DataOrigin
                 Defines how data will be used.
+            force_update: bool (default: False)
+                Forces the addition of a config to the history
         """
 
         if config is None:

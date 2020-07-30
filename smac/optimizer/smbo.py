@@ -7,7 +7,7 @@ import typing
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer, IntensifierBehest
+from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
@@ -198,7 +198,7 @@ class SMBO(object):
 
             # sample next configuration for intensification
             # Initial design runs are also included in the BO loop now.
-            behest, run_info = self.intensifier.get_next_run(
+            intent, run_info = self.intensifier.get_next_run(
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
                 chooser=self.epm_chooser,
@@ -207,7 +207,7 @@ class SMBO(object):
             )
 
             # Check if no more configs,
-            if behest == IntensifierBehest.TERMINATE:
+            if intent == RunInfoIntent.STOP_ITERATION:
                 self.logger.warn("No more valid configurations to try during intensification")
                 break
 
@@ -228,7 +228,7 @@ class SMBO(object):
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
-            if behest != IntensifierBehest.SKIP:
+            if intent != RunInfoIntent.SKIP:
                 try:
 
                     # Track the fact that a run was launched in the run
@@ -255,8 +255,6 @@ class SMBO(object):
                         self._incorporate_run_results(run_info, result)
 
                         # Update the intensifier with the result of the runs
-                        # Has to be executed regardless the config to run is None,
-                        # as the control logic has to prepare for the next iteration
                         self.incumbent, inc_perf = self.intensifier.process_results(
                             challenger=run_info.config,
                             incumbent=self.incumbent,
@@ -381,10 +379,10 @@ class SMBO(object):
 
     def _incorporate_run_results(self, run_info: RunInfo, result: RunValue) -> None:
         """
-        The SMBO submit a config run request via a RunInfo object.
+        The SMBO submits a config-run-request via a RunInfo object.
         When that config run is completed, a RunValue, which contains
-        all the relevant information for a job, is returned.
-        This method incorporates the status of the run into
+        all the relevant information obtained after running a job, is returned.
+        This method incorporates the status of that run into
         the stats/runhistory objects so that other consumers
         can advance with their task.
 

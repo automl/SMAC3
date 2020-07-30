@@ -107,7 +107,7 @@ class TestHyperband(unittest.TestCase):
         self.assertFalse(hasattr(intensifier, 's'))
 
         # Testing get_next_run - get next configuration
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,
@@ -127,7 +127,7 @@ class TestHyperband(unittest.TestCase):
                     seed=0, budget=0.5)
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
-        behest, run_info = intensifier.get_next_run(
+        intent, run_info = intensifier.get_next_run(
             challengers=[self.config2, self.config3],
             chooser=None,
             incumbent=None,

@@ -21,17 +21,18 @@ __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class IntensifierBehest(Enum):
-    """Class to define different request on how to process
+class RunInfoIntent(Enum):
+    """Class to define different requests on how to process
     the runinfo
 
     Gives the flexibility to indicate whether no more configs
-    are available (TERMINATE in this case), no need to rerun
-    previous configurations (SKIP) or we simple should run
+    are available (STOP_ITERATION in this case), no need to rerun
+    previous configurations (SKIP) or if the SMBO should simple
+    run a generated run_info.
     """
     RUN = 0  # Normal run execution of a run info
-    SKIP = 1  # Skip running the run info
-    TERMINATE = 2  # No more configurations to try
+    SKIP = 1  # Skip running the run_info
+    STOP_ITERATION = 2  # No more configurations to try
 
 
 class AbstractRacer(object):
@@ -130,7 +131,7 @@ class AbstractRacer(object):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True
-                     ) -> typing.Tuple[IntensifierBehest, RunInfo]:
+                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
@@ -154,7 +155,7 @@ class AbstractRacer(object):
         -------
         run_info: RunInfo
             An object that encapsulates necessary information for a config run
-        behest: IntensifierBehest
+        intent: RunInfoIntent
             Indicator of how to consume the RunInfo object
         """
         raise NotImplementedError()
@@ -178,12 +179,12 @@ class AbstractRacer(object):
         challenger : Configuration
             A configuration that was previously executed, and whose status
             will be used to define the next stage.
-        incumbent : Configuration
+        incumbent : typing.Optional[Configuration]
             Best configuration seen so far
-        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+        run_history : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
-        time_bound : float, optional (default=2 ** 31 - 1)
+        time_bound : float
             time in [sec] available to perform intensify
         result: RunValue
             Contain the result (status and other methadata) of exercising
