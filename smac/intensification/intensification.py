@@ -261,7 +261,6 @@ class Intensifier(AbstractRacer):
                 run_history=run_history,
                 repeat_configs=repeat_configs,
             )
-            print(f"Using challenger = {challenger}")
 
             # if first ever run, then assume current challenger to be the incumbent
             # In this case, we need a branch new challenger
@@ -410,7 +409,6 @@ class Intensifier(AbstractRacer):
             if hasattr(challenger, 'origin'):
                 self.logger.debug("Configuration origin: %s", challenger.origin)
 
-            print(f"stage={self.stage}")
             if self.stage in [IntensifierStage.RUN_CHALLENGER, IntensifierStage.RUN_BASIS]:
                 # Lines 8-11
                 incumbent, instance, seed, cutoff = self._get_next_racer(

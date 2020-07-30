@@ -254,7 +254,6 @@ class SMBO(object):
                         # Add the results of the run to the run history
                         self._incorporate_run_results(run_info, result)
 
-
                         # Update the intensifier with the result of the runs
                         # Has to be executed regardless the config to run is None,
                         # as the control logic has to prepare for the next iteration
