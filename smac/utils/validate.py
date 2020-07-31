@@ -454,13 +454,14 @@ class Validator(object):
                     # Add runs to runhistory
                     for c in configs_evaluated[:]:
                         runkey = RunKey(runhistory.config_ids[c], i, seed)
-                        cost, time, status, additional_info = runhistory.data[runkey]
+                        cost, time, status, start, end, additional_info = runhistory.data[runkey]
                         if status in [StatusType.CRASHED, StatusType.ABORT, StatusType.CAPPED]:
                             # Not properly executed target algorithm runs should be repeated
                             configs_evaluated.remove(c)
                             continue
                         new_rh.add(c, cost, time, status, instance_id=i,
-                                   seed=seed, additional_info=additional_info)
+                                   seed=seed, starttime=start, endtime=end,
+                                   additional_info=additional_info)
                         runs_from_rh += 1
                 else:
                     # If no runhistory or no entries for instance, get new seed

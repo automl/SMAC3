@@ -1,3 +1,16 @@
+# 0.12.3
+
+## Minor Changes
+
+* Use Scipy's Sobol sequence for the initial design instead of a 3rd-party package (#600)
+* Store start and end time of function evaluation (#647)
+
+## Bug Fixes
+
+* Fixes an issue in the Bayesian optimization facade which triggered an exception when tuning categorical 
+  hyperparameters (#666)
+* Fixes an issue in the Gaussian process MCMC which resulted in reduced execution speed and reduced performance (#666)
+
 # 0.12.2
 
 ## Bug Fixes

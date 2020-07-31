@@ -41,7 +41,7 @@ InstSeedBudgetKey = collections.namedtuple(
 
 
 RunValue = collections.namedtuple(
-    'RunValue', ['cost', 'time', 'status', 'additional_info'])
+    'RunValue', ['cost', 'time', 'status', 'starttime', 'endtime', 'additional_info'])
 
 
 class EnumEncoder(json.JSONEncoder):
@@ -169,6 +169,8 @@ class RunHistory(object):
         instance_id: typing.Optional[str] = None,
         seed: typing.Optional[int] = None,
         budget: float = 0.0,
+        starttime: float = 0.0,
+        endtime: float = 0.0,
         additional_info: typing.Optional[typing.Dict] = None,
         origin: DataOrigin = DataOrigin.INTERNAL,
     ) -> None:
@@ -192,6 +194,10 @@ class RunHistory(object):
                 Random seed used by TA (default: None)
             budget: float
                 budget (cutoff) used in intensifier to limit TA (default: 0)
+            starttime: float
+                starting timestamp of TA evaluation
+            endtime: float
+                ending timestamp of TA evaluation
             additional_info: dict
                 Additional run infos (could include further returned
                 information from TA or fields such as start time and host_id)
@@ -218,7 +224,7 @@ class RunHistory(object):
 
         # Construct keys and values for the data dictionary
         k = RunKey(config_id, instance_id, seed, budget)
-        v = RunValue(cost, time, status, additional_info)
+        v = RunValue(cost, time, status, starttime, endtime, additional_info)
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
@@ -487,7 +493,9 @@ class RunHistory(object):
                      instance_id=k[1],
                      seed=int(k[2]),
                      budget=float(k[3]) if len(k) == 4 else 0,
-                     additional_info=v[3])
+                     starttime=v[3],
+                     endtime=v[4],
+                     additional_info=v[5])
 
     def update_from_json(
         self,
@@ -533,10 +541,10 @@ class RunHistory(object):
         #  the ID
         for key, value in runhistory.data.items():
             config_id, instance_id, seed, budget = key
-            cost, time, status, additional_info = value
+            cost, time, status, start, end, additional_info = value
             config = runhistory.ids_config[config_id]
             self.add(config=config, cost=cost, time=time,
-                     status=status, instance_id=instance_id,
+                     status=status, instance_id=instance_id, starttime=start, endtime=end,
                      seed=seed, budget=budget, additional_info=additional_info,
                      origin=origin)
 
