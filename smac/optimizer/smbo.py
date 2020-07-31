@@ -206,11 +206,6 @@ class SMBO(object):
                 repeat_configs=self.intensifier.repeat_configs,
             )
 
-            # Check if no more configs,
-            if intent == RunInfoIntent.STOP_ITERATION:
-                self.logger.warn("No more valid configurations to try during intensification")
-                break
-
             # remove config from initial design challengers to not repeat it again
             self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
 

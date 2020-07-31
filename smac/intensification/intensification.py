@@ -54,8 +54,8 @@ class Intensifier(AbstractRacer):
     SMAC's intensification procedure, in detail:
 
     Procedure 2: Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, cˆ)
-    cˆ(θ, Π0) denotes the empirical cost of θ on the subset of instances
-    Π0 ⊆ Π, based on the runs in R; maxR is a parameter
+    cˆ(θ, Π') denotes the empirical cost of θ on the subset of instances
+    Π' ⊆ Π, based on the runs in R; maxR is a parameter
     where:
     Θ_new: Sequence of parameter settings to evaluate, challengers in this class.
     θ_inc: incumbent parameter setting, incumbent in this class.
@@ -210,10 +210,8 @@ class Intensifier(AbstractRacer):
         To circumvent this, a intent is also returned:
 
         - (intent=RUN) Run the RunInfo object (Normal Execution
-        - (intent=STOP_ITERATION) No more challengers available (Line 19 should occur)
         - (intent=SKIP) Skip this iteration. No challenger is available, in particular
             because challenger is the same as incumbent
-
 
         Parameters
         ----------
@@ -223,7 +221,7 @@ class Intensifier(AbstractRacer):
             incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : typing.Optional[smac.runhistory.runhistory.RunHistory]
+        run_history : RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -293,7 +291,7 @@ class Intensifier(AbstractRacer):
             available_insts = self._get_inc_available_inst(incumbent, run_history)
             if available_insts and len(inc_runs) < self.maxR:
                 # Lines 5-6-7
-                instance, seed, cutoff = self._get_next_inc_config(available_insts)
+                instance, seed, cutoff = self._get_next_inc_run(available_insts)
 
                 instance_specific = "0"
                 if instance is not None:
@@ -317,11 +315,6 @@ class Intensifier(AbstractRacer):
                 )
 
                 self.stage = IntensifierStage.RUN_CHALLENGER
-
-                self._process_inc_run(
-                    incumbent=incumbent,
-                    run_history=run_history,
-                )
 
         # Understand who is the active challenger.
         if self.stage == IntensifierStage.RUN_BASIS:
@@ -408,7 +401,9 @@ class Intensifier(AbstractRacer):
 
                 # Nevertheless, if there are no more instances to run,
                 # we might need to comply with line 17 and keep running the
-                # same challenger
+                # same challenger. In this case, if there is not enough information
+                # to decide if the challenger is better/worst than the incumbent,
+                # line 17 doubles the number of instances to run.
                 self.logger.debug("No further runs for challenger possible")
                 self._process_racer_results(
                     challenger=challenger,
@@ -487,7 +482,7 @@ class Intensifier(AbstractRacer):
         challenger : Configuration
             a configuration that was previously executed, and whose status
             will be used to define the next stage.
-        incumbet : typing.Optional[Configuration]
+        incumbent : typing.Optional[Configuration]
             best configuration so far, None in 1st run
         run_history : RunHistory
             stores all runs we ran so far
@@ -580,9 +575,9 @@ class Intensifier(AbstractRacer):
 
         return incumbent, inc_perf
 
-    def _get_next_inc_config(self,
-                             available_insts: typing.List[str],
-                             ) -> typing.Tuple[str, int, typing.Optional[float]]:
+    def _get_next_inc_run(self,
+                          available_insts: typing.List[str],
+                          ) -> typing.Tuple[str, int, typing.Optional[float]]:
         """Method to extract the next seed/instance in which a
         incumbent run most be evaluated.
 
@@ -944,6 +939,10 @@ class Intensifier(AbstractRacer):
 
         A brand new configuration should only be sampled, after all self.to_run
         instance seed pairs are exhausted.
+
+        This method triggers a call to _next_iteration if there are no more configurations
+        to run, for the current intensification loop. This marks the transition to Line 2,
+        where a new configuration to intensify will be drawn from epm/initial challengers.
 
 
         Parameters

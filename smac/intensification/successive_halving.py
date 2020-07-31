@@ -400,11 +400,11 @@ class SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
+        intent: RunInfoIntent
+               Indicator of how to consume the RunInfo object
         run_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
-        intent: RunInfoIntent
-               Indicator of how to consume the RunInfo object
          """
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
@@ -446,9 +446,7 @@ class SuccessiveHalving(AbstractRacer):
                     # which is triggered after the completion of a run
                     # If by there are no more configs to run (which is the case
                     # if we run into a IndexError),
-                    # then no new run will trigger update_stage,
-                    # so issue a terminate
-                    return RunInfoIntent.STOP_ITERATION, RunInfo(
+                    return RunInfoIntent.SKIP, RunInfo(
                         config=None,
                         instance=None,
                         instance_specific="0",

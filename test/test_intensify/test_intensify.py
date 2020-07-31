@@ -454,7 +454,7 @@ class TestIntensify(unittest.TestCase):
             instances=[1],
             deterministic=True)
 
-        instance, seed, cutoff = intensifier._get_next_inc_config(
+        instance, seed, cutoff = intensifier._get_next_inc_run(
             available_insts=intensifier._get_inc_available_inst(
                 incumbent=self.config1,
                 run_history=self.rh
@@ -524,7 +524,7 @@ class TestIntensify(unittest.TestCase):
             instances=[1, 2],
             deterministic=False)
 
-        instance, seed, cutoff = intensifier._get_next_inc_config(
+        instance, seed, cutoff = intensifier._get_next_inc_run(
             available_insts=intensifier._get_inc_available_inst(
                 incumbent=self.config1,
                 run_history=self.rh
@@ -549,7 +549,7 @@ class TestIntensify(unittest.TestCase):
         )
         self.assertEqual(len(self.rh.data), 1, self.rh.data)
 
-        instance, seed, cutoff = intensifier._get_next_inc_config(
+        instance, seed, cutoff = intensifier._get_next_inc_run(
             available_insts=intensifier._get_inc_available_inst(
                 incumbent=self.config1,
                 run_history=self.rh
@@ -578,7 +578,7 @@ class TestIntensify(unittest.TestCase):
         self.assertIn(1, [runs[0].instance, runs[1].instance])
         self.assertIn(2, [runs[0].instance, runs[1].instance])
 
-        instance, seed, cutoff = intensifier._get_next_inc_config(
+        instance, seed, cutoff = intensifier._get_next_inc_run(
             available_insts=intensifier._get_inc_available_inst(
                 incumbent=self.config1,
                 run_history=self.rh
@@ -1090,12 +1090,11 @@ class TestIntensify(unittest.TestCase):
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
         # In the upcoming get next run, the stage is RUN_CHALLENGER
-        # So config1 is tried to be run. Nevertheless, there are no further
-        # runs for this challenger available, that is, race challenger
-        # can do nothing. Instead for returning None, the code tries
-        # to grab a new iteration, but all of them are exhausted
-        # In this particular unit testing, no further new configurations
-        # nor a chooser is provided, so we run into a value error
+        # so the intensifier tries to run config1. Nevertheless,
+        # there are no further instances for this configuration available.
+        # In this scenario, the intensifier produces a SKIP intent as an indication
+        # that a new iteration must be initiated, and for code simplicity,
+        # relies on a new call to get_next_run to yield more configurations
         intent, run_info = intensifier.get_next_run(
             challengers=[self.config1],
             incumbent=inc,

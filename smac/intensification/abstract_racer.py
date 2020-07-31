@@ -25,23 +25,25 @@ class RunInfoIntent(Enum):
     """Class to define different requests on how to process
     the runinfo
 
-    Gives the flexibility to indicate whether no more configs
-    are available (STOP_ITERATION in this case), no need to rerun
-    previous configurations (SKIP) or if the SMBO should simple
+    Gives the flexibility to indicate whether a configuration
+    should be skipped (SKIP) or if the SMBO should simple
     run a generated run_info.
     """
     RUN = 0  # Normal run execution of a run info
     SKIP = 1  # Skip running the run_info
-    STOP_ITERATION = 2  # No more configurations to try
 
 
 class AbstractRacer(object):
     """
     Base class for all racing methods
 
-    The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs.
-    This is to facilitate on-demand configuration sampling if multiple configurations are required,
-    like Successive Halving or Hyperband.
+    The "intensification" is designed to output a RunInfo object with enough information
+    to run a given configuration (for example, the run info contains the instance/seed
+    pair, as well as the associated resources).
+
+    A worker can execute this RunInfo object and produce a RunValue object with the
+    execution results. Each intensifier process the RunValue object and updates it's
+    internal state in preparation for the next iteration.
 
     **Note: Do not use directly**
 
@@ -136,7 +138,8 @@ class AbstractRacer(object):
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
 
-        If no more challengers are available, the method should return None as configuration
+        If no more challengers are available, the method should issue a SKIP via
+        RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
 
         Parameters
         ----------

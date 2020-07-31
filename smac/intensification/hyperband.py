@@ -131,7 +131,7 @@ class Hyperband(SuccessiveHalving):
         challenger : Configuration
             A configuration that was previously executed, and whose status
             will be used to define the next stage.
-        incumbet : typing.Optional[Configuration]
+        incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
