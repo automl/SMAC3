@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_ta_run &mdash; SMAC 0.12.2 documentation</title>
+  <title>smac.tae.execute_ta_run &mdash; SMAC 0.12.3 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3
               </div>
             
           
@@ -284,6 +284,7 @@
   <h1>Source code for smac.tae.execute_ta_run</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
@@ -398,7 +399,7 @@
 <span class="sd">            run objective of SMAC</span>
 <span class="sd">        par_factor: int</span>
 <span class="sd">            penalization factor</span>
-<span class="sd">        crash_cost : float</span>
+<span class="sd">        cost_for_crash : float</span>
 <span class="sd">            cost that is used in case of crashed runs (including runs</span>
 <span class="sd">            that returned NaN or inf)</span>
 <span class="sd">        abort_on_first_run_crash: bool</span>
@@ -476,12 +477,15 @@
                              <span class="s2">&quot;(run objective), a cutoff time is required, &quot;</span>
                              <span class="s2">&quot;but not given to this call.&quot;</span><span class="p">)</span>
 
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                                                           <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
                                                           <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
                                                           <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
                                                           <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
                                                           <span class="n">instance_specific</span><span class="o">=</span><span class="n">instance_specific</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot handle DONOTADVANCE state when using intensify or SH/HB on &quot;</span>
                              <span class="s2">&quot;instances.&quot;</span><span class="p">)</span>
@@ -534,7 +538,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                                 <span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">runtime</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
                                 <span class="n">instance_id</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
-                                <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
+                                <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span> <span class="n">starttime</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
                                 <span class="n">additional_info</span><span class="o">=</span><span class="n">additional_info</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
 

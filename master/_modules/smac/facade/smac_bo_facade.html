@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.12.2 documentation</title>
+  <title>smac.facade.smac_bo_facade &mdash; SMAC 0.12.3 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.2
+                0.12.3
               </div>
             
           
@@ -388,7 +388,7 @@
                     <span class="n">operate_on</span><span class="o">=</span><span class="n">cat_dims</span><span class="p">,</span>
                 <span class="p">)</span>
 
-            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cont_dims</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">cat_dims</span><span class="p">))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span>
 
             <span class="n">noise_kernel</span> <span class="o">=</span> <span class="n">WhiteKernel</span><span class="p">(</span>
                 <span class="n">noise_level</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span>
