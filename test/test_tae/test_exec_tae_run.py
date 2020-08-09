@@ -13,11 +13,13 @@ import unittest
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.tae.execute_ta_run import ExecuteTARun, StatusType
-from smac.tae.execute_ta_run import TAEAbortException
+from smac.tae import (
+    StatusType,
+    TAEAbortException,
+)
+from smac.tae.serial_runner import SerialRunner
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 from smac.runhistory.runhistory import RunInfo
 
 if sys.version_info[0] == 2:
@@ -47,18 +49,18 @@ class TaeTest(unittest.TestCase):
                                   'output_dir': ''}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
-        eta = ExecuteTARun(ta=lambda *args: None,  # Dummy-function
+        eta = SerialRunner(ta=lambda *args: None,  # Dummy-function
                            stats=stats)
 
         # Dummy run. When on budget exhausted, the smbo
         # loop is notified via the result status
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config=None, instance=None, instance_specific=None,
             cutoff=None, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.BUDGETEXHAUSTED)
 
-    @mock.patch.object(ExecuteTARun, 'run')
+    @mock.patch.object(SerialRunner, 'run')
     def test_start_tae_return_abort(self, test_run):
         '''
             testing abort
@@ -76,45 +78,45 @@ class TaeTest(unittest.TestCase):
         )
         stats = Stats(scen)
         stats.start_timing()
-        eta = ExecuteTARun(ta=lambda *args: None, stats=stats)
+        eta = SerialRunner(ta=lambda *args: None, stats=stats)
 
         with self.assertRaises(TAEAbortException):
-            execute_ta_run_wrapper(
-                eta, RunInfo(
+            eta.run_wrapper(
+                RunInfo(
                     config=None, instance=1, instance_specific=None,
                     cutoff=30, seed=None, capped=False, budget=0.0
                 )
             )
 
-    @mock.patch.object(ExecuteTARun, 'run')
+    @mock.patch.object(SerialRunner, 'run')
     def test_start_tae_return_nan_inf(self, test_run):
         '''
             test nan-handling and inf-handling
         '''
 
         def get_tae(obj):
-            """ Create ExecuteTARun-object for testing. """
+            """ Create SerialRunner-object for testing. """
             scen = Scenario(scenario={'cs': ConfigurationSpace(), 'run_obj': obj,
                                       'cutoff_time': '10'}, cmd_options=None)
             stats = Stats(scen)
             stats.start_timing()
             # Add first run to not trigger FirstRunCrashedException
             stats.ta_runs += 1
-            eta = ExecuteTARun(ta=lambda *args: None, stats=stats, run_obj=obj)
+            eta = SerialRunner(ta=lambda *args: None, stats=stats, run_obj=obj)
             return eta
 
         # TEST NAN
         eta = get_tae('runtime')
         # Patch run-function for custom-return (obj = runtime, cost = nan)
         test_run.return_value = StatusType.SUCCESS, np.nan, 1, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.SUCCESS)
         #                                      (obj = runtime, runtime = nan)
         test_run.return_value = StatusType.SUCCESS, 1, np.nan, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
@@ -123,14 +125,14 @@ class TaeTest(unittest.TestCase):
         eta = get_tae('quality')
         # Patch run-function for custom-return (obj = quality, cost = nan)
         test_run.return_value = StatusType.SUCCESS, np.nan, 1, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.CRASHED)
         #                                      (obj = quality, runtime = nan)
         test_run.return_value = StatusType.SUCCESS, 1, np.nan, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
@@ -140,14 +142,14 @@ class TaeTest(unittest.TestCase):
         eta = get_tae('runtime')
         # Patch run-function for custom-return (obj = runtime, cost = inf)
         test_run.return_value = StatusType.SUCCESS, np.inf, 1, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.SUCCESS)
         #                                      (obj = runtime, runtime = inf)
         test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
@@ -156,20 +158,20 @@ class TaeTest(unittest.TestCase):
         eta = get_tae('quality')
         # Patch run-function for custom-return (obj = quality, cost = inf)
         test_run.return_value = StatusType.SUCCESS, np.inf, 1, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.CRASHED)
         #                                      (obj = quality, runtime = inf)
         test_run.return_value = StatusType.SUCCESS, 1, np.inf, {}
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=10, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(result.status, StatusType.SUCCESS)
 
-    @mock.patch.object(ExecuteTARun, 'run')
+    @mock.patch.object(SerialRunner, 'run')
     def test_crashed_cost_value(self, test_run):
         '''
             test cost on crashed runs
@@ -183,18 +185,18 @@ class TaeTest(unittest.TestCase):
 
         # Check quality
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
-        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+        eta = SerialRunner(ta=lambda *args: None, stats=stats,
                            run_obj='quality', cost_for_crash=100)
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=None, seed=None, capped=False, budget=0.0
         ))
         self.assertEqual(100, result.cost)
 
         # Check runtime
-        eta = ExecuteTARun(ta=lambda *args: None, stats=stats,
+        eta = SerialRunner(ta=lambda *args: None, stats=stats,
                            run_obj='runtime', cost_for_crash=10.7)
-        result = execute_ta_run_wrapper(eta, RunInfo(
+        run_info, result = eta.run_wrapper(RunInfo(
             config={}, instance=1, instance_specific="0",
             cutoff=20, seed=None, capped=False, budget=0.0
         ))

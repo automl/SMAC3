@@ -9,7 +9,7 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import FirstRunCrashedException
+from smac.tae import FirstRunCrashedException
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
@@ -78,7 +78,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch('smac.optimizer.smbo.SMBO._incorporate_run_results')
+    @mock.patch('smac.tae.serial_runner.SerialRunner.run_wrapper')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5

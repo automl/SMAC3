@@ -6,10 +6,11 @@ from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 import numpy as np
 
 # tae
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
+from smac.tae.serial_runner import SerialRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 # stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -71,7 +72,7 @@ class SMAC4AC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: Optional[Union[Type[ExecuteTARun], Callable]] = None,
+                 tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
                  tae_runner_kwargs: Optional[Dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[Dict] = None,
@@ -104,9 +105,9 @@ class SMAC4AC(object):
         ----------
         scenario : ~smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
+        tae_runner : ~smac.tae.base.BaseRunner or callable
             Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            :class:`~smac.tae.base.BaseRunner`. In case a
             callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
@@ -351,7 +352,8 @@ class SMAC4AC(object):
             'run_obj': scenario.run_obj,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
-            'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821
+            'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
+            'n_workers': 1 if not hasattr(scenario, 'n_workers') else scenario.n_workers, # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -361,9 +363,9 @@ class SMAC4AC(object):
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
             tae_runner_instance = (
                 ExecuteTARunOld(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
-            )  # type: ExecuteTARun
+            )  # type: BaseRunner
         elif inspect.isclass(tae_runner):
-            tae_runner_instance = cast(ExecuteTARun, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = cast(SerialRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
@@ -371,7 +373,7 @@ class SMAC4AC(object):
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
                             "either None, a callable or an object implementing "
-                            "ExecuteTaRun. Passing 'None' will result in the "
+                            "BaseRunner. Passing 'None' will result in the "
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
                             % type(tae_runner))
@@ -620,14 +622,14 @@ class SMAC4AC(object):
         return self.solver.validate(config_mode, instance_mode, repetitions,
                                     use_epm, n_jobs, backend)
 
-    def get_tae_runner(self) -> ExecuteTARun:
+    def get_tae_runner(self) -> BaseRunner:
         """
         Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
 
         Returns
         -------
-        TAE: smac.tae.execute_ta_run.ExecuteTARun
+        TAE: smac.tae.base.BaseRunner
 
         """
         return self.solver.tae_runner

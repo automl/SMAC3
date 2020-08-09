@@ -2,7 +2,8 @@ import typing
 from subprocess import Popen, PIPE
 
 from smac.configspace import Configuration
-from smac.tae.execute_ta_run import StatusType, ExecuteTARun
+from smac.tae import StatusType
+from smac.tae.serial_runner import SerialRunner
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -12,7 +13,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class ExecuteTARunOld(ExecuteTARun):
+class ExecuteTARunOld(SerialRunner):
 
     """Executes a target algorithm run with a given configuration on a given
     instance and some resource limitations. Uses the original SMAC/PILS format

@@ -15,9 +15,8 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, St
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 from smac.utils.constants import MAXINT
 
 __author__ = "Joshua Marben"
@@ -28,7 +27,7 @@ __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
 def _unbound_tae_starter(
-    tae: ExecuteTARun, runhistory: typing.Optional[RunHistory], run_info: RunInfo,
+    tae: BaseRunner, runhistory: typing.Optional[RunHistory], run_info: RunInfo,
     *args: typing.Any, **kwargs: typing.Any
 ) -> RunValue:
     """
@@ -37,7 +36,7 @@ def _unbound_tae_starter(
 
     Parameters
     ----------
-    tae: ExecuteTARun
+    tae: BaseRunner
         tae to be used
     runhistory: RunHistory
         runhistory to save
@@ -51,7 +50,7 @@ def _unbound_tae_starter(
     tae_results: RunValue
         return from tae.start
     """
-    result = execute_ta_run_wrapper(tae, run_info, *args, **kwargs)
+    run_info, result = tae.run_wrapper(run_info)
     tae.stats.ta_runs += 1
     tae.stats.ta_time_used += float(result.time)
     if runhistory:
@@ -154,7 +153,7 @@ class Validator(object):
                  n_jobs: int = 1,
                  backend: str = 'threading',
                  runhistory: typing.Optional[RunHistory] = None,
-                 tae: ExecuteTARun = None,
+                 tae: BaseRunner = None,
                  output_fn: typing.Optional[str] = None,
                  ) -> RunHistory:
         """
@@ -183,7 +182,7 @@ class Validator(object):
             what backend joblib should use for parallel runs
         runhistory: RunHistory
             optional, RunHistory-object to reuse runs
-        tae: ExecuteTARun
+        tae: BaseRunner
             tae to be used. if None, will initialize ExecuteTARunOld
         output_fn: str
             path to runhistory to be saved. if the suffix is not '.json', will
@@ -241,7 +240,7 @@ class Validator(object):
 
     def _validate_parallel(
         self,
-        tae: ExecuteTARun,
+        tae: BaseRunner,
         runs: typing.List[_Run],
         n_jobs: int,
         backend: str,
@@ -252,7 +251,7 @@ class Validator(object):
 
         Parameters
         ----------
-        tae: ExecuteTARun
+        tae: BaseRunner
             tae to be used for validation
         runs: list<_Run>
             list with _Run-objects

@@ -6,7 +6,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UniformFloatHyperparameter
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario
 from smac.epm import rfr_imputator

@@ -8,6 +8,7 @@ from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace, Configuration
 from smac.runhistory.runhistory import RunKey
 from smac.tae.execute_func import ExecuteTAFuncArray
+from smac.tae.execute_func_dask import ExecuteParallelTAFuncArray
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
@@ -87,9 +88,14 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
+    if not hasattr(scenario, 'n_workers') or scenario.n_workers == 1:
+        tae_runner = ExecuteTAFuncArray
+    else:
+        tae_runner = ExecuteParallelTAFuncArray
+
     smac = SMAC4HPO(
         scenario=scenario,
-        tae_runner=ExecuteTAFuncArray,
+        tae_runner=tae_runner,
         tae_runner_kwargs={'ta': func},
         rng=rng,
         **kwargs

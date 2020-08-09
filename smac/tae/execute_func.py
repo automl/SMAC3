@@ -10,8 +10,9 @@ import pynisher
 
 from smac.configspace import Configuration
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import StatusType, ExecuteTARun
+from smac.tae import StatusType
 from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.tae.serial_runner import SerialRunner
 
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -22,7 +23,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
 
 
-class AbstractTAFunc(ExecuteTARun):
+class AbstractTAFunc(SerialRunner):
     """Baseclass to execute target algorithms which are python functions.
 
     **Note:*** Do not use directly
@@ -43,12 +44,14 @@ class AbstractTAFunc(ExecuteTARun):
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
         use_pynisher: bool = True,
+        n_workers: int = 1,
     ):
 
         super().__init__(ta=ta, stats=stats,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
-                         abort_on_first_run_crash=abort_on_first_run_crash)
+                         abort_on_first_run_crash=abort_on_first_run_crash,
+                         n_workers=n_workers)
         """
         Abstract class for having a function as target algorithm
 

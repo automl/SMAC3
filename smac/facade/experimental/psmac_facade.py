@@ -13,8 +13,8 @@ import numpy as np
 
 from ConfigSpace.configuration_space import Configuration
 
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
-from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.utils.io.output_directory import create_output_directory
@@ -28,7 +28,7 @@ __license__ = "3-clause BSD"
 
 
 def optimize(scenario: typing.Type[Scenario],
-             tae: typing.Type[ExecuteTARun],
+             tae: typing.Type[BaseRunner],
              tae_kwargs: typing.Dict,
              rng: typing.Union[np.random.RandomState, int],
              output_dir: str,
@@ -40,7 +40,7 @@ def optimize(scenario: typing.Type[Scenario],
     ----------
     scenario: Scenario
         smac.Scenario to initialize SMAC
-    tae: ExecuteTARun
+    tae: BaseRunner
         Target Algorithm Runner (supports old and aclib format)
     tae_runner_kwargs: Optional[dict]
         arguments passed to constructor of '~tae'
@@ -91,7 +91,7 @@ class PSMAC(object):
                  scenario: typing.Type[Scenario],
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
                  run_id: int = 1,
-                 tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
+                 tae: typing.Type[BaseRunner] = ExecuteTARunOld,
                  tae_kwargs: typing.Union[dict, None] = None,
                  shared_model: bool = True,
                  validate: bool = True,
@@ -112,7 +112,7 @@ class PSMAC(object):
             The randomState/seed to pass to each smac run
         run_id: int
             run_id for this hydra run
-        tae: ExecuteTARun
+        tae: BaseRunner
             Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
         tae_kwargs: Optional[dict]
             arguments passed to constructor of '~tae'

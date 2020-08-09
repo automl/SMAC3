@@ -6,7 +6,7 @@ import typing
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
@@ -50,7 +50,7 @@ RunValue = collections.namedtuple(
 
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization
-    (implemented for StatusType from tae/execute_ta_run).
+    (implemented for StatusType from tae).
     Using encoder implied using object_hook as defined in StatusType
     to deserialize from json.
     """

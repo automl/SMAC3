@@ -30,8 +30,8 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS, RunHistory2EPM4C
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
+from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run import StatusType
 
 
 class TestSMACFacade(unittest.TestCase):
@@ -74,7 +74,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertRaisesRegex(
             TypeError,
             "Argument 'tae_runner' is <class 'int'>, but must be either None, a callable or an "
-            "object implementing ExecuteTaRun.",
+            "object implementing BaseRunner.",
             SMAC4AC,
             tae_runner=1,
             scenario=self.scenario,

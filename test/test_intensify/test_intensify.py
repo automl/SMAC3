@@ -15,7 +15,7 @@ from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
 from .test_eval_utils import eval_challenger
