@@ -4,25 +4,46 @@ import typing
 import dask
 from dask.distributed import Client, Future, wait
 
-from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.stats.stats import Stats
-from smac.tae import StatusType
 from smac.tae.base import BaseRunner
-from smac.utils.constants import MAXINT
 
 
 class DaskParallelRunner(BaseRunner):
     """Interface to submit and collect a job in a distributed fashion.
 
+    DaskParallelRunner is intended to comply with the bridge design pattern.
+
+    Nevertheless, to reduce the amount of code within single-vs-parallel
+    implementations, DaskParallelRunner wraps a BaseRunner object which
+    is then executed in parallel on n_workers.
+
+    This class then is constructed by passing a BaseRunner that implements
+    a run() method, and is capable of doing so in a serial fashion. Then,
+    this wrapper class called DaskParallelRunner uses dask to initialize
+    N number of BaseRunner that actively wait of a RunInfo to produce a
+    RunValue object.
+
+    To be more precise, the work model is then:
+    1- The smbo.intensifier dictates "what" to run (a configuration/instance/seed)
+       via a RunInfo object.
+    2- a tae_runner takes this RunInfo object and launches the task via
+       tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
+       receive a pickle-object of DaskParallelRunner.single_worker, each with a
+       run() method coming from DaskParallelRunner.single_worker.run()
+    3- RunInfo objects are run in a distributed fashion, an their results are
+       available locally to each worker. Such result is collected by
+       DaskParallelRunner.get_finished_runs() and then passed to the SMBO.
+    4- Exceptions are also locally available to each worker and need to be
+       collected.
+
+    Dask works with Future object which are managed via the DaskParallelRunner.client.
+
+
     Attributes
     ----------
 
-    results: Queue
-        A worker store it's result in a queue. SMBO collects the results of a completed
-        operation from the queue.
-    exceptions:
-        A list of capturing exceptions, product of the failure of submit/exec a job
+    results
+    exceptions
     ta
     stats
     run_obj
@@ -53,21 +74,28 @@ class DaskParallelRunner(BaseRunner):
     """
     def __init__(
         self,
-        ta: typing.Union[typing.List[str], typing.Callable],
-        stats: Stats,
-        run_obj: str = "runtime",
-        par_factor: int = 1,
-        cost_for_crash: float = float(MAXINT),
-        abort_on_first_run_crash: bool = True,
+        single_worker: BaseRunner,
         n_workers: int = 1
     ):
         super(DaskParallelRunner, self).__init__(
-            ta=ta, stats=stats, run_obj=run_obj, par_factor=par_factor,
-            cost_for_crash=cost_for_crash,
-            abort_on_first_run_crash=abort_on_first_run_crash,
-            n_workers=n_workers
+            ta=single_worker.ta,
+            stats=single_worker.stats,
+            run_obj=single_worker.run_obj,
+            par_factor=single_worker.par_factor,
+            cost_for_crash=single_worker.cost_for_crash,
+            abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
         )
 
+        # The single worker, which is replicated on a need
+        # basis to every compute node
+        self.single_worker = single_worker
+
+        # n_workers defines the number of workers that a client is originally initialized
+        # with. This number is dynamic and can vary by adding more workers to the proper
+        # scheduler address.
+        # Because a run() method can have pynisher, we need to prevent the multiprocessing
+        # workers to be instantiated as demonic
+        self.n_workers = n_workers
         dask.config.set({'distributed.worker.daemon': False})
         self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1)
         self.futures = []  # type: typing.List[Future]
@@ -76,14 +104,9 @@ class DaskParallelRunner(BaseRunner):
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration
         embedded in a run_info object, and uses one of the workers
-        to produce a result that is stored in a results queue.
+        to produce a result locally to each worker.
 
-        self.func is not yet a completely isolated function that can
-        take a run_info and produce a result. The current SMAC infrastructure is
-        created based on an object called tae that has the necessary attributes to
-        execute a run_info via it's run() method.
-
-        In other words, the execution of a configuration follows this procedure:
+        The execution of a configuration follows this procedure:
         1- SMBO/intensifier generates a run_info
         2- SMBO calls submit_run so that a worker launches the run_info
         3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
@@ -91,6 +114,8 @@ class DaskParallelRunner(BaseRunner):
         capping check.
 
         Child classes must implement a run() method.
+        All results will be only available locally to each worker, so the
+        main node needs to collect them.
 
         Parameters
         ----------
@@ -100,21 +125,18 @@ class DaskParallelRunner(BaseRunner):
         """
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
         # Check for resources or block till one is available
-        print("\n\n\n")
         if not self._workers_available():
-            print("Force collect a future {now}")
             done_futures = wait(self.futures, return_when='FIRST_COMPLETED').done
             for future in done_futures:
                 if future.exception():
                     self.exceptions.append(future.exception)
-                self.results.put(future.result())
+                self.results.append(future.result())
 
         # At this point we can submit the job
-        print(f"Scheduling job {self.counter} at {now}")
         self.counter += 1
         self.futures.append(
             self.client.submit(
-                self.run_wrapper,
+                self.single_worker.run_wrapper,
                 run_info
             )
         )
@@ -123,7 +145,7 @@ class DaskParallelRunner(BaseRunner):
         """This method returns any finished configuration, and returns a list with
         the results of exercising the configurations. This class keeps populating results
         to self.results until a call to get_finished runs is done. In this case, the
-        self.results Queue is emptied and all RunValues produced by running self.func are
+        self.results list is emptied and all RunValues produced by running run() are
         returned.
 
         Returns
@@ -137,12 +159,12 @@ class DaskParallelRunner(BaseRunner):
         for future in done_futures:
             if future.exception():
                 self.exceptions.append(future.exception)
-            self.results.put(future.result())
+            self.results.append(future.result())
             self.futures.remove(future)
 
         results_list = []
-        while not self.results.empty():
-            results_list.append(self.results.get())
+        while self.results:
+            results_list.append(self.results.pop())
         return results_list
 
     def get_exceptions(self) -> typing.List[Exception]:
@@ -168,9 +190,7 @@ class DaskParallelRunner(BaseRunner):
         that there are resources to launch a dask job"""
         total_compute_power = sum(self.client.nthreads().values())
         if len(self.futures) < total_compute_power:
-            print(f"There are workers {total_compute_power} and {len(self.futures)}")
             return True
-        print(f"There are NO workers {total_compute_power}")
         return False
 
     def __del__(self) -> None:

@@ -1,32 +1,30 @@
 """
-==========================
-scipy-style fmin interface
-==========================
+============================================
+Parallel Intensifier with No Intensification
+============================================
+
+This example showcases how to use dask to
+launch parallel configurations via n_workers
 """
 
 import logging
-import time
 
+from smac.intensification.random_search import RandomSearcher
 from smac.facade.func_facade import fmin_smac
+from smac.tae.execute_ta_run import StatusType
+
+# --------------------------------------------------------------
+# We need to provide a pickable function and use __main__
+# to be compliant with multiprocessing API
+# Below is a WA to have a packaged function called rosenbrock_2d
+# --------------------------------------------------------------
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+from rosenbrock_2d_delayed import rosenbrock_2d  # noqa: E402
+# --------------------------------------------------------------
 
 if __name__ == '__main__':
-
-    # Encapsulate the function within the main to have a self
-    # Isolated example. Functions to be parallelized must be pickle-compatible
-    def rosenbrock_2d(x):
-        """ The 2 dimensional Rosenbrock function as a toy model
-        The Rosenbrock function is well know in the optimization community and
-        often serves as a toy problem. It can be defined for arbitrary
-        dimensions. The minimium is always at x_i = 1 with a function value of
-        zero. All input parameters are continuous. The search domain for
-        all x's is the interval [-5, 10].
-        """
-        x1 = x[0]
-        x2 = x[1]
-
-        val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
-        time.sleep(1)
-        return val
 
     # debug output
     logging.basicConfig(level=20)
@@ -34,11 +32,12 @@ if __name__ == '__main__':
 
     # fmin_smac assumes that the function is deterministic
     # and uses under the hood the SMAC4HPO
-    x, cost, _ = fmin_smac(func=rosenbrock_2d,
-                           scenario_args={'n_workers': 4},
-                           x0=[-3, -4],
-                           bounds=[(-5, 10), (-5, 10)],
-                           maxfun=10,
-                           rng=3)  # Passing a seed makes fmin_smac determistic
-
+    # n_workers tells the SMBO loop to execute in parallel
+    x, cost, smac = fmin_smac(func=rosenbrock_2d,
+                              intensifier=RandomSearcher,
+                              scenario_args={'n_workers': 4},
+                              x0=[-3, -4],
+                              bounds=[(-5, 10), (-5, 10)],
+                              maxfun=10,
+                              rng=3)  # Passing a seed makes fmin_smac determistic
     print("Best x: %s; with cost: %f" % (str(x), cost))

@@ -23,6 +23,7 @@ from smac.tae import (
     StatusType,
 )
 from smac.tae.base import BaseRunner
+from smac.tae.dask_runner import DaskParallelRunner
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -126,7 +127,10 @@ class SMBO(object):
         self.rng = rng
         self._min_time = 10 ** -5
 
-        self.tae_runner = tae_runner
+        if not hasattr(self.scenario, 'n_workers') or self.scenario.n_workers <= 1:  # type: ignore[attr-defined] # noqa F821
+            self.tae_runner = tae_runner
+        else:
+            self.tae_runner = DaskParallelRunner(tae_runner, n_workers=self.scenario.n_workers)  # type: ignore[attr-defined] # noqa F821
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
@@ -222,7 +226,7 @@ class SMBO(object):
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
-            if intent != RunInfoIntent.SKIP:
+            if intent == RunInfoIntent.RUN:
                 # Track the fact that a run was launched in the run
                 # history
                 self.runhistory.add(
@@ -236,6 +240,17 @@ class SMBO(object):
                 )
 
                 self.tae_runner.submit_run(run_info=run_info)
+            elif intent == RunInfoIntent.SKIP:
+                # No launch is required
+                # This moarks a transition request from the intensifier
+                # To a new iteration
+                pass
+            else:
+                # In any other case, we wait for resources
+                # This likely indicates that no further decision
+                # can be taken by the intensifier until more data is
+                # available
+                self.tae_runner.wait()
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():

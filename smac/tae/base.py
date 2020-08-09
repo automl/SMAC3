@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from queue import Queue
 import math
 import logging
 import time
@@ -16,36 +15,41 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 
 
 class BaseRunner(ABC):
-    """Base class to handle the execution of SMAC' configurations.
+    """Interface class to handle the execution of SMAC' configurations.
 
-    This abstract class defines the interface to interact with SMBO,
+    This interface defines how interact with the SMBO loop,
     and execute a configuration, given a RunInfo object.
     The complexity of running a configuration as well as handling the
     results is abstracted to the SMBO via a BaseRunner.
 
-    To run a configuration, one muss subclass BaseRunner, and implement
-    a run() method, which contains the steps to translate a RunInfo object
-    to a RunValue object.
-
-    BaseRunner is an abstract class, whose implementation defines if
-    a configuration will run serially or in a parallel fashion.
+    From SMBO perspective, launching a configuration follows a
+    submit/collect scheme as follows:
+    1- A run is launched via submit_run()
+    1.1- Submit_run internally calls run_wrapper(), a method that
+         contains common processing functions among different runners,
+         for example, handling capping and stats checking.
+    1.2- A class that implements BaseRunner defines run() which is
+         really the algorithm to translate a RunInfo to a RunValue, i.e.
+         a configuration to an actual result.
+    2- A completed run is collected via get_finished_runs(), which returns
+       any finished runs, if any.
+    3- This interface also offers the method wait() as a mechanism to make
+       sure we have enough data in the next iteration to make a decision. For
+       example, the intensifier might not be able to select the next challenger
+       until more results are available.
 
 
     Attributes
     ----------
 
-    results: Queue
-        A worker store it's result in a queue. SMBO collects the results of a completed
-        operation from the queue.
-    exceptions:
-        A list of capturing exceptions, product of the failure of submit/exec a job
+    results
+    exceptions
     ta
     stats
     run_obj
     par_factor
     cost_for_crash
     abort_i_first_run_crash
-    n_workers
 
     Parameters
     ---------
@@ -62,8 +66,6 @@ class BaseRunner(ABC):
         that returned NaN or inf)
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
-    n_workers: int
-        Number of workers that will actively be running configurations in parallel
     """
     def __init__(
         self,
@@ -73,19 +75,25 @@ class BaseRunner(ABC):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
-        n_workers: int = 1
     ):
-        self.n_workers = n_workers
-        self.results = Queue()  # type: "Queue[typing.Tuple[RunInfo, RunValue]]"
+
+        # The results is a FIFO structure, implemented via a list
+        # (because the Queue lock is not pickable). Finished runs are
+        # put in this list and collected via process_finished_runs
+        self.results = []  # type: typing.List[typing.Tuple[RunInfo, RunValue]]
+
+        # Exceptions can happen on a distributed fashion, so
+        # they have to be collected and handled by the SMBO
         self.exceptions = []  # type: typing.List[Exception]
+
+        # Below state the support for a Runner algorithm that
+        # implements a ta
         self.ta = ta
         self.stats = stats
         self.run_obj = run_obj
-
         self.par_factor = par_factor
         self.cost_for_crash = cost_for_crash
         self.abort_on_first_run_crash = abort_on_first_run_crash
-
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
@@ -95,22 +103,18 @@ class BaseRunner(ABC):
     @abstractmethod
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration
-        embedded in a run_info object, and uses one of the workers
-        to produce a result that is stored in a results queue.
+        embedded in a RunInfo object, and uses one of the workers
+        to produce a result (such result will eventually be available
+        on the self.results FIFO).
 
-        self.func is not yet a completely isolated function that can
-        take a run_info and produce a result. The current SMAC infrastructure is
-        created based on an object called tae that has the necessary attributes to
-        execute a run_info via it's run() method.
+        This interface method will be called by SMBO, with the expectation
+        that a function will be executed by a worker.
 
-        In other words, the execution of a configuration follows this procedure:
-        1- SMBO/intensifier generates a run_info
-        2- SMBO calls submit_run so that a worker launches the run_info
-        3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
-        which contains common code that any run() method will otherwise have to implement, like
-        capping check.
+        What will be executed is dictated by run_info, and "how" will it be
+        executed is decided via the child class that implements a run() method.
 
-        Child classes must implement a run() method.
+        Because config submission can be a serial/parallel endeavor,
+        it is expected to be implemented by a child class.
 
         Parameters
         ----------
@@ -120,7 +124,6 @@ class BaseRunner(ABC):
         """
         pass
 
-    @abstractmethod
     def run(
         self, config: Configuration,
         instance: str,
@@ -132,6 +135,8 @@ class BaseRunner(ABC):
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
+
+        This method exemplifies how to defined the run() method
 
         Parameters
         ----------
@@ -292,7 +297,7 @@ class BaseRunner(ABC):
         """This method returns any finished configuration, and returns a list with
         the results of exercising the configurations. This class keeps populating results
         to self.results until a call to get_finished runs is done. In this case, the
-        self.results Queue is emptied and all RunValues produced by running self.func are
+        self.results list is emptied and all RunValues produced by running run() are
         returned.
 
         Returns

@@ -352,8 +352,7 @@ class SMAC4AC(object):
             'run_obj': scenario.run_obj,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
-            'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
-            'n_workers': 1 if not hasattr(scenario, 'n_workers') else scenario.n_workers, # type: ignore[attr-defined] # noqa F821
+            'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
