@@ -38,9 +38,8 @@ class SMAC4HPO(SMAC4AC):
 
         scenario = kwargs['scenario']
 
-        if len(scenario.cs.get_hyperparameters()) <= 40:
-            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
-        else:
+        kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+        if len(scenario.cs.get_hyperparameters()) > 40 and kwargs['initial_design'] is SobolDesign:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
