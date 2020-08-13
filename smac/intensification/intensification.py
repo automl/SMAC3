@@ -540,7 +540,7 @@ class Intensifier(AbstractRacer):
                     log_traj=log_traj,
                 )
 
-        elapsed_time = result.endtime - result.starttime
+        self.elapsed_time += (result.endtime - result.starttime)
         # check if 1 intensification run is complete - line 18
         # this is different to regular SMAC as it requires at least successful challenger run,
         # which is necessary to work on a fixed grid of configurations.
@@ -553,11 +553,11 @@ class Intensifier(AbstractRacer):
                 self.logger.info("Maximum #runs for intensification reached")
                 self._next_iteration()
 
-            if not self.use_ta_time_bound and elapsed_time - time_bound >= 0:
+            if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
                 self.logger.info(
                     "Wallclock time limit for intensification reached "
                     "(used: %f sec, available: %f sec)",
-                    elapsed_time,
+                    self.elapsed_time,
                     time_bound
                 )
 
