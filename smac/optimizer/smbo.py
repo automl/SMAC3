@@ -18,12 +18,12 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
-from smac.tae.execute_ta_run import (
+from smac.tae import (
     FirstRunCrashedException,
     StatusType,
-    ExecuteTARun,
 )
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
+from smac.tae.base import BaseRunner
+from smac.tae.dask_runner import DaskParallelRunner
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -65,7 +65,7 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 tae_runner: ExecuteTARun,
+                 tae_runner: BaseRunner,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
@@ -101,7 +101,7 @@ class SMBO(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
-        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
+        tae_runner : smac.tae.base.BaseRunner Object
             target algorithm run executor
         random_configuration_chooser
             Chooser for random configuration -- one of
@@ -127,7 +127,10 @@ class SMBO(object):
         self.rng = rng
         self._min_time = 10 ** -5
 
-        self.tae_runner = tae_runner
+        if not hasattr(self.scenario, 'n_workers') or self.scenario.n_workers <= 1:  # type: ignore[attr-defined] # noqa F821
+            self.tae_runner = tae_runner
+        else:
+            self.tae_runner = DaskParallelRunner(tae_runner, n_workers=self.scenario.n_workers)  # type: ignore[attr-defined] # noqa F821
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
@@ -223,49 +226,54 @@ class SMBO(object):
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
-            if intent != RunInfoIntent.SKIP:
-                try:
+            if intent == RunInfoIntent.RUN:
+                # Track the fact that a run was launched in the run
+                # history
+                self.runhistory.add(
+                    config=run_info.config,
+                    cost=float(MAXINT),
+                    time=0.0,
+                    status=StatusType.RUNNING,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                )
 
-                    # Track the fact that a run was launched in the run
-                    # history
-                    self.runhistory.add(
-                        config=run_info.config,
-                        cost=float(MAXINT),
-                        time=0.0,
-                        status=StatusType.RUNNING,
-                        instance_id=run_info.instance,
-                        seed=run_info.seed,
-                        budget=run_info.budget,
+                self.tae_runner.submit_run(run_info=run_info)
+            elif intent == RunInfoIntent.SKIP:
+                # No launch is required
+                # This marks a transition request from the intensifier
+                # To a new iteration
+                pass
+            else:
+                # In any other case, we wait for resources
+                # This likely indicates that no further decision
+                # can be taken by the intensifier until more data is
+                # available
+                self.tae_runner.wait()
+
+            # Check if there is any result, or else continue
+            for run_info, result in self.tae_runner.get_finished_runs():
+                if result.status != StatusType.BUDGETEXHAUSTED:
+
+                    # Add the results of the run to the run history
+                    self._incorporate_run_results(run_info, result)
+
+                    # Update the intensifier with the result of the runs
+                    self.incumbent, inc_perf = self.intensifier.process_results(
+                        challenger=run_info.config,
+                        incumbent=self.incumbent,
+                        run_history=self.runhistory,
+                        time_bound=max(self._min_time, time_left),
+                        result=result,
                     )
 
-                    result = execute_ta_run_wrapper(
-                        run_info=run_info,
-                        tae_runner=self.tae_runner,
-                        logger=self.logger,
-                    )
 
-                    if result.status != StatusType.BUDGETEXHAUSTED:
-
-                        # Add the results of the run to the run history
-                        self._incorporate_run_results(run_info, result)
-
-                        # Update the intensifier with the result of the runs
-                        self.incumbent, inc_perf = self.intensifier.process_results(
-                            challenger=run_info.config,
-                            incumbent=self.incumbent,
-                            run_history=self.runhistory,
-                            time_bound=max(self._min_time, time_left),
-                            result=result,
-                        )
-                except FirstRunCrashedException:
-                    if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
-                        raise
-
-                if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
-                    assert self.scenario.output_dir_for_this_run is not None  # please mypy
-                    pSMAC.write(run_history=self.runhistory,
-                                output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
-                                logger=self.logger)
+            if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
+                assert self.scenario.output_dir_for_this_run is not None  # please mypy
+                pSMAC.write(run_history=self.runhistory,
+                            output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
+                            logger=self.logger)
 
             self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),

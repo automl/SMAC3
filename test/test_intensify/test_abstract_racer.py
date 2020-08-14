@@ -9,7 +9,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 

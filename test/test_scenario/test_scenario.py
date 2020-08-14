@@ -21,7 +21,7 @@ from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 
 in_reader = InputReader()
 

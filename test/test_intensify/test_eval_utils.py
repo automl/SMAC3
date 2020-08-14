@@ -1,7 +1,6 @@
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
 
 
 def eval_challenger(
@@ -18,9 +17,8 @@ def eval_challenger(
     wrapper to launch the taf and add it to the history
     """
     # evaluating configuration
-    result = execute_ta_run_wrapper(
+    run_info, result = taf.run_wrapper(
         run_info=run_info,
-        tae_runner=taf,
     )
     stats.ta_runs += 1
     stats.ta_time_used += float(result.time)

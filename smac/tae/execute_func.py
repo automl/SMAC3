@@ -1,4 +1,3 @@
-import logging
 import inspect
 import math
 import time
@@ -10,8 +9,10 @@ import pynisher
 
 from smac.configspace import Configuration
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import StatusType, ExecuteTARun
+from smac.tae import StatusType
 from smac.utils.constants import MAXINT, MAX_CUTOFF
+from smac.tae.serial_runner import SerialRunner
+from smac.utils.logging import PickableLoggerAdapter
 
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -22,7 +23,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
 
 
-class AbstractTAFunc(ExecuteTARun):
+class AbstractTAFunc(SerialRunner):
     """Baseclass to execute target algorithms which are python functions.
 
     **Note:*** Do not use directly
@@ -48,7 +49,8 @@ class AbstractTAFunc(ExecuteTARun):
         super().__init__(ta=ta, stats=stats,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
-                         abort_on_first_run_crash=abort_on_first_run_crash)
+                         abort_on_first_run_crash=abort_on_first_run_crash,
+                         )
         """
         Abstract class for having a function as target algorithm
 
@@ -96,7 +98,7 @@ class AbstractTAFunc(ExecuteTARun):
 
         self.use_pynisher = use_pynisher
 
-        self.logger = logging.getLogger(
+        self.logger = PickableLoggerAdapter(
             self.__module__ + '.' + self.__class__.__name__)
 
     def run(self, config: Configuration,
@@ -156,9 +158,11 @@ class AbstractTAFunc(ExecuteTARun):
                     raise ValueError("%d is outside the legal range of [0, 65535] "
                                      "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
 
-            arguments = {'logger': logging.getLogger("pynisher"),
-                         'wall_time_in_s': cutoff,
-                         'mem_in_mb': self.memory_limit}
+            arguments = {
+                'logger': self.logger,
+                'wall_time_in_s': cutoff,
+                'mem_in_mb': self.memory_limit
+            }
 
             # call ta
             obj = pynisher.enforce_limits(**arguments)(self._ta)

@@ -7,3 +7,6 @@ scikit-learn>=0.22.0
 pyrfr>=0.8.0
 joblib
 lazy_import
+dask
+dask-labextension>=2.0.0
+distributed
