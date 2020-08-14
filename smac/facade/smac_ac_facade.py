@@ -349,7 +349,6 @@ class SMAC4AC(object):
         tae_def_kwargs = {
             'stats': self.stats,
             'run_obj': scenario.run_obj,
-            'runhistory': runhistory,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821
@@ -386,7 +385,6 @@ class SMAC4AC(object):
 
         # initialize intensification
         intensifier_def_kwargs = {
-            'tae_runner': tae_runner_instance,
             'stats': self.stats,
             'traj_logger': traj_logger,
             'rng': rng,
@@ -544,7 +542,8 @@ class SMAC4AC(object):
             'acquisition_func': acquisition_function_instance,
             'rng': rng,
             'restore_incumbent': restore_incumbent,
-            'random_configuration_chooser': random_configuration_chooser_instance
+            'random_configuration_chooser': random_configuration_chooser_instance,
+            'tae_runner': tae_runner_instance,
         }  # type: Dict[str, Any]
 
         if smbo_class is None:
@@ -631,7 +630,7 @@ class SMAC4AC(object):
         TAE: smac.tae.execute_ta_run.ExecuteTARun
 
         """
-        return self.solver.intensifier.tae_runner
+        return self.solver.tae_runner
 
     def get_runhistory(self) -> RunHistory:
         """

@@ -3,13 +3,13 @@ import typing
 
 import numpy as np
 
+from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.runhistory.runhistory import RunValue, RunInfo, StatusType  # noqa: F401
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -27,8 +27,6 @@ class Hyperband(SuccessiveHalving):
 
     Parameters
     ----------
-    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
-        target algorithm run executor
     stats: smac.stats.stats.Stats
         stats object
     traj_logger: smac.utils.io.traj_logging.TrajLogger
@@ -71,7 +69,6 @@ class Hyperband(SuccessiveHalving):
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -90,8 +87,7 @@ class Hyperband(SuccessiveHalving):
                  incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
 
-        super().__init__(tae_runner=tae_runner,
-                         stats=stats,
+        super().__init__(stats=stats,
                          traj_logger=traj_logger,
                          rng=rng,
                          instances=instances,
@@ -116,43 +112,52 @@ class Hyperband(SuccessiveHalving):
         self.hb_iters = 0
         self.sh_intensifier = None  # type: SuccessiveHalving # type: ignore[assignment]
 
-    def eval_challenger(self,
+    def process_results(self,
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
-                        time_bound: float = float(MAXINT),
-                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
+                        time_bound: float,
+                        result: RunValue,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[Configuration, float]:
         """
-        Running intensification via hyperband to determine the incumbent configuration.
-        *Side effect:* adds runs to run_history
-
-        Implementation of hyperband (Li et al., 2018)
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+        Also, a incumbent will be determined.
 
         Parameters
         ----------
         challenger : Configuration
-            promising configuration
+            A configuration that was previously executed, and whose status
+            will be used to define the next stage.
         incumbent : typing.Optional[Configuration]
-            best configuration so far, None in 1st run
-        run_history : smac.runhistory.runhistory.RunHistory
+            Best configuration seen so far
+        run_history : RunHistory
             stores all runs we ran so far
-        time_bound : float, optional (default=2 ** 31 - 1)
+            if False, an evaluated configuration will not be generated again
+        time_bound : float
             time in [sec] available to perform intensify
+        result: RunValue
+            Contain the result (status and other methadata) of exercising
+            a challenger/incumbent.
         log_traj: bool
-            whether to log changes of incumbents in trajectory
+            Whether to log changes of incumbents in trajectory
 
         Returns
         -------
-        Configuration
-            new incumbent configuration
-        float
+        incumbent: Configuration
+            current (maybe new) incumbent configuration
+        inc_perf: float
             empirical performance of incumbent configuration
         """
+
         # run 1 iteration of successive halving
-        incumbent, inc_perf = self.sh_intensifier.eval_challenger(challenger=challenger,
+        incumbent, inc_perf = self.sh_intensifier.process_results(challenger=challenger,
                                                                   incumbent=incumbent,
                                                                   run_history=run_history,
                                                                   time_bound=time_bound,
+                                                                  result=result,
                                                                   log_traj=log_traj)
         self.num_run += 1
 
@@ -162,21 +167,25 @@ class Hyperband(SuccessiveHalving):
 
         return incumbent, inc_perf
 
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True) -> \
-            typing.Tuple[typing.Optional[Configuration], bool]:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
         while the later iterations pick top configurations from the previously selected challengers in that iteration
 
+        If no new run is available, the method returns a configuration of None.
+
         Parameters
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        incumbent: Configuration
+               incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : smac.runhistory.runhistory.RunHistory
@@ -186,10 +195,10 @@ class Hyperband(SuccessiveHalving):
 
         Returns
         -------
-        typing.Optional[Configuration]
-            next configuration to evaluate
-        bool
-            flag telling if the configuration is newly sampled or one currently being tracked
+        intent: RunInfoIntent
+               Indicator of how to consume the RunInfo object
+        run_info: RunInfo
+               An object that encapsulates necessary information for a config run
         """
 
         if not hasattr(self, 's'):
@@ -199,13 +208,20 @@ class Hyperband(SuccessiveHalving):
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        challenger, new_challenger = self.sh_intensifier.get_next_challenger(
+        intent, run_info = self.sh_intensifier.get_next_run(
             challengers=challengers,
+            incumbent=incumbent,
             chooser=chooser,
             run_history=run_history,
             repeat_configs=self.sh_intensifier.repeat_configs
         )
-        return challenger, new_challenger
+
+        # For testing purposes, this attribute highlights whether a
+        # new challenger is proposed or not. Not required from a functional
+        # perspective
+        self.new_challenger = self.sh_intensifier.new_challenger
+
+        return intent, run_info
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
         """
@@ -242,7 +258,6 @@ class Hyperband(SuccessiveHalving):
 
         # creating a new Successive Halving intensifier with the current running budget
         self.sh_intensifier = SuccessiveHalving(
-            tae_runner=self.tae_runner,
             stats=self.stats,
             traj_logger=self.traj_logger,
             rng=self.rs,

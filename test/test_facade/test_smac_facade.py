@@ -66,9 +66,9 @@ class TestSMACFacade(unittest.TestCase):
         def target_algorithm(conf, inst):
             return 5
         smac = SMAC4AC(tae_runner=target_algorithm, scenario=self.scenario)
-        self.assertIsInstance(smac.solver.intensifier.tae_runner,
+        self.assertIsInstance(smac.solver.tae_runner,
                               ExecuteTAFuncDict)
-        self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
+        self.assertIs(smac.solver.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
         self.assertRaisesRegex(

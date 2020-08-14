@@ -13,8 +13,6 @@ from smac.stats.stats import Stats
 from smac.tae.execute_ta_run import StatusType, ExecuteTARun
 from smac.utils.constants import MAXINT, MAX_CUTOFF
 
-if typing.TYPE_CHECKING:
-    from smac.runhistory.runhistory import RunHistory  # noqa F401
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -39,7 +37,6 @@ class AbstractTAFunc(ExecuteTARun):
         self,
         ta: typing.Callable,
         stats: Stats,
-        runhistory: typing.Optional['RunHistory'] = None,
         run_obj: str = "quality",
         memory_limit: typing.Optional[int] = None,
         par_factor: int = 1,
@@ -48,7 +45,7 @@ class AbstractTAFunc(ExecuteTARun):
         use_pynisher: bool = True,
     ):
 
-        super().__init__(ta=ta, stats=stats, runhistory=runhistory,
+        super().__init__(ta=ta, stats=stats,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
                          abort_on_first_run_crash=abort_on_first_run_crash)
@@ -61,8 +58,6 @@ class AbstractTAFunc(ExecuteTARun):
             Function (target algorithm) to be optimized.
         stats: Stats()
              stats object to collect statistics about runtime and so on
-        runhistory: RunHistory
-            runhistory to keep track of all runs; only used if set
         run_obj: str
             run objective of SMAC
         memory_limit : int, optional
@@ -79,6 +74,13 @@ class AbstractTAFunc(ExecuteTARun):
               as it wants (time and memory) --- use with caution
               * all runs will be returned as SUCCESS if returned value is not None
         """
+        self.ta = ta
+        self.stats = stats
+        self.run_obj = run_obj
+
+        self.par_factor = par_factor
+        self.cost_for_crash = cost_for_crash
+        self.abort_on_first_run_crash = abort_on_first_run_crash
 
         signature = inspect.signature(ta).parameters
         self._accepts_seed = 'seed' in signature.keys()
@@ -172,16 +174,16 @@ class AbstractTAFunc(ExecuteTARun):
             # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
-                cost = self.crash_cost
+                cost = self.cost_for_crash
             elif obj.exit_status is pynisher.MemorylimitException:
                 status = StatusType.MEMOUT
-                cost = self.crash_cost
+                cost = self.cost_for_crash
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
                 cost = result
             else:
                 status = StatusType.CRASHED
-                cost = self.crash_cost
+                cost = self.cost_for_crash
 
             runtime = float(obj.wall_clock_time)
         else:
@@ -200,7 +202,7 @@ class AbstractTAFunc(ExecuteTARun):
             except Exception as e:
                 self.logger.exception(e)
                 status = StatusType.CRASHED
-                cost = self.crash_cost
+                cost = self.cost_for_crash
                 additional_run_info = {}
 
             runtime = time.time() - start_time
@@ -223,7 +225,7 @@ class AbstractTAFunc(ExecuteTARun):
 
         if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
             status = StatusType.CRASHED
-            cost = self.crash_cost
+            cost = self.cost_for_crash
 
         return status, cost, runtime, additional_run_info
 
@@ -262,8 +264,6 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         Stats object to collect statistics about runtime etc.
     run_obj : str, optional
         Run objective (runtime or quality)
-    runhistory : RunHistory, optional
-        runhistory to keep track of all runs; only used if set
     memory_limit : int, optional
         Memory limit (in MB) that will be applied to the target algorithm.
     par_factor : int, optional
@@ -307,8 +307,6 @@ class ExecuteTAFuncArray(AbstractTAFunc):
         Stats object to collect statistics about runtime etc.
     run_obj: str, optional
         Run objective (runtime or quality)
-    runhistory: RunHistory, optional
-        runhistory to keep track of all runs; only used if set
     memory_limit : int, optional
         Memory limit (in MB) that will be applied to the target algorithm.
     par_factor: int, optional

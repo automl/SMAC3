@@ -2,16 +2,15 @@ import logging
 import typing
 import time
 from collections import OrderedDict
+from enum import Enum
 
 import numpy as np
 
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
@@ -22,20 +21,34 @@ __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 
 
+class RunInfoIntent(Enum):
+    """Class to define different requests on how to process
+    the runinfo
+
+    Gives the flexibility to indicate whether a configuration
+    should be skipped (SKIP) or if the SMBO should simple
+    run a generated run_info.
+    """
+    RUN = 0  # Normal run execution of a run info
+    SKIP = 1  # Skip running the run_info
+
+
 class AbstractRacer(object):
     """
     Base class for all racing methods
 
-    The "intensification" is designed to be spread across multiple ``eval_challenger()`` runs.
-    This is to facilitate on-demand configuration sampling if multiple configurations are required,
-    like Successive Halving or Hyperband.
+    The "intensification" is designed to output a RunInfo object with enough information
+    to run a given configuration (for example, the run info contains the instance/seed
+    pair, as well as the associated resources).
+
+    A worker can execute this RunInfo object and produce a RunValue object with the
+    execution results. Each intensifier process the RunValue object and updates it's
+    internal state in preparation for the next iteration.
 
     **Note: Do not use directly**
 
     Parameters
     ----------
-    tae_runner : tae.executre_ta_run_*.ExecuteTARun* Object
-        target algorithm run executor
     stats: Stats
         stats object
     traj_logger: smac.utils.io.traj_logging.TrajLogger
@@ -64,7 +77,6 @@ class AbstractRacer(object):
     """
 
     def __init__(self,
-                 tae_runner: ExecuteTARun,
                  stats: Stats,
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
@@ -89,7 +101,6 @@ class AbstractRacer(object):
         self.cutoff = cutoff
         self.deterministic = deterministic
         self.run_obj_time = run_obj_time
-        self.tae_runner = tae_runner
 
         self.minR = minR
         self.maxR = maxR
@@ -107,7 +118,6 @@ class AbstractRacer(object):
             self.instance_specifics = instance_specifics
 
         # general attributes
-        self._min_time = 10 ** -5
         self.num_run = 0  # Number of runs done in an iteration so far
         self._chall_indx = 0
         self._ta_time = 0.
@@ -117,51 +127,26 @@ class AbstractRacer(object):
         # to mark the end of an iteration
         self.iteration_done = False
 
-    def eval_challenger(self,
-                        challenger: Configuration,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float = float(MAXINT),
-                        log_traj: bool = True) -> typing.Tuple[Configuration, float]:
-        """
-        Runs intensification by evaluating one configuration-instance at a time
-        *Side effect:* adds runs to run_history
-
-        Parameters
-        ----------
-        challenger : Configuration
-            promising configuration
-        incumbent : typing.Optional[Configuration]
-            best configuration so far, None in 1st run
-        run_history : smac.runhistory.runhistory.RunHistory
-            stores all runs we ran so far
-        time_bound : float, optional (default=2 ** 31 - 1)
-            time in [sec] available to perform intensify
-        log_traj : bool
-            whether to log changes of incumbents in trajectory
-
-        Returns
-        -------
-        typing.Tuple[Configuration, float]
-            incumbent and incumbent cost
-        """
-
-        raise NotImplementedError()
-
-    def get_next_challenger(self,
-                            challengers: typing.Optional[typing.List[Configuration]],
-                            chooser: typing.Optional[EPMChooser],
-                            run_history: RunHistory,
-                            repeat_configs: bool = True) -> \
-            typing.Tuple[typing.Optional[Configuration], bool]:
+    def get_next_run(self,
+                     challengers: typing.Optional[typing.List[Configuration]],
+                     incumbent: Configuration,
+                     chooser: typing.Optional[EPMChooser],
+                     run_history: RunHistory,
+                     repeat_configs: bool = True
+                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
         uses ``_next_challenger()`` by default
+
+        If no more challengers are available, the method should issue a SKIP via
+        RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
 
         Parameters
         ----------
         challengers : typing.List[Configuration]
             promising configurations
+        incumbent: Configuration
+             incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
         run_history : smac.runhistory.runhistory.RunHistory
@@ -171,16 +156,53 @@ class AbstractRacer(object):
 
         Returns
         -------
-        typing.Optional[Configuration]
-            next configuration to evaluate
-        bool
-            flag telling if the configuration is newly sampled or one currently being tracked
+        run_info: RunInfo
+            An object that encapsulates necessary information for a config run
+        intent: RunInfoIntent
+            Indicator of how to consume the RunInfo object
         """
-        challenger = self._next_challenger(challengers=challengers,
-                                           chooser=chooser,
-                                           run_history=run_history,
-                                           repeat_configs=repeat_configs)
-        return challenger, True
+        raise NotImplementedError()
+
+    def process_results(self,
+                        challenger: Configuration,
+                        incumbent: typing.Optional[Configuration],
+                        run_history: RunHistory,
+                        time_bound: float,
+                        result: RunValue,
+                        log_traj: bool = True,
+                        ) -> \
+            typing.Tuple[Configuration, float]:
+        """
+        The intensifier stage will be updated based on the results/status
+        of a configuration execution.
+        Also, a incumbent will be determined.
+
+        Parameters
+        ----------
+        challenger : Configuration
+            A configuration that was previously executed, and whose status
+            will be used to define the next stage.
+        incumbent : typing.Optional[Configuration]
+            Best configuration seen so far
+        run_history : RunHistory
+            stores all runs we ran so far
+            if False, an evaluated configuration will not be generated again
+        time_bound : float
+            time in [sec] available to perform intensify
+        result: RunValue
+            Contain the result (status and other methadata) of exercising
+            a challenger/incumbent.
+        log_traj: bool
+            Whether to log changes of incumbents in trajectory
+
+        Returns
+        -------
+        incumbent: Configuration()
+            current (maybe new) incumbent configuration
+        inc_perf: float
+            empirical performance of incumbent configuration
+        """
+        raise NotImplementedError()
 
     def _next_challenger(self,
                          challengers: typing.Optional[typing.List[Configuration]],

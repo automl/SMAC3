@@ -6,7 +6,6 @@ import numpy as np
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.intensification.intensification import Intensifier
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
@@ -79,8 +78,36 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(Intensifier, 'eval_challenger')
+    @mock.patch('smac.optimizer.smbo.SMBO._incorporate_run_results')
     def test_abort_on_initial_design(self, patch):
+        def target(x):
+            return 5
+
+        # should raise an error if abort_on_first_run_crash is True
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': True})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(FirstRunCrashedException, smbo.run)
+
+        # should not raise an error if abort_on_first_run_crash is False
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': False, 'wallclock-limit': 1})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+
+        try:
+            smbo.start()
+            smbo.run()
+        except FirstRunCrashedException:
+            self.fail('Raises FirstRunCrashedException unexpectedly!')
+
+    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    def test_abort_on_runner(self, patch):
         def target(x):
             return 5
 
@@ -138,7 +165,7 @@ class TestSMBO(unittest.TestCase):
 
     def test_update_intensification_percentage(self):
         """
-        This test checks the insification time bound is updated in subsequent iterations as long as
+        This test checks the intensification time bound is updated in subsequent iterations as long as
         num_runs of the intensifier is not reset to zero.
         """
 
@@ -156,19 +183,19 @@ class TestSMBO(unittest.TestCase):
         solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
 
         class SideEffect:
-            def __init__(self, intensifier, get_next_challenger):
+            def __init__(self, intensifier, get_next_run):
                 self.intensifier = intensifier
-                self.get_next_challenger = get_next_challenger
+                self.get_next_run = get_next_run
                 self.counter = 0
 
             def __call__(self, *args, **kwargs):
                 self.counter += 1
                 if self.counter % 4 == 0:
                     self.intensifier.num_run = 0
-                return self.get_next_challenger(*args, **kwargs)
+                return self.get_next_run(*args, **kwargs)
 
-        solver.intensifier.get_next_challenger = unittest.mock.Mock(
-            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_challenger))
+        solver.intensifier.get_next_run = unittest.mock.Mock(
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_run))
 
         solver.run()
 
