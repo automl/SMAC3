@@ -2,7 +2,7 @@
 
 Copyright (C) 2016-2018  [AutoML Group](http://www.automl.org/)
 
-__Attention__: This package is a re-implementation of the original SMAC tool
+__Attention__: This package is a reimplementation of the original SMAC tool
 (see reference below).
 However, the reimplementation slightly differs from the original SMAC.
 For comparisons against the original SMAC, we refer to a stable release of SMAC (v2) in Java
@@ -16,7 +16,7 @@ Status for master branch:
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=master)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
 [![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
-Status for development branch
+Status for the development branch
 
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=development)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
@@ -27,8 +27,8 @@ Status for development branch
 SMAC is a tool for algorithm configuration to optimize the parameters of
 arbitrary algorithms across a set of instances. This also includes
 hyperparameter optimization of ML algorithms. The main core consists of
-Bayesian Optimization in combination with a aggressive racing mechanism to
-efficiently decide which of two configuration performs better.
+Bayesian Optimization in combination with an aggressive racing mechanism to
+efficiently decide which of two configurations performs better.
 
 For a detailed description of its main idea,
 we refer to
@@ -97,7 +97,7 @@ pip install smac[gp]
 pip install .[gp,lhd]
 ```
 
-For convenience there is also an `all` meta-dependency that installs all optional dependencies:
+For convenience, there is also an `all` meta-dependency that installs all optional dependencies:
 ```
 pip install smac[all]
 ```
