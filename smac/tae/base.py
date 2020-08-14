@@ -227,7 +227,7 @@ class BaseRunner(ABC):
                 budget=run_info.budget,
                 instance_specific=run_info.instance_specific
             )
-        except Exception as e:
+        except Exception:
             status = StatusType.CRASHED
             cost = self.cost_for_crash
             runtime = time.time() - start
