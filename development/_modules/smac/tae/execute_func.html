@@ -181,6 +181,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -297,8 +298,6 @@
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span><span class="p">,</span> <span class="n">MAX_CUTOFF</span>
 
-<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>  <span class="c1"># noqa F401</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer, Matthias Feurer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -323,7 +322,6 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ta</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">,</span>
         <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
-        <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="s1">&#39;RunHistory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">run_obj</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
         <span class="n">memory_limit</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">par_factor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -332,7 +330,7 @@
         <span class="n">use_pynisher</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="n">ta</span><span class="p">,</span> <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                          <span class="n">run_obj</span><span class="o">=</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">par_factor</span><span class="o">=</span><span class="n">par_factor</span><span class="p">,</span>
                          <span class="n">cost_for_crash</span><span class="o">=</span><span class="n">cost_for_crash</span><span class="p">,</span>
                          <span class="n">abort_on_first_run_crash</span><span class="o">=</span><span class="n">abort_on_first_run_crash</span><span class="p">)</span>
@@ -345,8 +343,6 @@
 <span class="sd">            Function (target algorithm) to be optimized.</span>
 <span class="sd">        stats: Stats()</span>
 <span class="sd">             stats object to collect statistics about runtime and so on</span>
-<span class="sd">        runhistory: RunHistory</span>
-<span class="sd">            runhistory to keep track of all runs; only used if set</span>
 <span class="sd">        run_obj: str</span>
 <span class="sd">            run objective of SMAC</span>
 <span class="sd">        memory_limit : int, optional</span>
@@ -363,6 +359,13 @@
 <span class="sd">              as it wants (time and memory) --- use with caution</span>
 <span class="sd">              * all runs will be returned as SUCCESS if returned value is not None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ta</span> <span class="o">=</span> <span class="n">ta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">=</span> <span class="n">run_obj</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">par_factor</span> <span class="o">=</span> <span class="n">par_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span> <span class="o">=</span> <span class="n">cost_for_crash</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="o">=</span> <span class="n">abort_on_first_run_crash</span>
 
         <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">ta</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_accepts_seed</span> <span class="o">=</span> <span class="s1">&#39;seed&#39;</span> <span class="ow">in</span> <span class="n">signature</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
@@ -456,16 +459,16 @@
             <span class="c1"># get status, cost, time</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">TimeoutException</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">TIMEOUT</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span>
             <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="ow">is</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">MemorylimitException</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span>
             <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">exit_status</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span>
                 <span class="n">cost</span> <span class="o">=</span> <span class="n">result</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span>
 
             <span class="n">runtime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">wall_clock_time</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -484,7 +487,7 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
-                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+                <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span>
                 <span class="n">additional_run_info</span> <span class="o">=</span> <span class="p">{}</span>
 
             <span class="n">runtime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
@@ -507,7 +510,7 @@
 
         <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
             <span class="n">status</span> <span class="o">=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crash_cost</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span>
 
         <span class="k">return</span> <span class="n">status</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">runtime</span><span class="p">,</span> <span class="n">additional_run_info</span></div>
 
@@ -546,8 +549,6 @@
 <span class="sd">        Stats object to collect statistics about runtime etc.</span>
 <span class="sd">    run_obj : str, optional</span>
 <span class="sd">        Run objective (runtime or quality)</span>
-<span class="sd">    runhistory : RunHistory, optional</span>
-<span class="sd">        runhistory to keep track of all runs; only used if set</span>
 <span class="sd">    memory_limit : int, optional</span>
 <span class="sd">        Memory limit (in MB) that will be applied to the target algorithm.</span>
 <span class="sd">    par_factor : int, optional</span>
@@ -591,8 +592,6 @@
 <span class="sd">        Stats object to collect statistics about runtime etc.</span>
 <span class="sd">    run_obj: str, optional</span>
 <span class="sd">        Run objective (runtime or quality)</span>
-<span class="sd">    runhistory: RunHistory, optional</span>
-<span class="sd">        runhistory to keep track of all runs; only used if set</span>
 <span class="sd">    memory_limit : int, optional</span>
 <span class="sd">        Memory limit (in MB) that will be applied to the target algorithm.</span>
 <span class="sd">    par_factor: int, optional</span>

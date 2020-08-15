@@ -181,6 +181,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -291,19 +292,26 @@
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.initial_design</span> <span class="kn">import</span> <span class="n">InitialDesign</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span><span class="p">,</span> <span class="n">RunInfoIntent</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer</span> <span class="kn">import</span> <span class="n">pSMAC</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="n">AbstractAcquisitionFunction</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="n">ChooserNoCoolDown</span><span class="p">,</span> <span class="n">RandomConfigurationChooser</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="n">AcquisitionFunctionMaximizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunValue</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">AbstractRunHistory2EPM</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">FirstRunCrashedException</span>
+<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">FirstRunCrashedException</span><span class="p">,</span>
+    <span class="n">StatusType</span><span class="p">,</span>
+    <span class="n">ExecuteTARun</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_wrapper</span> <span class="kn">import</span> <span class="n">execute_ta_run_wrapper</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
 <span class="kn">from</span> <span class="nn">smac.utils.validate</span> <span class="kn">import</span> <span class="n">Validator</span>
+
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer, Matthias Feurer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -327,6 +335,7 @@
 <span class="sd">    rng</span>
 <span class="sd">    initial_design_configs</span>
 <span class="sd">    epm_chooser</span>
+<span class="sd">    tae_runner</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -341,6 +350,7 @@
                  <span class="n">acq_optimizer</span><span class="p">:</span> <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
                  <span class="n">acquisition_func</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
+                 <span class="n">tae_runner</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
                  <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="mf">2.0</span><span class="p">),</span>
                  <span class="n">predict_x_best</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -376,6 +386,8 @@
 <span class="sd">            incumbent to be used from the start. ONLY used to restore states.</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
+<span class="sd">        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object</span>
+<span class="sd">            target algorithm run executor</span>
 <span class="sd">        random_configuration_chooser</span>
 <span class="sd">            Chooser for random configuration -- one of</span>
 <span class="sd">            * ChooserNoCoolDown(modulus)</span>
@@ -398,6 +410,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span> <span class="o">=</span> <span class="n">intensifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="n">num_run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
 
@@ -468,15 +483,16 @@
 
             <span class="c1"># sample next configuration for intensification</span>
             <span class="c1"># Initial design runs are also included in the BO loop now.</span>
-            <span class="n">challenger</span><span class="p">,</span> <span class="n">new_challenger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_next_challenger</span><span class="p">(</span>
+            <span class="n">intent</span><span class="p">,</span> <span class="n">run_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">get_next_run</span><span class="p">(</span>
                 <span class="n">challengers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span><span class="p">,</span>
+                <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
                 <span class="n">chooser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span><span class="p">,</span>
                 <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">repeat_configs</span>
+                <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">repeat_configs</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="c1"># remove config from initial design challengers to not repeat it again</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">challenger</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">]</span>
 
             <span class="c1"># update timebound only if a &#39;new&#39; configuration is sampled as the challenger</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">num_run</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -489,18 +505,47 @@
                 <span class="n">time_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timebound_for_intensification</span><span class="p">(</span><span class="n">time_spent</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Updated intensification time bound from </span><span class="si">%f</span><span class="s1"> to </span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">old_time_left</span><span class="p">,</span> <span class="n">time_left</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">challenger</span><span class="p">:</span>
-
+            <span class="c1"># Skip the run if there was a request to do so.</span>
+            <span class="c1"># For example, during intensifier intensification, we</span>
+            <span class="c1"># don&#39;t want to rerun a config that was previously ran</span>
+            <span class="k">if</span> <span class="n">intent</span> <span class="o">!=</span> <span class="n">RunInfoIntent</span><span class="o">.</span><span class="n">SKIP</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">eval_challenger</span><span class="p">(</span>
-                        <span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
-                        <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
-                        <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                        <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">))</span>
 
+                    <span class="c1"># Track the fact that a run was launched in the run</span>
+                    <span class="c1"># history</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="n">config</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                        <span class="n">cost</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
+                        <span class="n">time</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                        <span class="n">status</span><span class="o">=</span><span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">,</span>
+                        <span class="n">instance_id</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+                        <span class="n">seed</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                        <span class="n">budget</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">execute_ta_run_wrapper</span><span class="p">(</span>
+                        <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span>
+                        <span class="n">tae_runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
+                        <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">BUDGETEXHAUSTED</span><span class="p">:</span>
+
+                        <span class="c1"># Add the results of the run to the run history</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_incorporate_run_results</span><span class="p">(</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+                        <span class="c1"># Update the intensifier with the result of the runs</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">process_results</span><span class="p">(</span>
+                            <span class="n">challenger</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                            <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
+                            <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
+                            <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">),</span>
+                            <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+                        <span class="p">)</span>
                 <span class="k">except</span> <span class="n">FirstRunCrashedException</span><span class="p">:</span>
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                         <span class="k">raise</span>
+
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                     <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
                     <span class="n">pSMAC</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
@@ -513,6 +558,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()))</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
 
             <span class="c1"># print stats at the end of each intensification iteration</span>
@@ -577,7 +623,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_rh</span> <span class="o">=</span> <span class="n">validator</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="p">,</span> <span class="n">instance_mode</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span>
                                         <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
-                                        <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="p">,</span>
                                         <span class="n">output_fn</span><span class="o">=</span><span class="n">new_rh_path</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_rh</span></div>
 
@@ -609,7 +655,57 @@
                           <span class="s2">&quot;configurations: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">), time left for &quot;</span>
                           <span class="s2">&quot;intensification: </span><span class="si">%.4f</span><span class="s2"> (</span><span class="si">%.2f</span><span class="s2">)&quot;</span> <span class="o">%</span>
                           <span class="p">(</span><span class="n">total_time</span><span class="p">,</span> <span class="n">time_spent</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">frac_intensify</span><span class="p">),</span> <span class="n">time_left</span><span class="p">,</span> <span class="n">frac_intensify</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">time_left</span></div></div>
+        <span class="k">return</span> <span class="n">time_left</span></div>
+
+<div class="viewcode-block" id="SMBO._incorporate_run_results"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO._incorporate_run_results">[docs]</a>    <span class="k">def</span> <span class="nf">_incorporate_run_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The SMBO submits a config-run-request via a RunInfo object.</span>
+<span class="sd">        When that config run is completed, a RunValue, which contains</span>
+<span class="sd">        all the relevant information obtained after running a job, is returned.</span>
+<span class="sd">        This method incorporates the status of that run into</span>
+<span class="sd">        the stats/runhistory objects so that other consumers</span>
+<span class="sd">        can advance with their task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        run_info: RunInfo</span>
+<span class="sd">            Describes the run (config) from which to process the results</span>
+<span class="sd">        result: RunValue</span>
+<span class="sd">            Contains relevant information regarding the execution of a config</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># update SMAC stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Return: Status: </span><span class="si">%r</span><span class="s2">, cost: </span><span class="si">%f</span><span class="s2">, time: </span><span class="si">%f</span><span class="s2">, additional: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">additional_info</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="n">instance_id</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">budget</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+            <span class="n">force_update</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span><span class="s2">&quot;First run crashed, abort. &quot;</span>
+                                               <span class="s2">&quot;Please check your setup -- &quot;</span>
+                                               <span class="s2">&quot;we assume that your default&quot;</span>
+                                               <span class="s2">&quot;configuration does not crashes. &quot;</span>
+                                               <span class="s2">&quot;(To deactivate this exception,&quot;</span>
+                                               <span class="s2">&quot; use the SMAC scenario option &quot;</span>
+                                               <span class="s2">&quot;&#39;abort_on_first_run_crash&#39;)&quot;</span><span class="p">)</span>
+        <span class="k">return</span></div></div>
 </pre></div>
 
            </div>

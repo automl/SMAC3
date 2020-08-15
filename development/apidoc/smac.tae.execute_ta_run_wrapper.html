@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae package &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.tae.execute_ta_run_wrapper module &mdash; SMAC 0.12.3 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.tae.execute_func module" href="smac.tae.execute_func.html" />
-    <link rel="prev" title="smac.stats.stats module" href="smac.stats.stats.html" /> 
+    <link rel="next" title="smac.utils package" href="smac.utils.html" />
+    <link rel="prev" title="smac.tae.execute_ta_run_old module" href="smac.tae.execute_ta_run_old.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -177,13 +177,13 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">smac.tae package</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -269,13 +269,15 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-      <li>smac.tae package</li>
+          <li><a href="smac.tae.html">smac.tae package</a> &raquo;</li>
+        
+      <li>smac.tae.execute_ta_run_wrapper module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.tae.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.tae.execute_ta_run_wrapper.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -288,18 +290,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.tae">
-<span id="smac-tae-package"></span><h1>smac.tae package<a class="headerlink" href="#module-smac.tae" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+  <div class="section" id="module-smac.tae.execute_ta_run_wrapper">
+<span id="smac-tae-execute-ta-run-wrapper-module"></span><h1>smac.tae.execute_ta_run_wrapper module<a class="headerlink" href="#module-smac.tae.execute_ta_run_wrapper" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="smac.tae.execute_ta_run_wrapper.execute_ta_run_wrapper">
+<code class="sig-prename descclassname">smac.tae.execute_ta_run_wrapper.</code><code class="sig-name descname">execute_ta_run_wrapper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tae_runner</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span></em>, <em class="sig-param"><span class="n">run_info</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a></span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>logging.Logger<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><a class="reference internal" href="../_modules/smac/tae/execute_ta_run_wrapper.html#execute_ta_run_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run_wrapper.execute_ta_run_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around ExecuteTARun to run and check the execution of a given config file</p>
+<p>This function relies on the tae runner object, in order to asses whether a run
+was intended to be evaluated with a runtime goal or quality goal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tae_runner</strong> (<em>'ExecuteTARun'</em>) – An object with a run method to execute a config provided via run_info</p></li>
+<li><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><em>RunInfo</em></a>) – Object that contains enough information to execute a configuration run in
+isolation.</p></li>
 </ul>
-</div>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Contains information about the status/performance of config</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">RunValue</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -310,10 +325,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.tae.execute_func.html" class="btn btn-neutral float-right" title="smac.tae.execute_func module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.utils.html" class="btn btn-neutral float-right" title="smac.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.stats.stats.html" class="btn btn-neutral float-left" title="smac.stats.stats module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.tae.execute_ta_run_old.html" class="btn btn-neutral float-left" title="smac.tae.execute_ta_run_old module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

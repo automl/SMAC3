@@ -16,3 +16,4 @@ smac.tae package
    smac.tae.execute_ta_run_aclib
    smac.tae.execute_ta_run_hydra
    smac.tae.execute_ta_run_old
+   smac.tae.execute_ta_run_wrapper

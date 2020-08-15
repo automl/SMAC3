@@ -181,6 +181,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -295,12 +296,13 @@
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="kn">import</span> <span class="n">RFRImputator</span>
 <span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_types</span>
-<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">StatusType</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
+<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_wrapper</span> <span class="kn">import</span> <span class="n">execute_ta_run_wrapper</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Joshua Marben&quot;</span>
@@ -311,8 +313,9 @@
 
 
 <div class="viewcode-block" id="_unbound_tae_starter"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate._unbound_tae_starter">[docs]</a><span class="k">def</span> <span class="nf">_unbound_tae_starter</span><span class="p">(</span>
-    <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]:</span>
+    <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">],</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
+    <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunValue</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unbound function to be used by joblibs Parallel, since directly passing the</span>
 <span class="sd">    TAE results in pickling-problems.</span>
@@ -321,15 +324,34 @@
 <span class="sd">    ----------</span>
 <span class="sd">    tae: ExecuteTARun</span>
 <span class="sd">        tae to be used</span>
+<span class="sd">    runhistory: RunHistory</span>
+<span class="sd">        runhistory to save</span>
+<span class="sd">    run_info: RunInfo</span>
+<span class="sd">        Config to be launched</span>
 <span class="sd">    *args, **kwargs: various</span>
 <span class="sd">        arguments to the tae</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    tae_results: tuple</span>
+<span class="sd">    tae_results: RunValue</span>
 <span class="sd">        return from tae.start</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">tae</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">execute_ta_run_wrapper</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="n">run_info</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">runhistory</span><span class="p">:</span>
+        <span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span>
+            <span class="n">time</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">status</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="n">instance_id</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
+            <span class="n">seed</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="n">budget</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <span class="n">_Run</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Run&#39;</span><span class="p">,</span> <span class="s1">&#39;config inst seed inst_specs&#39;</span><span class="p">)</span>
@@ -416,7 +438,7 @@
                  <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">,</span>
-                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">output_fn</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
@@ -476,7 +498,6 @@
         <span class="c1"># Create TAE</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tae</span><span class="p">:</span>
             <span class="n">tae</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="n">ta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-                                  <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
                                   <span class="n">stats</span><span class="o">=</span><span class="n">inf_stats</span><span class="p">,</span>
                                   <span class="n">run_obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
                                   <span class="n">par_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
@@ -486,19 +507,19 @@
             <span class="n">tae</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="n">inf_stats</span>
 
         <span class="c1"># Validate!</span>
-        <span class="n">run_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_parallel</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+        <span class="n">run_results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_parallel</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">run_results</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">runs</span><span class="p">),</span> <span class="p">(</span><span class="n">run_results</span><span class="p">,</span> <span class="n">runs</span><span class="p">)</span>
 
         <span class="c1"># tae returns (status, cost, runtime, additional_info)</span>
         <span class="c1"># Add runs to RunHistory</span>
         <span class="k">for</span> <span class="n">run</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">run_results</span><span class="p">):</span>
             <span class="n">validated_rh</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                             <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                             <span class="n">time</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                             <span class="n">status</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span>
+                             <span class="n">time</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+                             <span class="n">status</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                              <span class="n">instance_id</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">inst</span><span class="p">,</span>
                              <span class="n">seed</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-                             <span class="n">additional_info</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                             <span class="n">additional_info</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">additional_info</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_save_results</span><span class="p">(</span><span class="n">validated_rh</span><span class="p">,</span> <span class="n">output_fn</span><span class="p">,</span> <span class="n">backup_fn</span><span class="o">=</span><span class="s2">&quot;validated_runhistory.json&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">validated_rh</span></div>
@@ -509,7 +530,8 @@
         <span class="n">runs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_Run</span><span class="p">],</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">StatusType</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]]:</span>
+        <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">RunValue</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate runs with joblibs Parallel-interface</span>
 
@@ -524,6 +546,8 @@
 <span class="sd">            number of cpus to use for validation (-1 to use all)</span>
 <span class="sd">        backend: str</span>
 <span class="sd">            what backend to use for parallelization</span>
+<span class="sd">        runhistory: RunHistory</span>
+<span class="sd">            optional, RunHistory-object to reuse runs</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -532,12 +556,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Runs with parallel</span>
         <span class="n">run_results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)(</span>
-            <span class="n">delayed</span><span class="p">(</span><span class="n">_unbound_tae_starter</span><span class="p">)(</span><span class="n">tae</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
-                                          <span class="n">run</span><span class="o">.</span><span class="n">inst</span><span class="p">,</span>
-                                          <span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-                                          <span class="n">run</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-                                          <span class="n">run</span><span class="o">.</span><span class="n">inst_specs</span><span class="p">,</span>
-                                          <span class="n">capped</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">)</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_unbound_tae_starter</span><span class="p">)(</span>
+                <span class="n">tae</span><span class="p">,</span>
+                <span class="n">runhistory</span><span class="p">,</span>
+                <span class="n">RunInfo</span><span class="p">(</span>
+                    <span class="n">config</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                    <span class="n">instance</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">inst</span><span class="p">,</span>
+                    <span class="n">instance_specific</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                    <span class="n">seed</span><span class="o">=</span><span class="n">run</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                    <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scen</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                    <span class="n">capped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">budget</span><span class="o">=</span><span class="mi">0</span>
+                <span class="p">)</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">run_results</span></div>
 
 <div class="viewcode-block" id="Validator.validate_epm"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm">[docs]</a>    <span class="k">def</span> <span class="nf">validate_epm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

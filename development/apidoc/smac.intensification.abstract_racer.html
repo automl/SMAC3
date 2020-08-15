@@ -183,6 +183,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -293,17 +294,19 @@
 <span id="smac-intensification-abstract-racer-module"></span><h1>smac.intensification.abstract_racer module<a class="headerlink" href="#module-smac.intensification.abstract_racer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.intensification.abstract_racer.AbstractRacer">
-<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tae_runner</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">traj_logger</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger">smac.utils.io.traj_logging.TrajLogger</a></span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">instances</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">instance_specifics</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">[</span>str<span class="p">, </span>numpy.ndarray<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deterministic</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">run_obj_time</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">maxR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2000</span></em>, <em class="sig-param"><span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.2</span></em>, <em class="sig-param"><span class="n">min_chall</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">AbstractRacer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">traj_logger</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger">smac.utils.io.traj_logging.TrajLogger</a></span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">instances</span><span class="p">:</span> <span class="n">List<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">instance_specifics</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Mapping<span class="p">[</span>str<span class="p">, </span>numpy.ndarray<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">deterministic</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">run_obj_time</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">minR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">maxR</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2000</span></em>, <em class="sig-param"><span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.2</span></em>, <em class="sig-param"><span class="n">min_chall</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for all racing methods</p>
-<p>The “intensification” is designed to be spread across multiple <code class="docutils literal notranslate"><span class="pre">eval_challenger()</span></code> runs.
-This is to facilitate on-demand configuration sampling if multiple configurations are required,
-like Successive Halving or Hyperband.</p>
+<p>The “intensification” is designed to output a RunInfo object with enough information
+to run a given configuration (for example, the run info contains the instance/seed
+pair, as well as the associated resources).</p>
+<p>A worker can execute this RunInfo object and produce a RunValue object with the
+execution results. Each intensifier process the RunValue object and updates it’s
+internal state in preparation for the next iteration.</p>
 <p><strong>Note: Do not use directly</strong></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tae_runner</strong> (<em>tae.executre_ta_run_*.ExecuteTARun* Object</em>) – target algorithm run executor</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
 <li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>smac.utils.io.traj_logging.TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
@@ -411,38 +414,17 @@ If challenger is None, then optimizer will be used to generate the next challeng
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.intensification.abstract_racer.AbstractRacer.eval_challenger">
-<code class="sig-name descname">eval_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">time_bound</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.eval_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.eval_challenger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs intensification by evaluating one configuration-instance at a time
-<em>Side effect:</em> adds runs to run_history</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – promising configuration</p></li>
-<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – best configuration so far, None in 1st run</p></li>
-<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
-<li><p><strong>time_bound</strong> (<em>float</em><em>, </em><em>optional</em><em> (</em><em>default=2 ** 31 - 1</em><em>)</em>) – time in [sec] available to perform intensify</p></li>
-<li><p><strong>log_traj</strong> (<em>bool</em>) – whether to log changes of incumbents in trajectory</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>incumbent and incumbent cost</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>typing.Tuple[<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a>, float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.intensification.abstract_racer.AbstractRacer.get_next_challenger">
-<code class="sig-name descname">get_next_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challengers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">chooser</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser">smac.optimizer.epm_configuration_chooser.EPMChooser</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">repeat_configs</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">, </span>bool<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.get_next_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.get_next_challenger" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.intensification.abstract_racer.AbstractRacer.get_next_run">
+<code class="sig-name descname">get_next_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challengers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">chooser</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser">smac.optimizer.epm_configuration_chooser.EPMChooser</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">repeat_configs</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="#smac.intensification.abstract_racer.RunInfoIntent" title="smac.intensification.abstract_racer.RunInfoIntent">smac.intensification.abstract_racer.RunInfoIntent</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a><span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.get_next_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.get_next_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method for choosing the next challenger, to allow for different selections across intensifiers
 uses <code class="docutils literal notranslate"><span class="pre">_next_challenger()</span></code> by default</p>
+<p>If no more challengers are available, the method should issue a SKIP via
+RunInfoIntent.SKIP, so that a new iteration can sample new configurations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – promising configurations</p></li>
+<li><p><strong>incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent configuration</p></li>
 <li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
@@ -450,13 +432,64 @@ uses <code class="docutils literal notranslate"><span class="pre">_next_challeng
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>typing.Optional[Configuration]</em> – next configuration to evaluate</p></li>
-<li><p><em>bool</em> – flag telling if the configuration is newly sampled or one currently being tracked</p></li>
+<li><p><strong>run_info</strong> (<em>RunInfo</em>) – An object that encapsulates necessary information for a config run</p></li>
+<li><p><strong>intent</strong> (<em>RunInfoIntent</em>) – Indicator of how to consume the RunInfo object</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="smac.intensification.abstract_racer.AbstractRacer.process_results">
+<code class="sig-name descname">process_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">time_bound</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">result</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a></span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#AbstractRacer.process_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.AbstractRacer.process_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>The intensifier stage will be updated based on the results/status
+of a configuration execution.
+Also, a incumbent will be determined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>challenger</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – A configuration that was previously executed, and whose status
+will be used to define the next stage.</p></li>
+<li><p><strong>incumbent</strong> (<em>typing.Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – Best configuration seen so far</p></li>
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far
+if False, an evaluated configuration will not be generated again</p></li>
+<li><p><strong>time_bound</strong> (<em>float</em>) – time in [sec] available to perform intensify</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><em>RunValue</em></a>) – Contain the result (status and other methadata) of exercising
+a challenger/incumbent.</p></li>
+<li><p><strong>log_traj</strong> (<em>bool</em>) – Whether to log changes of incumbents in trajectory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>incumbent</strong> (<em>Configuration()</em>) – current (maybe new) incumbent configuration</p></li>
+<li><p><strong>inc_perf</strong> (<em>float</em>) – empirical performance of incumbent configuration</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="smac.intensification.abstract_racer.RunInfoIntent">
+<em class="property">class </em><code class="sig-prename descclassname">smac.intensification.abstract_racer.</code><code class="sig-name descname">RunInfoIntent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/abstract_racer.html#RunInfoIntent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.abstract_racer.RunInfoIntent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Class to define different requests on how to process
+the runinfo</p>
+<p>Gives the flexibility to indicate whether a configuration
+should be skipped (SKIP) or if the SMBO should simple
+run a generated run_info.</p>
+<dl class="py attribute">
+<dt id="smac.intensification.abstract_racer.RunInfoIntent.RUN">
+<code class="sig-name descname">RUN</code><em class="property"> = 0</em><a class="headerlink" href="#smac.intensification.abstract_racer.RunInfoIntent.RUN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.intensification.abstract_racer.RunInfoIntent.SKIP">
+<code class="sig-name descname">SKIP</code><em class="property"> = 1</em><a class="headerlink" href="#smac.intensification.abstract_racer.RunInfoIntent.SKIP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

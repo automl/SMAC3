@@ -181,6 +181,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -633,7 +634,6 @@
         <span class="n">tae_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
             <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
-            <span class="s1">&#39;runhistory&#39;</span><span class="p">:</span> <span class="n">runhistory</span><span class="p">,</span>
             <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
@@ -670,7 +670,6 @@
 
         <span class="c1"># initialize intensification</span>
         <span class="n">intensifier_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;tae_runner&#39;</span><span class="p">:</span> <span class="n">tae_runner_instance</span><span class="p">,</span>
             <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
             <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
@@ -828,7 +827,8 @@
             <span class="s1">&#39;acquisition_func&#39;</span><span class="p">:</span> <span class="n">acquisition_function_instance</span><span class="p">,</span>
             <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
             <span class="s1">&#39;restore_incumbent&#39;</span><span class="p">:</span> <span class="n">restore_incumbent</span><span class="p">,</span>
-            <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">:</span> <span class="n">random_configuration_chooser_instance</span>
+            <span class="s1">&#39;random_configuration_chooser&#39;</span><span class="p">:</span> <span class="n">random_configuration_chooser_instance</span><span class="p">,</span>
+            <span class="s1">&#39;tae_runner&#39;</span><span class="p">:</span> <span class="n">tae_runner_instance</span><span class="p">,</span>
         <span class="p">}</span>  <span class="c1"># type: Dict[str, Any]</span>
 
         <span class="k">if</span> <span class="n">smbo_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -915,7 +915,7 @@
 <span class="sd">        TAE: smac.tae.execute_ta_run.ExecuteTARun</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">tae_runner</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">tae_runner</span></div>
 
 <div class="viewcode-block" id="SMAC4AC.get_runhistory"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
