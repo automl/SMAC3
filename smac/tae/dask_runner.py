@@ -163,7 +163,6 @@ class DaskParallelRunner(BaseRunner):
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
         This class waits until 1 run completes
         """
-        print(f"self.futures={self.futures}")
         if self.futures:
             wait(self.futures, return_when='FIRST_COMPLETED').done
 
