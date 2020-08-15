@@ -1,3 +1,4 @@
+import sys
 import time
 import unittest
 import unittest.mock
@@ -7,8 +8,8 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
-from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.dask_runner import DaskParallelRunner
+from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.serial_runner import SerialRunner
 
 
@@ -80,6 +81,7 @@ class TestSerialRunner(unittest.TestCase):
         pass
 
 
+@unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
 class TestDaskRunner(unittest.TestCase):
 
     def setUp(self):
