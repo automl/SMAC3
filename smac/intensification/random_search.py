@@ -1,4 +1,3 @@
-import logging
 import typing
 
 import numpy as np
@@ -95,15 +94,6 @@ class RandomSearcher(AbstractRacer):
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
                          min_chall=min_chall)
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
-
-        self.first_run = True
-
-        # Define state variables to please mypy
-        self.curr_inst_idx = 0
-        self.running_challenger = None
-
     def process_results(self,
                         challenger: Configuration,
                         incumbent: typing.Optional[Configuration],
@@ -144,17 +134,14 @@ class RandomSearcher(AbstractRacer):
             empirical performance of incumbent configuration
         """
 
-        # If The incumbent is None and it is the first run, we use the challenger
-        if not incumbent and self.first_run:
+        # If The incumbent is None we use the challenger
+        if not incumbent:
             self.logger.info(
                 "First run, no incumbent provided; challenger is assumed to be the incumbent"
             )
             incumbent = challenger
-            self.first_run = False
 
-        self._ta_time += result.time
         self.num_run += 1
-        self.curr_inst_idx += 1
 
         incumbent = self._compare_configs(challenger=challenger,
                                           incumbent=incumbent,
@@ -198,32 +185,18 @@ class RandomSearcher(AbstractRacer):
             An object that encapsulates the minimum information to
             evaluate a configuration
          """
-        # sampling from next challenger marks the beginning of a new iteration
-        self.iteration_done = False
-
-        # first stage, so sample from configurations/chooser provided
+        # We always sample from the configs provided or the EPM
         challenger = self._next_challenger(challengers=challengers,
                                            chooser=chooser,
                                            run_history=run_history,
                                            repeat_configs=repeat_configs)
-        self.new_challenger = True
-
-        # reset instance index for the new challenger
-        self.curr_inst_idx = 0
-        self._chall_indx += 1
-        self.running_challenger = challenger
-
-        # selecting cutoff if running adaptive capping
-        cutoff = self.cutoff
-
-        capped = False
 
         return RunInfoIntent.RUN, RunInfo(
             config=challenger,
             instance=self.instances[-1],
             instance_specific="0",
             seed=0 if self.deterministic else self.rs.randint(low=0, high=MAXINT, size=1)[0],
-            cutoff=cutoff,
-            capped=capped,
+            cutoff=self.cutoff,
+            capped=False,
             budget=0.0,
         )

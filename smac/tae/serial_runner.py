@@ -84,7 +84,7 @@ class SerialRunner(BaseRunner):
         """This method returns any finished configuration, and returns a list with
         the results of exercising the configurations. This class keeps populating results
         to self.results until a call to get_finished runs is done. In this case, the
-        self.results Queue is emptied and all RunValues produced by running self.run() are
+        self.results list is emptied and all RunValues produced by running self.run() are
         returned.
 
         Returns
@@ -99,6 +99,15 @@ class SerialRunner(BaseRunner):
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
-        This class waits until 1 run completes
+        For serial runs, no wait is needed as the result is immediately available.
         """
         return
+
+    def pending_runs(self) -> bool:
+        """
+        Whether or not there are configs still running. Generally if the runner is serial,
+        launching a run instantly returns it's result. On parallel runners, there might
+        be pending configurations to complete.
+        """
+        # No pending runs in a serial run. Execution is blocking
+        return False

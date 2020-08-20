@@ -37,6 +37,6 @@ if __name__ == '__main__':
                               scenario_args={'n_workers': 4},
                               x0=[-3, -4],
                               bounds=[(-5, 10), (-5, 10)],
-                              maxfun=20,
+                              maxfun=25,
                               rng=3)  # Passing a seed makes fmin_smac determistic
     print("Best x: %s; with cost: %f" % (str(x), cost))

@@ -16,8 +16,7 @@ from smac.tae import StatusType, TAEAbortException
 class BaseRunner(ABC):
     """Interface class to handle the execution of SMAC' configurations.
 
-    This interface defines how interact with the SMBO loop,
-    and execute a configuration, given a RunInfo object.
+    This interface defines how to interact with the SMBO loop.
     The complexity of running a configuration as well as handling the
     results is abstracted to the SMBO via a BaseRunner.
 
@@ -51,10 +50,10 @@ class BaseRunner(ABC):
 
     Parameters
     ---------
-    ta : list
-        target algorithm command line as list of arguments
-    stats: Stats()
-         stats object to collect statistics about runtime and so on
+    ta : typing.Union[typing.List[str], typing.Callable]
+        target algorithm
+    stats: Stats
+         stats object to collect statistics about runtime/additional info
     run_obj: str
         run objective of SMAC
     par_factor: int
@@ -312,5 +311,14 @@ class BaseRunner(ABC):
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
         This method waits until 1 run completes
+        """
+        pass
+
+    @abstractmethod
+    def pending_runs(self) -> bool:
+        """
+        Whether or not there are configs still running. Generally if the runner is serial,
+        launching a run instantly returns it's result. On parallel runners, there might
+        be pending configurations to complete.
         """
         pass

@@ -54,19 +54,8 @@ class DaskParallelRunner(BaseRunner):
 
     Parameters
     ---------
-    ta : list
-        target algorithm command line as list of arguments
-    stats: Stats()
-         stats object to collect statistics about runtime and so on
-    run_obj: str
-        run objective of SMAC
-    par_factor: int
-        penalization factor
-    cost_for_crash : float
-        cost that is used in case of crashed runs (including runs
-        that returned NaN or inf)
-    abort_on_first_run_crash: bool
-        if true and first run crashes, raise FirstRunCrashedException
+    single_worker: BaseRunner
+        A runner to run on a distributed fashion
     n_workers: int
         Number of workers that will actively be running configurations in parallel
     """
@@ -122,9 +111,11 @@ class DaskParallelRunner(BaseRunner):
         """
         # Check for resources or block till one is available
         if not self._workers_available():
-            done_futures = wait(self.futures, return_when='FIRST_COMPLETED').done
-            for future in done_futures:
-                self.results.append(future.result())
+            wait(self.futures, return_when='FIRST_COMPLETED').done
+            self._extract_completed_runs_from_futures()
+
+        # In code check to make sure that there are resources
+        assert self._workers_available(), "Tried to execute a job with no worker"
 
         # At this point we can submit the job
         self.futures.append(
@@ -148,16 +139,34 @@ class DaskParallelRunner(BaseRunner):
             a submitted configuration
         """
 
-        done_futures = [f for f in self.futures if f.done()]
-        for future in done_futures:
-            self.results.append(future.result())
-
-            self.futures.remove(future)
+        # Proactively see if more configs have finished
+        self._extract_completed_runs_from_futures()
 
         results_list = []
         while self.results:
             results_list.append(self.results.pop())
         return results_list
+
+    def _extract_completed_runs_from_futures(self) -> None:
+        """
+        A run is over, when a future has done() equal true.
+        This function collects the completed futures and move
+        them from self.futures to self.results.
+
+        *** We make sure futures never exceed the capacity of
+        the scheduler
+        """
+
+        # In code check to make sure we don;t exceed resource allocation
+        assert len(self.futures) <= sum(self.client.nthreads().values()
+                                        ), "More jobs than resources found. "
+
+        # A future is removed to the list of futures as an indication
+        # that a worker is available to take in an extra job
+        done_futures = [f for f in self.futures if f.done()]
+        for future in done_futures:
+            self.results.append(future.result())
+            self.futures.remove(future)
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
@@ -165,6 +174,16 @@ class DaskParallelRunner(BaseRunner):
         """
         if self.futures:
             wait(self.futures, return_when='FIRST_COMPLETED').done
+
+    def pending_runs(self) -> bool:
+        """
+        Whether or not there are configs still running. Generally if the runner is serial,
+        launching a run instantly returns it's result. On parallel runners, there might
+        be pending configurations to complete.
+        """
+        # If there are futures available, it translates
+        # to runs still not finished/processed
+        return len(self.futures) > 0
 
     def _workers_available(self) -> bool:
         """"Query if there are workers available, which means

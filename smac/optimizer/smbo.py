@@ -130,6 +130,8 @@ class SMBO(object):
         if not hasattr(self.scenario, 'n_workers') or self.scenario.n_workers <= 1:  # type: ignore[attr-defined] # noqa F821
             self.tae_runner = tae_runner
         else:
+            # Wrap the serial runner so that it runs in parallel
+            # Right now dask is the only scheduler supported
             self.tae_runner = DaskParallelRunner(tae_runner, n_workers=self.scenario.n_workers)  # type: ignore[attr-defined] # noqa F821
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
@@ -228,7 +230,8 @@ class SMBO(object):
             # don't want to rerun a config that was previously ran
             if intent == RunInfoIntent.RUN:
                 # Track the fact that a run was launched in the run
-                # history
+                # history. It's status is tagged as RUNNING, and once
+                # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
                     cost=float(MAXINT),
@@ -240,6 +243,15 @@ class SMBO(object):
                 )
 
                 self.tae_runner.submit_run(run_info=run_info)
+
+                # There are 2 criteria that the stats object uses to know
+                # if the budged was exhausted.
+                # The budget time, which can only be known when the run finishes,
+                # And the number of ta executions. Because we submit the job at this point,
+                # we count this submission as a run. This prevent for using more
+                # runner runs than what the scenario allows
+                self.stats.ta_runs += 1
+
             elif intent == RunInfoIntent.SKIP:
                 # No launch is required
                 # This marks a transition request from the intensifier
@@ -257,17 +269,8 @@ class SMBO(object):
                 if result.status != StatusType.BUDGETEXHAUSTED:
 
                     # Add the results of the run to the run history
-                    self._incorporate_run_results(run_info, result)
-
-                    # Update the intensifier with the result of the runs
-                    self.incumbent, inc_perf = self.intensifier.process_results(
-                        challenger=run_info.config,
-                        incumbent=self.incumbent,
-                        run_history=self.runhistory,
-                        time_bound=max(self._min_time, time_left),
-                        result=result,
-                    )
-
+                    # Additionally check for new incumbent
+                    self._incorporate_run_results(run_info, result, time_left)
 
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                 assert self.scenario.output_dir_for_this_run is not None  # please mypy
@@ -282,6 +285,21 @@ class SMBO(object):
 
             if self.stats.is_budget_exhausted():
                 self.logger.warn("Exhausted configuration budget")
+
+                # The budget can be exhausted  for 2 reasons: number of ta runs or
+                # time. If the number of ta runs is reached, but there is still budget,
+                # wait for the runs to finish
+                while self.stats.get_remaining_ta_budget() > 0 and self.tae_runner.pending_runs():
+
+                    self.tae_runner.wait()
+
+                    for run_info, result in self.tae_runner.get_finished_runs():
+                        # Add the results of the run to the run history
+                        # Additionally check for new incumbent
+                        self._incorporate_run_results(run_info, result, time_left)
+
+                # Break from the intensification loop,
+                # as there are no more resources
                 break
 
             # print stats at the end of each intensification iteration
@@ -380,7 +398,8 @@ class SMBO(object):
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
 
-    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue) -> None:
+    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue,
+                                 time_left: float) -> None:
         """
         The SMBO submits a config-run-request via a RunInfo object.
         When that config run is completed, a RunValue, which contains
@@ -389,16 +408,20 @@ class SMBO(object):
         the stats/runhistory objects so that other consumers
         can advance with their task.
 
+        Additionally, it checks for a new incumbent via the intensifier process results,
+        which also has the side effect of moving the intensifier to a new state
+
         Parameters
         ----------
         run_info: RunInfo
             Describes the run (config) from which to process the results
         result: RunValue
             Contains relevant information regarding the execution of a config
+        time_left: float
+            time in [sec] available to perform intensify
         """
 
         # update SMAC stats
-        self.stats.ta_runs += 1
         self.stats.ta_time_used += float(result.time)
 
         self.logger.debug(
@@ -428,4 +451,14 @@ class SMBO(object):
                                                "(To deactivate this exception,"
                                                " use the SMAC scenario option "
                                                "'abort_on_first_run_crash')")
+
+        # Update the intensifier with the result of the runs
+        self.incumbent, inc_perf = self.intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.incumbent,
+            run_history=self.runhistory,
+            time_bound=max(self._min_time, time_left),
+            result=result,
+        )
+
         return

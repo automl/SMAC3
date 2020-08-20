@@ -1,18 +1,34 @@
 import shutil
+import sys
+import time
 import unittest
 from unittest import mock
 
 import numpy as np
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
+from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
+from smac.runhistory.runhistory import RunInfo
 from smac.scenario.scenario import Scenario
-from smac.tae import FirstRunCrashedException
+from smac.tae import FirstRunCrashedException, StatusType
+from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+
+
+def target(x, seed, instance):
+    """A target function for dummy testing of TA
+    Uses branin which has x, y, so just take X
+    """
+    return x[0] ** 2, {'key': seed, 'instance': instance}
 
 
 class ConfigurationMock(object):
@@ -237,3 +253,99 @@ class TestSMBO(unittest.TestCase):
         # SMBO should have the default configuration as the 1st config if no initial design is given
         smbo.start()
         self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
+
+    @unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
+    def test_ta_integration_to_smbo(self):
+        """
+        In SMBO. 3 objects need to actively comunicate:
+            -> stats
+            -> epm
+            -> runhistory
+
+        This method makes sure that executed jobs are properly registered
+        in the above objects
+
+        It uses n_workers to test parallel and serial implementations!!
+        """
+
+        for n_workers in range(1, 2):
+            # We create a controlled setting, in which we optimize x^2
+            # This will allow us to make sure every component act as expected
+
+            # FIRST: config space
+            cs = ConfigurationSpace()
+            cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
+            smac = SMAC4HPO(
+                scenario=Scenario({
+                    'n_workers': n_workers,
+                    'cs': cs,
+                    'runcount_limit': 5,
+                    'run_obj': 'quality',
+                    "deterministic": "true",
+                    "initial_incumbent": "DEFAULT",
+                    'output_dir': 'data-test_smbo'
+                }),
+                tae_runner=ExecuteTAFuncArray,
+                tae_runner_kwargs={'ta': target},
+            )
+
+            smbo = smac.solver
+
+            # SECOND: Intensifier that tracks configs
+            all_configs = []
+
+            def mock_get_next_run(**kwargs):
+                config = cs.sample_configuration()
+                all_configs.append(config)
+                return (RunInfoIntent.RUN, RunInfo(
+                    config=config, instance=time.time() % 10,
+                    instance_specific={}, seed=0,
+                    cutoff=None, capped=False, budget=0.0
+                ))
+            intensifier = unittest.mock.Mock()
+            intensifier.num_run = 0
+            intensifier.process_results.return_value = (0.0, 0.0)
+            intensifier.get_next_run = mock_get_next_run
+            smac.solver.intensifier = intensifier
+
+            # THIRD: Run in this controlled setting
+            smbo.run()
+
+            # FOURTH: Checks
+
+            # Run history
+            for k, v in smbo.runhistory.data.items():
+
+                # All configuration should be successful
+                self.assertEqual(v.status, StatusType.SUCCESS)
+
+                # The value should be the square version of the config
+                # The runhistory has  config_ids = {config: int}
+                # The k here is {config_id: int}. We search for the actual config
+                # by inverse searching this runhistory.config dict
+                config = list(smbo.runhistory.config_ids.keys())[
+                    list(smbo.runhistory.config_ids.values()).index(k.config_id)
+                ]
+
+                self.assertEqual(v.cost,
+                                 config.get('x')**2
+                                 )
+
+            # No config is lost in the config history
+            self.assertCountEqual(smbo.runhistory.config_ids.keys(), all_configs)
+
+            # Stats!
+            # We do not exceed the number of target algorithm runs
+            self.assertEqual(smbo.stats.ta_runs, len(all_configs))
+
+            # No config is lost
+            self.assertEqual(smbo.stats.n_configs, len(all_configs))
+
+            # The EPM can access all points. This is something that
+            # also relies on the runhistory
+            X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
+            self.assertEqual(X.shape[0], len(all_configs))
+
+
+if __name__ == "__main__":
+    unittest.main()
