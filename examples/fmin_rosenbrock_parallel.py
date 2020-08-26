@@ -9,7 +9,7 @@ launch parallel configurations via n_workers
 
 import logging
 
-from smac.intensification.random_search import RandomSearcher
+from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.facade.func_facade import fmin_smac
 
 # --------------------------------------------------------------
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     # and uses under the hood the SMAC4HPO
     # n_workers tells the SMBO loop to execute in parallel
     x, cost, smac = fmin_smac(func=rosenbrock_2d,
-                              intensifier=RandomSearcher,
+                              intensifier=SimpleIntensifier,
                               tae_runner_kwargs={'n_workers': 4},
                               x0=[-3, -4],
                               bounds=[(-5, 10), (-5, 10)],
