@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # n_workers tells the SMBO loop to execute in parallel
     x, cost, smac = fmin_smac(func=rosenbrock_2d,
                               intensifier=RandomSearcher,
-                              scenario_args={'n_workers': 4},
+                              tae_runner_kwargs={'n_workers': 4},
                               x0=[-3, -4],
                               bounds=[(-5, 10), (-5, 10)],
                               maxfun=25,

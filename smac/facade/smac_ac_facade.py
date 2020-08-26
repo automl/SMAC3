@@ -7,10 +7,10 @@ import numpy as np
 
 # tae
 from smac.tae.base import BaseRunner
-from smac.tae.serial_runner import SerialRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae import StatusType
+from smac.tae.dask_runner import DaskParallelRunner
 # stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -364,7 +364,7 @@ class SMAC4AC(object):
                 ExecuteTARunOld(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
             )  # type: BaseRunner
         elif inspect.isclass(tae_runner):
-            tae_runner_instance = cast(SerialRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = cast(BaseRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
@@ -376,6 +376,11 @@ class SMAC4AC(object):
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
                             % type(tae_runner))
+
+        # In case of a parallel run, wrap the single worker in a parallel
+        # runner
+        if 'n_workers' in tae_def_kwargs and tae_def_kwargs['n_workers'] > 1:
+            tae_runner_instance = DaskParallelRunner(tae_runner_instance)
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!

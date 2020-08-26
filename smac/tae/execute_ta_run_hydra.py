@@ -3,7 +3,6 @@ import typing
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.tae.base import BaseRunner
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae import StatusType
@@ -22,7 +21,7 @@ class ExecuteTARunHydra(SerialRunner):
     def __init__(
         self,
         cost_oracle: typing.Mapping[str, float],
-        tae: typing.Type[BaseRunner] = ExecuteTARunOld,
+        tae: typing.Type[SerialRunner] = ExecuteTARunOld,
         **kwargs: typing.Any
     ) -> None:
         '''
@@ -37,7 +36,7 @@ class ExecuteTARunHydra(SerialRunner):
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
         if tae is ExecuteTARunAClib:
-            self.runner = ExecuteTARunAClib(**kwargs)  # type: BaseRunner
+            self.runner = ExecuteTARunAClib(**kwargs)  # type: SerialRunner
         elif tae is ExecuteTARunOld:
             self.runner = ExecuteTARunOld(**kwargs)
         elif tae is ExecuteTAFuncDict:

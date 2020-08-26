@@ -1,7 +1,9 @@
 import typing
 
+from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
+from smac.tae import StatusType
 from smac.tae.base import BaseRunner
 from smac.utils.constants import MAXINT
 
@@ -42,6 +44,8 @@ class SerialRunner(BaseRunner):
         that returned NaN or inf)
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
+    n_workers: int
+        Number of workers to use for the runner
     """
     def __init__(
         self,
@@ -51,12 +55,14 @@ class SerialRunner(BaseRunner):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
+        n_workers: int = 1,
     ):
         super(SerialRunner, self).__init__(
             ta=ta, stats=stats, run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
+            n_workers=n_workers,
         )
 
     def submit_run(self, run_info: RunInfo) -> None:
@@ -101,6 +107,13 @@ class SerialRunner(BaseRunner):
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
         For serial runs, no wait is needed as the result is immediately available.
         """
+
+        # There is no need to wait in serial runs.
+        # When launching a run via submit, as the serial run
+        # uses the same process to run, the result is always available
+        # immediately after. This method implements is just an implementation of the
+        # abstract method via a simple return, again, because there is
+        # no need to wait (as in distributed runs)
         return
 
     def pending_runs(self) -> bool:
@@ -111,3 +124,47 @@ class SerialRunner(BaseRunner):
         """
         # No pending runs in a serial run. Execution is blocking
         return False
+
+    def run(
+        self, config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+        """Runs target algorithm <self.ta> with configuration <config> on
+        instance <instance> with instance specifics <specifics> for at most
+        <cutoff> seconds and random seed <seed>
+
+        This method exemplifies how to defined the run() method
+
+        Parameters
+        ----------
+            config : Configuration
+                dictionary param -> value
+            instance : string
+                problem instance
+            cutoff : float, optional
+                Wallclock time limit of the target algorithm. If no value is
+                provided no limit will be enforced.
+            seed : int
+                random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target
+                algorithm. Handled by the target algorithm internally
+            instance_specific: str
+                instance specific information (e.g., domain file or solution)
+
+        Returns
+        -------
+            status: enum of StatusType (int)
+                {SUCCESS, TIMEOUT, CRASHED, ABORT}
+            cost: float
+                cost/regret/quality (float) (None, if not returned by TA)
+            runtime: float
+                runtime (None if not returned by TA)
+            additional_info: dict
+                all further additional run information
+        """
+        pass

@@ -26,8 +26,10 @@ from smac.utils.validate import Validator
 
 def target(x, seed, instance):
     """A target function for dummy testing of TA
-    Uses branin which has x, y, so just take X
+    perform x^2 for easy result calculations in checks.
     """
+    # Return x[i] (with brackets) so we pass the value, not the
+    # np array element
     return x[0] ** 2, {'key': seed, 'instance': instance}
 
 
@@ -289,6 +291,9 @@ class TestSMBO(unittest.TestCase):
                 tae_runner_kwargs={'ta': target},
             )
 
+            # Register output dir for deletion
+            self.output_dirs.append(smac.output_dir)
+
             smbo = smac.solver
 
             # SECOND: Intensifier that tracks configs
@@ -312,6 +317,9 @@ class TestSMBO(unittest.TestCase):
             smbo.run()
 
             # FOURTH: Checks
+
+            # Make sure all configs where launched
+            self.assertEqual(len(all_configs), 5)
 
             # Run history
             for k, v in smbo.runhistory.data.items():

@@ -23,7 +23,6 @@ from smac.tae import (
     StatusType,
 )
 from smac.tae.base import BaseRunner
-from smac.tae.dask_runner import DaskParallelRunner
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -126,13 +125,7 @@ class SMBO(object):
         self.num_run = num_run
         self.rng = rng
         self._min_time = 10 ** -5
-
-        if not hasattr(self.scenario, 'n_workers') or self.scenario.n_workers <= 1:  # type: ignore[attr-defined] # noqa F821
-            self.tae_runner = tae_runner
-        else:
-            # Wrap the serial runner so that it runs in parallel
-            # Right now dask is the only scheduler supported
-            self.tae_runner = DaskParallelRunner(tae_runner, n_workers=self.scenario.n_workers)  # type: ignore[attr-defined] # noqa F821
+        self.tae_runner = tae_runner
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
@@ -289,7 +282,7 @@ class SMBO(object):
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
                 # wait for the runs to finish
-                while self.stats.get_remaining_ta_budget() > 0 and self.tae_runner.pending_runs():
+                while self.tae_runner.pending_runs():
 
                     self.tae_runner.wait()
 

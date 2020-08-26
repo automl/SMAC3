@@ -3,7 +3,9 @@ import typing
 import dask
 from dask.distributed import Client, Future, wait
 
+from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.tae import StatusType
 from smac.tae.base import BaseRunner
 
 
@@ -55,14 +57,11 @@ class DaskParallelRunner(BaseRunner):
     Parameters
     ---------
     single_worker: BaseRunner
-        A runner to run on a distributed fashion
-    n_workers: int
-        Number of workers that will actively be running configurations in parallel
+        A runner to run in a distributed fashion
     """
     def __init__(
         self,
         single_worker: BaseRunner,
-        n_workers: int = 1
     ):
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
@@ -71,18 +70,15 @@ class DaskParallelRunner(BaseRunner):
             par_factor=single_worker.par_factor,
             cost_for_crash=single_worker.cost_for_crash,
             abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
+            n_workers=single_worker.n_workers,
         )
 
         # The single worker, which is replicated on a need
         # basis to every compute node
         self.single_worker = single_worker
 
-        # n_workers defines the number of workers that a client is originally initialized
-        # with. This number is dynamic and can vary by adding more workers to the proper
-        # scheduler address.
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
         # workers to be instantiated as demonic
-        self.n_workers = n_workers
         dask.config.set({'distributed.worker.daemon': False})
         self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1)
         self.futures = []  # type: typing.List[Future]
@@ -115,7 +111,11 @@ class DaskParallelRunner(BaseRunner):
             self._extract_completed_runs_from_futures()
 
         # In code check to make sure that there are resources
-        assert self._workers_available(), "Tried to execute a job with no worker"
+        if not self._workers_available():
+            raise ValueError("Tried to execute a job, but no worker was "
+                             "available. This likely means that a worker crashed "
+                             "or no workers were properly configured."
+                             )
 
         # At this point we can submit the job
         self.futures.append(
@@ -158,8 +158,12 @@ class DaskParallelRunner(BaseRunner):
         """
 
         # In code check to make sure we don;t exceed resource allocation
-        assert len(self.futures) <= sum(self.client.nthreads().values()
-                                        ), "More jobs than resources found. "
+        if len(self.futures) > sum(self.client.nthreads().values()):
+            raise ValueError("More running jobs than resources available "
+                             "Should not have more futures/runs in remote workers "
+                             "than the number of workers. This could mean a worker "
+                             "crashed and was not able to be recovered by dask. "
+                             )
 
         # A future is removed to the list of futures as an indication
         # that a worker is available to take in an extra job
@@ -184,6 +188,48 @@ class DaskParallelRunner(BaseRunner):
         # If there are futures available, it translates
         # to runs still not finished/processed
         return len(self.futures) > 0
+
+    def run(
+        self, config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+        """
+        This method only complies with the abstract parent class. In the parallel case,
+        we call the single worker run() method
+
+        Parameters
+        ----------
+            config : Configuration
+                dictionary param -> value
+            instance : string
+                problem instance
+            cutoff : float, optional
+                Wallclock time limit of the target algorithm. If no value is
+                provided no limit will be enforced.
+            seed : int
+                random seed
+            budget : float, optional
+                A positive, real-valued number representing an arbitrary limit to the target
+                algorithm. Handled by the target algorithm internally
+            instance_specific: str
+                instance specific information (e.g., domain file or solution)
+
+        Returns
+        -------
+            status: enum of StatusType (int)
+                {SUCCESS, TIMEOUT, CRASHED, ABORT}
+            cost: float
+                cost/regret/quality (float) (None, if not returned by TA)
+            runtime: float
+                runtime (None if not returned by TA)
+            additional_info: dict
+                all further additional run information
+        """
+        pass
 
     def _workers_available(self) -> bool:
         """"Query if there are workers available, which means

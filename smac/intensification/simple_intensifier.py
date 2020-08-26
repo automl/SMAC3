@@ -11,9 +11,10 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
 
 
-class RandomSearcher(AbstractRacer):
+class SimpleIntensifier(AbstractRacer):
 
-    """Perform random search as a proof of concept to parallelize SMAC
+    """ Performs the traditional Bayesian Optimization loop, without
+        instance/seed intensification
 
     Parameters
     ----------
@@ -30,36 +31,12 @@ class RandomSearcher(AbstractRacer):
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
-        minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
-        maximum budget allowed for 1 run of successive halving
-    eta : float
-        'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : typing.Optional[int]
-        number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
-        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
-        how to order instances. Can be set to: [None, shuffle_once, shuffle]
-        * None - use as is given by the user
-        * shuffle_once - shuffle once and use across all SH run (default)
-        * shuffle - shuffle before every SH run
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive cutoff)
-    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
-        Do not set this argument, it will only be used by hyperband!
+    adaptive_capping_slackfactor: float
+        slack factor of adpative capping (factor * adpative cutoff)
     min_chall: int
-        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
-        raise an exception if a value larger than 1 is passed.
-    incumbent_selection: str
-        How to select incumbent in successive halving. Only active for real-valued budgets.
-        Can be set to: [highest_executed_budget, highest_budget, any_budget]
-        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-        * highest_budget - incumbent is selected only based on the highest budget
-        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
     def __init__(self,
@@ -70,17 +47,9 @@ class RandomSearcher(AbstractRacer):
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
                  cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
-                 initial_budget: typing.Optional[float] = None,
-                 max_budget: typing.Optional[float] = None,
-                 eta: float = 3,
-                 num_initial_challengers: typing.Optional[int] = None,
                  run_obj_time: bool = True,
-                 n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
-                 incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -92,7 +61,8 @@ class RandomSearcher(AbstractRacer):
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall)
+                         min_chall=min_chall,
+                         )
 
     def process_results(self,
                         challenger: Configuration,
@@ -160,9 +130,11 @@ class RandomSearcher(AbstractRacer):
                      repeat_configs: bool = True,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
-        Selects which challenger to use based on the iteration stage and set the iteration parameters.
+        Selects which challenger to use based on the iteration stage and set the
+        iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations pick top configurations from the previously selected challengers in that iteration
+        while the later iterations pick top configurations from the previously
+        selected challengers in that iteration
 
         Parameters
         ----------
