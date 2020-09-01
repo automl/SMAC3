@@ -3,7 +3,7 @@ import time
 # --------------------------------------------------------------
 # When working with multiprocessing, we need to provide a pickable
 # function and use __main__. Details can be found on:
-# https://docs.python.org/3.2/library/multiprocessing.html#multiprocessing-programming
+# https://docs.python.org/3/library/multiprocessing.html#multiprocessing-programming
 # This function below is used by the rosenbrock function minimization parallel
 # example, and  to be compliant with multiprocessing API,
 # this function is implemented in its own file. Dask in particular,
@@ -11,7 +11,7 @@ import time
 # is the same as the one passed to the workers. This is not the case
 # if this function is in the fmin example directly as main().rosenbrock_2d
 # is different than rosenbrock_2d.
-# Below is a WA to have a packaged function called rosenbrock_2d
+# Below is a work-around to have a packaged function called rosenbrock_2d
 # --------------------------------------------------------------
 
 

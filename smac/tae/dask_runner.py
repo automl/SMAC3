@@ -1,4 +1,6 @@
+import time
 import typing
+import warnings
 
 import dask
 from dask.distributed import Client, Future, wait
@@ -58,10 +60,16 @@ class DaskParallelRunner(BaseRunner):
     ---------
     single_worker: BaseRunner
         A runner to run in a distributed fashion
+    n_workers: int
+        Number of workers to use for distributed run
+    patience: int
+        How much to wait for workers to be available if one fails
     """
     def __init__(
         self,
         single_worker: BaseRunner,
+        n_workers: int,
+        patience: int = 5,
     ):
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
@@ -70,12 +78,15 @@ class DaskParallelRunner(BaseRunner):
             par_factor=single_worker.par_factor,
             cost_for_crash=single_worker.cost_for_crash,
             abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
-            n_workers=single_worker.n_workers,
         )
 
         # The single worker, which is replicated on a need
         # basis to every compute node
         self.single_worker = single_worker
+        self.n_workers = n_workers
+
+        # How much time to wait for workers to be available
+        self.patience = patience
 
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
         # workers to be instantiated as demonic
@@ -112,10 +123,14 @@ class DaskParallelRunner(BaseRunner):
 
         # In code check to make sure that there are resources
         if not self._workers_available():
-            raise ValueError("Tried to execute a job, but no worker was "
-                             "available. This likely means that a worker crashed "
-                             "or no workers were properly configured."
-                             )
+            warnings.warn("No workers are available. This could mean workers crashed"
+                          "Waiting for new workers...")
+            time.sleep(self.patience)
+            if not self._workers_available():
+                raise ValueError("Tried to execute a job, but no worker was "
+                                 "available. This likely means that a worker crashed "
+                                 "or no workers were properly configured."
+                                 )
 
         # At this point we can submit the job
         self.futures.append(
@@ -159,11 +174,11 @@ class DaskParallelRunner(BaseRunner):
 
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
-            raise ValueError("More running jobs than resources available "
-                             "Should not have more futures/runs in remote workers "
-                             "than the number of workers. This could mean a worker "
-                             "crashed and was not able to be recovered by dask. "
-                             )
+            warnings.warn("More running jobs than resources available "
+                          "Should not have more futures/runs in remote workers "
+                          "than the number of workers. This could mean a worker "
+                          "crashed and was not able to be recovered by dask. "
+                          )
 
         # A future is removed to the list of futures as an indication
         # that a worker is available to take in an extra job

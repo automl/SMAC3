@@ -36,12 +36,8 @@ class TestDaskRunner(unittest.TestCase):
         return the expected values/types"""
 
         # We use the funcdict as a mechanism to test Parallel Runner
-        runner = DaskParallelRunner(
-            ExecuteTAFuncDict(
-                ta=target, stats=self.stats,
-                run_obj='quality', n_workers=2
-            )
-        )
+        runner = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+        runner = DaskParallelRunner(runner, n_workers=2)
         self.assertIsInstance(runner, DaskParallelRunner)
 
         run_info = RunInfo(config=2, instance='test', instance_specific="0",
@@ -65,13 +61,9 @@ class TestDaskRunner(unittest.TestCase):
         """Make sure because there are 2 workers, the runs are launched
         closely in time together"""
 
-        # We use the funcdict as a mechanism to test SerialRunner
-        runner = DaskParallelRunner(
-            ExecuteTAFuncDict(
-                ta=target_delayed, stats=self.stats,
-                run_obj='quality', n_workers=2
-            )
-        )
+        # We use the funcdict as a mechanism to test Runner
+        runner = ExecuteTAFuncDict(ta=target_delayed, stats=self.stats, run_obj='quality')
+        runner = DaskParallelRunner(runner, n_workers=2)
 
         run_info = RunInfo(config=2, instance='test', instance_specific="0",
                            seed=0, cutoff=None, capped=False, budget=0.0)

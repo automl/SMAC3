@@ -43,7 +43,6 @@ class AbstractTAFunc(SerialRunner):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
-        n_workers: int = 1,
         use_pynisher: bool = True,
     ):
 
@@ -51,7 +50,6 @@ class AbstractTAFunc(SerialRunner):
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
                          abort_on_first_run_crash=abort_on_first_run_crash,
-                         n_workers=n_workers,
                          )
         """
         Abstract class for having a function as target algorithm
@@ -77,8 +75,6 @@ class AbstractTAFunc(SerialRunner):
               * TA func can use as many resources
               as it wants (time and memory) --- use with caution
               * all runs will be returned as SUCCESS if returned value is not None
-        n_workers: int
-            Number of workers to use. More than 1 means parallel execution
         """
         self.ta = ta
         self.stats = stats

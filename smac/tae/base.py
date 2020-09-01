@@ -72,7 +72,6 @@ class BaseRunner(ABC):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
-        n_workers: int = 1,
     ):
 
         # The results is a FIFO structure, implemented via a list
@@ -91,7 +90,6 @@ class BaseRunner(ABC):
         self.logger = PickableLoggerAdapter(
             self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
-        self.n_workers = n_workers
 
         super().__init__()
 

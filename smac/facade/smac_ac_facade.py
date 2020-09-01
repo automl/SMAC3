@@ -356,6 +356,11 @@ class SMAC4AC(object):
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
+
+        # In case n_workers is passed to the tae runner, it means
+        # we treat this run as a parallel run
+        n_workers = tae_def_kwargs.pop('n_workers', 1)
+
         if 'ta' not in tae_def_kwargs:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
         if tae_runner is None:
@@ -379,8 +384,8 @@ class SMAC4AC(object):
 
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
-        if 'n_workers' in tae_def_kwargs and tae_def_kwargs['n_workers'] > 1:
-            tae_runner_instance = DaskParallelRunner(tae_runner_instance)
+        if n_workers > 1:
+            tae_runner_instance = DaskParallelRunner(tae_runner_instance, n_workers=n_workers)
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!

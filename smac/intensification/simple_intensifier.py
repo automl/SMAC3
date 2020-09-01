@@ -33,10 +33,6 @@ class SimpleIntensifier(AbstractRacer):
         whether the TA is deterministic or not
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
-         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
     def __init__(self,
@@ -48,8 +44,7 @@ class SimpleIntensifier(AbstractRacer):
                  cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
                  run_obj_time: bool = True,
-                 adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,
+                 **kwargs: typing.Any
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -60,8 +55,8 @@ class SimpleIntensifier(AbstractRacer):
                          cutoff=cutoff,
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,
+                         adaptive_capping_slackfactor=1.0,
+                         min_chall=1,
                          )
 
     def process_results(self,
@@ -130,11 +125,9 @@ class SimpleIntensifier(AbstractRacer):
                      repeat_configs: bool = True,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
-        Selects which challenger to use based on the iteration stage and set the
-        iteration parameters.
-        First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations pick top configurations from the previously
-        selected challengers in that iteration
+        Selects which challenger to be used. As in a traditional BO loop,
+        we sample from the EPM, which is the next configuration based on
+        the acquisition function. The input data is read from the runhistory.
 
         Parameters
         ----------

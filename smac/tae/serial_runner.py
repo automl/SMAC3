@@ -44,8 +44,6 @@ class SerialRunner(BaseRunner):
         that returned NaN or inf)
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
-    n_workers: int
-        Number of workers to use for the runner
     """
     def __init__(
         self,
@@ -55,14 +53,12 @@ class SerialRunner(BaseRunner):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
-        n_workers: int = 1,
     ):
         super(SerialRunner, self).__init__(
             ta=ta, stats=stats, run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
-            n_workers=n_workers,
         )
 
     def submit_run(self, run_info: RunInfo) -> None:
