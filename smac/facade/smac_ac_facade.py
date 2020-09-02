@@ -6,10 +6,11 @@ from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 import numpy as np
 
 # tae
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
+from smac.tae.dask_runner import DaskParallelRunner
 # stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -71,7 +72,7 @@ class SMAC4AC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: Optional[Union[Type[ExecuteTARun], Callable]] = None,
+                 tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
                  tae_runner_kwargs: Optional[Dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[Dict] = None,
@@ -104,9 +105,9 @@ class SMAC4AC(object):
         ----------
         scenario : ~smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
+        tae_runner : ~smac.tae.base.BaseRunner or callable
             Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            :class:`~smac.tae.base.BaseRunner`. In case a
             callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
@@ -355,15 +356,20 @@ class SMAC4AC(object):
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
+
+        # In case n_workers is passed to the tae runner, it means
+        # we treat this run as a parallel run
+        n_workers = tae_def_kwargs.pop('n_workers', 1)
+
         if 'ta' not in tae_def_kwargs:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
         if tae_runner is None:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
             tae_runner_instance = (
                 ExecuteTARunOld(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
-            )  # type: ExecuteTARun
+            )  # type: BaseRunner
         elif inspect.isclass(tae_runner):
-            tae_runner_instance = cast(ExecuteTARun, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = cast(BaseRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
@@ -371,10 +377,15 @@ class SMAC4AC(object):
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
                             "either None, a callable or an object implementing "
-                            "ExecuteTaRun. Passing 'None' will result in the "
+                            "BaseRunner. Passing 'None' will result in the "
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
                             % type(tae_runner))
+
+        # In case of a parallel run, wrap the single worker in a parallel
+        # runner
+        if n_workers > 1:
+            tae_runner_instance = DaskParallelRunner(tae_runner_instance, n_workers=n_workers)
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!
@@ -620,14 +631,14 @@ class SMAC4AC(object):
         return self.solver.validate(config_mode, instance_mode, repetitions,
                                     use_epm, n_jobs, backend)
 
-    def get_tae_runner(self) -> ExecuteTARun:
+    def get_tae_runner(self) -> BaseRunner:
         """
         Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
 
         Returns
         -------
-        TAE: smac.tae.execute_ta_run.ExecuteTARun
+        TAE: smac.tae.base.BaseRunner
 
         """
         return self.solver.tae_runner

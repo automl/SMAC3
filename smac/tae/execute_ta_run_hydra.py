@@ -3,17 +3,17 @@ import typing
 from smac.configspace import Configuration
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.tae.execute_ta_run_aclib import ExecuteTARun
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_func import ExecuteTAFuncArray
-from smac.tae.execute_ta_run_old import StatusType
+from smac.tae import StatusType
+from smac.tae.serial_runner import SerialRunner
 
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 
 
-class ExecuteTARunHydra(ExecuteTARun):
+class ExecuteTARunHydra(SerialRunner):
 
     """Returns min(cost, cost_portfolio)
     """
@@ -21,7 +21,7 @@ class ExecuteTARunHydra(ExecuteTARun):
     def __init__(
         self,
         cost_oracle: typing.Mapping[str, float],
-        tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
+        tae: typing.Type[SerialRunner] = ExecuteTARunOld,
         **kwargs: typing.Any
     ) -> None:
         '''
@@ -36,7 +36,7 @@ class ExecuteTARunHydra(ExecuteTARun):
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
         if tae is ExecuteTARunAClib:
-            self.runner = ExecuteTARunAClib(**kwargs)  # type: ExecuteTARun
+            self.runner = ExecuteTARunAClib(**kwargs)  # type: SerialRunner
         elif tae is ExecuteTARunOld:
             self.runner = ExecuteTARunOld(**kwargs)
         elif tae is ExecuteTAFuncDict:

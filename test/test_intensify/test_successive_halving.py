@@ -12,7 +12,7 @@ from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 

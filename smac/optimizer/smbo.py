@@ -18,12 +18,11 @@ from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
-from smac.tae.execute_ta_run import (
+from smac.tae import (
     FirstRunCrashedException,
     StatusType,
-    ExecuteTARun,
 )
-from smac.tae.execute_ta_run_wrapper import execute_ta_run_wrapper
+from smac.tae.base import BaseRunner
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -65,7 +64,7 @@ class SMBO(object):
                  acq_optimizer: AcquisitionFunctionMaximizer,
                  acquisition_func: AbstractAcquisitionFunction,
                  rng: np.random.RandomState,
-                 tae_runner: ExecuteTARun,
+                 tae_runner: BaseRunner,
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
@@ -101,7 +100,7 @@ class SMBO(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
-        tae_runner : smac.tae.execute_ta_run.ExecuteTARun Object
+        tae_runner : smac.tae.base.BaseRunner Object
             target algorithm run executor
         random_configuration_chooser
             Chooser for random configuration -- one of
@@ -126,7 +125,6 @@ class SMBO(object):
         self.num_run = num_run
         self.rng = rng
         self._min_time = 10 ** -5
-
         self.tae_runner = tae_runner
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
@@ -223,49 +221,55 @@ class SMBO(object):
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
-            if intent != RunInfoIntent.SKIP:
-                try:
+            if intent == RunInfoIntent.RUN:
+                # Track the fact that a run was launched in the run
+                # history. It's status is tagged as RUNNING, and once
+                # completed and processed, it will be updated accordingly
+                self.runhistory.add(
+                    config=run_info.config,
+                    cost=float(MAXINT),
+                    time=0.0,
+                    status=StatusType.RUNNING,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                )
 
-                    # Track the fact that a run was launched in the run
-                    # history
-                    self.runhistory.add(
-                        config=run_info.config,
-                        cost=float(MAXINT),
-                        time=0.0,
-                        status=StatusType.RUNNING,
-                        instance_id=run_info.instance,
-                        seed=run_info.seed,
-                        budget=run_info.budget,
-                    )
+                self.tae_runner.submit_run(run_info=run_info)
 
-                    result = execute_ta_run_wrapper(
-                        run_info=run_info,
-                        tae_runner=self.tae_runner,
-                        logger=self.logger,
-                    )
+                # There are 2 criteria that the stats object uses to know
+                # if the budged was exhausted.
+                # The budget time, which can only be known when the run finishes,
+                # And the number of ta executions. Because we submit the job at this point,
+                # we count this submission as a run. This prevent for using more
+                # runner runs than what the scenario allows
+                self.stats.ta_runs += 1
 
-                    if result.status != StatusType.BUDGETEXHAUSTED:
+            elif intent == RunInfoIntent.SKIP:
+                # No launch is required
+                # This marks a transition request from the intensifier
+                # To a new iteration
+                pass
+            else:
+                # In any other case, we wait for resources
+                # This likely indicates that no further decision
+                # can be taken by the intensifier until more data is
+                # available
+                self.tae_runner.wait()
 
-                        # Add the results of the run to the run history
-                        self._incorporate_run_results(run_info, result)
+            # Check if there is any result, or else continue
+            for run_info, result in self.tae_runner.get_finished_runs():
+                if result.status != StatusType.BUDGETEXHAUSTED:
 
-                        # Update the intensifier with the result of the runs
-                        self.incumbent, inc_perf = self.intensifier.process_results(
-                            challenger=run_info.config,
-                            incumbent=self.incumbent,
-                            run_history=self.runhistory,
-                            time_bound=max(self._min_time, time_left),
-                            result=result,
-                        )
-                except FirstRunCrashedException:
-                    if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
-                        raise
+                    # Add the results of the run to the run history
+                    # Additionally check for new incumbent
+                    self._incorporate_run_results(run_info, result, time_left)
 
-                if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
-                    assert self.scenario.output_dir_for_this_run is not None  # please mypy
-                    pSMAC.write(run_history=self.runhistory,
-                                output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
-                                logger=self.logger)
+            if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
+                assert self.scenario.output_dir_for_this_run is not None  # please mypy
+                pSMAC.write(run_history=self.runhistory,
+                            output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
+                            logger=self.logger)
 
             self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
@@ -274,6 +278,21 @@ class SMBO(object):
 
             if self.stats.is_budget_exhausted():
                 self.logger.warn("Exhausted configuration budget")
+
+                # The budget can be exhausted  for 2 reasons: number of ta runs or
+                # time. If the number of ta runs is reached, but there is still budget,
+                # wait for the runs to finish
+                while self.tae_runner.pending_runs():
+
+                    self.tae_runner.wait()
+
+                    for run_info, result in self.tae_runner.get_finished_runs():
+                        # Add the results of the run to the run history
+                        # Additionally check for new incumbent
+                        self._incorporate_run_results(run_info, result, time_left)
+
+                # Break from the intensification loop,
+                # as there are no more resources
                 break
 
             # print stats at the end of each intensification iteration
@@ -372,7 +391,8 @@ class SMBO(object):
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
         return time_left
 
-    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue) -> None:
+    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue,
+                                 time_left: float) -> None:
         """
         The SMBO submits a config-run-request via a RunInfo object.
         When that config run is completed, a RunValue, which contains
@@ -381,16 +401,20 @@ class SMBO(object):
         the stats/runhistory objects so that other consumers
         can advance with their task.
 
+        Additionally, it checks for a new incumbent via the intensifier process results,
+        which also has the side effect of moving the intensifier to a new state
+
         Parameters
         ----------
         run_info: RunInfo
             Describes the run (config) from which to process the results
         result: RunValue
             Contains relevant information regarding the execution of a config
+        time_left: float
+            time in [sec] available to perform intensify
         """
 
         # update SMAC stats
-        self.stats.ta_runs += 1
         self.stats.ta_time_used += float(result.time)
 
         self.logger.debug(
@@ -420,4 +444,14 @@ class SMBO(object):
                                                "(To deactivate this exception,"
                                                " use the SMAC scenario option "
                                                "'abort_on_first_run_crash')")
+
+        # Update the intensifier with the result of the runs
+        self.incumbent, inc_perf = self.intensifier.process_results(
+            challenger=run_info.config,
+            incumbent=self.incumbent,
+            run_history=self.runhistory,
+            time_bound=max(self._min_time, time_left),
+            result=result,
+        )
+
         return

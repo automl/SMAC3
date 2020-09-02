@@ -13,7 +13,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost, AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -37,7 +37,7 @@ class ROAR(SMAC4AC):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: typing.Optional[
-                     typing.Union[typing.Type[ExecuteTARun], typing.Callable]
+                     typing.Union[typing.Type[BaseRunner], typing.Callable]
                  ] = None,
                  tae_runner_kwargs: typing.Optional[typing.Dict] = None,
                  runhistory: RunHistory = None,
@@ -58,9 +58,9 @@ class ROAR(SMAC4AC):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
+        tae_runner: smac.tae.base.BaseRunner or callable
             Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            :class:`~smac.tae.base.BaseRunner`. In case a
             callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
