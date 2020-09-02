@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,12 +177,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -206,6 +208,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
@@ -298,8 +301,8 @@
 
 <span class="kn">from</span> <span class="nn">ConfigSpace.configuration_space</span> <span class="kn">import</span> <span class="n">Configuration</span>
 
+<span class="kn">from</span> <span class="nn">smac.tae.base</span> <span class="kn">import</span> <span class="n">BaseRunner</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
@@ -313,7 +316,7 @@
 
 
 <div class="viewcode-block" id="optimize"><a class="viewcode-back" href="../../../../apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.optimize">[docs]</a><span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
-             <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">],</span>
+             <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">],</span>
              <span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">,</span>
              <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
              <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -325,7 +328,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    scenario: Scenario</span>
 <span class="sd">        smac.Scenario to initialize SMAC</span>
-<span class="sd">    tae: ExecuteTARun</span>
+<span class="sd">    tae: BaseRunner</span>
 <span class="sd">        Target Algorithm Runner (supports old and aclib format)</span>
 <span class="sd">    tae_runner_kwargs: Optional[dict]</span>
 <span class="sd">        arguments passed to constructor of &#39;~tae&#39;</span>
@@ -376,7 +379,7 @@
                  <span class="n">scenario</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
+                 <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
                  <span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">shared_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -397,7 +400,7 @@
 <span class="sd">            The randomState/seed to pass to each smac run</span>
 <span class="sd">        run_id: int</span>
 <span class="sd">            run_id for this hydra run</span>
-<span class="sd">        tae: ExecuteTARun</span>
+<span class="sd">        tae: BaseRunner</span>
 <span class="sd">            Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</span>
 <span class="sd">        tae_kwargs: Optional[dict]</span>
 <span class="sd">            arguments passed to constructor of &#39;~tae&#39;</span>

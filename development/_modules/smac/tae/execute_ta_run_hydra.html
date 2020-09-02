@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,12 +177,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -206,6 +208,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
@@ -267,6 +270,8 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
+          <li><a href="../tae.html">smac.tae</a> &raquo;</li>
+        
       <li>smac.tae.execute_ta_run_hydra</li>
     
     
@@ -288,17 +293,17 @@
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARunAClib</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_aclib</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncDict</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_func</span> <span class="kn">import</span> <span class="n">ExecuteTAFuncArray</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae</span> <span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae.serial_runner</span> <span class="kn">import</span> <span class="n">SerialRunner</span>
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 <span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 
 
-<div class="viewcode-block" id="ExecuteTARunHydra"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html#smac.tae.execute_ta_run_hydra.ExecuteTARunHydra">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARunHydra</span><span class="p">(</span><span class="n">ExecuteTARun</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunHydra"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html#smac.tae.execute_ta_run_hydra.ExecuteTARunHydra">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARunHydra</span><span class="p">(</span><span class="n">SerialRunner</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Returns min(cost, cost_portfolio)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -306,7 +311,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cost_oracle</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-        <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">ExecuteTARun</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
+        <span class="n">tae</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">SerialRunner</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -321,7 +326,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cost_oracle</span> <span class="o">=</span> <span class="n">cost_oracle</span>
         <span class="k">if</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTARunAClib</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunAClib</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ExecuteTARun</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunAClib</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: SerialRunner</span>
         <span class="k">elif</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTARunOld</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tae</span> <span class="ow">is</span> <span class="n">ExecuteTAFuncDict</span><span class="p">:</span>

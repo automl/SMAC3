@@ -152,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,12 +179,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -208,6 +210,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
@@ -296,7 +299,7 @@
 <span id="smac-facade-experimental-psmac-facade-module"></span><h1>smac.facade.experimental.psmac_facade module<a class="headerlink" href="#module-smac.facade.experimental.psmac_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.facade.experimental.psmac_facade.PSMAC">
-<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">PSMAC</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.execute_ta_run.ExecuteTARun] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, shared_model: bool = True, validate: bool = True, n_optimizers: int = 2, val_set: Optional[List[str]] = None, n_incs: int = 1, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">PSMAC</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.base.BaseRunner] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, shared_model: bool = True, validate: bool = True, n_optimizers: int = 2, val_set: Optional[List[str]] = None, n_incs: int = 1, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#PSMAC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use PSMAC</p>
 <dl class="py attribute">
@@ -356,7 +359,7 @@
 <li><p><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
 <li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
 <li><p><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</p></li>
-<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
 <li><p><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
 <li><p><strong>shared_model</strong> (<em>bool</em>) – Flag to indicate whether information is shared between SMAC runs or not</p></li>
 <li><p><strong>validate</strong> (<em>bool / None</em>) – Flag to indicate whether to validate the found configurations or to use the SMAC estimates
@@ -432,13 +435,13 @@ None =&gt; neither and return the full portfolio</p></li>
 
 <dl class="py function">
 <dt id="smac.facade.experimental.psmac_facade.optimize">
-<code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun">smac.tae.execute_ta_run.ExecuteTARun</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">Dict</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">output_dir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">smac.facade.experimental.psmac_facade.</code><code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae</span><span class="p">:</span> <span class="n">Type<span class="p">[</span><a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner">smac.tae.base.BaseRunner</a><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">Dict</span></em>, <em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numpy.random.mtrand.RandomState<span class="p">, </span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">output_dir</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.Configuration<a class="reference internal" href="../_modules/smac/facade/experimental/psmac_facade.html#optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unbound method to be called in a subprocess</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – smac.Scenario to initialize SMAC</p></li>
-<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target Algorithm Runner (supports old and aclib format)</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format)</p></li>
 <li><p><strong>tae_runner_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
 <li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
 <li><p><strong>output_dir</strong> (<em>str</em>) – The directory in which each smac run should write it’s results</p></li>

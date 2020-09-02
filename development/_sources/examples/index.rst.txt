@@ -32,6 +32,26 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example showcases how to use dask to launch parallel configurations via n_workers">
+
+.. only:: html
+
+ .. figure:: /examples/images/thumb/sphx_glr_fmin_rosenbrock_parallel_thumb.png
+
+     :ref:`sphx_glr_examples_fmin_rosenbrock_parallel.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/fmin_rosenbrock_parallel
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC interface tuned for hyperparameter optimization for black-box optimization">
 
 .. only:: html

@@ -152,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,12 +179,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -208,6 +210,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
@@ -294,51 +297,57 @@
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC interface tuned for hyperparameter optimization for black-box optimization"><div class="figure align-default" id="id2">
+<div class="sphx-glr-thumbcontainer" tooltip="This example showcases how to use dask to launch parallel configurations via n_workers"><div class="figure align-default" id="id2">
+<img alt="../_images/sphx_glr_fmin_rosenbrock_parallel_thumb.png" src="../_images/sphx_glr_fmin_rosenbrock_parallel_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="fmin_rosenbrock_parallel.html#sphx-glr-examples-fmin-rosenbrock-parallel-py"><span class="std std-ref">Parallel Intensifier with No Intensification</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC interface tuned for hyperparameter optimization for black-box optimization"><div class="figure align-default" id="id3">
 <img alt="../_images/sphx_glr_SMAC4HPO_rosenbrock_thumb.png" src="../_images/sphx_glr_SMAC4HPO_rosenbrock_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rosenbrock.html#sphx-glr-examples-smac4hpo-rosenbrock-py"><span class="std std-ref">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rosenbrock.html#sphx-glr-examples-smac4hpo-rosenbrock-py"><span class="std std-ref">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using the black-box optimization interface of SMAC"><div class="figure align-default" id="id3">
+<div class="sphx-glr-thumbcontainer" tooltip="Using the black-box optimization interface of SMAC"><div class="figure align-default" id="id4">
 <img alt="../_images/sphx_glr_SMAC4BO_rosenbrock_thumb.png" src="../_images/sphx_glr_SMAC4BO_rosenbrock_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4BO_rosenbrock.html#sphx-glr-examples-smac4bo-rosenbrock-py"><span class="std std-ref">Using the black-box optimization interface of SMAC</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4BO_rosenbrock.html#sphx-glr-examples-smac4bo-rosenbrock-py"><span class="std std-ref">Using the black-box optimization interface of SMAC</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Changing the acquisition function"><div class="figure align-default" id="id4">
+<div class="sphx-glr-thumbcontainer" tooltip="Changing the acquisition function"><div class="figure align-default" id="id5">
 <img alt="../_images/sphx_glr_SMAC4HPO_acq_rosenbrock_thumb.png" src="../_images/sphx_glr_SMAC4HPO_acq_rosenbrock_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html#sphx-glr-examples-smac4hpo-acq-rosenbrock-py"><span class="std std-ref">Changing the acquisition function</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html#sphx-glr-examples-smac4hpo-acq-rosenbrock-py"><span class="std std-ref">Changing the acquisition function</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest"><div class="figure align-default" id="id5">
+<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest"><div class="figure align-default" id="id6">
 <img alt="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" src="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py"><span class="std std-ref">Using the SMAC-HPO interface to tune a random forest</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py"><span class="std std-ref">Using the SMAC-HPO interface to tune a random forest</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a simple SVM on the IRIS-benchmark."><div class="figure align-default" id="id6">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a simple SVM on the IRIS-benchmark."><div class="figure align-default" id="id7">
 <img alt="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" src="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py"><span class="std std-ref">Optimize the hyperparameters of a support vector machine</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py"><span class="std std-ref">Optimize the hyperparameters of a support vector machine</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ..."><div class="figure align-default" id="id7">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ..."><div class="figure align-default" id="id8">
 <img alt="../_images/sphx_glr_hyperband_mlp_thumb.png" src="../_images/sphx_glr_hyperband_mlp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py"><span class="std std-ref">Optimizing an MLP with Hyperband</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py"><span class="std std-ref">Optimizing an MLP with Hyperband</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC with multiple instances. We optimize ..."><div class="figure align-default" id="id8">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC with multiple instances. We optimize ..."><div class="figure align-default" id="id9">
 <img alt="../_images/sphx_glr_BOHB4HPO_sgd_instances_thumb.png" src="../_images/sphx_glr_BOHB4HPO_sgd_instances_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">Optimizing average cross-validation performance with BOHB</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">Optimizing average cross-validation performance with BOHB</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC. We optimize a simple MLP on the digi..."><div class="figure align-default" id="id9">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC. We optimize a simple MLP on the digi..."><div class="figure align-default" id="id10">
 <img alt="../_images/sphx_glr_BOHB4HPO_mlp_thumb.png" src="../_images/sphx_glr_BOHB4HPO_mlp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py"><span class="std std-ref">Optimizing an MLP with BOHB</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py"><span class="std std-ref">Optimizing an MLP with BOHB</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>

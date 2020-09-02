@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,12 +177,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_wrapper.html">smac.tae.execute_ta_run_wrapper module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -206,6 +208,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
@@ -300,9 +303,8 @@
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory2epm</span> <span class="kn">import</span> <span class="n">RunHistory2EPM4Cost</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae.base</span> <span class="kn">import</span> <span class="n">BaseRunner</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_old</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_wrapper</span> <span class="kn">import</span> <span class="n">execute_ta_run_wrapper</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Joshua Marben&quot;</span>
@@ -313,7 +315,7 @@
 
 
 <div class="viewcode-block" id="_unbound_tae_starter"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate._unbound_tae_starter">[docs]</a><span class="k">def</span> <span class="nf">_unbound_tae_starter</span><span class="p">(</span>
-    <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">],</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
+    <span class="n">tae</span><span class="p">:</span> <span class="n">BaseRunner</span><span class="p">,</span> <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">],</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
     <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunValue</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -322,7 +324,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    tae: ExecuteTARun</span>
+<span class="sd">    tae: BaseRunner</span>
 <span class="sd">        tae to be used</span>
 <span class="sd">    runhistory: RunHistory</span>
 <span class="sd">        runhistory to save</span>
@@ -336,7 +338,7 @@
 <span class="sd">    tae_results: RunValue</span>
 <span class="sd">        return from tae.start</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">execute_ta_run_wrapper</span><span class="p">(</span><span class="n">tae</span><span class="p">,</span> <span class="n">run_info</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">run_info</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">tae</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">(</span><span class="n">run_info</span><span class="p">)</span>
     <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">runhistory</span><span class="p">:</span>
@@ -439,7 +441,7 @@
                  <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;threading&#39;</span><span class="p">,</span>
                  <span class="n">runhistory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">tae</span><span class="p">:</span> <span class="n">BaseRunner</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">output_fn</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RunHistory</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -468,7 +470,7 @@
 <span class="sd">            what backend joblib should use for parallel runs</span>
 <span class="sd">        runhistory: RunHistory</span>
 <span class="sd">            optional, RunHistory-object to reuse runs</span>
-<span class="sd">        tae: ExecuteTARun</span>
+<span class="sd">        tae: BaseRunner</span>
 <span class="sd">            tae to be used. if None, will initialize ExecuteTARunOld</span>
 <span class="sd">        output_fn: str</span>
 <span class="sd">            path to runhistory to be saved. if the suffix is not &#39;.json&#39;, will</span>
@@ -526,7 +528,7 @@
 
 <div class="viewcode-block" id="Validator._validate_parallel"><a class="viewcode-back" href="../../../apidoc/smac.utils.validate.html#smac.utils.validate.Validator._validate_parallel">[docs]</a>    <span class="k">def</span> <span class="nf">_validate_parallel</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">tae</span><span class="p">:</span> <span class="n">ExecuteTARun</span><span class="p">,</span>
+        <span class="n">tae</span><span class="p">:</span> <span class="n">BaseRunner</span><span class="p">,</span>
         <span class="n">runs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_Run</span><span class="p">],</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -537,7 +539,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        tae: ExecuteTARun</span>
+<span class="sd">        tae: BaseRunner</span>
 <span class="sd">            tae to be used for validation</span>
 <span class="sd">        runs: list&lt;_Run&gt;</span>
 <span class="sd">            list with _Run-objects</span>
