@@ -60,7 +60,7 @@ class SimpleIntensifier(AbstractRacer):
                          )
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -75,9 +75,8 @@ class SimpleIntensifier(AbstractRacer):
 
         Parameters
         ----------
-        challenger : Configuration
-            A configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
@@ -104,11 +103,11 @@ class SimpleIntensifier(AbstractRacer):
             self.logger.info(
                 "First run, no incumbent provided; challenger is assumed to be the incumbent"
             )
-            incumbent = challenger
+            incumbent = run_info.config
 
         self.num_run += 1
 
-        incumbent = self._compare_configs(challenger=challenger,
+        incumbent = self._compare_configs(challenger=run_info.config,
                                           incumbent=incumbent,
                                           run_history=run_history,
                                           log_traj=log_traj)

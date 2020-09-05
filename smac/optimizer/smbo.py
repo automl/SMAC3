@@ -250,12 +250,14 @@ class SMBO(object):
                 # This marks a transition request from the intensifier
                 # To a new iteration
                 pass
-            else:
+            elif intent == RunInfoIntent.WAIT:
                 # In any other case, we wait for resources
                 # This likely indicates that no further decision
                 # can be taken by the intensifier until more data is
                 # available
                 self.tae_runner.wait()
+            else:
+                raise NotImplementedError("No other RunInfoIntent has been coded!")
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
@@ -447,7 +449,7 @@ class SMBO(object):
 
         # Update the intensifier with the result of the runs
         self.incumbent, inc_perf = self.intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.incumbent,
             run_history=self.runhistory,
             time_bound=max(self._min_time, time_left),

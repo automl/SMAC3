@@ -93,6 +93,9 @@ class SuccessiveHalving(AbstractRacer):
         * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+    identifier: int
+        Adds a numerical identifier on this SH instance. Used for debug and tagging
+        logger messages properly
     """
 
     def __init__(self,
@@ -114,6 +117,7 @@ class SuccessiveHalving(AbstractRacer):
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
+                 identifier: int = 0,
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -127,8 +131,9 @@ class SuccessiveHalving(AbstractRacer):
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
                          min_chall=min_chall)
 
+        self.identifier = identifier
         self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+            self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
 
         if self.min_chall > 1:
             raise ValueError('Successive Halving cannot handle argument `min_chall` > 1.')
@@ -194,6 +199,11 @@ class SuccessiveHalving(AbstractRacer):
         self.do_not_advance_challengers = set()  # type: typing.Set[Configuration]
         self.fail_challengers = set()  # type: typing.Set[Configuration]
         self.fail_chal_offset = 0
+
+        # Track which configs were launched. This will allow to have an extra check to make sure
+        # that a successive halver deals only with the configs it launched, but also allows querying the
+        # status of the configs via the RH -- knowing what to query
+        self.run_tracker = []  # type: typing.List[typing.Tuple[Configuration, str, int]]
 
     def _init_sh_params(self,
                         initial_budget: typing.Optional[float],
@@ -270,7 +280,7 @@ class SuccessiveHalving(AbstractRacer):
         self.n_configs_in_stage = self.n_configs_in_stage.tolist()
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -285,9 +295,8 @@ class SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        challenger : Configuration
-            A configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
@@ -314,7 +323,7 @@ class SuccessiveHalving(AbstractRacer):
             self.logger.info(
                 "First run, no incumbent provided; challenger is assumed to be the incumbent"
             )
-            incumbent = challenger
+            incumbent = run_info.config
             self.first_run = False
 
         # selecting instance-seed subset for this budget, depending on the kind of budget
@@ -342,15 +351,15 @@ class SuccessiveHalving(AbstractRacer):
         # If a configuration is successful, it is added to curr_challengers.
         # if it fails it is added to fail_challengers.
         if np.isfinite(self.curr_inst_idx) and result.status == StatusType.SUCCESS:
-            self.success_challengers.add(challenger)  # successful configs
+            self.success_challengers.add(run_info.config)  # successful configs
         elif np.isfinite(self.curr_inst_idx) and result.status == StatusType.DONOTADVANCE:
-            self.do_not_advance_challengers.add(challenger)
+            self.do_not_advance_challengers.add(run_info.config)
         else:
-            self.fail_challengers.add(challenger)  # capped/crashed/do not advance configs
+            self.fail_challengers.add(run_info.config)  # capped/crashed/do not advance configs
 
         # get incumbent if all instances have been evaluated
         if n_insts_remaining <= 0:
-            incumbent = self._compare_configs(challenger=challenger,
+            incumbent = self._compare_configs(challenger=run_info.config,
                                               incumbent=incumbent,
                                               run_history=run_history,
                                               log_traj=log_traj)
@@ -410,18 +419,41 @@ class SuccessiveHalving(AbstractRacer):
         if not hasattr(self, 'stage'):
             self._update_stage(run_history=run_history)
 
+        # In the case of multiprocessing, we have runs in Running stage, which have not
+        # been processed via process_results(). get_next_run() is called agnostically by
+        # smbo. To prevent launching more configs, that the ones needed, we query if
+        # there is room for more configurations, else we wait for process_results()
+        # to trigger a new stage
+        if self._launched_all_configs_for_current_stage(run_history):
+            return RunInfoIntent.WAIT, RunInfo(
+                config=None,
+                instance=None,
+                instance_specific="0",
+                seed=0,
+                cutoff=self.cutoff,
+                capped=False,
+                budget=0.0,
+                source_id=self.identifier,
+            )
+
         # sampling from next challenger marks the beginning of a new iteration
         self.iteration_done = False
 
-        curr_budget = int(self.all_budgets[self.stage])
+        curr_budget = self.all_budgets[self.stage]
 
         # if all instances have been executed, then reset and move on to next config
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            n_insts = (curr_budget - prev_budget)
+            n_insts = (int(curr_budget) - prev_budget)
         else:
             n_insts = len(self.inst_seed_pairs)
-        n_insts_remaining = n_insts - self.curr_inst_idx
+
+        # In the case of multiprocessing, we will have launched instance/seeds
+        # which are not completed, yet running. To proactively move to a new challenger,
+        # we account for them in the n_insts_remaining calculation
+        running_instances = self._count_running_instances_for_challenger(run_history)
+
+        n_insts_remaining = n_insts - (self.curr_inst_idx + running_instances)
 
         # if there are instances pending, finish running configuration
         if self.running_challenger and n_insts_remaining > 0:
@@ -435,6 +467,24 @@ class SuccessiveHalving(AbstractRacer):
                                                    chooser=chooser,
                                                    run_history=run_history,
                                                    repeat_configs=repeat_configs)
+                if challenger is None:
+                    # If no challenger was sampled from the EPM or
+                    # initial challengers, it might mean that the EPM
+                    # is proposing a configuration that is currently running.
+                    # There is a filtering on the above _next_challenger to return
+                    # None if the proposed config us already in the run history
+                    # To get a new config, we wait for more data
+                    return RunInfoIntent.WAIT, RunInfo(
+                        config=None,
+                        instance=None,
+                        instance_specific="0",
+                        seed=0,
+                        cutoff=self.cutoff,
+                        capped=False,
+                        budget=0.0,
+                        source_id=self.identifier,
+                    )
+
                 new_challenger = True
             else:
                 # sample top configs from previously sampled configurations
@@ -454,6 +504,7 @@ class SuccessiveHalving(AbstractRacer):
                         cutoff=self.cutoff,
                         capped=False,
                         budget=0.0,
+                        source_id=self.identifier,
                     )
 
             if challenger:
@@ -461,6 +512,9 @@ class SuccessiveHalving(AbstractRacer):
                 self.curr_inst_idx = 0
                 self._chall_indx += 1
                 self.running_challenger = challenger
+                # If there is a brand new challenger, there will be no
+                # running instances
+                running_instances = 0
 
         # calculating the incumbent's performance for adaptive capping
         # this check is required because:
@@ -475,21 +529,17 @@ class SuccessiveHalving(AbstractRacer):
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
 
-        # select which instance to run current config on
-        curr_budget = self.all_budgets[self.stage]
-
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
-        n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
 
         self.logger.debug(" Running challenger  -  %s" % str(challenger))
 
         # run the next instance-seed pair for the given configuration
-        instance, seed = curr_insts[self.curr_inst_idx]
+        instance, seed = curr_insts[self.curr_inst_idx + running_instances]
 
         # selecting cutoff if running adaptive capping
         cutoff = self.cutoff
@@ -513,6 +563,7 @@ class SuccessiveHalving(AbstractRacer):
         if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
             capped = True
 
+        self.run_tracker.append((challenger, instance, seed))
         return RunInfoIntent.RUN, RunInfo(
             config=challenger,
             instance=instance,
@@ -521,6 +572,7 @@ class SuccessiveHalving(AbstractRacer):
             cutoff=cutoff,
             capped=capped,
             budget=0.0 if self.instance_as_budget else curr_budget,
+            source_id=self.identifier,
         )
 
     def _update_stage(self, run_history: RunHistory) -> None:
@@ -820,3 +872,70 @@ class SuccessiveHalving(AbstractRacer):
         # select top configurations only
         top_configs = configs_sorted[:k]
         return top_configs
+
+    def _count_running_instances_for_challenger(self, run_history: RunHistory) -> int:
+        """
+        The intensifiers are called on a sequential manner. In each iteration,
+        one can only return a configuration at a time, for that reason
+        self.running_challenger tracks that more instance/seed pairs need to be
+        launched for a given config.
+
+        This procedure counts the number of running instances/seed pairs for the
+        current running challenger
+        """
+        running_instances = 0
+
+        if self.running_challenger is not None:
+            for k, v in run_history.data.items():
+                if run_history.ids_config[k.config_id] == self.running_challenger:
+                    if v.status == StatusType.RUNNING:
+                        running_instances += 1
+
+        return running_instances
+
+    def _launched_all_configs_for_current_stage(self, run_history: RunHistory) -> bool:
+        """
+        This procedure queries if the addition of currently finished configs
+        and running configs are sufficient for the current stage.
+        If more configs are needed, it will return False.
+        Parameters
+        ----------
+        run_history : RunHistory
+            stores all runs we ran so far
+
+        Returns
+        -------
+            bool: Whether or not to launch more configurations/instances/seed pairs
+        """
+        # selecting instance-seed subset for this budget, depending on the kind of budget
+        curr_budget = self.all_budgets[self.stage]
+        if self.instance_as_budget:
+            prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
+            curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
+        else:
+            curr_insts = self.inst_seed_pairs
+
+        # _count_running_instances_for_challenger will count the running instances
+        # of the last challenger. It makes sense here, because we assume that if we
+        # moved to a new challenger, all instances have been launched for a previous
+        # challenger
+        running_instances = self._count_running_instances_for_challenger(run_history)
+        n_insts_remaining = len(curr_insts) - (self.curr_inst_idx + running_instances)
+
+        # Check which of the current configs is running
+        my_configs = [c for c, i, s in self.run_tracker]
+        running_configs = set()
+        for k, v in run_history.data.items():
+            if v.status == StatusType.RUNNING:
+                if run_history.ids_config[k.config_id] in my_configs:
+                    running_configs.add(k.config_id)
+
+        # if all configurations for the current stage have been evaluated, reset stage
+        num_chal_available = (
+            len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
+            + self.fail_chal_offset + len(running_configs)
+        )
+        if num_chal_available == self.n_configs_in_stage[self.stage] and n_insts_remaining == 0:
+            return True
+        else:
+            return False

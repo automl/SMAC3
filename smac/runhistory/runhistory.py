@@ -32,8 +32,32 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
-RunInfo = collections.namedtuple(
-    'RunInfo', ['config', 'instance', 'instance_specific', 'seed', 'cutoff', 'capped', 'budget'])
+# NOTE class instead of collection to have a default value for budget/source_id in RunInfo
+class RunInfo(
+    collections.namedtuple(
+        'RunInfo',
+        ['config', 'instance', 'instance_specific', 'seed', 'cutoff', 'capped', 'budget', 'source_id']
+    )
+):
+    __slots__ = ()
+
+    def __new__(
+        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
+              # see https://docs.python.org/3/reference/datamodel.html#object.__new__
+        config: Configuration,
+        instance: typing.Optional[str],
+        instance_specific: str,
+        seed: int,
+        cutoff: typing.Optional[float],
+        capped: bool,
+        budget: float = 0.0,
+        # In the context of parallel runs, one will have multiple suppliers of
+        # configurations. source_id is a new mechanism to track what entity launched
+        # this configuration
+        source_id: int = 0,
+    ) -> 'RunInfo':
+        return super().__new__(cls, config, instance, instance_specific, seed,
+                               cutoff, capped, budget, source_id)
 
 
 InstSeedKey = collections.namedtuple(

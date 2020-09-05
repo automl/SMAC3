@@ -113,7 +113,7 @@ class Hyperband(SuccessiveHalving):
         self.sh_intensifier = None  # type: SuccessiveHalving # type: ignore[assignment]
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -128,9 +128,8 @@ class Hyperband(SuccessiveHalving):
 
         Parameters
         ----------
-        challenger : Configuration
-            A configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
@@ -153,7 +152,7 @@ class Hyperband(SuccessiveHalving):
         """
 
         # run 1 iteration of successive halving
-        incumbent, inc_perf = self.sh_intensifier.process_results(challenger=challenger,
+        incumbent, inc_perf = self.sh_intensifier.process_results(run_info=run_info,
                                                                   incumbent=incumbent,
                                                                   run_history=run_history,
                                                                   time_bound=time_bound,

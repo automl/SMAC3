@@ -31,6 +31,7 @@ class RunInfoIntent(Enum):
     """
     RUN = 0  # Normal run execution of a run info
     SKIP = 1  # Skip running the run_info
+    WAIT = 2  # Wait for more configs to be processed
 
 
 class AbstractRacer(object):
@@ -164,7 +165,7 @@ class AbstractRacer(object):
         raise NotImplementedError()
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -179,9 +180,8 @@ class AbstractRacer(object):
 
         Parameters
         ----------
-        challenger : Configuration
-            A configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
@@ -288,7 +288,7 @@ class AbstractRacer(object):
         """
 
         if not self.run_obj_time:
-            raise ValueError('This method only works when the run objective is quality')
+            raise ValueError('This method only works when the run objective is time')
 
         curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
 

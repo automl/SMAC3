@@ -454,7 +454,7 @@ class Intensifier(AbstractRacer):
             raise ValueError('No valid stage found!')
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -479,9 +479,8 @@ class Intensifier(AbstractRacer):
 
         Parameters
         ----------
-        challenger : Configuration
-            a configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             best configuration so far, None in 1st run
         run_history : RunHistory
@@ -508,7 +507,7 @@ class Intensifier(AbstractRacer):
                     "First run, no incumbent provided;"
                     " challenger is assumed to be the incumbent"
                 )
-                incumbent = challenger
+                incumbent = run_info.config
 
         if self.stage in [IntensifierStage.PROCESS_INCUMBENT_RUN,
                           IntensifierStage.PROCESS_FIRST_CONFIG_RUN]:
@@ -534,7 +533,7 @@ class Intensifier(AbstractRacer):
 
                 self._ta_time += result.time
                 incumbent = self._process_racer_results(
-                    challenger=challenger,
+                    challenger=run_info.config,
                     incumbent=incumbent,
                     run_history=run_history,
                     log_traj=log_traj,
