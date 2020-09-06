@@ -244,7 +244,14 @@ class DaskParallelRunner(BaseRunner):
             additional_info: dict
                 all further additional run information
         """
-        pass
+        return self.single_worker.run(
+            config=config,
+            instance=instance,
+            cutoff=cutoff,
+            seed=seed,
+            budget=budget,
+            instance_specific=instance_specific,
+        )
 
     def _workers_available(self) -> bool:
         """"Query if there are workers available, which means

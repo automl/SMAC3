@@ -935,7 +935,7 @@ class SuccessiveHalving(AbstractRacer):
             len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
             + self.fail_chal_offset + len(running_configs)
         )
-        if num_chal_available == self.n_configs_in_stage[self.stage] and n_insts_remaining == 0:
+        if num_chal_available == self.n_configs_in_stage[self.stage] and n_insts_remaining <= 0:
             return True
         else:
             return False

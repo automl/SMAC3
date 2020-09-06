@@ -124,7 +124,8 @@ class AbstractRacer(object):
         self._ta_time = 0.
 
         # attributes for sampling next configuration
-        self.repeat_configs = True
+        # Repeating configurations is discouraged for parallel runs
+        self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
 
