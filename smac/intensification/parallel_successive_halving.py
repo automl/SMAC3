@@ -335,4 +335,3 @@ class ParallelSuccessiveHalving(AbstractRacer):
             return list(range(expected, len(self.sh_instances))) + list(range(expected))
         else:
             raise ValueError("Unsupported strategy " + strategy)
-
