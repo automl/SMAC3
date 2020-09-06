@@ -32,7 +32,7 @@ from smac.initial_design.random_configuration_design import RandomConfigurations
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-from mlp_from_cfg import mlp_from_cfg  # noqa: E402
+from mlp_from_cfg_func import mlp_from_cfg  # noqa: E402
 # --------------------------------------------------------------
 
 if __name__ == '__main__':

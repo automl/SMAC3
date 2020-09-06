@@ -323,5 +323,5 @@ sphinx_gallery_conf = {
     # compile execute examples in the examples dir
     'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.
-    'ignore_pattern': '.*rosenbrock_2d_delayed.py'
+    'ignore_pattern': '.*_func.py'
 }

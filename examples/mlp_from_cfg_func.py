@@ -1,13 +1,17 @@
-import numpy as np
 import warnings
+
+import numpy as np
+
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
-# Target Algorithm
-# The signature of the function determines what arguments are passed to it
-# i.e., budget is passed to the target algorithm if it is present in the signature
+
+
+# A common function to be optimized by a Real valued Intensifier
 digits = load_digits()
+
+
 def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
     """
         Creates a MLP classifier from sklearn and fits the given data on it.
@@ -42,7 +46,8 @@ def mlp_from_cfg(cfg, seed, instance, budget, **kwargs):
             random_state=seed)
 
         # returns the cross validation accuracy
-        cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
+        # to make CV splits consistent
+        cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)
         score = cross_val_score(mlp, digits.data, digits.target, cv=cv, error_score='raise')
 
     return 1 - np.mean(score)  # Because minimize!

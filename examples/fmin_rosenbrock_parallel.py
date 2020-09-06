@@ -20,7 +20,7 @@ from smac.facade.func_facade import fmin_smac
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__)))
-from rosenbrock_2d_delayed import rosenbrock_2d  # noqa: E402
+from rosenbrock_2d_delayed_func import rosenbrock_2d  # noqa: E402
 # --------------------------------------------------------------
 
 if __name__ == '__main__':
