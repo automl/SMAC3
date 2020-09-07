@@ -4,6 +4,7 @@ import typing
 import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.tae.dask_runner import DaskParallelRunner
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
@@ -18,9 +19,10 @@ class ParallelSuccessiveHalving(AbstractRacer):
     in a parallel fashion
 
     This class instantiates SuccessiveHalving objects on a need basis, that is, to
-    prevent workers from being idle. The maximum number of SuccessiveHalving objects
-    created is controlled via max_active_SH.
+    prevent workers from being idle.
 
+    The maximum number of SuccessiveHalving objects created is controlled via
+    runner.num_workers() so that we can dynamically query active workers.
 
     Parameters
     ----------
@@ -67,8 +69,8 @@ class ParallelSuccessiveHalving(AbstractRacer):
         * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
-    max_active_SH: int
-        Number of max active successive halvers to support
+    runner: DaskParallelRunner
+        The tae instance that can support parallel execution
     """
 
     def __init__(self,
@@ -76,6 +78,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
                  instances: typing.List[str],
+                 runner: DaskParallelRunner,
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
                  cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
@@ -90,7 +93,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
-                 max_active_SH: int = 1,
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -118,7 +120,14 @@ class ParallelSuccessiveHalving(AbstractRacer):
         self.max_budget = max_budget
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
-        self.max_active_SH = max_active_SH
+
+        # Currently we only support DaskParallelRunner because we query
+        # the number of workers on the client
+        self.runner = runner
+        if not isinstance(self.runner, DaskParallelRunner):
+            raise ValueError("Unsupported tae runner provided: {}".format(
+                type(self.runner)
+            ))
 
         # We have a pool of successive halving instances that yield work
         # Add sh number 0, because we are likely gonna need it
@@ -145,7 +154,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
         To do so, this procedures redirects the result argument, to the
         respective SuccessiveHalving object that generated the original config.
 
-        Also, a incumbent will be determined. This determination is done
+        Also, an incumbent will be determined. This determination is done
         using the complete run history, so we rely on the current SH
         choice of incumbent. That is, not need to go over each SH to
         get the incumbent, as there is no local runhistory
@@ -169,7 +178,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        incumbent: Configuration()
+        incumbent: Configuration
             current (maybe new) incumbent configuration
         inc_perf: float
             empirical performance of incumbent configuration
@@ -197,7 +206,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
         got selected, please check get_next_run of SuccesiveHalving.
 
         To prevent having idle workers, this procedure creates successive halvers
-        up to a maximum of self.max_active_SH.
+        up to the maximum number of workers available.
 
         If no new SH can be created and all SH objects need to wait for more data,
         this procedure sends a wait request to smbo.
@@ -278,7 +287,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
         Decides if it is possible to add a new SH, and adds it.
         If a new SH is added, True is returned, else False.
         """
-        if len(self.sh_instances) >= self.max_active_SH:
+        if len(self.sh_instances) >= self.runner.num_workers():
             return False
 
         self.sh_instances[len(self.sh_instances)] = SuccessiveHalving(
@@ -305,7 +314,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
 
         return True
 
-    def _sh_scheduling(self, strategy: str = 'serial') -> typing.List[int]:
+    def _sh_scheduling(self, strategy: str = 'more_advanced_iteration') -> typing.List[int]:
         """
         This procedure dictates what SH to prioritize in
         launching jobs.
@@ -333,5 +342,29 @@ class ParallelSuccessiveHalving(AbstractRacer):
             # in above example, if last scheduler was 5, it is like ordinal
             # scheduling
             return list(range(expected, len(self.sh_instances))) + list(range(expected))
+        elif strategy == 'more_advanced_iteration':
+            # We want to prioritize runs that are close to finishing an iteration.
+            # In the context of successive halving, an iteration have stages that are
+            # composed of # of configs and each configs has # of instance-seed pairs
+            preference = []
+            for i, sh in self.sh_instances.items():
+                # Each row of this matrix is id, stage, configs+instances for stage
+                # We use sh.run_tracker as a cheap way to now how advanced the run is
+                # in case of stage ties among successive halvers. sh.run_tracker is
+                # also emptied each iteration
+                stage = 0
+                if hasattr(sh, 'stage'):
+                    # Newly created SuccessiveHalving objects have no stage
+                    stage = sh.stage
+                preference.append(
+                    (i, stage, len(sh.run_tracker))
+                )
+
+            # First we sort by config/instance/seed as the less important criteria
+            preference.sort(key=lambda x: x[2], reverse=True)
+            # Second by stage. The more advanced the stage is, the more we want
+            # this SH to finish early
+            preference.sort(key=lambda x: x[1], reverse=True)
+            return [i for i, s, c in preference]
         else:
             raise ValueError("Unsupported strategy " + strategy)

@@ -2,6 +2,7 @@ import inspect
 import logging
 import os
 from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
+import warnings
 
 import numpy as np
 
@@ -408,6 +409,26 @@ class SMAC4AC(object):
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
             'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         }
+
+        # In case the intensifier supports parallelism, we
+        # pass here the TAE instance for consumption.
+        # We pass the whole instance as a mechanism to dynamically
+        # query the number of workers.
+        # For ParallelSuccessiveHalving, internally, a maximum of
+        # n_workers Successivehalving instances are created to deal
+        # with idle workers. Idle workers happen when a SH instance
+        # has to wait for runs to finish before moving to a new stage
+        if n_workers > 1:
+            if isinstance(
+                intensifier, ParallelSuccessiveHalving
+            ) or intensifier == ParallelSuccessiveHalving:
+                intensifier_def_kwargs['runner'] = tae_runner_instance
+            else:
+                warnings.warn("Provided n_workers > 1 but the intensifier is not "
+                              "compatible with parallelism. Please consider using "
+                              "an intensifier that can consider parallelism"
+                              )
+
         if isinstance(intensifier, Intensifier) \
                 or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):
             intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821
@@ -428,16 +449,6 @@ class SMAC4AC(object):
                 "Argument intensifier must be None or an object implementing the AbstractRacer, but is '%s'" %
                 type(intensifier)
             )
-
-        # In case the intensifier supports parallelism, we
-        # pass here the TAE n_workers for consumption.
-        # For ParallelSuccessiveHalving, internally, a maximum of
-        # n_workers Successivehalving instances are created to deal
-        # with idle workers. Idle workers happen when a SH instance
-        # has to wait for runs to finish before moving to a new stage
-        if isinstance(intensifier_instance, ParallelSuccessiveHalving) and n_workers > 1:
-            if 'max_active_SH' not in intensifier_def_kwargs:
-                intensifier_instance.max_active_SH = n_workers
 
         # initial design
         if initial_design is not None and initial_configurations is not None:

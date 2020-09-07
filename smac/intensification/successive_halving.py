@@ -201,8 +201,16 @@ class SuccessiveHalving(AbstractRacer):
         self.fail_chal_offset = 0
 
         # Track which configs were launched. This will allow to have an extra check to make sure
-        # that a successive halver deals only with the configs it launched, but also allows querying the
-        # status of the configs via the RH -- knowing what to query
+        # that a successive halver deals only with the configs it launched,
+        # but also allows querying the status of the configs via the run history.
+        # In other works, the run history is agnostic of the origin of the configurations,
+        # that is, which successive halving instance created it. The RunInfo object
+        # is aware of this information, and for parallel execution, the routing of
+        # finish results is expected to use this information.
+        # Nevertheless, the common object among SMBO/intensifier, which is the
+        # run history, does not have this information and so we track locally. That way,
+        # when we access the complete list of configs from the run history, we filter
+        # the ones launched by the current succesive halver using self.run_tracker
         self.run_tracker = []  # type: typing.List[typing.Tuple[Configuration, str, int]]
 
     def _init_sh_params(self,
@@ -312,7 +320,7 @@ class SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        incumbent: Configuration()
+        incumbent: Configuration
             current (maybe new) incumbent configuration
         inc_perf: float
             empirical performance of incumbent configuration
@@ -421,7 +429,7 @@ class SuccessiveHalving(AbstractRacer):
 
         # In the case of multiprocessing, we have runs in Running stage, which have not
         # been processed via process_results(). get_next_run() is called agnostically by
-        # smbo. To prevent launching more configs, that the ones needed, we query if
+        # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
         if self._launched_all_configs_for_current_stage(run_history):
@@ -655,6 +663,7 @@ class SuccessiveHalving(AbstractRacer):
                 self.iteration_done = True
                 self.sh_iters += 1
                 self.stage = 0
+                self.run_tracker = []
                 self.configs_to_run = []
                 self.fail_chal_offset = 0
 
@@ -930,7 +939,10 @@ class SuccessiveHalving(AbstractRacer):
                 if run_history.ids_config[k.config_id] in my_configs:
                     running_configs.add(k.config_id)
 
-        # if all configurations for the current stage have been evaluated, reset stage
+        # The total number of runs for this stage account for finished configurations
+        # (success + failed + do not advance) + the offset + running but not finished
+        # configurations. Also we account for the instances not launched for the
+        # currently running configuration
         num_chal_available = (
             len(self.success_challengers | self.fail_challengers | self.do_not_advance_challengers)
             + self.fail_chal_offset + len(running_configs)

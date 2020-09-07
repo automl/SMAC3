@@ -15,7 +15,8 @@ from smac.facade.func_facade import fmin_smac
 # --------------------------------------------------------------
 # We need to provide a pickable function and use __main__
 # to be compliant with multiprocessing API
-# Below is a WA to have a packaged function called rosenbrock_2d
+# Below is a work around to have a packaged function called
+# rosenbrock_2d
 # --------------------------------------------------------------
 import os
 import sys

@@ -995,6 +995,11 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh,
             incumbent=None,
         )
+
+        # Add a check for empty run history
+        self.assertEqual(len(self.rh.data), 0)
+        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 0)
+
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
             run_info=run_info,
@@ -1034,7 +1039,8 @@ class TestSuccessiveHalving(unittest.TestCase):
             run_history=self.rh,
             incumbent=None,
         )
-        self.assertNotEqual(new_run_info, run_info)
+        self.assertEqual(new_run_info.config, run_info.config)
+        self.assertNotEqual(new_run_info.instance, run_info.instance)
 
         # Add another running instance
         self.rh.add(config=new_run_info.config,
@@ -1058,7 +1064,8 @@ class TestSuccessiveHalving(unittest.TestCase):
 
     def test_launched_all_configs_for_current_stage(self):
         """
-        Makes sure we return the proper number of running configs
+        This check makes sure we can identify when all the current runs
+        (config/instance/seed) pairs for a given stage have been launched
         """
         def target(x):
             return 1
@@ -1103,7 +1110,6 @@ class TestSuccessiveHalving(unittest.TestCase):
                         time=1,
                         status=StatusType.RUNNING,
                         additional_info=None)
-        print(intensifier._launched_all_configs_for_current_stage(self.rh))
 
         # This will get us the second instance of config 1
         intent, run_info = intensifier.get_next_run(

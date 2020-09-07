@@ -8,6 +8,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.tae.dask_runner import DaskParallelRunner
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import SuccessiveHalving
@@ -62,6 +63,9 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
+        self.tae = mock.Mock(spec=DaskParallelRunner)
+        self.tae.num_workers.return_value = 2
+
         # Create the base object
         self.PSH = ParallelSuccessiveHalving(
             stats=self.stats,
@@ -74,7 +78,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             initial_budget=2,
             max_budget=5,
             eta=2,
-            max_active_SH=2,
+            runner=self.tae,
         )
 
     def test_initialization(self):
@@ -157,7 +161,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """Makes sure that a single SH returns a valid config"""
 
         # Everything here will be tested with a single SH
-        self.PSH.max_active_SH = 1
+        self.tae.num_workers.return_value = 1
 
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
@@ -197,7 +201,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         run_info properly"""
 
         # Everything here will be tested with a single SH
-        self.PSH.max_active_SH = 2
+        self.tae.num_workers.return_value = 2
 
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
@@ -237,7 +241,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """Test whether we can add a SH and when we should not"""
 
         # Case of a single SH
-        self.PSH.max_active_SH = 1
+        self.tae.num_workers.return_value = 1
 
         # By default we create at least 1 SH
         self.assertEqual(len(self.PSH.sh_instances), 1)
@@ -249,7 +253,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(len(self.PSH.sh_instances), 1)
 
         # We try with 2 SH active
-        self.PSH.max_active_SH = 2
+        self.tae.num_workers.return_value = 2
 
         # We effectively return true because we added a new SH
         self.assertTrue(self.PSH._add_new_SH())
@@ -265,7 +269,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         """Ensures proper scheduling is returned based on the strategy"""
 
         # Add more SH to make testing interesting
-        self.PSH.max_active_SH = 4
+        self.tae.num_workers.return_value = 4
         for i in range(4):
             self.PSH._add_new_SH()
 
@@ -284,6 +288,65 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [2, 3, 0, 1])
         self.PSH.last_active_instance = 2
         self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [3, 0, 1, 2])
+
+    def test_sh_scheduling_more_advanced_iteration(self):
+        """Ensures that we prioritize the more advanced stage iteration"""
+
+        def add_sh_mock(stage, config_inst_pairs):
+            sh = mock.Mock()
+            sh.run_tracker = []
+            for i in range(config_inst_pairs):
+                sh.run_tracker.append((i, i, i))
+            sh.stage = stage
+            return sh
+
+        # Add more SH to make testing interesting
+        self.tae.num_workers.return_value = 5
+        self.PSH.sh_instances[0] = add_sh_mock(stage=1, config_inst_pairs=6)
+        self.PSH.sh_instances[1] = add_sh_mock(stage=1, config_inst_pairs=2)
+
+        # We only have two configurations in the same stage.
+        # In this case, we want to prioritize the one with more launched runs
+        # that is zero
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [0, 1]
+        )
+
+        # One more instance comparison to be supper safe
+        self.PSH.sh_instances[2] = add_sh_mock(stage=1, config_inst_pairs=7)
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [2, 0, 1]
+        )
+
+        # Not let us add a more advanced stage run
+        self.PSH.sh_instances[3] = add_sh_mock(stage=2, config_inst_pairs=1)
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [3, 2, 0, 1]
+        )
+
+        # Make 1 the oldest stage
+        self.PSH.sh_instances[1] = add_sh_mock(stage=4, config_inst_pairs=1)
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [1, 3, 2, 0]
+        )
+
+        # Add a new run that's empty
+        self.PSH.sh_instances[4] = add_sh_mock(stage=0, config_inst_pairs=0)
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [1, 3, 2, 0, 4]
+        )
+
+        # Lastly make 0 stage 4 but with not as many instances as 1
+        self.PSH.sh_instances[4] = add_sh_mock(stage=4, config_inst_pairs=0)
+        self.assertCountEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [1, 0, 3, 2, 4]
+        )
 
     def _exhaust_run_and_get_incumbent(self, sh, rh):
         """
@@ -349,9 +412,9 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         incumbent, inc_perf = self._exhaust_run_and_get_incumbent(SH, rh)
 
-        # Just to make sure nothing has changed form SH side to make
+        # Just to make sure nothing has changed from the SH side to make
         # this check invalid:
-        # We add config values, so config 4 with 0 and 0 should be the lesser cost
+        # We add config values, so config 3 with 0 and 7 should be the lesser cost
         self.assertEqual(incumbent, self.config3)
         self.assertEqual(inc_perf, 7.0)
 
@@ -369,18 +432,26 @@ class TestSuccessiveHalving(unittest.TestCase):
         # we want to make sure the values of SH to PSH match
         self.assertEqual(len(self.rh.data), len(rh.data))
 
+        # We are comparing exhausted single vs parallel successive
+        # halving runs. The number and type of configs should be the same
+        # and is enforced as a dictionary key argument check. The number
+        # of runs will be different ParallelSuccesiveHalving has 2 SH instances
+        # yet we make sure that after exhaustion, the budgets a config was run
+        # should match
         configs_sh_rh = {}
         for k, v in rh.data.items():
             config_sh = rh.ids_config[k.config_id]
             if config_sh not in configs_sh_rh:
                 configs_sh_rh[config_sh] = []
-            configs_sh_rh[config_sh].append(v.cost)
+            if v.cost not in configs_sh_rh[config_sh]:
+                configs_sh_rh[config_sh].append(v.cost)
         configs_psh_rh = {}
-        for k, v in rh.data.items():
-            config_sh = rh.ids_config[k.config_id]
-            if config_sh not in configs_psh_rh:
-                configs_psh_rh[config_sh] = []
-            configs_psh_rh[config_sh].append(v.cost)
+        for k, v in self.rh.data.items():
+            config_psh = self.rh.ids_config[k.config_id]
+            if config_psh not in configs_psh_rh:
+                configs_psh_rh[config_psh] = []
+            if v.cost not in configs_psh_rh[config_psh]:
+                configs_psh_rh[config_psh].append(v.cost)
 
         # If this dictionaries are equal it means we have all configs
         # and the values track the numbers and actual cost!

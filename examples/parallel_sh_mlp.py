@@ -3,7 +3,7 @@
 Optimizing an MLP with Parallel SuccesiveHalving
 ================================================
 An example for the usage of a model-free SuccessiveHalving intensifier in SMAC,
-with support for parallel execution. The configurations are randomly sampled.
+for parallel execution. The configurations are randomly sampled.
 
 This examples uses a real-valued SuccessiveHalving through epochs.
 
@@ -27,7 +27,8 @@ from smac.initial_design.random_configuration_design import RandomConfigurations
 # --------------------------------------------------------------
 # We need to provide a pickable function and use __main__
 # to be compliant with multiprocessing API
-# Below is a WA to have a packaged function called rosenbrock_2d
+# Below is a work around to have a packaged function called
+# mlp_from_cfg_func
 # --------------------------------------------------------------
 import os
 import sys
@@ -67,16 +68,16 @@ if __name__ == '__main__':
                          })
 
     # Intensification parameters
-    # Intensifier will allocate from 5 to a maximum of 50 epochs to each configuration
-    # max_active_SH controls how many Succesive Halving childs are created to prevent idle
-    # workers. If not passed via intensifier_kwargs it is set to the max number of workers
-    intensifier_kwargs = {'initial_budget': 5, 'max_budget': 25, 'eta': 3, 'max_active_SH': 8,
+    # Intensifier will allocate from 5 to a maximum of 25 epochs to each configuration
+    # Succesive Halving child-instances are created to prevent idle
+    # workers.
+    intensifier_kwargs = {'initial_budget': 5, 'max_budget': 25, 'eta': 3,
                           'min_chall': 1, 'instance_order': 'shuffle_once'}
 
     # To optimize, we pass the function to the SMAC-object
     smac = ROAR(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
-                tae_runner_kwargs={'n_workers': 8},
+                tae_runner_kwargs={'n_workers': 4},
                 intensifier=ParallelSuccessiveHalving,
                 intensifier_kwargs=intensifier_kwargs,
                 initial_design=RandomConfigurations)
