@@ -202,6 +202,7 @@ class SMBO(object):
                 chooser=self.epm_chooser,
                 run_history=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
+                num_workers=self.tae_runner.num_workers(),
             )
 
             # remove config from initial design challengers to not repeat it again

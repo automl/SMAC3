@@ -1,5 +1,6 @@
 import logging
 import typing
+import warnings
 
 import numpy as np
 
@@ -396,6 +397,7 @@ class SuccessiveHalving(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
@@ -414,6 +416,9 @@ class SuccessiveHalving(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -423,6 +428,11 @@ class SuccessiveHalving(AbstractRacer):
             An object that encapsulates the minimum information to
             evaluate a configuration
          """
+        if num_workers > 1:
+            warnings.warn("Consider using ParallelSuccesiveHalving instead of "
+                          "SuccesiveHalving. The later will halt on each stage "
+                          "transition until all configs for the current stage are completed."
+                          )
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, 'stage'):
             self._update_stage(run_history=run_history)

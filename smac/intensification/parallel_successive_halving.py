@@ -1,10 +1,10 @@
 import logging
 import typing
+import warnings
 
 import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.tae.dask_runner import DaskParallelRunner
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.stats.stats import Stats
@@ -20,9 +20,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
 
     This class instantiates SuccessiveHalving objects on a need basis, that is, to
     prevent workers from being idle.
-
-    The maximum number of SuccessiveHalving objects created is controlled via
-    runner.num_workers() so that we can dynamically query active workers.
 
     Parameters
     ----------
@@ -69,8 +66,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
         * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
-    runner: DaskParallelRunner
-        The tae instance that can support parallel execution
     """
 
     def __init__(self,
@@ -78,7 +73,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
                  traj_logger: TrajLogger,
                  rng: np.random.RandomState,
                  instances: typing.List[str],
-                 runner: DaskParallelRunner,
                  instance_specifics: typing.Mapping[str, np.ndarray] = None,
                  cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
@@ -121,18 +115,9 @@ class ParallelSuccessiveHalving(AbstractRacer):
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
 
-        # Currently we only support DaskParallelRunner because we query
-        # the number of workers on the client
-        self.runner = runner
-        if not isinstance(self.runner, DaskParallelRunner):
-            raise ValueError("Unsupported tae runner provided: {}".format(
-                type(self.runner)
-            ))
-
         # We have a pool of successive halving instances that yield work
         # Add sh number 0, because we are likely gonna need it
         self.sh_instances = {}  # type: typing.Dict[int, SuccessiveHalving]
-        self._add_new_SH()
 
         # We will have multiple SH. Below variable tracks which is the last
         # instance that launched a job
@@ -199,6 +184,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = False,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         This procedure decides from which successive halver instance to pick a config,
@@ -223,6 +209,9 @@ class ParallelSuccessiveHalving(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -232,6 +221,13 @@ class ParallelSuccessiveHalving(AbstractRacer):
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
+
+        if num_workers <= 1:
+            warnings.warn("ParallelSuccesiveHalving is intended to be used "
+                          "with more than 1 worker but num_workers={}".format(
+                              num_workers
+                          ))
+
         # If repeat_configs is True, that means that not only self can repeat
         # configurations, but also in the context of multiprocessing, N
         # successive halving instance will also share configurations. The later
@@ -261,7 +257,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
             return intent, run_info
 
         # If gotten to this point, we might look into adding a new SH
-        if self._add_new_SH():
+        if self._add_new_SH(num_workers):
             return self.sh_instances[len(self.sh_instances) - 1].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
@@ -282,12 +278,22 @@ class ParallelSuccessiveHalving(AbstractRacer):
             budget=0.0,
         )
 
-    def _add_new_SH(self) -> bool:
+    def _add_new_SH(self, num_workers: int) -> bool:
         """
         Decides if it is possible to add a new SH, and adds it.
         If a new SH is added, True is returned, else False.
+
+        Parameters:
+        -----------
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
+
+        Returns
+        -------
+            Whether or not a successive halving instance was added
         """
-        if len(self.sh_instances) >= self.runner.num_workers():
+        if len(self.sh_instances) >= num_workers:
             return False
 
         self.sh_instances[len(self.sh_instances)] = SuccessiveHalving(
@@ -330,6 +336,12 @@ class ParallelSuccessiveHalving(AbstractRacer):
                 The order in which to query for new jobs
 
         """
+
+        # This function might be called when no SuccessiveHalving instances
+        # exist (first iteration), so we return an empty list in that case
+        if len(self.sh_instances) == 0:
+            return []
+
         expected = self.last_active_instance + 1
         if strategy == 'ordinal' or expected == len(self.sh_instances):
             # This is hpbanster strategy, just pick on an ordered fashion

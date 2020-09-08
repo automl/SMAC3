@@ -2,7 +2,6 @@ import inspect
 import logging
 import os
 from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
-import warnings
 
 import numpy as np
 
@@ -32,7 +31,6 @@ from smac.initial_design.sobol_design import SobolDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.intensification.parallel_successive_halving import ParallelSuccessiveHalving
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -409,25 +407,6 @@ class SMAC4AC(object):
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
             'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         }
-
-        # In case the intensifier supports parallelism, we
-        # pass here the TAE instance for consumption.
-        # We pass the whole instance as a mechanism to dynamically
-        # query the number of workers.
-        # For ParallelSuccessiveHalving, internally, a maximum of
-        # n_workers Successivehalving instances are created to deal
-        # with idle workers. Idle workers happen when a SH instance
-        # has to wait for runs to finish before moving to a new stage
-        if n_workers > 1:
-            if isinstance(
-                intensifier, ParallelSuccessiveHalving
-            ) or intensifier == ParallelSuccessiveHalving:
-                intensifier_def_kwargs['runner'] = tae_runner_instance
-            else:
-                warnings.warn("Provided n_workers > 1 but the intensifier is not "
-                              "compatible with parallelism. Please consider using "
-                              "an intensifier that can consider parallelism"
-                              )
 
         if isinstance(intensifier, Intensifier) \
                 or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):

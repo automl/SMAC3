@@ -8,7 +8,6 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.tae.dask_runner import DaskParallelRunner
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import SuccessiveHalving
@@ -63,9 +62,6 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
-        self.tae = mock.Mock(spec=DaskParallelRunner)
-        self.tae.num_workers.return_value = 2
-
         # Create the base object
         self.PSH = ParallelSuccessiveHalving(
             stats=self.stats,
@@ -78,14 +74,16 @@ class TestSuccessiveHalving(unittest.TestCase):
             initial_budget=2,
             max_budget=5,
             eta=2,
-            runner=self.tae,
         )
 
     def test_initialization(self):
         """Makes sure that a proper SH is created"""
 
-        # One SH instance gets created at least
-        self.assertEqual(len(self.PSH.sh_instances), 1)
+        # We initialize the PSH with zero instances
+        self.assertEqual(len(self.PSH.sh_instances), 0)
+
+        # Add an instance to check the SH initialization
+        self.assertTrue(self.PSH._add_new_SH(num_workers=1))
 
         # Parameters properly passed to SH
         self.assertEqual(len(self.PSH.sh_instances[0].inst_seed_pairs), 10)
@@ -160,14 +158,13 @@ class TestSuccessiveHalving(unittest.TestCase):
     def test_get_next_run_single_SH(self):
         """Makes sure that a single SH returns a valid config"""
 
-        # Everything here will be tested with a single SH
-        self.tae.num_workers.return_value = 1
-
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
             intent, run_info = self.PSH.get_next_run(
                 challengers=challengers,
-                incumbent=None, chooser=None, run_history=self.rh)
+                incumbent=None, chooser=None, run_history=self.rh,
+                num_workers=1,
+            )
 
             # Regenerate challenger list
             challengers = [c for c in challengers if c != run_info.config]
@@ -201,13 +198,13 @@ class TestSuccessiveHalving(unittest.TestCase):
         run_info properly"""
 
         # Everything here will be tested with a single SH
-        self.tae.num_workers.return_value = 2
-
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
             intent, run_info = self.PSH.get_next_run(
                 challengers=challengers,
-                incumbent=None, chooser=None, run_history=self.rh)
+                incumbent=None, chooser=None, run_history=self.rh,
+                num_workers=2,
+            )
 
             # Regenerate challenger list
             challengers = [c for c in challengers if c != run_info.config]
@@ -240,38 +237,33 @@ class TestSuccessiveHalving(unittest.TestCase):
     def test_add_new_SH(self):
         """Test whether we can add a SH and when we should not"""
 
-        # Case of a single SH
-        self.tae.num_workers.return_value = 1
-
-        # By default we create at least 1 SH
+        # By default we do not create a SH
+        # test adding the first instance!
+        self.assertEqual(len(self.PSH.sh_instances), 0)
+        self.assertTrue(self.PSH._add_new_SH(num_workers=1))
         self.assertEqual(len(self.PSH.sh_instances), 1)
         self.assertIsInstance(self.PSH.sh_instances[0], SuccessiveHalving)
-
-        # If max active SH is called, we should not add another SH
-        # and return false
-        self.assertFalse(self.PSH._add_new_SH())
-        self.assertEqual(len(self.PSH.sh_instances), 1)
+        # A second call should not add a new SH
+        self.assertFalse(self.PSH._add_new_SH(num_workers=1))
 
         # We try with 2 SH active
-        self.tae.num_workers.return_value = 2
 
         # We effectively return true because we added a new SH
-        self.assertTrue(self.PSH._add_new_SH())
+        self.assertTrue(self.PSH._add_new_SH(num_workers=2))
 
         self.assertEqual(len(self.PSH.sh_instances), 2)
         self.assertIsInstance(self.PSH.sh_instances[1], SuccessiveHalving)
 
         # Trying to add a third one should return false
-        self.assertFalse(self.PSH._add_new_SH())
+        self.assertFalse(self.PSH._add_new_SH(num_workers=2))
         self.assertEqual(len(self.PSH.sh_instances), 2)
 
     def test_sh_scheduling(self):
         """Ensures proper scheduling is returned based on the strategy"""
 
         # Add more SH to make testing interesting
-        self.tae.num_workers.return_value = 4
         for i in range(4):
-            self.PSH._add_new_SH()
+            self.PSH._add_new_SH(num_workers=4)
 
         # First test the ordinal approach
         self.assertEqual(list(self.PSH._sh_scheduling(strategy='ordinal')), [0, 1, 2, 3])
@@ -301,7 +293,6 @@ class TestSuccessiveHalving(unittest.TestCase):
             return sh
 
         # Add more SH to make testing interesting
-        self.tae.num_workers.return_value = 5
         self.PSH.sh_instances[0] = add_sh_mock(stage=1, config_inst_pairs=6)
         self.PSH.sh_instances[1] = add_sh_mock(stage=1, config_inst_pairs=2)
 
@@ -355,7 +346,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             [1, 0, 4, 3, 2]
         )
 
-    def _exhaust_run_and_get_incumbent(self, sh, rh):
+    def _exhaust_run_and_get_incumbent(self, sh, rh, num_workers=2):
         """
         Runs all provided configs on all instances and return the incumbent
         as a nice side effect runhistory/stats are properly filled
@@ -366,7 +357,9 @@ class TestSuccessiveHalving(unittest.TestCase):
             try:
                 intent, run_info = sh.get_next_run(
                     challengers=challengers,
-                    incumbent=None, chooser=None, run_history=rh)
+                    incumbent=None, chooser=None, run_history=rh,
+                    num_workers=num_workers,
+                )
             except ValueError as e:
                 # Get configurations until you run out of them
                 print(e)
@@ -427,8 +420,9 @@ class TestSuccessiveHalving(unittest.TestCase):
 
         # Do the same for PSH, but have multiple SH in there
         # _add_new_SH returns true if it was able to add a new SH
-        # scheduling is defaulted to serial
-        self.assertTrue(self.PSH._add_new_SH())
+        # We call this method twice because we want 2 workers
+        self.assertTrue(self.PSH._add_new_SH(num_workers=2))
+        self.assertTrue(self.PSH._add_new_SH(num_workers=2))
         incumbent_psh, inc_perf_psh = self._exhaust_run_and_get_incumbent(self.PSH, self.rh)
         self.assertEqual(incumbent, incumbent_psh)
 

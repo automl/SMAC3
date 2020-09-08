@@ -171,7 +171,9 @@ class Hyperband(SuccessiveHalving):
                      incumbent: Configuration,
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
-                     repeat_configs: bool = True) -> typing.Tuple[RunInfoIntent, RunInfo]:
+                     repeat_configs: bool = True,
+                     num_workers: int = 1,
+                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -191,6 +193,9 @@ class Hyperband(SuccessiveHalving):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -199,6 +204,12 @@ class Hyperband(SuccessiveHalving):
         run_info: RunInfo
                An object that encapsulates necessary information for a config run
         """
+
+        if num_workers > 1:
+            raise ValueError("HyperBand does not support more than 1 worker, yet "
+                             "the argument num_workers to get_next_run is {}".format(
+                                 num_workers
+                             ))
 
         if not hasattr(self, 's'):
             # initialize tracking variables

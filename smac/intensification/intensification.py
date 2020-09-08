@@ -196,6 +196,7 @@ class Intensifier(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         This procedure is in charge of generating a RunInfo object to comply
@@ -225,6 +226,9 @@ class Intensifier(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -233,6 +237,11 @@ class Intensifier(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates necessary information for a config run
         """
+        if num_workers > 1:
+            raise ValueError("Intensifier does not support more than 1 worker, yet "
+                             "the argument num_workers to get_next_run is {}".format(
+                                 num_workers
+                             ))
 
         # If this function is called, it means the iteration is
         # not complete (we can be starting a new iteration, or re-running a

@@ -323,3 +323,10 @@ class BaseRunner(ABC):
         be pending configurations to complete.
         """
         pass
+
+    @abstractmethod
+    def num_workers(self) -> int:
+        """
+        Return the active number of workers that will execute tae runs.
+        """
+        pass

@@ -122,6 +122,7 @@ class SimpleIntensifier(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to be used. As in a traditional BO loop,
@@ -140,6 +141,9 @@ class SimpleIntensifier(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
