@@ -344,12 +344,12 @@ class ParallelSuccessiveHalving(AbstractRacer):
             return list(range(expected, len(self.sh_instances))) + list(range(expected))
         elif strategy == 'more_advanced_iteration':
             # We want to prioritize runs that are close to finishing an iteration.
-            # In the context of successive halving, an iteration have stages that are
+            # In the context of successive halving, an iteration has stages that are
             # composed of # of configs and each configs has # of instance-seed pairs
             preference = []
             for i, sh in self.sh_instances.items():
                 # Each row of this matrix is id, stage, configs+instances for stage
-                # We use sh.run_tracker as a cheap way to now how advanced the run is
+                # We use sh.run_tracker as a cheap way to know how advanced the run is
                 # in case of stage ties among successive halvers. sh.run_tracker is
                 # also emptied each iteration
                 stage = 0

@@ -274,20 +274,20 @@ class TestSuccessiveHalving(unittest.TestCase):
             self.PSH._add_new_SH()
 
         # First test the ordinal approach
-        self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='ordinal')), [0, 1, 2, 3])
+        self.assertEqual(list(self.PSH._sh_scheduling(strategy='ordinal')), [0, 1, 2, 3])
 
         # Also, if strategy is serial and index is 3 it should be the same as ordinal
         # That is, we lastly queried the SH #3, we have to start from 0 again
         self.PSH.last_active_instance = 3
-        self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [0, 1, 2, 3])
+        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [0, 1, 2, 3])
 
         # Make sure we complete the list properly in serial
         self.PSH.last_active_instance = 0
-        self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [1, 2, 3, 0])
+        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [1, 2, 3, 0])
         self.PSH.last_active_instance = 1
-        self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [2, 3, 0, 1])
+        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [2, 3, 0, 1])
         self.PSH.last_active_instance = 2
-        self.assertCountEqual(list(self.PSH._sh_scheduling(strategy='serial')), [3, 0, 1, 2])
+        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [3, 0, 1, 2])
 
     def test_sh_scheduling_more_advanced_iteration(self):
         """Ensures that we prioritize the more advanced stage iteration"""
@@ -308,44 +308,51 @@ class TestSuccessiveHalving(unittest.TestCase):
         # We only have two configurations in the same stage.
         # In this case, we want to prioritize the one with more launched runs
         # that is zero
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
             [0, 1]
         )
 
         # One more instance comparison to be supper safe
         self.PSH.sh_instances[2] = add_sh_mock(stage=1, config_inst_pairs=7)
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
             [2, 0, 1]
         )
 
         # Not let us add a more advanced stage run
         self.PSH.sh_instances[3] = add_sh_mock(stage=2, config_inst_pairs=1)
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
             [3, 2, 0, 1]
         )
 
         # Make 1 the oldest stage
         self.PSH.sh_instances[1] = add_sh_mock(stage=4, config_inst_pairs=1)
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
             [1, 3, 2, 0]
         )
 
         # Add a new run that's empty
         self.PSH.sh_instances[4] = add_sh_mock(stage=0, config_inst_pairs=0)
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
             [1, 3, 2, 0, 4]
         )
 
-        # Lastly make 0 stage 4 but with not as many instances as 1
+        # Make 4 stage 4 but with not as many instances as 1
         self.PSH.sh_instances[4] = add_sh_mock(stage=4, config_inst_pairs=0)
-        self.assertCountEqual(
+        self.assertEqual(
             list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
-            [1, 0, 3, 2, 4]
+            [1, 4, 3, 2, 0]
+        )
+
+        # And lastly 0 -> stage 4
+        self.PSH.sh_instances[0] = add_sh_mock(stage=4, config_inst_pairs=0)
+        self.assertEqual(
+            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            [1, 0, 4, 3, 2]
         )
 
     def _exhaust_run_and_get_incumbent(self, sh, rh):
