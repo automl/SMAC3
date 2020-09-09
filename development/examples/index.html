@@ -152,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -214,9 +215,10 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -321,33 +323,39 @@
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest"><div class="figure align-default" id="id6">
-<img alt="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" src="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py"><span class="std std-ref">Using the SMAC-HPO interface to tune a random forest</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a simple SVM on the IRIS-benchmark."><div class="figure align-default" id="id7">
-<img alt="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" src="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py"><span class="std std-ref">Optimize the hyperparameters of a support vector machine</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
-</div>
-</div><div class="toctree-wrapper compound">
-</div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ..."><div class="figure align-default" id="id8">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ..."><div class="figure align-default" id="id6">
 <img alt="../_images/sphx_glr_hyperband_mlp_thumb.png" src="../_images/sphx_glr_hyperband_mlp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py"><span class="std std-ref">Optimizing an MLP with Hyperband</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py"><span class="std std-ref">Optimizing an MLP with Hyperband</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC with multiple instances. We optimize ..."><div class="figure align-default" id="id9">
+<div class="sphx-glr-thumbcontainer" tooltip="This examples uses a real-valued SuccessiveHalving through epochs."><div class="figure align-default" id="id7">
+<img alt="../_images/sphx_glr_parallel_sh_mlp_thumb.png" src="../_images/sphx_glr_parallel_sh_mlp_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="parallel_sh_mlp.html#sphx-glr-examples-parallel-sh-mlp-py"><span class="std std-ref">Optimizing an MLP with Parallel SuccesiveHalving</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest"><div class="figure align-default" id="id8">
+<img alt="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" src="../_images/sphx_glr_SMAC4HPO_rf_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py"><span class="std std-ref">Using the SMAC-HPO interface to tune a random forest</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a simple SVM on the IRIS-benchmark."><div class="figure align-default" id="id9">
+<img alt="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" src="../_images/sphx_glr_SMAC4HPO_svm_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py"><span class="std std-ref">Optimize the hyperparameters of a support vector machine</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC with multiple instances. We optimize ..."><div class="figure align-default" id="id10">
 <img alt="../_images/sphx_glr_BOHB4HPO_sgd_instances_thumb.png" src="../_images/sphx_glr_BOHB4HPO_sgd_instances_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">Optimizing average cross-validation performance with BOHB</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">Optimizing average cross-validation performance with BOHB</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC. We optimize a simple MLP on the digi..."><div class="figure align-default" id="id10">
+<div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC. We optimize a simple MLP on the digi..."><div class="figure align-default" id="id11">
 <img alt="../_images/sphx_glr_BOHB4HPO_mlp_thumb.png" src="../_images/sphx_glr_BOHB4HPO_mlp_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py"><span class="std std-ref">Optimizing an MLP with BOHB</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text"><a class="reference internal" href="BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py"><span class="std std-ref">Optimizing an MLP with BOHB</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>

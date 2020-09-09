@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -212,9 +213,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -490,6 +492,7 @@
                 <span class="n">chooser</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span><span class="p">,</span>
                 <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
                 <span class="n">repeat_configs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">repeat_configs</span><span class="p">,</span>
+                <span class="n">num_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">num_workers</span><span class="p">(),</span>
             <span class="p">)</span>
 
             <span class="c1"># remove config from initial design challengers to not repeat it again</span>
@@ -538,12 +541,14 @@
                 <span class="c1"># This marks a transition request from the intensifier</span>
                 <span class="c1"># To a new iteration</span>
                 <span class="k">pass</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">intent</span> <span class="o">==</span> <span class="n">RunInfoIntent</span><span class="o">.</span><span class="n">WAIT</span><span class="p">:</span>
                 <span class="c1"># In any other case, we wait for resources</span>
                 <span class="c1"># This likely indicates that no further decision</span>
                 <span class="c1"># can be taken by the intensifier until more data is</span>
                 <span class="c1"># available</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;No other RunInfoIntent has been coded!&quot;</span><span class="p">)</span>
 
             <span class="c1"># Check if there is any result, or else continue</span>
             <span class="k">for</span> <span class="n">run_info</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">get_finished_runs</span><span class="p">():</span>
@@ -719,6 +724,8 @@
             <span class="n">instance_id</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span>
             <span class="n">seed</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
             <span class="n">budget</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
+            <span class="n">starttime</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">starttime</span><span class="p">,</span>
+            <span class="n">endtime</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">endtime</span><span class="p">,</span>
             <span class="n">force_update</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
@@ -735,7 +742,7 @@
 
         <span class="c1"># Update the intensifier with the result of the runs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">process_results</span><span class="p">(</span>
-            <span class="n">challenger</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span>
             <span class="n">incumbent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span>
             <span class="n">run_history</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="p">,</span>
             <span class="n">time_bound</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span><span class="p">,</span> <span class="n">time_left</span><span class="p">),</span>

@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -212,9 +213,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -348,7 +350,7 @@
                          <span class="p">)</span>
 
 <div class="viewcode-block" id="SimpleIntensifier.process_results"><a class="viewcode-back" href="../../../apidoc/smac.intensification.simple_intensifier.html#smac.intensification.simple_intensifier.SimpleIntensifier.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                        <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -363,9 +365,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challenger : Configuration</span>
-<span class="sd">            A configuration that was previously executed, and whose status</span>
-<span class="sd">            will be used to define the next stage.</span>
+<span class="sd">        run_info : RunInfo</span>
+<span class="sd">               A RunInfo containing the configuration that was evaluated</span>
 <span class="sd">        incumbent : typing.Optional[Configuration]</span>
 <span class="sd">            Best configuration seen so far</span>
 <span class="sd">        run_history : RunHistory</span>
@@ -392,11 +393,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;First run, no incumbent provided; challenger is assumed to be the incumbent&quot;</span>
             <span class="p">)</span>
-            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">challenger</span>
+            <span class="n">incumbent</span> <span class="o">=</span> <span class="n">run_info</span><span class="o">.</span><span class="n">config</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
                                           <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                           <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                                           <span class="n">log_traj</span><span class="o">=</span><span class="n">log_traj</span><span class="p">)</span>
@@ -411,6 +412,7 @@
                      <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
                      <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                      <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                     <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                      <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects which challenger to be used. As in a traditional BO loop,</span>
@@ -429,6 +431,9 @@
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        repeat_configs : bool</span>
 <span class="sd">            if False, an evaluated configuration will not be generated again</span>
+<span class="sd">        num_workers: int</span>
+<span class="sd">            the maximum number of workers available</span>
+<span class="sd">            at a given time.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>

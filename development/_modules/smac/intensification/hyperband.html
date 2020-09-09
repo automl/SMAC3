@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -212,9 +213,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -401,7 +403,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: SuccessiveHalving # type: ignore[assignment]</span>
 
 <div class="viewcode-block" id="Hyperband.process_results"><a class="viewcode-back" href="../../../apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                        <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+                        <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -416,9 +418,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challenger : Configuration</span>
-<span class="sd">            A configuration that was previously executed, and whose status</span>
-<span class="sd">            will be used to define the next stage.</span>
+<span class="sd">        run_info : RunInfo</span>
+<span class="sd">               A RunInfo containing the configuration that was evaluated</span>
 <span class="sd">        incumbent : typing.Optional[Configuration]</span>
 <span class="sd">            Best configuration seen so far</span>
 <span class="sd">        run_history : RunHistory</span>
@@ -441,7 +442,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># run 1 iteration of successive halving</span>
-        <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">process_results</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
+        <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_intensifier</span><span class="o">.</span><span class="n">process_results</span><span class="p">(</span><span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span>
                                                                   <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                                                   <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
                                                                   <span class="n">time_bound</span><span class="o">=</span><span class="n">time_bound</span><span class="p">,</span>
@@ -460,7 +461,9 @@
                      <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                      <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
                      <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-                     <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
+                     <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                     <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects which challenger to use based on the iteration stage and set the iteration parameters.</span>
 <span class="sd">        First iteration will choose configurations from the ``chooser`` or input challengers,</span>
@@ -480,6 +483,9 @@
 <span class="sd">            stores all runs we ran so far</span>
 <span class="sd">        repeat_configs : bool</span>
 <span class="sd">            if False, an evaluated configuration will not be generated again</span>
+<span class="sd">        num_workers: int</span>
+<span class="sd">            the maximum number of workers available</span>
+<span class="sd">            at a given time.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -488,6 +494,12 @@
 <span class="sd">        run_info: RunInfo</span>
 <span class="sd">               An object that encapsulates necessary information for a config run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">num_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;HyperBand does not support more than 1 worker, yet &quot;</span>
+                             <span class="s2">&quot;the argument num_workers to get_next_run is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                 <span class="n">num_workers</span>
+                             <span class="p">))</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">):</span>
             <span class="c1"># initialize tracking variables</span>

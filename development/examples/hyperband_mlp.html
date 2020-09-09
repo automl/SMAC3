@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimizing average cross-validation performance with BOHB" href="BOHB4HPO_sgd_instances.html" />
-    <link rel="prev" title="Optimize the hyperparameters of a support vector machine" href="SMAC4HPO_svm.html" /> 
+    <link rel="next" title="Optimizing an MLP with Parallel SuccesiveHalving" href="parallel_sh_mlp.html" />
+    <link rel="prev" title="Changing the acquisition function" href="SMAC4HPO_acq_rosenbrock.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -152,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -214,9 +215,10 @@
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -302,64 +304,21 @@ The configurations are randomly sampled</p>
 <p>In this example, we use a real-valued budget in hyperband (number of epochs to train the MLP) and
 optimize the average accuracy on a 5-fold cross validation.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="n">CategoricalHyperparameter</span><span class="p">,</span> \
     <span class="n">UniformFloatHyperparameter</span><span class="p">,</span> <span class="n">UniformIntegerHyperparameter</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
-<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
-<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.facade.hyperband_facade</span> <span class="kn">import</span> <span class="n">HB4AC</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
-
-<span class="n">digits</span> <span class="o">=</span> <span class="n">load_digits</span><span class="p">()</span>
-
-
-<span class="c1"># Target Algorithm</span>
-<span class="c1"># The signature of the function determines what arguments are passed to it</span>
-<span class="c1"># i.e., budget is passed to the target algorithm if it is present in the signature</span>
-<span class="k">def</span> <span class="nf">mlp_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">budget</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Creates a MLP classifier from sklearn and fits the given data on it.</span>
-<span class="sd">        This is the function-call we try to optimize. Chosen values are stored in</span>
-<span class="sd">        the configuration (cfg).</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        cfg: Configuration</span>
-<span class="sd">            configuration chosen by smac</span>
-<span class="sd">        seed: int or RandomState</span>
-<span class="sd">            used to initialize the rf&#39;s random generator</span>
-<span class="sd">        instance: str</span>
-<span class="sd">            used to represent the instance to use (just a placeholder for this example)</span>
-<span class="sd">        budget: float</span>
-<span class="sd">            used to set max iterations for the MLP</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
-
-        <span class="n">mlp</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span>
-            <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">[</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;n_neurons&quot;</span><span class="p">]]</span> <span class="o">*</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;n_layer&quot;</span><span class="p">],</span>
-            <span class="n">batch_size</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">],</span>
-            <span class="n">activation</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;activation&#39;</span><span class="p">],</span>
-            <span class="n">learning_rate_init</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;learning_rate_init&#39;</span><span class="p">],</span>
-            <span class="n">max_iter</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">budget</span><span class="p">)),</span>
-            <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
-
-        <span class="c1"># returns the cross validation accuracy</span>
-        <span class="n">cv</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># to make CV splits consistent</span>
-        <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">digits</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">error_score</span><span class="o">=</span><span class="s1">&#39;raise&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>  <span class="c1"># Because minimize!</span>
+<span class="c1"># --------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+<span class="kn">from</span> <span class="nn">mlp_from_cfg_func</span> <span class="kn">import</span> <span class="n">mlp_from_cfg</span>  <span class="c1"># noqa: E402</span>
+<span class="c1"># --------------------------------------------------------------</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;MLP-example&quot;</span><span class="p">)</span>
@@ -437,10 +396,10 @@ optimize the average accuracy on a 5-fold cross validation.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-right" title="Optimizing average cross-validation performance with BOHB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="parallel_sh_mlp.html" class="btn btn-neutral float-right" title="Optimizing an MLP with Parallel SuccesiveHalving" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="SMAC4HPO_svm.html" class="btn btn-neutral float-left" title="Optimize the hyperparameters of a support vector machine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="SMAC4HPO_acq_rosenbrock.html" class="btn btn-neutral float-left" title="Changing the acquisition function" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

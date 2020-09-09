@@ -112,6 +112,46 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ...">
+
+.. only:: html
+
+ .. figure:: /examples/images/thumb/sphx_glr_hyperband_mlp_thumb.png
+
+     :ref:`sphx_glr_examples_hyperband_mlp.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/hyperband_mlp
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This examples uses a real-valued SuccessiveHalving through epochs.">
+
+.. only:: html
+
+ .. figure:: /examples/images/thumb/sphx_glr_parallel_sh_mlp_thumb.png
+
+     :ref:`sphx_glr_examples_parallel_sh_mlp.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/parallel_sh_mlp
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest">
 
 .. only:: html
@@ -149,26 +189,6 @@ Examples
    :hidden:
 
    /examples/SMAC4HPO_svm
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ...">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_hyperband_mlp_thumb.png
-
-     :ref:`sphx_glr_examples_hyperband_mlp.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/hyperband_mlp
 
 .. raw:: html
 

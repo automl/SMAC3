@@ -152,6 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -214,9 +215,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -943,84 +945,9 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 
 <dl class="py class">
 <dt id="smac.runhistory.runhistory.RunInfo">
-<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em>, <em class="sig-param"><span class="n">instance</span></em>, <em class="sig-param"><span class="n">instance_specific</span></em>, <em class="sig-param"><span class="n">seed</span></em>, <em class="sig-param"><span class="n">cutoff</span></em>, <em class="sig-param"><span class="n">capped</span></em>, <em class="sig-param"><span class="n">budget</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of RunInfo(config, instance, instance_specific, seed, cutoff, capped, budget)</p>
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo._asdict">
-<code class="sig-name descname">_asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._asdict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new OrderedDict which maps field names to their values.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.runhistory.runhistory.RunInfo._field_defaults">
-<code class="sig-name descname">_field_defaults</code><em class="property"> = {}</em><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._field_defaults" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.runhistory.runhistory.RunInfo._fields">
-<code class="sig-name descname">_fields</code><em class="property"> = ('config', 'instance', 'instance_specific', 'seed', 'cutoff', 'capped', 'budget')</em><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.runhistory.runhistory.RunInfo._fields_defaults">
-<code class="sig-name descname">_fields_defaults</code><em class="property"> = {}</em><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._fields_defaults" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo._make">
-<em class="property">classmethod </em><code class="sig-name descname">_make</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">iterable</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._make" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a new RunInfo object from a sequence or iterable</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo._replace">
-<code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo._replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a new RunInfo object replacing specified fields with new values</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.budget">
-<em class="property">property </em><code class="sig-name descname">budget</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.budget" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 6</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.capped">
-<em class="property">property </em><code class="sig-name descname">capped</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.capped" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 5</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.config">
-<em class="property">property </em><code class="sig-name descname">config</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.cutoff">
-<em class="property">property </em><code class="sig-name descname">cutoff</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.cutoff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 4</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.instance">
-<em class="property">property </em><code class="sig-name descname">instance</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.instance_specific">
-<em class="property">property </em><code class="sig-name descname">instance_specific</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.instance_specific" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.runhistory.runhistory.RunInfo.seed">
-<em class="property">property </em><code class="sig-name descname">seed</code><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo.seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 3</p>
-</dd></dl>
-
+<em class="property">class </em><code class="sig-prename descclassname">smac.runhistory.runhistory.</code><code class="sig-name descname">RunInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">capped</span><span class="p">:</span> <span class="n">bool</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">source_id</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory.RunInfo</span></code></a></p>
+<p>Create new instance of RunInfo(config, instance, instance_specific, seed, cutoff, capped, budget, source_id)</p>
 </dd></dl>
 
 <dl class="py class">

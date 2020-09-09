@@ -1,0 +1,8 @@
+smac.intensification.parallel\_successive\_halving module
+=========================================================
+
+.. automodule:: smac.intensification.parallel_successive_halving
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

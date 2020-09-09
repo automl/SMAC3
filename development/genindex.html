@@ -150,6 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -212,9 +213,10 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -408,6 +410,8 @@
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_main_options">_add_main_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
+      <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._add_new_SH">_add_new_SH() (smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_scen_options">_add_scen_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_smac_options">_add_smac_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
@@ -416,8 +420,6 @@
 
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._asdict">(smac.runhistory.runhistory.InstSeedKey method)</a>
-</li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._asdict">(smac.runhistory.runhistory.RunInfo method)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._asdict">(smac.runhistory.runhistory.RunValue method)</a>
 </li>
@@ -502,6 +504,8 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory._cost">_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+      <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._count_running_instances_for_challenger">_count_running_instances_for_challenger() (smac.intensification.successive_halving.SuccessiveHalving method)</a>
+</li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._create_tmp_dag">_create_tmp_dag() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._do_search">_do_search() (smac.optimizer.ei_optimization.LocalSearch method)</a>
@@ -517,8 +521,6 @@
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._field_defaults">(smac.runhistory.runhistory.InstSeedKey attribute)</a>
 </li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._field_defaults">(smac.runhistory.runhistory.RunInfo attribute)</a>
-</li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._field_defaults">(smac.runhistory.runhistory.RunValue attribute)</a>
 </li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry._field_defaults">(smac.utils.io.traj_logging.TrajEntry attribute)</a>
@@ -529,8 +531,6 @@
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._fields">(smac.runhistory.runhistory.InstSeedKey attribute)</a>
 </li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._fields">(smac.runhistory.runhistory.RunInfo attribute)</a>
-</li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._fields">(smac.runhistory.runhistory.RunValue attribute)</a>
 </li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry._fields">(smac.utils.io.traj_logging.TrajEntry attribute)</a>
@@ -540,8 +540,6 @@
 
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._fields_defaults">(smac.runhistory.runhistory.InstSeedKey attribute)</a>
-</li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._fields_defaults">(smac.runhistory.runhistory.RunInfo attribute)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._fields_defaults">(smac.runhistory.runhistory.RunValue attribute)</a>
 </li>
@@ -576,10 +574,10 @@
 </li>
       <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator._get_instances">_get_instances() (smac.utils.validate.Validator method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_instances_to_run">_get_instances_to_run() (smac.intensification.intensification.Intensifier method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">_get_mean_costs() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_next_inc_run">_get_next_inc_run() (smac.intensification.intensification.Intensifier method)</a>
@@ -638,6 +636,8 @@
       </ul></li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._is_there_time_due_to_adaptive_cap">_is_there_time_due_to_adaptive_cap() (smac.intensification.intensification.Intensifier method)</a>
 </li>
+      <li><a href="apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._launched_all_configs_for_current_stage">_launched_all_configs_for_current_stage() (smac.intensification.successive_halving.SuccessiveHalving method)</a>
+</li>
       <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll">_ll() (smac.epm.gaussian_process_mcmc.GaussianProcessMCMC method)</a>
 </li>
       <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._ll_w_grad">_ll_w_grad() (smac.epm.gaussian_process_mcmc.GaussianProcessMCMC method)</a>
@@ -660,8 +660,6 @@
 
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._make">(smac.runhistory.runhistory.InstSeedKey class method)</a>
-</li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._make">(smac.runhistory.runhistory.RunInfo class method)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._make">(smac.runhistory.runhistory.RunValue class method)</a>
 </li>
@@ -721,8 +719,6 @@
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey._replace">(smac.runhistory.runhistory.InstSeedKey method)</a>
 </li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo._replace">(smac.runhistory.runhistory.RunInfo method)</a>
-</li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue._replace">(smac.runhistory.runhistory.RunValue method)</a>
 </li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry._replace">(smac.utils.io.traj_logging.TrajEntry method)</a>
@@ -777,6 +773,8 @@
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._sort_configs_by_acq_value">_sort_configs_by_acq_value() (smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer method)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._sort_hyperparameters">_sort_hyperparameters() (smac.configspace.ConfigurationSpace method)</a>
+</li>
+      <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._sort_sh_instances_by_stage">_sort_sh_instances_by_stage() (smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
 </li>
       <li><a href="apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario._to_str_and_warn">_to_str_and_warn() (smac.scenario.scenario.Scenario method)</a>
 </li>
@@ -933,8 +931,6 @@
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey.budget">budget() (smac.runhistory.runhistory.InstSeedBudgetKey property)</a>
 
       <ul>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.budget">(smac.runhistory.runhistory.RunInfo property)</a>
-</li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.budget">(smac.utils.io.traj_logging.TrajEntry property)</a>
 </li>
       </ul></li>
@@ -949,8 +945,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.tae.html#smac.tae.StatusType.CAPPED">CAPPED (smac.tae.StatusType attribute)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.capped">capped() (smac.runhistory.runhistory.RunInfo property)</a>
 </li>
       <li><a href="apidoc/smac.tae.html#smac.tae.CappedRunException">CappedRunException</a>
 </li>
@@ -1006,10 +1000,10 @@
 </li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.clone_with_theta">clone_with_theta() (smac.epm.gp_kernels.MagicMixin method)</a>
 </li>
-      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.compare">compare() (smac.configspace.CategoricalHyperparameter method)</a>
@@ -1017,8 +1011,6 @@
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.compare_vector">compare_vector() (smac.configspace.CategoricalHyperparameter method)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.compute_all_costs">compute_all_costs() (smac.runhistory.runhistory.RunHistory method)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.config">config() (smac.runhistory.runhistory.RunInfo property)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
@@ -1069,8 +1061,6 @@
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.cs">cs (smac.initial_design.initial_design.InitialDesign attribute)</a>
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.cutoff">cutoff (smac.epm.rfr_imputator.RFRImputator attribute)</a>
-</li>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.cutoff">cutoff() (smac.runhistory.runhistory.RunInfo property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1240,10 +1230,10 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">get_instance_costs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_min_cost">get_min_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.get_neighbors">get_neighbors() (smac.configspace.CategoricalHyperparameter method)</a>
 
       <ul>
@@ -1262,6 +1252,8 @@
         <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.get_next_run">(smac.intensification.hyperband.Hyperband method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_run">(smac.intensification.intensification.Intensifier method)</a>
+</li>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving.get_next_run">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#smac.intensification.simple_intensifier.SimpleIntensifier.get_next_run">(smac.intensification.simple_intensifier.SimpleIntensifier method)</a>
 </li>
@@ -1387,15 +1379,11 @@
       <ul>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.instance">(smac.runhistory.runhistory.InstSeedKey property)</a>
 </li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.instance">(smac.runhistory.runhistory.RunInfo property)</a>
-</li>
       </ul></li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.instance_features">instance_features (smac.epm.base_epm.AbstractEPM attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.instance_specific">instance_specific() (smac.runhistory.runhistory.RunInfo property)</a>
-</li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey">InstSeedBudgetKey (class in smac.runhistory.runhistory)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey">InstSeedKey (class in smac.runhistory.runhistory)</a>
@@ -1622,6 +1610,8 @@
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#module-smac.intensification.intensification">smac.intensification.intensification</a>
 </li>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#module-smac.intensification.parallel_successive_halving">smac.intensification.parallel_successive_halving</a>
+</li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#module-smac.intensification.simple_intensifier">smac.intensification.simple_intensifier</a>
 </li>
         <li><a href="apidoc/smac.intensification.successive_halving.html#module-smac.intensification.successive_halving">smac.intensification.successive_halving</a>
@@ -1741,6 +1731,14 @@
 </li>
       <li><a href="apidoc/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">num_targets (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
 </li>
+      <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.num_workers">num_workers() (smac.tae.base.BaseRunner method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.num_workers">(smac.tae.dask_runner.DaskParallelRunner method)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.num_workers">(smac.tae.serial_runner.SerialRunner method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1779,6 +1777,8 @@
         <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.par_factor">(smac.tae.serial_runner.SerialRunner attribute)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving">ParallelSuccessiveHalving (class in smac.intensification.parallel_successive_halving)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.parse_main_command">parse_main_command() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.parse_scenario_command">parse_scenario_command() (smac.utils.io.cmd_reader.CMDReader method)</a>
@@ -1841,6 +1841,8 @@
         <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband.process_results">(smac.intensification.hyperband.Hyperband method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.process_results">(smac.intensification.intensification.Intensifier method)</a>
+</li>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving.process_results">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#smac.intensification.simple_intensifier.SimpleIntensifier.process_results">(smac.intensification.simple_intensifier.SimpleIntensifier method)</a>
 </li>
@@ -2049,8 +2051,6 @@
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedBudgetKey.seed">(smac.runhistory.runhistory.InstSeedBudgetKey property)</a>
 </li>
         <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.InstSeedKey.seed">(smac.runhistory.runhistory.InstSeedKey property)</a>
-</li>
-        <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo.seed">(smac.runhistory.runhistory.RunInfo property)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.select_configurations">select_configurations() (smac.initial_design.initial_design.InitialDesign method)</a>
@@ -2339,6 +2339,13 @@
 </li>
       </ul></li>
       <li>
+    smac.intensification.parallel_successive_halving
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#module-smac.intensification.parallel_successive_halving">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.intensification.simple_intensifier
 
       <ul>
@@ -2366,6 +2373,8 @@
         <li><a href="apidoc/smac.optimizer.acquisition.html#module-smac.optimizer.acquisition">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.ei_optimization
 
@@ -2373,8 +2382,6 @@
         <li><a href="apidoc/smac.optimizer.ei_optimization.html#module-smac.optimizer.ei_optimization">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.epm_configuration_chooser
 
@@ -2860,6 +2867,8 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.RunInfoIntent.WAIT">WAIT (smac.intensification.abstract_racer.RunInfoIntent attribute)</a>
+</li>
       <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.wait">wait() (smac.tae.base.BaseRunner method)</a>
 
       <ul>

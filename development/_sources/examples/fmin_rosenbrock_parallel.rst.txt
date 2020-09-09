@@ -26,12 +26,13 @@ launch parallel configurations via n_workers
     # --------------------------------------------------------------
     # We need to provide a pickable function and use __main__
     # to be compliant with multiprocessing API
-    # Below is a WA to have a packaged function called rosenbrock_2d
+    # Below is a work around to have a packaged function called
+    # rosenbrock_2d
     # --------------------------------------------------------------
     import os
     import sys
     sys.path.append(os.path.join(os.path.dirname(__file__)))
-    from rosenbrock_2d_delayed import rosenbrock_2d  # noqa: E402
+    from rosenbrock_2d_delayed_func import rosenbrock_2d  # noqa: E402
     # --------------------------------------------------------------
 
     if __name__ == '__main__':
