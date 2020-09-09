@@ -31,6 +31,7 @@ class RunInfoIntent(Enum):
     """
     RUN = 0  # Normal run execution of a run info
     SKIP = 1  # Skip running the run_info
+    WAIT = 2  # Wait for more configs to be processed
 
 
 class AbstractRacer(object):
@@ -123,7 +124,8 @@ class AbstractRacer(object):
         self._ta_time = 0.
 
         # attributes for sampling next configuration
-        self.repeat_configs = True
+        # Repeating configurations is discouraged for parallel runs
+        self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
 
@@ -132,7 +134,8 @@ class AbstractRacer(object):
                      incumbent: Configuration,
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
-                     repeat_configs: bool = True
+                     repeat_configs: bool = True,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Abstract method for choosing the next challenger, to allow for different selections across intensifiers
@@ -153,6 +156,9 @@ class AbstractRacer(object):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -164,7 +170,7 @@ class AbstractRacer(object):
         raise NotImplementedError()
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -179,9 +185,8 @@ class AbstractRacer(object):
 
         Parameters
         ----------
-        challenger : Configuration
-            A configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
@@ -288,7 +293,7 @@ class AbstractRacer(object):
         """
 
         if not self.run_obj_time:
-            raise ValueError('This method only works when the run objective is quality')
+            raise ValueError('This method only works when the run objective is time')
 
         curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
 

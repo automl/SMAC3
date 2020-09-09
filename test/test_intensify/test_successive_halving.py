@@ -10,6 +10,7 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
@@ -293,7 +294,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertIsNotNone(run_info.config)
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
@@ -462,7 +463,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
@@ -503,7 +504,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
@@ -523,7 +524,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -543,7 +544,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -590,7 +591,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
@@ -610,7 +611,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,
@@ -664,7 +665,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
@@ -682,7 +683,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             )
             result = eval_challenger(run_info, taf, self.stats, self.rh)
             inc, inc_value = intensifier.process_results(
-                challenger=run_info.config,
+                run_info=run_info,
                 incumbent=inc,
                 run_history=self.rh,
                 time_bound=np.inf,
@@ -707,7 +708,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertEqual(run_info.config, self.config4)
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -727,7 +728,7 @@ class TestSuccessiveHalving(unittest.TestCase):
             self.assertEqual(run_info.config, self.config4)
             result = eval_challenger(run_info, taf, self.stats, self.rh)
             inc, inc_value = intensifier.process_results(
-                challenger=run_info.config,
+                run_info=run_info,
                 incumbent=inc,
                 run_history=self.rh,
                 time_bound=np.inf,
@@ -777,7 +778,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=None,
             run_history=self.rh,
             time_bound=np.inf,
@@ -797,7 +798,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -817,7 +818,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -843,7 +844,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=inc,
             run_history=self.rh,
             time_bound=np.inf,
@@ -971,3 +972,154 @@ class TestSuccessiveHalving(unittest.TestCase):
         inc = intensifier._compare_configs(incumbent=self.config4, challenger=self.config3,
                                            run_history=self.rh, log_traj=False)
         self.assertEqual(self.config3, inc)
+
+    def test_count_running_instances_for_challenger(self):
+        """
+        Makes sure we return the proper number of running configs
+        """
+        def target(x):
+            return 1
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+
+        taf.runhistory = self.rh
+        # select best on any budget
+        intensifier = SuccessiveHalving(
+            stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=list(range(20)), initial_budget=3, max_budget=10, eta=2)
+
+        # Get and process the first instance pair of config 1
+        intent, run_info = intensifier.get_next_run(
+            challengers=[self.config1, self.config2, self.config3, self.config4],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+
+        # Add a check for empty run history
+        self.assertEqual(len(self.rh.data), 0)
+        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 0)
+
+        result = eval_challenger(run_info, taf, self.stats, self.rh)
+        inc, inc_value = intensifier.process_results(
+            run_info=run_info,
+            incumbent=self.config1,
+            run_history=self.rh,
+            time_bound=np.inf,
+            result=result,
+            log_traj=False,
+        )
+        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 0)
+
+        # This will get us the second instance of config 1
+        intent, run_info = intensifier.get_next_run(
+            challengers=[self.config2, self.config3, self.config4],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+
+        # Mark this run_info object as running and make sure that the intensifier can
+        # access it
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 1)
+
+        # Now, when the intensifier is requested, to provide a new run,
+        # it should provide a new instance, not the same one
+        new_intent, new_run_info = intensifier.get_next_run(
+            challengers=[self.config2, self.config3, self.config4],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+        self.assertEqual(new_run_info.config, run_info.config)
+        self.assertNotEqual(new_run_info.instance, run_info.instance)
+
+        # Add another running instance
+        self.rh.add(config=new_run_info.config,
+                    instance_id=new_run_info.instance,
+                    seed=new_run_info.seed,
+                    budget=new_run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 2)
+
+        # Get a new config to gain more confidence
+        newer_intent, newer_run_info = intensifier.get_next_run(
+            challengers=[self.config2, self.config3, self.config4],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+        self.assertNotIn(newer_run_info, [new_run_info, run_info])
+
+    def test_launched_all_configs_for_current_stage(self):
+        """
+        This check makes sure we can identify when all the current runs
+        (config/instance/seed) pairs for a given stage have been launched
+        """
+        def target(x):
+            return 1
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+
+        taf.runhistory = self.rh
+        # select best on any budget
+        intensifier = SuccessiveHalving(
+            stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            instances=list(range(10)), initial_budget=2, max_budget=10, eta=2)
+
+        # So there are 2 instances per config.
+        # self.stage=0
+        # self.n_configs_in_stage=[4.0, 2.0, 1.0]
+        # self.all_budgets=[ 2.5  5.  10. ]
+        total_configs_in_stage = 4
+        instances_per_stage = 2
+
+        # get all configs and add them to list
+        run_tracker = []
+        challengers = [self.config1, self.config2, self.config3, self.config4]
+        for i in range(total_configs_in_stage * instances_per_stage):
+            intent, run_info = intensifier.get_next_run(
+                challengers=challengers,
+                chooser=None,
+                run_history=self.rh,
+                incumbent=None,
+            )
+
+            # All this runs are valid for this stage
+            self.assertEqual(intent, RunInfoIntent.RUN)
+
+            # Remove from the challengers, the launched configs
+            challengers = [c for c in challengers if c != run_info.config]
+            run_tracker.append((run_info.config, run_info.instance, run_info.seed))
+            self.rh.add(config=run_info.config,
+                        instance_id=run_info.instance,
+                        seed=run_info.seed,
+                        budget=run_info.budget,
+                        cost=10,
+                        time=1,
+                        status=StatusType.RUNNING,
+                        additional_info=None)
+
+        # This will get us the second instance of config 1
+        intent, run_info = intensifier.get_next_run(
+            challengers=[self.config2, self.config3, self.config4],
+            chooser=None,
+            run_history=self.rh,
+            incumbent=None,
+        )
+
+        # We have launched all runs, that are expected for this stage
+        # not registered any, so for sure we have to wait
+        # For all runs to be completed before moving to the next stage
+        self.assertEqual(intent, RunInfoIntent.WAIT)

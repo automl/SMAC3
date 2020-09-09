@@ -137,7 +137,7 @@ class TestHyperband(unittest.TestCase):
         self.assertIsNotNone(run_info.config)
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.config1,
             run_history=self.rh,
             time_bound=np.inf,

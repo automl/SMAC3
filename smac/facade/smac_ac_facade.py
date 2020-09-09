@@ -407,6 +407,7 @@ class SMAC4AC(object):
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
             'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         }
+
         if isinstance(intensifier, Intensifier) \
                 or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):
             intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821

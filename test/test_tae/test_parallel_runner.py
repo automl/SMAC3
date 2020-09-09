@@ -100,6 +100,20 @@ class TestDaskRunner(unittest.TestCase):
         # Results are returned in left to right
         self.assertLessEqual(int(run_values[0][1].starttime), int(run_values[1][1].endtime))
 
+    def test_num_workers(self):
+        """Make sure we can properly return the number of workers"""
+
+        # We use the funcdict as a mechanism to test Runner
+        runner = ExecuteTAFuncDict(ta=target_delayed, stats=self.stats, run_obj='quality')
+        runner = DaskParallelRunner(runner, n_workers=2)
+        self.assertEqual(runner.num_workers(), 2)
+
+        # Reduce the number of workers
+        # have to give time for the worker to be killed
+        runner.client.cluster.scale(1)
+        time.sleep(2)
+        self.assertEqual(runner.num_workers(), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

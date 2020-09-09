@@ -202,6 +202,7 @@ class SMBO(object):
                 chooser=self.epm_chooser,
                 run_history=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
+                num_workers=self.tae_runner.num_workers(),
             )
 
             # remove config from initial design challengers to not repeat it again
@@ -250,12 +251,14 @@ class SMBO(object):
                 # This marks a transition request from the intensifier
                 # To a new iteration
                 pass
-            else:
+            elif intent == RunInfoIntent.WAIT:
                 # In any other case, we wait for resources
                 # This likely indicates that no further decision
                 # can be taken by the intensifier until more data is
                 # available
                 self.tae_runner.wait()
+            else:
+                raise NotImplementedError("No other RunInfoIntent has been coded!")
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
@@ -431,6 +434,8 @@ class SMBO(object):
             instance_id=run_info.instance,
             seed=run_info.seed,
             budget=run_info.budget,
+            starttime=result.starttime,
+            endtime=result.endtime,
             force_update=True
         )
         self.stats.n_configs = len(self.runhistory.config_ids)
@@ -447,7 +452,7 @@ class SMBO(object):
 
         # Update the intensifier with the result of the runs
         self.incumbent, inc_perf = self.intensifier.process_results(
-            challenger=run_info.config,
+            run_info=run_info,
             incumbent=self.incumbent,
             run_history=self.runhistory,
             time_bound=max(self._min_time, time_left),

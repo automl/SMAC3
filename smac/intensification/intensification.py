@@ -196,6 +196,7 @@ class Intensifier(AbstractRacer):
                      chooser: typing.Optional[EPMChooser],
                      run_history: RunHistory,
                      repeat_configs: bool = True,
+                     num_workers: int = 1,
                      ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         This procedure is in charge of generating a RunInfo object to comply
@@ -225,6 +226,9 @@ class Intensifier(AbstractRacer):
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
+        num_workers: int
+            the maximum number of workers available
+            at a given time.
 
         Returns
         -------
@@ -233,6 +237,11 @@ class Intensifier(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates necessary information for a config run
         """
+        if num_workers > 1:
+            raise ValueError("Intensifier does not support more than 1 worker, yet "
+                             "the argument num_workers to get_next_run is {}".format(
+                                 num_workers
+                             ))
 
         # If this function is called, it means the iteration is
         # not complete (we can be starting a new iteration, or re-running a
@@ -454,7 +463,7 @@ class Intensifier(AbstractRacer):
             raise ValueError('No valid stage found!')
 
     def process_results(self,
-                        challenger: Configuration,
+                        run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
                         run_history: RunHistory,
                         time_bound: float,
@@ -479,9 +488,8 @@ class Intensifier(AbstractRacer):
 
         Parameters
         ----------
-        challenger : Configuration
-            a configuration that was previously executed, and whose status
-            will be used to define the next stage.
+        run_info : RunInfo
+               A RunInfo containing the configuration that was evaluated
         incumbent : typing.Optional[Configuration]
             best configuration so far, None in 1st run
         run_history : RunHistory
@@ -508,7 +516,7 @@ class Intensifier(AbstractRacer):
                     "First run, no incumbent provided;"
                     " challenger is assumed to be the incumbent"
                 )
-                incumbent = challenger
+                incumbent = run_info.config
 
         if self.stage in [IntensifierStage.PROCESS_INCUMBENT_RUN,
                           IntensifierStage.PROCESS_FIRST_CONFIG_RUN]:
@@ -534,7 +542,7 @@ class Intensifier(AbstractRacer):
 
                 self._ta_time += result.time
                 incumbent = self._process_racer_results(
-                    challenger=challenger,
+                    challenger=run_info.config,
                     incumbent=incumbent,
                     run_history=run_history,
                     log_traj=log_traj,

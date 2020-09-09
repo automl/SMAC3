@@ -164,3 +164,8 @@ class SerialRunner(BaseRunner):
                 all further additional run information
         """
         pass
+
+    def num_workers(self) -> int:
+        """Total number of workers available."""
+        # Any serial runner supports only 1 worker
+        return 1
