@@ -119,10 +119,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
         # Add sh number 0, because we are likely gonna need it
         self.sh_instances = {}  # type: typing.Dict[int, SuccessiveHalving]
 
-        # We will have multiple SH. Below variable tracks which is the last
-        # instance that launched a job
-        self.last_active_instance = 0
-
     def process_results(self,
                         run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
@@ -237,7 +233,7 @@ class ParallelSuccessiveHalving(AbstractRacer):
                 "repeat_configs==True is not supported for parallel successive halving")
 
         # First get a config to run from a SH instance
-        for i in self._sh_scheduling():
+        for i in self._sort_sh_instances_by_stage():
             intent, run_info = self.sh_instances[i].get_next_run(
                 challengers=challengers,
                 incumbent=incumbent,
@@ -250,9 +246,6 @@ class ParallelSuccessiveHalving(AbstractRacer):
             # with a new configuration, so we continue
             if intent == RunInfoIntent.WAIT:
                 continue
-
-            # The last instance that sent a job, for scheduling purposes
-            self.last_active_instance = i
 
             return intent, run_info
 
@@ -320,15 +313,12 @@ class ParallelSuccessiveHalving(AbstractRacer):
 
         return True
 
-    def _sh_scheduling(self, strategy: str = 'more_advanced_iteration') -> typing.List[int]:
+    def _sort_sh_instances_by_stage(self) -> typing.List[int]:
         """
         This procedure dictates what SH to prioritize in
-        launching jobs.
-
-        Parameters
-        ----------
-            strategy: str
-                What type of scheduling to follow
+        launching jobs. It prioritizes resource allocation to
+        SH instances that have higher stages. In case of tie,
+        we prioritize the SH instance with more launched configs
 
         Returns
         -------
@@ -342,41 +332,26 @@ class ParallelSuccessiveHalving(AbstractRacer):
         if len(self.sh_instances) == 0:
             return []
 
-        expected = self.last_active_instance + 1
-        if strategy == 'ordinal' or expected == len(self.sh_instances):
-            # This is hpbanster strategy, just pick on an ordered fashion
-            return list(range(len(self.sh_instances)))
-        elif strategy == 'serial':
-            # All SH instances are copies launching the same type of
-            # of configurations. This is a cheap way of doing FIFO
-            # if last index was 3, we will expect to go to 4 onwards like:
-            # --> next schedule: 4->5->0->1->2->3 for 6 SH
-            # in above example, if last scheduler was 5, it is like ordinal
-            # scheduling
-            return list(range(expected, len(self.sh_instances))) + list(range(expected))
-        elif strategy == 'more_advanced_iteration':
-            # We want to prioritize runs that are close to finishing an iteration.
-            # In the context of successive halving, an iteration has stages that are
-            # composed of # of configs and each configs has # of instance-seed pairs
-            preference = []
-            for i, sh in self.sh_instances.items():
-                # Each row of this matrix is id, stage, configs+instances for stage
-                # We use sh.run_tracker as a cheap way to know how advanced the run is
-                # in case of stage ties among successive halvers. sh.run_tracker is
-                # also emptied each iteration
-                stage = 0
-                if hasattr(sh, 'stage'):
-                    # Newly created SuccessiveHalving objects have no stage
-                    stage = sh.stage
-                preference.append(
-                    (i, stage, len(sh.run_tracker))
-                )
+        # We want to prioritize runs that are close to finishing an iteration.
+        # In the context of successive halving, an iteration has stages that are
+        # composed of # of configs and each configs has # of instance-seed pairs
+        preference = []
+        for i, sh in self.sh_instances.items():
+            # Each row of this matrix is id, stage, configs+instances for stage
+            # We use sh.run_tracker as a cheap way to know how advanced the run is
+            # in case of stage ties among successive halvers. sh.run_tracker is
+            # also emptied each iteration
+            stage = 0
+            if hasattr(sh, 'stage'):
+                # Newly created SuccessiveHalving objects have no stage
+                stage = sh.stage
+            preference.append(
+                (i, stage, len(sh.run_tracker))
+            )
 
-            # First we sort by config/instance/seed as the less important criteria
-            preference.sort(key=lambda x: x[2], reverse=True)
-            # Second by stage. The more advanced the stage is, the more we want
-            # this SH to finish early
-            preference.sort(key=lambda x: x[1], reverse=True)
-            return [i for i, s, c in preference]
-        else:
-            raise ValueError("Unsupported strategy " + strategy)
+        # First we sort by config/instance/seed as the less important criteria
+        preference.sort(key=lambda x: x[2], reverse=True)
+        # Second by stage. The more advanced the stage is, the more we want
+        # this SH to finish early
+        preference.sort(key=lambda x: x[1], reverse=True)
+        return [i for i, s, c in preference]

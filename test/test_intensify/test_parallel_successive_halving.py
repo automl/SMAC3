@@ -258,30 +258,7 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.assertFalse(self.PSH._add_new_SH(num_workers=2))
         self.assertEqual(len(self.PSH.sh_instances), 2)
 
-    def test_sh_scheduling(self):
-        """Ensures proper scheduling is returned based on the strategy"""
-
-        # Add more SH to make testing interesting
-        for i in range(4):
-            self.PSH._add_new_SH(num_workers=4)
-
-        # First test the ordinal approach
-        self.assertEqual(list(self.PSH._sh_scheduling(strategy='ordinal')), [0, 1, 2, 3])
-
-        # Also, if strategy is serial and index is 3 it should be the same as ordinal
-        # That is, we lastly queried the SH #3, we have to start from 0 again
-        self.PSH.last_active_instance = 3
-        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [0, 1, 2, 3])
-
-        # Make sure we complete the list properly in serial
-        self.PSH.last_active_instance = 0
-        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [1, 2, 3, 0])
-        self.PSH.last_active_instance = 1
-        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [2, 3, 0, 1])
-        self.PSH.last_active_instance = 2
-        self.assertEqual(list(self.PSH._sh_scheduling(strategy='serial')), [3, 0, 1, 2])
-
-    def test_sh_scheduling_more_advanced_iteration(self):
+    def test_sort_sh_instances_by_stage(self):
         """Ensures that we prioritize the more advanced stage iteration"""
 
         def add_sh_mock(stage, config_inst_pairs):
@@ -300,49 +277,49 @@ class TestSuccessiveHalving(unittest.TestCase):
         # In this case, we want to prioritize the one with more launched runs
         # that is zero
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [0, 1]
         )
 
         # One more instance comparison to be supper safe
         self.PSH.sh_instances[2] = add_sh_mock(stage=1, config_inst_pairs=7)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [2, 0, 1]
         )
 
         # Not let us add a more advanced stage run
         self.PSH.sh_instances[3] = add_sh_mock(stage=2, config_inst_pairs=1)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [3, 2, 0, 1]
         )
 
         # Make 1 the oldest stage
         self.PSH.sh_instances[1] = add_sh_mock(stage=4, config_inst_pairs=1)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [1, 3, 2, 0]
         )
 
         # Add a new run that's empty
         self.PSH.sh_instances[4] = add_sh_mock(stage=0, config_inst_pairs=0)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [1, 3, 2, 0, 4]
         )
 
         # Make 4 stage 4 but with not as many instances as 1
         self.PSH.sh_instances[4] = add_sh_mock(stage=4, config_inst_pairs=0)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [1, 4, 3, 2, 0]
         )
 
         # And lastly 0 -> stage 4
         self.PSH.sh_instances[0] = add_sh_mock(stage=4, config_inst_pairs=0)
         self.assertEqual(
-            list(self.PSH._sh_scheduling(strategy='more_advanced_iteration')),
+            list(self.PSH._sort_sh_instances_by_stage()),
             [1, 0, 4, 3, 2]
         )
 
