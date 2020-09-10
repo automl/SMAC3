@@ -174,7 +174,6 @@ class TestEPMChooser(unittest.TestCase):
         self.assertEqual(num_random_search_sorted, 5000)
         self.assertEqual(num_random_search, 5187)
 
-    @unittest.skipIf(sys.version_info < (3, 6), 'Test not deterministic for Python 3.5 and earlier')
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
         def side_effect(X):
