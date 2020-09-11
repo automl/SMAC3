@@ -28,8 +28,8 @@ for name, requirements in extras_require.items():
             package_name = 'skopt'
         lazy_import.lazy_module(package_name)
 
-if sys.version_info < (3, 5, 2):
-    raise ValueError("SMAC requires Python 3.5.2 or newer.")
+if sys.version_info < (3, 6, 0):
+    raise ValueError("SMAC requires Python 3.6.0 or newer.")
 
 
 if os.name != 'posix':

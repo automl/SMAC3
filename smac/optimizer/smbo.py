@@ -236,6 +236,8 @@ class SMBO(object):
                     budget=run_info.budget,
                 )
 
+                run_info.config.config_id = self.runhistory.config_ids[run_info.config]
+
                 self.tae_runner.submit_run(run_info=run_info)
 
                 # There are 2 criteria that the stats object uses to know

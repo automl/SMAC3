@@ -30,7 +30,7 @@ def get_author():
 
 
 setup(
-    python_requires=">=3.5.2",
+    python_requires=">=3.6",
     install_requires=requirements,
     extras_require=extras_require,
     package_data={'smac': ['requirements.txt', 'extras_require.json']},
