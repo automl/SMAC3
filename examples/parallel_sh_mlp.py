@@ -7,7 +7,7 @@ for parallel execution. The configurations are randomly sampled.
 
 This examples uses a real-valued SuccessiveHalving through epochs.
 
-4 workers are allocated for this run. As soon as the any worker is iddle,
+4 workers are allocated for this run. As soon as the any worker is idle,
 the ParallelSuccessiveHalving creates an additional internal instance
 of SuccessiveHalving to use the idle resources.
 """
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 
     # Intensification parameters
     # Intensifier will allocate from 5 to a maximum of 25 epochs to each configuration
-    # Succesive Halving child-instances are created to prevent idle
+    # Successive Halving child-instances are created to prevent idle
     # workers.
     intensifier_kwargs = {'initial_budget': 5, 'max_budget': 25, 'eta': 3,
                           'min_chall': 1, 'instance_order': 'shuffle_once'}

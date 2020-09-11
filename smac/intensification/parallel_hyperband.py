@@ -4,19 +4,18 @@ import typing
 import numpy as np
 
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 
 
-class ParallelSuccessiveHalving(ParallelScheduler):
+class ParallelHyperband(ParallelScheduler):
+    """ Races multiple challengers against an incumbent using Hyperband method,
+    with iterations that run over multiple workers.
 
-    """Races multiple challengers against an incumbent using Successive Halving method,
-    in a parallel fashion
-
-    This class instantiates SuccessiveHalving objects on a need basis, that is, to
-    prevent workers from being idle.
+    This class can be considered a wrapper over Hyperband, that creates multiple
+    intensifiers to prevent having idle workers
 
     Parameters
     ----------
@@ -30,7 +29,7 @@ class ParallelSuccessiveHalving(ParallelScheduler):
     instance_specifics : typing.Mapping[str,np.ndarray]
         mapping from instance name to instance specific string
     cutoff : typing.Optional[int]
-        cutoff of TA runs
+        runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : typing.Optional[float]
@@ -39,8 +38,6 @@ class ParallelSuccessiveHalving(ParallelScheduler):
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : typing.Optional[int]
-        number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : typing.Optional[int]
@@ -51,9 +48,7 @@ class ParallelSuccessiveHalving(ParallelScheduler):
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive cutoff)
-    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
-        Do not set this argument, it will only be used by hyperband!
+        slack factor of adpative capping (factor * adpative cutoff)
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
@@ -64,7 +59,6 @@ class ParallelSuccessiveHalving(ParallelScheduler):
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
@@ -76,12 +70,10 @@ class ParallelSuccessiveHalving(ParallelScheduler):
                  initial_budget: typing.Optional[float] = None,
                  max_budget: typing.Optional[float] = None,
                  eta: float = 3,
-                 num_initial_challengers: typing.Optional[int] = None,
                  run_obj_time: bool = True,
                  n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
+                 instance_order: str = 'shuffle_once',
                  adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
                  ) -> None:
@@ -100,17 +92,15 @@ class ParallelSuccessiveHalving(ParallelScheduler):
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
-        # Successive Halving Hyperparameters
+        # Parameters for a new hyperband
         self.n_seeds = n_seeds
         self.instance_order = instance_order
-        self.inst_seed_pairs = inst_seed_pairs
         self.incumbent_selection = incumbent_selection
         self._instances = instances
         self._instance_specifics = instance_specifics
         self.initial_budget = initial_budget
         self.max_budget = max_budget
         self.eta = eta
-        self.num_initial_challengers = num_initial_challengers
 
     def _get_intensifier_ranking(self, intensifier: AbstractRacer
                                  ) -> typing.Tuple[int, int]:
@@ -136,17 +126,15 @@ class ParallelSuccessiveHalving(ParallelScheduler):
             of configurations launched
         """
         # For mypy -- we expect to work with Hyperband instances
-        assert isinstance(intensifier, SuccessiveHalving)
+        assert isinstance(intensifier, Hyperband)
 
-        # Each row of this matrix is id, stage, configs+instances for stage
-        # We use sh.run_tracker as a cheap way to know how advanced the run is
-        # in case of stage ties among successive halvers. sh.run_tracker is
-        # also emptied each iteration
+        # For hyperband, we use the internal successive halving as a criteria
+        # to see how advanced this intensifier is
         stage = 0
-        if hasattr(intensifier, 'stage'):
+        if hasattr(intensifier.sh_intensifier, 'stage'):
             # Newly created SuccessiveHalving objects have no stage
-            stage = intensifier.stage
-        return stage, len(intensifier.run_tracker)
+            stage = intensifier.sh_intensifier.stage
+        return stage, len(intensifier.sh_intensifier.run_tracker)
 
     def _add_new_instance(self, num_workers: int) -> bool:
         """
@@ -162,12 +150,12 @@ class ParallelSuccessiveHalving(ParallelScheduler):
 
         Returns
         -------
-            Whether or not a successive halving instance was added
+            Whether or not a new instance was added
         """
         if len(self.intensifier_instances) >= num_workers:
             return False
 
-        self.intensifier_instances[len(self.intensifier_instances)] = SuccessiveHalving(
+        self.intensifier_instances[len(self.intensifier_instances)] = Hyperband(
             stats=self.stats,
             traj_logger=self.traj_logger,
             rng=self.rs,
@@ -178,12 +166,10 @@ class ParallelSuccessiveHalving(ParallelScheduler):
             initial_budget=self.initial_budget,
             max_budget=self.max_budget,
             eta=self.eta,
-            num_initial_challengers=self.num_initial_challengers,
             run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
             adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
-            inst_seed_pairs=self.inst_seed_pairs,
             min_chall=self.min_chall,
             incumbent_selection=self.incumbent_selection,
             identifier=len(self.intensifier_instances),

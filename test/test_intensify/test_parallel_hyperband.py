@@ -11,7 +11,8 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.scenario.scenario import Scenario
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.intensification.parallel_successive_halving import ParallelSuccessiveHalving
+from smac.intensification.hyperband import Hyperband
+from smac.intensification.parallel_hyperband import ParallelHyperband
 from smac.tae import StatusType
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -40,7 +41,7 @@ def target_from_run_info(RunInfo):
     )
 
 
-class TestParallelSuccessiveHalving(unittest.TestCase):
+class TestParallelHyperband(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
@@ -55,6 +56,8 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
                                      values={'a': 0, 'b': 7})
         self.config4 = Configuration(self.cs,
                                      values={'a': 29, 'b': 31})
+        self.config5 = Configuration(self.cs,
+                                     values={'a': 31, 'b': 33})
 
         self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
                               "run_obj": 'runtime',
@@ -63,7 +66,7 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
         self.stats.start_timing()
 
         # Create the base object
-        self.PSH = ParallelSuccessiveHalving(
+        self.PHB = ParallelHyperband(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
             rng=np.random.RandomState(12345),
@@ -77,27 +80,40 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
         )
 
     def test_initialization(self):
-        """Makes sure that a proper SH is created"""
+        """Makes sure that a proper HB is created"""
 
-        # We initialize the PSH with zero intensifier_instances
-        self.assertEqual(len(self.PSH.intensifier_instances), 0)
+        # We initialize the PHB with zero intensifier_instances
+        self.assertEqual(len(self.PHB.intensifier_instances), 0)
 
-        # Add an instance to check the SH initialization
-        self.assertTrue(self.PSH._add_new_instance(num_workers=1))
+        # Add an instance to check the HB initialization
+        self.assertTrue(self.PHB._add_new_instance(num_workers=1))
+
+        # Some default init
+        self.assertEqual(self.PHB.intensifier_instances[0].hb_iters, 0)
+        self.assertEqual(self.PHB.intensifier_instances[0].max_budget, 5)
+        self.assertEqual(self.PHB.intensifier_instances[0].initial_budget, 2)
+
+        # Update the stage
+        (self.PHB.intensifier_instances[0]._update_stage(self.rh))
 
         # Parameters properly passed to SH
-        self.assertEqual(len(self.PSH.intensifier_instances[0].inst_seed_pairs), 10)
-        self.assertEqual(self.PSH.intensifier_instances[0].initial_budget, 2)
-        self.assertEqual(self.PSH.intensifier_instances[0].max_budget, 5)
+        self.assertEqual(len(self.PHB.intensifier_instances[0].sh_intensifier.inst_seed_pairs), 10)
+        self.assertEqual(self.PHB.intensifier_instances[0].sh_intensifier.initial_budget, 2)
+        self.assertEqual(self.PHB.intensifier_instances[0].sh_intensifier.max_budget, 5)
 
     def test_process_results_via_sourceid(self):
         """Makes sure source id is honored when deciding
-        which SH will consume the result/run_info"""
+        which SH will consume the result/run_info
+
+        """
         # Mock the SH so we can make sure the correct item is passed
         for i in range(10):
-            self.PSH.intensifier_instances[i] = mock.Mock()
+            self.PHB.intensifier_instances[i] = mock.Mock()
+            self.PHB.intensifier_instances[i].process_results.return_value = (self.config1, 0.5)
+            # make iter false so the mock object is not overwritten
+            self.PHB.intensifier_instances[i].iteration_done = False
 
-        # randomly create run_infos and push into PSH. Then we will make
+        # randomly create run_infos and push into PHB. Then we will make
         # sure they got properly allocated
         for i in np.random.choice(list(range(10)), 30):
             run_info = RunInfo(
@@ -123,7 +139,7 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
                 endtime=2,
                 additional_info=magic
             )
-            self.PSH.process_results(
+            self.PHB.process_results(
                 run_info=run_info,
                 incumbent=None,
                 run_history=self.rh,
@@ -137,21 +153,21 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
 
             # First the expected one
             self.assertEqual(
-                self.PSH.intensifier_instances[i].process_results.call_args[1]['run_info'], run_info)
+                self.PHB.intensifier_instances[i].process_results.call_args[1]['run_info'], run_info)
             self.assertEqual(
-                self.PSH.intensifier_instances[i].process_results.call_args[1]['result'], result)
+                self.PHB.intensifier_instances[i].process_results.call_args[1]['result'], result)
             all_other_run_infos, all_other_results = [], []
-            for j in range(len(self.PSH.intensifier_instances)):
+            for j in range(len(self.PHB.intensifier_instances)):
                 # Skip the expected SH
                 if i == j:
                     continue
-                if self.PSH.intensifier_instances[j].process_results.call_args is None:
+                if self.PHB.intensifier_instances[j].process_results.call_args is None:
                     all_other_run_infos.append(None)
                 else:
                     all_other_run_infos.append(
-                        self.PSH.intensifier_instances[j].process_results.call_args[1]['run_info'])
+                        self.PHB.intensifier_instances[j].process_results.call_args[1]['run_info'])
                     all_other_results.append(
-                        self.PSH.intensifier_instances[j].process_results.call_args[1]['result'])
+                        self.PHB.intensifier_instances[j].process_results.call_args[1]['result'])
             self.assertNotIn(run_info, all_other_run_infos)
             self.assertNotIn(result, all_other_results)
 
@@ -160,7 +176,7 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
 
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
-            intent, run_info = self.PSH.get_next_run(
+            intent, run_info = self.PHB.get_next_run(
                 challengers=challengers,
                 incumbent=None, chooser=None, run_history=self.rh,
                 num_workers=1,
@@ -172,7 +188,7 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
             if intent == RunInfoIntent.WAIT:
                 break
 
-            # Add the config to self.rh in order to make PSH aware that this
+            # Add the config to self.rh in order to make PHB aware that this
             # config/instance was launched
             self.rh.add(
                 config=run_info.config,
@@ -184,8 +200,14 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
                 budget=run_info.budget,
             )
 
+        # smax==1 (int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.   eta))))
+        self.assertEqual(self.PHB.intensifier_instances[0].s_max, 1)
+
+        # And we do not even complete 1 iteration, so s has to be 1
+        self.assertEqual(self.PHB.intensifier_instances[0].s, 1)
+
         # We should not create more SH intensifier_instances
-        self.assertEqual(len(self.PSH.intensifier_instances), 1)
+        self.assertEqual(len(self.PHB.intensifier_instances), 1)
 
         # We are running with:
         # 'all_budgets': array([2.5, 5. ]) -> 2 intensifier_instances per config top
@@ -193,23 +215,34 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
         # This means we run int(2.5) + 2.0 = 4 runs before waiting
         self.assertEqual(i, 4)
 
-    def test_get_next_run_dual_SH(self):
+        # Also, check the internals of the unique sh instance
+
+        # sh_initial_budget==2.5 (self.eta ** -self.s * self.max_budget)
+        self.assertEqual(self.PHB.intensifier_instances[0].sh_intensifier.initial_budget, 2)
+
+        # n_challengers=2 (int(np.floor((self.s_max + 1) / (self.s + 1)) * self.eta ** self.s))
+        self.assertEqual(len(self.PHB.intensifier_instances[0].sh_intensifier.n_configs_in_stage), 2)
+
+    def test_get_next_run_multiple_SH(self):
         """Makes sure that two  SH can properly coexist and tag
         run_info properly"""
 
-        # Everything here will be tested with a single SH
+        # We allow 2 SH to be created. This means, we have a newer iteration
+        # to expect in hyperband
         challengers = [self.config1, self.config2, self.config3, self.config4]
+        run_infos = []
         for i in range(30):
-            intent, run_info = self.PSH.get_next_run(
+            intent, run_info = self.PHB.get_next_run(
                 challengers=challengers,
                 incumbent=None, chooser=None, run_history=self.rh,
                 num_workers=2,
             )
+            run_infos.append(run_info)
 
             # Regenerate challenger list
             challengers = [c for c in challengers if c != run_info.config]
 
-            # Add the config to self.rh in order to make PSH aware that this
+            # Add the config to self.rh in order to make PHB aware that this
             # config/instance was launched
             if intent == RunInfoIntent.WAIT:
                 break
@@ -223,40 +256,65 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
                 budget=run_info.budget,
             )
 
-        # We create a second sh intensifier_instances as after 4 runs, the SH
-        # number zero needs to wait
-        self.assertEqual(len(self.PSH.intensifier_instances), 2)
+        # We have not completed an iteration
+        self.assertEqual(self.PHB.intensifier_instances[0].hb_iters, 0)
+
+        # Because n workers is now 2, we expect 2 sh intensifier_instances
+        self.assertEqual(len(self.PHB.intensifier_instances), 2)
+
+        # Each of the intensifier_instances should have s equal to 1
+        # As no iteration has been completed
+        self.assertEqual(self.PHB.intensifier_instances[0].s_max, 1)
+        self.assertEqual(self.PHB.intensifier_instances[0].s, 1)
+        self.assertEqual(self.PHB.intensifier_instances[1].s_max, 1)
+        self.assertEqual(self.PHB.intensifier_instances[1].s, 1)
+
+        # First let us check everything makes sense in HB-SH-0 HB-SH-0
+        self.assertEqual(self.PHB.intensifier_instances[0].sh_intensifier.initial_budget, 2)
+        self.assertEqual(self.PHB.intensifier_instances[0].sh_intensifier.max_budget, 5)
+        self.assertEqual(len(self.PHB.intensifier_instances[0].sh_intensifier.n_configs_in_stage), 2)
+        self.assertEqual(self.PHB.intensifier_instances[1].sh_intensifier.initial_budget, 2)
+        self.assertEqual(self.PHB.intensifier_instances[1].sh_intensifier.max_budget, 5)
+        self.assertEqual(len(self.PHB.intensifier_instances[1].sh_intensifier.n_configs_in_stage), 2)
 
         # We are running with:
-        # 'all_budgets': array([2.5, 5. ]) -> 2 intensifier_instances per config top
-        # 'n_configs_in_stage': [2.0, 1.0],
-        # This means we run int(2.5) + 2.0 = 4 runs before waiting
-        # But we have 2 successive halvers now!
+        # + 4 runs for sh instance 0 ('all_budgets': array([2.5, 5. ]), 'n_configs_in_stage': [2.0, 1.0])
+        #   that is, for SH0 we run in stage==0 int(2.5) intensifier_instances * 2.0 configs
+        # And this times 2 because we have 2 HB intensifier_instances
         self.assertEqual(i, 8)
+
+        # Adding a new worker is not possible as we already have 2 intensifier_instances
+        # and n_workers==2
+        intent, run_info = self.PHB.get_next_run(
+            challengers=challengers,
+            incumbent=None, chooser=None, run_history=self.rh,
+            num_workers=2,
+        )
+        self.assertEqual(intent, RunInfoIntent.WAIT)
 
     def test_add_new_instance(self):
         """Test whether we can add a SH and when we should not"""
 
         # By default we do not create a SH
         # test adding the first instance!
-        self.assertEqual(len(self.PSH.intensifier_instances), 0)
-        self.assertTrue(self.PSH._add_new_instance(num_workers=1))
-        self.assertEqual(len(self.PSH.intensifier_instances), 1)
-        self.assertIsInstance(self.PSH.intensifier_instances[0], SuccessiveHalving)
+        self.assertEqual(len(self.PHB.intensifier_instances), 0)
+        self.assertTrue(self.PHB._add_new_instance(num_workers=1))
+        self.assertEqual(len(self.PHB.intensifier_instances), 1)
+        self.assertIsInstance(self.PHB.intensifier_instances[0], SuccessiveHalving)
         # A second call should not add a new SH
-        self.assertFalse(self.PSH._add_new_instance(num_workers=1))
+        self.assertFalse(self.PHB._add_new_instance(num_workers=1))
 
         # We try with 2 SH active
 
         # We effectively return true because we added a new SH
-        self.assertTrue(self.PSH._add_new_instance(num_workers=2))
+        self.assertTrue(self.PHB._add_new_instance(num_workers=2))
 
-        self.assertEqual(len(self.PSH.intensifier_instances), 2)
-        self.assertIsInstance(self.PSH.intensifier_instances[1], SuccessiveHalving)
+        self.assertEqual(len(self.PHB.intensifier_instances), 2)
+        self.assertIsInstance(self.PHB.intensifier_instances[1], SuccessiveHalving)
 
         # Trying to add a third one should return false
-        self.assertFalse(self.PSH._add_new_instance(num_workers=2))
-        self.assertEqual(len(self.PSH.intensifier_instances), 2)
+        self.assertFalse(self.PHB._add_new_instance(num_workers=2))
+        self.assertEqual(len(self.PHB.intensifier_instances), 2)
 
     def _exhaust_run_and_get_incumbent(self, sh, rh, num_workers=2):
         """
@@ -303,26 +361,25 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
             )
         return incumbent, inc_perf
 
-    def test_parallel_same_as_serial_SH(self):
+    def test_parallel_same_as_serial_HB(self):
         """Makes sure we behave the same as a serial run at the end"""
 
         # Get the run_history for a SH run:
         rh = RunHistory()
         stats = Stats(scenario=self.scen)
         stats.start_timing()
-        SH = SuccessiveHalving(
+        HB = Hyperband(
             stats=stats,
             traj_logger=TrajLogger(output_dir=None, stats=stats),
             rng=np.random.RandomState(12345),
-            deterministic=False,
+            deterministic=True,
             run_obj_time=False,
             instances=[1, 2, 3, 4, 5],
-            n_seeds=2,
             initial_budget=2,
             max_budget=5,
             eta=2,
         )
-        incumbent, inc_perf = self._exhaust_run_and_get_incumbent(SH, rh)
+        incumbent, inc_perf = self._exhaust_run_and_get_incumbent(HB, rh, num_workers=1)
 
         # Just to make sure nothing has changed from the SH side to make
         # this check invalid:
@@ -330,45 +387,32 @@ class TestParallelSuccessiveHalving(unittest.TestCase):
         self.assertEqual(incumbent, self.config3)
         self.assertEqual(inc_perf, 7.0)
 
-        # Do the same for PSH, but have multiple SH in there
-        # _add_new_instance returns true if it was able to add a new SH
-        # We call this method twice because we want 2 workers
-        self.assertTrue(self.PSH._add_new_instance(num_workers=2))
-        self.assertTrue(self.PSH._add_new_instance(num_workers=2))
-        incumbent_psh, inc_perf_psh = self._exhaust_run_and_get_incumbent(self.PSH, self.rh)
-        self.assertEqual(incumbent, incumbent_psh)
+        # Do the same for PHB, but have multiple SH in there
+        # This SH will be created via num_workers==2 in self._exhaust_run_and_get_incumbent
+        PHB = ParallelHyperband(
+            stats=self.stats,
+            traj_logger=TrajLogger(output_dir=None, stats=self.stats),
+            rng=np.random.RandomState(12345),
+            deterministic=True,
+            run_obj_time=False,
+            instances=[1, 2, 3, 4, 5],
+            initial_budget=2,
+            max_budget=5,
+            eta=2,
+        )
+        incumbent_phb, inc_perf_phb = self._exhaust_run_and_get_incumbent(PHB, self.rh)
+        self.assertEqual(incumbent, incumbent_phb)
 
-        # This makes sure there is a single incumbent in PSH
-        self.assertEqual(inc_perf, inc_perf_psh)
+        # This makes sure there is a single incumbent in PHB
+        self.assertEqual(inc_perf, inc_perf_phb)
 
         # We don't want to loose any configuration, and particularly
-        # we want to make sure the values of SH to PSH match
+        # we want to make sure the values of SH to PHB match
         self.assertEqual(len(self.rh.data), len(rh.data))
 
-        # We are comparing exhausted single vs parallel successive
-        # halving runs. The number and type of configs should be the same
-        # and is enforced as a dictionary key argument check. The number
-        # of runs will be different ParallelSuccesiveHalving has 2 SH intensifier_instances
-        # yet we make sure that after exhaustion, the budgets a config was run
-        # should match
-        configs_sh_rh = {}
-        for k, v in rh.data.items():
-            config_sh = rh.ids_config[k.config_id]
-            if config_sh not in configs_sh_rh:
-                configs_sh_rh[config_sh] = []
-            if v.cost not in configs_sh_rh[config_sh]:
-                configs_sh_rh[config_sh].append(v.cost)
-        configs_psh_rh = {}
-        for k, v in self.rh.data.items():
-            config_psh = self.rh.ids_config[k.config_id]
-            if config_psh not in configs_psh_rh:
-                configs_psh_rh[config_psh] = []
-            if v.cost not in configs_psh_rh[config_psh]:
-                configs_psh_rh[config_psh].append(v.cost)
-
-        # If this dictionaries are equal it means we have all configs
-        # and the values track the numbers and actual cost!
-        self.assertDictEqual(configs_sh_rh, configs_psh_rh)
+        # Because it is a deterministic run, the run histories must be the
+        # same on exhaustion
+        self.assertDictEqual(self.rh.data, rh.data)
 
 
 if __name__ == "__main__":
