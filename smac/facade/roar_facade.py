@@ -1,6 +1,7 @@
 import logging
 import typing
 
+import dask.distributed
 import numpy as np
 
 from smac.configspace import Configuration
@@ -50,7 +51,10 @@ class ROAR(SMAC4AC):
                  initial_configurations: typing.List[Configuration] = None,
                  stats: Stats = None,
                  rng: np.random.RandomState = None,
-                 run_id: int = 1):
+                 run_id: int = 1,
+                 dask_client: typing.Optional[dask.distributed.Client] = None,
+                 n_jobs: int = 1,
+                 ):
         """
         Constructor
 
@@ -92,7 +96,11 @@ class ROAR(SMAC4AC):
             Random number generator
         run_id: int, (default: 1)
             Run ID will be used as subfolder for output_dir.
-
+        dask_client : dask.distributed.Client
+            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+        n_jobs : int
+            Number of jobs. If > 1, this creates a dask client if ``dask_client`` is ``None``. Will
+            be ignored if ``dask_client`` is not ``None``.
         """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -124,5 +132,7 @@ class ROAR(SMAC4AC):
             acquisition_function_optimizer_kwargs=acquisition_function_optimizer_kwargs,
             model=RandomEPM,
             rng=rng,
-            stats=stats
+            stats=stats,
+            dask_client=dask_client,
+            n_jobs=n_jobs,
         )
