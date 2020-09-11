@@ -526,6 +526,8 @@
                     <span class="n">budget</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">,</span>
                 <span class="p">)</span>
 
+                <span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">config_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">[</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">]</span>
+
                 <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">submit_run</span><span class="p">(</span><span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">)</span>
 
                 <span class="c1"># There are 2 criteria that the stats object uses to know</span>

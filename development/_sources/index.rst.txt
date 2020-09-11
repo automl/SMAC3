@@ -55,7 +55,7 @@ Contents:
      |    howpublished={\\url{https://github.com/automl/SMAC3}}
      | }
 
-SMAC3 is mainly written in Python 3 and continuously tested with Python 3.5-3.6.
+SMAC3 is mainly written in Python 3 and continuously tested with Python 3.6-3.8.
 Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in
 C++11.
 
