@@ -96,7 +96,9 @@ class SMAC4AC(object):
                  smbo_class: Optional[Type[SMBO]] = None,
                  run_id: Optional[int] = None,
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
-                 random_configuration_chooser_kwargs: Optional[Dict] = None
+                 random_configuration_chooser_kwargs: Optional[Dict] = None,
+                 use_dask_backend: bool = False,
+                 n_jobs: int = 1,
                  ):
         """
         Constructor
@@ -175,7 +177,10 @@ class SMAC4AC(object):
             How often to choose a random configuration during the intensification procedure.
         random_configuration_chooser_kwargs : Optional[Dict]
             arguments of constructor for '~random_configuration_chooser'
-
+        use_dask_backend : bool
+            Whether to create a dask backend for evaluating configurations in parallel
+        n_jobs : int
+            Number of jobs. If > 1, this always creates a dask backend (even if ``use_dask_backend`` is ``False``).
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -357,10 +362,6 @@ class SMAC4AC(object):
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
 
-        # In case n_workers is passed to the tae runner, it means
-        # we treat this run as a parallel run
-        n_workers = tae_def_kwargs.pop('n_workers', 1)
-
         if 'ta' not in tae_def_kwargs:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
         if tae_runner is None:
@@ -384,8 +385,11 @@ class SMAC4AC(object):
 
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
-        if n_workers > 1:
-            tae_runner_instance = DaskParallelRunner(tae_runner_instance, n_workers=n_workers)
+        if n_jobs < 1:
+            raise ValueError('Number of tasks must be positive, but is %s' % str(n_jobs))
+        if n_jobs > 1 or use_dask_backend:
+            tae_runner_instance = DaskParallelRunner(tae_runner_instance, n_workers=n_jobs,
+                                                     output_directory=self.output_dir)
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!
