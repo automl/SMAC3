@@ -67,6 +67,8 @@ class DaskParallelRunner(BaseRunner):
         How much to wait for workers to be available if one fails
     output_directory: str, optional
         If given, this will be used for the dask worker directory and for storing server information.
+        If a dask client is passed, it will only be used for storing server information as the
+        worker directory must be set by the program/user starting the workers.
     dask_client: dask.distributed.Client
         User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
     """
