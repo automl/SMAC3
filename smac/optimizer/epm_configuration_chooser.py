@@ -197,7 +197,7 @@ class EPMChooser(object):
         else:
             all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
             x_best = self.incumbent
-            x_best_array = convert_configurations_to_array([all_configs])
+            x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self.runhistory.get_cost(x_best)
             best_observation_as_array = np.array(best_observation).reshape((1, 1))
             # It's unclear how to do this for inv scaling and potential future scaling.
