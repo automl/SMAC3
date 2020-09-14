@@ -438,7 +438,8 @@ class SMBO(object):
             budget=run_info.budget,
             starttime=result.starttime,
             endtime=result.endtime,
-            force_update=True
+            force_update=True,
+            additional_info=result.additional_info,
         )
         self.stats.n_configs = len(self.runhistory.config_ids)
 
