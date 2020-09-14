@@ -53,7 +53,7 @@ class ROAR(SMAC4AC):
                  rng: np.random.RandomState = None,
                  run_id: int = 1,
                  dask_client: typing.Optional[dask.distributed.Client] = None,
-                 n_jobs: int = 1,
+                 n_jobs: typing.Optional[int] = 1,
                  ):
         """
         Constructor
@@ -98,9 +98,10 @@ class ROAR(SMAC4AC):
             Run ID will be used as subfolder for output_dir.
         dask_client : dask.distributed.Client
             User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-        n_jobs : int
-            Number of jobs. If > 1, this creates a dask client if ``dask_client`` is ``None``. Will
+        n_jobs : int, optional
+            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
             be ignored if ``dask_client`` is not ``None``.
+            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
         """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 

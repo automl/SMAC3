@@ -4,6 +4,7 @@ import os
 from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 
 import dask.distributed
+import joblib
 import numpy as np
 
 # tae
@@ -99,7 +100,7 @@ class SMAC4AC(object):
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
                  random_configuration_chooser_kwargs: Optional[Dict] = None,
                  dask_client: Optional[dask.distributed.Client] = None,
-                 n_jobs: int = 1,
+                 n_jobs: Optional[int] = 1,
                  ):
         """
         Constructor
@@ -180,9 +181,10 @@ class SMAC4AC(object):
             arguments of constructor for '~random_configuration_chooser'
         dask_client : dask.distributed.Client
             User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-        n_jobs : int
-            Number of jobs. If > 1, this creates a dask client if ``dask_client`` is ``None``. Will
+        n_jobs : int, optional
+            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
             be ignored if ``dask_client`` is not ``None``.
+            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -387,8 +389,14 @@ class SMAC4AC(object):
 
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
-        if n_jobs < 1:
-            raise ValueError('Number of tasks must be positive, but is %s' % str(n_jobs))
+        if n_jobs is None or n_jobs == 1:
+            n_jobs = 1
+        elif n_jobs == -1:
+            n_jobs = joblib.cpu_count()
+        elif n_jobs > 0:
+            pass
+        else:
+            raise ValueError('Number of tasks must be positive, None or -1, but is %s' % str(n_jobs))
         if n_jobs > 1 or dask_client is not None:
             tae_runner_instance = DaskParallelRunner(
                 tae_runner_instance,
