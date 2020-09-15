@@ -3,9 +3,9 @@ scipy>=0.18.1
 psutil
 pynisher>=0.4.1
 ConfigSpace>=0.4.14,<0.5
+joblib
 scikit-learn>=0.22.0
 pyrfr>=0.8.0
-joblib
 lazy_import
 dask
 distributed

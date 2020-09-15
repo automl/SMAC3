@@ -1,3 +1,4 @@
+import os
 import time
 import typing
 import warnings
@@ -61,15 +62,23 @@ class DaskParallelRunner(BaseRunner):
     single_worker: BaseRunner
         A runner to run in a distributed fashion
     n_workers: int
-        Number of workers to use for distributed run
+        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
     patience: int
         How much to wait for workers to be available if one fails
+    output_directory: str, optional
+        If given, this will be used for the dask worker directory and for storing server information.
+        If a dask client is passed, it will only be used for storing server information as the
+        worker directory must be set by the program/user starting the workers.
+    dask_client: dask.distributed.Client
+        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
     """
     def __init__(
         self,
         single_worker: BaseRunner,
         n_workers: int,
         patience: int = 5,
+        output_directory: typing.Optional[str] = None,
+        dask_client: typing.Optional[dask.distributed.Client] = None,
     ):
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
@@ -88,11 +97,22 @@ class DaskParallelRunner(BaseRunner):
         # How much time to wait for workers to be available
         self.patience = patience
 
+        self.output_directory = output_directory
+
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
-        # workers to be instantiated as demonic
+        # workers to be instantiated as demonic - this cannot be passed via worker_kwargs
         dask.config.set({'distributed.worker.daemon': False})
-        self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1)
+        if dask_client is None:
+            self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1,
+                                 local_directory=output_directory)
+        else:
+            self.client = dask_client
         self.futures = []  # type: typing.List[Future]
+
+        self.scheduler_info = self.client._get_scheduler_info()
+        if self.output_directory:
+            self.scheduler_file = os.path.join(self.output_directory, '.dask_scheduler_file')
+            self.client.write_scheduler_file(scheduler_file=self.scheduler_file)
 
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration

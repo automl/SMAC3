@@ -3,6 +3,8 @@ import logging
 import os
 from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 
+import dask.distributed
+import joblib
 import numpy as np
 
 # tae
@@ -96,7 +98,9 @@ class SMAC4AC(object):
                  smbo_class: Optional[Type[SMBO]] = None,
                  run_id: Optional[int] = None,
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
-                 random_configuration_chooser_kwargs: Optional[Dict] = None
+                 random_configuration_chooser_kwargs: Optional[Dict] = None,
+                 dask_client: Optional[dask.distributed.Client] = None,
+                 n_jobs: Optional[int] = 1,
                  ):
         """
         Constructor
@@ -175,7 +179,12 @@ class SMAC4AC(object):
             How often to choose a random configuration during the intensification procedure.
         random_configuration_chooser_kwargs : Optional[Dict]
             arguments of constructor for '~random_configuration_chooser'
-
+        dask_client : dask.distributed.Client
+            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+        n_jobs : int, optional
+            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
+            be ignored if ``dask_client`` is not ``None``.
+            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -357,10 +366,6 @@ class SMAC4AC(object):
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
 
-        # In case n_workers is passed to the tae runner, it means
-        # we treat this run as a parallel run
-        n_workers = tae_def_kwargs.pop('n_workers', 1)
-
         if 'ta' not in tae_def_kwargs:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
         if tae_runner is None:
@@ -384,8 +389,21 @@ class SMAC4AC(object):
 
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
-        if n_workers > 1:
-            tae_runner_instance = DaskParallelRunner(tae_runner_instance, n_workers=n_workers)
+        if n_jobs is None or n_jobs == 1:
+            _n_jobs = 1
+        elif n_jobs == -1:
+            _n_jobs = joblib.cpu_count()
+        elif n_jobs > 0:
+            _n_jobs = n_jobs
+        else:
+            raise ValueError('Number of tasks must be positive, None or -1, but is %s' % str(n_jobs))
+        if _n_jobs > 1 or dask_client is not None:
+            tae_runner_instance = DaskParallelRunner(
+                tae_runner_instance,
+                n_workers=_n_jobs,
+                output_directory=self.output_dir,
+                dask_client=dask_client,
+            )
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!
