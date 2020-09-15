@@ -41,11 +41,6 @@ class StatusType(Enum):
         return obj
 
 
-class BudgetExhaustedException(Exception):
-    """Exception indicating that time- or memory-budgets are exhausted."""
-    pass
-
-
 class TAEAbortException(Exception):
     """Exception indicating that the target algorithm suggests an ABORT of
     SMAC, usually because it assumes that all further runs will surely fail.
@@ -56,10 +51,4 @@ class TAEAbortException(Exception):
 class FirstRunCrashedException(TAEAbortException):
     """Exception indicating that the first run crashed (depending on options
     this could trigger an ABORT of SMAC.) """
-    pass
-
-
-class CappedRunException(Exception):
-    """Exception indicating that a run was capped with a cutoff smaller than
-    the actual timeout """
     pass
