@@ -201,7 +201,8 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
         if X.shape[1] != self.n_params + self.n_feats:
-            raise ValueError('Rows in X should have %d entries but have %d!' % (self.n_params + self.n_feats, X.shape[1]))
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.n_params + self.n_feats, X.shape[1]))
 
         if self._apply_pca:
             try:

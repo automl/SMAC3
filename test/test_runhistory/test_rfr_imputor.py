@@ -108,8 +108,8 @@ class ImputorTest(unittest.TestCase):
 
             if add:
                 rh.add(config=config, cost=runtime, time=runtime,
-                            status=status, instance_id=instance_id,
-                            seed=seed, additional_info=None)
+                       status=status, instance_id=instance_id,
+                       seed=seed, additional_info=None)
         return cs, rh
 
     def get_scenario(self, instance_features=None):

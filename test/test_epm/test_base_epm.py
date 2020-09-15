@@ -3,9 +3,7 @@ import unittest.mock
 
 import numpy as np
 
-from ConfigSpace import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, \
-    OrdinalHyperparameter, EqualsCondition
+from ConfigSpace import UniformFloatHyperparameter
 
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import get_types
@@ -34,7 +32,7 @@ class TestRFWithInstances(unittest.TestCase):
             y = np.random.rand(num_samples)
             return X, y
 
-        with unittest.mock.patch.object(AbstractEPM, '_train') as train_mock:
+        with unittest.mock.patch.object(AbstractEPM, '_train'):
             with unittest.mock.patch.object(AbstractEPM, '_predict') as predict_mock:
 
                 predict_mock.side_effect = lambda x, _: (x, x)
