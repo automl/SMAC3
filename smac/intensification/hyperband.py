@@ -66,6 +66,8 @@ class Hyperband(SuccessiveHalving):
         * highest_executed_budget - incumbent is the best in the highest budget run so far (default)
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
+    identifier: int
+        Allows to identify the Hyperband instance in case of multiple ones
     """
 
     def __init__(self,
@@ -85,6 +87,7 @@ class Hyperband(SuccessiveHalving):
                  adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
+                 identifier: int = 0,
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -105,8 +108,10 @@ class Hyperband(SuccessiveHalving):
                          min_chall=min_chall,
                          incumbent_selection=incumbent_selection,)
 
+        self.identifier = identifier
+
         self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+            self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
 
         # to track completed hyperband iterations
         self.hb_iters = 0
@@ -283,5 +288,6 @@ class Hyperband(SuccessiveHalving):
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
             adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
-            inst_seed_pairs=self.inst_seed_pairs  # additional argument to avoid
+            inst_seed_pairs=self.inst_seed_pairs,  # additional argument to avoid
+            identifier=self.identifier,
         )  # processing instances & seeds again
