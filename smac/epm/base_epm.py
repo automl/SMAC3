@@ -96,6 +96,7 @@ class AbstractEPM(object):
 
         self.pca = PCA(n_components=self.pca_components)
         self.scaler = MinMaxScaler()
+        self._apply_pca = False
 
         # Never use a lower variance than this
         self.var_threshold = VERY_SMALL_NUMBER
@@ -150,6 +151,9 @@ class AbstractEPM(object):
                     np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
                     dtype=np.uint,
                 )
+            self._apply_pca = True
+        else:
+            self._apply_pca = False
 
         return self._train(X, Y)
 
@@ -200,7 +204,7 @@ class AbstractEPM(object):
         if X.shape[1] != len(self._initial_types):
             raise ValueError('Rows in X should have %d entries but have %d!' % (len(self._initial_types), X.shape[1]))
 
-        if self.pca_components:
+        if self._apply_pca:
             try:
                 X_feats = X[:, -self.n_feats:]
                 X_feats = self.scaler.transform(X_feats)
