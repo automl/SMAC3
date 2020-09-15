@@ -61,18 +61,13 @@ class ImputorTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
-        self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
-        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
-        self.cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
-                                                                lower=-10, upper=10, default_value=0))
 
-    def get_model(self, instance_features=None):
+    def get_model(self, cs, instance_features=None):
         if instance_features:
             instance_features = numpy.array([instance_features[key] for key in instance_features])
-        types, bounds = get_types(self.cs, instance_features)
+        types, bounds = get_types(cs, instance_features)
         model = RandomForestWithInstances(
-            configspace=self.cs,
+            configspace=cs,
             types=types,
             bounds=bounds,
             instance_features=instance_features,
@@ -82,6 +77,12 @@ class ImputorTest(unittest.TestCase):
         return model
 
     def get_runhistory(self, num_success, num_capped, num_timeout):
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
+        cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
+                                                           lower=-10, upper=10, default_value=0))
+
         rh = runhistory.RunHistory()
         rs = numpy.random.RandomState(1)
         successes = 0
@@ -89,7 +90,7 @@ class ImputorTest(unittest.TestCase):
         timeouts = 0
         while successes < num_success or capped < num_capped or timeouts < num_timeout:
             config, seed, runtime, status, instance_id = \
-                generate_config(cs=self.cs, rs=rs)
+                generate_config(cs=cs, rs=rs)
             if status == StatusType.SUCCESS and successes < num_success:
                 successes += 1
                 add = True
@@ -109,7 +110,7 @@ class ImputorTest(unittest.TestCase):
                 rh.add(config=config, cost=runtime, time=runtime,
                             status=status, instance_id=instance_id,
                             seed=seed, additional_info=None)
-        return rh
+        return cs, rh
 
     def get_scenario(self, instance_features=None):
         scen = Scen()
@@ -153,7 +154,7 @@ class ImputorTest(unittest.TestCase):
                                                  threshold=cutoff * 10,
                                                  change_threshold=0.01,
                                                  max_iter=5,
-                                                 model=self.get_model())
+                                                 model=self.get_model(cs))
 
             imp_y = imputor.impute(censored_X=cen_X, censored_y=cen_y,
                                    uncensored_X=uncen_X,
@@ -170,8 +171,11 @@ class ImputorTest(unittest.TestCase):
 
         # Without instance features
         rs = numpy.random.RandomState(1)
+
+        cs, rh = self.get_runhistory(num_success=5, num_timeout=1, num_capped=2)
+
         scen = self.get_scenario()
-        model = self.get_model()
+        model = self.get_model(cs)
         imputor = rfr_imputator.RFRImputator(rng=rs,
                                              cutoff=scen.cutoff,
                                              threshold=scen.cutoff * 10,
@@ -184,14 +188,14 @@ class ImputorTest(unittest.TestCase):
             impute_censored_data=True, impute_state=[StatusType.TIMEOUT],
             imputor=imputor, rng=rs,
         )
-        rh = self.get_runhistory(num_success=5, num_timeout=1, num_capped=2)
+
         self.assertEqual(r2e.transform(rh)[1].shape, (8, 1))
         self.assertEqual(r2e.transform(rh)[1].shape, (8, 1))
 
         # Now with instance features
         instance_features = {run_key.instance_id: numpy.random.rand(10) for run_key in rh.data}
         scen = self.get_scenario(instance_features)
-        model = self.get_model(instance_features)
+        model = self.get_model(cs, instance_features)
 
         with unittest.mock.patch.object(model, attribute='train', wraps=model.train) as train_wrapper:
             imputor = rfr_imputator.RFRImputator(rng=rs,
