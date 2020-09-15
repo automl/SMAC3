@@ -92,10 +92,11 @@ class AbstractEPM(object):
         else:
             self.n_feats = 0
 
-        self.n_params = None  # will be updated on train()
+        self.n_params = len(self.configspace.get_hyperparameters())
 
         self.pca = PCA(n_components=self.pca_components)
         self.scaler = MinMaxScaler()
+        self._apply_pca = False
 
         # Never use a lower variance than this
         self.var_threshold = VERY_SMALL_NUMBER
@@ -122,16 +123,13 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
-        self.types = copy.deepcopy(self._initial_types)
 
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != len(self.types):
-            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (len(self.types), X.shape[1]))
+        if X.shape[1] != self.n_params + self.n_feats:
+            raise ValueError('Feature mismatch: X should have %d features, but has %d' % (self.n_params, X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError('X.shape[0] (%s) != y.shape[0] (%s)' % (X.shape[0], Y.shape[0]))
-
-        self.n_params = X.shape[1] - self.n_feats
 
         # reduce dimensionality of features of larger than PCA_DIM
         if self.pca_components and X.shape[0] > self.pca.n_components and self.n_feats >= self.pca_components:
@@ -150,6 +148,11 @@ class AbstractEPM(object):
                     np.hstack((self.types[:self.n_params], np.zeros((X_feats.shape[1])))),
                     dtype=np.uint,
                 )
+            self._apply_pca = True
+        else:
+            self._apply_pca = False
+            if hasattr(self, "types"):
+                self.types = copy.deepcopy(self._initial_types)
 
         return self._train(X, Y)
 
@@ -197,10 +200,11 @@ class AbstractEPM(object):
         """
         if len(X.shape) != 2:
             raise ValueError('Expected 2d array, got %dd array!' % len(X.shape))
-        if X.shape[1] != len(self._initial_types):
-            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self._initial_types), X.shape[1]))
+        if X.shape[1] != self.n_params + self.n_feats:
+            raise ValueError('Rows in X should have %d entries but have %d!' %
+                             (self.n_params + self.n_feats, X.shape[1]))
 
-        if self.pca_components:
+        if self._apply_pca:
             try:
                 X_feats = X[:, -self.n_feats:]
                 X_feats = self.scaler.transform(X_feats)
