@@ -291,6 +291,7 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
+<span class="kn">import</span> <span class="nn">dask.distributed</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -340,7 +341,10 @@
                  <span class="n">initial_configurations</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+                 <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">dask_client</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
 
@@ -382,7 +386,12 @@
 <span class="sd">            Random number generator</span>
 <span class="sd">        run_id: int, (default: 1)</span>
 <span class="sd">            Run ID will be used as subfolder for output_dir.</span>
-
+<span class="sd">        dask_client : dask.distributed.Client</span>
+<span class="sd">            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
+<span class="sd">        n_jobs : int, optional</span>
+<span class="sd">            Number of jobs. If &gt; 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will</span>
+<span class="sd">            be ignored if ``dask_client`` is not ``None``.</span>
+<span class="sd">            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -414,7 +423,9 @@
             <span class="n">acquisition_function_optimizer_kwargs</span><span class="o">=</span><span class="n">acquisition_function_optimizer_kwargs</span><span class="p">,</span>
             <span class="n">model</span><span class="o">=</span><span class="n">RandomEPM</span><span class="p">,</span>
             <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
-            <span class="n">stats</span><span class="o">=</span><span class="n">stats</span>
+            <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+            <span class="n">dask_client</span><span class="o">=</span><span class="n">dask_client</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="p">)</span></div>
 </pre></div>
 

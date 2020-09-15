@@ -290,7 +290,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for smac.tae.dask_runner</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -353,15 +354,23 @@
 <span class="sd">    single_worker: BaseRunner</span>
 <span class="sd">        A runner to run in a distributed fashion</span>
 <span class="sd">    n_workers: int</span>
-<span class="sd">        Number of workers to use for distributed run</span>
+<span class="sd">        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.</span>
 <span class="sd">    patience: int</span>
 <span class="sd">        How much to wait for workers to be available if one fails</span>
+<span class="sd">    output_directory: str, optional</span>
+<span class="sd">        If given, this will be used for the dask worker directory and for storing server information.</span>
+<span class="sd">        If a dask client is passed, it will only be used for storing server information as the</span>
+<span class="sd">        worker directory must be set by the program/user starting the workers.</span>
+<span class="sd">    dask_client: dask.distributed.Client</span>
+<span class="sd">        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">single_worker</span><span class="p">:</span> <span class="n">BaseRunner</span><span class="p">,</span>
         <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">output_directory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dask_client</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DaskParallelRunner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">ta</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span>
@@ -380,11 +389,22 @@
         <span class="c1"># How much time to wait for workers to be available</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">patience</span> <span class="o">=</span> <span class="n">patience</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">output_directory</span>
+
         <span class="c1"># Because a run() method can have pynisher, we need to prevent the multiprocessing</span>
-        <span class="c1"># workers to be instantiated as demonic</span>
+        <span class="c1"># workers to be instantiated as demonic - this cannot be passed via worker_kwargs</span>
         <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;distributed.worker.daemon&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                 <span class="n">local_directory</span><span class="o">=</span><span class="n">output_directory</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">dask_client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Future]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_get_scheduler_info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">,</span> <span class="s1">&#39;.dask_scheduler_file&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_scheduler_file</span><span class="p">(</span><span class="n">scheduler_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.submit_run"><a class="viewcode-back" href="../../../apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.submit_run">[docs]</a>    <span class="k">def</span> <span class="nf">submit_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;This function submits a configuration</span>

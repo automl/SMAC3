@@ -33,11 +33,13 @@ if __name__ == '__main__':
     # fmin_smac assumes that the function is deterministic
     # and uses under the hood the SMAC4HPO
     # n_workers tells the SMBO loop to execute in parallel
-    x, cost, smac = fmin_smac(func=rosenbrock_2d,
-                              intensifier=SimpleIntensifier,
-                              tae_runner_kwargs={'n_workers': 4},
-                              x0=[-3, -4],
-                              bounds=[(-5, 10), (-5, 10)],
-                              maxfun=25,
-                              rng=3)  # Passing a seed makes fmin_smac determistic
+    x, cost, smac = fmin_smac(
+        func=rosenbrock_2d,
+        intensifier=SimpleIntensifier,
+        x0=[-3, -4],
+        bounds=[(-5, 10), (-5, 10)],
+        maxfun=25,
+        rng=3,
+        n_jobs=4,
+    )  # Passing a seed makes fmin_smac determistic
     print("Best x: %s; with cost: %f" % (str(x), cost))

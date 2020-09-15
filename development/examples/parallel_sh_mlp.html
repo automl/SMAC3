@@ -370,10 +370,10 @@ of SuccessiveHalving to use the idle resources.</p>
     <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
                 <span class="n">tae_runner</span><span class="o">=</span><span class="n">mlp_from_cfg</span><span class="p">,</span>
-                <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_workers&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
                 <span class="n">intensifier</span><span class="o">=</span><span class="n">ParallelSuccessiveHalving</span><span class="p">,</span>
                 <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>
-                <span class="n">initial_design</span><span class="o">=</span><span class="n">RandomConfigurations</span><span class="p">)</span>
+                <span class="n">initial_design</span><span class="o">=</span><span class="n">RandomConfigurations</span><span class="p">,</span>
+                <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
     <span class="c1"># Example call of the function with default values</span>
     <span class="c1"># It returns: Status, Cost, Runtime, Additional Infos</span>

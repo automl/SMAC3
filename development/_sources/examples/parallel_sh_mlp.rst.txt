@@ -88,10 +88,10 @@ of SuccessiveHalving to use the idle resources.
         # To optimize, we pass the function to the SMAC-object
         smac = ROAR(scenario=scenario, rng=np.random.RandomState(42),
                     tae_runner=mlp_from_cfg,
-                    tae_runner_kwargs={'n_workers': 4},
                     intensifier=ParallelSuccessiveHalving,
                     intensifier_kwargs=intensifier_kwargs,
-                    initial_design=RandomConfigurations)
+                    initial_design=RandomConfigurations,
+                    n_jobs=4)
 
         # Example call of the function with default values
         # It returns: Status, Cost, Runtime, Additional Infos

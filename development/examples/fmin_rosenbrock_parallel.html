@@ -327,13 +327,15 @@ launch parallel configurations via n_workers</p>
     <span class="c1"># fmin_smac assumes that the function is deterministic</span>
     <span class="c1"># and uses under the hood the SMAC4HPO</span>
     <span class="c1"># n_workers tells the SMBO loop to execute in parallel</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">smac</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rosenbrock_2d</span><span class="p">,</span>
-                              <span class="n">intensifier</span><span class="o">=</span><span class="n">SimpleIntensifier</span><span class="p">,</span>
-                              <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;n_workers&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
-                              <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">],</span>
-                              <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span>
-                              <span class="n">maxfun</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-                              <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Passing a seed makes fmin_smac determistic</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">smac</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span>
+        <span class="n">func</span><span class="o">=</span><span class="n">rosenbrock_2d</span><span class="p">,</span>
+        <span class="n">intensifier</span><span class="o">=</span><span class="n">SimpleIntensifier</span><span class="p">,</span>
+        <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">],</span>
+        <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span>
+        <span class="n">maxfun</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+        <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="p">)</span>  <span class="c1"># Passing a seed makes fmin_smac determistic</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best x: </span><span class="si">%s</span><span class="s2">; with cost: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
 </div>

@@ -293,6 +293,8 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
+<span class="kn">import</span> <span class="nn">dask.distributed</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="c1"># tae</span>
@@ -386,7 +388,9 @@
                  <span class="n">smbo_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">random_configuration_chooser_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                 <span class="n">random_configuration_chooser_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">dask_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Constructor</span>
@@ -465,7 +469,12 @@
 <span class="sd">            How often to choose a random configuration during the intensification procedure.</span>
 <span class="sd">        random_configuration_chooser_kwargs : Optional[Dict]</span>
 <span class="sd">            arguments of constructor for &#39;~random_configuration_chooser&#39;</span>
-
+<span class="sd">        dask_client : dask.distributed.Client</span>
+<span class="sd">            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
+<span class="sd">        n_jobs : int, optional</span>
+<span class="sd">            Number of jobs. If &gt; 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will</span>
+<span class="sd">            be ignored if ``dask_client`` is not ``None``.</span>
+<span class="sd">            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -647,10 +656,6 @@
         <span class="k">if</span> <span class="n">tae_runner_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tae_runner_kwargs</span><span class="p">)</span>
 
-        <span class="c1"># In case n_workers is passed to the tae runner, it means</span>
-        <span class="c1"># we treat this run as a parallel run</span>
-        <span class="n">n_workers</span> <span class="o">=</span> <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_workers&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="s1">&#39;ta&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tae_def_kwargs</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">ta</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">if</span> <span class="n">tae_runner</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -674,8 +679,21 @@
 
         <span class="c1"># In case of a parallel run, wrap the single worker in a parallel</span>
         <span class="c1"># runner</span>
-        <span class="k">if</span> <span class="n">n_workers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">DaskParallelRunner</span><span class="p">(</span><span class="n">tae_runner_instance</span><span class="p">,</span> <span class="n">n_workers</span><span class="o">=</span><span class="n">n_workers</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_jobs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">_n_jobs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">_n_jobs</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Number of tasks must be positive, None or -1, but is </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">_n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">DaskParallelRunner</span><span class="p">(</span>
+                <span class="n">tae_runner_instance</span><span class="p">,</span>
+                <span class="n">n_workers</span><span class="o">=</span><span class="n">_n_jobs</span><span class="p">,</span>
+                <span class="n">output_directory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>
+                <span class="n">dask_client</span><span class="o">=</span><span class="n">dask_client</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="c1"># Check that overall objective and tae objective are the same</span>
         <span class="c1"># TODO: remove these two ignores once the scenario object knows all its attributes!</span>
