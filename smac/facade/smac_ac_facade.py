@@ -390,17 +390,17 @@ class SMAC4AC(object):
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
         if n_jobs is None or n_jobs == 1:
-            n_jobs = 1
+            _n_jobs = 1
         elif n_jobs == -1:
-            n_jobs = joblib.cpu_count()
+            _n_jobs = joblib.cpu_count()
         elif n_jobs > 0:
-            pass
+            _n_jobs = n_jobs
         else:
             raise ValueError('Number of tasks must be positive, None or -1, but is %s' % str(n_jobs))
-        if n_jobs > 1 or dask_client is not None:
+        if _n_jobs > 1 or dask_client is not None:
             tae_runner_instance = DaskParallelRunner(
                 tae_runner_instance,
-                n_workers=n_jobs,
+                n_workers=_n_jobs,
                 output_directory=self.output_dir,
                 dask_client=dask_client,
             )
