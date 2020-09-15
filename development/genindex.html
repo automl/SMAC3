@@ -150,6 +150,8 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.parallel_hyperband.html">smac.intensification.parallel_hyperband module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -410,8 +412,14 @@
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_main_options">_add_main_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
-      <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._add_new_SH">_add_new_SH() (smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+      <li><a href="apidoc/smac.intensification.parallel_hyperband.html#smac.intensification.parallel_hyperband.ParallelHyperband._add_new_instance">_add_new_instance() (smac.intensification.parallel_hyperband.ParallelHyperband method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance">(smac.intensification.parallel_scheduling.ParallelScheduler method)</a>
 </li>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._add_new_instance">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_scen_options">_add_scen_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader._add_smac_options">_add_smac_options() (smac.utils.io.cmd_reader.CMDReader method)</a>
@@ -578,6 +586,14 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.intensification.parallel_hyperband.html#smac.intensification.parallel_hyperband.ParallelHyperband._get_intensifier_ranking">_get_intensifier_ranking() (smac.intensification.parallel_hyperband.ParallelHyperband method)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler._get_intensifier_ranking">(smac.intensification.parallel_scheduling.ParallelScheduler method)</a>
+</li>
+        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._get_intensifier_ranking">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">_get_mean_costs() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_next_inc_run">_get_next_inc_run() (smac.intensification.intensification.Intensifier method)</a>
@@ -774,7 +790,7 @@
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._sort_hyperparameters">_sort_hyperparameters() (smac.configspace.ConfigurationSpace method)</a>
 </li>
-      <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving._sort_sh_instances_by_stage">_sort_sh_instances_by_stage() (smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+      <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler._sort_instances_by_stage">_sort_instances_by_stage() (smac.intensification.parallel_scheduling.ParallelScheduler method)</a>
 </li>
       <li><a href="apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario._to_str_and_warn">_to_str_and_warn() (smac.scenario.scenario.Scenario method)</a>
 </li>
@@ -1249,7 +1265,7 @@
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_run">(smac.intensification.intensification.Intensifier method)</a>
 </li>
-        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving.get_next_run">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler.get_next_run">(smac.intensification.parallel_scheduling.ParallelScheduler method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#smac.intensification.simple_intensifier.SimpleIntensifier.get_next_run">(smac.intensification.simple_intensifier.SimpleIntensifier method)</a>
 </li>
@@ -1606,6 +1622,10 @@
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#module-smac.intensification.intensification">smac.intensification.intensification</a>
 </li>
+        <li><a href="apidoc/smac.intensification.parallel_hyperband.html#module-smac.intensification.parallel_hyperband">smac.intensification.parallel_hyperband</a>
+</li>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#module-smac.intensification.parallel_scheduling">smac.intensification.parallel_scheduling</a>
+</li>
         <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#module-smac.intensification.parallel_successive_halving">smac.intensification.parallel_successive_halving</a>
 </li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#module-smac.intensification.simple_intensifier">smac.intensification.simple_intensifier</a>
@@ -1773,6 +1793,10 @@
         <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.par_factor">(smac.tae.serial_runner.SerialRunner attribute)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.intensification.parallel_hyperband.html#smac.intensification.parallel_hyperband.ParallelHyperband">ParallelHyperband (class in smac.intensification.parallel_hyperband)</a>
+</li>
+      <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler">ParallelScheduler (class in smac.intensification.parallel_scheduling)</a>
+</li>
       <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving">ParallelSuccessiveHalving (class in smac.intensification.parallel_successive_halving)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.parse_main_command">parse_main_command() (smac.utils.io.cmd_reader.CMDReader method)</a>
@@ -1807,10 +1831,10 @@
         <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.portfolio">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
 </li>
       </ul></li>
-      <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">predict() (smac.epm.base_epm.AbstractEPM method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">predict() (smac.epm.base_epm.AbstractEPM method)</a>
+</li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">predict_marginalized_over_instances() (smac.epm.base_epm.AbstractEPM method)</a>
 
       <ul>
@@ -1838,7 +1862,7 @@
 </li>
         <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.process_results">(smac.intensification.intensification.Intensifier method)</a>
 </li>
-        <li><a href="apidoc/smac.intensification.parallel_successive_halving.html#smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving.process_results">(smac.intensification.parallel_successive_halving.ParallelSuccessiveHalving method)</a>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler.process_results">(smac.intensification.parallel_scheduling.ParallelScheduler method)</a>
 </li>
         <li><a href="apidoc/smac.intensification.simple_intensifier.html#smac.intensification.simple_intensifier.SimpleIntensifier.process_results">(smac.intensification.simple_intensifier.SimpleIntensifier method)</a>
 </li>
@@ -2335,6 +2359,20 @@
 </li>
       </ul></li>
       <li>
+    smac.intensification.parallel_hyperband
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.parallel_hyperband.html#module-smac.intensification.parallel_hyperband">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.intensification.parallel_scheduling
+
+      <ul>
+        <li><a href="apidoc/smac.intensification.parallel_scheduling.html#module-smac.intensification.parallel_scheduling">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.intensification.parallel_successive_halving
 
       <ul>
@@ -2362,6 +2400,8 @@
         <li><a href="apidoc/smac.optimizer.html#module-smac.optimizer">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.acquisition
 
@@ -2369,8 +2409,6 @@
         <li><a href="apidoc/smac.optimizer.acquisition.html#module-smac.optimizer.acquisition">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.ei_optimization
 

@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_hyperband.html">smac.intensification.parallel_hyperband module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
@@ -302,7 +304,7 @@
 <p>An example for the usage of a model-free SuccessiveHalving intensifier in SMAC,
 for parallel execution. The configurations are randomly sampled.</p>
 <p>This examples uses a real-valued SuccessiveHalving through epochs.</p>
-<p>4 workers are allocated for this run. As soon as the any worker is iddle,
+<p>4 workers are allocated for this run. As soon as the any worker is idle,
 the ParallelSuccessiveHalving creates an additional internal instance
 of SuccessiveHalving to use the idle resources.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
@@ -362,7 +364,7 @@ of SuccessiveHalving to use the idle resources.</p>
 
     <span class="c1"># Intensification parameters</span>
     <span class="c1"># Intensifier will allocate from 5 to a maximum of 25 epochs to each configuration</span>
-    <span class="c1"># Succesive Halving child-instances are created to prevent idle</span>
+    <span class="c1"># Successive Halving child-instances are created to prevent idle</span>
     <span class="c1"># workers.</span>
     <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;max_budget&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span> <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                           <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;instance_order&#39;</span><span class="p">:</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">}</span>
