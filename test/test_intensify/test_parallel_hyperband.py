@@ -103,10 +103,10 @@ class TestParallelHyperband(unittest.TestCase):
 
     def test_process_results_via_sourceid(self):
         """Makes sure source id is honored when deciding
-        which SH will consume the result/run_info
+        which HB instance will consume the result/run_info
 
         """
-        # Mock the SH so we can make sure the correct item is passed
+        # Mock the HB instance so we can make sure the correct item is passed
         for i in range(10):
             self.PHB.intensifier_instances[i] = mock.Mock()
             self.PHB.intensifier_instances[i].process_results.return_value = (self.config1, 0.5)
@@ -128,7 +128,7 @@ class TestParallelHyperband(unittest.TestCase):
             )
 
             # make sure results aren't messed up via magic variable
-            # That is we check only the proper SH has this
+            # That is we check only the proper HB instance has this
             magic = time.time()
 
             result = RunValue(
@@ -158,7 +158,7 @@ class TestParallelHyperband(unittest.TestCase):
                 self.PHB.intensifier_instances[i].process_results.call_args[1]['result'], result)
             all_other_run_infos, all_other_results = [], []
             for j in range(len(self.PHB.intensifier_instances)):
-                # Skip the expected SH
+                # Skip the expected HB instance
                 if i == j:
                     continue
                 if self.PHB.intensifier_instances[j].process_results.call_args is None:
@@ -171,8 +171,8 @@ class TestParallelHyperband(unittest.TestCase):
             self.assertNotIn(run_info, all_other_run_infos)
             self.assertNotIn(result, all_other_results)
 
-    def test_get_next_run_single_SH(self):
-        """Makes sure that a single SH returns a valid config"""
+    def test_get_next_run_single_HB_instance(self):
+        """Makes sure that a single HB instance returns a valid config"""
 
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(30):
@@ -206,7 +206,7 @@ class TestParallelHyperband(unittest.TestCase):
         # And we do not even complete 1 iteration, so s has to be 1
         self.assertEqual(self.PHB.intensifier_instances[0].s, 1)
 
-        # We should not create more SH intensifier_instances
+        # We should not create more HB instance intensifier_instances
         self.assertEqual(len(self.PHB.intensifier_instances), 1)
 
         # We are running with:
@@ -223,11 +223,11 @@ class TestParallelHyperband(unittest.TestCase):
         # n_challengers=2 (int(np.floor((self.s_max + 1) / (self.s + 1)) * self.eta ** self.s))
         self.assertEqual(len(self.PHB.intensifier_instances[0].sh_intensifier.n_configs_in_stage), 2)
 
-    def test_get_next_run_multiple_SH(self):
-        """Makes sure that two  SH can properly coexist and tag
+    def test_get_next_run_multiple_HB_instances(self):
+        """Makes sure that two  HB instance can properly coexist and tag
         run_info properly"""
 
-        # We allow 2 SH to be created. This means, we have a newer iteration
+        # We allow 2 HB instance to be created. This means, we have a newer iteration
         # to expect in hyperband
         challengers = [self.config1, self.config2, self.config3, self.config4]
         run_infos = []
@@ -293,20 +293,20 @@ class TestParallelHyperband(unittest.TestCase):
         self.assertEqual(intent, RunInfoIntent.WAIT)
 
     def test_add_new_instance(self):
-        """Test whether we can add a SH and when we should not"""
+        """Test whether we can add a instance and when we should not"""
 
-        # By default we do not create a SH
+        # By default we do not create a HB
         # test adding the first instance!
         self.assertEqual(len(self.PHB.intensifier_instances), 0)
         self.assertTrue(self.PHB._add_new_instance(num_workers=1))
         self.assertEqual(len(self.PHB.intensifier_instances), 1)
         self.assertIsInstance(self.PHB.intensifier_instances[0], SuccessiveHalving)
-        # A second call should not add a new SH
+        # A second call should not add a new HB instance
         self.assertFalse(self.PHB._add_new_instance(num_workers=1))
 
-        # We try with 2 SH active
+        # We try with 2 HB instance active
 
-        # We effectively return true because we added a new SH
+        # We effectively return true because we added a new HB instance
         self.assertTrue(self.PHB._add_new_instance(num_workers=2))
 
         self.assertEqual(len(self.PHB.intensifier_instances), 2)
@@ -364,7 +364,7 @@ class TestParallelHyperband(unittest.TestCase):
     def test_parallel_same_as_serial_HB(self):
         """Makes sure we behave the same as a serial run at the end"""
 
-        # Get the run_history for a SH run:
+        # Get the run_history for a HB instance run:
         rh = RunHistory()
         stats = Stats(scenario=self.scen)
         stats.start_timing()
@@ -381,14 +381,15 @@ class TestParallelHyperband(unittest.TestCase):
         )
         incumbent, inc_perf = self._exhaust_run_and_get_incumbent(HB, rh, num_workers=1)
 
-        # Just to make sure nothing has changed from the SH side to make
+        # Just to make sure nothing has changed from the HB instance side to make
         # this check invalid:
         # We add config values, so config 3 with 0 and 7 should be the lesser cost
         self.assertEqual(incumbent, self.config3)
         self.assertEqual(inc_perf, 7.0)
 
-        # Do the same for PHB, but have multiple SH in there
-        # This SH will be created via num_workers==2 in self._exhaust_run_and_get_incumbent
+        # Do the same for PHB, but have multiple HB instance in there
+        # This HB instance will be created via num_workers==2
+        # in self._exhaust_run_and_get_incumbent
         PHB = ParallelHyperband(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
@@ -407,7 +408,7 @@ class TestParallelHyperband(unittest.TestCase):
         self.assertEqual(inc_perf, inc_perf_phb)
 
         # We don't want to loose any configuration, and particularly
-        # we want to make sure the values of SH to PHB match
+        # we want to make sure the values of HB instance to PHB match
         self.assertEqual(len(self.rh.data), len(rh.data))
 
         # Because it is a deterministic run, the run histories must be the

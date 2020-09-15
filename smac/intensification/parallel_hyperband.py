@@ -14,7 +14,7 @@ class ParallelHyperband(ParallelScheduler):
     """ Races multiple challengers against an incumbent using Hyperband method,
     with iterations that run over multiple workers.
 
-    This class can be considered a wrapper over Hyperband, that creates multiple
+    This class can be considered a wrapper around Hyperband, that creates multiple
     intensifiers to prevent having idle workers
 
     Parameters

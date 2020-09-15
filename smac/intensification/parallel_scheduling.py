@@ -188,8 +188,9 @@ class ParallelScheduler(AbstractRacer):
                 repeat_configs=repeat_configs,
             )
 
-        # If got to this point, there is no new SH addition viable
-        # not a SH has something to launch, so we have to wait
+        # If got to this point, no new instance can be added as
+        # there are no idle workers and all running instances have to
+        # wait, so we return a wait intent
         return RunInfoIntent.WAIT, RunInfo(
             config=None,
             instance="0",
