@@ -150,9 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_hyperband.html">smac.intensification.parallel_hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -298,6 +296,7 @@
 
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span><span class="p">,</span> <span class="n">RunInfoIntent</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.epm_configuration_chooser</span> <span class="kn">import</span> <span class="n">EPMChooser</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.parallel_scheduling</span> <span class="kn">import</span> <span class="n">ParallelScheduler</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
@@ -311,13 +310,18 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractRacer</span><span class="p">):</span>
+<div class="viewcode-block" id="_SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">_SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractRacer</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
 
-<span class="sd">    Implementation following the description in</span>
+<span class="sd">    This class contains the logic to implement:</span>
 <span class="sd">    &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
 <span class="sd">    Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</span>
+
+<span class="sd">    The `SuccessiveHalving` class can create multiple `_SuccessiveHalving` objects, to</span>
+<span class="sd">    allow parallelism in the method (up to the number of workers available). The user  interface</span>
+<span class="sd">    is expected to be `SuccessiveHalving`, yet this class (`_SuccessiveHalving`) contains the</span>
+<span class="sd">    actual single worker implementation of the BOHB method.</span>
 
 <span class="sd">    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</span>
 <span class="sd">    1. **&#39;Instances&#39; as budget**:</span>
@@ -335,11 +339,6 @@
 <span class="sd">        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</span>
 
 <span class="sd">        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.</span>
-
-<span class="sd">    Examples for successive halving (and hyperband) can be found here:</span>
-<span class="sd">    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`</span>
-<span class="sd">    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`</span>
-<span class="sd">    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -506,7 +505,7 @@
         <span class="c1"># the ones launched by the current succesive halver using self.run_tracker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[typing.Tuple[Configuration, str, int]]</span>
 
-<div class="viewcode-block" id="SuccessiveHalving._init_sh_params"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._init_sh_params">[docs]</a>    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving._init_sh_params"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._init_sh_params">[docs]</a>    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                         <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -580,7 +579,7 @@
                                                                      <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_sh_iter</span><span class="p">,</span> <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving.process_results"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving.process_results"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -683,7 +682,7 @@
 
         <span class="k">return</span> <span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving.get_next_run"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving.get_next_run"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                      <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
                      <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                      <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
@@ -885,7 +884,7 @@
             <span class="n">source_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
         <span class="p">)</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._update_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._update_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_update_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="_SuccessiveHalving._update_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._update_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_update_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update tracking information for a new stage/iteration and update statistics.</span>
 <span class="sd">        This method is called to initialize stage variables and after all configurations</span>
@@ -980,7 +979,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._compare_configs"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._compare_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving._compare_configs"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._compare_configs">[docs]</a>    <span class="k">def</span> <span class="nf">_compare_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                          <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                          <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -1086,7 +1085,7 @@
 
         <span class="k">return</span> <span class="n">new_incumbent</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._compare_configs_across_budgets"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._compare_configs_across_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">_compare_configs_across_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving._compare_configs_across_budgets"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._compare_configs_across_budgets">[docs]</a>    <span class="k">def</span> <span class="nf">_compare_configs_across_budgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                                         <span class="n">challenger</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                                         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
                                         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
@@ -1141,7 +1140,7 @@
 
         <span class="k">return</span> <span class="n">new_incumbent</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._top_k"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._top_k">[docs]</a>    <span class="k">def</span> <span class="nf">_top_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+<div class="viewcode-block" id="_SuccessiveHalving._top_k"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._top_k">[docs]</a>    <span class="k">def</span> <span class="nf">_top_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
                <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
                <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
@@ -1184,7 +1183,7 @@
         <span class="n">top_configs</span> <span class="o">=</span> <span class="n">configs_sorted</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">top_configs</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._count_running_instances_for_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._count_running_instances_for_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">_count_running_instances_for_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="_SuccessiveHalving._count_running_instances_for_challenger"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._count_running_instances_for_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">_count_running_instances_for_challenger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The intensifiers are called on a sequential manner. In each iteration,</span>
 <span class="sd">        one can only return a configuration at a time, for that reason</span>
@@ -1204,7 +1203,7 @@
 
         <span class="k">return</span> <span class="n">running_instances</span></div>
 
-<div class="viewcode-block" id="SuccessiveHalving._launched_all_configs_for_current_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._launched_all_configs_for_current_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_launched_all_configs_for_current_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="_SuccessiveHalving._launched_all_configs_for_current_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._launched_all_configs_for_current_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_launched_all_configs_for_current_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This procedure queries if the addition of currently finished configs</span>
 <span class="sd">        and running configs are sufficient for the current stage.</span>
@@ -1253,6 +1252,214 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">ParallelScheduler</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
+
+<span class="sd">    Implementation following the description in</span>
+<span class="sd">    &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
+<span class="sd">    Supplementary reference: http://proceedings.mlr.press/v80/falkner18a/falkner18a-supp.pdf</span>
+
+<span class="sd">    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</span>
+<span class="sd">    1. **&#39;Instances&#39; as budget**:</span>
+<span class="sd">        When multiple instances are provided or when run objective is &quot;runtime&quot;, this is the criterion used as budget</span>
+<span class="sd">        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated</span>
+<span class="sd">        on at a time. Top challengers for the next iteration are selected based on the combined performance across</span>
+<span class="sd">        all instances used.</span>
+
+<span class="sd">        If ``initial_budget`` and ``max_budget`` are not provided, then they are set to 1 and total number</span>
+<span class="sd">        of available instances respectively by default.</span>
+
+<span class="sd">    2. **&#39;Real-valued&#39; budget**:</span>
+<span class="sd">        This is used when there is only one instance provided and when run objective is &quot;quality&quot;,</span>
+<span class="sd">        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.</span>
+<span class="sd">        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</span>
+
+<span class="sd">        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.</span>
+
+<span class="sd">    Examples for successive halving (and hyperband) can be found here:</span>
+<span class="sd">    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`</span>
+<span class="sd">    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`</span>
+<span class="sd">    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`</span>
+
+<span class="sd">    This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to</span>
+<span class="sd">    prevent workers from being idle. The actual logic that implements the Successive halving method</span>
+<span class="sd">    lies on the _SuccessiveHalving class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    stats: smac.stats.stats.Stats</span>
+<span class="sd">        stats object</span>
+<span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
+<span class="sd">        TrajLogger object to log all new incumbents</span>
+<span class="sd">    rng : np.random.RandomState</span>
+<span class="sd">    instances : typing.List[str]</span>
+<span class="sd">        list of all instance ids</span>
+<span class="sd">    instance_specifics : typing.Mapping[str,np.ndarray]</span>
+<span class="sd">        mapping from instance name to instance specific string</span>
+<span class="sd">    cutoff : typing.Optional[int]</span>
+<span class="sd">        cutoff of TA runs</span>
+<span class="sd">    deterministic : bool</span>
+<span class="sd">        whether the TA is deterministic or not</span>
+<span class="sd">    initial_budget : typing.Optional[float]</span>
+<span class="sd">        minimum budget allowed for 1 run of successive halving</span>
+<span class="sd">    max_budget : typing.Optional[float]</span>
+<span class="sd">        maximum budget allowed for 1 run of successive halving</span>
+<span class="sd">    eta : float</span>
+<span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
+<span class="sd">    num_initial_challengers : typing.Optional[int]</span>
+<span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
+<span class="sd">    run_obj_time : bool</span>
+<span class="sd">        whether the run objective is runtime or not (if true, apply adaptive capping)</span>
+<span class="sd">    n_seeds : typing.Optional[int]</span>
+<span class="sd">        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
+<span class="sd">    instance_order : typing.Optional[str]</span>
+<span class="sd">        how to order instances. Can be set to: [None, shuffle_once, shuffle]</span>
+<span class="sd">        * None - use as is given by the user</span>
+<span class="sd">        * shuffle_once - shuffle once and use across all SH run (default)</span>
+<span class="sd">        * shuffle - shuffle before every SH run</span>
+<span class="sd">    adaptive_capping_slackfactor : float</span>
+<span class="sd">        slack factor of adpative capping (factor * adaptive cutoff)</span>
+<span class="sd">    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional</span>
+<span class="sd">        Do not set this argument, it will only be used by hyperband!</span>
+<span class="sd">    min_chall: int</span>
+<span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will</span>
+<span class="sd">        raise an exception if a value larger than 1 is passed.</span>
+<span class="sd">    incumbent_selection: str</span>
+<span class="sd">        How to select incumbent in successive halving. Only active for real-valued budgets.</span>
+<span class="sd">        Can be set to: [highest_executed_budget, highest_budget, any_budget]</span>
+<span class="sd">        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)</span>
+<span class="sd">        * highest_budget - incumbent is selected only based on the highest budget</span>
+<span class="sd">        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
+                 <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
+                 <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
+                 <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">instance_order</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;shuffle_once&#39;</span><span class="p">,</span>
+                 <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
+                 <span class="n">inst_seed_pairs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;highest_executed_budget&#39;</span><span class="p">,</span>
+                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+                         <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
+                         <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
+                         <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span>
+                         <span class="n">instance_specifics</span><span class="o">=</span><span class="n">instance_specifics</span><span class="p">,</span>
+                         <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
+                         <span class="n">deterministic</span><span class="o">=</span><span class="n">deterministic</span><span class="p">,</span>
+                         <span class="n">run_obj_time</span><span class="o">=</span><span class="n">run_obj_time</span><span class="p">,</span>
+                         <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
+                         <span class="n">min_chall</span><span class="o">=</span><span class="n">min_chall</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># Successive Halving Hyperparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span> <span class="o">=</span> <span class="n">n_seeds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">=</span> <span class="n">instance_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="n">inst_seed_pairs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span> <span class="o">=</span> <span class="n">incumbent_selection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="n">instances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_specifics</span> <span class="o">=</span> <span class="n">instance_specifics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span> <span class="o">=</span> <span class="n">initial_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">=</span> <span class="n">max_budget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">=</span> <span class="n">eta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_initial_challengers</span> <span class="o">=</span> <span class="n">num_initial_challengers</span>
+
+<div class="viewcode-block" id="SuccessiveHalving._get_intensifier_ranking"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._get_intensifier_ranking">[docs]</a>    <span class="k">def</span> <span class="nf">_get_intensifier_ranking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span>
+                                 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a intensifier, returns how advance it is.</span>
+<span class="sd">        This metric will be used to determine what priority to</span>
+<span class="sd">        assign to the intensifier</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        intensifier: AbstractRacer</span>
+<span class="sd">            Intensifier to rank based on run progress</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ranking: int</span>
+<span class="sd">            the higher this number, the faster the intensifier will get</span>
+<span class="sd">            the running resources. For hyperband we can use the</span>
+<span class="sd">            sh_intensifier stage, for example</span>
+<span class="sd">        tie_breaker: int</span>
+<span class="sd">            The configurations that have been launched to break ties. For</span>
+<span class="sd">            example, in the case of Successive Halving it can be the number</span>
+<span class="sd">            of configurations launched</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># For mypy -- we expect to work with Hyperband instances</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">_SuccessiveHalving</span><span class="p">)</span>
+
+        <span class="c1"># Each row of this matrix is id, stage, configs+instances for stage</span>
+        <span class="c1"># We use sh.run_tracker as a cheap way to know how advanced the run is</span>
+        <span class="c1"># in case of stage ties among successive halvers. sh.run_tracker is</span>
+        <span class="c1"># also emptied each iteration</span>
+        <span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="s1">&#39;stage&#39;</span><span class="p">):</span>
+            <span class="c1"># Newly created _SuccessiveHalving objects have no stage</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="n">intensifier</span><span class="o">.</span><span class="n">stage</span>
+        <span class="k">return</span> <span class="n">stage</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">intensifier</span><span class="o">.</span><span class="n">run_tracker</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SuccessiveHalving._add_new_instance"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving._add_new_instance">[docs]</a>    <span class="k">def</span> <span class="nf">_add_new_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decides if it is possible to add a new intensifier instance,</span>
+<span class="sd">        and adds it.</span>
+<span class="sd">        If a new intensifier instance is added, True is returned, else False.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        num_workers: int</span>
+<span class="sd">            the maximum number of workers available</span>
+<span class="sd">            at a given time.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Whether or not a successive halving instance was added</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">num_workers</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">)]</span> <span class="o">=</span> <span class="n">_SuccessiveHalving</span><span class="p">(</span>
+            <span class="n">stats</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="n">traj_logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">traj_logger</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span>
+            <span class="n">instances</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">,</span>
+            <span class="n">instance_specifics</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_instance_specifics</span><span class="p">,</span>
+            <span class="n">cutoff</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>
+            <span class="n">deterministic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>
+            <span class="n">initial_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">,</span>
+            <span class="n">max_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span>
+            <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
+            <span class="n">num_initial_challengers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_initial_challengers</span><span class="p">,</span>
+            <span class="n">run_obj_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">,</span>
+            <span class="n">n_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span><span class="p">,</span>
+            <span class="n">instance_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span><span class="p">,</span>
+            <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
+            <span class="n">inst_seed_pairs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
+            <span class="n">min_chall</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_chall</span><span class="p">,</span>
+            <span class="n">incumbent_selection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">incumbent_selection</span><span class="p">,</span>
+            <span class="n">identifier</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 </pre></div>
 
            </div>

@@ -1,8 +1,0 @@
-smac.intensification.parallel\_hyperband module
-===============================================
-
-.. automodule:: smac.intensification.parallel_hyperband
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

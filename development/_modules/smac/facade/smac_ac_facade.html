@@ -150,9 +150,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_hyperband.html">smac.intensification.parallel_hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -325,6 +323,7 @@
 <span class="c1"># intensification</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.hyperband</span> <span class="kn">import</span> <span class="n">Hyperband</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.abstract_racer</span> <span class="kn">import</span> <span class="n">AbstractRacer</span>
 <span class="c1"># optimizer</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
@@ -814,7 +813,7 @@
                 <span class="s1">&#39;impute_state&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">})</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier_instance</span><span class="p">,</span> <span class="n">SuccessiveHalving</span><span class="p">)</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier_instance</span><span class="p">,</span> <span class="p">(</span><span class="n">SuccessiveHalving</span><span class="p">,</span> <span class="n">Hyperband</span><span class="p">))</span> <span class="ow">and</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;quality&quot;</span><span class="p">:</span>
             <span class="n">r2e_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
                 <span class="s1">&#39;success_states&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span>
                                    <span class="n">StatusType</span><span class="o">.</span><span class="n">MEMOUT</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">DONOTADVANCE</span><span class="p">,</span>

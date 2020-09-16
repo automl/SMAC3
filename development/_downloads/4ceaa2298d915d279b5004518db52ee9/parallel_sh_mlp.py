@@ -7,9 +7,9 @@ for parallel execution. The configurations are randomly sampled.
 
 This examples uses a real-valued SuccessiveHalving through epochs.
 
-4 workers are allocated for this run. As soon as the any worker is idle,
-the ParallelSuccessiveHalving creates an additional internal instance
-of SuccessiveHalving to use the idle resources.
+4 workers are allocated for this run. As soon as any worker is idle,
+SMAC internally creates more SuccessiveHalving instances to take
+advantage of the idle resources.
 """
 
 import logging
@@ -21,7 +21,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
 from smac.configspace import ConfigurationSpace
 from smac.facade.roar_facade import ROAR
 from smac.scenario.scenario import Scenario
-from smac.intensification.parallel_successive_halving import ParallelSuccessiveHalving
+from smac.intensification.successive_halving import SuccessiveHalving
 from smac.initial_design.random_configuration_design import RandomConfigurations
 
 # --------------------------------------------------------------
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # To optimize, we pass the function to the SMAC-object
     smac = ROAR(scenario=scenario, rng=np.random.RandomState(42),
                 tae_runner=mlp_from_cfg,
-                intensifier=ParallelSuccessiveHalving,
+                intensifier=SuccessiveHalving,
                 intensifier_kwargs=intensifier_kwargs,
                 initial_design=RandomConfigurations,
                 n_jobs=4)

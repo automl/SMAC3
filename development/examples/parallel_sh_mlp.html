@@ -152,9 +152,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_hyperband.html">smac.intensification.parallel_hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_successive_halving.html">smac.intensification.parallel_successive_halving module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
@@ -304,9 +302,9 @@
 <p>An example for the usage of a model-free SuccessiveHalving intensifier in SMAC,
 for parallel execution. The configurations are randomly sampled.</p>
 <p>This examples uses a real-valued SuccessiveHalving through epochs.</p>
-<p>4 workers are allocated for this run. As soon as the any worker is idle,
-the ParallelSuccessiveHalving creates an additional internal instance
-of SuccessiveHalving to use the idle resources.</p>
+<p>4 workers are allocated for this run. As soon as any worker is idle,
+SMAC internally creates more SuccessiveHalving instances to take
+advantage of the idle resources.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -316,7 +314,7 @@ of SuccessiveHalving to use the idle resources.</p>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.facade.roar_facade</span> <span class="kn">import</span> <span class="n">ROAR</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
-<span class="kn">from</span> <span class="nn">smac.intensification.parallel_successive_halving</span> <span class="kn">import</span> <span class="n">ParallelSuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="kn">import</span> <span class="n">RandomConfigurations</span>
 
 <span class="c1"># --------------------------------------------------------------</span>
@@ -372,7 +370,7 @@ of SuccessiveHalving to use the idle resources.</p>
     <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">ROAR</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
                 <span class="n">tae_runner</span><span class="o">=</span><span class="n">mlp_from_cfg</span><span class="p">,</span>
-                <span class="n">intensifier</span><span class="o">=</span><span class="n">ParallelSuccessiveHalving</span><span class="p">,</span>
+                <span class="n">intensifier</span><span class="o">=</span><span class="n">SuccessiveHalving</span><span class="p">,</span>
                 <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>
                 <span class="n">initial_design</span><span class="o">=</span><span class="n">RandomConfigurations</span><span class="p">,</span>
                 <span class="n">n_jobs</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
