@@ -33,6 +33,7 @@ from smac.initial_design.sobol_design import SobolDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -522,7 +523,7 @@ class SMAC4AC(object):
                 'impute_state': None,
             })
 
-        if isinstance(intensifier_instance, SuccessiveHalving) and scenario.run_obj == "quality":
+        if isinstance(intensifier_instance, (SuccessiveHalving, Hyperband)) and scenario.run_obj == "quality":
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED,
                                    StatusType.MEMOUT, StatusType.DONOTADVANCE,
