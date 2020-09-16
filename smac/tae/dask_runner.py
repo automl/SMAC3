@@ -103,16 +103,18 @@ class DaskParallelRunner(BaseRunner):
         # workers to be instantiated as demonic - this cannot be passed via worker_kwargs
         dask.config.set({'distributed.worker.daemon': False})
         if dask_client is None:
+            self.close_client_at_del = True
             self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1,
                                  local_directory=output_directory)
+            if self.output_directory:
+                self.scheduler_file = os.path.join(self.output_directory, '.dask_scheduler_file')
+                self.client.write_scheduler_file(scheduler_file=self.scheduler_file)
         else:
+            self.close_client_at_del = False
             self.client = dask_client
         self.futures = []  # type: typing.List[Future]
 
         self.scheduler_info = self.client._get_scheduler_info()
-        if self.output_directory:
-            self.scheduler_file = os.path.join(self.output_directory, '.dask_scheduler_file')
-            self.client.write_scheduler_file(scheduler_file=self.scheduler_file)
 
     def submit_run(self, run_info: RunInfo) -> None:
         """This function submits a configuration
@@ -287,5 +289,7 @@ class DaskParallelRunner(BaseRunner):
         return False
 
     def __del__(self) -> None:
-        """Make sure that when this object gets deleted, the client is terminated."""
-        self.client.close()
+        """Make sure that when this object gets deleted, the client is terminated. This is only done if
+        the client was created by the dask runner."""
+        if self.close_client_at_del:
+            self.client.close()
