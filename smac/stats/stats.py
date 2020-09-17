@@ -197,12 +197,12 @@ class Stats(object):
         log_func("#Incumbent changed: %d" % (self.inc_changed - 1))  # first change is default conf
         log_func(
             "#Submitted target algorithm runs: %d / %s"
-            % (self.submitted_ta_runs, str(self.__scenario.ta_run_limit))
-        )  # type: ignore[attr-defined] # noqa F821
+            % (self.submitted_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
+        )
         log_func(
             "#Finished target algorithm runs: %d / %s"
-            % (self.finished_ta_runs, str(self.__scenario.ta_run_limit))
-        )  # type: ignore[attr-defined] # noqa F821
+            % (self.finished_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
+        )
         log_func("#Configurations: %d" % (self.n_configs))
         log_func(
             "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit))
