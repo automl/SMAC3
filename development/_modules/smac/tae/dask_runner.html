@@ -395,16 +395,18 @@
         <span class="c1"># workers to be instantiated as demonic - this cannot be passed via worker_kwargs</span>
         <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s1">&#39;distributed.worker.daemon&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">dask_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threads_per_worker</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                  <span class="n">local_directory</span><span class="o">=</span><span class="n">output_directory</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">,</span> <span class="s1">&#39;.dask_scheduler_file&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_scheduler_file</span><span class="p">(</span><span class="n">scheduler_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">dask_client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">futures</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Future]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">_get_scheduler_info</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="p">,</span> <span class="s1">&#39;.dask_scheduler_file&#39;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">write_scheduler_file</span><span class="p">(</span><span class="n">scheduler_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scheduler_file</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DaskParallelRunner.submit_run"><a class="viewcode-back" href="../../../apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.submit_run">[docs]</a>    <span class="k">def</span> <span class="nf">submit_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;This function submits a configuration</span>
@@ -579,8 +581,10 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Make sure that when this object gets deleted, the client is terminated.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="sd">&quot;&quot;&quot;Make sure that when this object gets deleted, the client is terminated. This is only done if</span>
+<span class="sd">        the client was created by the dask runner.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_client_at_del</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </pre></div>
 
            </div>
