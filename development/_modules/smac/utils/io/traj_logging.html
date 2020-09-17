@@ -382,11 +382,11 @@
 <span class="sd">        budget: float</span>
 <span class="sd">            budget used in intensifier to limit TA (default: 0)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ta_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span>
+        <span class="n">finished_ta_runs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span>
         <span class="n">ta_time_used</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span>
         <span class="n">wallclock_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_used_wallclock_time</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TrajEntry</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
-                               <span class="n">ta_runs</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">,</span> <span class="n">budget</span><span class="p">))</span>
+                               <span class="n">finished_ta_runs</span><span class="p">,</span> <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">,</span> <span class="n">budget</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_in_old_format</span><span class="p">(</span><span class="n">train_perf</span><span class="p">,</span> <span class="n">incumbent_id</span><span class="p">,</span> <span class="n">incumbent</span><span class="p">,</span>
                                     <span class="n">ta_time_used</span><span class="p">,</span> <span class="n">wallclock_time</span><span class="p">)</span>
@@ -457,7 +457,7 @@
 
         <span class="n">traj_entry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cpu_time&quot;</span><span class="p">:</span> <span class="n">ta_time_used</span><span class="p">,</span>
                       <span class="s2">&quot;wallclock_time&quot;</span><span class="p">:</span> <span class="n">wallclock_time</span><span class="p">,</span>
-                      <span class="s2">&quot;evaluations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span>
+                      <span class="s2">&quot;evaluations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span><span class="p">,</span>
                       <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="n">train_perf</span><span class="p">,</span>
                       <span class="s2">&quot;incumbent&quot;</span><span class="p">:</span> <span class="n">conf</span><span class="p">,</span>
                       <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">incumbent</span><span class="o">.</span><span class="n">origin</span><span class="p">,</span>
@@ -490,7 +490,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">traj_entry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cpu_time&quot;</span><span class="p">:</span> <span class="n">ta_time_used</span><span class="p">,</span>
                       <span class="s2">&quot;wallclock_time&quot;</span><span class="p">:</span> <span class="n">wallclock_time</span><span class="p">,</span>
-                      <span class="s2">&quot;evaluations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span>
+                      <span class="s2">&quot;evaluations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span><span class="p">,</span>
                       <span class="s2">&quot;cost&quot;</span><span class="p">:</span> <span class="n">train_perf</span><span class="p">,</span>
                       <span class="s2">&quot;incumbent&quot;</span><span class="p">:</span> <span class="n">incumbent</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">(),</span>
                       <span class="s2">&quot;budget&quot;</span><span class="p">:</span> <span class="n">budget</span><span class="p">,</span>

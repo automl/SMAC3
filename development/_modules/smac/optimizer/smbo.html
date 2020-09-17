@@ -440,7 +440,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">start_timing</span><span class="p">()</span>
 
         <span class="c1"># Initialization, depends on input</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Running initial design&#39;</span><span class="p">)</span>
             <span class="c1"># Intensifier initialization</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">()</span>
@@ -449,14 +449,14 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()]</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;According to stats there have been runs performed, &quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;According to stats there have been runs started, &quot;</span>
                              <span class="s2">&quot;but the optimizer cannot detect an incumbent. Did &quot;</span>
                              <span class="s2">&quot;you set the incumbent (e.g. after restoring state)?&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;An incumbent is specified, but there are no runs &quot;</span>
-                             <span class="s2">&quot;recorded in the Stats-object. If you&#39;re restoring &quot;</span>
-                             <span class="s2">&quot;a state, please provide the Stats-object.&quot;</span><span class="p">)</span>
+                             <span class="s2">&quot;recorded as started in the Stats-object. If you&#39;re &quot;</span>
+                             <span class="s2">&quot;restoring a state, please provide the Stats-object.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Restoring state!</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;State Restored! Starting optimization with &quot;</span>
@@ -536,7 +536,7 @@
                 <span class="c1"># And the number of ta executions. Because we submit the job at this point,</span>
                 <span class="c1"># we count this submission as a run. This prevent for using more</span>
                 <span class="c1"># runner runs than what the scenario allows</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="k">elif</span> <span class="n">intent</span> <span class="o">==</span> <span class="n">RunInfoIntent</span><span class="o">.</span><span class="n">SKIP</span><span class="p">:</span>
                 <span class="c1"># No launch is required</span>
@@ -572,7 +572,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()))</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
 
                 <span class="c1"># The budget can be exhausted  for 2 reasons: number of ta runs or</span>
                 <span class="c1"># time. If the number of ta runs is reached, but there is still budget,</span>
@@ -711,6 +711,7 @@
 
         <span class="c1"># update SMAC stats</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;Return: Status: </span><span class="si">%r</span><span class="s2">, cost: </span><span class="si">%f</span><span class="s2">, time: </span><span class="si">%f</span><span class="s2">, additional: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
@@ -734,7 +735,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span><span class="s2">&quot;First run crashed, abort. &quot;</span>
                                                <span class="s2">&quot;Please check your setup -- &quot;</span>
                                                <span class="s2">&quot;we assume that your default&quot;</span>

@@ -341,7 +341,8 @@
 <span class="sd">        return from tae.start</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">run_info</span><span class="p">,</span> <span class="n">result</span> <span class="o">=</span> <span class="n">tae</span><span class="o">.</span><span class="n">run_wrapper</span><span class="p">(</span><span class="n">run_info</span><span class="p">)</span>
-    <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">tae</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">+=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">runhistory</span><span class="p">:</span>
         <span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>

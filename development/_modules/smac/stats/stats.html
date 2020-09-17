@@ -313,7 +313,8 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ta_runs</span>
+<span class="sd">    submitted_ta_runs</span>
+<span class="sd">    finished_ta_runs</span>
 <span class="sd">    wallclock_time_used</span>
 <span class="sd">    ta_time_used</span>
 <span class="sd">    inc_changed</span>
@@ -330,7 +331,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span> <span class="o">=</span> <span class="n">scenario</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wallclock_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -427,7 +429,7 @@
         <span class="sd">&quot;&quot;&quot;Subtract the target algorithm runs in the scenario with the used ta</span>
 <span class="sd">        runs&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
 
@@ -440,7 +442,7 @@
 
 <div class="viewcode-block" id="Stats.is_budget_exhausted"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">[docs]</a>    <span class="k">def</span> <span class="nf">is_budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether the configuration budget for time budget, ta_budget</span>
-<span class="sd">        and ta_runs is empty</span>
+<span class="sd">        and submitted_ta_runs is exhausted</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -483,7 +485,14 @@
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;##########################################################&quot;</span><span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;Statistics:&quot;</span><span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Incumbent changed: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># first change is default conf</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">)))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;#Submitted target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="p">)</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;#Finished target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finished_ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Configurations: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span><span class="p">))</span>
         <span class="n">log_func</span><span class="p">(</span>
             <span class="s2">&quot;Used wallclock time: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">wallclock_limit</span><span class="p">))</span>

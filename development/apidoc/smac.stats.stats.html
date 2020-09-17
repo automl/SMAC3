@@ -304,8 +304,13 @@
 <p>All statistics collected during configuration run.
 Written to output-directory to be restored</p>
 <dl class="py attribute">
-<dt id="smac.stats.stats.Stats.ta_runs">
-<code class="sig-name descname">ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.ta_runs" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.stats.stats.Stats.submitted_ta_runs">
+<code class="sig-name descname">submitted_ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.submitted_ta_runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.stats.stats.Stats.finished_ta_runs">
+<code class="sig-name descname">finished_ta_runs</code><a class="headerlink" href="#smac.stats.stats.Stats.finished_ta_runs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -370,7 +375,7 @@ runs</p>
 <dt id="smac.stats.stats.Stats.is_budget_exhausted">
 <code class="sig-name descname">is_budget_exhausted</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/stats/stats.html#Stats.is_budget_exhausted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.stats.stats.Stats.is_budget_exhausted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the configuration budget for time budget, ta_budget
-and ta_runs is empty</p>
+and submitted_ta_runs is exhausted</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><strong>exhaustedness</strong> – true if one of the budgets is exhausted</p>
