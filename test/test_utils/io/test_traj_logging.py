@@ -64,7 +64,7 @@ class TrajLoggerTest(unittest.TestCase):
         # Mock stats
         mock_stats.ta_time_used = .5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
-        mock_stats.ta_runs = 1
+        mock_stats.finished_ta_runs = 1
 
         with tempfile.TemporaryDirectory() as tmpdir:
             tl = TrajLogger(output_dir=tmpdir, stats=mock_stats)
@@ -139,7 +139,7 @@ class TrajLoggerTest(unittest.TestCase):
     def test_ambigious_categoricals(self, mock_stats):
         mock_stats.ta_time_used = 0.5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
-        mock_stats.ta_runs = 1
+        mock_stats.finished_ta_runs = 1
 
         with tempfile.TemporaryDirectory() as tmpdir:
             tl = TrajLogger(output_dir=tmpdir, stats=mock_stats)

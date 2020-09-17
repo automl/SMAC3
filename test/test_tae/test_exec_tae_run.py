@@ -101,7 +101,7 @@ class TaeTest(unittest.TestCase):
             stats = Stats(scen)
             stats.start_timing()
             # Add first run to not trigger FirstRunCrashedException
-            stats.ta_runs += 1
+            stats.submitted_ta_runs += 1
             eta = SerialRunner(ta=lambda *args: None, stats=stats, run_obj=obj)
             return eta
 
@@ -181,7 +181,7 @@ class TaeTest(unittest.TestCase):
                                   'run_obj': 'quality'}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
-        stats.ta_runs += 1
+        stats.submitted_ta_runs += 1
 
         # Check quality
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}

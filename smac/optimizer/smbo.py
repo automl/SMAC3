@@ -150,7 +150,7 @@ class SMBO(object):
         self.stats.start_timing()
 
         # Initialization, depends on input
-        if self.stats.ta_runs == 0 and self.incumbent is None:
+        if self.stats.submitted_ta_runs == 0 and self.incumbent is None:
             self.logger.info('Running initial design')
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
@@ -159,14 +159,14 @@ class SMBO(object):
             if not self.initial_design_configs:
                 self.initial_design_configs = [self.config_space.get_default_configuration()]
 
-        elif self.stats.ta_runs > 0 and self.incumbent is None:
-            raise ValueError("According to stats there have been runs performed, "
+        elif self.stats.submitted_ta_runs > 0 and self.incumbent is None:
+            raise ValueError("According to stats there have been runs started, "
                              "but the optimizer cannot detect an incumbent. Did "
                              "you set the incumbent (e.g. after restoring state)?")
-        elif self.stats.ta_runs == 0 and self.incumbent is not None:
+        elif self.stats.submitted_ta_runs == 0 and self.incumbent is not None:
             raise ValueError("An incumbent is specified, but there are no runs "
-                             "recorded in the Stats-object. If you're restoring "
-                             "a state, please provide the Stats-object.")
+                             "recorded as started in the Stats-object. If you're "
+                             "restoring a state, please provide the Stats-object.")
         else:
             # Restoring state!
             self.logger.info("State Restored! Starting optimization with "
@@ -246,7 +246,7 @@ class SMBO(object):
                 # And the number of ta executions. Because we submit the job at this point,
                 # we count this submission as a run. This prevent for using more
                 # runner runs than what the scenario allows
-                self.stats.ta_runs += 1
+                self.stats.submitted_ta_runs += 1
 
             elif intent == RunInfoIntent.SKIP:
                 # No launch is required
@@ -282,7 +282,7 @@ class SMBO(object):
                 self.stats.get_remaining_ta_runs()))
 
             if self.stats.is_budget_exhausted():
-                self.logger.warn("Exhausted configuration budget")
+                self.logger.warning("Exhausted configuration budget")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
@@ -421,6 +421,7 @@ class SMBO(object):
 
         # update SMAC stats
         self.stats.ta_time_used += float(result.time)
+        self.stats.finished_ta_runs += 1
 
         self.logger.debug(
             "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
@@ -444,7 +445,7 @@ class SMBO(object):
         self.stats.n_configs = len(self.runhistory.config_ids)
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
-            if self.stats.ta_runs == 1 and result.status == StatusType.CRASHED:
+            if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
                 raise FirstRunCrashedException("First run crashed, abort. "
                                                "Please check your setup -- "
                                                "we assume that your default"
