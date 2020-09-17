@@ -733,7 +733,6 @@ class TestIntensify(unittest.TestCase):
             time_bound=np.inf,
             result=result,
         )
-        self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(self.stats.inc_changed, 1)
 
@@ -805,7 +804,6 @@ class TestIntensify(unittest.TestCase):
         # the basis configuration (config3) not better than incumbent, so can move on
         self.assertEqual(inc, self.config1)
         self.assertEqual(self.stats.inc_changed, 2)
-        self.assertEqual(self.stats.ta_runs, 5)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_INCUMBENT)
         self.assertEqual(list(self.rh.data.values())[4][2], StatusType.CAPPED)
         self.assertEqual(intensifier.n_iters, 1)  # iteration continues as `min_chall` condition is not met
@@ -896,7 +894,6 @@ class TestIntensify(unittest.TestCase):
         # no new TA runs as there are no more instances to run
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 1)
-        self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 

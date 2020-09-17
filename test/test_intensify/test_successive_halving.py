@@ -815,7 +815,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(inc, self.config2)
         self.assertEqual(inc_value, 0.05)
-        self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(list(self.rh.data.keys())[-1][0], self.rh.config_ids[self.config2])
         self.assertEqual(self.stats.inc_changed, 1)
 
@@ -854,7 +853,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
         )
         self.assertEqual(run_info.config, self.config1)
-        self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(self.stats.inc_changed, 1)
 
         # config2 should be capped and config1 should still be the incumbent
@@ -874,7 +872,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
         )
         self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 1)
         self.assertEqual(list(self.rh.data.values())[1][2], StatusType.CAPPED)
 
@@ -894,7 +891,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
         )
         self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.ta_runs, 3)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.TIMEOUT)
 
     @mock.patch.object(_SuccessiveHalving, '_top_k')
@@ -941,7 +937,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
         )
         self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.ta_runs, 1)
         self.assertEqual(list(self.rh.data.values())[2][2], StatusType.CRASHED)
         self.assertEqual(len(intensifier.success_challengers), 0)
 
@@ -961,7 +956,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
         )
         self.assertEqual(inc, self.config1)
-        self.assertEqual(self.stats.ta_runs, 2)
         self.assertEqual(self.stats.inc_changed, 0)
         self.assertEqual(list(self.rh.data.values())[3][2], StatusType.CAPPED)
         self.assertEqual(len(intensifier.success_challengers), 0)

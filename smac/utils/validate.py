@@ -51,7 +51,8 @@ def _unbound_tae_starter(
         return from tae.start
     """
     run_info, result = tae.run_wrapper(run_info)
-    tae.stats.ta_runs += 1
+    tae.stats.submitted_ta_runs += 1
+    tae.stats.finished_ta_runs += 1
     tae.stats.ta_time_used += float(result.time)
     if runhistory:
         runhistory.add(

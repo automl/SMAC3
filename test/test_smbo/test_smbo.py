@@ -344,7 +344,8 @@ class TestSMBO(unittest.TestCase):
 
             # Stats!
             # We do not exceed the number of target algorithm runs
-            self.assertEqual(smbo.stats.ta_runs, len(all_configs))
+            self.assertEqual(smbo.stats.submitted_ta_runs, len(all_configs))
+            self.assertEqual(smbo.stats.finished_ta_runs, len(all_configs))
 
             # No config is lost
             self.assertEqual(smbo.stats.n_configs, len(all_configs))

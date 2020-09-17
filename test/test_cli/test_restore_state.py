@@ -69,7 +69,7 @@ class TestSMACCLI(unittest.TestCase):
         scen = Scenario({'run_obj': 'quality', 'cs': cs})
         stats = Stats(scen)
         # Recorded runs but no incumbent.
-        stats.ta_runs = 10
+        stats.submitted_ta_runs = 10
         smac = SMAC4AC(scen, stats=stats, rng=np.random.RandomState(42))
         self.output_dirs.append(scen.output_dir)
         self.assertRaises(ValueError, smac.optimize)
