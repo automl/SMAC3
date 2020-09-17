@@ -121,7 +121,9 @@ class TestDaskRunner(unittest.TestCase):
     def test_file_output(self):
         tmp_dir = tempfile.mkdtemp()
         single_worker_mock = unittest.mock.Mock()
-        parallel_runner = DaskParallelRunner(single_worker=single_worker_mock, n_workers=1, output_directory=tmp_dir)
+        parallel_runner = DaskParallelRunner(  # noqa F841
+            single_worker=single_worker_mock, n_workers=1, output_directory=tmp_dir
+        )
         self.assertTrue(os.path.exists(os.path.join(tmp_dir, '.dask_scheduler_file')))
 
     def test_do_not_close_external_client(self):
@@ -129,13 +131,15 @@ class TestDaskRunner(unittest.TestCase):
 
         single_worker_mock = unittest.mock.Mock()
         client = Client()
-        parallel_runner = DaskParallelRunner(single_worker=single_worker_mock, dask_client=client, n_workers=1,
-                                             output_directory=tmp_dir)
+        parallel_runner = DaskParallelRunner(
+            single_worker=single_worker_mock, dask_client=client, n_workers=1, output_directory=tmp_dir
+        )  # noqa F841
         del parallel_runner
         self.assertFalse(os.path.exists(os.path.join(tmp_dir, '.dask_scheduler_file')))
         self.assertEqual(client.status, 'running')
-        parallel_runner = DaskParallelRunner(single_worker=single_worker_mock, dask_client=client, n_workers=1,
-                                             output_directory=tmp_dir)
+        parallel_runner = DaskParallelRunner(
+            single_worker=single_worker_mock, dask_client=client, n_workers=1, output_directory=tmp_dir
+        )  # noqa F841
         del parallel_runner
         self.assertEqual(client.status, 'running')
         client.shutdown()
