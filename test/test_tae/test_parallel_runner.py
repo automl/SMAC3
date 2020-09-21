@@ -173,9 +173,8 @@ class TestDaskRunner(unittest.TestCase):
 
         # Make sure the error message is included
         self.assertIn('error', result.additional_info)
-        self.assertEqual(
-            'AttributeError("Can\'t pickle local object '
-            '\'TestDaskRunner.test_additional_info_crash_msg.<locals>.target_nonpickable\'")',
+        self.assertIn(
+            'Can\'t pickle local object',
             result.additional_info['error'])
 
 
