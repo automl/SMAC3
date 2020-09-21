@@ -166,10 +166,19 @@ class TestDaskRunner(unittest.TestCase):
         runner.wait()
         run_info, result = runner.get_finished_runs()[0]
 
-        expected_dict = {
-            'exception_msg': "can't pickle _thread.RLock objects"
-        }
-        self.assertDictEqual(result.additional_info, expected_dict)
+        # Make sure the traceback message is included
+        self.assertIn('traceback', result.additional_info)
+        self.assertIn(
+            # We expect the problem to occur in the run wrapper
+            # So traceback should show this!
+            'in run_wrapper',
+            result.additional_info['traceback'])
+
+        # Make sure the error message is included
+        self.assertIn('error', result.additional_info)
+        self.assertEqual(
+            'TypeError("can\'t pickle _thread.RLock objects",)',
+            result.additional_info['error'])
 
 
 if __name__ == "__main__":
