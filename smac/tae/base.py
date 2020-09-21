@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import math
 import time
+import traceback
 import typing
 
 import numpy as np
@@ -227,11 +228,18 @@ class BaseRunner(ABC):
                 budget=run_info.budget,
                 instance_specific=run_info.instance_specific
             )
-        except Exception:
+        except Exception as e:
             status = StatusType.CRASHED
             cost = self.cost_for_crash
             runtime = time.time() - start
-            additional_info = {}
+
+            # Add context information to the error message
+            exception_traceback = traceback.format_exc()
+            error_message = repr(e)
+            additional_info = {
+                'traceback': exception_traceback,
+                'error': error_message
+            }
 
         end = time.time()
 

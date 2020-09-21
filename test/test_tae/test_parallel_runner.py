@@ -144,6 +144,39 @@ class TestDaskRunner(unittest.TestCase):
         self.assertEqual(client.status, 'running')
         client.shutdown()
 
+    def test_additional_info_crash_msg(self):
+        """
+        We want to make sure we catch errors as additional info,
+        and in particular when doing multiprocessing runs, we
+        want to make sure we capture dask exceptions
+        """
+        def target_nonpickable(x, seed, instance):
+            return x**2, {'key': seed, 'instance': instance}
+
+        runner = ExecuteTAFuncDict(ta=target_nonpickable, stats=self.stats, run_obj='quality')
+
+        runner = DaskParallelRunner(runner, n_workers=2)
+
+        run_info = RunInfo(config=2, instance='test', instance_specific="0",
+                           seed=0, cutoff=None, capped=False, budget=0.0)
+        runner.submit_run(run_info)
+        runner.wait()
+        run_info, result = runner.get_finished_runs()[0]
+
+        # Make sure the traceback message is included
+        self.assertIn('traceback', result.additional_info)
+        self.assertIn(
+            # We expect the problem to occur in the run wrapper
+            # So traceback should show this!
+            'in run_wrapper',
+            result.additional_info['traceback'])
+
+        # Make sure the error message is included
+        self.assertIn('error', result.additional_info)
+        self.assertIn(
+            'Can\'t pickle local object',
+            result.additional_info['error'])
+
 
 if __name__ == "__main__":
     unittest.main()
