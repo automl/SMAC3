@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import tempfile
@@ -143,6 +144,32 @@ class TestDaskRunner(unittest.TestCase):
         del parallel_runner
         self.assertEqual(client.status, 'running')
         client.shutdown()
+
+    def test_additional_info_crash_msg(self):
+        """
+        We want to make sure we catch errors as additional info,
+        and in particular when doing multiprocessing runs, we
+        want to make sure we capture dask exceptions
+        """
+        runner = ExecuteTAFuncDict(ta=target_delayed, stats=self.stats, run_obj='quality')
+
+        # Dask does not support traditional logging, (well you can do tweaks, but in the
+        # general case, out of the box)
+        # as internally it has a thread lock which is not
+        # pickable. This should crash and log an exception
+        runner.logger = logging.getLogger(__name__)
+        runner = DaskParallelRunner(runner, n_workers=2)
+
+        run_info = RunInfo(config=2, instance='test', instance_specific="0",
+                           seed=0, cutoff=None, capped=False, budget=0.0)
+        runner.submit_run(run_info)
+        runner.wait()
+        run_info, result = runner.get_finished_runs()[0]
+
+        expected_dict = {
+            'exception_msg': "can't pickle _thread.RLock objects"
+        }
+        self.assertDictEqual(result.additional_info, expected_dict)
 
 
 if __name__ == "__main__":
