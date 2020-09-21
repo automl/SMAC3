@@ -1,4 +1,3 @@
-import logging
 import os
 import sys
 import tempfile
@@ -151,13 +150,11 @@ class TestDaskRunner(unittest.TestCase):
         and in particular when doing multiprocessing runs, we
         want to make sure we capture dask exceptions
         """
-        runner = ExecuteTAFuncDict(ta=target_delayed, stats=self.stats, run_obj='quality')
+        def target_nonpickable(x, seed, instance):
+            return x**2, {'key': seed, 'instance': instance}
 
-        # Dask does not support traditional logging, (well you can do tweaks, but in the
-        # general case, out of the box)
-        # as internally it has a thread lock which is not
-        # pickable. This should crash and log an exception
-        runner.logger = logging.getLogger(__name__)
+        runner = ExecuteTAFuncDict(ta=target_nonpickable, stats=self.stats, run_obj='quality')
+
         runner = DaskParallelRunner(runner, n_workers=2)
 
         run_info = RunInfo(config=2, instance='test', instance_specific="0",
@@ -177,7 +174,8 @@ class TestDaskRunner(unittest.TestCase):
         # Make sure the error message is included
         self.assertIn('error', result.additional_info)
         self.assertEqual(
-            'TypeError("can\'t pickle _thread.RLock objects",)',
+            'AttributeError("Can\'t pickle local object '
+            '\'TestDaskRunner.test_additional_info_crash_msg.<locals>.target_nonpickable\'")',
             result.additional_info['error'])
 
 
