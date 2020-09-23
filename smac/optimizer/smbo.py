@@ -219,6 +219,10 @@ class SMBO(object):
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
                 self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
+            # Skip starting new runs if the budget is now exhausted
+            if self.stats.is_budget_exhausted():
+                intent = RunInfoIntent.SKIP
+
             # Skip the run if there was a request to do so.
             # For example, during intensifier intensification, we
             # don't want to rerun a config that was previously ran
@@ -264,11 +268,10 @@ class SMBO(object):
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
-                if result.status != StatusType.BUDGETEXHAUSTED:
 
-                    # Add the results of the run to the run history
-                    # Additionally check for new incumbent
-                    self._incorporate_run_results(run_info, result, time_left)
+                # Add the results of the run to the run history
+                # Additionally check for new incumbent
+                self._incorporate_run_results(run_info, result, time_left)
 
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                 assert self.scenario.output_dir_for_this_run is not None  # please mypy
