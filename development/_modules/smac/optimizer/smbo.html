@@ -509,6 +509,10 @@
                 <span class="n">time_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_timebound_for_intensification</span><span class="p">(</span><span class="n">time_spent</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Updated intensification time bound from </span><span class="si">%f</span><span class="s1"> to </span><span class="si">%f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">old_time_left</span><span class="p">,</span> <span class="n">time_left</span><span class="p">)</span>
 
+            <span class="c1"># Skip starting new runs if the budget is now exhausted</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
+                <span class="n">intent</span> <span class="o">=</span> <span class="n">RunInfoIntent</span><span class="o">.</span><span class="n">SKIP</span>
+
             <span class="c1"># Skip the run if there was a request to do so.</span>
             <span class="c1"># For example, during intensifier intensification, we</span>
             <span class="c1"># don&#39;t want to rerun a config that was previously ran</span>
@@ -554,11 +558,10 @@
 
             <span class="c1"># Check if there is any result, or else continue</span>
             <span class="k">for</span> <span class="n">run_info</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span><span class="o">.</span><span class="n">get_finished_runs</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">BUDGETEXHAUSTED</span><span class="p">:</span>
 
-                    <span class="c1"># Add the results of the run to the run history</span>
-                    <span class="c1"># Additionally check for new incumbent</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_incorporate_run_results</span><span class="p">(</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">time_left</span><span class="p">)</span>
+                <span class="c1"># Add the results of the run to the run history</span>
+                <span class="c1"># Additionally check for new incumbent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_incorporate_run_results</span><span class="p">(</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">time_left</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">shared_model</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
                 <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># please mypy</span>
