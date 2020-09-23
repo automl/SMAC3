@@ -23,8 +23,6 @@ class StatusType(Enum):
     # 1) The run has converged and does not benefit from a higher budget
     # 2) The run has exhausted given resources and will not benefit from higher budgets
     DONOTADVANCE = 7
-    # In case of budget exception
-    BUDGETEXHAUSTED = 8
     # In case a job was submited, but it has not finished
     RUNNING = 9
 

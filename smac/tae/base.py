@@ -187,22 +187,6 @@ class BaseRunner(ABC):
         """
         start = time.time()
 
-        if self.stats.is_budget_exhausted():
-            # In case there is a budget exhausted, return par_factor time.
-            # Cutoff can be None, and in such case not par factor can be taken
-            if run_info.cutoff is not None:
-                ehausted_cost = run_info.cutoff * self.par_factor
-            else:
-                ehausted_cost = run_info.cutoff
-            return run_info, RunValue(
-                status=StatusType.BUDGETEXHAUSTED,
-                cost=ehausted_cost,
-                time=0.0,
-                additional_info={},
-                starttime=start,
-                endtime=time.time()
-            )
-
         if run_info.cutoff is None and self.run_obj == "runtime":
             if self.logger:
                 self.logger.critical(

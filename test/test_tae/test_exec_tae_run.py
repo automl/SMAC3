@@ -39,27 +39,6 @@ class TaeTest(unittest.TestCase):
     def tearDown(self):
         os.chdir(self.current_dir)
 
-    def test_start_exhausted_budget(self):
-        '''
-            testing exhausted budget
-        '''
-        # Set time-limit negative in scenario-options to trigger exception
-        scen = Scenario(scenario={'wallclock_limit': -1, 'cs': ConfigurationSpace(),
-                                  'run_obj': 'quality',
-                                  'output_dir': ''}, cmd_options=None)
-        stats = Stats(scen)
-        stats.start_timing()
-        eta = SerialRunner(ta=lambda *args: None,  # Dummy-function
-                           stats=stats)
-
-        # Dummy run. When on budget exhausted, the smbo
-        # loop is notified via the result status
-        run_info, result = eta.run_wrapper(RunInfo(
-            config=None, instance=None, instance_specific=None,
-            cutoff=None, seed=None, capped=False, budget=0.0
-        ))
-        self.assertEqual(result.status, StatusType.BUDGETEXHAUSTED)
-
     @mock.patch.object(SerialRunner, 'run')
     def test_start_tae_return_abort(self, test_run):
         '''
