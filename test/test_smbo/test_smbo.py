@@ -15,7 +15,7 @@ from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
-from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunInfo
 from smac.scenario.scenario import Scenario
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray

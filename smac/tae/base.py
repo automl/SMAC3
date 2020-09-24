@@ -11,7 +11,7 @@ from smac.utils.constants import MAXINT
 from smac.utils.logging import PickableLoggerAdapter
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
-from smac.tae import StatusType, TAEAbortException
+from smac.tae import StatusType
 
 
 class BaseRunner(ABC):
