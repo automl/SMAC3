@@ -59,13 +59,13 @@ class TaeTest(unittest.TestCase):
         stats.start_timing()
         eta = SerialRunner(ta=lambda *args: None, stats=stats)
 
-        with self.assertRaises(TAEAbortException):
-            eta.run_wrapper(
-                RunInfo(
-                    config=None, instance=1, instance_specific=None,
-                    cutoff=30, seed=None, capped=False, budget=0.0
-                )
+        _, run_value,  = eta.run_wrapper(
+            RunInfo(
+                config=None, instance=1, instance_specific=None,
+                cutoff=30, seed=None, capped=False, budget=0.0
             )
+        )
+        self.assertEqual(run_value.status, StatusType.ABORT)
 
     @mock.patch.object(SerialRunner, 'run')
     def test_start_tae_return_nan_inf(self, test_run):

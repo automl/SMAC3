@@ -249,11 +249,6 @@ class BaseRunner(ABC):
                                     )
             status = StatusType.CRASHED
 
-        if status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
-                                    "exit. The last incumbent can be found "
-                                    "in the trajectory-file.")
-
         if self.run_obj == "runtime":
             # The following line pleases mypy - we already check for cutoff not being none above,
             # prior to calling run. However, mypy assumes that the data type of cutoff
