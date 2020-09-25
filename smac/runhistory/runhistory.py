@@ -6,7 +6,7 @@ import typing
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
@@ -32,6 +32,34 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
 
+# NOTE class instead of collection to have a default value for budget/source_id in RunInfo
+class RunInfo(
+    collections.namedtuple(
+        'RunInfo',
+        ['config', 'instance', 'instance_specific', 'seed', 'cutoff', 'capped', 'budget', 'source_id']
+    )
+):
+    __slots__ = ()
+
+    def __new__(
+        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
+              # see https://docs.python.org/3/reference/datamodel.html#object.__new__
+        config: Configuration,
+        instance: typing.Optional[str],
+        instance_specific: str,
+        seed: int,
+        cutoff: typing.Optional[float],
+        capped: bool,
+        budget: float = 0.0,
+        # In the context of parallel runs, one will have multiple suppliers of
+        # configurations. source_id is a new mechanism to track what entity launched
+        # this configuration
+        source_id: int = 0,
+    ) -> 'RunInfo':
+        return super().__new__(cls, config, instance, instance_specific, seed,
+                               cutoff, capped, budget, source_id)
+
+
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
 
@@ -46,7 +74,7 @@ RunValue = collections.namedtuple(
 
 class EnumEncoder(json.JSONEncoder):
     """Custom encoder for enum-serialization
-    (implemented for StatusType from tae/execute_ta_run).
+    (implemented for StatusType from tae).
     Using encoder implied using object_hook as defined in StatusType
     to deserialize from json.
     """
@@ -173,6 +201,7 @@ class RunHistory(object):
         endtime: float = 0.0,
         additional_info: typing.Optional[typing.Dict] = None,
         origin: DataOrigin = DataOrigin.INTERNAL,
+        force_update: bool = False,
     ) -> None:
         """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
@@ -203,6 +232,8 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
             origin: DataOrigin
                 Defines how data will be used.
+            force_update: bool (default: False)
+                Forces the addition of a config to the history
         """
 
         if config is None:
@@ -228,7 +259,7 @@ class RunHistory(object):
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
-        if self.overwrite_existing_runs or self.data.get(k) is None:
+        if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
             self._add(k, v, status, origin)
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs
@@ -247,8 +278,10 @@ class RunHistory(object):
         self.data[k] = v
         self.external[k] = origin
 
+        # Capped data is added above
+        # Do not register the cost until the run has completed
         if origin in (DataOrigin.INTERNAL, DataOrigin.EXTERNAL_SAME_INSTANCES) \
-                and status != StatusType.CAPPED:  # Capped data is added above
+                and status not in [StatusType.CAPPED, StatusType.RUNNING]:
             # also add to fast data structure
             is_k = InstSeedKey(k.instance_id, k.seed)
             self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})

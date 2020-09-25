@@ -92,11 +92,11 @@ class TrajLogger(object):
         budget: float
             budget used in intensifier to limit TA (default: 0)
         """
-        ta_runs = self.stats.ta_runs
+        finished_ta_runs = self.stats.finished_ta_runs
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
         self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
-                               ta_runs, ta_time_used, wallclock_time, budget))
+                               finished_ta_runs, ta_time_used, wallclock_time, budget))
         if self.output_dir is not None:
             self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
@@ -167,7 +167,7 @@ class TrajLogger(object):
 
         traj_entry = {"cpu_time": ta_time_used,
                       "wallclock_time": wallclock_time,
-                      "evaluations": self.stats.ta_runs,
+                      "evaluations": self.stats.finished_ta_runs,
                       "cost": train_perf,
                       "incumbent": conf,
                       "origin": incumbent.origin,
@@ -200,7 +200,7 @@ class TrajLogger(object):
         """
         traj_entry = {"cpu_time": ta_time_used,
                       "wallclock_time": wallclock_time,
-                      "evaluations": self.stats.ta_runs,
+                      "evaluations": self.stats.finished_ta_runs,
                       "cost": train_perf,
                       "incumbent": incumbent.get_dictionary(),
                       "budget": budget,

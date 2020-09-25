@@ -345,7 +345,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 inc, seed=self.rng.randint(low=0, high=100000)))
             local_search_steps[i] += 1
         # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq = [[]] * num_candidates  # type: List[List[Configuration]]
+        neighbors_w_equal_acq = [[] for _ in range(num_candidates)]  # type: List[List[Configuration]]
 
         num_iters = 0
         while np.any(active):

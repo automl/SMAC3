@@ -17,7 +17,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.io.traj_logging import TrajLogger
-from smac.tae.execute_ta_run import TAEAbortException, FirstRunCrashedException
+from smac.tae import TAEAbortException, FirstRunCrashedException
 from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Marius Lindauer"

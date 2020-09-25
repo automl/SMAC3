@@ -10,7 +10,7 @@ from smac.configspace import ConfigurationSpace, Configuration
 from smac.tae.execute_func import ExecuteTAFuncDict, ExecuteTAFuncArray
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 
 
 class TestExecuteFunc(unittest.TestCase):

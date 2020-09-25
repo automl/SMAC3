@@ -1,19 +1,36 @@
 import shutil
+import sys
+import time
 import unittest
 from unittest import mock
 
 import numpy as np
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
+from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.intensification.intensification import Intensifier
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
+from smac.runhistory.runhistory import RunInfo
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import FirstRunCrashedException
+from smac.tae import FirstRunCrashedException, StatusType
+from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.utils import test_helpers
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
+
+
+def target(x, seed, instance):
+    """A target function for dummy testing of TA
+    perform x^2 for easy result calculations in checks.
+    """
+    # Return x[i] (with brackets) so we pass the value, not the
+    # np array element
+    return x[0] ** 2, {'key': seed, 'instance': instance}
 
 
 class ConfigurationMock(object):
@@ -79,7 +96,7 @@ class TestSMBO(unittest.TestCase):
             rng='BLA',
         )
 
-    @mock.patch.object(Intensifier, 'eval_challenger')
+    @mock.patch('smac.tae.execute_func.ExecuteTAFuncDict._call_ta')
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
@@ -106,6 +123,52 @@ class TestSMBO(unittest.TestCase):
             smbo.run()
         except FirstRunCrashedException:
             self.fail('Raises FirstRunCrashedException unexpectedly!')
+
+    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    def test_abort_on_runner(self, patch):
+        def target(x):
+            return 5
+
+        # should raise an error if abort_on_first_run_crash is True
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': True})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        self.assertRaises(FirstRunCrashedException, smbo.run)
+
+        # should not raise an error if abort_on_first_run_crash is False
+        patch.side_effect = FirstRunCrashedException()
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': False, 'wallclock-limit': 1})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+
+        try:
+            smbo.start()
+            smbo.run()
+        except FirstRunCrashedException:
+            self.fail('Raises FirstRunCrashedException unexpectedly!')
+
+    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    def test_stop_smbo(self, patch):
+        def target(x):
+            return 5
+
+        # should raise an error if abort_on_first_run_crash is True
+        patch.return_value = StatusType.STOP, 0.5, 0.5, {}
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': True})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1)
+        self.assertFalse(smbo.solver._stop)
+        smbo.optimize()
+        self.assertEqual(len(smbo.runhistory.data), 1)
+        self.assertEqual(list(smbo.runhistory.data.values())[0].status, StatusType.RUNNING)
+        self.assertTrue(smbo.solver._stop)
 
     def test_intensification_percentage(self):
         def target(x):
@@ -138,7 +201,7 @@ class TestSMBO(unittest.TestCase):
 
     def test_update_intensification_percentage(self):
         """
-        This test checks the insification time bound is updated in subsequent iterations as long as
+        This test checks the intensification time bound is updated in subsequent iterations as long as
         num_runs of the intensifier is not reset to zero.
         """
 
@@ -156,19 +219,19 @@ class TestSMBO(unittest.TestCase):
         solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
 
         class SideEffect:
-            def __init__(self, intensifier, get_next_challenger):
+            def __init__(self, intensifier, get_next_run):
                 self.intensifier = intensifier
-                self.get_next_challenger = get_next_challenger
+                self.get_next_run = get_next_run
                 self.counter = 0
 
             def __call__(self, *args, **kwargs):
                 self.counter += 1
                 if self.counter % 4 == 0:
                     self.intensifier.num_run = 0
-                return self.get_next_challenger(*args, **kwargs)
+                return self.get_next_run(*args, **kwargs)
 
-        solver.intensifier.get_next_challenger = unittest.mock.Mock(
-            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_challenger))
+        solver.intensifier.get_next_run = unittest.mock.Mock(
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_run))
 
         solver.run()
 
@@ -210,3 +273,106 @@ class TestSMBO(unittest.TestCase):
         # SMBO should have the default configuration as the 1st config if no initial design is given
         smbo.start()
         self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
+
+    @unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
+    def test_ta_integration_to_smbo(self):
+        """
+        In SMBO. 3 objects need to actively comunicate:
+            -> stats
+            -> epm
+            -> runhistory
+
+        This method makes sure that executed jobs are properly registered
+        in the above objects
+
+        It uses n_workers to test parallel and serial implementations!!
+        """
+
+        for n_workers in range(1, 2):
+            # We create a controlled setting, in which we optimize x^2
+            # This will allow us to make sure every component act as expected
+
+            # FIRST: config space
+            cs = ConfigurationSpace()
+            cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
+            smac = SMAC4HPO(
+                scenario=Scenario({
+                    'n_workers': n_workers,
+                    'cs': cs,
+                    'runcount_limit': 5,
+                    'run_obj': 'quality',
+                    "deterministic": "true",
+                    "initial_incumbent": "DEFAULT",
+                    'output_dir': 'data-test_smbo'
+                }),
+                tae_runner=ExecuteTAFuncArray,
+                tae_runner_kwargs={'ta': target},
+            )
+
+            # Register output dir for deletion
+            self.output_dirs.append(smac.output_dir)
+
+            smbo = smac.solver
+
+            # SECOND: Intensifier that tracks configs
+            all_configs = []
+
+            def mock_get_next_run(**kwargs):
+                config = cs.sample_configuration()
+                all_configs.append(config)
+                return (RunInfoIntent.RUN, RunInfo(
+                    config=config, instance=time.time() % 10,
+                    instance_specific={}, seed=0,
+                    cutoff=None, capped=False, budget=0.0
+                ))
+            intensifier = unittest.mock.Mock()
+            intensifier.num_run = 0
+            intensifier.process_results.return_value = (0.0, 0.0)
+            intensifier.get_next_run = mock_get_next_run
+            smac.solver.intensifier = intensifier
+
+            # THIRD: Run in this controlled setting
+            smbo.run()
+
+            # FOURTH: Checks
+
+            # Make sure all configs where launched
+            self.assertEqual(len(all_configs), 5)
+
+            # Run history
+            for k, v in smbo.runhistory.data.items():
+
+                # All configuration should be successful
+                self.assertEqual(v.status, StatusType.SUCCESS)
+
+                # The value should be the square version of the config
+                # The runhistory has  config_ids = {config: int}
+                # The k here is {config_id: int}. We search for the actual config
+                # by inverse searching this runhistory.config dict
+                config = list(smbo.runhistory.config_ids.keys())[
+                    list(smbo.runhistory.config_ids.values()).index(k.config_id)
+                ]
+
+                self.assertEqual(v.cost,
+                                 config.get('x')**2
+                                 )
+
+            # No config is lost in the config history
+            self.assertCountEqual(smbo.runhistory.config_ids.keys(), all_configs)
+
+            # Stats!
+            # We do not exceed the number of target algorithm runs
+            self.assertEqual(smbo.stats.submitted_ta_runs, len(all_configs))
+            self.assertEqual(smbo.stats.finished_ta_runs, len(all_configs))
+
+            # No config is lost
+            self.assertEqual(smbo.stats.n_configs, len(all_configs))
+
+            # The EPM can access all points. This is something that
+            # also relies on the runhistory
+            X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
+            self.assertEqual(X.shape[0], len(all_configs))
+
+
+if __name__ == "__main__":
+    unittest.main()

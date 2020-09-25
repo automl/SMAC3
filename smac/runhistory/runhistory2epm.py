@@ -4,7 +4,7 @@ import typing
 
 import numpy as np
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
 from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
