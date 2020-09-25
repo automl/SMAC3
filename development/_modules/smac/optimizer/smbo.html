@@ -311,6 +311,7 @@
 <span class="kn">from</span> <span class="nn">smac.tae</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">FirstRunCrashedException</span><span class="p">,</span>
     <span class="n">StatusType</span><span class="p">,</span>
+    <span class="n">TAEAbortException</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.tae.base</span> <span class="kn">import</span> <span class="n">BaseRunner</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
@@ -432,6 +433,9 @@
                                       <span class="n">random_configuration_chooser</span><span class="o">=</span><span class="n">random_configuration_chooser</span><span class="p">,</span>
                                       <span class="n">predict_x_best</span><span class="o">=</span><span class="n">predict_x_best</span><span class="p">,</span>
                                       <span class="n">min_samples_model</span><span class="o">=</span><span class="n">min_samples_model</span><span class="p">)</span>
+
+        <span class="c1"># Internal variable - if this is set to True it will gracefully stop SMAC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Starts the Bayesian Optimization loop.</span>
@@ -574,8 +578,11 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_ta_budget</span><span class="p">(),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">get_remaining_ta_runs</span><span class="p">()))</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shutting down because a configuration returned status STOP&quot;</span><span class="p">)</span>
 
                 <span class="c1"># The budget can be exhausted  for 2 reasons: number of ta runs or</span>
                 <span class="c1"># time. If the number of ta runs is reached, but there is still budget,</span>
@@ -721,6 +728,14 @@
                 <span class="n">result</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">additional_info</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">ABORT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TAEAbortException</span><span class="p">(</span><span class="s2">&quot;Target algorithm status ABORT - SMAC will &quot;</span>
+                                    <span class="s2">&quot;exit. The last incumbent can be found &quot;</span>
+                                    <span class="s2">&quot;in the trajectory-file.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">STOP</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
