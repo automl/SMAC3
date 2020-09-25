@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; SMAC 0.12.3 documentation</title>
+  <title>Overview: module code &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -150,6 +150,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,11 +178,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -205,12 +209,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -316,6 +322,8 @@
 <li><a href="smac/intensification/abstract_racer.html">smac.intensification.abstract_racer</a></li>
 <li><a href="smac/intensification/hyperband.html">smac.intensification.hyperband</a></li>
 <li><a href="smac/intensification/intensification.html">smac.intensification.intensification</a></li>
+<li><a href="smac/intensification/parallel_scheduling.html">smac.intensification.parallel_scheduling</a></li>
+<li><a href="smac/intensification/simple_intensifier.html">smac.intensification.simple_intensifier</a></li>
 <li><a href="smac/intensification/successive_halving.html">smac.intensification.successive_halving</a></li>
 <li><a href="smac/optimizer/acquisition.html">smac.optimizer.acquisition</a></li>
 <li><a href="smac/optimizer/ei_optimization.html">smac.optimizer.ei_optimization</a></li>
@@ -328,12 +336,15 @@
 <li><a href="smac/scenario/scenario.html">smac.scenario.scenario</a></li>
 <li><a href="smac/smac_cli.html">smac.smac_cli</a></li>
 <li><a href="smac/stats/stats.html">smac.stats.stats</a></li>
+<li><a href="smac/tae.html">smac.tae</a></li>
+<ul><li><a href="smac/tae/base.html">smac.tae.base</a></li>
+<li><a href="smac/tae/dask_runner.html">smac.tae.dask_runner</a></li>
 <li><a href="smac/tae/execute_func.html">smac.tae.execute_func</a></li>
-<li><a href="smac/tae/execute_ta_run.html">smac.tae.execute_ta_run</a></li>
 <li><a href="smac/tae/execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib</a></li>
 <li><a href="smac/tae/execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra</a></li>
 <li><a href="smac/tae/execute_ta_run_old.html">smac.tae.execute_ta_run_old</a></li>
-<li><a href="smac/utils/dependencies.html">smac.utils.dependencies</a></li>
+<li><a href="smac/tae/serial_runner.html">smac.tae.serial_runner</a></li>
+</ul><li><a href="smac/utils/dependencies.html">smac.utils.dependencies</a></li>
 <li><a href="smac/utils/io/cmd_reader.html">smac.utils.io.cmd_reader</a></li>
 <li><a href="smac/utils/io/input_reader.html">smac.utils.io.input_reader</a></li>
 <li><a href="smac/utils/io/output_directory.html">smac.utils.io.output_directory</a></li>
@@ -356,7 +367,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.stats.stats &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.stats.stats &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -150,6 +150,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,11 +178,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -205,12 +209,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -307,7 +313,8 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    ta_runs</span>
+<span class="sd">    submitted_ta_runs</span>
+<span class="sd">    finished_ta_runs</span>
 <span class="sd">    wallclock_time_used</span>
 <span class="sd">    ta_time_used</span>
 <span class="sd">    inc_changed</span>
@@ -324,7 +331,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span> <span class="o">=</span> <span class="n">scenario</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wallclock_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ta_time_used</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -421,7 +429,7 @@
         <span class="sd">&quot;&quot;&quot;Subtract the target algorithm runs in the scenario with the used ta</span>
 <span class="sd">        runs&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Scenario is missing&quot;</span><span class="p">)</span></div>
 
@@ -434,7 +442,7 @@
 
 <div class="viewcode-block" id="Stats.is_budget_exhausted"><a class="viewcode-back" href="../../../apidoc/smac.stats.stats.html#smac.stats.stats.Stats.is_budget_exhausted">[docs]</a>    <span class="k">def</span> <span class="nf">is_budget_exhausted</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Check whether the configuration budget for time budget, ta_budget</span>
-<span class="sd">        and ta_runs is empty</span>
+<span class="sd">        and submitted_ta_runs is exhausted</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -477,7 +485,14 @@
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;##########################################################&quot;</span><span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;Statistics:&quot;</span><span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Incumbent changed: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inc_changed</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>  <span class="c1"># first change is default conf</span>
-        <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">)))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;#Submitted target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">submitted_ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="p">)</span>
+        <span class="n">log_func</span><span class="p">(</span>
+            <span class="s2">&quot;#Finished target algorithm runs: </span><span class="si">%d</span><span class="s2"> / </span><span class="si">%s</span><span class="s2">&quot;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finished_ta_runs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">ta_run_limit</span><span class="p">))</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+        <span class="p">)</span>
         <span class="n">log_func</span><span class="p">(</span><span class="s2">&quot;#Configurations: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_configs</span><span class="p">))</span>
         <span class="n">log_func</span><span class="p">(</span>
             <span class="s2">&quot;Used wallclock time: </span><span class="si">%.2f</span><span class="s2"> / </span><span class="si">%.2f</span><span class="s2"> sec &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scenario</span><span class="o">.</span><span class="n">wallclock_limit</span><span class="p">))</span>
@@ -504,7 +519,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

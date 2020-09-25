@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae package &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.tae package &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.tae.execute_func module" href="smac.tae.execute_func.html" />
+    <link rel="next" title="smac.tae.base module" href="smac.tae.base.html" />
     <link rel="prev" title="smac.stats.stats module" href="smac.stats.stats.html" /> 
 </head>
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,11 +180,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -207,12 +211,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -289,13 +295,90 @@
             
   <div class="section" id="module-smac.tae">
 <span id="smac-tae-package"></span><h1>smac.tae package<a class="headerlink" href="#module-smac.tae" title="Permalink to this headline">¶</a></h1>
+<dl class="py exception">
+<dt id="smac.tae.FirstRunCrashedException">
+<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.</code><code class="sig-name descname">FirstRunCrashedException</code><a class="reference internal" href="../_modules/smac/tae.html#FirstRunCrashedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.FirstRunCrashedException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.tae.TAEAbortException" title="smac.tae.TAEAbortException"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.TAEAbortException</span></code></a></p>
+<p>Exception indicating that the first run crashed (depending on options
+this could trigger an ABORT of SMAC.)</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="smac.tae.StatusType">
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.</code><code class="sig-name descname">StatusType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae.html#StatusType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.StatusType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Class to define numbers for status types</p>
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.ABORT">
+<code class="sig-name descname">ABORT</code><em class="property"> = 4</em><a class="headerlink" href="#smac.tae.StatusType.ABORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.CAPPED">
+<code class="sig-name descname">CAPPED</code><em class="property"> = 6</em><a class="headerlink" href="#smac.tae.StatusType.CAPPED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.CRASHED">
+<code class="sig-name descname">CRASHED</code><em class="property"> = 3</em><a class="headerlink" href="#smac.tae.StatusType.CRASHED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.DONOTADVANCE">
+<code class="sig-name descname">DONOTADVANCE</code><em class="property"> = 7</em><a class="headerlink" href="#smac.tae.StatusType.DONOTADVANCE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.MEMOUT">
+<code class="sig-name descname">MEMOUT</code><em class="property"> = 5</em><a class="headerlink" href="#smac.tae.StatusType.MEMOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.RUNNING">
+<code class="sig-name descname">RUNNING</code><em class="property"> = 9</em><a class="headerlink" href="#smac.tae.StatusType.RUNNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.STOP">
+<code class="sig-name descname">STOP</code><em class="property"> = 8</em><a class="headerlink" href="#smac.tae.StatusType.STOP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.SUCCESS">
+<code class="sig-name descname">SUCCESS</code><em class="property"> = 1</em><a class="headerlink" href="#smac.tae.StatusType.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.StatusType.TIMEOUT">
+<code class="sig-name descname">TIMEOUT</code><em class="property"> = 2</em><a class="headerlink" href="#smac.tae.StatusType.TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="smac.tae.StatusType.enum_hook">
+<em class="property">static </em><code class="sig-name descname">enum_hook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="../_modules/smac/tae.html#StatusType.enum_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.StatusType.enum_hook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook function passed to json-deserializer as “object_hook”.
+EnumEncoder in runhistory/runhistory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt id="smac.tae.TAEAbortException">
+<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.</code><code class="sig-name descname">TAEAbortException</code><a class="reference internal" href="../_modules/smac/tae.html#TAEAbortException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.TAEAbortException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception indicating that the target algorithm suggests an ABORT of
+SMAC, usually because it assumes that all further runs will surely fail.</p>
+</dd></dl>
+
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </div>
 </div>
@@ -308,7 +391,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.tae.execute_func.html" class="btn btn-neutral float-right" title="smac.tae.execute_func module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.tae.base.html" class="btn btn-neutral float-right" title="smac.tae.base module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="smac.stats.stats.html" class="btn btn-neutral float-left" title="smac.stats.stats module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -321,7 +404,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

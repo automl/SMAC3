@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.runhistory.runhistory &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.runhistory.runhistory &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -150,6 +150,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,11 +178,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -205,12 +209,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -290,7 +296,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae</span> <span class="kn">import</span> <span class="n">StatusType</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">PickableLoggerAdapter</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
@@ -316,6 +322,34 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_id</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span></div>
 
 
+<span class="c1"># NOTE class instead of collection to have a default value for budget/source_id in RunInfo</span>
+<div class="viewcode-block" id="RunInfo"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo">[docs]</a><span class="k">class</span> <span class="nc">RunInfo</span><span class="p">(</span>
+    <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
+        <span class="s1">&#39;RunInfo&#39;</span><span class="p">,</span>
+        <span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="s1">&#39;instance&#39;</span><span class="p">,</span> <span class="s1">&#39;instance_specific&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">,</span> <span class="s1">&#39;cutoff&#39;</span><span class="p">,</span> <span class="s1">&#39;capped&#39;</span><span class="p">,</span> <span class="s1">&#39;budget&#39;</span><span class="p">,</span> <span class="s1">&#39;source_id&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>  <span class="c1"># No type annotation because the 1st argument for a namedtuble is always the class type,</span>
+              <span class="c1"># see https://docs.python.org/3/reference/datamodel.html#object.__new__</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">instance_specific</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">capped</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">budget</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="c1"># In the context of parallel runs, one will have multiple suppliers of</span>
+        <span class="c1"># configurations. source_id is a new mechanism to track what entity launched</span>
+        <span class="c1"># this configuration</span>
+        <span class="n">source_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;RunInfo&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">instance_specific</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span>
+                               <span class="n">cutoff</span><span class="p">,</span> <span class="n">capped</span><span class="p">,</span> <span class="n">budget</span><span class="p">,</span> <span class="n">source_id</span><span class="p">)</span></div>
+
+
 <span class="n">InstSeedKey</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span>
     <span class="s1">&#39;InstSeedKey&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;instance&#39;</span><span class="p">,</span> <span class="s1">&#39;seed&#39;</span><span class="p">])</span>
 
@@ -330,7 +364,7 @@
 
 <div class="viewcode-block" id="EnumEncoder"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.EnumEncoder">[docs]</a><span class="k">class</span> <span class="nc">EnumEncoder</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Custom encoder for enum-serialization</span>
-<span class="sd">    (implemented for StatusType from tae/execute_ta_run).</span>
+<span class="sd">    (implemented for StatusType from tae).</span>
 <span class="sd">    Using encoder implied using object_hook as defined in StatusType</span>
 <span class="sd">    to deserialize from json.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -457,6 +491,7 @@
         <span class="n">endtime</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">additional_info</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span> <span class="o">=</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span>
+        <span class="n">force_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Adds a data of a new target algorithm (TA) run;</span>
 <span class="sd">        it will update data if the same key values are used</span>
@@ -487,6 +522,8 @@
 <span class="sd">                information from TA or fields such as start time and host_id)</span>
 <span class="sd">            origin: DataOrigin</span>
 <span class="sd">                Defines how data will be used.</span>
+<span class="sd">            force_update: bool (default: False)</span>
+<span class="sd">                Forces the addition of a config to the history</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -512,7 +549,7 @@
 
         <span class="c1"># Each runkey is supposed to be used only once. Repeated tries to add</span>
         <span class="c1"># the same runkey will be ignored silently if not capped.</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">or</span> <span class="n">force_update</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
             <span class="c1"># overwrite capped runs with uncapped runs</span>
@@ -531,8 +568,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin</span>
 
+        <span class="c1"># Capped data is added above</span>
+        <span class="c1"># Do not register the cost until the run has completed</span>
         <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="p">(</span><span class="n">DataOrigin</span><span class="o">.</span><span class="n">INTERNAL</span><span class="p">,</span> <span class="n">DataOrigin</span><span class="o">.</span><span class="n">EXTERNAL_SAME_INSTANCES</span><span class="p">)</span> \
-                <span class="ow">and</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>  <span class="c1"># Capped data is added above</span>
+                <span class="ow">and</span> <span class="n">status</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">,</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">]:</span>
             <span class="c1"># also add to fast data structure</span>
             <span class="n">is_k</span> <span class="o">=</span> <span class="n">InstSeedKey</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">instance_id</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">,</span> <span class="p">{})</span>
@@ -1016,7 +1055,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

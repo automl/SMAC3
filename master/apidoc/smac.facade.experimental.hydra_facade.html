@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.experimental.hydra_facade module &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.facade.experimental.hydra_facade module &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,11 +180,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -207,12 +211,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -295,7 +301,7 @@
 <span id="smac-facade-experimental-hydra-facade-module"></span><h1>smac.facade.experimental.hydra_facade module<a class="headerlink" href="#module-smac.facade.experimental.hydra_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.facade.experimental.hydra_facade.Hydra">
-<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.hydra_facade.</code><code class="sig-name descname">Hydra</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], n_iterations: int, val_set: str = 'train', incs_per_round: int = 1, n_optimizers: int = 1, rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.execute_ta_run.ExecuteTARun] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.hydra_facade.</code><code class="sig-name descname">Hydra</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], n_iterations: int, val_set: str = 'train', incs_per_round: int = 1, n_optimizers: int = 1, rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.base.BaseRunner] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use Hydra default mode</p>
 <dl class="py attribute">
@@ -360,7 +366,7 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 <li><p><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
 <li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
 <li><p><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</p></li>
-<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><em>ExecuteTARun</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
 <li><p><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
 </ul>
 </dd>
@@ -443,7 +449,7 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

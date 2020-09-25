@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_ta_run module &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.tae.serial_runner module &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.tae.execute_ta_run_aclib module" href="smac.tae.execute_ta_run_aclib.html" />
-    <link rel="prev" title="smac.tae.execute_func module" href="smac.tae.execute_func.html" /> 
+    <link rel="next" title="smac.utils package" href="smac.utils.html" />
+    <link rel="prev" title="smac.tae.execute_ta_run_old module" href="smac.tae.execute_ta_run_old.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,11 +180,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -207,12 +211,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -270,13 +276,13 @@
         
           <li><a href="smac.tae.html">smac.tae package</a> &raquo;</li>
         
-      <li>smac.tae.execute_ta_run module</li>
+      <li>smac.tae.serial_runner module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.tae.execute_ta_run.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.tae.serial_runner.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -289,70 +295,56 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.tae.execute_ta_run">
-<span id="smac-tae-execute-ta-run-module"></span><h1>smac.tae.execute_ta_run module<a class="headerlink" href="#module-smac.tae.execute_ta_run" title="Permalink to this headline">¶</a></h1>
-<dl class="py exception">
-<dt id="smac.tae.execute_ta_run.BudgetExhaustedException">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">BudgetExhaustedException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#BudgetExhaustedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.BudgetExhaustedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Exception indicating that time- or memory-budgets are exhausted.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt id="smac.tae.execute_ta_run.CappedRunException">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">CappedRunException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#CappedRunException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.CappedRunException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Exception indicating that a run was capped with a cutoff smaller than
-the actual timeout</p>
-</dd></dl>
-
+  <div class="section" id="module-smac.tae.serial_runner">
+<span id="smac-tae-serial-runner-module"></span><h1>smac.tae.serial_runner module<a class="headerlink" href="#module-smac.tae.serial_runner" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">ExecuteTARun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>RunHistory<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'runtime'</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Executes a target algorithm run with a given configuration on a given
-instance and some resource limitations</p>
+<dt id="smac.tae.serial_runner.SerialRunner">
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.serial_runner.</code><code class="sig-name descname">SerialRunner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'runtime'</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.base.BaseRunner</span></code></a></p>
+<p>Interface to submit and collect a job in a serial fashion.</p>
+<p>It dictates what a worker should do to convert a
+configuration/instance/seed to a result.</p>
+<p>This class is expected to be extended via the implementation of
+a run() method for the desired task.</p>
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.ta">
-<code class="sig-name descname">ta</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.ta" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.results">
+<code class="sig-name descname">results</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.results" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.stats">
-<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.stats" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.ta">
+<code class="sig-name descname">ta</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.ta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.runhistory">
-<code class="sig-name descname">runhistory</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.runhistory" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.stats">
+<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.run_obj">
-<code class="sig-name descname">run_obj</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run_obj" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.run_obj">
+<code class="sig-name descname">run_obj</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.run_obj" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.par_factor">
-<code class="sig-name descname">par_factor</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.par_factor" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.par_factor">
+<code class="sig-name descname">par_factor</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.par_factor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.crash_cost">
-<code class="sig-name descname">crash_cost</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.crash_cost" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.cost_for_crash">
+<code class="sig-name descname">cost_for_crash</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.cost_for_crash" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.logger" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.abort_i_first_run_crash">
+<code class="sig-name descname">abort_i_first_run_crash</code><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.abort_i_first_run_crash" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>Constructor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
 <li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
 <li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
@@ -362,12 +354,51 @@ that returned NaN or inf)</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt id="smac.tae.serial_runner.SerialRunner._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.run" title="Permalink to this definition">¶</a></dt>
+<dt id="smac.tae.serial_runner.SerialRunner.get_finished_runs">
+<code class="sig-name descname">get_finished_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Tuple<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.get_finished_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method returns any finished configuration, and returns a list with
+the results of exercising the configurations. This class keeps populating results
+to self.results until a call to get_finished runs is done. In this case, the
+self.results list is emptied and all RunValues produced by running self.run() are
+returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>List[RunInfo, RunValue]</strong> (<em>A list of RunInfo/RunValues pairs</em>)</p></li>
+<li><p><em>a submitted configuration</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="smac.tae.serial_runner.SerialRunner.num_workers">
+<code class="sig-name descname">num_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.num_workers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.num_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total number of workers available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="smac.tae.serial_runner.SerialRunner.pending_runs">
+<code class="sig-name descname">pending_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.pending_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.pending_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether or not there are configs still running. Generally if the runner is serial,
+launching a run instantly returns it’s result. On parallel runners, there might
+be pending configurations to complete.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="smac.tae.serial_runner.SerialRunner.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType">smac.tae.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
+<p>This method exemplifies how to defined the run() method</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -376,8 +407,8 @@ instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 <li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – Wallclock time limit of the target algorithm. If no value is
 provided no limit will be enforced.</p></li>
 <li><p><strong>seed</strong> (<em>int</em>) – random seed</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
-Handled by the target algorithm internally</p></li>
+<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target
+algorithm. Handled by the target algorithm internally</p></li>
 <li><p><strong>instance_specific</strong> (<em>str</em>) – instance specific information (e.g., domain file or solution)</p></li>
 </ul>
 </dd>
@@ -394,101 +425,29 @@ Handled by the target algorithm internally</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.tae.execute_ta_run.ExecuteTARun.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em>, <em class="sig-param"><span class="n">capped</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#ExecuteTARun.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.ExecuteTARun.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper function for ExecuteTARun.run() to check configuration
-budget before the runs and to update stats after run</p>
+<dt id="smac.tae.serial_runner.SerialRunner.submit_run">
+<code class="sig-name descname">submit_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_info</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a></span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.submit_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.submit_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function submits a run_info object
+in a serial fashion.</p>
+<p>As there is a single worker for this task, this
+interface can be considered a wrapper over the run()
+method.</p>
+<p>Both result/exceptions can be completely determined in this
+step so both lists are properly filled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – Mainly a dictionary param -&gt; value</p></li>
-<li><p><strong>instance</strong> (<em>string</em>) – Problem instance</p></li>
-<li><p><strong>cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – Runtime cutoff</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Random seed</p></li>
-<li><p><strong>budget</strong> (<em>float</em><em>, </em><em>optional</em>) – A positive, real-valued number representing an arbitrary limit to the target algorithm
-Handled by the target algorithm internally</p></li>
-<li><p><strong>instance_specific</strong> (<em>str</em>) – Instance specific information (e.g., domain file or solution)</p></li>
-<li><p><strong>capped</strong> (<em>bool</em>) – If true and status is StatusType.TIMEOUT,
-uses StatusType.CAPPED</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>status</strong> (<em>enum of StatusType (int)</em>) – {SUCCESS, TIMEOUT, CRASHED, ABORT}</p></li>
-<li><p><strong>cost</strong> (<em>float</em>) – cost/regret/quality (float) (None, if not returned by TA)</p></li>
-<li><p><strong>runtime</strong> (<em>float</em>) – runtime (None if not returned by TA)</p></li>
-<li><p><strong>additional_info</strong> (<em>dict</em>) – all further additional run information</p></li>
-</ul>
-</p>
+<dd class="field-odd"><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><em>RunInfo</em></a>) – An object containing the configuration and the necessary data to run it</p>
 </dd>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py exception">
-<dt id="smac.tae.execute_ta_run.FirstRunCrashedException">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">FirstRunCrashedException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#FirstRunCrashedException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.FirstRunCrashedException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_ta_run.TAEAbortException" title="smac.tae.execute_ta_run.TAEAbortException"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.TAEAbortException</span></code></a></p>
-<p>Exception indicating that the first run crashed (depending on options
-this could trigger an ABORT of SMAC.)</p>
-</dd></dl>
-
-<dl class="py class">
-<dt id="smac.tae.execute_ta_run.StatusType">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">StatusType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#StatusType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
-<p>Class to define numbers for status types</p>
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.ABORT">
-<code class="sig-name descname">ABORT</code><em class="property"> = 4</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.ABORT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.CAPPED">
-<code class="sig-name descname">CAPPED</code><em class="property"> = 6</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.CAPPED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.CRASHED">
-<code class="sig-name descname">CRASHED</code><em class="property"> = 3</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.CRASHED" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.DONOTADVANCE">
-<code class="sig-name descname">DONOTADVANCE</code><em class="property"> = 7</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.DONOTADVANCE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.MEMOUT">
-<code class="sig-name descname">MEMOUT</code><em class="property"> = 5</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.MEMOUT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.SUCCESS">
-<code class="sig-name descname">SUCCESS</code><em class="property"> = 1</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.SUCCESS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="smac.tae.execute_ta_run.StatusType.TIMEOUT">
-<code class="sig-name descname">TIMEOUT</code><em class="property"> = 2</em><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.TIMEOUT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
-<dt id="smac.tae.execute_ta_run.StatusType.enum_hook">
-<em class="property">static </em><code class="sig-name descname">enum_hook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span> &#x2192; Any<a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#StatusType.enum_hook"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.StatusType.enum_hook" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook function passed to json-deserializer as “object_hook”.
-EnumEncoder in runhistory/runhistory.</p>
+<dt id="smac.tae.serial_runner.SerialRunner.wait">
+<code class="sig-name descname">wait</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/tae/serial_runner.html#SerialRunner.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.serial_runner.SerialRunner.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.
+For serial runs, no wait is needed as the result is immediately available.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py exception">
-<dt id="smac.tae.execute_ta_run.TAEAbortException">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.tae.execute_ta_run.</code><code class="sig-name descname">TAEAbortException</code><a class="reference internal" href="../_modules/smac/tae/execute_ta_run.html#TAEAbortException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_ta_run.TAEAbortException" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Exception indicating that the target algorithm suggests an ABORT of
-SMAC, usually because it assumes that all further runs will surely fail.</p>
 </dd></dl>
 
 </div>
@@ -501,10 +460,10 @@ SMAC, usually because it assumes that all further runs will surely fail.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.tae.execute_ta_run_aclib.html" class="btn btn-neutral float-right" title="smac.tae.execute_ta_run_aclib module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.utils.html" class="btn btn-neutral float-right" title="smac.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.tae.execute_func.html" class="btn btn-neutral float-left" title="smac.tae.execute_func module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.tae.execute_ta_run_old.html" class="btn btn-neutral float-left" title="smac.tae.execute_ta_run_old module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -514,7 +473,7 @@ SMAC, usually because it assumes that all further runs will surely fail.</p>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

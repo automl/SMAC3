@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.optimizer.smbo module &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.optimizer.smbo module &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,11 +180,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -207,12 +211,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -293,7 +299,7 @@
 <span id="smac-optimizer-smbo-module"></span><h1>smac.optimizer.smbo module<a class="headerlink" href="#module-smac.optimizer.smbo" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.optimizer.smbo.SMBO">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.smbo.</code><code class="sig-name descname">SMBO</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">intensifier: smac.intensification.abstract_racer.AbstractRacer</em>, <em class="sig-param">num_run: int</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_x_best: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.smbo.</code><code class="sig-name descname">SMBO</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">initial_design: smac.initial_design.initial_design.InitialDesign</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">intensifier: smac.intensification.abstract_racer.AbstractRacer</em>, <em class="sig-param">num_run: int</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">tae_runner: smac.tae.base.BaseRunner</em>, <em class="sig-param">restore_incumbent: ConfigSpace.configuration_space.Configuration = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_x_best: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="py attribute">
@@ -354,6 +360,11 @@
 <dl class="py attribute">
 <dt id="smac.optimizer.smbo.SMBO.epm_chooser">
 <code class="sig-name descname">epm_chooser</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.epm_chooser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.optimizer.smbo.SMBO.tae_runner">
+<code class="sig-name descname">tae_runner</code><a class="headerlink" href="#smac.optimizer.smbo.SMBO.tae_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface that contains the main Bayesian optimization loop</p>
 <dl class="simple">
 <dt>scenario: smac.scenario.scenario.Scenario</dt><dd><p>Scenario object</p>
@@ -381,6 +392,8 @@ data into EPM data</p>
 <dt>restore_incumbent: Configuration</dt><dd><p>incumbent to be used from the start. ONLY used to restore states.</p>
 </dd>
 <dt>rng: np.random.RandomState</dt><dd><p>Random number generator</p>
+</dd>
+<dt>tae_runner<span class="classifier">smac.tae.base.BaseRunner Object</span></dt><dd><p>target algorithm run executor</p>
 </dd>
 <dt>random_configuration_chooser</dt><dd><p>Chooser for random configuration – one of
 * ChooserNoCoolDown(modulus)
@@ -414,6 +427,28 @@ scenario.intensification_percentage).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="smac.optimizer.smbo.SMBO._incorporate_run_results">
+<code class="sig-name descname">_incorporate_run_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_info</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a></span></em>, <em class="sig-param"><span class="n">result</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a></span></em>, <em class="sig-param"><span class="n">time_left</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO._incorporate_run_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO._incorporate_run_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SMBO submits a config-run-request via a RunInfo object.
+When that config run is completed, a RunValue, which contains
+all the relevant information obtained after running a job, is returned.
+This method incorporates the status of that run into
+the stats/runhistory objects so that other consumers
+can advance with their task.</p>
+<p>Additionally, it checks for a new incumbent via the intensifier process results,
+which also has the side effect of moving the intensifier to a new state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_info</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><em>RunInfo</em></a>) – Describes the run (config) from which to process the results</p></li>
+<li><p><strong>result</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><em>RunValue</em></a>) – Contains relevant information regarding the execution of a config</p></li>
+<li><p><strong>time_left</strong> (<em>float</em>) – time in [sec] available to perform intensify</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -493,7 +528,7 @@ deterministic will be fixed to 1)</p></li>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

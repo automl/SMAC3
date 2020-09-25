@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_func module &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.tae.execute_func module &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.tae.execute_ta_run module" href="smac.tae.execute_ta_run.html" />
-    <link rel="prev" title="smac.tae package" href="smac.tae.html" /> 
+    <link rel="next" title="smac.tae.execute_ta_run_aclib module" href="smac.tae.execute_ta_run_aclib.html" />
+    <link rel="prev" title="smac.tae.dask_runner module" href="smac.tae.dask_runner.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -152,6 +152,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -178,11 +180,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
@@ -207,12 +211,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -293,8 +299,8 @@
 <span id="smac-tae-execute-func-module"></span><h1>smac.tae.execute_func module<a class="headerlink" href="#module-smac.tae.execute_func" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.tae.execute_func.AbstractTAFunc">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">AbstractTAFunc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>RunHistory<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.ExecuteTARun" title="smac.tae.execute_ta_run.ExecuteTARun"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_ta_run.ExecuteTARun</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">AbstractTAFunc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner" title="smac.tae.serial_runner.SerialRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.serial_runner.SerialRunner</span></code></a></p>
 <p>Baseclass to execute target algorithms which are python functions.</p>
 <p><strong>Note:*</strong> Do not use directly</p>
 <dl class="py attribute">
@@ -307,21 +313,11 @@
 <code class="sig-name descname">use_pynisher</code><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.use_pynisher" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<p>Constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
-<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
-that returned NaN or inf)</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
-</ul>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.AbstractTAFunc._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="smac.tae.execute_func.AbstractTAFunc._call_ta">
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc._call_ta" title="Permalink to this definition">¶</a></dt>
@@ -329,7 +325,7 @@ that returned NaN or inf)</p></li>
 
 <dl class="py method">
 <dt id="smac.tae.execute_func.AbstractTAFunc.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.execute_ta_run.html#smac.tae.execute_ta_run.StatusType" title="smac.tae.execute_ta_run.StatusType">smac.tae.execute_ta_run.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType">smac.tae.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self._ta&gt; with configuration &lt;config&gt; for at
 most &lt;cutoff&gt; seconds, allowing it to use at most &lt;memory_limit&gt; RAM.</p>
 <p>Whether the target algorithm is called with the &lt;instance&gt; and
@@ -364,7 +360,7 @@ Handled by the target algorithm internally</p></li>
 
 <dl class="py class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncArray">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>RunHistory<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncArray</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as an array-like to the target algorithm. The
@@ -385,27 +381,16 @@ the target algorithm.</p>
 <li><p><strong>ta</strong> (<em>callable</em>) – Function (target algorithm) to be optimized.</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>smac.stats.stats.Stats</em></a><em>, </em><em>optional</em>) – Stats object to collect statistics about runtime etc.</p></li>
 <li><p><strong>run_obj</strong> (<em>str</em><em>, </em><em>optional</em>) – Run objective (runtime or quality)</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
 <li><p><strong>memory_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Memory limit (in MB) that will be applied to the target algorithm.</p></li>
 <li><p><strong>par_factor</strong> (<em>int</em><em>, </em><em>optional</em>) – Penalized average runtime factor. Only used when <cite>run_obj=’runtime’</cite></p></li>
 </ul>
 </dd>
 </dl>
-<p>Constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
-<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
-that returned NaN or inf)</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
-</ul>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.ExecuteTAFuncArray._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="smac.tae.execute_func.ExecuteTAFuncArray._call_ta">
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray._call_ta" title="Permalink to this definition">¶</a></dt>
@@ -415,7 +400,7 @@ that returned NaN or inf)</p></li>
 
 <dl class="py class">
 <dt id="smac.tae.execute_func.ExecuteTAFuncDict">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">runhistory</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>RunHistory<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">smac.tae.execute_func.</code><code class="sig-name descname">ExecuteTAFuncDict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'quality'</span></em>, <em class="sig-param"><span class="n">memory_limit</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_pynisher</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.tae.execute_func.AbstractTAFunc" title="smac.tae.execute_func.AbstractTAFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.execute_func.AbstractTAFunc</span></code></a></p>
 <p>Evaluate function for given configuration and resource limit.</p>
 <p>Passes the configuration as a dictionary to the target algorithm. The
@@ -436,28 +421,17 @@ the target algorithm.</p>
 <li><p><strong>ta</strong> (<em>callable</em>) – Function (target algorithm) to be optimized.</p></li>
 <li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>smac.stats.stats.Stats</em></a><em>, </em><em>optional</em>) – Stats object to collect statistics about runtime etc.</p></li>
 <li><p><strong>run_obj</strong> (<em>str</em><em>, </em><em>optional</em>) – Run objective (runtime or quality)</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
 <li><p><strong>memory_limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Memory limit (in MB) that will be applied to the target algorithm.</p></li>
 <li><p><strong>par_factor</strong> (<em>int</em><em>, </em><em>optional</em>) – Penalized average runtime factor. Only used when <cite>run_obj=’runtime’</cite></p></li>
 <li><p><strong>use_pynisher</strong> (<em>bool</em><em>, </em><em>optional</em>) – use pynisher to limit resources;</p></li>
 </ul>
 </dd>
 </dl>
-<p>Constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ta</strong> (<em>list</em>) – target algorithm command line as list of arguments</p></li>
-<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a><em>, </em><em>optional</em>) – runhistory to keep track of all runs; only used if set</p></li>
-<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a><em>(</em><em>)</em>) – stats object to collect statistics about runtime and so on</p></li>
-<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
-<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
-<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
-that returned NaN or inf)</p></li>
-<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
-</ul>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.ExecuteTAFuncDict._abc_impl">
+<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="smac.tae.execute_func.ExecuteTAFuncDict._call_ta">
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict._call_ta" title="Permalink to this definition">¶</a></dt>
@@ -475,10 +449,10 @@ that returned NaN or inf)</p></li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.tae.execute_ta_run.html" class="btn btn-neutral float-right" title="smac.tae.execute_ta_run module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.tae.execute_ta_run_aclib.html" class="btn btn-neutral float-right" title="smac.tae.execute_ta_run_aclib module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.tae.html" class="btn btn-neutral float-left" title="smac.tae package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="smac.tae.dask_runner.html" class="btn btn-neutral float-left" title="smac.tae.dask_runner module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -488,7 +462,7 @@ that returned NaN or inf)</p></li>
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>

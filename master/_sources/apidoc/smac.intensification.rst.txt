@@ -14,4 +14,6 @@ smac.intensification package
    smac.intensification.abstract_racer
    smac.intensification.hyperband
    smac.intensification.intensification
+   smac.intensification.parallel_scheduling
+   smac.intensification.simple_intensifier
    smac.intensification.successive_halving

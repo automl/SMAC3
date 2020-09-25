@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_ta_run_old &mdash; SMAC 0.12.3 documentation</title>
+  <title>smac.tae.execute_ta_run_old &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.12.3
+                0.13.0
               </div>
             
           
@@ -150,6 +150,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
 </ul>
 </li>
@@ -176,11 +178,13 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.tae.html">smac.tae package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.base.html">smac.tae.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run.html">smac.tae.execute_ta_run module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.utils.html">smac.utils package</a><ul>
@@ -205,12 +209,14 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
 </ul>
@@ -266,6 +272,8 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
+          <li><a href="../tae.html">smac.tae</a> &raquo;</li>
+        
       <li>smac.tae.execute_ta_run_old</li>
     
     
@@ -286,7 +294,8 @@
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run</span> <span class="kn">import</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">ExecuteTARun</span>
+<span class="kn">from</span> <span class="nn">smac.tae</span> <span class="kn">import</span> <span class="n">StatusType</span>
+<span class="kn">from</span> <span class="nn">smac.tae.serial_runner</span> <span class="kn">import</span> <span class="n">SerialRunner</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
@@ -296,7 +305,7 @@
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
 
 
-<div class="viewcode-block" id="ExecuteTARunOld"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARunOld</span><span class="p">(</span><span class="n">ExecuteTARun</span><span class="p">):</span>
+<div class="viewcode-block" id="ExecuteTARunOld"><a class="viewcode-back" href="../../../apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld">[docs]</a><span class="k">class</span> <span class="nc">ExecuteTARunOld</span><span class="p">(</span><span class="n">SerialRunner</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;Executes a target algorithm run with a given configuration on a given</span>
 <span class="sd">    instance and some resource limitations. Uses the original SMAC/PILS format</span>
@@ -443,7 +452,7 @@
   <div role="contentinfo">
     <p>
         
-        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,Stefan Falkner and Frank Hutter
+        &copy; Copyright 2015-2020, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter
 
     </p>
   </div>
