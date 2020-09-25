@@ -21,6 +21,7 @@ from smac.utils.constants import MAXINT
 from smac.tae import (
     FirstRunCrashedException,
     StatusType,
+    TAEAbortException,
 )
 from smac.tae.base import BaseRunner
 from smac.utils.io.traj_logging import TrajLogger
@@ -142,6 +143,9 @@ class SMBO(object):
                                       random_configuration_chooser=random_configuration_chooser,
                                       predict_x_best=predict_x_best,
                                       min_samples_model=min_samples_model)
+
+        # Internal variable - if this is set to True it will gracefully stop SMAC
+        self._stop = False
 
     def start(self) -> None:
         """Starts the Bayesian Optimization loop.
@@ -284,8 +288,11 @@ class SMBO(object):
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
 
-            if self.stats.is_budget_exhausted():
-                self.logger.warning("Exhausted configuration budget")
+            if self.stats.is_budget_exhausted() or self._stop:
+                if self.stats.is_budget_exhausted():
+                    self.logger.debug("Exhausted configuration budget")
+                else:
+                    self.logger.debug("Shutting down because a configuration returned status STOP")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
@@ -431,6 +438,14 @@ class SMBO(object):
                 result.status, result.cost, result.time, str(result.additional_info)
             )
         )
+
+        if result.status == StatusType.ABORT:
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
+                                    "exit. The last incumbent can be found "
+                                    "in the trajectory-file.")
+        elif result.status == StatusType.STOP:
+            self._stop = True
+            return
 
         self.runhistory.add(
             config=run_info.config,

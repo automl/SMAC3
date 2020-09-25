@@ -11,7 +11,7 @@ from smac.utils.constants import MAXINT
 from smac.utils.logging import PickableLoggerAdapter
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
-from smac.tae import StatusType, TAEAbortException
+from smac.tae import StatusType
 
 
 class BaseRunner(ABC):
@@ -248,11 +248,6 @@ class BaseRunner(ABC):
                                         self.cost_for_crash)
                                     )
             status = StatusType.CRASHED
-
-        if status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
-                                    "exit. The last incumbent can be found "
-                                    "in the trajectory-file.")
 
         if self.run_obj == "runtime":
             # The following line pleases mypy - we already check for cutoff not being none above,

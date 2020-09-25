@@ -152,6 +152,24 @@ class TestSMBO(unittest.TestCase):
         except FirstRunCrashedException:
             self.fail('Raises FirstRunCrashedException unexpectedly!')
 
+    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    def test_stop_smbo(self, patch):
+        def target(x):
+            return 5
+
+        # should raise an error if abort_on_first_run_crash is True
+        patch.return_value = StatusType.STOP, 0.5, 0.5, {}
+        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
+                         'abort_on_first_run_crash': True})
+        self.output_dirs.append(scen.output_dir)
+        smbo = SMAC4AC(scen, tae_runner=target, rng=1)
+        self.assertFalse(smbo.solver._stop)
+        smbo.optimize()
+        self.assertEqual(len(smbo.runhistory.data), 1)
+        self.assertEqual(list(smbo.runhistory.data.values())[0].status, StatusType.RUNNING)
+        self.assertTrue(smbo.solver._stop)
+
     def test_intensification_percentage(self):
         def target(x):
             return 5
