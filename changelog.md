@@ -7,8 +7,9 @@
 
 ## Minor Changes
 * Update Readme 
-* Store SMAC's internal config id in the configuration object (#679)
 * Remove runhistory from TAE (#663)
+* Store SMAC's internal config id in the configuration object (#679)
+* Introduce Status Type STOP (#690)
 
 ## Bug Fixes
 * Only validate restriction of Sobol Sequence when choosing Sobol Sequence (#664)
