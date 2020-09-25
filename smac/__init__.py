@@ -6,8 +6,9 @@ import lazy_import
 from smac.utils import dependencies
 
 __version__ = '0.12.4'
-__author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,'\
-    'Stefan Falkner and Frank Hutter'
+__author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, ' \
+             'André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner ' \
+             'and Frank Hutter'
 
 
 with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as fh:
