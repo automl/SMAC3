@@ -464,13 +464,11 @@ class SMBO(object):
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
             if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
-                raise FirstRunCrashedException("First run crashed, abort. "
-                                               "Please check your setup -- "
-                                               "we assume that your default"
-                                               "configuration does not crashes. "
-                                               "(To deactivate this exception,"
-                                               " use the SMAC scenario option "
-                                               "'abort_on_first_run_crash')")
+                raise FirstRunCrashedException(
+                    "First run crashed, abort. Please check your setup -- we assume that your default "
+                    "configuration does not crashes. (To deactivate this exception, use the SMAC scenario option "
+                    "'abort_on_first_run_crash'). Additional run info: %s" % result.additional_info
+                )
 
         # Update the intensifier with the result of the runs
         self.incumbent, inc_perf = self.intensifier.process_results(
