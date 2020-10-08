@@ -216,12 +216,12 @@ class SMBO(object):
             if self.intensifier.num_run == 0:
                 time_spent = time.time() - start_time
                 time_left = self._get_timebound_for_intensification(time_spent, update=False)
-                self.logger.debug('New intensification time bound: %f', time_left)
+                print('New intensification time bound: %f', time_left)
             else:
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
+                print('Updated intensification time bound from %f to %f', old_time_left, time_left)
 
             # Skip starting new runs if the budget is now exhausted
             if self.stats.is_budget_exhausted():
@@ -234,6 +234,12 @@ class SMBO(object):
                 # Track the fact that a run was launched in the run
                 # history. It's status is tagged as RUNNING, and once
                 # completed and processed, it will be updated accordingly
+                print(
+                    "START Going to add config={} config_id_tmp={}".format(
+                        run_info.config,
+                        self.runhistory.config_ids.get(run_info.config),
+                    )
+                )
                 self.runhistory.add(
                     config=run_info.config,
                     cost=float(MAXINT),
@@ -242,7 +248,10 @@ class SMBO(object):
                     instance_id=run_info.instance,
                     seed=run_info.seed,
                     budget=run_info.budget,
+                    starttime=time.time(),
                 )
+                for k, v in self.runhistory.data.items():
+                    print(f"RH -- {k}->{v}")
 
                 run_info.config.config_id = self.runhistory.config_ids[run_info.config]
 
@@ -283,16 +292,16 @@ class SMBO(object):
                             output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
                             logger=self.logger)
 
-            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
+            print("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
                 self.stats.get_remaing_time_budget(),
                 self.stats.get_remaining_ta_budget(),
                 self.stats.get_remaining_ta_runs()))
 
             if self.stats.is_budget_exhausted() or self._stop:
                 if self.stats.is_budget_exhausted():
-                    self.logger.debug("Exhausted configuration budget")
+                    print("Exhausted configuration budget")
                 else:
-                    self.logger.debug("Shutting down because a configuration returned status STOP")
+                    print("Shutting down because a configuration returned status STOP")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
@@ -400,7 +409,7 @@ class SMBO(object):
                              frac_intensify)
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
-        self.logger.debug("Total time: %.4f, time spent on choosing next "
+        print("Total time: %.4f, time spent on choosing next "
                           "configurations: %.4f (%.2f), time left for "
                           "intensification: %.4f (%.2f)" %
                           (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
@@ -433,7 +442,7 @@ class SMBO(object):
         self.stats.ta_time_used += float(result.time)
         self.stats.finished_ta_runs += 1
 
-        self.logger.debug(
+        print(
             "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
                 result.status, result.cost, result.time, str(result.additional_info)
             )
@@ -446,6 +455,13 @@ class SMBO(object):
         elif result.status == StatusType.STOP:
             self._stop = True
             return
+
+        print(
+            "END Going to add config={} config_id_tmp={}".format(
+                run_info.config,
+                self.runhistory.config_ids.get(run_info.config),
+            )
+        )
 
         self.runhistory.add(
             config=run_info.config,
@@ -460,6 +476,8 @@ class SMBO(object):
             force_update=True,
             additional_info=result.additional_info,
         )
+        for k, v in self.runhistory.data.items():
+            print(f"RH -- {k}->{v}")
         self.stats.n_configs = len(self.runhistory.config_ids)
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
