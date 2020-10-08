@@ -282,6 +282,8 @@ class SMBO(object):
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
 
+                print(f"Finished_pair run_info={run_info} result={result}")
+
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
                 self._incorporate_run_results(run_info, result, time_left)
