@@ -149,6 +149,8 @@ We provide a bunch of examples in the [examples folder](examples), such as:
     * [BOHB4HPO_mlp.py](examples/BOHB4HPO_mlp.py) - BOHB
     * [BOHB4HPO_sgd_instances.py](examples/BOHB4HPO_sgd_instances.py) - BOHB across instances
 
+An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
+
 # Contact
 
 SMAC3 is developed by the [AutoML Group of the University of Freiburg](http://www.automl.org/).
