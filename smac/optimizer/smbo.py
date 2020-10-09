@@ -240,7 +240,7 @@ class SMBO(object):
                         self.runhistory.config_ids.get(run_info.config),
                     )
                 )
-                self.runhistory.add(
+                config_id = self.runhistory.add(
                     config=run_info.config,
                     cost=float(MAXINT),
                     time=0.0,
@@ -253,7 +253,7 @@ class SMBO(object):
                 for k, v in self.runhistory.data.items():
                     print(f"RH -- {k}->{v}")
 
-                run_info.config.config_id = self.runhistory.config_ids[run_info.config]
+                run_info.config.config_id = config_id
 
                 self.tae_runner.submit_run(run_info=run_info)
 
@@ -458,13 +458,6 @@ class SMBO(object):
             self._stop = True
             return
 
-        print(
-            "END Going to add config={} config_id_tmp={}".format(
-                run_info.config,
-                self.runhistory.config_ids.get(run_info.config),
-            )
-        )
-
         self.runhistory.add(
             config=run_info.config,
             cost=result.cost,
@@ -475,7 +468,7 @@ class SMBO(object):
             budget=run_info.budget,
             starttime=result.starttime,
             endtime=result.endtime,
-            force_update=True,
+            force_update=run_info.config.config_id,
             additional_info=result.additional_info,
         )
         for k, v in self.runhistory.data.items():

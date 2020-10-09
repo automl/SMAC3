@@ -8,6 +8,7 @@ import numpy as np
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from smac.utils.constants import MAXINT
 from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
@@ -15,7 +16,7 @@ from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
-from smac.runhistory.runhistory import RunInfo
+from smac.runhistory.runhistory import RunInfo, RunValue, RunKey
 from smac.scenario.scenario import Scenario
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray
@@ -292,7 +293,7 @@ class TestSMBO(unittest.TestCase):
             # We create a controlled setting, in which we optimize x^2
             # This will allow us to make sure every component act as expected
 
-            # FIRST: config space
+            # 16FIRST: config space
             cs = ConfigurationSpace()
             cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
             smac = SMAC4HPO(
@@ -373,6 +374,104 @@ class TestSMBO(unittest.TestCase):
             X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
             self.assertEqual(X.shape[0], len(all_configs))
 
+    @unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
+    def test_incorporate_run_results(self):
+        """
+        Makes sure that a configuration that as launched and tagged as running
+        is updated properly in the run history, when the job is completed
+        """
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
+        smac = SMAC4HPO(
+            scenario=Scenario({
+                'n_workers': 2,
+                'cs': cs,
+                'runcount_limit': 5,
+                'run_obj': 'quality',
+                "deterministic": "true",
+                "initial_incumbent": "DEFAULT",
+                'output_dir': 'data-test_smbo'
+            }),
+            tae_runner=ExecuteTAFuncArray,
+            tae_runner_kwargs={'ta': target},
+        )
+
+        # Register output dir for deletion
+        self.output_dirs.append(smac.output_dir)
+
+        smbo = smac.solver
+
+        # Mock the fact that we launched a run
+        # Here the run value is the default assumption in
+        # case of the run not finishing
+        config = cs.sample_configuration()
+        run_info =  RunInfo(
+            config=config, instance=time.time() % 10,
+            instance_specific={}, seed=0,
+            cutoff=None, capped=False, budget=0.0
+        )
+        starttime = time.time()
+        run_value = RunValue(
+            cost=float(MAXINT),
+            time=0.0,
+            status=StatusType.RUNNING,
+            starttime=starttime,
+            endtime=0.0,
+            additional_info=None
+        )
+        config_id = smbo.runhistory.add(
+            config=run_info.config,
+            cost=float(MAXINT),
+            time=0.0,
+            status=StatusType.RUNNING,
+            instance_id=run_info.instance,
+            seed=run_info.seed,
+            budget=run_info.budget,
+            starttime=starttime,
+        )
+        run_info.config.config_id = config_id
+
+        # We should only have one value in the run history
+        self.assertEqual(config_id, 1)
+        self.assertDictEqual(
+            smbo.runhistory.data,
+            {RunKey(
+                config_id=config_id,
+                instance_id=run_info.instance,
+                seed=run_info.seed,
+                budget=run_info.budget
+            ): run_value,
+            }
+        )
+
+        # Then we test with updating the finished run
+
+        # Mock intensifier
+        smbo.intensifier = unittest.mock.Mock()
+        smbo.intensifier.process_results.return_value = (config, 1.0)
+
+        run_value = RunValue(
+            cost=123,
+            time=0.5,
+            status=StatusType.SUCCESS,
+            starttime=time.time(),
+            endtime=time.time() + 1,
+            additional_info={}
+        )
+        smbo._incorporate_run_results(run_info=run_info,
+                                      result=run_value,
+                                      time_left=np.inf)
+        self.assertEqual(smbo.stats.n_configs, 1)
+        self.assertDictEqual(
+            smbo.runhistory.data,
+            {RunKey(
+                config_id=config_id,
+                instance_id=run_info.instance,
+                seed=run_info.seed,
+                budget=run_info.budget
+            ): run_value,
+            }
+        )
 
 if __name__ == "__main__":
     unittest.main()

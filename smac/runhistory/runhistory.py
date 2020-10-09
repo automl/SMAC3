@@ -201,8 +201,8 @@ class RunHistory(object):
         endtime: float = 0.0,
         additional_info: typing.Optional[typing.Dict] = None,
         origin: DataOrigin = DataOrigin.INTERNAL,
-        force_update: bool = False,
-    ) -> None:
+        force_update: typing.Optional[int] = None,
+    ) -> int:
         """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
         (config, instance_id, seed)
@@ -232,8 +232,14 @@ class RunHistory(object):
                 information from TA or fields such as start time and host_id)
             origin: DataOrigin
                 Defines how data will be used.
-            force_update: bool (default: False)
-                Forces the addition of a config to the history
+            force_update: int (default: None)
+                Forces the addition of a config to the history using the provided
+                identifier. By Default it is None, so no update to an exiting config
+                id is made
+        Returns
+        -------
+        config_id: int
+            An identifier to locate the config that was added to the run history
         """
 
         if config is None:
@@ -244,7 +250,10 @@ class RunHistory(object):
             )
 
         # Get the config id
-        config_id_tmp = self.config_ids.get(config)
+        # When dealing with parallelism, the config object will be recreated by
+        # a worker, which can change the object ID. We use force_update as a safe mechanism
+        # to re-identify configs in case it is not found
+        config_id_tmp = self.config_ids.get(config, force_update)
         if config_id_tmp is None:
             self._n_id += 1
             self.config_ids[config] = self._n_id
@@ -253,6 +262,24 @@ class RunHistory(object):
         else:
             config_id = typing.cast(int, config_id_tmp)
 
+        print(
+            "Going to add config={} config_id_tmp={} {}".format(
+                config,
+                config_id_tmp,
+                force_update,
+            )
+        )
+
+        # Also, in case an object ID changed
+        # (that is, when a config is sent to the worker, it will be recreated
+        # in the remote object, and the new re-created object will be returned)
+        # We use the config_id as a hand-shaking mechanism to re-identify the config
+        if self.config_ids.get(config) != self.config_ids.get(config, force_update):
+            # A new object exists
+            old_config = self.config_ids[self.ids_config[force_update]]
+            self.config_ids[config] = self.config_ids.pop(old_config)
+            self.ids_config[force_update] = config
+
         # Construct keys and values for the data dictionary
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
@@ -260,6 +287,7 @@ class RunHistory(object):
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
         if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
+            print(f"called {force_update} for {k} {v}")
             self._add(k, v, status, origin)
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs
@@ -267,6 +295,8 @@ class RunHistory(object):
         elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
             # overwrite if censored with a larger cutoff
             self._add(k, v, status, origin)
+
+        return config_id
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType,
              origin: DataOrigin) -> None:
