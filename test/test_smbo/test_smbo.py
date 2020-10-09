@@ -405,8 +405,9 @@ class TestSMBO(unittest.TestCase):
         # Here the run value is the default assumption in
         # case of the run not finishing
         config = cs.sample_configuration()
+        instance = 5
         run_info =  RunInfo(
-            config=config, instance=time.time() % 10,
+            config=config, instance=instance,
             instance_specific={}, seed=0,
             cutoff=None, capped=False, budget=0.0
         )
@@ -458,6 +459,30 @@ class TestSMBO(unittest.TestCase):
             endtime=time.time() + 1,
             additional_info={}
         )
+        smbo._incorporate_run_results(run_info=run_info,
+                                      result=run_value,
+                                      time_left=np.inf)
+        self.assertEqual(smbo.stats.n_configs, 1)
+        self.assertDictEqual(
+            smbo.runhistory.data,
+            {RunKey(
+                config_id=config_id,
+                instance_id=run_info.instance,
+                seed=run_info.seed,
+                budget=run_info.budget
+            ): run_value,
+            }
+        )
+
+        # here drastically change the config, so we rely on the
+        # config id handshaking
+        config = cs.sample_configuration()
+        run_info =  RunInfo(
+            config=config, instance=instance,
+            instance_specific={}, seed=0,
+            cutoff=None, capped=False, budget=0.0
+        )
+        run_info.config.config_id = config_id
         smbo._incorporate_run_results(run_info=run_info,
                                       result=run_value,
                                       time_left=np.inf)

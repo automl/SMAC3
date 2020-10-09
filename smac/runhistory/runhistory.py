@@ -276,9 +276,9 @@ class RunHistory(object):
         # We use the config_id as a hand-shaking mechanism to re-identify the config
         if self.config_ids.get(config) != self.config_ids.get(config, force_update):
             # A new object exists
-            old_config = self.config_ids[self.ids_config[force_update]]
+            old_config = self.ids_config[config_id]
             self.config_ids[config] = self.config_ids.pop(old_config)
-            self.ids_config[force_update] = config
+            self.ids_config[config_id] = config
 
         # Construct keys and values for the data dictionary
         k = RunKey(config_id, instance_id, seed, budget)
