@@ -293,7 +293,7 @@ class TestSMBO(unittest.TestCase):
             # We create a controlled setting, in which we optimize x^2
             # This will allow us to make sure every component act as expected
 
-            # 16FIRST: config space
+            # FIRST: config space
             cs = ConfigurationSpace()
             cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
             smac = SMAC4HPO(
