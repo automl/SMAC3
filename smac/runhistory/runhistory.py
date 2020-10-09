@@ -262,14 +262,6 @@ class RunHistory(object):
         else:
             config_id = typing.cast(int, config_id_tmp)
 
-        print(
-            "Going to add config={} config_id_tmp={} {}".format(
-                config,
-                config_id_tmp,
-                force_update,
-            )
-        )
-
         # Also, in case an object ID changed
         # (that is, when a config is sent to the worker, it will be recreated
         # in the remote object, and the new re-created object will be returned)
@@ -287,7 +279,6 @@ class RunHistory(object):
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
         if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
-            print(f"called {force_update} for {k} {v}")
             self._add(k, v, status, origin)
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs

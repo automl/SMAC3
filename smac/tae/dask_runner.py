@@ -161,7 +161,6 @@ class DaskParallelRunner(BaseRunner):
                 run_info
             )
         )
-        print(f"submitted config={run_info} future={self.futures[-1]} so currently self.futures({len(self.futures)})={self.futures}")
 
     def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with
@@ -206,11 +205,9 @@ class DaskParallelRunner(BaseRunner):
         # A future is removed to the list of futures as an indication
         # that a worker is available to take in an extra job
         done_futures = [f for f in self.futures if f.done()]
-        print(f"BEFORE Completed runs self.futures({len(self.futures)})={self.futures} and done_futures={done_futures} self.results={self.results}")
         for future in done_futures:
             self.results.append(future.result())
             self.futures.remove(future)
-        print(f"AFTER Completed runs self.futures({len(self.futures)})={self.futures} and done_futures={done_futures} self.results={self.results}")
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.

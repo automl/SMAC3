@@ -406,7 +406,7 @@ class TestSMBO(unittest.TestCase):
         # case of the run not finishing
         config = cs.sample_configuration()
         instance = 5
-        run_info =  RunInfo(
+        run_info = RunInfo(
             config=config, instance=instance,
             instance_specific={}, seed=0,
             cutoff=None, capped=False, budget=0.0
@@ -477,7 +477,7 @@ class TestSMBO(unittest.TestCase):
         # here drastically change the config, so we rely on the
         # config id handshaking
         config = cs.sample_configuration()
-        run_info =  RunInfo(
+        run_info = RunInfo(
             config=config, instance=instance,
             instance_specific={}, seed=0,
             cutoff=None, capped=False, budget=0.0
@@ -497,6 +497,7 @@ class TestSMBO(unittest.TestCase):
             ): run_value,
             }
         )
+
 
 if __name__ == "__main__":
     unittest.main()
