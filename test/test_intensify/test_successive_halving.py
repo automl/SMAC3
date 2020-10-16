@@ -1422,8 +1422,8 @@ class Test_SuccessiveHalving(unittest.TestCase):
         total_configs_in_stage = 4
         instances_per_stage = 2
 
-        # get all configs and add them to list
-        run_tracker = []
+        # get all configs and add them to the dict
+        run_tracker = {}
         challengers = [self.config1, self.config2, self.config3, self.config4]
         for i in range(total_configs_in_stage * instances_per_stage):
             intent, run_info = intensifier.get_next_run(
@@ -1438,7 +1438,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
             # Remove from the challengers, the launched configs
             challengers = [c for c in challengers if c != run_info.config]
-            run_tracker.append((run_info.config, run_info.instance, run_info.seed))
+            run_tracker[(run_info.config, run_info.instance, run_info.seed)] = False
             self.rh.add(config=run_info.config,
                         instance_id=run_info.instance,
                         seed=run_info.seed,
@@ -1460,6 +1460,227 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # not registered any, so for sure we have to wait
         # For all runs to be completed before moving to the next stage
         self.assertEqual(intent, RunInfoIntent.WAIT)
+
+    def _exhaust_stage_execution(self, intensifier, taf, challengers):
+        """
+        Exhaust configuration/instances seed and returns the
+        run_info that were not launched.
+
+        The idea with this procedure is to emulate the fact that some
+        configurations will finish while others won't. We need to be
+        robust against this scenario
+        """
+        pending_processing = []
+        toggle = True
+        while True:
+            intent, run_info = intensifier.get_next_run(
+                challengers=challengers,
+                chooser=None,
+                run_history=self.rh,
+                incumbent=None,
+            )
+
+            # Update the challengers
+            challengers = [c for c in challengers if c != run_info.config]
+
+            if intent == RunInfoIntent.WAIT:
+                break
+
+            # Add this configuration as running
+            self.rh.add(config=run_info.config,
+                        instance_id=run_info.instance,
+                        seed=run_info.seed,
+                        budget=run_info.budget,
+                        cost=1000,
+                        time=1000,
+                        status=StatusType.RUNNING,
+                        additional_info=None)
+
+            if toggle:
+                result = eval_challenger(run_info, taf, self.stats, self.rh,
+                                         force_update=True)
+                inc, inc_value = intensifier.process_results(
+                    run_info=run_info,
+                    incumbent=self.config1,
+                    run_history=self.rh,
+                    time_bound=np.inf,
+                    result=result,
+                    log_traj=False,
+                )
+            else:
+                pending_processing.append(run_info)
+            toggle = not toggle
+
+            # In case a iteration is done, break
+            # This happens if the configs per stage is 1
+            if intensifier.iteration_done:
+                break
+
+        return pending_processing
+
+    def test_iteration_done_only_when_all_configs_processed_instance_as_budget(self):
+        """
+        Makes sure that iteration done for a given stage is asserted ONLY after all
+        configurations AND instances are completed, when instance is used as budget
+        """
+        def target(x):
+            return 1
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+
+        taf.runhistory = self.rh
+        # select best on any budget
+        intensifier = _SuccessiveHalving(
+            stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            deterministic=True,
+            instances=list(range(5)), initial_budget=2, max_budget=5, eta=2)
+
+        # we want to test instance as budget
+        self.assertTrue(intensifier.instance_as_budget)
+
+        # Run until there are no more configurations to be proposed
+        # Skip running some configurations to emulate the fact that runs finish on different time
+        # We need this because there was a bug where not all instances had finished, yet
+        # the SH instance assumed all configurations finished
+        challengers = [self.config1, self.config2, self.config3, self.config4]
+        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+
+        # We have configurations pending, so iteration should NOT be done
+        self.assertFalse(intensifier.iteration_done)
+
+        # Make sure we launched all configurations we were meant to:
+        # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
+        # We need 2 configurations in the run history
+        configurations = set([k.config_id for k, v in self.rh.data.items()])
+        self.assertEqual(configurations, {1, 2})
+        # We need int(2.5) instances in the run history per config
+        config_inst_seed = set([k for k, v in self.rh.data.items()])
+        self.assertEqual(len(config_inst_seed), 4)
+
+        # Go to the last stage. Notice that iteration should not be done
+        # as we are in stage 1 out of 2
+        for run_info in pending_processing:
+            result = eval_challenger(run_info, taf, self.stats, self.rh,
+                                     force_update=True)
+            inc, inc_value = intensifier.process_results(
+                run_info=run_info,
+                incumbent=self.config1,
+                run_history=self.rh,
+                time_bound=np.inf,
+                result=result,
+                log_traj=False,
+            )
+        self.assertFalse(intensifier.iteration_done)
+
+        # we transition to stage 1, where the budget is 5
+        self.assertEqual(intensifier.stage, 1)
+
+        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+
+        # Because budget is 5, BUT we previously ran 2 instances in stage 0
+        # we expect that the run history will be populated with 3 new instances for 1
+        # config more 4 (stage0, 2 config on 2 instances) + 3 (stage1, 1 config 3 instances) = 7
+        config_inst_seed = [k for k, v in self.rh.data.items()]
+        self.assertEqual(len(config_inst_seed), 7)
+
+        # All new runs should be on the same config
+        self.assertEqual(len(set([c.config_id for c in config_inst_seed[4:]])), 1)
+        # We need 3 new instance seed pairs
+        self.assertEqual(len(set(config_inst_seed[4:])), 3)
+
+        # because there are configurations pending, no iteration should be done
+        self.assertFalse(intensifier.iteration_done)
+
+        # Finish the pending runs
+        for run_info in pending_processing:
+            result = eval_challenger(run_info, taf, self.stats, self.rh,
+                                     force_update=True)
+            inc, inc_value = intensifier.process_results(
+                run_info=run_info,
+                incumbent=self.config1,
+                run_history=self.rh,
+                time_bound=np.inf,
+                result=result,
+                log_traj=False,
+            )
+
+        # Finally, all stages are done, so iteration should be done!!
+        self.assertTrue(intensifier.iteration_done)
+
+    def test_iteration_done_only_when_all_configs_processed_no_instance_as_budget(self):
+        """
+        Makes sure that iteration done for a given stage is asserted ONLY after all
+        configurations AND instances are completed, when instance is NOT used as budget
+        """
+        def target(x):
+            return 1
+        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
+
+        taf.runhistory = self.rh
+        # select best on any budget
+        intensifier = _SuccessiveHalving(
+            stats=self.stats, traj_logger=None,
+            rng=np.random.RandomState(12345), run_obj_time=False,
+            deterministic=True,
+            instances=[0], initial_budget=2, max_budget=5, eta=2)
+
+        # we do not want to test instance as budget
+        self.assertFalse(intensifier.instance_as_budget)
+
+        # Run until there are no more configurations to be proposed
+        # Skip running some configurations to emulate the fact that runs finish on different time
+        # We need this because there was a bug where not all instances had finished, yet
+        # the SH instance assumed all configurations finished
+        challengers = [self.config1, self.config2, self.config3, self.config4]
+        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+
+        # We have configurations pending, so iteration should NOT be done
+        self.assertFalse(intensifier.iteration_done)
+
+        # Make sure we launched all configurations we were meant to:
+        # all_budgets=[2.5 5. ] n_configs_in_stage=[2.0, 1.0]
+        # We need 2 configurations in the run history
+        configurations = set([k.config_id for k, v in self.rh.data.items()])
+        self.assertEqual(configurations, {1, 2})
+        # There is only one instance always -- so we only have 2 configs for 1 instances each
+        config_inst_seed = set([k for k, v in self.rh.data.items()])
+        self.assertEqual(len(config_inst_seed), 2)
+
+        # Go to the last stage. Notice that iteration should not be done
+        # as we are in stage 1 out of 2
+        for run_info in pending_processing:
+            result = eval_challenger(run_info, taf, self.stats, self.rh,
+                                     force_update=True)
+            inc, inc_value = intensifier.process_results(
+                run_info=run_info,
+                incumbent=self.config1,
+                run_history=self.rh,
+                time_bound=np.inf,
+                result=result,
+                log_traj=False,
+            )
+        self.assertFalse(intensifier.iteration_done)
+
+        # we transition to stage 1, where the budget is 5
+        self.assertEqual(intensifier.stage, 1)
+
+        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+
+        # The next configuration per stage is just one (n_configs_in_stage=[2.0, 1.0])
+        # We ran previously 2 configs and with this new, we should have 3 total
+        config_inst_seed = [k for k, v in self.rh.data.items()]
+        self.assertEqual(len(config_inst_seed), 3)
+
+        # Because it is only 1 config, the iteration is completed
+        self.assertTrue(intensifier.iteration_done)
+
+        # We make sure the proper budget got allocated on the whole run:
+        # all_budgets=[2.5 5. ]
+        # We ran 2 configs in small budget and 1 in full budget
+        self.assertEqual(
+            [k.budget for k in self.rh.data.keys()],
+            [2.5, 2.5, 5]
+        )
 
 
 if __name__ == "__main__":

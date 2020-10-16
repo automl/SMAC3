@@ -8,6 +8,7 @@ def eval_challenger(
     taf: ExecuteTAFuncDict,
     stats: Stats,
     runhistory: RunHistory,
+    force_update=False,
 ):
     """
     Wrapper over challenger evaluation
@@ -29,6 +30,7 @@ def eval_challenger(
         instance_id=run_info.instance,
         seed=run_info.seed,
         budget=run_info.budget,
+        force_update=force_update,
     )
     stats.n_configs = len(runhistory.config_ids)
     return result
