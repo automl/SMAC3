@@ -168,7 +168,7 @@ class TestDaskRunner(unittest.TestCase):
         self.assertIn(
             # We expect the problem to occur in the run wrapper
             # So traceback should show this!
-            'in run_wrapper',
+            'target_nonpickable',
             result.additional_info['traceback'])
 
         # Make sure the error message is included

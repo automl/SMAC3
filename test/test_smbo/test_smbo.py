@@ -108,7 +108,8 @@ class TestSMBO(unittest.TestCase):
                          'abort_on_first_run_crash': True})
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
-        self.assertRaises(FirstRunCrashedException, smbo.run)
+        with self.assertRaisesRegex(FirstRunCrashedException, "in _mock_call"):
+            smbo.run()
 
         # should not raise an error if abort_on_first_run_crash is False
         patch.side_effect = FirstRunCrashedException()
