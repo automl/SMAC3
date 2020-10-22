@@ -332,8 +332,12 @@ class _SuccessiveHalving(AbstractRacer):
         self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
         # We need to update the incumbent if this config we are processing
-        # completes the instance seed pair. Here, a config/seed/instance is seen for the first time
-        # so if all configurations runs are marked as RAN it means that this new config
+        # completes all scheduled instance-seed pairs.
+        # Here, a config/seed/instance is going to be processed for the first time
+        # (it has been previously scheduled by get_next_run and marked False, indicating
+        # that it has not been processed yet. Entering process_results() this config/seed/instance
+        # is marked as TRUE as an indication that it has finished and should be processed)
+        # so if all configurations runs are marked as TRUE it means that this new config
         # was the missing piece to have everything needed to compare against the incumbent
         update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == run_info.config])
 
@@ -887,7 +891,11 @@ class _SuccessiveHalving(AbstractRacer):
         for c in configs:
             # ensuring that all configurations being compared are run on the same set of instance, seed & budget
             cur_run_key = run_history.get_runs_for_config(c, only_max_observed_budget=True)
-            if cur_run_key != run_key:
+
+            # Move to compare set -- get_runs_for_config queries form a dictionary
+            # which is not an ordered structure. Some queries to that dictionary returned unordered
+            # list which wrongly trigger the below if
+            if set(cur_run_key) != set(run_key):
                 raise ValueError(
                     'Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s'
                     % (run_key, cur_run_key)
@@ -941,7 +949,12 @@ class _SuccessiveHalving(AbstractRacer):
             curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
-        n_insts_remaining = len(curr_insts) - self.curr_inst_idx - 1
+
+        # The minus one here accounts for the fact that len(curr_insts) is a length starting at 1
+        # and self.curr_inst_idx is a zero based index
+        # But when all configurations have been launched and are running in run history
+        # n_insts_remaining becomes -1, which is confusing. Cap to zero
+        n_insts_remaining = max(len(curr_insts) - self.curr_inst_idx - 1, 0)
         # If there are pending runs from a past config, wait for them
         pending_to_process = [k for k, v in self.run_tracker.items() if not v]
         return n_insts_remaining + len(pending_to_process)
@@ -984,6 +997,14 @@ class _SuccessiveHalving(AbstractRacer):
             # Our goal here is to account for number of challengers available
             # We care if the challenger is running only if is is not tracked in
             # success/fails/do not advance
+            # In other words, in each SH iteration we have to run N configs on
+            # M instance/seed pairs. This part of the code makes sure that N different
+            # configurations are launched (we only move to a new config after M
+            # instance-seed pairs on that config are launched)
+            # Notice that this number N of configs tracked in num_chal_available
+            # is a set of processed configurations + the running challengers
+            # so we do not want to double count configurations
+            # n_insts_remaining variable above accounts for the last active configuration only
             if run_history.ids_config[k.config_id] in tracked_configs:
                 continue
 

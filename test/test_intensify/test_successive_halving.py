@@ -1461,7 +1461,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # For all runs to be completed before moving to the next stage
         self.assertEqual(intent, RunInfoIntent.WAIT)
 
-    def _exhaust_stage_execution(self, intensifier, taf, challengers):
+    def _exhaust_stage_execution(self, intensifier, taf, challengers, incumbent):
         """
         Exhaust configuration/instances seed and returns the
         run_info that were not launched.
@@ -1471,13 +1471,32 @@ class Test_SuccessiveHalving(unittest.TestCase):
         robust against this scenario
         """
         pending_processing = []
-        toggle = True
+        stage = 0 if not hasattr(intensifier, 'stage') else intensifier.stage
+        curr_budget = intensifier.all_budgets[stage]
+        prev_budget = int(intensifier.all_budgets[stage - 1]) if stage > 0 else 0
+        if intensifier.instance_as_budget:
+            total_runs = int(curr_budget - prev_budget) * int(
+                intensifier.n_configs_in_stage[stage])
+            toggle = np.random.choice([True, False], total_runs).tolist()
+            while not np.any(toggle) or not np.any(np.invert(toggle)):
+                # make sure we have both true and false!
+                toggle = np.random.choice([True, False], total_runs).tolist()
+        else:
+            # If we directly use the budget, then there are no instances to wait
+            # But we still want to mimic pending configurations. That is, we don't
+            # advance to the next stage until all configurations are done for a given
+            # budget.
+            # Here if we do not launch a configuration because toggle was false, is
+            # like this configuration never exited as there is only 1 instance in this
+            # and if toggle is false, it is never run. So we cannot do a random toggle
+            toggle = [False, True, False, True]
+
         while True:
             intent, run_info = intensifier.get_next_run(
                 challengers=challengers,
                 chooser=None,
                 run_history=self.rh,
-                incumbent=None,
+                incumbent=incumbent,
             )
 
             # Update the challengers
@@ -1496,12 +1515,12 @@ class Test_SuccessiveHalving(unittest.TestCase):
                         status=StatusType.RUNNING,
                         additional_info=None)
 
-            if toggle:
+            if toggle.pop():
                 result = eval_challenger(run_info, taf, self.stats, self.rh,
                                          force_update=True)
-                inc, inc_value = intensifier.process_results(
+                incumbent, inc_value = intensifier.process_results(
                     run_info=run_info,
-                    incumbent=self.config1,
+                    incumbent=incumbent,
                     run_history=self.rh,
                     time_bound=np.inf,
                     result=result,
@@ -1509,14 +1528,13 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 )
             else:
                 pending_processing.append(run_info)
-            toggle = not toggle
 
             # In case a iteration is done, break
             # This happens if the configs per stage is 1
             if intensifier.iteration_done:
                 break
 
-        return pending_processing
+        return pending_processing, incumbent
 
     def test_iteration_done_only_when_all_configs_processed_instance_as_budget(self):
         """
@@ -1543,7 +1561,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # We need this because there was a bug where not all instances had finished, yet
         # the SH instance assumed all configurations finished
         challengers = [self.config1, self.config2, self.config3, self.config4]
-        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+        incumbent = None
+        pending_processing, incumbent = self._exhaust_stage_execution(intensifier, taf,
+                                                                      challengers, incumbent)
 
         # We have configurations pending, so iteration should NOT be done
         self.assertFalse(intensifier.iteration_done)
@@ -1562,7 +1582,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         for run_info in pending_processing:
             result = eval_challenger(run_info, taf, self.stats, self.rh,
                                      force_update=True)
-            inc, inc_value = intensifier.process_results(
+            incumbent, inc_value = intensifier.process_results(
                 run_info=run_info,
                 incumbent=self.config1,
                 run_history=self.rh,
@@ -1575,7 +1595,8 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # we transition to stage 1, where the budget is 5
         self.assertEqual(intensifier.stage, 1)
 
-        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+        pending_processing, incumbent = self._exhaust_stage_execution(intensifier, taf,
+                                                                      challengers, incumbent)
 
         # Because budget is 5, BUT we previously ran 2 instances in stage 0
         # we expect that the run history will be populated with 3 new instances for 1
@@ -1595,9 +1616,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         for run_info in pending_processing:
             result = eval_challenger(run_info, taf, self.stats, self.rh,
                                      force_update=True)
-            inc, inc_value = intensifier.process_results(
+            incumbent, inc_value = intensifier.process_results(
                 run_info=run_info,
-                incumbent=self.config1,
+                incumbent=incumbent,
                 run_history=self.rh,
                 time_bound=np.inf,
                 result=result,
@@ -1632,7 +1653,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # We need this because there was a bug where not all instances had finished, yet
         # the SH instance assumed all configurations finished
         challengers = [self.config1, self.config2, self.config3, self.config4]
-        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+        incumbent = None
+        pending_processing, incumbent = self._exhaust_stage_execution(intensifier, taf,
+                                                                      challengers, incumbent)
 
         # We have configurations pending, so iteration should NOT be done
         self.assertFalse(intensifier.iteration_done)
@@ -1651,9 +1674,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         for run_info in pending_processing:
             result = eval_challenger(run_info, taf, self.stats, self.rh,
                                      force_update=True)
-            inc, inc_value = intensifier.process_results(
+            incumbent, inc_value = intensifier.process_results(
                 run_info=run_info,
-                incumbent=self.config1,
+                incumbent=incumbent,
                 run_history=self.rh,
                 time_bound=np.inf,
                 result=result,
@@ -1664,7 +1687,8 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # we transition to stage 1, where the budget is 5
         self.assertEqual(intensifier.stage, 1)
 
-        pending_processing = self._exhaust_stage_execution(intensifier, taf, challengers)
+        pending_processing, incumbent = self._exhaust_stage_execution(intensifier, taf,
+                                                                      challengers, incumbent)
 
         # The next configuration per stage is just one (n_configs_in_stage=[2.0, 1.0])
         # We ran previously 2 configs and with this new, we should have 3 total
