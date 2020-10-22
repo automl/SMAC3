@@ -331,16 +331,6 @@ class _SuccessiveHalving(AbstractRacer):
         # Mark the fact that we processed this configuration
         self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
-        # We need to update the incumbent if this config we are processing
-        # completes all scheduled instance-seed pairs.
-        # Here, a config/seed/instance is going to be processed for the first time
-        # (it has been previously scheduled by get_next_run and marked False, indicating
-        # that it has not been processed yet. Entering process_results() this config/seed/instance
-        # is marked as TRUE as an indication that it has finished and should be processed)
-        # so if all configurations runs are marked as TRUE it means that this new config
-        # was the missing piece to have everything needed to compare against the incumbent
-        update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == run_info.config])
-
         # If The incumbent is None and it is the first run, we use the challenger
         if not incumbent and self.first_run:
             self.logger.info(
@@ -374,6 +364,16 @@ class _SuccessiveHalving(AbstractRacer):
             self.do_not_advance_challengers.add(run_info.config)
         else:
             self.fail_challengers.add(run_info.config)  # capped/crashed/do not advance configs
+
+        # We need to update the incumbent if this config we are processing
+        # completes all scheduled instance-seed pairs.
+        # Here, a config/seed/instance is going to be processed for the first time
+        # (it has been previously scheduled by get_next_run and marked False, indicating
+        # that it has not been processed yet. Entering process_results() this config/seed/instance
+        # is marked as TRUE as an indication that it has finished and should be processed)
+        # so if all configurations runs are marked as TRUE it means that this new config
+        # was the missing piece to have everything needed to compare against the incumbent
+        update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == run_info.config])
 
         # get incumbent if all instances have been evaluated
         if n_insts_remaining <= 0 or update_incumbent:
@@ -902,7 +902,7 @@ class _SuccessiveHalving(AbstractRacer):
                 )
             config_costs[c] = run_history.get_cost(c)
 
-        configs_sorted = sorted(config_costs, key=config_costs.get)
+        configs_sorted = [k for k, v in sorted(config_costs.items(), key=lambda item: item[1])]
         # select top configurations only
         top_configs = configs_sorted[:k]
         return top_configs
