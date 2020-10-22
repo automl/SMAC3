@@ -510,12 +510,20 @@ class Test_Hyperband(unittest.TestCase):
         self.assertEqual(intensifier.s, 1)
         self.assertEqual(intensifier.s_max, 1)
 
+        # We assume now that process results was called with below successes.
+        # We track closely run execution through run_tracker, so this also
+        # has to be update -- the fact that the succesive halving inside hyperband
+        # processed the given configurations
         self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS,
                     seed=0, budget=1)
+        intensifier.sh_intensifier.run_tracker[(self.config1, None, 0, 1)] = True
         self.rh.add(config=self.config2, cost=2, time=2, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
+        intensifier.sh_intensifier.run_tracker[(self.config2, None, 0, 0.5)] = True
         self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
+        intensifier.sh_intensifier.run_tracker[(self.config3, None, 0, 0.5)] = True
+
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
         intent, run_info = intensifier.get_next_run(

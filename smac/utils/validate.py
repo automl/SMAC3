@@ -445,9 +445,9 @@ class Validator(object):
         if isinstance(configs, str):
             configs = self._get_configs(configs)
         if isinstance(insts, str):
-            instances = self._get_instances(insts)  # type: typing.Sequence[typing.Union[str, None]]
+            instances = sorted(self._get_instances(insts))  # type: typing.Sequence[typing.Union[str, None]]
         elif insts is not None:
-            instances = insts
+            instances = sorted(insts)
         else:
             instances = [None]
         # If no instances are given, fix the instances to one "None" instance
@@ -470,7 +470,7 @@ class Validator(object):
         # If we reuse runs, we want to return them as well
         new_rh = RunHistory()
 
-        for i in sorted(instances):
+        for i in instances:
             for rep in range(repetitions):
                 # First, find a seed and add all the data we can take from the
                 # given runhistory to "our" validation runhistory.
