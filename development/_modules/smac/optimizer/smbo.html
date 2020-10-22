@@ -754,13 +754,11 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span><span class="s2">&quot;First run crashed, abort. &quot;</span>
-                                               <span class="s2">&quot;Please check your setup -- &quot;</span>
-                                               <span class="s2">&quot;we assume that your default&quot;</span>
-                                               <span class="s2">&quot;configuration does not crashes. &quot;</span>
-                                               <span class="s2">&quot;(To deactivate this exception,&quot;</span>
-                                               <span class="s2">&quot; use the SMAC scenario option &quot;</span>
-                                               <span class="s2">&quot;&#39;abort_on_first_run_crash&#39;)&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">FirstRunCrashedException</span><span class="p">(</span>
+                    <span class="s2">&quot;First run crashed, abort. Please check your setup -- we assume that your default &quot;</span>
+                    <span class="s2">&quot;configuration does not crashes. (To deactivate this exception, use the SMAC scenario option &quot;</span>
+                    <span class="s2">&quot;&#39;abort_on_first_run_crash&#39;). Additional run info: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">result</span><span class="o">.</span><span class="n">additional_info</span>
+                <span class="p">)</span>
 
         <span class="c1"># Update the intensifier with the result of the runs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">inc_perf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">process_results</span><span class="p">(</span>
