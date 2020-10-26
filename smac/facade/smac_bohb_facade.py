@@ -42,7 +42,8 @@ class BOHB4HPO(SMAC4HPO):
 
         # Intensification parameters
         # select Hyperband as the intensifier ensure respective parameters are provided
-        kwargs['intensifier'] = Hyperband
+        if kwargs['intensifier'] is None:
+            kwargs['intensifier'] = Hyperband
 
         # set Hyperband parameters if not given
         intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
