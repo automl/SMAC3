@@ -290,7 +290,7 @@ class _Hyperband(_SuccessiveHalving):
             initial_budget=sh_initial_budget,
             max_budget=self.max_budget,
             eta=self.eta,
-            _all_budgets=self.all_budgets[(-self.s-1):],
+            _all_budgets=self.all_budgets[(-self.s - 1):],
             _n_configs_in_stage=n_configs_in_stage.tolist(),
             num_initial_challengers=n_challengers,
             run_obj_time=self.run_obj_time,

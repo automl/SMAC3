@@ -308,10 +308,8 @@ class _SuccessiveHalving(AbstractRacer):
                                                                                  max_sh_iter + 1))
             # number of challengers to consider in each stage
             self.n_configs_in_stage = num_initial_challengers * \
-                                      np.power(self.eta, -np.linspace(0, max_sh_iter,
-                                                                      max_sh_iter + 1))
+                np.power(self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1))
             self.n_configs_in_stage = self.n_configs_in_stage.tolist()
-
 
     def process_results(self,
                         run_info: RunInfo,
