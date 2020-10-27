@@ -490,6 +490,6 @@ class SMBO(object):
         )
 
         for callback in self._callbacks['_incorporate_run_results']:
-            callback(self, run_info, result, time_left)
+            callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
 
         return
