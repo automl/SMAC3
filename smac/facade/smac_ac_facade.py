@@ -692,3 +692,27 @@ class SMAC4AC(object):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.trajectory
+
+    def register_callback(self, callback: Callable) -> None:
+        """Register a callback function.
+
+        Callbacks must implement a class in ``smac.callbacks`` and be instantiated objects.
+        They will automatically be assigned the correct callback.
+
+        Parameters
+        ----------
+        callback - Callable
+
+        Returns
+        -------
+        None
+        """
+        types_to_check = callback.__class__.__mro__
+        key = None
+        for type_to_check in types_to_check:
+            key = self.solver._callbackt_to_key.get(type_to_check)
+            if key is not None:
+                break
+        if key is None:
+            raise ValueError('Cannot register callback of type %s' % type(callback))
+        self.solver._callbacks[key].append(callback)
