@@ -227,7 +227,7 @@ class _SuccessiveHalving(AbstractRacer):
                         initial_budget: typing.Optional[float],
                         max_budget: typing.Optional[float],
                         eta: float,
-                        num_initial_challengers: typing.Optional[int],
+                        num_initial_challengers: typing.Optional[int] = None,
                         _all_budgets: typing.Optional[typing.List[float]] = None,
                         _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
                         ) -> None:
@@ -295,7 +295,7 @@ class _SuccessiveHalving(AbstractRacer):
         # max. no. of SH iterations possible given the budgets
         max_sh_iter = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
         # initial number of challengers to sample
-        if not num_initial_challengers:
+        if num_initial_challengers is None:
             num_initial_challengers = int(self.eta ** max_sh_iter)
 
         if _all_budgets is not None and _n_configs_in_stage is not None:
@@ -309,7 +309,7 @@ class _SuccessiveHalving(AbstractRacer):
             # number of challengers to consider in each stage
             n_configs_in_stage = num_initial_challengers * \
                 np.power(self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1))
-            self.n_configs_in_stage = n_configs_in_stage.tolist()
+            self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
     def process_results(self,
                         run_info: RunInfo,
