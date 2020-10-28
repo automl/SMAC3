@@ -1741,21 +1741,17 @@ class Test__SuccessiveHalving(unittest.TestCase):
                                         eta=eta,
                                         _all_budgets=None,
                                         _n_configs_in_stage=None,
-            )
+                                        )
             comp_budgets = intensifier.all_budgets.tolist()
             comp_configs = intensifier.n_configs_in_stage
 
             self.assertEqual(len(all_budgets), len(comp_budgets))
             self.assertEqual(comp_budgets[-1], maxb)
-            for i, j in zip(all_budgets, comp_budgets):
-                self.assertAlmostEqual(i, j, places=5, msg=("%s != %s" %
-                                                            (all_budgets, comp_budgets)))
+            np.testing.assert_array_almost_equal(all_budgets, comp_budgets, decimal=5)
 
             self.assertEqual(comp_configs[-1], 1)
             self.assertEqual(len(n_configs_in_stage), len(comp_configs))
-            for i, j in zip(n_configs_in_stage, comp_configs):
-                self.assertAlmostEqual(i, j, places=5, msg=("%s != %s" %
-                                                            (n_configs_in_stage, comp_configs)))
+            np.testing.assert_array_almost_equal(n_configs_in_stage, comp_configs, decimal=5)
 
 
 if __name__ == "__main__":

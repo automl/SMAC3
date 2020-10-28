@@ -589,13 +589,23 @@ class Test__Hyperband(unittest.TestCase):
                                         eta=eta,
                                         _all_budgets=None,
                                         _n_configs_in_stage=None,
-            )
-            for i in range(len(all_budgets)+10):
+                                        )
+            for i in range(len(all_budgets) + 10):
                 intensifier._update_stage()
                 comp_budgets = intensifier.sh_intensifier.all_budgets.tolist()
                 comp_configs = intensifier.sh_intensifier.n_configs_in_stage
-                self.assertEqual(len(all_budgets[i%len(all_budgets):]), len(comp_budgets))
-                self.assertEqual(len(n_configs_in_stage[i%len(n_configs_in_stage):]), len(comp_configs))
+
+                self.assertIsInstance(comp_configs, list)
+                for c in comp_configs:
+                    self.assertIsInstance(c, int)
+
+                # all_budgets for SH is always a subset of all_budgets of HB
+                np.testing.assert_array_almost_equal(all_budgets[i % len(all_budgets):],
+                                                     comp_budgets, decimal=5)
+
+                # The content of these lists might differ
+                self.assertEqual(len(n_configs_in_stage[i % len(n_configs_in_stage):]),
+                                 len(comp_configs))
 
 
 if __name__ == "__main__":

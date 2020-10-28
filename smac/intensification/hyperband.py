@@ -274,6 +274,7 @@ class _Hyperband(_SuccessiveHalving):
 
         # Compute this for the next round
         n_configs_in_stage = n_challengers * np.power(self.eta, -np.linspace(0, self.s, self.s + 1))
+        n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
         self.logger.info('Hyperband iteration-step: %d-%d  with initial budget: %d' % (
             self.hb_iters + 1, self.s_max - self.s + 1, sh_initial_budget))
@@ -291,7 +292,7 @@ class _Hyperband(_SuccessiveHalving):
             max_budget=self.max_budget,
             eta=self.eta,
             _all_budgets=self.all_budgets[(-self.s - 1):],
-            _n_configs_in_stage=n_configs_in_stage.tolist(),
+            _n_configs_in_stage=n_configs_in_stage,
             num_initial_challengers=n_challengers,
             run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
