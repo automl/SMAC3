@@ -8,14 +8,16 @@ import numpy as np
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances
+import smac.facade.smac_ac_facade
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
-from smac.runhistory.runhistory import RunInfo
+from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.scenario.scenario import Scenario
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray
@@ -373,6 +375,39 @@ class TestSMBO(unittest.TestCase):
             # also relies on the runhistory
             X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
             self.assertEqual(X.shape[0], len(all_configs))
+
+    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, 'process_results')
+    def test_incorporate_run_results_callback(self, process_results_mock):
+
+        process_results_mock.return_value = None, None
+
+        class TestCallback(IncorporateRunResultCallback):
+            def __init__(self):
+                self.num_call = 0
+
+            def __call__(self, smbo, run_info, result, time_left) -> None:
+                self.num_call += 1
+                self.config = run_info.config
+
+        callback = TestCallback()
+
+        self.scenario.output_dir = None
+        smac = SMAC4AC(self.scenario)
+        smac.register_callback(callback)
+
+        self.output_dirs.append(smac.output_dir)
+        smbo = smac.solver
+
+        config = self.scenario.cs.sample_configuration()
+
+        run_info = RunInfo(config=config, instance=None, instance_specific=None, seed=1,
+                           cutoff=None, capped=False, budget=0.0, source_id=0)
+        result = RunValue(1.2345, 2.3456, 'status', 'starttime', 'endtime', 'additional_info')
+        time_left = 10
+
+        smbo._incorporate_run_results(run_info=run_info, result=result, time_left=time_left)
+        self.assertEqual(callback.num_call, 1)
+        self.assertEqual(callback.config, config)
 
 
 if __name__ == "__main__":

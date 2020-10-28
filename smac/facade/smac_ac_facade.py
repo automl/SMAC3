@@ -697,7 +697,8 @@ class SMAC4AC(object):
         """Register a callback function.
 
         Callbacks must implement a class in ``smac.callbacks`` and be instantiated objects.
-        They will automatically be assigned the correct callback.
+        They will automatically be registered within SMAC based on which callback class from
+        ``smac.callbacks`` they implement.
 
         Parameters
         ----------
@@ -710,7 +711,7 @@ class SMAC4AC(object):
         types_to_check = callback.__class__.__mro__
         key = None
         for type_to_check in types_to_check:
-            key = self.solver._callbackt_to_key.get(type_to_check)
+            key = self.solver._callback_to_key.get(type_to_check)
             if key is not None:
                 break
         if key is None:

@@ -153,7 +153,7 @@ class SMBO(object):
         self._callbacks = {
             '_incorporate_run_results': list()
         }  # type: typing.Dict[str, typing.List[typing.Callable]]
-        self._callbackt_to_key = {
+        self._callback_to_key = {
             IncorporateRunResultCallback: '_incorporate_run_results',
         }  # type: typing.Dict[typing.Type, str]
 
