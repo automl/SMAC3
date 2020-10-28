@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.io package &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.callbacks module &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.utils.io.cmd_reader module" href="smac.utils.io.cmd_reader.html" />
-    <link rel="prev" title="smac.utils package" href="smac.utils.html" /> 
+    <link rel="next" title="smac.configspace package" href="smac.configspace.html" />
+    <link rel="prev" title="API Documentation" href="../api.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -104,7 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="smac.callbacks.html">smac.callbacks module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -190,8 +190,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.utils.io package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
@@ -275,15 +275,13 @@
         
           <li><a href="../api.html">API Documentation</a> &raquo;</li>
         
-          <li><a href="smac.utils.html">smac.utils package</a> &raquo;</li>
-        
-      <li>smac.utils.io package</li>
+      <li>smac.callbacks module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/apidoc/smac.utils.io.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apidoc/smac.callbacks.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -296,17 +294,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.utils.io">
-<span id="smac-utils-io-package"></span><h1>smac.utils.io package<a class="headerlink" href="#module-smac.utils.io" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
-</ul>
-</div>
+  <div class="section" id="module-smac.callbacks">
+<span id="smac-callbacks-module"></span><h1>smac.callbacks module<a class="headerlink" href="#module-smac.callbacks" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="smac.callbacks.IncorporateRunResultCallback">
+<em class="property">class </em><code class="sig-prename descclassname">smac.callbacks.</code><code class="sig-name descname">IncorporateRunResultCallback</code><a class="reference internal" href="../_modules/smac/callbacks.html#IncorporateRunResultCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.callbacks.IncorporateRunResultCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Callback to react on a new run result. Called after the finished run is added to the runhistory.</p>
+</dd></dl>
+
 </div>
 
 
@@ -317,10 +313,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="smac.utils.io.cmd_reader.html" class="btn btn-neutral float-right" title="smac.utils.io.cmd_reader module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="smac.configspace.html" class="btn btn-neutral float-right" title="smac.configspace package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="smac.utils.html" class="btn btn-neutral float-left" title="smac.utils package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../api.html" class="btn btn-neutral float-left" title="API Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

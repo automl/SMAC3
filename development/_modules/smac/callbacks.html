@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.callbacks &mdash; SMAC 0.13.0 documentation</title>
   
 
   
@@ -273,7 +273,7 @@
         
           <li><a href="../index.html">Module code</a> &raquo;</li>
         
-      <li>smac.tae</li>
+      <li>smac.callbacks</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -288,61 +288,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for smac.tae</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span> <span class="nn">typing</span>
+  <h1>Source code for smac.callbacks</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
-<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2015, ML4AAD&quot;</span>
-<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
-<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s2">&quot;Marius Lindauer&quot;</span>
-<span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;lindauer@cs.uni-freiburg.de&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">smac.optimizer.smbo</span> <span class="kn">import</span> <span class="n">SMBO</span>
+<span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunInfo</span><span class="p">,</span> <span class="n">RunValue</span>
 
+<span class="sd">&quot;&quot;&quot;Callbacks for SMAC.</span>
 
-<div class="viewcode-block" id="StatusType"><a class="viewcode-back" href="../../apidoc/smac.tae.html#smac.tae.StatusType">[docs]</a><span class="k">class</span> <span class="nc">StatusType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="sd">Callbacks allow customizing the behavior of SMAC to ones needs. Currently, the list of implemented callbacks is</span>
+<span class="sd">very limited, but they can easily be added.</span>
 
-    <span class="sd">&quot;&quot;&quot;Class to define numbers for status types&quot;&quot;&quot;</span>
-    <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">CRASHED</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">ABORT</span> <span class="o">=</span> <span class="mi">4</span>
-    <span class="n">MEMOUT</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">CAPPED</span> <span class="o">=</span> <span class="mi">6</span>
-    <span class="c1"># Only relevant for SH/HB. Run might have a results, but should not be considered further.</span>
-    <span class="c1"># By default, these runs will always be considered for building the model. Potential use cases:</span>
-    <span class="c1"># 1) The run has converged and does not benefit from a higher budget</span>
-    <span class="c1"># 2) The run has exhausted given resources and will not benefit from higher budgets</span>
-    <span class="n">DONOTADVANCE</span> <span class="o">=</span> <span class="mi">7</span>
-    <span class="c1"># Gracefully exit SMAC - wait for currently executed runs to finish</span>
-    <span class="n">STOP</span> <span class="o">=</span> <span class="mi">8</span>
-    <span class="c1"># In case a job was submited, but it has not finished</span>
-    <span class="n">RUNNING</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="sd">How to add a new callback</span>
+<span class="sd">=========================</span>
 
-<div class="viewcode-block" id="StatusType.enum_hook"><a class="viewcode-back" href="../../apidoc/smac.tae.html#smac.tae.StatusType.enum_hook">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">enum_hook</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Hook function passed to json-deserializer as &quot;object_hook&quot;.</span>
-<span class="sd">        EnumEncoder in runhistory/runhistory.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;__enum__&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
-            <span class="c1"># object is marked as enum</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s2">&quot;__enum__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;StatusType&quot;</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="n">name</span><span class="p">],</span> <span class="n">member</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obj</span></div></div>
+<span class="sd">1. Implement a callback class in this module. There are no restrictions on how such a callback must look like,</span>
+<span class="sd">   but it is recommended to implement the main logic inside the `__call__` function, such as for example in</span>
+<span class="sd">   ``IncorporateRunResultCallback``.</span>
+<span class="sd">2. Add your callback to ``smac.smbo.optimizer.SMBO._callbacks``, using the name of your callback as the key,</span>
+<span class="sd">   and an empty list as the value.</span>
+<span class="sd">3. Add your callback to ``smac.smbo.optimizer.SMBO._callback_to_key``, using the callback class as the key,</span>
+<span class="sd">   and the name as value (the name used in 2.).</span>
+<span class="sd">4. Implement calling all registered callbacks at the correct place. This is as simple as</span>
+<span class="sd">   ``for callback in self._callbacks[&#39;your_callback&#39;]: callback(*args, **kwargs)``, where you obviously need to</span>
+<span class="sd">   change the callback name and signature.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="TAEAbortException"><a class="viewcode-back" href="../../apidoc/smac.tae.html#smac.tae.TAEAbortException">[docs]</a><span class="k">class</span> <span class="nc">TAEAbortException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Exception indicating that the target algorithm suggests an ABORT of</span>
-<span class="sd">    SMAC, usually because it assumes that all further runs will surely fail.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="IncorporateRunResultCallback"><a class="viewcode-back" href="../../apidoc/smac.callbacks.html#smac.callbacks.IncorporateRunResultCallback">[docs]</a><span class="k">class</span> <span class="nc">IncorporateRunResultCallback</span><span class="p">:</span>
 
+    <span class="sd">&quot;&quot;&quot;Callback to react on a new run result. Called after the finished run is added to the runhistory.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FirstRunCrashedException"><a class="viewcode-back" href="../../apidoc/smac.tae.html#smac.tae.FirstRunCrashedException">[docs]</a><span class="k">class</span> <span class="nc">FirstRunCrashedException</span><span class="p">(</span><span class="n">TAEAbortException</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Exception indicating that the first run crashed (depending on options</span>
-<span class="sd">    this could trigger an ABORT of SMAC.) &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">smbo</span><span class="p">:</span> <span class="s1">&#39;SMBO&#39;</span><span class="p">,</span>
+            <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
+            <span class="n">result</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
+            <span class="n">time_left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span></div>
 </pre></div>
 
            </div>
