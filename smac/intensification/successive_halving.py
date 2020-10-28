@@ -71,6 +71,10 @@ class _SuccessiveHalving(AbstractRacer):
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
+    _all_budgets: typing.Optional[typing.List[float]] = None
+        Used internally when HB uses SH as a subrouting
+    _n_configs_in_stage: typing.Optional[typing.List[int]] = None
+        Used internally when HB uses SH as a subrouting
     num_initial_challengers : typing.Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
@@ -111,6 +115,8 @@ class _SuccessiveHalving(AbstractRacer):
                  initial_budget: typing.Optional[float] = None,
                  max_budget: typing.Optional[float] = None,
                  eta: float = 3,
+                 _all_budgets: typing.Optional[typing.List[float]] = None,
+                 _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
                  num_initial_challengers: typing.Optional[int] = None,
                  run_obj_time: bool = True,
                  n_seeds: typing.Optional[int] = None,
@@ -175,7 +181,9 @@ class _SuccessiveHalving(AbstractRacer):
             self.inst_seed_pairs = inst_seed_pairs
 
         # successive halving parameters
-        self._init_sh_params(initial_budget, max_budget, eta, num_initial_challengers)
+        self._init_sh_params(initial_budget=initial_budget, max_budget=max_budget, eta=eta,
+                             num_initial_challengers=num_initial_challengers,
+                             _all_budgets=_all_budgets, _n_configs_in_stage=_n_configs_in_stage)
 
         # adaptive capping
         if self.instance_as_budget and self.instance_order != 'shuffle' and self.run_obj_time:
@@ -219,7 +227,10 @@ class _SuccessiveHalving(AbstractRacer):
                         initial_budget: typing.Optional[float],
                         max_budget: typing.Optional[float],
                         eta: float,
-                        num_initial_challengers: typing.Optional[int]) -> None:
+                        num_initial_challengers: typing.Optional[int] = None,
+                        _all_budgets: typing.Optional[typing.List[float]] = None,
+                        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
+                        ) -> None:
         """
         initialize Successive Halving parameters
 
@@ -233,6 +244,10 @@ class _SuccessiveHalving(AbstractRacer):
             'halving' factor after each iteration in a successive halving run
         num_initial_challengers : typing.Optional[int]
             number of challengers to consider for the initial budget
+        _all_budgets: typing.Optional[typing.List[float]] = None
+            Used internally when HB uses SH as a subrouting
+        _n_configs_in_stage: typing.Optional[typing.List[int]] = None
+            Used internally when HB uses SH as a subrouting
         """
 
         if eta <= 1:
@@ -280,14 +295,21 @@ class _SuccessiveHalving(AbstractRacer):
         # max. no. of SH iterations possible given the budgets
         max_sh_iter = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
         # initial number of challengers to sample
-        if not num_initial_challengers:
+        if num_initial_challengers is None:
             num_initial_challengers = int(self.eta ** max_sh_iter)
-        # budgets to consider in each stage
-        self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0, max_sh_iter + 1))
-        # number of challengers to consider in each stage
-        self.n_configs_in_stage = num_initial_challengers * np.power(self.eta,
-                                                                     -np.linspace(0, max_sh_iter, max_sh_iter + 1))
-        self.n_configs_in_stage = self.n_configs_in_stage.tolist()
+
+        if _all_budgets is not None and _n_configs_in_stage is not None:
+            # Assert we use the given numbers to avoid rounding issues, see #701
+            self.all_budgets = _all_budgets
+            self.n_configs_in_stage = _n_configs_in_stage
+        else:
+            # budgets to consider in each stage
+            self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0,
+                                                                                 max_sh_iter + 1))
+            # number of challengers to consider in each stage
+            n_configs_in_stage = num_initial_challengers * \
+                np.power(self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1))
+            self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
     def process_results(self,
                         run_info: RunInfo,
