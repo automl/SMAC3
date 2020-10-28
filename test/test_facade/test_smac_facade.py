@@ -8,8 +8,8 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
+from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
-
 from smac.epm.random_epm import RandomEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
@@ -433,3 +433,21 @@ class TestSMACFacade(unittest.TestCase):
         scen1 = Scenario(test_scenario_dict)
         smac = SMAC4AC(scenario=scen1, run_id=1)
         self.assertFalse(os.path.isdir(smac.output_dir))
+
+    def test_register_callback(self):
+        smac = SMAC4AC(scenario=self.scenario, run_id=1)
+
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'function'>"):
+            smac.register_callback(lambda: 1)
+
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'type'>"):
+            smac.register_callback(IncorporateRunResultCallback)
+
+        smac.register_callback(IncorporateRunResultCallback())
+        self.assertEqual(len(smac.solver._callbacks['_incorporate_run_results']), 1)
+
+        class SubClass(IncorporateRunResultCallback):
+            pass
+
+        smac.register_callback(SubClass())
+        self.assertEqual(len(smac.solver._callbacks['_incorporate_run_results']), 2)

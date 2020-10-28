@@ -4,6 +4,7 @@ import numpy as np
 import time
 import typing
 
+from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.initial_design.initial_design import InitialDesign
@@ -146,6 +147,15 @@ class SMBO(object):
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False
+
+        # Callbacks. All known callbacks have a key. If something does not have a key here, there is
+        # no callback available.
+        self._callbacks = {
+            '_incorporate_run_results': list()
+        }  # type: typing.Dict[str, typing.List[typing.Callable]]
+        self._callback_to_key = {
+            IncorporateRunResultCallback: '_incorporate_run_results',
+        }  # type: typing.Dict[typing.Type, str]
 
     def start(self) -> None:
         """Starts the Bayesian Optimization loop.
@@ -478,5 +488,8 @@ class SMBO(object):
             time_bound=max(self._min_time, time_left),
             result=result,
         )
+
+        for callback in self._callbacks['_incorporate_run_results']:
+            callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
 
         return
