@@ -510,12 +510,20 @@ class Test_Hyperband(unittest.TestCase):
         self.assertEqual(intensifier.s, 1)
         self.assertEqual(intensifier.s_max, 1)
 
+        # We assume now that process results was called with below successes.
+        # We track closely run execution through run_tracker, so this also
+        # has to be update -- the fact that the succesive halving inside hyperband
+        # processed the given configurations
         self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS,
                     seed=0, budget=1)
+        intensifier.sh_intensifier.run_tracker[(self.config1, None, 0, 1)] = True
         self.rh.add(config=self.config2, cost=2, time=2, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
+        intensifier.sh_intensifier.run_tracker[(self.config2, None, 0, 0.5)] = True
         self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS,
                     seed=0, budget=0.5)
+        intensifier.sh_intensifier.run_tracker[(self.config3, None, 0, 0.5)] = True
+
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
         intent, run_info = intensifier.get_next_run(
@@ -540,6 +548,64 @@ class Test_Hyperband(unittest.TestCase):
         self.assertEqual(inc_value, 0.1)
         self.assertEqual(list(self.rh.data.keys())[-1][0], self.rh.config_ids[self.config2])
         self.assertEqual(self.stats.inc_changed, 1)
+
+
+class Test__Hyperband(unittest.TestCase):
+
+    def test_budget_initialization(self):
+        """
+            Check computing budgets (only for non-instance cases)
+        """
+        intensifier = _Hyperband(
+            stats=None, traj_logger=None,
+            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+            instances=None, initial_budget=1, max_budget=81, eta=3
+        )
+        self.assertListEqual([1, 3, 9, 27, 81], intensifier.all_budgets.tolist())
+        self.assertListEqual([81, 27, 9, 3, 1], intensifier.n_configs_in_stage)
+
+        to_check = [
+            # minb, maxb, eta, n_configs_in_stage, all_budgets
+            [1, 81, 3, [81, 27, 9, 3, 1], [1, 3, 9, 27, 81]],
+            [1, 600, 3, [243, 81, 27, 9, 3, 1],
+             [2.469135, 7.407407, 22.222222, 66.666666, 200, 600]],
+            [1, 100, 10, [100, 10, 1], [1, 10, 100]],
+            [0.001, 1, 3, [729, 243, 81, 27, 9, 3, 1],
+             [0.001371, 0.004115, 0.012345, 0.037037, 0.111111, 0.333333, 1.0]],
+            [1, 1000, 3, [729, 243, 81, 27, 9, 3, 1],
+             [1.371742, 4.115226, 12.345679, 37.037037, 111.111111, 333.333333, 1000.0]],
+            [0.001, 100, 10, [100000, 10000, 1000, 100, 10, 1],
+             [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]],
+        ]
+
+        for minb, maxb, eta, n_configs_in_stage, all_budgets in to_check:
+            intensifier = _Hyperband(
+                stats=None, traj_logger=None,
+                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
+                instances=None, initial_budget=minb, max_budget=maxb, eta=eta
+            )
+            intensifier._init_sh_params(initial_budget=minb,
+                                        max_budget=maxb,
+                                        eta=eta,
+                                        _all_budgets=None,
+                                        _n_configs_in_stage=None,
+                                        )
+            for i in range(len(all_budgets) + 10):
+                intensifier._update_stage()
+                comp_budgets = intensifier.sh_intensifier.all_budgets.tolist()
+                comp_configs = intensifier.sh_intensifier.n_configs_in_stage
+
+                self.assertIsInstance(comp_configs, list)
+                for c in comp_configs:
+                    self.assertIsInstance(c, int)
+
+                # all_budgets for SH is always a subset of all_budgets of HB
+                np.testing.assert_array_almost_equal(all_budgets[i % len(all_budgets):],
+                                                     comp_budgets, decimal=5)
+
+                # The content of these lists might differ
+                self.assertEqual(len(n_configs_in_stage[i % len(n_configs_in_stage):]),
+                                 len(comp_configs))
 
 
 if __name__ == "__main__":

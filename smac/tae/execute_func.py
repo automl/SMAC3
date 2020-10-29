@@ -2,6 +2,7 @@ import inspect
 import math
 import time
 import json
+import traceback
 import typing
 
 import numpy as np
@@ -165,8 +166,17 @@ class AbstractTAFunc(SerialRunner):
             }
 
             # call ta
-            obj = pynisher.enforce_limits(**arguments)(self._ta)
-            rval = self._call_ta(obj, config, obj_kwargs)
+            try:
+                obj = pynisher.enforce_limits(**arguments)(self._ta)
+                rval = self._call_ta(obj, config, obj_kwargs)
+            except Exception as e:
+                exception_traceback = traceback.format_exc()
+                error_message = repr(e)
+                additional_info = {
+                    'traceback': exception_traceback,
+                    'error': error_message
+                }
+                return StatusType.CRASHED, self.cost_for_crash, 0.0, additional_info
 
             if isinstance(rval, tuple):
                 result = rval[0]
