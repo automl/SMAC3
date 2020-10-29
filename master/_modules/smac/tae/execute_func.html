@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.tae.execute_func &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.tae.execute_func &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -294,6 +295,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -457,8 +459,17 @@
             <span class="p">}</span>
 
             <span class="c1"># call ta</span>
-            <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ta</span><span class="p">)</span>
-            <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">obj_kwargs</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">obj</span> <span class="o">=</span> <span class="n">pynisher</span><span class="o">.</span><span class="n">enforce_limits</span><span class="p">(</span><span class="o">**</span><span class="n">arguments</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ta</span><span class="p">)</span>
+                <span class="n">rval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_ta</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">obj_kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">exception_traceback</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">additional_info</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;traceback&#39;</span><span class="p">:</span> <span class="n">exception_traceback</span><span class="p">,</span>
+                    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">error_message</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">additional_info</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rval</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">rval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>

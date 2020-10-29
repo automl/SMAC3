@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_ac_facade module &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.facade.smac_ac_facade module &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -104,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -463,6 +464,26 @@ time).</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="smac.facade.smac_ac_facade.SMAC4AC.register_callback">
+<code class="sig-name descname">register_callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/facade/smac_ac_facade.html#SMAC4AC.register_callback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.smac_ac_facade.SMAC4AC.register_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a callback function.</p>
+<p>Callbacks must implement a class in <code class="docutils literal notranslate"><span class="pre">smac.callbacks</span></code> and be instantiated objects.
+They will automatically be registered within SMAC based on which callback class from
+<code class="docutils literal notranslate"><span class="pre">smac.callbacks</span></code> they implement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>- Callable</strong> (<em>callback</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

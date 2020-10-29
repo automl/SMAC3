@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.intensification.hyperband &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.intensification.hyperband &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -562,6 +563,10 @@
         <span class="c1"># sample challengers for next iteration (based on HpBandster package)</span>
         <span class="n">n_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
 
+        <span class="c1"># Compute this for the next round</span>
+        <span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">n_challengers</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_configs_in_stage</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Hyperband iteration-step: </span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1">  with initial budget: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">hb_iters</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sh_initial_budget</span><span class="p">))</span>
 
@@ -577,6 +582,8 @@
             <span class="n">initial_budget</span><span class="o">=</span><span class="n">sh_initial_budget</span><span class="p">,</span>
             <span class="n">max_budget</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span><span class="p">,</span>
             <span class="n">eta</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
+            <span class="n">_all_budgets</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):],</span>
+            <span class="n">_n_configs_in_stage</span><span class="o">=</span><span class="n">n_configs_in_stage</span><span class="p">,</span>
             <span class="n">num_initial_challengers</span><span class="o">=</span><span class="n">n_challengers</span><span class="p">,</span>
             <span class="n">run_obj_time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">,</span>
             <span class="n">n_seeds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_seeds</span><span class="p">,</span>

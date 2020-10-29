@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.facade.smac_bohb_facade &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.facade.smac_bohb_facade &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -332,7 +333,8 @@
 
         <span class="c1"># Intensification parameters</span>
         <span class="c1"># select Hyperband as the intensifier ensure respective parameters are provided</span>
-        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hyperband</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;intensifier&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;intensifier&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Hyperband</span>
 
         <span class="c1"># set Hyperband parameters if not given</span>
         <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;intensifier_kwargs&#39;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">())</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.intensification.successive_halving &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.intensification.successive_halving &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -361,6 +362,10 @@
 <span class="sd">        maximum budget allowed for 1 run of successive halving</span>
 <span class="sd">    eta : float</span>
 <span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
+<span class="sd">    _all_budgets: typing.Optional[typing.List[float]] = None</span>
+<span class="sd">        Used internally when HB uses SH as a subrouting</span>
+<span class="sd">    _n_configs_in_stage: typing.Optional[typing.List[int]] = None</span>
+<span class="sd">        Used internally when HB uses SH as a subrouting</span>
 <span class="sd">    num_initial_challengers : typing.Optional[int]</span>
 <span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
 <span class="sd">    run_obj_time : bool</span>
@@ -401,6 +406,8 @@
                  <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">_all_budgets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
                  <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -465,7 +472,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="n">inst_seed_pairs</span>
 
         <span class="c1"># successive halving parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_init_sh_params</span><span class="p">(</span><span class="n">initial_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="p">,</span> <span class="n">eta</span><span class="p">,</span> <span class="n">num_initial_challengers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_sh_params</span><span class="p">(</span><span class="n">initial_budget</span><span class="o">=</span><span class="n">initial_budget</span><span class="p">,</span> <span class="n">max_budget</span><span class="o">=</span><span class="n">max_budget</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span>
+                             <span class="n">num_initial_challengers</span><span class="o">=</span><span class="n">num_initial_challengers</span><span class="p">,</span>
+                             <span class="n">_all_budgets</span><span class="o">=</span><span class="n">_all_budgets</span><span class="p">,</span> <span class="n">_n_configs_in_stage</span><span class="o">=</span><span class="n">_n_configs_in_stage</span><span class="p">)</span>
 
         <span class="c1"># adaptive capping</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_order</span> <span class="o">!=</span> <span class="s1">&#39;shuffle&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_obj_time</span><span class="p">:</span>
@@ -503,13 +512,16 @@
         <span class="c1"># run history, does not have this information and so we track locally. That way,</span>
         <span class="c1"># when we access the complete list of configs from the run history, we filter</span>
         <span class="c1"># the ones launched by the current succesive halver using self.run_tracker</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[typing.Tuple[Configuration, str, int]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]</span>
 
 <div class="viewcode-block" id="_SuccessiveHalving._init_sh_params"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._init_sh_params">[docs]</a>    <span class="k">def</span> <span class="nf">_init_sh_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                         <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="n">_all_budgets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        initialize Successive Halving parameters</span>
 
@@ -523,6 +535,10 @@
 <span class="sd">            &#39;halving&#39; factor after each iteration in a successive halving run</span>
 <span class="sd">        num_initial_challengers : typing.Optional[int]</span>
 <span class="sd">            number of challengers to consider for the initial budget</span>
+<span class="sd">        _all_budgets: typing.Optional[typing.List[float]] = None</span>
+<span class="sd">            Used internally when HB uses SH as a subrouting</span>
+<span class="sd">        _n_configs_in_stage: typing.Optional[typing.List[int]] = None</span>
+<span class="sd">            Used internally when HB uses SH as a subrouting</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">eta</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
@@ -570,14 +586,21 @@
         <span class="c1"># max. no. of SH iterations possible given the budgets</span>
         <span class="n">max_sh_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_budget</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">)))</span>
         <span class="c1"># initial number of challengers to sample</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">num_initial_challengers</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_initial_challengers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">num_initial_challengers</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span> <span class="o">**</span> <span class="n">max_sh_iter</span><span class="p">)</span>
-        <span class="c1"># budgets to consider in each stage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">max_sh_iter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="c1"># number of challengers to consider in each stage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">num_initial_challengers</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span>
-                                                                     <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_sh_iter</span><span class="p">,</span> <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+        <span class="k">if</span> <span class="n">_all_budgets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">_n_configs_in_stage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Assert we use the given numbers to avoid rounding issues, see #701</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span> <span class="o">=</span> <span class="n">_all_budgets</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">_n_configs_in_stage</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># budgets to consider in each stage</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_budget</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">max_sh_iter</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+                                                                                 <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="c1"># number of challengers to consider in each stage</span>
+            <span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">num_initial_challengers</span> <span class="o">*</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_sh_iter</span><span class="p">,</span> <span class="n">max_sh_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_configs_in_stage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">n_configs_in_stage</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="_SuccessiveHalving.process_results"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                         <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
@@ -618,6 +641,9 @@
 <span class="sd">            empirical performance of incumbent configuration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="c1"># Mark the fact that we processed this configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="p">[(</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">run_info</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">run_info</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="n">run_info</span><span class="o">.</span><span class="n">budget</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">True</span>
+
         <span class="c1"># If The incumbent is None and it is the first run, we use the challenger</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">incumbent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_run</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -626,14 +652,9 @@
             <span class="n">incumbent</span> <span class="o">=</span> <span class="n">run_info</span><span class="o">.</span><span class="n">config</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">first_run</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="c1"># selecting instance-seed subset for this budget, depending on the kind of budget</span>
-        <span class="n">curr_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span><span class="p">:</span>
-            <span class="n">prev_budget</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-            <span class="n">curr_insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">prev_budget</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">curr_budget</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">curr_insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span>
-        <span class="n">n_insts_remaining</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_insts</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># Account for running instances across configurations, not only on the</span>
+        <span class="c1"># running configuration</span>
+        <span class="n">n_insts_remaining</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pending_instances_for_stage</span><span class="p">(</span><span class="n">run_history</span><span class="p">)</span>
 
         <span class="c1"># Make sure that there is no Budget exhausted</span>
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span><span class="p">:</span>
@@ -657,8 +678,18 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># capped/crashed/do not advance configs</span>
 
+        <span class="c1"># We need to update the incumbent if this config we are processing</span>
+        <span class="c1"># completes all scheduled instance-seed pairs.</span>
+        <span class="c1"># Here, a config/seed/instance is going to be processed for the first time</span>
+        <span class="c1"># (it has been previously scheduled by get_next_run and marked False, indicating</span>
+        <span class="c1"># that it has not been processed yet. Entering process_results() this config/seed/instance</span>
+        <span class="c1"># is marked as TRUE as an indication that it has finished and should be processed)</span>
+        <span class="c1"># so if all configurations runs are marked as TRUE it means that this new config</span>
+        <span class="c1"># was the missing piece to have everything needed to compare against the incumbent</span>
+        <span class="n">update_incumbent</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">])</span>
+
         <span class="c1"># get incumbent if all instances have been evaluated</span>
-        <span class="k">if</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_insts_remaining</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">update_incumbent</span><span class="p">:</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span><span class="n">challenger</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
                                               <span class="n">incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                                               <span class="n">run_history</span><span class="o">=</span><span class="n">run_history</span><span class="p">,</span>
@@ -872,7 +903,9 @@
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cutoff</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">):</span>  <span class="c1"># type: ignore[operator] # noqa F821</span>
             <span class="n">capped</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">challenger</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">))</span>
+        <span class="n">budget</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span> <span class="k">else</span> <span class="n">curr_budget</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="p">[(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="n">RunInfoIntent</span><span class="o">.</span><span class="n">RUN</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
             <span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">,</span>
@@ -880,7 +913,7 @@
             <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span>
             <span class="n">cutoff</span><span class="o">=</span><span class="n">cutoff</span><span class="p">,</span>
             <span class="n">capped</span><span class="o">=</span><span class="n">capped</span><span class="p">,</span>
-            <span class="n">budget</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span> <span class="k">else</span> <span class="n">curr_budget</span><span class="p">,</span>
+            <span class="n">budget</span><span class="o">=</span><span class="n">budget</span><span class="p">,</span>
             <span class="n">source_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span>
         <span class="p">)</span></div>
 
@@ -964,7 +997,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sh_iters</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span> <span class="o">=</span> <span class="p">{}</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fail_chal_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1171,14 +1204,18 @@
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">configs</span><span class="p">:</span>
             <span class="c1"># ensuring that all configurations being compared are run on the same set of instance, seed &amp; budget</span>
             <span class="n">cur_run_key</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">cur_run_key</span> <span class="o">!=</span> <span class="n">run_key</span><span class="p">:</span>
+
+            <span class="c1"># Move to compare set -- get_runs_for_config queries form a dictionary</span>
+            <span class="c1"># which is not an ordered structure. Some queries to that dictionary returned unordered</span>
+            <span class="c1"># list which wrongly trigger the below if</span>
+            <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">cur_run_key</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">set</span><span class="p">(</span><span class="n">run_key</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s1">&#39;Cannot compare configs that were run on different instances-seeds-budgets: </span><span class="si">%s</span><span class="s1"> vs </span><span class="si">%s</span><span class="s1">&#39;</span>
                     <span class="o">%</span> <span class="p">(</span><span class="n">run_key</span><span class="p">,</span> <span class="n">cur_run_key</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="n">config_costs</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
-        <span class="n">configs_sorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_costs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">config_costs</span><span class="o">.</span><span class="n">get</span><span class="p">)</span>
+        <span class="n">configs_sorted</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">config_costs</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
         <span class="c1"># select top configurations only</span>
         <span class="n">top_configs</span> <span class="o">=</span> <span class="n">configs_sorted</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">top_configs</span></div>
@@ -1202,6 +1239,38 @@
                         <span class="n">running_instances</span> <span class="o">+=</span> <span class="mi">1</span>
 
         <span class="k">return</span> <span class="n">running_instances</span></div>
+
+<div class="viewcode-block" id="_SuccessiveHalving._get_pending_instances_for_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._get_pending_instances_for_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_get_pending_instances_for_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        When running SH, M configs might require N instances. Before moving to the</span>
+<span class="sd">        next stage, we need to make sure that all MxN jobs are completed</span>
+
+<span class="sd">        We use the run tracker to make sure we processed all configurations.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        run_history : RunHistory</span>
+<span class="sd">            stores all runs we ran so far</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            int: All the instances that have not yet been processed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">curr_budget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_as_budget</span><span class="p">:</span>
+            <span class="n">prev_budget</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_budgets</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">curr_insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">prev_budget</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">curr_budget</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">curr_insts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inst_seed_pairs</span>
+
+        <span class="c1"># The minus one here accounts for the fact that len(curr_insts) is a length starting at 1</span>
+        <span class="c1"># and self.curr_inst_idx is a zero based index</span>
+        <span class="c1"># But when all configurations have been launched and are running in run history</span>
+        <span class="c1"># n_insts_remaining becomes -1, which is confusing. Cap to zero</span>
+        <span class="n">n_insts_remaining</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">curr_insts</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># If there are pending runs from a past config, wait for them</span>
+        <span class="n">pending_to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">n_insts_remaining</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending_to_process</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="_SuccessiveHalving._launched_all_configs_for_current_stage"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving._launched_all_configs_for_current_stage">[docs]</a>    <span class="k">def</span> <span class="nf">_launched_all_configs_for_current_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1233,9 +1302,25 @@
         <span class="n">n_insts_remaining</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">curr_insts</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span> <span class="o">+</span> <span class="n">running_instances</span><span class="p">)</span>
 
         <span class="c1"># Check which of the current configs is running</span>
-        <span class="n">my_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="p">]</span>
+        <span class="n">my_configs</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_tracker</span><span class="p">]</span>
         <span class="n">running_configs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">tracked_configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">success_challengers</span><span class="o">.</span><span class="n">union</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail_challengers</span><span class="p">)</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_not_advance_challengers</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">run_history</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Our goal here is to account for number of challengers available</span>
+            <span class="c1"># We care if the challenger is running only if is is not tracked in</span>
+            <span class="c1"># success/fails/do not advance</span>
+            <span class="c1"># In other words, in each SH iteration we have to run N configs on</span>
+            <span class="c1"># M instance/seed pairs. This part of the code makes sure that N different</span>
+            <span class="c1"># configurations are launched (we only move to a new config after M</span>
+            <span class="c1"># instance-seed pairs on that config are launched)</span>
+            <span class="c1"># Notice that this number N of configs tracked in num_chal_available</span>
+            <span class="c1"># is a set of processed configurations + the running challengers</span>
+            <span class="c1"># so we do not want to double count configurations</span>
+            <span class="c1"># n_insts_remaining variable above accounts for the last active configuration only</span>
+            <span class="k">if</span> <span class="n">run_history</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="ow">in</span> <span class="n">tracked_configs</span><span class="p">:</span>
+                <span class="k">continue</span>
+
             <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">run_history</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="ow">in</span> <span class="n">my_configs</span><span class="p">:</span>
                     <span class="n">running_configs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">)</span>

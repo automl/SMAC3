@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>smac.utils.validate &mdash; SMAC 0.13.0 documentation</title>
+  <title>smac.utils.validate &mdash; SMAC 0.13.1 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.13.0
+                0.13.1
               </div>
             
           
@@ -102,6 +102,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.callbacks.html">smac.callbacks module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.configspace.html">smac.configspace package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.configspace.util.html">smac.configspace.util module</a></li>
 </ul>
@@ -735,9 +736,9 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">configs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_configs</span><span class="p">(</span><span class="n">configs</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">insts</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">insts</span><span class="p">)</span>  <span class="c1"># type: typing.Sequence[typing.Union[str, None]]</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_instances</span><span class="p">(</span><span class="n">insts</span><span class="p">))</span>  <span class="c1"># type: typing.Sequence[typing.Union[str, None]]</span>
         <span class="k">elif</span> <span class="n">insts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">instances</span> <span class="o">=</span> <span class="n">insts</span>
+            <span class="n">instances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">insts</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">instances</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
         <span class="c1"># If no instances are given, fix the instances to one &quot;None&quot; instance</span>
@@ -760,7 +761,7 @@
         <span class="c1"># If we reuse runs, we want to return them as well</span>
         <span class="n">new_rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">instances</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
                 <span class="c1"># First, find a seed and add all the data we can take from the</span>
                 <span class="c1"># given runhistory to &quot;our&quot; validation runhistory.</span>
