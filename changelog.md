@@ -1,3 +1,13 @@
+# 0.13.1
+
+## Minor Changes
+* Improve error message for first run crashed (#694).
+* Experimental: add callback mechanism (#703).
+
+## Bug fixes
+* Fix a bug which could make successive halving fail if run in parallel (#695).
+* Fix a bug which could cause hyperband to ignore the lowest budget (#701).
+
 # 0.13.0
 
 ## Major Changes
