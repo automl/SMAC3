@@ -254,6 +254,21 @@ class RunHistory(object):
             config_id = typing.cast(int, config_id_tmp)
 
         # Construct keys and values for the data dictionary
+        for key, value in (
+            ('config', config.get_dictionary()),
+            ('config_id', config_id),
+            ('instance_id', instance_id),
+            ('seed', seed),
+            ('budget', budget),
+            ('cost', cost),
+            ('time', time),
+            ('status', status),
+            ('starttime', starttime),
+            ('endtime', endtime),
+            ('additional_info', additional_info),
+            ('origin', config.origin),
+        ):
+            self._check_json_serializable(key, value, EnumEncoder)
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
 
@@ -267,6 +282,20 @@ class RunHistory(object):
         elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
             # overwrite if censored with a larger cutoff
             self._add(k, v, status, origin)
+
+    def _check_json_serializable(
+        self,
+        key: str,
+        obj: typing.Any,
+        encoder: typing.Type[json.JSONEncoder],
+    ) -> None:
+        try:
+            json.dumps(obj, cls=encoder)
+        except Exception as e:
+            raise ValueError(
+                "Cannot add %s: %s to runhistory because it raises an error during JSON encoding, "
+                "please see the error above." % (key, str(obj))
+            ) from e
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType,
              origin: DataOrigin) -> None:
