@@ -544,9 +544,24 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">config_id</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">config_id_tmp</span><span class="p">)</span>
 
-        <span class="c1"># Construct keys and values for the data dictionary</span>
         <span class="n">k</span> <span class="o">=</span> <span class="n">RunKey</span><span class="p">(</span><span class="n">config_id</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">budget</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="n">RunValue</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">starttime</span><span class="p">,</span> <span class="n">endtime</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">)</span>
+        <span class="c1"># Construct keys and values for the data dictionary</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">get_dictionary</span><span class="p">()),</span>
+            <span class="p">(</span><span class="s1">&#39;config_id&#39;</span><span class="p">,</span> <span class="n">config_id</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;instance_id&#39;</span><span class="p">,</span> <span class="n">instance_id</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;seed&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;budget&#39;</span><span class="p">,</span> <span class="n">budget</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="n">cost</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">time</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;starttime&#39;</span><span class="p">,</span> <span class="n">starttime</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;endtime&#39;</span><span class="p">,</span> <span class="n">endtime</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;additional_info&#39;</span><span class="p">,</span> <span class="n">additional_info</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">origin</span><span class="p">),</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check_json_serializable</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">EnumEncoder</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
         <span class="c1"># Each runkey is supposed to be used only once. Repeated tries to add</span>
         <span class="c1"># the same runkey will be ignored silently if not capped.</span>
@@ -558,6 +573,22 @@
         <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="n">cost</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
             <span class="c1"># overwrite if censored with a larger cutoff</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RunHistory._check_json_serializable"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory._check_json_serializable">[docs]</a>    <span class="k">def</span> <span class="nf">_check_json_serializable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">obj</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">,</span>
+        <span class="n">encoder</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">JSONEncoder</span><span class="p">],</span>
+        <span class="n">runkey</span><span class="p">:</span> <span class="n">RunKey</span><span class="p">,</span>
+        <span class="n">runvalue</span><span class="p">:</span> <span class="n">RunValue</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">encoder</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot add </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2"> of type </span><span class="si">%s</span><span class="s2"> to runhistory because it raises an error during JSON encoding, &quot;</span>
+                <span class="s2">&quot;please see the error above.</span><span class="se">\n</span><span class="s2">RunKey: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">RunValue </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">runkey</span><span class="p">,</span> <span class="n">runvalue</span><span class="p">)</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 <div class="viewcode-block" id="RunHistory._add"><a class="viewcode-back" href="../../../apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory._add">[docs]</a>    <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span><span class="p">,</span>
              <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

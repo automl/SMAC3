@@ -9,7 +9,7 @@
 :limit_resources: If true, *SMAC* will use pynisher to limit time and memory for the target algorithm. Allows SMAC to use all resources available. Applicable only to func TAEs. Set to 'True' by default. (Use with caution!) Default: True.
 :maxR: Maximum number of calls per configuration. Default: 2000.
 :minR: Minimum number of calls per configuration. Default: 1.
-:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2020-11-08_22:20:30_523476.
+:output_dir: Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2020-11-09_14:27:09_018973.
 :rand_prob: probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.
 :random_configuration_chooser: path to a python module containing a class`RandomConfigurationChooserImpl` implementingthe interface of `RandomConfigurationChooser`
 :rf_do_bootstrapping: Use bootstraping in random forest. Default: True.
