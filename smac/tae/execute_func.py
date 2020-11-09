@@ -215,27 +215,11 @@ class AbstractTAFunc(SerialRunner):
                 cost = result
             except Exception as e:
                 self.logger.exception(e)
+                cost, result = self.cost_for_crash, self.cost_for_crash
                 status = StatusType.CRASHED
-                cost = self.cost_for_crash
                 additional_run_info = {}
 
             runtime = time.time() - start_time
-
-        # check serializability of results
-        try:
-            json.dumps(cost)
-        except TypeError as e:
-            self.logger.exception(e)
-            raise TypeError("Target Algorithm returned 'cost' {} (type {}) but it is not serializable. "
-                            "Please ensure all objects returned are JSON serializable.".format(result, type(result))) \
-                from e
-        try:
-            json.dumps(additional_run_info)
-        except TypeError as e:
-            self.logger.exception(e)
-            raise TypeError("Target Algorithm returned 'additional_run_info' ({}) with some non-serializable items. "
-                            "Please ensure all objects returned are JSON serializable.".format(additional_run_info)) \
-                from e
 
         if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
             status = StatusType.CRASHED

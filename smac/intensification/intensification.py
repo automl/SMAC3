@@ -604,14 +604,15 @@ class Intensifier(AbstractRacer):
             Max time for a given instance/seed pair
 
         """
-        # Line 5
-        next_instance = self.rs.choice(available_insts)
+        # Line 5 - and avoid https://github.com/numpy/numpy/issues/10791
+        _idx = self.rs.choice(len(available_insts))
+        next_instance = available_insts[_idx]
 
         # Line 6
         if self.deterministic:
             next_seed = 0
         else:
-            next_seed = self.rs.randint(low=0, high=MAXINT, size=1)[0]
+            next_seed = int(self.rs.randint(low=0, high=MAXINT, size=1)[0])
 
         # Line 7
         self.logger.debug(
