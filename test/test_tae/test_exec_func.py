@@ -187,20 +187,3 @@ class TestExecuteFunc(unittest.TestCase):
             return x**2
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         self.assertRaises(ValueError, taf.run, config=2, cutoff=65536)
-
-    def test_non_serializable(self):
-        # cost non serializable
-        def target(x):
-            return np.int32(x)
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-        msg = "Please ensure all objects returned are JSON serializable."
-        with self.assertRaisesRegex(TypeError, msg):
-            taf.run(config=2)
-
-        # additional info non serializable
-        def target(x):
-            return x, {'x': np.int32(x)}
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
-        msg = "Please ensure all objects returned are JSON serializable."
-        with self.assertRaisesRegex(TypeError, msg):
-            taf.run(config=2)

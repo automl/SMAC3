@@ -164,7 +164,7 @@ class _SuccessiveHalving(AbstractRacer):
             if self.deterministic:
                 seeds = [0]
             else:
-                seeds = self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)
+                seeds = [int(s) for s in self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)]
                 if self.n_seeds == 1:
                     self.logger.warning('The target algorithm is specified to be non deterministic, '
                                         'but number of seeds to evaluate are set to 1. '

@@ -163,7 +163,7 @@ class SimpleIntensifier(AbstractRacer):
             config=challenger,
             instance=self.instances[-1],
             instance_specific="0",
-            seed=0 if self.deterministic else self.rs.randint(low=0, high=MAXINT, size=1)[0],
+            seed=0 if self.deterministic else int(self.rs.randint(low=0, high=MAXINT, size=1)[0]),
             cutoff=self.cutoff,
             capped=False,
             budget=0.0,
