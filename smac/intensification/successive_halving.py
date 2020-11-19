@@ -203,7 +203,12 @@ class _SuccessiveHalving(AbstractRacer):
         self.incumbent_selection = incumbent_selection
 
         # Define state variables to please mypy
-        self.curr_inst_idx = 0
+
+        # current instance index tracks two things. Configurations that are to be launched,
+        # That is config A needs to run in 3 instances/seed pairs, then curr_inst_idx should
+        # track this. But then, if a new configuration is added in the case of parallelism
+        # a new separate curr_inst_idx needs to be started
+        self.curr_inst_idx = {}  # type: typing.Dict[Configuration, int]
         self.running_challenger = None
         self.success_challengers = set()  # type: typing.Set[Configuration]
         self.do_not_advance_challengers = set()  # type: typing.Set[Configuration]
@@ -367,12 +372,11 @@ class _SuccessiveHalving(AbstractRacer):
 
         # Make sure that there is no Budget exhausted
         if result.status == StatusType.CAPPED:
-            self.curr_inst_idx = np.inf
+            self.curr_inst_idx[run_info.config] = np.inf
             n_insts_remaining = 0
         else:
             self._ta_time += result.time
             self.num_run += 1
-            self.curr_inst_idx += 1
 
         # adding challengers to the list of evaluated challengers
         #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
@@ -380,9 +384,9 @@ class _SuccessiveHalving(AbstractRacer):
         # curr_challengers is a set, so "at least 1" success can be counted by set addition (no duplicates)
         # If a configuration is successful, it is added to curr_challengers.
         # if it fails it is added to fail_challengers.
-        if np.isfinite(self.curr_inst_idx) and result.status == StatusType.SUCCESS:
+        if np.isfinite(self.curr_inst_idx[run_info.config]) and result.status == StatusType.SUCCESS:
             self.success_challengers.add(run_info.config)  # successful configs
-        elif np.isfinite(self.curr_inst_idx) and result.status == StatusType.DONOTADVANCE:
+        elif np.isfinite(self.curr_inst_idx[run_info.config]) and result.status == StatusType.DONOTADVANCE:
             self.do_not_advance_challengers.add(run_info.config)
         else:
             self.fail_challengers.add(run_info.config)  # capped/crashed/do not advance configs
@@ -497,12 +501,11 @@ class _SuccessiveHalving(AbstractRacer):
         else:
             n_insts = len(self.inst_seed_pairs)
 
-        # In the case of multiprocessing, we will have launched instance/seeds
-        # which are not completed, yet running. To proactively move to a new challenger,
-        # we account for them in the n_insts_remaining calculation
-        running_instances = self._count_running_instances_for_challenger(run_history)
-
-        n_insts_remaining = n_insts - (self.curr_inst_idx + running_instances)
+        # The instances remaining tell us, per configuration, how many instances we
+        # have suggested to SMBO
+        n_insts_remaining = n_insts
+        if self.running_challenger is not None:
+            n_insts_remaining = n_insts - self.curr_inst_idx[self.running_challenger]
 
         # if there are instances pending, finish running configuration
         if self.running_challenger and n_insts_remaining > 0:
@@ -557,13 +560,11 @@ class _SuccessiveHalving(AbstractRacer):
                     )
 
             if challenger:
-                # reset instance index for the new challenger
-                self.curr_inst_idx = 0
+                # We see a challenger for the first time, so no
+                # instance has been launched
+                self.curr_inst_idx[challenger] = 0
                 self._chall_indx += 1
                 self.running_challenger = challenger
-                # If there is a brand new challenger, there will be no
-                # running instances
-                running_instances = 0
 
         # calculating the incumbent's performance for adaptive capping
         # this check is required because:
@@ -588,7 +589,7 @@ class _SuccessiveHalving(AbstractRacer):
         self.logger.debug(" Running challenger  -  %s" % str(challenger))
 
         # run the next instance-seed pair for the given configuration
-        instance, seed = curr_insts[self.curr_inst_idx + running_instances]
+        instance, seed = curr_insts[self.curr_inst_idx[challenger]]
 
         # selecting cutoff if running adaptive capping
         cutoff = self.cutoff
@@ -599,7 +600,7 @@ class _SuccessiveHalving(AbstractRacer):
             if cutoff is not None and cutoff <= 0:
                 # ran out of time to validate challenger
                 self.logger.debug("Stop challenger intensification due to adaptive capping.")
-                self.curr_inst_idx = np.inf
+                self.curr_inst_idx[challenger] = np.inf
 
         self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
 
@@ -615,6 +616,12 @@ class _SuccessiveHalving(AbstractRacer):
         budget = 0.0 if self.instance_as_budget else curr_budget
 
         self.run_tracker[(challenger, instance, seed, budget)] = False
+
+        # self.curr_inst_idx Tell us our current instance to be run. The upcoming return
+        # will launch a challenger on a given instance/seed/pair. The next time this function
+        # is called, we will like to run self.curr_inst_idx + 1 for this configuration
+        self.curr_inst_idx[challenger] += 1
+
         return RunInfoIntent.RUN, RunInfo(
             config=challenger,
             instance=instance,
@@ -646,7 +653,7 @@ class _SuccessiveHalving(AbstractRacer):
             self.stage = 0
             # to track challengers across stages
             self.configs_to_run = []  # type: typing.List[Configuration]
-            self.curr_inst_idx = 0
+            self.curr_inst_idx = {}
             self.running_challenger = None
             self.success_challengers = set()  # successful configs
             self.do_not_advance_challengers = set()  # configs which are successful, but should not be advanced
@@ -718,7 +725,7 @@ class _SuccessiveHalving(AbstractRacer):
         self.success_challengers = set()  # successful configs
         self.do_not_advance_challengers = set()  # successful, but should not be advanced to the next budget/stage
         self.fail_challengers = set()  # capped/failed configs
-        self.curr_inst_idx = 0
+        self.curr_inst_idx = {}
         self.running_challenger = None
 
     def _compare_configs(self,
@@ -929,26 +936,6 @@ class _SuccessiveHalving(AbstractRacer):
         top_configs = configs_sorted[:k]
         return top_configs
 
-    def _count_running_instances_for_challenger(self, run_history: RunHistory) -> int:
-        """
-        The intensifiers are called on a sequential manner. In each iteration,
-        one can only return a configuration at a time, for that reason
-        self.running_challenger tracks that more instance/seed pairs need to be
-        launched for a given config.
-
-        This procedure counts the number of running instances/seed pairs for the
-        current running challenger
-        """
-        running_instances = 0
-
-        if self.running_challenger is not None:
-            for k, v in run_history.data.items():
-                if run_history.ids_config[k.config_id] == self.running_challenger:
-                    if v.status == StatusType.RUNNING:
-                        running_instances += 1
-
-        return running_instances
-
     def _get_pending_instances_for_stage(self, run_history: RunHistory) -> int:
         """
         When running SH, M configs might require N instances. Before moving to the
@@ -972,11 +959,13 @@ class _SuccessiveHalving(AbstractRacer):
         else:
             curr_insts = self.inst_seed_pairs
 
-        # The minus one here accounts for the fact that len(curr_insts) is a length starting at 1
-        # and self.curr_inst_idx is a zero based index
-        # But when all configurations have been launched and are running in run history
-        # n_insts_remaining becomes -1, which is confusing. Cap to zero
-        n_insts_remaining = max(len(curr_insts) - self.curr_inst_idx - 1, 0)
+        # self.curr_inst_idx - 1 is the last proposed instance/seed pair from get_next_run
+        # But it is zero indexed, so (self.curr_inst_idx - 1) + 1 is the number of configurations
+        # that we have proposed to run in total for the running configuration via get_next_run
+        n_insts_remaining = len(curr_insts)
+        if self.running_challenger is not None:
+            n_insts_remaining = max(
+                len(curr_insts) - self.curr_inst_idx[self.running_challenger], 0)
         # If there are pending runs from a past config, wait for them
         pending_to_process = [k for k, v in self.run_tracker.items() if not v]
         return n_insts_remaining + len(pending_to_process)
@@ -1003,12 +992,9 @@ class _SuccessiveHalving(AbstractRacer):
         else:
             curr_insts = self.inst_seed_pairs
 
-        # _count_running_instances_for_challenger will count the running instances
-        # of the last challenger. It makes sense here, because we assume that if we
-        # moved to a new challenger, all instances have been launched for a previous
-        # challenger
-        running_instances = self._count_running_instances_for_challenger(run_history)
-        n_insts_remaining = len(curr_insts) - (self.curr_inst_idx + running_instances)
+        n_insts_remaining = len(curr_insts)
+        if self.running_challenger is not None:
+            n_insts_remaining = len(curr_insts) - self.curr_inst_idx[self.running_challenger]
 
         # Check which of the current configs is running
         my_configs = [c for c, i, s, b in self.run_tracker]

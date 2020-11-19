@@ -619,19 +619,39 @@ class Test_SuccessiveHalving(unittest.TestCase):
             run_history=self.rh,
             incumbent=None,
         )
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
         self.assertEqual(run_info.config, self.config1)
         self.assertTrue(intensifier.new_challenger)
 
-        # until evaluated, does not pick new challenger
-        intent, run_info = intensifier.get_next_run(
+        # In the parallel scenario, we cannot wait for a configuration
+        # to be evaluated before moving to the next configuration in the same
+        # stage. That is, for this example we will have self.n_configs_in_stage=[2, 1]
+        # with self.all_budgets=[1. 2.]. In other words, in this stage we
+        # will have 2 configs each with 1 instance.
+        intent, run_info_new = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             run_history=self.rh,
             incumbent=None,
         )
-        self.assertEqual(run_info.config, self.config1)
-        self.assertEqual(intensifier.running_challenger, run_info.config)
-        self.assertFalse(intensifier.new_challenger)
+        self.rh.add(config=run_info_new.config,
+                    instance_id=run_info_new.instance,
+                    seed=run_info_new.seed,
+                    budget=run_info_new.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        self.assertEqual(run_info_new.config, self.config2)
+        self.assertEqual(intensifier.running_challenger, run_info_new.config)
+        self.assertTrue(intensifier.new_challenger)
 
         # evaluating configuration
         self.assertIsNotNone(run_info.config)
@@ -644,13 +664,18 @@ class Test_SuccessiveHalving(unittest.TestCase):
             result=result,
             log_traj=False,
         )
+
+        # We already launched run_info_new. We expect 2 configs each with 1 seed/instance
+        # 1 has finished and already processed. We have not even run run_info_new
+        # So we cannot advance to a new stage
         intent, run_info = intensifier.get_next_run(
             challengers=[self.config2],
             chooser=None,
             incumbent=inc,
             run_history=self.rh
         )
-        self.assertEqual(run_info.config, self.config2)
+        self.assertIsNone(run_info.config)
+        self.assertEqual(intent, RunInfoIntent.WAIT)
         self.assertEqual(len(intensifier.success_challengers), 1)
         self.assertTrue(intensifier.new_challenger)
 
@@ -1309,95 +1334,6 @@ class Test_SuccessiveHalving(unittest.TestCase):
         inc = intensifier._compare_configs(incumbent=self.config4, challenger=self.config3,
                                            run_history=self.rh, log_traj=False)
         self.assertEqual(self.config3, inc)
-
-    def test_count_running_instances_for_challenger(self):
-        """
-        Makes sure we return the proper number of running configs
-        """
-        def target(x):
-            return 1
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj='quality')
-
-        taf.runhistory = self.rh
-        # select best on any budget
-        intensifier = _SuccessiveHalving(
-            stats=self.stats, traj_logger=None,
-            rng=np.random.RandomState(12345), run_obj_time=False,
-            instances=list(range(20)), initial_budget=3, max_budget=10, eta=2)
-
-        # Get and process the first instance pair of config 1
-        intent, run_info = intensifier.get_next_run(
-            challengers=[self.config1, self.config2, self.config3, self.config4],
-            chooser=None,
-            run_history=self.rh,
-            incumbent=None,
-        )
-
-        # Add a check for empty run history
-        self.assertEqual(len(self.rh.data), 0)
-        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 0)
-
-        result = eval_challenger(run_info, taf, self.stats, self.rh)
-        inc, inc_value = intensifier.process_results(
-            run_info=run_info,
-            incumbent=self.config1,
-            run_history=self.rh,
-            time_bound=np.inf,
-            result=result,
-            log_traj=False,
-        )
-        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 0)
-
-        # This will get us the second instance of config 1
-        intent, run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config3, self.config4],
-            chooser=None,
-            run_history=self.rh,
-            incumbent=None,
-        )
-
-        # Mark this run_info object as running and make sure that the intensifier can
-        # access it
-        self.rh.add(config=run_info.config,
-                    instance_id=run_info.instance,
-                    seed=run_info.seed,
-                    budget=run_info.budget,
-                    cost=10,
-                    time=1,
-                    status=StatusType.RUNNING,
-                    additional_info=None)
-        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 1)
-
-        # Now, when the intensifier is requested, to provide a new run,
-        # it should provide a new instance, not the same one
-        new_intent, new_run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config3, self.config4],
-            chooser=None,
-            run_history=self.rh,
-            incumbent=None,
-        )
-        self.assertEqual(new_run_info.config, run_info.config)
-        self.assertNotEqual(new_run_info.instance, run_info.instance)
-
-        # Add another running instance
-        self.rh.add(config=new_run_info.config,
-                    instance_id=new_run_info.instance,
-                    seed=new_run_info.seed,
-                    budget=new_run_info.budget,
-                    cost=10,
-                    time=1,
-                    status=StatusType.RUNNING,
-                    additional_info=None)
-        self.assertEqual(intensifier._count_running_instances_for_challenger(self.rh), 2)
-
-        # Get a new config to gain more confidence
-        newer_intent, newer_run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config3, self.config4],
-            chooser=None,
-            run_history=self.rh,
-            incumbent=None,
-        )
-        self.assertNotIn(newer_run_info, [new_run_info, run_info])
 
     def test_launched_all_configs_for_current_stage(self):
         """
