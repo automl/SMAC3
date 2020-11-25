@@ -1138,7 +1138,17 @@ class Test_SuccessiveHalving(unittest.TestCase):
             incumbent=None,
             run_history=self.rh
         )
-        result = eval_challenger(run_info, taf, self.stats, self.rh)
+
+        # Mark the configuration as launched
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        result = eval_challenger(run_info, taf, self.stats, self.rh, force_update=True)
         inc, inc_value = intensifier.process_results(
             run_info=run_info,
             incumbent=None,
@@ -1158,7 +1168,15 @@ class Test_SuccessiveHalving(unittest.TestCase):
             incumbent=inc,
             run_history=self.rh
         )
-        result = eval_challenger(run_info, taf, self.stats, self.rh)
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        result = eval_challenger(run_info, taf, self.stats, self.rh, force_update=True)
         inc, inc_value = intensifier.process_results(
             run_info=run_info,
             incumbent=inc,
@@ -1178,7 +1196,15 @@ class Test_SuccessiveHalving(unittest.TestCase):
             incumbent=inc,
             run_history=self.rh
         )
-        result = eval_challenger(run_info, taf, self.stats, self.rh)
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        result = eval_challenger(run_info, taf, self.stats, self.rh, force_update=True)
         inc, inc_value = intensifier.process_results(
             run_info=run_info,
             incumbent=inc,
@@ -1204,7 +1230,15 @@ class Test_SuccessiveHalving(unittest.TestCase):
             incumbent=inc,
             run_history=self.rh
         )
-        result = eval_challenger(run_info, taf, self.stats, self.rh)
+        self.rh.add(config=run_info.config,
+                    instance_id=run_info.instance,
+                    seed=run_info.seed,
+                    budget=run_info.budget,
+                    cost=10,
+                    time=1,
+                    status=StatusType.RUNNING,
+                    additional_info=None)
+        result = eval_challenger(run_info, taf, self.stats, self.rh, force_update=True)
         inc, inc_value = intensifier.process_results(
             run_info=run_info,
             incumbent=inc,
