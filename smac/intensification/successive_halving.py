@@ -368,7 +368,10 @@ class _SuccessiveHalving(AbstractRacer):
 
         # Account for running instances across configurations, not only on the
         # running configuration
-        n_insts_remaining = self._get_pending_instances_for_stage(run_history)
+        n_insts_remaining = self._count_remaining_instances_for_stage(
+            run_history=run_history,
+            activate_configuration_being_intensified=self.running_challenger,
+        )
 
         # Make sure that there is no Budget exhausted
         if result.status == StatusType.CAPPED:
@@ -936,22 +939,49 @@ class _SuccessiveHalving(AbstractRacer):
         top_configs = configs_sorted[:k]
         return top_configs
 
-    def _get_pending_instances_for_stage(self, run_history: RunHistory) -> int:
+    def _count_remaining_instances_for_stage(
+        self, run_history: RunHistory,
+        activate_configuration_being_intensified: typing.Optional[Configuration]
+    ) -> int:
         """
         When running SH, M configs might require N instances. Before moving to the
         next stage, we need to make sure that all MxN jobs are completed
 
-        We use the run tracker to make sure we processed all configurations.
+        If this function returns a 0, it means that there are no more instances
+        for this stage, and we should transition to the next one.
+
+        To finish a stage for M configurations and N instances:
+        -> All (M-1) configurations have had all instances launched and are actively
+           tracked in self.run_tracker. Making sure that all (M-1)*N jobs are finish
+           is tracked in pending_to_process variable
+        -> The M configuration, the last one being process, is actively tracked in
+           activate_configuration_being_intensified. Not all of it's instances N are
+           already added in self.run_tracker (if the stage is not yet complete)
+           so we have to account for this in pending_to_launch
+
 
         Parameters
         ----------
         run_history : RunHistory
             stores all runs we ran so far
+        activate_configuration_being_intensified: Optional[Configuration]
+            The last configuration being actively processes by this intensifier
 
         Returns
         -------
             int: All the instances that have not yet been processed
         """
+
+        # First account for the M-1 configurations whose N instances have fully
+        # been sent to the SMBO.
+        # Run tracker contains any config/instance/seed/budget that has been
+        # provided to SMBO. It is initially tagged with False as an indication
+        # that it is not yet processed. When the result of this
+        # config/instance/seed/budget is processed by the intensifer, this
+        # config/instance/seed/budget in the run_tracker dictionary is tagges a True
+        pending_to_process = [k for k, v in self.run_tracker.items() if not v]
+
+        # The we query how many N instances of the M configuration are pending
         curr_budget = self.all_budgets[self.stage]
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
@@ -959,16 +989,19 @@ class _SuccessiveHalving(AbstractRacer):
         else:
             curr_insts = self.inst_seed_pairs
 
-        # self.curr_inst_idx - 1 is the last proposed instance/seed pair from get_next_run
-        # But it is zero indexed, so (self.curr_inst_idx - 1) + 1 is the number of configurations
-        # that we have proposed to run in total for the running configuration via get_next_run
-        n_insts_remaining = len(curr_insts)
-        if self.running_challenger is not None:
-            n_insts_remaining = max(
-                len(curr_insts) - self.curr_inst_idx[self.running_challenger], 0)
-        # If there are pending runs from a past config, wait for them
-        pending_to_process = [k for k, v in self.run_tracker.items() if not v]
-        return n_insts_remaining + len(pending_to_process)
+        if activate_configuration_being_intensified is None:
+            # When a new stage begins, there is no active configuration.
+            # Therefore activate_configuration_being_intensified is empty and all instances are
+            # remaining
+            pending_to_launch = len(curr_insts)
+        else:
+            # self.curr_inst_idx - 1 is the last proposed instance/seed pair from get_next_run
+            # But it is zero indexed, so (self.curr_inst_idx - 1) + 1 is the number of
+            # configurations that we have proposed to run in total for the running
+            # configuration via get_next_run
+            pending_to_launch = max(
+                len(curr_insts) - self.curr_inst_idx[activate_configuration_being_intensified], 0)
+        return pending_to_launch + len(pending_to_process)
 
     def _launched_all_configs_for_current_stage(self, run_history: RunHistory) -> bool:
         """
