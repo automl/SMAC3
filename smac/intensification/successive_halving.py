@@ -385,23 +385,23 @@ class _SuccessiveHalving(AbstractRacer):
         # configuration, and to get to this point, we have already submitted tasks
         # for (M - 1) configurations on N instances seed-pairs. The status of such
         # (M - 1) * N tasks is tracked in self.run_tracker, that has a value of False
-        # if not processed nad true if such task has been processed.
+        # if not processed and true if such task has been processed.
         # This stage is complete only if all tasks have been launched and all of the
         # already launched tasks are processed.
 
         # 1: We first query if we have launched everything already (All M * N tasks)
-        tasks_not_yet_launched = self._count_remaining_tasks_for_stage(
+        all_config_inst_seed_launched = self._all_config_inst_seed_pairs_launched(
             run_history=run_history,
             activate_configuration_being_intensified=self.running_challenger,
         )
 
         # 2: Then we get the already submitted tasks (that is, proposed by get_next_runs),
         # that have not yet been processed process_results
-        running_tasks_not_processed = len([k for k, v in self.run_tracker.items() if not v])
+        all_config_inst_seeds_processed = len([v for v in self.run_tracker.values() if not v]) <= 0
 
         # 3: Then the total number of remaining task before we can conclude this stage
-        # is calculated by adding point 2 and 3 above
-        n_pending_tasks_to_process = running_tasks_not_processed + tasks_not_yet_launched
+        # is calculated by taking into account point 2 and 3 above
+        is_stage_done = all_config_inst_seed_launched and all_config_inst_seeds_processed
 
         # adding challengers to the list of evaluated challengers
         #  - Stop: CAPPED/CRASHED/TIMEOUT/MEMOUT/DONOTADVANCE (!= SUCCESS)
@@ -427,12 +427,12 @@ class _SuccessiveHalving(AbstractRacer):
         update_incumbent = all([v for k, v in self.run_tracker.items() if k[0] == run_info.config])
 
         # get incumbent if all instances have been evaluated
-        if n_pending_tasks_to_process <= 0 or update_incumbent:
+        if is_stage_done or update_incumbent:
             incumbent = self._compare_configs(challenger=run_info.config,
                                               incumbent=incumbent,
                                               run_history=run_history,
                                               log_traj=log_traj)
-        if n_pending_tasks_to_process <= 0:
+        if is_stage_done:
             self.logger.info('Successive Halving iteration-step: %d-%d with '
                              'budget [%.2f / %d] - evaluated %d challenger(s)' %
                              (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
@@ -496,7 +496,7 @@ class _SuccessiveHalving(AbstractRacer):
         # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
-        if self._count_remaining_tasks_for_stage(run_history, self.running_challenger) <= 0:
+        if self._all_config_inst_seed_pairs_launched(run_history, self.running_challenger):
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
@@ -955,16 +955,16 @@ class _SuccessiveHalving(AbstractRacer):
         top_configs = configs_sorted[:k]
         return top_configs
 
-    def _count_remaining_tasks_for_stage(
+    def _all_config_inst_seed_pairs_launched(
         self, run_history: RunHistory,
         activate_configuration_being_intensified: typing.Optional[Configuration],
-    ) -> int:
+    ) -> bool:
         """
         When running SH, M configs might require N instances. Before moving to the
         next stage, we need to make sure that tasks (each of the MxN jobs) are launched.
 
-        This function returns the number of tasks that have not yet been proposed
-        to run. In other words, the M x N - already_launched_runs.
+        This function returns a true if any M configs are pending or if N instance/seed are
+        still remaining.
 
         Parameters
         ----------
@@ -975,7 +975,8 @@ class _SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-            int: All the instances that have not yet been processed
+            bool: whether a instance/pair of any of the M configurations for the current
+                stage are pending
         """
 
         # 1: First we count the number of configurations that have been launched
@@ -1024,7 +1025,9 @@ class _SuccessiveHalving(AbstractRacer):
             pending_instances_to_launch = max(
                 len(curr_insts) - self.curr_inst_idx[activate_configuration_being_intensified], 0)
 
-        return total_pending_configurations + pending_instances_to_launch
+        # If the there are any pending configuration, or instances/seed pending for the
+        # active runner, we return a boolean
+        return (total_pending_configurations + pending_instances_to_launch) <= 0
 
 
 class SuccessiveHalving(ParallelScheduler):
