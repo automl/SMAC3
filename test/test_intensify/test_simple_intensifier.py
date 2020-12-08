@@ -1,12 +1,10 @@
-import unittest
-from unittest import mock
-
-import logging
-import numpy as np
 import time
+import unittest
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
+import numpy as np
 
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
@@ -14,10 +12,7 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
-from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.utils.io.traj_logging import TrajLogger
-
-from .test_eval_utils import eval_challenger
 
 
 def get_config_space():

@@ -2,12 +2,12 @@ import typing
 
 import numpy as np
 
+from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
-from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -174,14 +174,14 @@ class SimpleIntensifier(AbstractRacer):
         if total_active_runs >= num_workers:
             # We only submit jobs if there is an idle worker
             return RunInfoIntent.WAIT, RunInfo(
-                 config=None,
-                 instance=None,
-                 instance_specific="0",
-                 seed=0,
-                 cutoff=self.cutoff,
-                 capped=False,
-                 budget=0.0,
-             )
+                config=None,
+                instance=None,
+                instance_specific="0",
+                seed=0,
+                cutoff=self.cutoff,
+                capped=False,
+                budget=0.0,
+            )
 
         run_info = RunInfo(
             config=challenger,
