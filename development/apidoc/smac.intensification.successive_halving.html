@@ -481,6 +481,29 @@ logger messages properly</p></li>
 </dd>
 </dl>
 <dl class="py method">
+<dt id="smac.intensification.successive_halving._SuccessiveHalving._all_config_inst_seed_pairs_launched">
+<code class="sig-name descname">_all_config_inst_seed_pairs_launched</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">activate_configuration_being_intensified</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._all_config_inst_seed_pairs_launched"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._all_config_inst_seed_pairs_launched" title="Permalink to this definition">¶</a></dt>
+<dd><p>When running SH, M configs might require N instances. Before moving to the
+next stage, we need to make sure that tasks (each of the MxN jobs) are launched.</p>
+<p>This function returns a true if any M configs are pending or if N instance/seed are
+still remaining.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</p></li>
+<li><p><strong>activate_configuration_being_intensified</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – The last configuration being actively processes by this intensifier</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>bool</strong> – stage are pending</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>whether a instance/pair of any of the M configurations for the current</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="smac.intensification.successive_halving._SuccessiveHalving._compare_configs">
 <code class="sig-name descname">_compare_configs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incumbent</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">challenger</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em>, <em class="sig-param"><span class="n">log_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._compare_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._compare_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compares the challenger with current incumbent and returns the best configuration,
@@ -526,36 +549,6 @@ based on the given incumbent selection design.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.intensification.successive_halving._SuccessiveHalving._count_running_instances_for_challenger">
-<code class="sig-name descname">_count_running_instances_for_challenger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._count_running_instances_for_challenger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._count_running_instances_for_challenger" title="Permalink to this definition">¶</a></dt>
-<dd><p>The intensifiers are called on a sequential manner. In each iteration,
-one can only return a configuration at a time, for that reason
-self.running_challenger tracks that more instance/seed pairs need to be
-launched for a given config.</p>
-<p>This procedure counts the number of running instances/seed pairs for the
-current running challenger</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.intensification.successive_halving._SuccessiveHalving._get_pending_instances_for_stage">
-<code class="sig-name descname">_get_pending_instances_for_stage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._get_pending_instances_for_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._get_pending_instances_for_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>When running SH, M configs might require N instances. Before moving to the
-next stage, we need to make sure that all MxN jobs are completed</p>
-<p>We use the run tracker to make sure we processed all configurations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – stores all runs we ran so far</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>int</strong></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>All the instances that have not yet been processed</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="smac.intensification.successive_halving._SuccessiveHalving._init_sh_params">
 <code class="sig-name descname">_init_sh_params</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">initial_budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">max_budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">eta</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_all_budgets</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>float<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._init_sh_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._init_sh_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>initialize Successive Halving parameters</p>
@@ -569,24 +562,6 @@ next stage, we need to make sure that all MxN jobs are completed</p>
 <li><p><strong>_all_budgets</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
 <li><p><strong>_n_configs_in_stage</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>int</em><em>]</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.intensification.successive_halving._SuccessiveHalving._launched_all_configs_for_current_stage">
-<code class="sig-name descname">_launched_all_configs_for_current_stage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_history</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">smac.runhistory.runhistory.RunHistory</a></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._launched_all_configs_for_current_stage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._launched_all_configs_for_current_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>This procedure queries if the addition of currently finished configs
-and running configs are sufficient for the current stage.
-If more configs are needed, it will return False.
-:param run_history: stores all runs we ran so far
-:type run_history: RunHistory</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>bool</strong></p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Whether or not to launch more configurations/instances/seed pairs</p>
 </dd>
 </dl>
 </dd></dl>
