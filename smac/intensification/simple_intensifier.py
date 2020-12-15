@@ -2,12 +2,12 @@ import typing
 
 import numpy as np
 
+from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
-from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -59,6 +59,12 @@ class SimpleIntensifier(AbstractRacer):
                          min_chall=1,
                          )
 
+        # We want to control the number of runs that are sent to
+        # the workers. At any time, we want to make sure that if there
+        # are just W workers, there should be at max W active runs
+        # Below variable tracks active runs not processed
+        self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
+
     def process_results(self,
                         run_info: RunInfo,
                         incumbent: typing.Optional[Configuration],
@@ -97,6 +103,8 @@ class SimpleIntensifier(AbstractRacer):
         inc_perf: float
             empirical performance of incumbent configuration
         """
+        # Mark the fact that we processed this configuration
+        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
         # If The incumbent is None we use the challenger
         if not incumbent:
@@ -159,7 +167,23 @@ class SimpleIntensifier(AbstractRacer):
                                            run_history=run_history,
                                            repeat_configs=repeat_configs)
 
-        return RunInfoIntent.RUN, RunInfo(
+        # Run tracker is a dictionary whose values indicate if a run has been
+        # processed. If a value in this dict is false, it means that a worker
+        # should still be processing this configuration.
+        total_active_runs = len([v for v in self.run_tracker.values() if not v])
+        if total_active_runs >= num_workers:
+            # We only submit jobs if there is an idle worker
+            return RunInfoIntent.WAIT, RunInfo(
+                config=None,
+                instance=None,
+                instance_specific="0",
+                seed=0,
+                cutoff=self.cutoff,
+                capped=False,
+                budget=0.0,
+            )
+
+        run_info = RunInfo(
             config=challenger,
             instance=self.instances[-1],
             instance_specific="0",
@@ -168,3 +192,6 @@ class SimpleIntensifier(AbstractRacer):
             capped=False,
             budget=0.0,
         )
+
+        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = False
+        return RunInfoIntent.RUN, run_info

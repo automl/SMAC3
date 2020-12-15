@@ -170,7 +170,8 @@ class TestSMBO(unittest.TestCase):
         self.assertFalse(smbo.solver._stop)
         smbo.optimize()
         self.assertEqual(len(smbo.runhistory.data), 1)
-        self.assertEqual(list(smbo.runhistory.data.values())[0].status, StatusType.RUNNING)
+        # After an optimization, we expect no running instances.
+        self.assertEqual(list(smbo.runhistory.data.values())[0].status, StatusType.STOP)
         self.assertTrue(smbo.solver._stop)
 
     def test_intensification_percentage(self):

@@ -449,14 +449,6 @@ class SMBO(object):
             )
         )
 
-        if result.status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
-                                    "exit. The last incumbent can be found "
-                                    "in the trajectory-file.")
-        elif result.status == StatusType.STOP:
-            self._stop = True
-            return
-
         self.runhistory.add(
             config=run_info.config,
             cost=result.cost,
@@ -471,6 +463,14 @@ class SMBO(object):
             additional_info=result.additional_info,
         )
         self.stats.n_configs = len(self.runhistory.config_ids)
+
+        if result.status == StatusType.ABORT:
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
+                                    "exit. The last incumbent can be found "
+                                    "in the trajectory-file.")
+        elif result.status == StatusType.STOP:
+            self._stop = True
+            return
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
             if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
