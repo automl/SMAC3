@@ -740,14 +740,6 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">ABORT</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TAEAbortException</span><span class="p">(</span><span class="s2">&quot;Target algorithm status ABORT - SMAC will &quot;</span>
-                                    <span class="s2">&quot;exit. The last incumbent can be found &quot;</span>
-                                    <span class="s2">&quot;in the trajectory-file.&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">STOP</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">return</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">cost</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span>
@@ -762,6 +754,14 @@
             <span class="n">additional_info</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">additional_info</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">n_configs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">config_ids</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">ABORT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TAEAbortException</span><span class="p">(</span><span class="s2">&quot;Target algorithm status ABORT - SMAC will &quot;</span>
+                                    <span class="s2">&quot;exit. The last incumbent can be found &quot;</span>
+                                    <span class="s2">&quot;in the trajectory-file.&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">STOP</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">return</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span> <span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">finished_ta_runs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CRASHED</span><span class="p">:</span>
