@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016-2018  [AutoML Group](http://www.automl.org/)
+Copyright (C) 2016-2020  [AutoML Group](http://www.automl.org/)
 
 __Attention__: This package is a reimplementation of the original SMAC tool
 (see reference below).
@@ -21,6 +21,10 @@ Status for the development branch
 [![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=development)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
 [![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
+
+Try SMAC directly in your Browser
+
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
 
 # OVERVIEW
 
@@ -124,11 +128,28 @@ target algorithms.
 
 # Examples
 
-See examples/
+We provide a bunch of examples in the [examples folder](examples), such as:
 
-  * examples/rosenbrock.py - example on how to optimize a Python function
-  * examples/spear_qcp/run.sh - example on how to optimize the SAT solver Spear
-    on a set of SAT formulas
+  * Optimization of a python function directly with SMAC
+    * [branin/branin_fmin.py](examples/branin/branin_fmin.py)
+    * [fmin_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/fmin_rosenbrock.html#sphx-glr-examples-fmin-rosenbrock-py) - Optimization of the 2D Rosenbrock function
+    * [fmin_rosenbrock_parallel.py](https://automl.github.io/SMAC3/master/examples/fmin_rosenbrock_parallel.html#sphx-glr-examples-fmin-rosenbrock-parallel-py) - Example of parallel SMAC using dask
+  * Optimization of a black-box function with SMAC
+    * [SMAC4BO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4BO_rosenbrock.html#sphx-glr-examples-smac4bo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4BO_acq_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_acq_rosenbrock.html#sphx-glr-examples-smac4hpo-acq-rosenbrock-py) - Example to select the acquisition function
+  * Hyperparameter Optimization with SMAC
+    * [SMAC4HPO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_rosenbrock.html#sphx-glr-examples-smac4hpo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4HPO_rf.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py) - Optimization of a random forest
+    * [SMAC4HPO_svm.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py) - Optimization of an SVM [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+  * Optimization of a SAT solver across problem instances with SMAC
+    * [spear_qcp/run_SMAC.sh](examples/spear_qcp/run_SMAC.sh)
+  * Optimization of an MLP
+    * [parallel_sh_mlp.py](https://automl.github.io/SMAC3/master/examples/parallel_sh_mlp.html#sphx-glr-examples-parallel-sh-mlp-py) - Parallel Successive Halving
+    * [hyperband_mlp.py](https://automl.github.io/SMAC3/master/examples/hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py) - Hyperband
+    * [BOHB4HPO_mlp.py](https://automl.github.io/SMAC3/master/examples/BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py) - BOHB
+    * [BOHB4HPO_sgd_instances.py](https://automl.github.io/SMAC3/master/examples/BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py) - BOHB across instances
+
+An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
 
 # Contact
 
