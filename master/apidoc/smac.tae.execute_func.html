@@ -323,6 +323,11 @@
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc._call_ta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.AbstractTAFunc.results">
+<code class="sig-name descname">results</code><em class="property">: typing.List<span class="p">[</span>typing.Tuple<span class="p">[</span>RunInfo<span class="p">, </span>RunValue<span class="p">]</span><span class="p">]</span></em><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt id="smac.tae.execute_func.AbstractTAFunc.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType">smac.tae.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#AbstractTAFunc.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run" title="Permalink to this definition">¶</a></dt>
@@ -396,6 +401,11 @@ the target algorithm.</p>
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncArray._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray._call_ta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.ExecuteTAFuncArray.results">
+<code class="sig-name descname">results</code><em class="property">: typing.List<span class="p">[</span>typing.Tuple<span class="p">[</span>RunInfo<span class="p">, </span>RunValue<span class="p">]</span><span class="p">]</span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -435,6 +445,11 @@ the target algorithm.</p>
 <dl class="py method">
 <dt id="smac.tae.execute_func.ExecuteTAFuncDict._call_ta">
 <code class="sig-name descname">_call_ta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">obj_kwargs</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>str<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>Dict<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/execute_func.html#ExecuteTAFuncDict._call_ta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict._call_ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="smac.tae.execute_func.ExecuteTAFuncDict.results">
+<code class="sig-name descname">results</code><em class="property">: typing.List<span class="p">[</span>typing.Tuple<span class="p">[</span>RunInfo<span class="p">, </span>RunValue<span class="p">]</span><span class="p">]</span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.results" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
