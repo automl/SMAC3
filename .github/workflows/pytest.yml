@@ -31,7 +31,7 @@ jobs:
         # Miniconda is available in $CONDA env var
         $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
         $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
-        $CONDA/envs/testenv/bin/pip3 install -e .[test]
+        $CONDA/envs/testenv/bin/pip3 install -e .[all]
     - name: Install test dependencies
       if: matrix.use-conda == false && matrix.use-dist == false
       run: |
@@ -40,7 +40,7 @@ jobs:
           # Numpy 1.20 dropped suppert for Python3.6
           pip install "numpy<=1.19"
         fi
-        pip install -e .[test]
+        pip install -e .[all]
         sudo apt-get update
         sudo apt-get remove swig
         sudo apt-get install swig3.0
@@ -56,7 +56,7 @@ jobs:
         # We need to install for the dependencies, like pytest
         python setup.py sdist
         last_dist=$(ls -t dist/auto-sklearn-*.tar.gz | head -n 1)
-        pip install $last_dist[test]
+        pip install $last_dist[all]
     - name: Store repository status
       id: status-before
       run: |
