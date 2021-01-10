@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 120
+ignore = W605,E402,W503
+show-source = True
+application-import-names = smac
+exclude =
+    venv
+    build
+    .git
+    __pycache__
+    doc
+    build
+    dist
+    examples/spear_qcp/*

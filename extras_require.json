@@ -10,5 +10,21 @@
     "sphinx",
     "sphinx_rtd_theme",
     "sphinx-gallery==0.5.0"
+  ],
+  "test": [
+    "pytest>=4.6",
+    "mypy",
+    "pytest-xdist",
+    "pytest-timeout",
+    "flaky",
+    "openml",
+    "pre-commit",
+    "pytest-cov"
+  ],
+  "examples": [
+    "matplotlib",
+    "jupyter",
+    "notebook",
+    "seaborn"
   ]
 }
