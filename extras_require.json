@@ -14,11 +14,11 @@
   "test": [
     "pytest>=4.6",
     "mypy",
-    "pytest-xdist",
     "pytest-timeout",
     "flaky",
     "openml",
     "pre-commit",
+    "pytest-forked",
     "pytest-cov"
   ],
   "examples": [

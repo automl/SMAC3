@@ -72,7 +72,7 @@ jobs:
         # to change the default python
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         if [ ${{ matrix.code-cov }} ]; then codecov='--cov=smac --cov-report=xml'; fi
-        $CONDA/envs/testenv/bin/python3 -m pytest --durations=20 --timeout=300 --timeout-method=thread -v $codecov test
+        $CONDA/envs/testenv/bin/python3 -m pytest --forked --durations=20 --timeout=300 --timeout-method=thread --fulltrace --full-trace -sv $codecov test
     - name: Run tests
       timeout-minutes: 45
       if: matrix.use-conda == false
@@ -81,7 +81,7 @@ jobs:
         export OMP_NUM_THREADS=1
         export MKL_NUM_THREADS=1
         if [ ${{ matrix.code-cov }} ]; then codecov='--cov=smac --cov-report=xml'; fi
-        pytest --durations=20 --timeout=300 --timeout-method=thread -v $codecov test
+        pytest --forked --durations=20 --timeout=300 --timeout-method=thread --fulltrace --full-trace -sv $codecov test
     - name: Check for files left behind by test
       if: ${{ always() }}
       run: |
