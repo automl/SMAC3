@@ -40,11 +40,11 @@ jobs:
           # Numpy 1.20 dropped suppert for Python3.6
           pip install "numpy<=1.19"
         fi
-        pip install -e .[all]
         sudo apt-get update
         sudo apt-get remove swig
         sudo apt-get install swig3.0
         sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
+        pip install -e .[all]
     - name: Dist Install test dependencies
       if: matrix.use-conda == false && matrix.use-dist == true
       run: |
@@ -65,11 +65,7 @@ jobs:
       timeout-minutes: 45
       if: matrix.use-conda == true
       run: |
-        export OPENBLAS_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        export MKL_NUM_THREADS=1
-        # We activate conda as metalearning uses python directly, so we need
-        # to change the default python
+        # Activate anaconda so default python is from conda
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         if [ ${{ matrix.code-cov }} ]; then codecov='--cov=smac --cov-report=xml'; fi
         $CONDA/envs/testenv/bin/python3 -m pytest --forked --durations=20 --timeout=300 --timeout-method=thread --fulltrace --full-trace -sv $codecov test
@@ -77,9 +73,6 @@ jobs:
       timeout-minutes: 45
       if: matrix.use-conda == false
       run: |
-        export OPENBLAS_NUM_THREADS=1
-        export OMP_NUM_THREADS=1
-        export MKL_NUM_THREADS=1
         if [ ${{ matrix.code-cov }} ]; then codecov='--cov=smac --cov-report=xml'; fi
         pytest --forked --durations=20 --timeout=300 --timeout-method=thread --fulltrace --full-trace -sv $codecov test
     - name: Check for files left behind by test

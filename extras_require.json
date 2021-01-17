@@ -16,15 +16,8 @@
     "mypy",
     "pytest-timeout",
     "flaky",
-    "openml",
     "pre-commit",
     "pytest-forked",
     "pytest-cov"
-  ],
-  "examples": [
-    "matplotlib",
-    "jupyter",
-    "notebook",
-    "seaborn"
   ]
 }
