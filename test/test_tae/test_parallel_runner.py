@@ -5,6 +5,10 @@ import time
 import unittest
 import unittest.mock
 
+# Add below as a WA for
+# https://github.com/dask/distributed/issues/4168
+import multiprocessing.popen_spawn_posix  # noqa
+import dask  # noqa
 from dask.distributed import Client
 
 from smac.configspace import ConfigurationSpace

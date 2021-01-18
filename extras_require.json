@@ -10,5 +10,14 @@
     "sphinx",
     "sphinx_rtd_theme",
     "sphinx-gallery==0.5.0"
+  ],
+  "test": [
+    "pytest>=4.6",
+    "mypy",
+    "pytest-timeout",
+    "flaky",
+    "pre-commit",
+    "pytest-forked",
+    "pytest-cov"
   ]
 }

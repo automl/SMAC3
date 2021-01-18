@@ -16,7 +16,6 @@ target_algo_runs.json
 
 # Other
 .tox
-.coverage
 .pypirc
 .ipynb_checkpoints/
 *.ipynb
@@ -33,3 +32,24 @@ doc/main_options.rst
 doc/scenario_options.rst
 doc/smac_options.rst
 doc/apidoc
+
+# Dask created work space
+dask-worker-space
+
+# Python distribution generated files
+.eggs
+
+# Unit test / coverage reports
+htmlcov/
+cover
+coverage
+htmlcov
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+prof/
