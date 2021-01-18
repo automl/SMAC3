@@ -243,13 +243,13 @@ Examples
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Python source code: examples_python.zip <//home/travis/build/automl/SMAC3/doc/examples/examples_python.zip>`
+    :download:`Download all examples in Python source code: examples_python.zip <//home/runner/work/SMAC3/SMAC3/doc/examples/examples_python.zip>`
 
 
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip <//home/travis/build/automl/SMAC3/doc/examples/examples_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip <//home/runner/work/SMAC3/SMAC3/doc/examples/examples_jupyter.zip>`
 
 
 .. only:: html

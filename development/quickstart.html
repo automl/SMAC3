@@ -315,25 +315,7 @@ This example aims to explain the basic usage of <em>SMAC</em>. There are differe
 <p>The easiest way to use <em>SMAC</em> is to use the <a class="reference external" href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">f_min SMAC wrapper</a>. It is
 implemented in <cite>examples/branin/branin_fmin.py</cite> and requires no extra files. We
 import the fmin-function and the Branin-function:</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">branin</span> <span class="kn">import</span> <span class="n">branin</span>
-
-</pre></div>
-</td></tr></table></div>
 <p>And run the f_min-function:</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>17
-18
-19
-20
-21
-22</pre></div></td><td class="code"><div class="highlight"><pre><span></span>    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">branin</span><span class="p">,</span>  <span class="c1"># function</span>
-                           <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="c1"># default configuration</span>
-                           <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)],</span>  <span class="c1"># limits</span>
-                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="c1"># maximum number of evaluations</span>
-                           <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># random seed</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimum at </span><span class="si">{}</span><span class="s2"> with cost of </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">))</span>
-</pre></div>
-</td></tr></table></div>
 <p>This way, you can optimize a blackbox-function with minimal effort. However, to
 use all of <em>SMAC’s</em> capability, a <a class="reference external" href="options.html#scenario">scenario</a> object should be used.</p>
 </div>
