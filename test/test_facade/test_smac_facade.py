@@ -459,17 +459,17 @@ class TestSMACFacade(unittest.TestCase):
 
         scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': ''})
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
-        self.assertEqual(smac.solver.tae_runner.use_pynisher, True)
-        self.assertEqual(smac.solver.tae_runner.memory_limit, None)
+        self.assertTrue(smac.solver.tae_runner.use_pynisher)
+        self.assertIsNone(smac.solver.tae_runner.memory_limit)
 
         scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': '',
                              "memory_limit": 333})
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
-        self.assertEqual(smac.solver.tae_runner.use_pynisher, True)
+        self.assertTrue(smac.solver.tae_runner.use_pynisher)
         self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
 
         scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': '',
                              "memory_limit": 333, "limit_resources": False})
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
-        self.assertEqual(smac.solver.tae_runner.use_pynisher, False)
+        self.assertFalse(smac.solver.tae_runner.use_pynisher)
         self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
