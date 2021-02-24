@@ -33,7 +33,6 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -304,7 +303,7 @@
 <span id="smac-tae-base-module"></span><h1>smac.tae.base module<a class="headerlink" href="#module-smac.tae.base" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.tae.base.BaseRunner">
-<em class="property">class </em><code class="sig-prename descclassname">smac.tae.base.</code><code class="sig-name descname">BaseRunner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ta</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>Callable<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">stats</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">smac.stats.stats.Stats</a></span></em>, <em class="sig-param"><span class="n">run_obj</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'runtime'</span></em>, <em class="sig-param"><span class="n">par_factor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">cost_for_crash</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2147483647.0</span></em>, <em class="sig-param"><span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.tae.base.</span></code><code class="sig-name descname"><span class="pre">BaseRunner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><span class="pre">smac.stats.stats.Stats</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'runtime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par_factor</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_for_crash</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2147483647.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abort_on_first_run_crash</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Interface class to handle the execution of SMAC’ configurations.</p>
 <p>This interface defines how to interact with the SMBO loop.
@@ -331,37 +330,37 @@ until more results are available.</p>
 </dl>
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.results">
-<code class="sig-name descname">results</code><a class="headerlink" href="#smac.tae.base.BaseRunner.results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">results</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.results" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.ta">
-<code class="sig-name descname">ta</code><a class="headerlink" href="#smac.tae.base.BaseRunner.ta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">ta</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.ta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.stats">
-<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.tae.base.BaseRunner.stats" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">stats</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.stats" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.run_obj">
-<code class="sig-name descname">run_obj</code><a class="headerlink" href="#smac.tae.base.BaseRunner.run_obj" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run_obj</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.run_obj" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.par_factor">
-<code class="sig-name descname">par_factor</code><a class="headerlink" href="#smac.tae.base.BaseRunner.par_factor" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">par_factor</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.par_factor" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.cost_for_crash">
-<code class="sig-name descname">cost_for_crash</code><a class="headerlink" href="#smac.tae.base.BaseRunner.cost_for_crash" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">cost_for_crash</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.cost_for_crash" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner.abort_first_run_crash">
-<code class="sig-name descname">abort_first_run_crash</code><a class="headerlink" href="#smac.tae.base.BaseRunner.abort_first_run_crash" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">abort_first_run_crash</span></code><a class="headerlink" href="#smac.tae.base.BaseRunner.abort_first_run_crash" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="field-list simple">
@@ -379,12 +378,12 @@ that returned NaN or inf)</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.tae.base.BaseRunner._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.tae.base.BaseRunner._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.tae.base.BaseRunner._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.get_finished_runs">
-<em class="property">abstract </em><code class="sig-name descname">get_finished_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>Tuple<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.get_finished_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">get_finished_runs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><span class="pre">smac.runhistory.runhistory.RunInfo</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.get_finished_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.get_finished_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method returns any finished configuration, and returns a list with
 the results of exercising the configurations. This class keeps populating results
 to self.results until a call to get_finished runs is done. In this case, the
@@ -403,13 +402,13 @@ returned.</p>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.num_workers">
-<em class="property">abstract </em><code class="sig-name descname">num_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; int<a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.num_workers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.num_workers" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">num_workers</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">int</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.num_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.num_workers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the active number of workers that will execute tae runs.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.pending_runs">
-<em class="property">abstract </em><code class="sig-name descname">pending_runs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.pending_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.pending_runs" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">pending_runs</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">bool</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.pending_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.pending_runs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether or not there are configs still running. Generally if the runner is serial,
 launching a run instantly returns it’s result. On parallel runners, there might
 be pending configurations to complete.</p>
@@ -417,7 +416,7 @@ be pending configurations to complete.</p>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.run">
-<em class="property">abstract </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.Configuration</span></em>, <em class="sig-param"><span class="n">instance</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">12345</span></em>, <em class="sig-param"><span class="n">budget</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">instance_specific</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'0'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType">smac.tae.StatusType</a><span class="p">, </span>float<span class="p">, </span>float<span class="p">, </span>Dict<span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.run" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">12345</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specific</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs target algorithm &lt;self.ta&gt; with configuration &lt;config&gt; on
 instance &lt;instance&gt; with instance specifics &lt;specifics&gt; for at most
 &lt;cutoff&gt; seconds and random seed &lt;seed&gt;</p>
@@ -449,7 +448,7 @@ algorithm. Handled by the target algorithm internally</p></li>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.run_wrapper">
-<code class="sig-name descname">run_wrapper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_info</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a></span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a><span class="p">, </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a><span class="p">]</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.run_wrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run_wrapper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><span class="pre">smac.runhistory.runhistory.RunInfo</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><span class="pre">smac.runhistory.runhistory.RunInfo</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.run_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.run_wrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrapper around run() to exec and check the execution of a given config file</p>
 <p>This function encapsulates common handling/processing, so that run() implementation
 is simplified.</p>
@@ -470,7 +469,7 @@ isolation.</p>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.submit_run">
-<em class="property">abstract </em><code class="sig-name descname">submit_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_info</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a></span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.submit_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.submit_run" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">submit_run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><span class="pre">smac.runhistory.runhistory.RunInfo</span></a></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.submit_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.submit_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function submits a configuration
 embedded in a RunInfo object, and uses one of the workers
 to produce a result (such result will eventually be available
@@ -490,7 +489,7 @@ it is expected to be implemented by a child class.</p>
 
 <dl class="py method">
 <dt id="smac.tae.base.BaseRunner.wait">
-<em class="property">abstract </em><code class="sig-name descname">wait</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.wait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.wait" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">wait</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/tae/base.html#BaseRunner.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.base.BaseRunner.wait" title="Permalink to this definition">¶</a></dt>
 <dd><p>SMBO/intensifier might need to wait for runs to finish before making a decision.
 This method waits until 1 run completes</p>
 </dd></dl>

@@ -33,7 +33,6 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -304,12 +303,12 @@
 <span id="smac-epm-base-imputor-module"></span><h1>smac.epm.base_imputor module<a class="headerlink" href="#module-smac.epm.base_imputor" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.epm.base_imputor.BaseImputor">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_imputor.</code><code class="sig-name descname">BaseImputor</code><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.epm.base_imputor.</span></code><code class="sig-name descname"><span class="pre">BaseImputor</span></code><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the Imputation API.</p>
 <dl class="py method">
 <dt id="smac.epm.base_imputor.BaseImputor.impute">
-<em class="property">abstract </em><code class="sig-name descname">impute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">censored_X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">censored_y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">uncensored_X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">uncensored_y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor.impute" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">impute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">censored_X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">censored_y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/epm/base_imputor.html#BaseImputor.impute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_imputor.BaseImputor.impute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imputes censored runs and returns new y values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

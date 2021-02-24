@@ -304,17 +304,17 @@
 <span id="smac-optimizer-acquisition-module"></span><h1>smac.optimizer.acquisition module<a class="headerlink" href="#module-smac.optimizer.acquisition" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">AbstractAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">AbstractAcquisitionFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract base class for acquisition function</p>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.model">
-<code class="sig-name descname">model</code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">model</span></code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.logger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">logger</span></code><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>Constructor</p>
@@ -325,12 +325,12 @@
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction._compute">
-<em class="property">abstract </em><code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the acquisition value for a given point X. This function has
 to be overwritten in a derived class.</p>
 <dl class="field-list simple">
@@ -351,7 +351,7 @@ dimensions of one X.</p>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.AbstractAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#AbstractAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition function attributes required for calculation.</p>
 <p>This method will be called after fitting the model, but before maximizing the acquisition
 function. As an examples, EI uses it to update the current fmin.</p>
@@ -368,7 +368,7 @@ are already present.</p>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.EI">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">EI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">EI</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.</p>
@@ -392,12 +392,12 @@ acquisition function.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.EI._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.EI._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.EI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EI._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.EI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -416,14 +416,14 @@ dimensions of one X.</p>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.EI._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.EI._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.EI._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.EIPS">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">EIPS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">EIPS</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.EI</span></code></a></p>
 <p>Computes for a given x the expected improvement as
 acquisition value.
@@ -447,12 +447,12 @@ acquisition function.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.EIPS._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.EIPS._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#EIPS._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EIPS value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -471,14 +471,14 @@ dimensions of one X.</p>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.EIPS._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.EIPS._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">IntegratedAcquisitionFunction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">acquisition_function</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction">smac.optimizer.acquisition.AbstractAcquisitionFunction</a></span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">IntegratedAcquisitionFunction</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquisition_function</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Marginalize over Model hyperparameters to compute the integrated acquisition function.</p>
 <p>See “Practical Bayesian Optimization of Machine Learning Algorithms” by Jasper Snoek et al.
@@ -496,12 +496,12 @@ integrate over.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -520,12 +520,12 @@ dimensions of one X.</p>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.IntegratedAcquisitionFunction.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">update</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#IntegratedAcquisitionFunction.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.IntegratedAcquisitionFunction.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the acquisition functions values.</p>
 <p>This method will be called if the model is updated. E.g. entropy search uses it to update its approximation
 of P(x=x_min), EI uses it to update the current fmin.</p>
@@ -546,7 +546,7 @@ integrate over.</p></li>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.LCB">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">LCB</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">LCB</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the lower confidence bound for a given x over the best so far value as
 acquisition value.</p>
@@ -569,12 +569,12 @@ acquisition function.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.LCB._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.LCB._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LCB._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.LCB._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the LCB value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -591,14 +591,14 @@ acquisition function.</p></li>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.LCB._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.LCB._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.LogEI">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">LogEI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">LogEI</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes for a given x the logarithm expected improvement as
 acquisition value.</p>
@@ -619,12 +619,12 @@ acquisition function.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.LogEI._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.LogEI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#LogEI._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the EI value and its derivatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -643,14 +643,14 @@ dimensions of one X.</p>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.LogEI._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.LogEI._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="smac.optimizer.acquisition.PI">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.acquisition.</code><code class="sig-name descname">PI</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">par</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></code><code class="sig-name descname"><span class="pre">PI</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Computes the probability of improvement for a given x over the best so far value as
 acquisition value.</p>
@@ -674,12 +674,12 @@ acquisition function.</p></li>
 </dl>
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.PI._abc_impl">
-<code class="sig-name descname">_abc_impl</code><em class="property"> = &lt;_abc_data object&gt;</em><a class="headerlink" href="#smac.optimizer.acquisition.PI._abc_impl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_abc_impl</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.PI._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="smac.optimizer.acquisition.PI._compute">
-<code class="sig-name descname">_compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_compute</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#PI._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.PI._compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the PI value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -696,7 +696,7 @@ acquisition function.</p></li>
 
 <dl class="py attribute">
 <dt id="smac.optimizer.acquisition.PI._required_updates">
-<code class="sig-name descname">_required_updates</code><em class="property">: Tuple<span class="p">[</span>str<span class="p">, </span><span class="p">…</span><span class="p">]</span></em><a class="headerlink" href="#smac.optimizer.acquisition.PI._required_updates" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">_required_updates</span></code><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">…</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.PI._required_updates" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

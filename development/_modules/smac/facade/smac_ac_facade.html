@@ -33,7 +33,6 @@
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -657,7 +656,7 @@
             <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
             <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">tae_runner_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tae_runner_kwargs</span><span class="p">)</span>
@@ -674,6 +673,7 @@
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tae_runner</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_pynisher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">limit_resources</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;memory_limit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">memory_limit</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Argument &#39;tae_runner&#39; is </span><span class="si">%s</span><span class="s2">, but must be &quot;</span>
