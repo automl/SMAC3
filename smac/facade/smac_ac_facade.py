@@ -362,7 +362,7 @@ class SMAC4AC(object):
             'run_obj': scenario.run_obj,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
-            'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821
+            'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -379,6 +379,7 @@ class SMAC4AC(object):
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
+            tae_def_kwargs['memory_limit'] = scenario.memory_limit  # type: ignore[attr-defined] # noqa F821
             tae_runner_instance = ExecuteTAFuncDict(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "

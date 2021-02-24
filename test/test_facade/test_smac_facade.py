@@ -451,3 +451,25 @@ class TestSMACFacade(unittest.TestCase):
 
         smac.register_callback(SubClass())
         self.assertEqual(len(smac.solver._callbacks['_incorporate_run_results']), 2)
+
+    def test_set_limit_resources_with_tae_func_dict(self):
+        # To optimize, we pass the function to the SMAC-object
+        def tmp(**kwargs):
+            return 1
+
+        scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': ''})
+        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        self.assertTrue(smac.solver.tae_runner.use_pynisher)
+        self.assertIsNone(smac.solver.tae_runner.memory_limit)
+
+        scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': '',
+                             "memory_limit": 333})
+        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        self.assertTrue(smac.solver.tae_runner.use_pynisher)
+        self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
+
+        scenario = Scenario({'cs': self.cs, 'run_obj': 'quality', 'output_dir': '',
+                             "memory_limit": 333, "limit_resources": False})
+        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        self.assertFalse(smac.solver.tae_runner.use_pynisher)
+        self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
