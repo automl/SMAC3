@@ -264,7 +264,7 @@ class TestRFWithInstances(unittest.TestCase):
                     pca_components=100,
                     log_y=True,
                 )
-                maes = [0.43186902865718386507, 0.4267519520332511912]
+                maes = [0.43169704431695493156, 0.4267519520332511912]
             else:
                 targets = y
                 model = RandomForestWithInstances(
