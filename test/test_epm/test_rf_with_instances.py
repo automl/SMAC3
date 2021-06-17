@@ -288,7 +288,7 @@ class TestRFWithInstances(unittest.TestCase):
                 self.assertAlmostEqual(mae, maes[i], msg=('Do log: %s, iteration %i' % (str(do_log), i)),
                                        # We observe a difference of around 0.00017
                                        # in github actions if doing log
-                                       places=7 if do_log else 4)
+                                       places=3 if do_log else 7)
 
     def test_impute_inactive_hyperparameters(self):
         cs = smac.configspace.ConfigurationSpace()
