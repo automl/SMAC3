@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -299,41 +302,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.facade.func_facade">
-<span id="smac-facade-func-facade-module"></span><h1>smac.facade.func_facade module<a class="headerlink" href="#module-smac.facade.func_facade" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt id="smac.facade.func_facade.fmin_smac">
-<code class="sig-prename descclassname"><span class="pre">smac.facade.func_facade.</span></code><code class="sig-name descname"><span class="pre">fmin_smac</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfun</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_args</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_runner_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO" title="smac.facade.smac_hpo_facade.SMAC4HPO"><span class="pre">smac.facade.smac_hpo_facade.SMAC4HPO</span></a><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/facade/func_facade.html#fmin_smac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.func_facade.fmin_smac" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimize a function func using the SMAC4HPO facade
-(i.e., a modified version of SMAC).
-This function is a convenience wrapper for the SMAC4HPO class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>typing.Callable</em>) – Function to minimize.</p></li>
-<li><p><strong>x0</strong> (<em>typing.List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</p></li>
-<li><p><strong>bounds</strong> (<em>typing.List</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the bound on
-that parameters.</p></li>
-<li><p><strong>maxfun</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of function evaluations.</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em>, </em><em>optional</em>) – Random number generator used by SMAC.</p></li>
-<li><p><strong>scenario_args</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>typing.Any</em><em>]</em>) – Arguments passed to the scenario
-See smac.scenario.scenario.Scenario</p></li>
-<li><p><strong>**kwargs</strong> – Arguments passed to the optimizer class
-See ~smac.facade.smac_facade.SMAC</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>x</strong> (<em>list</em>) – Estimated position of the minimum.</p></li>
-<li><p><strong>f</strong> (<em>float</em>) – Value of <cite>func</cite> at the minimum.</p></li>
-<li><p><strong>s</strong> (<a class="reference internal" href="smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO" title="smac.facade.smac_hpo_facade.SMAC4HPO"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_hpo_facade.SMAC4HPO</span></code></a>) – SMAC objects which enables the user to get
-e.g., the trajectory and runhistory.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="smac-facade-func-facade-module">
+<h1>smac.facade.func_facade module<a class="headerlink" href="#smac-facade-func-facade-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

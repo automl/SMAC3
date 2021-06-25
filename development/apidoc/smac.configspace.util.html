@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -302,8 +305,8 @@
   <div class="section" id="module-smac.configspace.util">
 <span id="smac-configspace-util-module"></span><h1>smac.configspace.util module<a class="headerlink" href="#module-smac.configspace.util" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="smac.configspace.util.convert_configurations_to_array">
-<code class="sig-prename descclassname"><span class="pre">smac.configspace.util.</span></code><code class="sig-name descname"><span class="pre">convert_configurations_to_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/configspace/util.html#convert_configurations_to_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.configspace.util.convert_configurations_to_array" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.configspace.util.convert_configurations_to_array">
+<span class="sig-prename descclassname"><span class="pre">smac.configspace.util.</span></span><span class="sig-name descname"><span class="pre">convert_configurations_to_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/smac/configspace/util.html#convert_configurations_to_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.configspace.util.convert_configurations_to_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Impute inactive hyperparameters in configurations with their default.</p>
 <p>Necessary to apply an EPM to the data.</p>
 <dl class="field-list simple">

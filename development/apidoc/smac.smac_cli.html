@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -297,43 +300,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-smac.smac_cli">
-<span id="smac-smac-cli-module"></span><h1>smac.smac_cli module<a class="headerlink" href="#module-smac.smac_cli" title="Permalink to this headline">¶</a></h1>
-<dl class="py class">
-<dt id="smac.smac_cli.SMACCLI">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.smac_cli.</span></code><code class="sig-name descname"><span class="pre">SMACCLI</span></code><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Main class of SMAC</p>
-<p>Constructor</p>
-<dl class="py method">
-<dt id="smac.smac_cli.SMACCLI.main_cli">
-<code class="sig-name descname"><span class="pre">main_cli</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commandline_arguments</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.main_cli"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.main_cli" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function of SMAC for CLI interface</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.smac_cli.SMACCLI.restore_state">
-<code class="sig-name descname"><span class="pre">restore_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">restore_state</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a><span class="p"><span class="pre">,</span> </span><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><span class="pre">smac.stats.stats.Stats</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read in files for state-restoration: runhistory, stats, trajectory.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="smac.smac_cli.SMACCLI.restore_state_after_output_dir">
-<code class="sig-name descname"><span class="pre">restore_state_after_output_dir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scen</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><span class="pre">smac.stats.stats.Stats</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_list_aclib</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_list_old</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">ConfigSpace.configuration_space.Configuration</span><a class="reference internal" href="../_modules/smac/smac_cli.html#SMACCLI.restore_state_after_output_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.smac_cli.SMACCLI.restore_state_after_output_dir" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finish processing files for state-restoration. Trajectory
-is read in, but needs to be written to new output-folder. Therefore, the
-output-dir is created. This needs to be considered in the SMAC-facade.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="smac.smac_cli.cmd_line_call">
-<code class="sig-prename descclassname"><span class="pre">smac.smac_cli.</span></code><code class="sig-name descname"><span class="pre">cmd_line_call</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/smac_cli.html#cmd_line_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.smac_cli.cmd_line_call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Entry point to be installable to /user/bin
-:return:</p>
-</dd></dl>
-
+  <div class="section" id="smac-smac-cli-module">
+<h1>smac.smac_cli module<a class="headerlink" href="#smac-smac-cli-module" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

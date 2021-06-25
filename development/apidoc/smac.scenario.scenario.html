@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -302,8 +305,8 @@
   <div class="section" id="module-smac.scenario.scenario">
 <span id="smac-scenario-scenario-module"></span><h1>smac.scenario.scenario module<a class="headerlink" href="#module-smac.scenario.scenario" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.scenario.scenario.Scenario">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.scenario.scenario.</span></code><code class="sig-name descname"><span class="pre">Scenario</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_options</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.scenario.scenario.</span></span><span class="sig-name descname"><span class="pre">Scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_options</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Scenario contains the configuration of the optimization process and
 constructs a scenario object from a file or dictionary.</p>
@@ -324,34 +327,34 @@ If None, only cmd_options will be used</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="smac.scenario.scenario.Scenario._to_str_and_warn">
-<code class="sig-name descname"><span class="pre">_to_str_and_warn</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario._to_str_and_warn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario._to_str_and_warn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario._to_str_and_warn">
+<span class="sig-name descname"><span class="pre">_to_str_and_warn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario._to_str_and_warn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario._to_str_and_warn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="smac.scenario.scenario.Scenario._transform_arguments">
-<code class="sig-name descname"><span class="pre">_transform_arguments</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario._transform_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario._transform_arguments" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario._transform_arguments">
+<span class="sig-name descname"><span class="pre">_transform_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario._transform_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario._transform_arguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.scenario.scenario.Scenario.feature_dict">
-<code class="sig-name descname"><span class="pre">feature_dict</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.feature_dict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario.feature_dict">
+<span class="sig-name descname"><span class="pre">feature_dict</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.feature_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.scenario.scenario.Scenario.run_obj">
-<code class="sig-name descname"><span class="pre">run_obj</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'None'</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.run_obj" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario.run_obj">
+<span class="sig-name descname"><span class="pre">run_obj</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'None'</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.run_obj" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.scenario.scenario.Scenario.use_ta_time">
-<code class="sig-name descname"><span class="pre">use_ta_time</span></code><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.use_ta_time" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario.use_ta_time">
+<span class="sig-name descname"><span class="pre">use_ta_time</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#smac.scenario.scenario.Scenario.use_ta_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="smac.scenario.scenario.Scenario.write">
-<code class="sig-name descname"><span class="pre">write</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.write" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.scenario.scenario.Scenario.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/scenario/scenario.html#Scenario.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.scenario.scenario.Scenario.write" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write scenario to self.output_dir/scenario.txt.</p>
 </dd></dl>
 

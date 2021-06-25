@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -300,66 +303,66 @@
   <div class="section" id="module-smac.tae">
 <span id="smac-tae-package"></span><h1>smac.tae package<a class="headerlink" href="#module-smac.tae" title="Permalink to this headline">¶</a></h1>
 <dl class="py exception">
-<dt id="smac.tae.FirstRunCrashedException">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">smac.tae.</span></code><code class="sig-name descname"><span class="pre">FirstRunCrashedException</span></code><a class="reference internal" href="../_modules/smac/tae.html#FirstRunCrashedException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.FirstRunCrashedException" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.FirstRunCrashedException">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">smac.tae.</span></span><span class="sig-name descname"><span class="pre">FirstRunCrashedException</span></span><a class="reference internal" href="../_modules/smac/tae.html#FirstRunCrashedException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.FirstRunCrashedException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.tae.TAEAbortException" title="smac.tae.TAEAbortException"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.tae.TAEAbortException</span></code></a></p>
 <p>Exception indicating that the first run crashed (depending on options
 this could trigger an ABORT of SMAC.)</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="smac.tae.StatusType">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.tae.</span></code><code class="sig-name descname"><span class="pre">StatusType</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae.html#StatusType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.StatusType" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.tae.</span></span><span class="sig-name descname"><span class="pre">StatusType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/tae.html#StatusType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.StatusType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Class to define numbers for status types</p>
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.ABORT">
-<code class="sig-name descname"><span class="pre">ABORT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#smac.tae.StatusType.ABORT" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.ABORT">
+<span class="sig-name descname"><span class="pre">ABORT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4</span></em><a class="headerlink" href="#smac.tae.StatusType.ABORT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.CAPPED">
-<code class="sig-name descname"><span class="pre">CAPPED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#smac.tae.StatusType.CAPPED" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.CAPPED">
+<span class="sig-name descname"><span class="pre">CAPPED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">6</span></em><a class="headerlink" href="#smac.tae.StatusType.CAPPED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.CRASHED">
-<code class="sig-name descname"><span class="pre">CRASHED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#smac.tae.StatusType.CRASHED" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.CRASHED">
+<span class="sig-name descname"><span class="pre">CRASHED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">3</span></em><a class="headerlink" href="#smac.tae.StatusType.CRASHED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.DONOTADVANCE">
-<code class="sig-name descname"><span class="pre">DONOTADVANCE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#smac.tae.StatusType.DONOTADVANCE" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.DONOTADVANCE">
+<span class="sig-name descname"><span class="pre">DONOTADVANCE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">7</span></em><a class="headerlink" href="#smac.tae.StatusType.DONOTADVANCE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.MEMOUT">
-<code class="sig-name descname"><span class="pre">MEMOUT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#smac.tae.StatusType.MEMOUT" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.MEMOUT">
+<span class="sig-name descname"><span class="pre">MEMOUT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">5</span></em><a class="headerlink" href="#smac.tae.StatusType.MEMOUT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.RUNNING">
-<code class="sig-name descname"><span class="pre">RUNNING</span></code><em class="property"> <span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#smac.tae.StatusType.RUNNING" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.RUNNING">
+<span class="sig-name descname"><span class="pre">RUNNING</span></span><em class="property"> <span class="pre">=</span> <span class="pre">9</span></em><a class="headerlink" href="#smac.tae.StatusType.RUNNING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.STOP">
-<code class="sig-name descname"><span class="pre">STOP</span></code><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#smac.tae.StatusType.STOP" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.STOP">
+<span class="sig-name descname"><span class="pre">STOP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8</span></em><a class="headerlink" href="#smac.tae.StatusType.STOP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.SUCCESS">
-<code class="sig-name descname"><span class="pre">SUCCESS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#smac.tae.StatusType.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.SUCCESS">
+<span class="sig-name descname"><span class="pre">SUCCESS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#smac.tae.StatusType.SUCCESS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.tae.StatusType.TIMEOUT">
-<code class="sig-name descname"><span class="pre">TIMEOUT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#smac.tae.StatusType.TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.TIMEOUT">
+<span class="sig-name descname"><span class="pre">TIMEOUT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#smac.tae.StatusType.TIMEOUT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="smac.tae.StatusType.enum_hook">
-<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">enum_hook</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/smac/tae.html#StatusType.enum_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.StatusType.enum_hook" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.StatusType.enum_hook">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">enum_hook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/smac/tae.html#StatusType.enum_hook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.StatusType.enum_hook" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook function passed to json-deserializer as “object_hook”.
 EnumEncoder in runhistory/runhistory.</p>
 </dd></dl>
@@ -367,8 +370,8 @@ EnumEncoder in runhistory/runhistory.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="smac.tae.TAEAbortException">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">smac.tae.</span></code><code class="sig-name descname"><span class="pre">TAEAbortException</span></code><a class="reference internal" href="../_modules/smac/tae.html#TAEAbortException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.TAEAbortException" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.tae.TAEAbortException">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">smac.tae.</span></span><span class="sig-name descname"><span class="pre">TAEAbortException</span></span><a class="reference internal" href="../_modules/smac/tae.html#TAEAbortException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.tae.TAEAbortException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Exception indicating that the target algorithm suggests an ABORT of
 SMAC, usually because it assumes that all further runs will surely fail.</p>

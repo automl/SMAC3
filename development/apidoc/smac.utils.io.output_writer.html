@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -304,13 +307,13 @@
   <div class="section" id="module-smac.utils.io.output_writer">
 <span id="smac-utils-io-output-writer-module"></span><h1>smac.utils.io.output_writer module<a class="headerlink" href="#module-smac.utils.io.output_writer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.utils.io.output_writer.OutputWriter">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">smac.utils.io.output_writer.</span></code><code class="sig-name descname"><span class="pre">OutputWriter</span></code><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.utils.io.output_writer.</span></span><span class="sig-name descname"><span class="pre">OutputWriter</span></span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Writing scenario to file.</p>
 <dl class="py method">
-<dt id="smac.utils.io.output_writer.OutputWriter._parse_argument">
-<code class="sig-name descname"><span class="pre">_parse_argument</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter._parse_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter._parse_argument" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter._parse_argument">
+<span class="sig-name descname"><span class="pre">_parse_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Any</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter._parse_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter._parse_argument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Some values of the scenario-file need to be changed upon writing,
 such as the ‘ta’ (target algorithm), due to it’s callback. Also,
 the configspace, features, train_inst- and test-inst-lists are saved
@@ -340,8 +343,8 @@ output if possible, creates the files from attributes otherwise</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.output_writer.OutputWriter.save_configspace">
-<code class="sig-name descname"><span class="pre">save_configspace</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter.save_configspace">
+<span class="sig-name descname"><span class="pre">save_configspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.save_configspace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writing ConfigSpace to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -356,8 +359,8 @@ output if possible, creates the files from attributes otherwise</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.output_writer.OutputWriter.write_inst_features_file">
-<code class="sig-name descname"><span class="pre">write_inst_features_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feat_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter.write_inst_features_file">
+<span class="sig-name descname"><span class="pre">write_inst_features_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feat_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_features_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes features to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -371,8 +374,8 @@ output if possible, creates the files from attributes otherwise</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.output_writer.OutputWriter.write_inst_file">
-<code class="sig-name descname"><span class="pre">write_inst_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">insts</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter.write_inst_file">
+<span class="sig-name descname"><span class="pre">write_inst_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">insts</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_inst_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_inst_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes instance-list to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -385,8 +388,8 @@ output if possible, creates the files from attributes otherwise</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.output_writer.OutputWriter.write_scenario_file">
-<code class="sig-name descname"><span class="pre">write_scenario_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Scenario</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_scenario_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_scenario_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter.write_scenario_file">
+<span class="sig-name descname"><span class="pre">write_scenario_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Scenario</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="reference internal" href="../_modules/smac/utils/io/output_writer.html#OutputWriter.write_scenario_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.write_scenario_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write scenario to a file (format is compatible with input_reader).
 Will overwrite if file exists. If you have arguments that need special
 parsing when saving, specify so in the _parse_argument-function.

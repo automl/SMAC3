@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
 
   
@@ -30,6 +32,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -399,35 +402,22 @@ INFO:SMAC:Final Incumbent: Configuration:
 optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known <a class="reference external" href="https://en.wikipedia.org/wiki/Iris_flower_data_set">IRIS-dataset</a>.
 This example is located in <code class="code docutils literal notranslate"><span class="pre">examples/svm.py</span></code>.</p>
 <p>To use <em>SMAC</em> directly with Python, we first import the necessary modules</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 9</span>
-<span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Note</span><span class="p">:</span> <span class="n">SMAC</span><span class="o">-</span><span class="n">documentation</span> <span class="n">uses</span> <span class="n">linenumbers</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">docs</span> <span class="kn">from</span> <span class="nn">this</span> <span class="n">file</span><span class="o">.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="s2">import logging</span>
-
-<span class="s2">import numpy as np</span>
-<span class="s2">from ConfigSpace.conditions import InCondition</span>
-<span class="s2">from ConfigSpace.hyperparameters import CategoricalHyperparameter, </span><span class="se">\</span>
-<span class="s2">    UniformFloatHyperparameter, UniformIntegerHyperparameter</span>
-<span class="s2">from sklearn import svm, datasets</span>
-<span class="s2">from sklearn.model_selection import cross_val_score</span>
-
-<span class="s2"># Import ConfigSpace and different types of parameters</span>
-<span class="s2">from smac.configspace import ConfigurationSpace</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 9</span><span class="n">Note</span><span class="p">:</span> <span class="n">SMAC</span><span class="o">-</span><span class="n">documentation</span> <span class="n">uses</span> <span class="n">linenumbers</span> <span class="n">to</span> <span class="n">generate</span> <span class="n">docs</span> <span class="kn">from</span> <span class="nn">this</span> <span class="n">file</span><span class="o">.</span>
+<span class="linenos">10</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="s2">import logging</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="s2">import numpy as np</span>
+<span class="linenos">15</span><span class="s2">from ConfigSpace.conditions import InCondition</span>
+<span class="linenos">16</span><span class="s2">from ConfigSpace.hyperparameters import CategoricalHyperparameter, </span><span class="se">\</span>
+<span class="linenos">17</span><span class="s2">    UniformFloatHyperparameter, UniformIntegerHyperparameter</span>
+<span class="linenos">18</span><span class="s2">from sklearn import svm, datasets</span>
+<span class="linenos">19</span><span class="s2">from sklearn.model_selection import cross_val_score</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span><span class="s2"># Import ConfigSpace and different types of parameters</span>
+<span class="linenos">22</span><span class="s2">from smac.configspace import ConfigurationSpace</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <dl class="simple">
 <dt>We import the <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">SVM from Scikit-Learn</a>,</dt><dd><p>different hyperparameter types, the ConfigurationSpace, and the objects we need from <em>SMAC</em>.</p>
 </dd>
@@ -440,174 +430,111 @@ quickly lead to overfitting, which is why we use cross-validation to evaluate
 the configuration.</p>
 <p>Let’s start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
 the kernel.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span>
-<span class="c1"># logger = logging.getLogger(&quot;SVMExample&quot;)</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>  <span class="c1"># logging.DEBUG for debug output</span>
-
-<span class="c1"># Build Configuration Space which defines all parameters and their ranges</span>
-<span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">60</span>
+<span class="linenos">61</span><span class="c1"># logger = logging.getLogger(&quot;SVMExample&quot;)</span>
+<span class="linenos">62</span><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>  <span class="c1"># logging.DEBUG for debug output</span>
+<span class="linenos">63</span>
+<span class="linenos">64</span><span class="c1"># Build Configuration Space which defines all parameters and their ranges</span>
+<span class="linenos">65</span><span class="n">cs</span> <span class="o">=</span> <span class="n">ConfigurationSpace</span><span class="p">()</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># We define a few possible types of SVM-kernels and add them as &quot;kernel&quot; to our cs</span>
-<span class="n">kernel</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;kernel&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">67</span><span class="c1"># We define a few possible types of SVM-kernels and add them as &quot;kernel&quot; to our cs</span>
+<span class="linenos">68</span><span class="n">kernel</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;kernel&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;poly&quot;</span><span class="p">)</span>
+<span class="linenos">69</span><span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+<span class="linenos">70</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
 We can reflect this in optimization using <strong>conditions</strong> to deactivate hyperparameters that are irrelevant to the current kernel.
 Deactivated hyperparameters are not considered during optimization, limiting the search-space to reasonable configurations.
 This way human knowledge about the problem is introduced.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">C</span><span class="p">,</span> <span class="n">shrinking</span><span class="p">])</span>
-
-<span class="c1"># Others are kernel-specific, so we can add conditions to limit the searchspace</span>
-<span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Only used by kernel poly</span>
-<span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">72</span><span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="linenos">73</span><span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
+<span class="linenos">74</span><span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">C</span><span class="p">,</span> <span class="n">shrinking</span><span class="p">])</span>
+<span class="linenos">75</span>
+<span class="linenos">76</span><span class="c1"># Others are kernel-specific, so we can add conditions to limit the searchspace</span>
+<span class="linenos">77</span><span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Only used by kernel poly</span>
+<span class="linenos">78</span><span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Conditions can be used for various reasons. The <cite>gamma</cite>-hyperparameter for
 example can be set to “auto” or to a fixed float-value. We introduce a hyperparameters
 that is only activated if <cite>gamma</cite> is not set to “auto”.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">use_degree</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">])</span>
-<span class="n">use_coef0</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">coef0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">])</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">use_degree</span><span class="p">,</span> <span class="n">use_coef0</span><span class="p">])</span>
-
-<span class="c1"># This also works for parameters that are a mix of categorical and values from a range of numbers</span>
-<span class="c1"># For example, gamma can be either &quot;auto&quot; or a fixed float</span>
-<span class="n">gamma</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># only rbf, poly, sigmoid</span>
-<span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">gamma_value</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">80</span><span class="n">use_degree</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">])</span>
+<span class="linenos">81</span><span class="n">use_coef0</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">coef0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">])</span>
+<span class="linenos">82</span><span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">use_degree</span><span class="p">,</span> <span class="n">use_coef0</span><span class="p">])</span>
+<span class="linenos">83</span>
+<span class="linenos">84</span><span class="c1"># This also works for parameters that are a mix of categorical and values from a range of numbers</span>
+<span class="linenos">85</span><span class="c1"># For example, gamma can be either &quot;auto&quot; or a fixed float</span>
+<span class="linenos">86</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># only rbf, poly, sigmoid</span>
+<span class="linenos">87</span><span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">88</span><span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">gamma_value</span><span class="p">])</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
 Some options, such as the <em>kernel</em> or <em>C</em>, can be passed directly.
 Others, such as <em>gamma</em>, need to be translated before the call to the SVM.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">svm_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Creates a SVM based on a configuration and evaluates it on the</span>
-<span class="sd">    iris-dataset using cross-validation.</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    cfg: Configuration (ConfigSpace.ConfigurationSpace.Configuration)</span>
-<span class="sd">        Configuration containing the parameters.</span>
-<span class="sd">        Configurations are indexable!</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    A crossvalidated mean score for the svm on the loaded data-set.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># For deactivated parameters, the configuration stores None-values.</span>
-    <span class="c1"># This is not accepted by the SVM, so we remove them.</span>
-    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
-    <span class="c1"># We translate boolean values:</span>
-    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
-    <span class="c1"># And for gamma, we set it to a fixed value or to &quot;auto&quot; (if used)</span>
-    <span class="k">if</span> <span class="s2">&quot;gamma&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
-        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span> <span class="k">else</span> <span class="s2">&quot;auto&quot;</span>
-        <span class="n">cfg</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># Remove &quot;gamma_value&quot;</span>
-
-    <span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">31</span><span class="k">def</span> <span class="nf">svm_from_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
+<span class="linenos">32</span>    <span class="sd">&quot;&quot;&quot; Creates a SVM based on a configuration and evaluates it on the</span>
+<span class="linenos">33</span><span class="sd">    iris-dataset using cross-validation.</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span><span class="sd">    Parameters:</span>
+<span class="linenos">36</span><span class="sd">    -----------</span>
+<span class="linenos">37</span><span class="sd">    cfg: Configuration (ConfigSpace.ConfigurationSpace.Configuration)</span>
+<span class="linenos">38</span><span class="sd">        Configuration containing the parameters.</span>
+<span class="linenos">39</span><span class="sd">        Configurations are indexable!</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="sd">    Returns:</span>
+<span class="linenos">42</span><span class="sd">    --------</span>
+<span class="linenos">43</span><span class="sd">    A crossvalidated mean score for the svm on the loaded data-set.</span>
+<span class="linenos">44</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">45</span>    <span class="c1"># For deactivated parameters, the configuration stores None-values.</span>
+<span class="linenos">46</span>    <span class="c1"># This is not accepted by the SVM, so we remove them.</span>
+<span class="linenos">47</span>    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
+<span class="linenos">48</span>    <span class="c1"># We translate boolean values:</span>
+<span class="linenos">49</span>    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
+<span class="linenos">50</span>    <span class="c1"># And for gamma, we set it to a fixed value or to &quot;auto&quot; (if used)</span>
+<span class="linenos">51</span>    <span class="k">if</span> <span class="s2">&quot;gamma&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
+<span class="linenos">52</span>        <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span> <span class="k">else</span> <span class="s2">&quot;auto&quot;</span>
+<span class="linenos">53</span>        <span class="n">cfg</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># Remove &quot;gamma_value&quot;</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span>    <span class="n">clf</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">(</span><span class="o">**</span><span class="n">cfg</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">iris</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="linenos">58</span>    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>  <span class="c1"># Minimize!</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>We need a Scenario-object to configure the optimization process.
 We provide a <a class="reference external" href="options.html#scenario">list of possible options</a> in the scenario.</p>
 <p>The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># And again we can restrict the use of gamma in general to the choice of the kernel</span>
-<span class="n">cs</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">]))</span>
-
-<span class="c1"># Scenario object</span>
-<span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>  <span class="c1"># we optimize quality (alternatively runtime)</span>
-                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>  <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">91</span><span class="c1"># And again we can restrict the use of gamma in general to the choice of the kernel</span>
+<span class="linenos">92</span><span class="n">cs</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;rbf&quot;</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">]))</span>
+<span class="linenos">93</span>
+<span class="linenos">94</span><span class="c1"># Scenario object</span>
+<span class="linenos">95</span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>  <span class="c1"># we optimize quality (alternatively runtime)</span>
+<span class="linenos">96</span>                     <span class="s2">&quot;runcount-limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>  <span class="c1"># max. number of function evaluations; for this example set to a low number</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>Now we’re ready to create a <em>SMAC</em>-instance, which handles the Bayesian
 Optimization-loop and calculates the incumbent.
 To automatically handle the exploration of the search space
 and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">def_value</span> <span class="o">=</span> <span class="n">svm_from_cfg</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Default Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">def_value</span><span class="p">))</span>
-
-<span class="c1"># Optimize, using a SMAC-object</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing! Depending on your machine, this might take a few minutes.&quot;</span><span class="p">)</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
-                <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">)</span>
-
-<span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
-
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">103</span><span class="n">def_value</span> <span class="o">=</span> <span class="n">svm_from_cfg</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">())</span>
+<span class="linenos">104</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Default Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">def_value</span><span class="p">))</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span><span class="c1"># Optimize, using a SMAC-object</span>
+<span class="linenos">107</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimizing! Depending on your machine, this might take a few minutes.&quot;</span><span class="p">)</span>
+<span class="linenos">108</span><span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+<span class="linenos">109</span>                <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">)</span>
+<span class="linenos">110</span>
+<span class="linenos">111</span><span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+<span class="linenos">112</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 <p>We start the optimization loop.</p>
 <p>Internally SMAC keeps track of the number of algorithm calls and the remaining time budget via a Stats object.</p>
 <p>After successful execution of the optimization loop the Stats object outputs the result of the loop.</p>
@@ -635,21 +562,15 @@ so that as final output we can see the error value of the incumbent.</p>
 </div>
 <p>As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.</p>
-<div class="highlight-default notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inc_value</span><span class="p">))</span>
-
-<span class="c1"># We can also validate our results (though this makes a lot more sense with instances)</span>
-<span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>  <span class="c1"># We can choose which configurations to evaluate</span>
-              <span class="c1"># instance_mode=&#39;train+test&#39;,  # Defines what instances to validate</span>
-              <span class="n">repetitions</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Ignored, unless you set &quot;deterministic&quot; to &quot;false&quot; in line 95</span>
-              <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># How many cores to use in parallel for optimization</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">115</span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">inc_value</span><span class="p">))</span>
+<span class="linenos">116</span>
+<span class="linenos">117</span><span class="c1"># We can also validate our results (though this makes a lot more sense with instances)</span>
+<span class="linenos">118</span><span class="n">smac</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">config_mode</span><span class="o">=</span><span class="s1">&#39;inc&#39;</span><span class="p">,</span>  <span class="c1"># We can choose which configurations to evaluate</span>
+<span class="linenos">119</span>              <span class="c1"># instance_mode=&#39;train+test&#39;,  # Defines what instances to validate</span>
+<span class="linenos">120</span>              <span class="n">repetitions</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Ignored, unless you set &quot;deterministic&quot; to &quot;false&quot; in line 95</span>
+<span class="linenos">121</span>              <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># How many cores to use in parallel for optimization</span>
 </pre></div>
-</td></tr></table></div>
+</div>
 </div>
 <div class="section" id="spear-qcp">
 <span id="spear-example"></span><h2>Spear-QCP<a class="headerlink" href="#spear-qcp" title="Permalink to this headline">¶</a></h2>
