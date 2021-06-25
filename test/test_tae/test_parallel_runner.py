@@ -1,5 +1,4 @@
 import os
-import sys
 import tempfile
 import time
 import unittest
@@ -29,7 +28,6 @@ def target_delayed(x, seed, instance):
     return x ** 2, {'key': seed, 'instance': instance}
 
 
-@unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
 class TestDaskRunner(unittest.TestCase):
 
     def setUp(self):

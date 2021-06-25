@@ -1,5 +1,4 @@
 import shutil
-import sys
 import time
 import unittest
 from unittest import mock
@@ -278,7 +277,6 @@ class TestSMBO(unittest.TestCase):
         smbo.start()
         self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
 
-    @unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
     def test_ta_integration_to_smbo(self):
         """
         In SMBO. 3 objects need to actively comunicate:
