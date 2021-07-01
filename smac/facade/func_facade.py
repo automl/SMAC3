@@ -22,6 +22,7 @@ def fmin_smac(func: typing.Callable,
               maxfun: int = -1,
               rng: typing.Union[np.random.RandomState, int] = None,
               scenario_args: typing.Mapping[str, typing.Any] = None,
+              tae_runner_kwargs: typing.Optional[typing.Dict[str, typing.Any]] = None,
               **kwargs: typing.Any) -> typing.Tuple[Configuration, float, SMAC4HPO]:
     """
     Minimize a function func using the SMAC4HPO facade
@@ -87,10 +88,17 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
+    # Handle optional tae  arguments
+    if tae_runner_kwargs is not None:
+        if 'ta' not in tae_runner_kwargs:
+            tae_runner_kwargs.update({'ta': func})
+    else:
+        tae_runner_kwargs = {'ta': func}
+
     smac = SMAC4HPO(
         scenario=scenario,
         tae_runner=ExecuteTAFuncArray,
-        tae_runner_kwargs={'ta': func},
+        tae_runner_kwargs=tae_runner_kwargs,
         rng=rng,
         **kwargs
     )

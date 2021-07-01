@@ -6,7 +6,7 @@ import logging
 
 from smac.runhistory.runhistory import RunHistory, RunKey, DataOrigin
 from smac.utils import test_helpers
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.optimizer import pSMAC
 
 

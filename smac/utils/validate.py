@@ -11,11 +11,11 @@ from smac.configspace import Configuration, convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.util_funcs import get_types
-from smac.runhistory.runhistory import RunHistory, RunKey, StatusType
+from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 
@@ -27,25 +27,46 @@ __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
 def _unbound_tae_starter(
-    tae: ExecuteTARun, *args: typing.Any, **kwargs: typing.Any
-) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+    tae: BaseRunner, runhistory: typing.Optional[RunHistory], run_info: RunInfo,
+    *args: typing.Any, **kwargs: typing.Any
+) -> RunValue:
     """
     Unbound function to be used by joblibs Parallel, since directly passing the
     TAE results in pickling-problems.
 
     Parameters
     ----------
-    tae: ExecuteTARun
+    tae: BaseRunner
         tae to be used
+    runhistory: RunHistory
+        runhistory to save
+    run_info: RunInfo
+        Config to be launched
     *args, **kwargs: various
         arguments to the tae
 
     Returns
     -------
-    tae_results: tuple
+    tae_results: RunValue
         return from tae.start
     """
-    return tae.start(*args, **kwargs)
+    run_info, result = tae.run_wrapper(run_info)
+    tae.stats.submitted_ta_runs += 1
+    tae.stats.finished_ta_runs += 1
+    tae.stats.ta_time_used += float(result.time)
+    if runhistory:
+        runhistory.add(
+            config=run_info.config,
+            cost=result.cost,
+            time=result.time,
+            status=result.status,
+            instance_id=run_info.instance,
+            seed=run_info.seed,
+            budget=run_info.budget,
+        )
+        tae.stats.n_configs = len(runhistory.config_ids)
+
+    return result
 
 
 _Run = namedtuple('Run', 'config inst seed inst_specs')
@@ -132,8 +153,8 @@ class Validator(object):
                  repetitions: int = 1,
                  n_jobs: int = 1,
                  backend: str = 'threading',
-                 runhistory: RunHistory = None,
-                 tae: ExecuteTARun = None,
+                 runhistory: typing.Optional[RunHistory] = None,
+                 tae: BaseRunner = None,
                  output_fn: typing.Optional[str] = None,
                  ) -> RunHistory:
         """
@@ -162,7 +183,7 @@ class Validator(object):
             what backend joblib should use for parallel runs
         runhistory: RunHistory
             optional, RunHistory-object to reuse runs
-        tae: ExecuteTARun
+        tae: BaseRunner
             tae to be used. if None, will initialize ExecuteTARunOld
         output_fn: str
             path to runhistory to be saved. if the suffix is not '.json', will
@@ -192,7 +213,6 @@ class Validator(object):
         # Create TAE
         if not tae:
             tae = ExecuteTARunOld(ta=self.scen.ta,  # type: ignore[attr-defined] # noqa F821
-                                  runhistory=runhistory,
                                   stats=inf_stats,
                                   run_obj=self.scen.run_obj,
                                   par_factor=self.scen.par_factor,  # type: ignore[attr-defined] # noqa F821
@@ -202,36 +222,37 @@ class Validator(object):
             tae.stats = inf_stats
 
         # Validate!
-        run_results = self._validate_parallel(tae, runs, n_jobs, backend)
+        run_results = self._validate_parallel(tae, runs, n_jobs, backend, runhistory)
         assert len(run_results) == len(runs), (run_results, runs)
 
         # tae returns (status, cost, runtime, additional_info)
         # Add runs to RunHistory
         for run, result in zip(runs, run_results):
             validated_rh.add(config=run.config,
-                             cost=result[1],
-                             time=result[2],
-                             status=result[0],
+                             cost=result.cost,
+                             time=result.time,
+                             status=result.status,
                              instance_id=run.inst,
                              seed=run.seed,
-                             additional_info=result[3])
+                             additional_info=result.additional_info)
 
         self._save_results(validated_rh, output_fn, backup_fn="validated_runhistory.json")
         return validated_rh
 
     def _validate_parallel(
         self,
-        tae: ExecuteTARun,
+        tae: BaseRunner,
         runs: typing.List[_Run],
         n_jobs: int,
         backend: str,
-    ) -> typing.List[typing.Tuple[StatusType, float, float, typing.Dict]]:
+        runhistory: typing.Optional[RunHistory] = None,
+    ) -> typing.List[RunValue]:
         """
         Validate runs with joblibs Parallel-interface
 
         Parameters
         ----------
-        tae: ExecuteTARun
+        tae: BaseRunner
             tae to be used for validation
         runs: list<_Run>
             list with _Run-objects
@@ -240,6 +261,8 @@ class Validator(object):
             number of cpus to use for validation (-1 to use all)
         backend: str
             what backend to use for parallelization
+        runhistory: RunHistory
+            optional, RunHistory-object to reuse runs
 
         Returns
         -------
@@ -248,12 +271,19 @@ class Validator(object):
         """
         # Runs with parallel
         run_results = Parallel(n_jobs=n_jobs, backend=backend)(
-            delayed(_unbound_tae_starter)(tae, run.config,
-                                          run.inst,
-                                          self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
-                                          run.seed,
-                                          run.inst_specs,
-                                          capped=False) for run in runs)
+            delayed(_unbound_tae_starter)(
+                tae,
+                runhistory,
+                RunInfo(
+                    config=run.config,
+                    instance=run.inst,
+                    instance_specific="0",
+                    seed=run.seed,
+                    cutoff=self.scen.cutoff,  # type: ignore[attr-defined] # noqa F821
+                    capped=False,
+                    budget=0
+                )
+            ) for run in runs)
         return run_results
 
     def validate_epm(self,
@@ -415,9 +445,9 @@ class Validator(object):
         if isinstance(configs, str):
             configs = self._get_configs(configs)
         if isinstance(insts, str):
-            instances = self._get_instances(insts)  # type: typing.Sequence[typing.Union[str, None]]
+            instances = sorted(self._get_instances(insts))  # type: typing.Sequence[typing.Union[str, None]]
         elif insts is not None:
-            instances = insts
+            instances = sorted(insts)
         else:
             instances = [None]
         # If no instances are given, fix the instances to one "None" instance
@@ -440,7 +470,7 @@ class Validator(object):
         # If we reuse runs, we want to return them as well
         new_rh = RunHistory()
 
-        for i in sorted(instances):
+        for i in instances:
             for rep in range(repetitions):
                 # First, find a seed and add all the data we can take from the
                 # given runhistory to "our" validation runhistory.

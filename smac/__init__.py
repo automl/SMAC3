@@ -5,9 +5,10 @@ import sys
 import lazy_import
 from smac.utils import dependencies
 
-__version__ = '0.12.3'
-__author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Aaron Klein,'\
-    'Stefan Falkner and Frank Hutter'
+__version__ = '0.13.1'
+__author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, ' \
+             'André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner ' \
+             'and Frank Hutter'
 
 
 with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as fh:
@@ -28,8 +29,8 @@ for name, requirements in extras_require.items():
             package_name = 'skopt'
         lazy_import.lazy_module(package_name)
 
-if sys.version_info < (3, 5, 2):
-    raise ValueError("SMAC requires Python 3.5.2 or newer.")
+if sys.version_info < (3, 6, 0):
+    raise ValueError("SMAC requires Python 3.6.0 or newer.")
 
 
 if os.name != 'posix':

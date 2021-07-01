@@ -15,9 +15,9 @@ import numpy as np
 
 from ConfigSpace.configuration_space import Configuration
 
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
-from smac.tae.execute_ta_run_hydra import ExecuteTARun
 from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.experimental.psmac_facade import PSMAC
@@ -58,7 +58,7 @@ class Hydra(object):
                  n_optimizers: int = 1,
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
                  run_id: int = 1,
-                 tae: typing.Type[ExecuteTARun] = ExecuteTARunOld,
+                 tae: typing.Type[BaseRunner] = ExecuteTARunOld,
                  tae_kwargs: typing.Union[dict, None] = None,
                  **kwargs):
         """
@@ -82,7 +82,7 @@ class Hydra(object):
             The randomState/seed to pass to each smac run
         run_id: int
             run_id for this hydra run
-        tae: ExecuteTARun
+        tae: BaseRunner
             Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
         tae_kwargs: Optional[dict]
             arguments passed to constructor of '~tae'

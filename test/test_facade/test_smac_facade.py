@@ -8,8 +8,8 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
+from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
-
 from smac.epm.random_epm import RandomEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
@@ -30,8 +30,8 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS, RunHistory2EPM4C
 from smac.scenario.scenario import Scenario
 from smac.optimizer.acquisition import EI, EIPS, LCB
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
+from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run import StatusType
 
 
 class TestSMACFacade(unittest.TestCase):
@@ -66,15 +66,15 @@ class TestSMACFacade(unittest.TestCase):
         def target_algorithm(conf, inst):
             return 5
         smac = SMAC4AC(tae_runner=target_algorithm, scenario=self.scenario)
-        self.assertIsInstance(smac.solver.intensifier.tae_runner,
+        self.assertIsInstance(smac.solver.tae_runner,
                               ExecuteTAFuncDict)
-        self.assertIs(smac.solver.intensifier.tae_runner.ta, target_algorithm)
+        self.assertIs(smac.solver.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
         self.assertRaisesRegex(
             TypeError,
             "Argument 'tae_runner' is <class 'int'>, but must be either None, a callable or an "
-            "object implementing ExecuteTaRun.",
+            "object implementing BaseRunner.",
             SMAC4AC,
             tae_runner=1,
             scenario=self.scenario,
@@ -433,3 +433,21 @@ class TestSMACFacade(unittest.TestCase):
         scen1 = Scenario(test_scenario_dict)
         smac = SMAC4AC(scenario=scen1, run_id=1)
         self.assertFalse(os.path.isdir(smac.output_dir))
+
+    def test_register_callback(self):
+        smac = SMAC4AC(scenario=self.scenario, run_id=1)
+
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'function'>"):
+            smac.register_callback(lambda: 1)
+
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'type'>"):
+            smac.register_callback(IncorporateRunResultCallback)
+
+        smac.register_callback(IncorporateRunResultCallback())
+        self.assertEqual(len(smac.solver._callbacks['_incorporate_run_results']), 1)
+
+        class SubClass(IncorporateRunResultCallback):
+            pass
+
+        smac.register_callback(SubClass())
+        self.assertEqual(len(smac.solver._callbacks['_incorporate_run_results']), 2)

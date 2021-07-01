@@ -23,7 +23,8 @@ class Stats(object):
 
     Attributes
     ----------
-    ta_runs
+    submitted_ta_runs
+    finished_ta_runs
     wallclock_time_used
     ta_time_used
     inc_changed
@@ -40,7 +41,8 @@ class Stats(object):
         """
         self.__scenario = scenario
 
-        self.ta_runs = 0
+        self.submitted_ta_runs = 0
+        self.finished_ta_runs = 0
         self.n_configs = 0
         self.wallclock_time_used = 0.0
         self.ta_time_used = 0.0
@@ -137,7 +139,7 @@ class Stats(object):
         """Subtract the target algorithm runs in the scenario with the used ta
         runs"""
         if self.__scenario:
-            return self.__scenario.ta_run_limit - self.ta_runs  # type: ignore[attr-defined] # noqa F821
+            return self.__scenario.ta_run_limit - self.submitted_ta_runs  # type: ignore[attr-defined] # noqa F821
         else:
             raise ValueError("Scenario is missing")
 
@@ -150,7 +152,7 @@ class Stats(object):
 
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget
-        and ta_runs is empty
+        and submitted_ta_runs is exhausted
 
         Returns
         -------
@@ -193,7 +195,14 @@ class Stats(object):
         log_func("##########################################################")
         log_func("Statistics:")
         log_func("#Incumbent changed: %d" % (self.inc_changed - 1))  # first change is default conf
-        log_func("#Target algorithm runs: %d / %s" % (self.ta_runs, str(self.__scenario.ta_run_limit)))  # type: ignore[attr-defined] # noqa F821
+        log_func(
+            "#Submitted target algorithm runs: %d / %s"
+            % (self.submitted_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
+        )
+        log_func(
+            "#Finished target algorithm runs: %d / %s"
+            % (self.finished_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
+        )
         log_func("#Configurations: %d" % (self.n_configs))
         log_func(
             "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit))

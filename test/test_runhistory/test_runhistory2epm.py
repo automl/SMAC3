@@ -9,7 +9,7 @@ import unittest
 
 import numpy as np
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.runhistory import runhistory, runhistory2epm
 
 from ConfigSpace import Configuration, ConfigurationSpace

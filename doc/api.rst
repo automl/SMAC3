@@ -8,6 +8,7 @@ API Documentation
 
 .. toctree::
 
+    apidoc/smac.callbacks
     apidoc/smac.configspace
     apidoc/smac.epm
     apidoc/smac.facade

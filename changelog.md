@@ -1,3 +1,31 @@
+# 0.13.1
+
+## Minor Changes
+* Improve error message for first run crashed (#694).
+* Experimental: add callback mechanism (#703).
+
+## Bug fixes
+* Fix a bug which could make successive halving fail if run in parallel (#695).
+* Fix a bug which could cause hyperband to ignore the lowest budget (#701).
+
+# 0.13.0
+
+## Major Changes
+* Split choosing next challenger from evaluating challenger (#663)
+* Implemented parallel SMAC using dask (#675, #677, #681, #685, #686)
+* Drop support for Python 3.5
+
+## Minor Changes
+* Update Readme 
+* Remove runhistory from TAE (#663)
+* Store SMAC's internal config id in the configuration object (#679)
+* Introduce Status Type STOP (#690)
+
+## Bug Fixes
+* Only validate restriction of Sobol Sequence when choosing Sobol Sequence (#664)
+* Fix wrong initialization of list in local search (#680)
+* Fix setting random seed with a too small range in Latin Hypercube design (#688)
+
 # 0.12.3
 
 ## Minor Changes

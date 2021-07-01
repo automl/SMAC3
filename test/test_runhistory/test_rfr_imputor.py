@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 import logging
 import numpy
 
@@ -6,7 +7,7 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, \
     CategoricalHyperparameter, UniformFloatHyperparameter
 
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario
 from smac.epm import rfr_imputator
@@ -60,41 +61,66 @@ class ImputorTest(unittest.TestCase):
 
     def setUp(self):
         logging.basicConfig(level=logging.DEBUG)
-        self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
-        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
-        self.cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
-                                                                lower=-10, upper=10, default_value=0))
 
-        self.rh = runhistory.RunHistory()
-        rs = numpy.random.RandomState(1)
-        to_count = 0
-        cn_count = 0
-        for i in range(500):
-            config, seed, runtime, status, instance_id = \
-                generate_config(cs=self.cs, rs=rs)
-            if runtime == 40:
-                to_count += 1
-            if runtime < 40 and status == StatusType.TIMEOUT:
-                cn_count += 1
-            self.rh.add(config=config, cost=runtime, time=runtime,
-                        status=status, instance_id=instance_id,
-                        seed=seed, additional_info=None)
-        print("%d TIMEOUTs, %d censored" % (to_count, cn_count))
-
-        self.scen = Scen()
-        self.scen.run_obj = "runtime"
-        self.scen.overall_obj = "par10"
-        self.scen.cutoff = 40
-
-        types, bounds = get_types(self.cs, None)
-        self.model = RandomForestWithInstances(
-            configspace=self.cs,
+    def get_model(self, cs, instance_features=None):
+        if instance_features:
+            instance_features = numpy.array([instance_features[key] for key in instance_features])
+        types, bounds = get_types(cs, instance_features)
+        model = RandomForestWithInstances(
+            configspace=cs,
             types=types,
             bounds=bounds,
-            instance_features=None,
+            instance_features=instance_features,
             seed=1234567980,
+            pca_components=7,
         )
+        return model
+
+    def get_runhistory(self, num_success, num_capped, num_timeout):
+        cs = ConfigurationSpace()
+        cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
+        cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name='integer_0_100',
+                                                           lower=-10, upper=10, default_value=0))
+
+        rh = runhistory.RunHistory()
+        rs = numpy.random.RandomState(1)
+        successes = 0
+        capped = 0
+        timeouts = 0
+        while successes < num_success or capped < num_capped or timeouts < num_timeout:
+            config, seed, runtime, status, instance_id = \
+                generate_config(cs=cs, rs=rs)
+            if status == StatusType.SUCCESS and successes < num_success:
+                successes += 1
+                add = True
+            elif status == StatusType.TIMEOUT:
+                if runtime < 40 and capped < num_capped:
+                    capped += 1
+                    add = True
+                elif runtime == 40 and timeouts < num_timeout:
+                    timeouts += 1
+                    add = True
+                else:
+                    add = False
+            else:
+                add = False
+
+            if add:
+                rh.add(config=config, cost=runtime, time=runtime,
+                       status=status, instance_id=instance_id,
+                       seed=seed, additional_info=None)
+        return cs, rh
+
+    def get_scenario(self, instance_features=None):
+        scen = Scen()
+        scen.run_obj = "runtime"
+        scen.overall_obj = "par10"
+        scen.cutoff = 40
+        if instance_features:
+            scen.feature_dict = instance_features
+            scen.n_features = len(list(instance_features.values())[0])
+        return scen
 
     def testRandomImputation(self):
         rs = numpy.random.RandomState(1)
@@ -123,20 +149,12 @@ class ImputorTest(unittest.TestCase):
                 cs.add_hyperparameter(UniformFloatHyperparameter(name="a_%d" % i,
                                                                  lower=0, upper=1, default_value=0.5))
 
-            types, bounds = get_types(cs, None)
-            self.model = RandomForestWithInstances(
-                configspace=cs,
-                types=types,
-                bounds=bounds,
-                instance_features=None,
-                seed=1234567980,
-            )
             imputor = rfr_imputator.RFRImputator(rng=rs,
                                                  cutoff=cutoff,
                                                  threshold=cutoff * 10,
                                                  change_threshold=0.01,
                                                  max_iter=5,
-                                                 model=self.model)
+                                                 model=self.get_model(cs))
 
             imp_y = imputor.impute(censored_X=cen_X, censored_y=cen_y,
                                    uncensored_X=uncen_X,
@@ -150,16 +168,58 @@ class ImputorTest(unittest.TestCase):
             self.assertTrue(numpy.isfinite(imp_y).all())
 
     def testRealImputation(self):
+
+        # Without instance features
         rs = numpy.random.RandomState(1)
+
+        cs, rh = self.get_runhistory(num_success=5, num_timeout=1, num_capped=2)
+
+        scen = self.get_scenario()
+        model = self.get_model(cs)
         imputor = rfr_imputator.RFRImputator(rng=rs,
-                                             cutoff=self.scen.cutoff,
-                                             threshold=self.scen.cutoff * 10,
+                                             cutoff=scen.cutoff,
+                                             threshold=scen.cutoff * 10,
                                              change_threshold=0.01, max_iter=10,
-                                             model=self.model)
+                                             model=model)
 
         r2e = runhistory2epm.RunHistory2EPM4LogCost(
-            scenario=self.scen, num_params=3,
+            scenario=scen, num_params=3,
             success_states=[StatusType.SUCCESS, ],
             impute_censored_data=True, impute_state=[StatusType.TIMEOUT],
-            imputor=imputor, rng=rs)
-        print("%s" % str(r2e.transform(self.rh)[0]))
+            imputor=imputor, rng=rs,
+        )
+
+        self.assertEqual(r2e.transform(rh)[1].shape, (8, 1))
+        self.assertEqual(r2e.transform(rh)[1].shape, (8, 1))
+
+        # Now with instance features
+        instance_features = {run_key.instance_id: numpy.random.rand(10) for run_key in rh.data}
+        scen = self.get_scenario(instance_features)
+        model = self.get_model(cs, instance_features)
+
+        with unittest.mock.patch.object(model, attribute='train', wraps=model.train) as train_wrapper:
+            imputor = rfr_imputator.RFRImputator(rng=rs,
+                                                 cutoff=scen.cutoff,
+                                                 threshold=scen.cutoff * 10,
+                                                 change_threshold=0.01, max_iter=10,
+                                                 model=model)
+            r2e = runhistory2epm.RunHistory2EPM4LogCost(
+                scenario=scen, num_params=3,
+                success_states=[StatusType.SUCCESS, ],
+                impute_censored_data=True, impute_state=[StatusType.TIMEOUT],
+                imputor=imputor, rng=rs,
+            )
+            X, y = r2e.transform(rh)
+            self.assertEqual(X.shape, (8, 13))
+            self.assertEqual(y.shape, (8, 1))
+            num_calls = len(train_wrapper.call_args_list)
+            self.assertGreater(num_calls, 1)
+            self.assertEqual(train_wrapper.call_args_list[0][0][0].shape, (5, 13))
+            self.assertEqual(train_wrapper.call_args_list[1][0][0].shape, (8, 13))
+
+            X, y = r2e.transform(rh)
+            self.assertEqual(X.shape, (8, 13))
+            self.assertEqual(y.shape, (8, 1))
+            self.assertGreater(len(train_wrapper.call_args_list), num_calls + 1)
+            self.assertEqual(train_wrapper.call_args_list[num_calls][0][0].shape, (5, 13))
+            self.assertEqual(train_wrapper.call_args_list[num_calls + 1][0][0].shape, (8, 13))

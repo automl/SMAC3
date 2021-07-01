@@ -1,4 +1,3 @@
-import sys
 import shutil
 import unittest
 from unittest import mock
@@ -11,7 +10,7 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.utils import test_helpers
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
 
 
 class ConfigurationMock(object):
@@ -174,7 +173,6 @@ class TestEPMChooser(unittest.TestCase):
         self.assertEqual(num_random_search_sorted, 5000)
         self.assertEqual(num_random_search, 5187)
 
-    @unittest.skipIf(sys.version_info < (3, 6), 'Test not deterministic for Python 3.5 and earlier')
     def test_choose_next_3(self):
         # Test with ten configurations in the runhistory
         def side_effect(X):

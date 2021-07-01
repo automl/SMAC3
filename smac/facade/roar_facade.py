@@ -1,6 +1,7 @@
 import logging
 import typing
 
+import dask.distributed
 import numpy as np
 
 from smac.configspace import Configuration
@@ -13,7 +14,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost, AbstractRunHistory2EPM
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -37,7 +38,7 @@ class ROAR(SMAC4AC):
     def __init__(self,
                  scenario: Scenario,
                  tae_runner: typing.Optional[
-                     typing.Union[typing.Type[ExecuteTARun], typing.Callable]
+                     typing.Union[typing.Type[BaseRunner], typing.Callable]
                  ] = None,
                  tae_runner_kwargs: typing.Optional[typing.Dict] = None,
                  runhistory: RunHistory = None,
@@ -50,7 +51,10 @@ class ROAR(SMAC4AC):
                  initial_configurations: typing.List[Configuration] = None,
                  stats: Stats = None,
                  rng: np.random.RandomState = None,
-                 run_id: int = 1):
+                 run_id: int = 1,
+                 dask_client: typing.Optional[dask.distributed.Client] = None,
+                 n_jobs: typing.Optional[int] = 1,
+                 ):
         """
         Constructor
 
@@ -58,9 +62,9 @@ class ROAR(SMAC4AC):
         ----------
         scenario: smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner: smac.tae.execute_ta_run.ExecuteTARun or callable
+        tae_runner: smac.tae.base.BaseRunner or callable
             Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            :class:`~smac.tae.base.BaseRunner`. In case a
             callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
@@ -92,7 +96,12 @@ class ROAR(SMAC4AC):
             Random number generator
         run_id: int, (default: 1)
             Run ID will be used as subfolder for output_dir.
-
+        dask_client : dask.distributed.Client
+            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+        n_jobs : int, optional
+            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
+            be ignored if ``dask_client`` is not ``None``.
+            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
         """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -124,5 +133,7 @@ class ROAR(SMAC4AC):
             acquisition_function_optimizer_kwargs=acquisition_function_optimizer_kwargs,
             model=RandomEPM,
             rng=rng,
-            stats=stats
+            stats=stats,
+            dask_client=dask_client,
+            n_jobs=n_jobs,
         )

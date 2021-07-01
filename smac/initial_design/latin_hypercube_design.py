@@ -37,7 +37,7 @@ class LHDesign(InitialDesign):
         params = self.cs.get_hyperparameters()
 
         # seeding of lhd design
-        np.random.seed(self.rng.randint(1, 2 * 20))
+        np.random.seed(self.rng.randint(1, 2 ** 20))
 
         constants = 0
         for p in params:

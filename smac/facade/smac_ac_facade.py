@@ -3,13 +3,16 @@ import logging
 import os
 from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 
+import dask.distributed
+import joblib
 import numpy as np
 
 # tae
-from smac.tae.execute_ta_run import ExecuteTARun
+from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_ta_run import StatusType
+from smac.tae import StatusType
+from smac.tae.dask_runner import DaskParallelRunner
 # stats and options
 from smac.stats.stats import Stats
 from smac.scenario.scenario import Scenario
@@ -30,6 +33,7 @@ from smac.initial_design.sobol_design import SobolDesign
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.intensification.hyperband import Hyperband
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -71,7 +75,7 @@ class SMAC4AC(object):
 
     def __init__(self,
                  scenario: Scenario,
-                 tae_runner: Optional[Union[Type[ExecuteTARun], Callable]] = None,
+                 tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
                  tae_runner_kwargs: Optional[Dict] = None,
                  runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
                  runhistory_kwargs: Optional[Dict] = None,
@@ -95,7 +99,9 @@ class SMAC4AC(object):
                  smbo_class: Optional[Type[SMBO]] = None,
                  run_id: Optional[int] = None,
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
-                 random_configuration_chooser_kwargs: Optional[Dict] = None
+                 random_configuration_chooser_kwargs: Optional[Dict] = None,
+                 dask_client: Optional[dask.distributed.Client] = None,
+                 n_jobs: Optional[int] = 1,
                  ):
         """
         Constructor
@@ -104,9 +110,9 @@ class SMAC4AC(object):
         ----------
         scenario : ~smac.scenario.scenario.Scenario
             Scenario object
-        tae_runner : ~smac.tae.execute_ta_run.ExecuteTARun or callable
+        tae_runner : ~smac.tae.base.BaseRunner or callable
             Callable or implementation of
-            :class:`~smac.tae.execute_ta_run.ExecuteTARun`. In case a
+            :class:`~smac.tae.base.BaseRunner`. In case a
             callable is passed it will be wrapped by
             :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
             If not set, it will be initialized with the
@@ -174,7 +180,12 @@ class SMAC4AC(object):
             How often to choose a random configuration during the intensification procedure.
         random_configuration_chooser_kwargs : Optional[Dict]
             arguments of constructor for '~random_configuration_chooser'
-
+        dask_client : dask.distributed.Client
+            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+        n_jobs : int, optional
+            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
+            be ignored if ``dask_client`` is not ``None``.
+            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
         """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -349,22 +360,22 @@ class SMAC4AC(object):
         tae_def_kwargs = {
             'stats': self.stats,
             'run_obj': scenario.run_obj,
-            'runhistory': runhistory,
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash  # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
+
         if 'ta' not in tae_def_kwargs:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
         if tae_runner is None:
             tae_def_kwargs['ta'] = scenario.ta  # type: ignore[attr-defined] # noqa F821
             tae_runner_instance = (
                 ExecuteTARunOld(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
-            )  # type: ExecuteTARun
+            )  # type: BaseRunner
         elif inspect.isclass(tae_runner):
-            tae_runner_instance = cast(ExecuteTARun, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = cast(BaseRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
         elif callable(tae_runner):
             tae_def_kwargs['ta'] = tae_runner
             tae_def_kwargs['use_pynisher'] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
@@ -372,10 +383,28 @@ class SMAC4AC(object):
         else:
             raise TypeError("Argument 'tae_runner' is %s, but must be "
                             "either None, a callable or an object implementing "
-                            "ExecuteTaRun. Passing 'None' will result in the "
+                            "BaseRunner. Passing 'None' will result in the "
                             "creation of target algorithm runner based on the "
                             "call string in the scenario file."
                             % type(tae_runner))
+
+        # In case of a parallel run, wrap the single worker in a parallel
+        # runner
+        if n_jobs is None or n_jobs == 1:
+            _n_jobs = 1
+        elif n_jobs == -1:
+            _n_jobs = joblib.cpu_count()
+        elif n_jobs > 0:
+            _n_jobs = n_jobs
+        else:
+            raise ValueError('Number of tasks must be positive, None or -1, but is %s' % str(n_jobs))
+        if _n_jobs > 1 or dask_client is not None:
+            tae_runner_instance = DaskParallelRunner(
+                tae_runner_instance,
+                n_workers=_n_jobs,
+                output_directory=self.output_dir,
+                dask_client=dask_client,
+            )
 
         # Check that overall objective and tae objective are the same
         # TODO: remove these two ignores once the scenario object knows all its attributes!
@@ -386,7 +415,6 @@ class SMAC4AC(object):
 
         # initialize intensification
         intensifier_def_kwargs = {
-            'tae_runner': tae_runner_instance,
             'stats': self.stats,
             'traj_logger': traj_logger,
             'rng': rng,
@@ -398,6 +426,7 @@ class SMAC4AC(object):
             'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
             'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
         }
+
         if isinstance(intensifier, Intensifier) \
                 or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):
             intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821
@@ -494,7 +523,7 @@ class SMAC4AC(object):
                 'impute_state': None,
             })
 
-        if isinstance(intensifier_instance, SuccessiveHalving) and scenario.run_obj == "quality":
+        if isinstance(intensifier_instance, (SuccessiveHalving, Hyperband)) and scenario.run_obj == "quality":
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED,
                                    StatusType.MEMOUT, StatusType.DONOTADVANCE,
@@ -544,7 +573,8 @@ class SMAC4AC(object):
             'acquisition_func': acquisition_function_instance,
             'rng': rng,
             'restore_incumbent': restore_incumbent,
-            'random_configuration_chooser': random_configuration_chooser_instance
+            'random_configuration_chooser': random_configuration_chooser_instance,
+            'tae_runner': tae_runner_instance,
         }  # type: Dict[str, Any]
 
         if smbo_class is None:
@@ -621,17 +651,17 @@ class SMAC4AC(object):
         return self.solver.validate(config_mode, instance_mode, repetitions,
                                     use_epm, n_jobs, backend)
 
-    def get_tae_runner(self) -> ExecuteTARun:
+    def get_tae_runner(self) -> BaseRunner:
         """
         Returns target algorithm evaluator (TAE) object which can run the
         target algorithm given a configuration
 
         Returns
         -------
-        TAE: smac.tae.execute_ta_run.ExecuteTARun
+        TAE: smac.tae.base.BaseRunner
 
         """
-        return self.solver.intensifier.tae_runner
+        return self.solver.tae_runner
 
     def get_runhistory(self) -> RunHistory:
         """
@@ -662,3 +692,28 @@ class SMAC4AC(object):
             raise ValueError('SMAC was not fitted yet. Call optimize() prior '
                              'to accessing the runhistory.')
         return self.trajectory
+
+    def register_callback(self, callback: Callable) -> None:
+        """Register a callback function.
+
+        Callbacks must implement a class in ``smac.callbacks`` and be instantiated objects.
+        They will automatically be registered within SMAC based on which callback class from
+        ``smac.callbacks`` they implement.
+
+        Parameters
+        ----------
+        callback - Callable
+
+        Returns
+        -------
+        None
+        """
+        types_to_check = callback.__class__.__mro__
+        key = None
+        for type_to_check in types_to_check:
+            key = self.solver._callback_to_key.get(type_to_check)
+            if key is not None:
+                break
+        if key is None:
+            raise ValueError('Cannot register callback of type %s' % type(callback))
+        self.solver._callbacks[key].append(callback)
