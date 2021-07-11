@@ -487,7 +487,7 @@ class LCB(AbstractAcquisitionFunction):
         model : AbstractEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
-        par : float, default=0.0
+        par : float, default=1.0
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
