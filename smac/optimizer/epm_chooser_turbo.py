@@ -222,7 +222,7 @@ class EPMChooserTurBO(EPMChooser):
             if isinstance(self.model, GaussianProcess):
                 kernel_length = np.exp(self.model.hypers[1:-1])
             elif isinstance(self.model, GaussianProcessMCMC):
-                kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=1))
+                kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))
 
             kernel_length = kernel_length / kernel_length.mean()  # This will make the next line more stable
             subspace_scale = kernel_length / np.prod(np.power(kernel_length, 1.0 / len(kernel_length)))  # We now have weights.prod() = 1
