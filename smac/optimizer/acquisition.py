@@ -520,3 +520,56 @@ class LCB(AbstractAcquisitionFunction):
         std = np.sqrt(var_)
         beta = 2 * np.log((X.shape[1] * self.num_data**2) / self.par)
         return -(m - np.sqrt(beta) * std)
+
+
+class TS(AbstractAcquisitionFunction):
+    def __init__(self,
+                 model: AbstractEPM,
+                 par: float = 0.0):
+
+        r"""Do a Thompson Sampling for a given x over the best so far value as
+        acquisition value.
+
+        :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
+
+        Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            A model that implements at least
+                 - predict_marginalized_over_instances(X)
+        par : float, default=0.0
+            Controls the balance between exploration and exploitation of the
+            acquisition function.
+        """
+        super(TS, self).__init__(model)
+        self.long_name = 'Thompson Sampling'
+        self.par = par
+        self.num_data = None
+        self._required_updates = ('model')
+
+    def _compute(self, X: np.ndarray) -> np.ndarray:
+        """Computes the LCB value.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D)
+           Points to evaluate LCB. N is the number of points and D the dimension for the points
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Expected Improvement of X
+        """
+        if len(X.shape) == 1:
+            X = X[:, np.newaxis]
+        if hasattr(self.model, "sample_functions"):
+            return - self.model.sample_functions(X, n_funcs=1)
+        else:
+            mu, var_ = self.model.predict_marginalized_over_instances(X)
+            if hasattr(self.model, "rng"):
+                rng = self.model.rng
+            else:
+                rng = np.random.RandomState(self.model.seed)
+                return  rng.multivariate_normal(mu, var_, 1).T
