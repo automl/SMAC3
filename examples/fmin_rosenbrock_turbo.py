@@ -12,11 +12,10 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bo_facade import SMAC4BO
-from smac.optimizer.epm_chooser_turbo import EPMChooserTurBO
+from smac.optimizer.local_bo.epm_chooser_turbo import EPMChooserTurBO
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-from smac.optimizer.ei_optimization import SobolSearch
 
 
 def rosenbrock_2d(x):
@@ -60,9 +59,8 @@ smac = SMAC4BO(scenario=scenario,
                rng=np.random.RandomState(42),
                model_type="gp",
                smbo_kwargs={"epm_chooser":EPMChooserTurBO},
-               initial_design_kwargs={"init_budget": 1},
+               initial_design_kwargs={"init_budget": 0},
                tae_runner=rosenbrock_2d,
-               acquisition_function_optimizer=SobolSearch,
                )
 
 smac.optimize()

@@ -547,7 +547,7 @@ class TS(AbstractAcquisitionFunction):
         self.long_name = 'Thompson Sampling'
         self.par = par
         self.num_data = None
-        self._required_updates = ('model')
+        self._required_updates = ('model', )
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
