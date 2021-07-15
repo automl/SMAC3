@@ -94,6 +94,8 @@ class InitialDesign:
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
+        if self.init_budget == 0:
+            return []
 
         if self.configs is None:
             self.configs = self._select_configurations()
