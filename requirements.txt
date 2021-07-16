@@ -6,6 +6,5 @@ ConfigSpace>=0.4.14,<0.5
 joblib
 scikit-learn>=0.22.0
 pyrfr>=0.8.0
-lazy_import
 dask
 distributed
