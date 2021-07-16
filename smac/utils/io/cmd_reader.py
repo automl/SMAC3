@@ -736,6 +736,11 @@ class CMDReader(object):
                                type=str, action=ReadPCSFileAction,
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
+        scen_opts.add_argument("--save-results-instantly",
+                               dest='save_results_instantly',
+                               default=False, type=bool,
+                               help="[dev] If true, runhistory and stats are saved immediately on changes. "
+                                    "Otherwise, runhistory and states are only saved once after the optimization process has finished.")
         scen_opts.add_argument('--cs',
                                default=None,  # ConfigSpace object, overridden by --paramfile
                                help=SUPPRESS)

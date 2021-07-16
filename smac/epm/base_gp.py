@@ -1,20 +1,14 @@
-from typing import List, Optional, Tuple, Union, TYPE_CHECKING
+from typing import List, Optional, Tuple, Union
 
 from smac.configspace import ConfigurationSpace
 import numpy as np
-import sklearn.gaussian_process.kernels
 
 from smac.epm.base_epm import AbstractEPM
 import smac.epm.gp_base_prior
 
-if TYPE_CHECKING:
-    from skopt.learning.gaussian_process.kernels import Kernel
-    from skopt.learning.gaussian_process import GaussianProcessRegressor
-else:
-    from lazy_import import lazy_callable
-    Kernel = lazy_callable('skopt.learning.gaussian_process.kernels.Kernel')
-    GaussianProcessRegressor = lazy_callable(
-        'skopt.learning.gaussian_process.GaussianProcessRegressor')
+import sklearn.gaussian_process
+from sklearn.gaussian_process.kernels import Kernel, KernelOperator
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 
 class BaseModel(AbstractEPM):
@@ -104,11 +98,11 @@ class BaseModel(AbstractEPM):
         to_visit.append(self.gp.kernel.k2)
         while len(to_visit) > 0:
             current_param = to_visit.pop(0)
-            if isinstance(current_param, sklearn.gaussian_process.kernels.KernelOperator):
+            if isinstance(current_param, KernelOperator):
                 to_visit.insert(0, current_param.k1)
                 to_visit.insert(1, current_param.k2)
                 continue
-            elif isinstance(current_param, sklearn.gaussian_process.kernels.Kernel):
+            elif isinstance(current_param, Kernel):
                 hps = current_param.hyperparameters
                 assert len(hps) == 1
                 hp = hps[0]

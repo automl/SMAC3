@@ -111,7 +111,7 @@ class SMBO(object):
         predict_x_best: bool
             Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model.
         """
 
         self.logger = logging.getLogger(
@@ -492,4 +492,19 @@ class SMBO(object):
         for callback in self._callbacks['_incorporate_run_results']:
             callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
 
+        if self.scenario.save_results_instantly:
+            self.save()
+
         return
+
+    def save(self):
+        """
+        Saves the current stats and runhistory. 
+        """
+        self.stats.save()
+
+        output_dir = self.scenario.output_dir_for_this_run
+        if output_dir is not None:
+            self.runhistory.save_json(
+                fn=os.path.join(output_dir, "runhistory.json")
+            )
