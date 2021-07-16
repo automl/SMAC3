@@ -1,7 +1,16 @@
+"""
+=========================================
+Optimizing GradientBoosting with SMAC4HPO
+=========================================
+
+An example for the usage of SMAC within Python.
+We optimize a GradientBoosting on an artificially created binary classification dataset.
+"""
+
 import logging
 import numpy as np
 
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformIntegerHyperparameter
 
 from sklearn.datasets import make_hastie_10_2
 from sklearn.ensemble import GradientBoostingClassifier
@@ -11,20 +20,23 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 
-#load data and split it into training and test dataset
+# load data and split it into training and test dataset
 X, y = make_hastie_10_2(random_state=0)
 X_train, X_test = X[:8400], X[8400:]
 y_train, y_test = y[:8400], y[8400:]
 
-#Gradient Boosting scored with cross validation
+# Gradient Boosting scored with cross validation
+
+
 def xgboost_from_cfg(cfg):
     clf = GradientBoostingClassifier(**cfg, random_state=0).fit(X_train, y_train)
     scores = cross_val_score(clf, X_train, y_train)
     return 1 - np.mean(scores)
 
+
 logging.basicConfig(level=logging.INFO)
 
-#creating a Configuration Space with every parameter over which SMAC is going to optimize
+# creating a Configuration Space with every parameter over which SMAC is going to optimize
 cs = ConfigurationSpace()
 
 max_depth = UniformIntegerHyperparameter("max_depth", 1, 10, default_value=3)
@@ -40,30 +52,29 @@ cs.add_hyperparameters([min_samples_split, max_features])
 subsample = UniformFloatHyperparameter("subsample", 0.5, 1, default_value=0.8)
 cs.add_hyperparameter(subsample)
 
-print("default cross validation score: %.2f" % (xgboost_from_cfg(cs.get_default_configuration()))) 
+print("default cross validation score: %.2f" % (xgboost_from_cfg(cs.get_default_configuration())))
 cfg = cs.get_default_configuration()
 clf = GradientBoostingClassifier(**cfg, random_state=0).fit(X_train, y_train)
-def_test_score = 1-clf.score(X_test, y_test)
-print("default test score: %.2f" %def_test_score)
+def_test_score = 1 - clf.score(X_test, y_test)
+print("default test score: %.2f" % def_test_score)
 
-#scenario object
+# scenario object
 scenario = Scenario({"run_obj": "quality",
-                    "runcount-limit": 100,
-                    "cs": cs,
-                    "deterministic": "true",
-                    "wallclock_limit": 120
-                    })
+                     "runcount-limit": 100,
+                     "cs": cs,
+                     "deterministic": "true",
+                     "wallclock_limit": 120
+                     })
 
 
 smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(0), tae_runner=xgboost_from_cfg)
 
-#the optimization process is called
+# the optimization process is called
 incumbent = smac.optimize()
 
-#a classifier is trained with the hyperparameters returned from the optimizer
+# a classifier is trained with the hyperparameters returned from the optimizer
 clf_incumbent = GradientBoostingClassifier(**incumbent, random_state=0).fit(X_train, y_train)
 
-#evaluated on test
-inc_value_1 = 1-clf_incumbent.score(X_test, y_test)
-
+# evaluated on test
+inc_value_1 = 1 - clf_incumbent.score(X_test, y_test)
 print("Score on test set: %.2f" % (inc_value_1))
