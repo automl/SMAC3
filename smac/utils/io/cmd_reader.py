@@ -740,7 +740,8 @@ class CMDReader(object):
                                dest='save_results_instantly',
                                default=False, type=bool,
                                help="[dev] If true, runhistory and stats are saved immediately on changes. "
-                                    "Otherwise, runhistory and states are only saved once after the optimization process has finished.")
+                                    "Otherwise, runhistory and states are only saved once after the optimization "
+                                    "process has finished.")
         scen_opts.add_argument('--cs',
                                default=None,  # ConfigSpace object, overridden by --paramfile
                                help=SUPPRESS)

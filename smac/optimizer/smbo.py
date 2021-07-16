@@ -497,9 +497,9 @@ class SMBO(object):
 
         return
 
-    def save(self):
+    def save(self) -> None:
         """
-        Saves the current stats and runhistory. 
+        Saves the current stats and runhistory.
         """
         self.stats.save()
 
