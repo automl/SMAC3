@@ -597,7 +597,8 @@ class SMAC4AC(object):
         try:
             incumbent = self.solver.run()
         finally:
-            self.solver.stats.save()
+            self.solver.save()
+
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
@@ -606,10 +607,6 @@ class SMAC4AC(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
-            if self.output_dir is not None:
-                self.solver.runhistory.save_json(
-                    fn=os.path.join(self.output_dir, "runhistory.json")
-                )
         return incumbent
 
     def validate(self,
