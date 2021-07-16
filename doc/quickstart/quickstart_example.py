@@ -10,7 +10,7 @@ Quickstart
 #
 # To get started, we will walk you through a few examples.
 #
-# * First, we explain the basic usage of *SMAC* by optimizing the :ref:`Branin:branin-example`-function as a toy example.
+# * First, we explain the basic usage of *SMAC* by optimizing the `Branin`__-function as a toy example.
 # * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
 # * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
 #
