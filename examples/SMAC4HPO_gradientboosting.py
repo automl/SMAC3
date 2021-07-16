@@ -1,3 +1,12 @@
+"""
+=========================================
+Optimizing GradientBoosting with SMAC4HPO
+=========================================
+
+An example for the usage of SMAC within Python.
+We optimize a GradientBoosting on an artificially created binary classification dataset.
+"""
+
 import logging
 import numpy as np
 
