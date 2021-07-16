@@ -397,7 +397,7 @@ data into EPM data</p></li>
 * ChooserNoCoolDown(modulus)
 * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p></li>
 <li><p><strong>predict_x_best</strong> (<em>bool</em>) – Choose x_best for computing the acquisition function via the model instead of via the observations.</p></li>
-<li><p><strong>min_samples_model</strong> (<em>int</em>) – Minimum number of samples to build a model</p></li>
+<li><p><strong>min_samples_model</strong> (<em>int</em>) – Minimum number of samples to build a model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -458,6 +458,12 @@ which also has the side effect of moving the intensifier to a new state</p>
 <dd class="field-even"><p>np.array(1, H)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.optimizer.smbo.SMBO.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/smbo.html#SMBO.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.smbo.SMBO.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the current stats and runhistory.</p>
 </dd></dl>
 
 <dl class="py method">

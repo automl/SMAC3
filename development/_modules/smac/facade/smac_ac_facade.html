@@ -894,7 +894,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">():</span>
@@ -903,10 +904,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span>
-                    <span class="n">fn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMAC4AC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

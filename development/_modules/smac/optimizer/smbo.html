@@ -408,7 +408,7 @@
 <span class="sd">        predict_x_best: bool</span>
 <span class="sd">            Choose x_best for computing the acquisition function via the model instead of via the observations.</span>
 <span class="sd">        min_samples_model: int</span>
-<span class="sd">            Minimum number of samples to build a model</span>
+<span class="sd">            Minimum number of samples to build a model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -789,7 +789,22 @@
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">[</span><span class="s1">&#39;_incorporate_run_results&#39;</span><span class="p">]:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">smbo</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">time_left</span><span class="o">=</span><span class="n">time_left</span><span class="p">)</span>
 
-        <span class="k">return</span></div></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">save_results_instantly</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="SMBO.save"><a class="viewcode-back" href="../../../apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Saves the current stats and runhistory. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span>
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span>
+                <span class="n">fn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
+            <span class="p">)</span></div></div>
 </pre></div>
 
            </div>

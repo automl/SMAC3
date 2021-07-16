@@ -1033,6 +1033,11 @@
                                <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">ReadPCSFileAction</span><span class="p">,</span>
                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] Specifies the path to the &quot;</span>
                                     <span class="s2">&quot;PCS-file.&quot;</span><span class="p">)</span>
+        <span class="n">scen_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--save-results-instantly&quot;</span><span class="p">,</span>
+                               <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;save_results_instantly&#39;</span><span class="p">,</span>
+                               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] If true, runhistory and stats are saved immediately on changes. &quot;</span>
+                                    <span class="s2">&quot;Otherwise, runhistory and states are only saved once after the optimization process has finished.&quot;</span><span class="p">)</span>
         <span class="n">scen_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cs&#39;</span><span class="p">,</span>
                                <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># ConfigSpace object, overridden by --paramfile</span>
                                <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>
