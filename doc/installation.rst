@@ -4,7 +4,7 @@ Installation
 .. _requirements:
 
 System Requirements
-------------
+-------------------
 
 SMAC has the following system requirements:
 
