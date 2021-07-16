@@ -1,7 +1,6 @@
 {
   "gp": [
     "emcee>=3.0.0",
-    "scikit-optimize"
   ],
   "documentation": [
     "sphinx",

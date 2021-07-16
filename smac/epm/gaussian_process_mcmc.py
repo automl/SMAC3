@@ -11,8 +11,8 @@ from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import Prior
 
-from skopt.learning.gaussian_process.kernels import Kernel
-from skopt.learning.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 logger = logging.getLogger(__name__)
 
