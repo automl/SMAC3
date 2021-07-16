@@ -7,7 +7,7 @@ This is a wrapper used by SMAC to optimize parameters on the branin-function.
 
 To run this example, execute:
     $ cd examples/branin
-    $ python ../../scripts/smac --scenario scenario.txt
+    $ python3 ../../scripts/smac --scenario scenario.txt
 
 We optimize the branin-function (see "examples/branin/branin.py").
 
@@ -25,7 +25,7 @@ The target algorithm parameters (here: x1, x2) are also passed as
 commandline-arguments.
 A full call by SMAC looks like this:
     <algo>           <instance> <instance specific> <cutoff time>  <runlength> <seed> <algorithm parameters>
-    python branin.py 0          0                   99999999999999 0           12345  -x1 0 -x2 0
+    python3 branin.py 0          0                   99999999999999 0           12345  -x1 0 -x2 0
 
 SMAC processes results from the commandline, therefore the print-statement is
 crucial. The format of the results must be:

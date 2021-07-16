@@ -20,7 +20,7 @@ provide slightly different interfaces. You can see `SVM-example
   .. code-block:: bash
 
       <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
-      python algo.py 123 0 10 25 12345 -param1 value1 -param2 value2 [...]
+      python3 algo.py 123 0 10 25 12345 -param1 value1 -param2 value2 [...]
 
   The first two parameters after the ``algo.py`` are the instance name, on which the target algorithm is evaluated, and extra information about the instance (rarely used).
   The third parameter is the cutoff time, which is the maximal time the target algorithm is allowed to run.

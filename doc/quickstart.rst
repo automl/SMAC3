@@ -54,7 +54,7 @@ To run the example scenario, change into the root directory of *SMAC* and type t
 .. code-block:: bash
 
     cd examples/branin
-    python ../../scripts/smac --scenario scenario.txt
+    python3 ../../scripts/smac --scenario scenario.txt
 
 The Python command runs *SMAC* with the specified scenario. The scenario file consists of the following lines:
 
@@ -67,7 +67,7 @@ An algorithm call by *SMAC* is of the following format:
     .. code-block:: bash
 
         <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
-        python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
+        python3 branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
     
 The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
@@ -126,11 +126,11 @@ This example is located in :code:`examples/svm.py`.
 To use *SMAC* directly with Python, we first import the necessary modules
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 9-22
+   :lines: 14-25
    :lineno-match:
    
 We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
- different hyperparameter types, the ConfigurationSpace, and the objects we need from *SMAC*.
+different hyperparameter types, the ConfigurationSpace, and the objects we need from *SMAC*.
 The ConfigurationSpace is used to define the hyperparameters we want to optimize as well as
 their domains. Possible hyperparameter types are floats, integers and categorical parameters.
 
@@ -143,14 +143,14 @@ Let's start by creating a ConfigSpace-object and adding the first hyperparameter
 the kernel.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 60-65
+   :lines: 65-69
    :lineno-match:
 
 We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list. 
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 67-70
+   :lines: 72-74
    :lineno-match:
 
 Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
@@ -159,7 +159,7 @@ Deactivated hyperparameters are not considered during optimization, limiting the
 This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 72-78
+   :lines: 77-82
    :lineno-match:
 
 Conditions can be used for various reasons. The `gamma`-hyperparameter for
@@ -167,7 +167,7 @@ example can be set to "auto" or to a fixed float-value. We introduce a hyperpara
 that is only activated if `gamma` is not set to "auto".
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 80-88
+   :lines: 86-92
    :lineno-match:
 
 Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
@@ -187,7 +187,7 @@ The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 91-96
+   :lines: 95-99
    :lineno-match:
 
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
@@ -197,7 +197,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 103-112
+   :lines: 108-115
    :lineno-match:
 
 We start the optimization loop.
@@ -235,7 +235,7 @@ As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 115-
+   :lines: 118-121
    :lineno-match:
 
 .. _spear-example:
@@ -279,7 +279,7 @@ In this folder you see the following files and directories:
 
         .. code-block:: bash
 
-            python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+            python3 -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 
         This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
         This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
@@ -326,7 +326,7 @@ In this folder you see the following files and directories:
 * **run.sh**
     A shell script calling *SMAC* with the following command:
 
-    ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
+    ``python3 ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
 
     This runs *SMAC* with the scenario options specified in the scenario.txt file.
 
@@ -338,7 +338,7 @@ To run the example type one of the two commands below into a terminal:
 .. code-block:: bash
 
     bash run.sh
-    python ../../scripts/smac --scenario scenario.txt
+    python3 ../../scripts/smac --scenario scenario.txt
 
 *SMAC* will run for a few seconds and generate a lot of logging output.
 After *SMAC* finished the configuration process you'll get some final statistics about the configuration process:
@@ -401,7 +401,7 @@ __ spear-example_
 
 To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
 
- ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3``
+ ``python3 ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3``
 
 As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
 You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
