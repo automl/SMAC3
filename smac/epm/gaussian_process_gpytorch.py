@@ -25,8 +25,28 @@ gpytorch.settings.debug.off()
 
 
 class ExactGPModel(ExactGP):
-    def __init__(self, train_x, train_y, base_covar_kernel, likelihood):
-        super(ExactGPModel, self).__init__(train_x, train_y, likelihood)
+    """
+    Exact GP model serves as a backbone of the class GaussianProcessGPyTorch
+    """
+    def __init__(self,
+                 train_X: torch.tensor,
+                 train_y: torch.tensor,
+                 base_covar_kernel: Kernel,
+                 likelihood: GaussianLikelihood):
+        """
+        initialization function
+        Parameters
+        ----------
+        train_X: torch.tenor
+            input feature
+        train_y: torch.tensor
+            input observations
+        base_covar_kernel: Kernel
+            covariance kernel used to compute covariance matrix
+        likelihood: GaussianLikelihood
+            GP likelihood
+        """
+        super(ExactGPModel, self).__init__(train_X, train_y, likelihood)
         self.mean_module = ZeroMean()
         self.covar_module = base_covar_kernel
 
@@ -43,9 +63,9 @@ class GaussianProcessGPyTorch(BaseModel):
                  bounds: typing.List[typing.Tuple[float, float]],
                  seed: int,
                  kernel: Kernel,
-                 likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
                  normalize_y: bool = True,
                  n_opt_restarts: int = 10,
+                 likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
                  instance_features: typing.Optional[np.ndarray] = None,
                  pca_components: typing.Optional[int] = None,
                  ):
@@ -65,21 +85,16 @@ class GaussianProcessGPyTorch(BaseModel):
             have to pass [3, 0]. Note that we count starting from 0.
         bounds : List[Tuple[float, float]]
             bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        bounds_cont: np.ndarray
-            bounds of continuous hyperparameters
-        bounds_cat:  typing.List[typing.List[typing.Tuple]],
-            bounds of categorical hyperparameters, need to be flattened, e.g. all the possible categorical needs to
-            be listed
         seed : int
             Model seed.
         kernel : Kernel
             Specifies the kernel that is used for all Gaussian Process
-        likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
-            Gaussian Likelihood (or noise)
         normalize_y : bool
             Zero mean unit variance normalization of the output values
-        n_opt_restart : int
+        n_opt_restarts : int
             Number of restarts for GP hyperparameter optimization
+        likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
+            Gaussian Likelihood (or noise)
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features of the I different instances
         pca_components : float
@@ -94,7 +109,6 @@ class GaussianProcessGPyTorch(BaseModel):
                                                       instance_features,
                                                       pca_components,
                                                       )
-        self.kernel = kernel
         if likelihood is None:
             noise_prior = HorseshoePrior(0.1)
             likelihood = GaussianLikelihood(
@@ -103,10 +117,11 @@ class GaussianProcessGPyTorch(BaseModel):
             ).double()
         self.likelihood = likelihood
 
-        self.cat_dims = np.where(np.array(types) != 0)[0]
-        self.cont_dims = np.where(np.array(types) == 0)[0]
-
         self.normalize_y = normalize_y
+
+        n_opt_restarts = int(n_opt_restarts)
+        if n_opt_restarts <= 0:
+            raise ValueError(f'n_opt_restarts needs to be positive, however, it get {n_opt_restarts}')
         self.n_opt_restarts = n_opt_restarts
 
         self.hypers = np.empty((0,))
@@ -116,7 +131,7 @@ class GaussianProcessGPyTorch(BaseModel):
 
         self.num_points = 0
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcess':
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcessGPyTorch':
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -129,7 +144,7 @@ class GaussianProcessGPyTorch(BaseModel):
             Input data points. The dimensionality of X is (N, D),
             with N as the number of points and D is the number of features.
         y: np.ndarray (N,)
-            The corresponding target values.
+            The corresponding target values, N as the number of points
         do_optimize: boolean
             If set to true the hyperparameters are optimized otherwise
             the default hyperparameters of the kernel are used.
@@ -151,16 +166,12 @@ class GaussianProcessGPyTorch(BaseModel):
             try:
                 self.gp = self._get_gp(X, y)
                 break
-            except np.linalg.LinAlgError as e:
-                if i == n_tries:
+            except Exception as e:
+                if i == n_tries - 1:
+                    # To avoid Endless loop, we need to stop it when we have n_tries unsuccessful tries.
                     raise e
-                # Assume that the last entry of theta is the noise
-                # theta = np.exp(self.kernel.theta)
-                # theta[-1] += 1
-                # self.kernel.theta = np.log(theta)
 
         if do_optimize:
-            # self._all_priors = self._get_all_priors(add_bound_priors=False)
             self.hypers = self._optimize()
             self.gp = set_params_with_array(self.gp, self.hypers, self.property_dict)
         else:
@@ -173,20 +184,19 @@ class GaussianProcessGPyTorch(BaseModel):
                 y: typing.Optional[np.ndarray] = None) -> typing.Optional[ExactMarginalLogLikelihood]:
         """
         Get the GP model with the given X and y values, as GPyTorch requires the input data to initialize a new
-        model, we also pass X and y here
+        model, we also pass X and y here. X and y are set optional to ensure compatible
 
         Parameters
         -------
-        X: typing.Optional[np.ndarray]
-            input feature vectors
-        y: typing.Optional[np.ndarray]
-            input observations
+        X: typing.Optional[np.ndarray(N, D)]
+            input feature vectors, N is number of data points and D is number of feature dimensions
+        y: typing.Optional[np.ndarray(N,)]
+            input observations, N is number of data points
         Returns
         -------
         mll : typing.Optional[ExactMarginalLogLikelihood]
-            a GPyTorch model
+            a GPyTorch model with Zero Mean and user specified covariance
         """
-
         if X is None:
             return None
 
@@ -211,19 +221,24 @@ class GaussianProcessGPyTorch(BaseModel):
         x0, property_dict, bounds = module_to_array(module=self.gp)
 
         bounds = np.asarray(bounds).transpose().tolist()
-        # x0 = x0.astype(np.float64)
 
         self.property_dict = property_dict
 
         p0 = [x0]
 
-        while len(p0) < self.n_opt_restarts:
+        n_tries = 5000
+        for i in range(n_tries):
             try:
                 self.gp.pyro_sample_from_prior()
                 sample, _, _ = module_to_array(module=self.gp)
                 p0.append(sample.astype(np.float64))
-            except Exception as e:
+            except RuntimeError as e:
+                if i == n_tries - 1:
+                    self.logger.debug(f'Falls to sample new hyperparameters because of {e}')
+                    raise e
                 continue
+            if len(p0) == self.n_opt_restarts:
+                break
 
         self.gp_model.train()
         self.likelihood.train()
@@ -239,7 +254,7 @@ class GaussianProcessGPyTorch(BaseModel):
                     bounds=bounds,
                 )
             except RuntimeError as e:
-                self.logger.warning(f"Fail to optimize as an Error occurs: {e}")
+                self.logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
                 continue
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
@@ -330,7 +345,7 @@ class GaussianProcessGPyTorch(BaseModel):
 
         X_test = torch.from_numpy(self._impute_inactive(X_test))
         with torch.no_grad():
-            funcs = self.likelihood(self.gp_model(X_test)).sample(torch.Size([n_funcs])).t().cpu().detach().numpy()
+            funcs = self.likelihood(self.gp_model(X_test)).sample(torch.Size([n_funcs])).t().cpu().numpy()
 
         if self.normalize_y:
             funcs = self._untransform_y(funcs)
