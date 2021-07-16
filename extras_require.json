@@ -1,5 +1,5 @@
 {
-  "gpmcmc": [
+  "gp": [
     "emcee>=3.0.0"
   ],
   "documentation": [

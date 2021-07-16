@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+import lazy_import
 from smac.utils import dependencies
 
 __version__ = '0.13.2dev'
@@ -22,6 +23,9 @@ for name, requirements in extras_require.items():
         continue
     if dependencies.are_valid_packages(requirements):
         extras_installed.add(name)
+    for requirement in requirements:
+        package_name = dependencies.RE_PATTERN.match(requirement).group('name')  # type: ignore[union-attr] # noqa F821
+        lazy_import.lazy_module(package_name)
 
 if sys.version_info < (3, 7, 0):
     raise ValueError("SMAC requires Python 3.7.0 or newer.")

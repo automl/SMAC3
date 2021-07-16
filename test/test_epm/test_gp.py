@@ -15,6 +15,8 @@ from smac.configspace import (
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 
+from test import requires_extra
+
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
@@ -128,6 +130,7 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     return model
 
 
+@requires_extra('gp')
 class TestGP(unittest.TestCase):
 
     def test_predict_wrong_X_dimensions(self):

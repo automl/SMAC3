@@ -59,7 +59,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     return model
 
 
-@requires_extra('gpmcmc')
+@requires_extra('gp')
 class TestGPMCMC(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)

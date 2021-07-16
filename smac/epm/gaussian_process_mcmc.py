@@ -3,13 +3,7 @@ import logging
 import typing
 import warnings
 
-try:
-    import emcee
-except ImportError as e:
-    raise ImportError(
-        'Could not import emcee - emcee is an optional dependency.\n'
-        'Please install it manually via `pip install emcee`.') from e
-
+import emcee
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
