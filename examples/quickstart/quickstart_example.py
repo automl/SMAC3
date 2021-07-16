@@ -10,9 +10,9 @@ Quickstart
 #
 # To get started, we will walk you through a few examples.
 #
-# * First, we explain the basic usage of *SMAC* by optimizing the `Branin`__-function as a toy example.
-# * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
-# * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
+# * First, we explain the basic usage of *SMAC* by optimizing the `Branin`_-function as a toy example.
+# * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`_.
+# * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`_.
 #
 # __ branin-example_
 # __ svm-example_
@@ -22,11 +22,13 @@ Quickstart
 # .. _PCS: ../options.html#paramcs
 # .. _TAE: ../tae.html
 
-# .. _branin-example:
-#
+
+###############################################################################
+# .. _branin_example
 # Branin
-# =======
-# First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
+# ======
+# First of, we'll demonstrate the usage of *SMAC* on the minimization of
+# `the standard 2-dimensional continuous test function Branin <https://www.sfu.ca/~ssurjano/branin.html>`_.
 #
 
 import numpy as np
@@ -49,7 +51,7 @@ def branin(x):
 # f_min-wrapper
 # ~~~~~~~~~~~~~
 # The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
-# <apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_. 
+# <apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_.
 # We import the fmin-function and wrap it around are simple branin function.
 #
 
@@ -105,15 +107,15 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #
 # The **run_obj** parameter specifies what *SMAC* is supposed to **optimize**. Here we optimize solution quality.
 # The **runcount_limit** specifies the maximum number of algorithm calls.
-# 
+#
 # *SMAC* reads the results from the command line output. The wrapper returns the
 # results of the algorithm in a specific format:
-# 
+#
 #     .. code-block:: bash
-# 
+#
 #         Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
 #         Result for SMAC: SUCCESS, 0, 0, 48.948190, 1148756733
-# 
+#
 #     | The second line is the result of the above listed algorithm call.
 #     | *STATUS:* can be either *SUCCESS*, *CRASHED*, *SAT*, *UNSAT*, *TIMEOUT*
 #     | *running time:* is the measured running time for an algorithm call
@@ -121,7 +123,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #     | *quality:* the solution quality
 #     | *seed:* the seed that was used with the algorithm call
 #     | *instance-specifics:* additional information
-# 
+#
 # *SMAC* will terminate with the following output:
 #
 #     .. code-block:: bash
@@ -280,7 +282,7 @@ print("Optimized Value: %.2f" % (inc_value))
 #     INFO:smac.stats.stats.Stats:Statistics:
 #     INFO:smac.stats.stats.Stats:#Incumbent changed: 88
 #     INFO:smac.stats.stats.Stats:#Target algorithm runs: 200 / 200.0
-#     INFO:smac.stats.stats.Stats:Used wallclock time: 41.73 / inf sec 
+#     INFO:smac.stats.stats.Stats:Used wallclock time: 41.73 / inf sec
 #     INFO:smac.stats.stats.Stats:Used target algorithm runtime: 17.44 / inf sec
 #     INFO:smac.stats.stats.Stats:##########################################################
 #     INFO:smac.facade.smac_facade.SMAC:Final Incumbent: Configuration:
@@ -296,7 +298,7 @@ print("Optimized Value: %.2f" % (inc_value))
 # so that as final output we can see the error value of the incumbent.
 #
 # .. code-block:: bash
-# 
+#
 #    Optimized Value: 0.02
 #
 # As a bonus, we can validate our results. This is more useful when optimizing on
@@ -328,7 +330,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 # * **features.txt**:
 #
 #     The `feature file <options.html#feature>`_ contains the features for each instance in a csv-format.
-# 
+#
 #     +--------------------+--------------------+--------------------+-----+
 #     |      instance      | name of feature 1  | name of feature 2  | ... |
 #     +====================+====================+====================+=====+
@@ -336,7 +338,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #     +--------------------+--------------------+--------------------+-----+
 #     |         ...        |          ...       |          ...       | ... |
 #     +--------------------+--------------------+--------------------+-----+
-# 
+#
 # * **instances.txt**
 #     The `instance file <options.html#instance>`_ contains the names of all instances one might want to consider during the optimization process.
 #
@@ -375,7 +377,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #         This parameter specifies which pcs-file to use and where it is located.
 #
 #         The PCS-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
-# 
+#
 #         In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
 #         parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
 #
@@ -406,14 +408,14 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 # * **target_algorithms** contains the wrapper and the executable for Spear.
 # * **instances** folder contains the instances on which *SMAC* will configure Spear.
-# 
+#
 # To run the example type one of the two commands below into a terminal:
 #
 # .. code-block:: bash
 #
 #     bash run.sh
 #     python ../../scripts/smac --scenario scenario.txt
-# 
+#
 # *SMAC* will run for a few seconds and generate a lot of logging output.
 # After *SMAC* finished the configuration process you'll get some final statistics about the configuration process:
 #
