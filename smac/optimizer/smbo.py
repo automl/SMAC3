@@ -111,7 +111,7 @@ class SMBO(object):
         predict_x_best: bool
             Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(

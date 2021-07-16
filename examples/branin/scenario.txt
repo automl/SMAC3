@@ -1,4 +1,4 @@
-algo = python cmdline_wrapper.py
+algo = python3 cmdline_wrapper.py
 paramfile = param_config_space.pcs
 run_obj = quality
 runcount_limit = 10

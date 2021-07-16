@@ -18,7 +18,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.
 def main():
     # Initialize scenario, using runcount_limit as budget.
     orig_scen_dict = {
-        'algo': 'python cmdline_wrapper.py',
+        'algo': 'python3 cmdline_wrapper.py',
         'paramfile': 'param_config_space.pcs',
         'run_obj': 'quality',
         'runcount_limit': 25,
