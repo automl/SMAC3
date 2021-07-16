@@ -20,7 +20,7 @@ Contents:
    :maxdepth: 1
 
    installation
-   quickstart
+   quickstart/index
    usage_recomendation
    manual
    api

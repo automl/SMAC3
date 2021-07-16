@@ -317,9 +317,9 @@ sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
     'backreferences_dir': False,
     # path to the examples
-    'examples_dirs': '../examples',
+    'examples_dirs': ['../examples/general', '../examples/quickstart'],
     # path where to save gallery generated examples
-    'gallery_dirs': 'examples',
+    'gallery_dirs': ['examples', 'quickstart'],
     # compile execute examples in the examples dir
     'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.

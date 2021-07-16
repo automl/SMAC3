@@ -1,10 +1,17 @@
-.. _scenario: options.html#scenario
-.. _PCS: options.html#paramcs
-.. _TAE: tae.html
+.. note::
+    :class: sphx-glr-download-link-note
 
-Quick Start
-===========
-If you have not installed *SMAC* yet take a look at the `installation instructions <installation.html>`_ and make sure that all the requirements are fulfilled.
+    Click :ref:`here <sphx_glr_download_quickstart_quickstart_example.py>` to download the full example code
+.. rst-class:: sphx-glr-example-title
+
+.. _sphx_glr_quickstart_quickstart_example.py:
+
+
+==========
+Quickstart
+==========
+
+If you have not installed *SMAC* yet take a look at the `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
 Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
 
 To get started, we will walk you through a few examples.
@@ -17,66 +24,119 @@ __ branin-example_
 __ svm-example_
 __ spear-example_
 
+.. _scenario: ../options.html#scenario
+.. _PCS: ../options.html#paramcs
+
 .. _branin-example:
 
 Branin
-------
+=======
 First of, we'll demonstrate the usage of *SMAC* on the minimization of a standard 2-dimensional continuous test function (`Branin <https://www.sfu.ca/~ssurjano/branin.html>`_).
+
+
+
+.. code-block:: default
+
+
+    import numpy as np
+
+    def branin(x):
+        x1 = x[0]
+        x2 = x[1]
+        a = 1.
+        b = 5.1 / (4. * np.pi ** 2)
+        c = 5. / np.pi
+        r = 6.
+        s = 10.
+        t = 1. / (8. * np.pi)
+        ret = a * (x2 - b * x1 ** 2 + c * x1 - r) ** 2 + s * (1 - t) * np.cos(x1) + s
+        return ret
+
+
+
+
+
+
+
+
 This example aims to explain the basic usage of *SMAC*. There are different ways to use *SMAC*:
 
 f_min-wrapper
 ~~~~~~~~~~~~~
 The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
-<apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_. It is
-implemented in `examples/branin/branin_fmin.py` and requires no extra files. We
-import the fmin-function and the Branin-function:
+<apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_. 
+We import the fmin-function and wrap it around are simple branin function.
 
-.. literalinclude:: ../examples/branin/branin_fmin.py
-   :lines: 3-4 
-   :lineno-match:
 
-And run the f_min-function:
 
-.. literalinclude:: ../examples/branin/branin_fmin.py
-   :start-after: logging.basicConfig 
-   :lineno-match:
+.. code-block:: default
+
+
+    from smac.facade.func_facade import fmin_smac
+
+    x, cost, _ = fmin_smac(func=branin,  # function
+                           x0=[0, 0],  # default configuration
+                           bounds=[(-5, 10), (0, 15)],  # limits
+                           maxfun=10,  # maximum number of evaluations
+                           rng=3)  # random seed
+    print("Optimum at {} with cost of {}".format(x, cost))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Optimum at [-3.77468294 14.3847332 ] with cost of 2.546567041963237
+
+
+
 
 This way, you can optimize a blackbox-function with minimal effort. However, to
 use all of *SMAC's* capability, a scenario_ object should be used.
 
 Command line
 ~~~~~~~~~~~~
-A more evolved example can be found in ``examples/branin/``. In this directory you can find
-a wrapper ``cmdline_wrapper.py``, a scenario-file ``scenario.txt``, and a
-*PCS*-file ``param_config_space.pcs``.
+A more evolved example can be found in ``examples/quickstart/branin/``.
+In this directory you can find:
+
+* ``branin.py``
+* ``cmdline_wrapper.py``
+* ``scenario.txt``
+* ``param_config_space.pcs``
+
 To run the example scenario, change into the root directory of *SMAC* and type the following commands:
+
 
 .. code-block:: bash
 
-    cd examples/branin
+    cd examples/quickstart/branin
     python ../../scripts/smac --scenario scenario.txt
 
 The Python command runs *SMAC* with the specified scenario. The scenario file consists of the following lines:
 
-    .. literalinclude:: ../examples/branin/scenario.txt
+.. literalinclude:: ../../examples/quickstart/branin/scenario.txt
 
 The **algo** parameter specifies how *SMAC* calls the target algorithm to be optimized.
-This is further explained in the chapter about the `Target Algorithm Evaluator (TAE) <tae.html>`_.
+This is further explained in the chapter about the Target Algorithm Evaluator (TAE_).
 An algorithm call by *SMAC* is of the following format:
 
     .. code-block:: bash
 
         <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
-    
+
 The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 
-    .. literalinclude:: ../examples/branin/param_config_space.pcs
+    .. literalinclude:: ../../examples/quickstart/branin/param_config_space.pcs
 
-    x1 and x2 are both continuous parameters. x1 can take any real value in the range [-5, 10], x2 in the range [0, 15] and both have the default value 0.
+``x1`` and ``x2`` are both continuous parameters. ``x1`` can take any real value in the range ``[-5, 10]``, ``x2`` in the range ``[0, 15]`` and both have the default value ``0``.
 
 The **run_obj** parameter specifies what *SMAC* is supposed to **optimize**. Here we optimize solution quality.
-
 The **runcount_limit** specifies the maximum number of algorithm calls.
 
 *SMAC* reads the results from the command line output. The wrapper returns the
@@ -121,86 +181,215 @@ Using *SMAC* in Python: SVM
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
-This example is located in :code:`examples/svm.py`.
+This example is located in :code:`examples/general/svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 9-22
-   :lineno-match:
-   
-We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
- different hyperparameter types, the ConfigurationSpace, and the objects we need from *SMAC*.
-The ConfigurationSpace is used to define the hyperparameters we want to optimize as well as
-their domains. Possible hyperparameter types are floats, integers and categorical parameters.
 
-We optimize a SVM with the hyperparameters *kernel*, *C*, *gamma*, *coef0*, *degree* and *shrinking*, which
-are further explained in the documentation of sklearn. Note that modifying *C* can
-quickly lead to overfitting, which is why we use cross-validation to evaluate
-the configuration.
 
-Let's start by creating a ConfigSpace-object and adding the first hyperparameter: the choice of
-the kernel.
+.. code-block:: default
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 60-65
-   :lineno-match:
 
-We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
-once, by passing them in a list. 
+    import numpy as np
+    from ConfigSpace.conditions import InCondition
+    from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
+        UniformFloatHyperparameter, UniformIntegerHyperparameter
+    from sklearn import svm, datasets
+    from sklearn.model_selection import cross_val_score
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 67-70
-   :lineno-match:
+    # Import ConfigSpace and different types of parameters
+    from smac.configspace import ConfigurationSpace
+    from smac.facade.smac_hpo_facade import SMAC4HPO
+    # Import SMAC-utilities
+    from smac.scenario.scenario import Scenario
 
-Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
-We can reflect this in optimization using **conditions** to deactivate hyperparameters that are irrelevant to the current kernel.
-Deactivated hyperparameters are not considered during optimization, limiting the search-space to reasonable configurations.
-This way human knowledge about the problem is introduced.
+    # We load the iris-dataset (a widely used benchmark)
+    iris = datasets.load_iris()
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 72-78
-   :lineno-match:
 
-Conditions can be used for various reasons. The `gamma`-hyperparameter for
-example can be set to "auto" or to a fixed float-value. We introduce a hyperparameters
-that is only activated if `gamma` is not set to "auto".
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 80-88
-   :lineno-match:
+
+
+
+
+
+Next we need a configuration space from which to sample from
+
+
+.. code-block:: default
+
+
+    # Build Configuration Space which defines all parameters and their ranges
+    cs = ConfigurationSpace()
+
+    # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
+    kernel = CategoricalHyperparameter("kernel", ["linear", "rbf", "poly", "sigmoid"], default_value="poly")
+    cs.add_hyperparameter(kernel)
+
+    # There are some hyperparameters shared by all kernels
+    C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0)
+    shrinking = CategoricalHyperparameter("shrinking", ["true", "false"], default_value="true")
+    cs.add_hyperparameters([C, shrinking])
+
+    # Others are kernel-specific, so we can add conditions to limit the searchspace
+    degree = UniformIntegerHyperparameter("degree", 1, 5, default_value=3)  # Only used by kernel poly
+    coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
+    cs.add_hyperparameters([degree, coef0])
+    use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
+    use_coef0 = InCondition(child=coef0, parent=kernel, values=["poly", "sigmoid"])
+    cs.add_conditions([use_degree, use_coef0])
+
+    # This also works for parameters that are a mix of categorical and values from a range of numbers
+    # For example, gamma can be either "auto" or a fixed float
+    gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
+    gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1)
+    cs.add_hyperparameters([gamma, gamma_value])
+    # We only activate gamma_value if gamma is set to "value"
+    cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
+    # And again we can restrict the use of gamma in general to the choice of the kernel
+    cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
+
+    print(cs)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Configuration space object:
+      Hyperparameters:
+        C, Type: UniformFloat, Range: [0.001, 1000.0], Default: 1.0
+        coef0, Type: UniformFloat, Range: [0.0, 10.0], Default: 0.0
+        degree, Type: UniformInteger, Range: [1, 5], Default: 3
+        gamma, Type: Categorical, Choices: {auto, value}, Default: auto
+        gamma_value, Type: UniformFloat, Range: [0.0001, 8.0], Default: 1.0
+        kernel, Type: Categorical, Choices: {linear, rbf, poly, sigmoid}, Default: poly
+        shrinking, Type: Categorical, Choices: {true, false}, Default: true
+      Conditions:
+        coef0 | kernel in {'poly', 'sigmoid'}
+        degree | kernel in {'poly'}
+        gamma | kernel in {'rbf', 'poly', 'sigmoid'}
+        gamma_value | gamma in {'value'}
+
+
+
+
 
 Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
 Some options, such as the *kernel* or *C*, can be passed directly.
 Others, such as *gamma*, need to be translated before the call to the SVM.
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :pyobject: svm_from_cfg
-   :lineno-match:
+
+.. code-block:: default
+
+
+    def svm_from_cfg(cfg):
+        """ Creates a SVM based on a configuration and evaluates it on the
+        iris-dataset using cross-validation.
+
+        Parameters:
+        -----------
+        cfg: Configuration (ConfigSpace.ConfigurationSpace.Configuration)
+            Configuration containing the parameters.
+            Configurations are indexable!
+
+        Returns:
+        --------
+        A crossvalidated mean score for the svm on the loaded data-set.
+        """
+        # For deactivated parameters, the configuration stores None-values.
+        # This is not accepted by the SVM, so we remove them.
+        cfg = {k: cfg[k] for k in cfg if cfg[k]}
+        # We translate boolean values:
+        cfg["shrinking"] = True if cfg["shrinking"] == "true" else False
+        # And for gamma, we set it to a fixed value or to "auto" (if used)
+        if "gamma" in cfg:
+            cfg["gamma"] = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
+            cfg.pop("gamma_value", None)  # Remove "gamma_value"
+
+        clf = svm.SVC(**cfg, random_state=42)
+        scores = cross_val_score(clf, iris.data, iris.target, cv=5)
+        return 1 - np.mean(scores)  # Minimize!
+
+    def_value = svm_from_cfg(cs.get_default_configuration())
+    print("Default Value: %.2f" % (def_value))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Default Value: 0.03
+
+
+
 
 We need a Scenario-object to configure the optimization process.
 We provide a `list of possible options`__ in the scenario.
 
-__ scenario_
-
 The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 91-96
-   :lineno-match:
+
+
+.. code-block:: default
+
+
+    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                         "runcount-limit": 5,  # max. number of function evaluations; for this example set to a low number
+                         "cs": cs,  # configuration space
+                         "deterministic": "true"
+                         })
+
+
+
+
+
+
+
 
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
-Optimization-loop and calculates the incumbent. 
-To automatically handle the exploration of the search space 
-and evaluation of the function, SMAC needs as inputs the scenario object 
+Optimization-loop and calculates the incumbent.
+To automatically handle the exploration of the search space
+and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 103-112
-   :lineno-match:
 
-We start the optimization loop.
+
+.. code-block:: default
+
+    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                    tae_runner=svm_from_cfg)
+
+    incumbent = smac.optimize()
+
+    inc_value = svm_from_cfg(incumbent)
+    print("Optimized Value: %.2f" % (inc_value))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Optimized Value: 0.03
+
+
+
 
 Internally SMAC keeps track of the number of algorithm calls and the remaining time budget via a Stats object.
 
@@ -234,9 +423,31 @@ so that as final output we can see the error value of the incumbent.
 As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.
 
-.. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 115-
-   :lineno-match:
+We can also validate our results (though this makes a lot more sense with instances)
+
+
+.. code-block:: default
+
+
+    smac.validate(config_mode='inc',  # We can choose which configurations to evaluate
+                  # instance_mode='train+test',  # Defines what instances to validate
+                  repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
+                  n_jobs=1)  # How many cores to use in parallel for optimization
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    <smac.runhistory.runhistory.RunHistory object at 0x7f4e9af657f0>
+
+
 
 .. _spear-example:
 
@@ -249,7 +460,7 @@ In *SMACs* root-directory type:
 
 .. code-block:: bash
 
-    cd examples/spear_qcp && ls -l
+    cd examples/general/spear_qcp && ls -l
 
 In this folder you see the following files and directories:
 
@@ -270,9 +481,9 @@ In this folder you see the following files and directories:
 
 * **scenario.txt**
     The scenario_ file contains all the necessary information about the configuration scenario at hand.
-    
-    .. literalinclude:: ../examples/spear_qcp/scenario.txt
-    
+
+    .. literalinclude:: ../../examples/quickstart/spear_qcp/scenario.txt
+
     For this example the following options are used:
 
     * *algo:*
@@ -326,7 +537,9 @@ In this folder you see the following files and directories:
 * **run.sh**
     A shell script calling *SMAC* with the following command:
 
-    ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
+        .. code-block:: bash
+
+              python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
 
     This runs *SMAC* with the scenario options specified in the scenario.txt file.
 
@@ -401,7 +614,9 @@ __ spear-example_
 
 To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
 
- ``python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3``
+.. code-block:: bash
+
+      python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3
 
 As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
 You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
@@ -409,3 +624,36 @@ you will find a *hydra-output-yyy-mm-dd_hh:mm:ss_xyz* folder. This folder contai
 SMAC runs, as well as the resulting portfolio (as pkl file).
 
 The resulting portfolio can be used with any algorithm selector such as `AutoFolio <https://github.com/mlindauer/AutoFolio>`_
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  4.253 seconds)
+
+
+.. _sphx_glr_download_quickstart_quickstart_example.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: quickstart_example.py <quickstart_example.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: quickstart_example.ipynb <quickstart_example.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
