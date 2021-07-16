@@ -36,6 +36,7 @@ class EPMChooser(object):
 
         Parameters
         ----------
+
         scenario: smac.scenario.scenario.Scenario
             Scenario object
         stats: smac.stats.stats.Stats
@@ -51,14 +52,15 @@ class EPMChooser(object):
             incumbent to be used from the start. ONLY used to restore states.
         rng: np.random.RandomState
             Random number generator
-        random_configuration_chooser
+        random_configuration_chooser:
             Chooser for random configuration -- one of
+
             * ChooserNoCoolDown(modulus)
             * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
         predict_x_best: bool
             Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model
         """
 
         self.logger = logging.getLogger(
@@ -176,8 +178,8 @@ class EPMChooser(object):
         predict : bool
             Whether to use the predicted or observed best.
 
-        Return
-        ------
+        Returns
+        -------
         float
         np.ndarry
         Configuration

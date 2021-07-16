@@ -31,7 +31,7 @@ On the command line an exemplary call could be:
 
 .. code-block:: bash
 
-        python smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
+        python3 smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
 
 We recommend that each *pSMAC* uses a different random **seed**.
 
@@ -40,7 +40,7 @@ please set the **verbose** level to **DEBUG** and grep in the following way
 
 .. code-block:: bash
   
-		python smac --verbose DEBUG [...] | grep -E "Loaded [0-9]+ new runs"
+		python3 smac --verbose DEBUG [...] | grep -E "Loaded [0-9]+ new runs"
 
 .. _psmacinpython:
 

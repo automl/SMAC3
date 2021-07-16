@@ -1,6 +1,6 @@
 import typing
 
-from scipy.optimize._shgo_lib.sobol_seq import Sobol
+from scipy.stats.qmc import Sobol
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
@@ -39,8 +39,9 @@ class SobolDesign(InitialDesign):
             if isinstance(p, Constant):
                 constants += 1
 
-        sobol_gen = Sobol()
-        sobol = sobol_gen.i4_sobol_generate(len(params) - constants, self.init_budget)
+        dim = len(params) - constants
+        sobol_gen = Sobol(d=dim, scramble=False, seed=None)
+        sobol = sobol_gen.random(self.init_budget)
 
         return self._transform_continuous_designs(design=sobol,
                                                   origin='Sobol',
