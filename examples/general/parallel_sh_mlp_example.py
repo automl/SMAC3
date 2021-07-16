@@ -32,7 +32,9 @@ from smac.initial_design.random_configuration_design import RandomConfigurations
 # --------------------------------------------------------------
 import os
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__)))
+# https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use
+# sys.path.append(os.path.join(os.path.dirname(__file__)))
+sys.path.append(os.getcwd())
 from mlp_from_cfg_func import mlp_from_cfg  # noqa: E402
 # --------------------------------------------------------------
 
