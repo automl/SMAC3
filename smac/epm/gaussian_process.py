@@ -9,8 +9,8 @@ from smac.epm.base_gp import BaseModel
 from smac.epm.gp_base_prior import Prior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
-from skopt.learning.gaussian_process.kernels import Kernel
-from skopt.learning.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel
+from sklearn.gaussian_process import GaussianProcessRegressor
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +147,6 @@ class GaussianProcess(BaseModel):
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
-            noise=None,
             random_state=self.rng,
         )
 

@@ -130,7 +130,7 @@ class SMAC4AC(object):
             incumbent
         intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
-        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
+        acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
             Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
             Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
             `~acquisition_function_kwargs` is passed to the class constructor.
@@ -141,26 +141,26 @@ class SMAC4AC(object):
             hyperparameters (i.e. GaussianProcessMCMC).
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
-            Will use :class:`smac.optimizer.ei_optimization.LocalAndSortedRandomSearch` if not set.
-        acquisition_function_optimizer_kwargs: Optional[Dict]
-            Arguments passed to constructor of '~acquisition_function_optimizer'
+            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
+        acquisition_function_optimizer_kwargs: Optional[dict]
+            Arguments passed to constructor of `~acquisition_function_optimizer`
         model : AbstractEPM
             Model that implements train() and predict(). Will use a
             :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-        model_kwargs : Optional[Dict]
-            Arguments passed to constructor of '~model'
+        model_kwargs : Optional[dict]
+            Arguments passed to constructor of `~model`
         runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
             Object that implements the AbstractRunHistory2EPM. If None,
             will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
             if objective is cost or
             :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
             if objective is runtime.
-        runhistory2epm_kwargs: Optional[Dict]
-            Arguments passed to the constructor of '~runhistory2epm'
+        runhistory2epm_kwargs: Optional[dict]
+            Arguments passed to the constructor of `~runhistory2epm`
         initial_design : InitialDesign
             initial sampling design
-        initial_design_kwargs: Optional[Dict]
-            arguments passed to constructor of `~initial_design'
+        initial_design_kwargs: Optional[dict]
+            arguments passed to constructor of `~initial_design`
         initial_configurations : List[Configuration]
             list of initial configurations for initial design --
             cannot be used together with initial_design
@@ -178,8 +178,8 @@ class SMAC4AC(object):
             chosen.
         random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
             How often to choose a random configuration during the intensification procedure.
-        random_configuration_chooser_kwargs : Optional[Dict]
-            arguments of constructor for '~random_configuration_chooser'
+        random_configuration_chooser_kwargs : Optional[dict]
+            arguments of constructor for `~random_configuration_chooser`
         dask_client : dask.distributed.Client
             User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
         n_jobs : int, optional
@@ -597,7 +597,8 @@ class SMAC4AC(object):
         try:
             incumbent = self.solver.run()
         finally:
-            self.solver.stats.save()
+            self.solver.save()
+
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
@@ -606,10 +607,6 @@ class SMAC4AC(object):
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 
-            if self.output_dir is not None:
-                self.solver.runhistory.save_json(
-                    fn=os.path.join(self.output_dir, "runhistory.json")
-                )
         return incumbent
 
     def validate(self,

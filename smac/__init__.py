@@ -5,7 +5,7 @@ import sys
 import lazy_import
 from smac.utils import dependencies
 
-__version__ = '0.13.1'
+__version__ = '0.13.2dev'
 __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, ' \
              'André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner ' \
              'and Frank Hutter'
@@ -25,8 +25,6 @@ for name, requirements in extras_require.items():
         extras_installed.add(name)
     for requirement in requirements:
         package_name = dependencies.RE_PATTERN.match(requirement).group('name')  # type: ignore[union-attr] # noqa F821
-        if package_name == 'scikit-optimize':
-            package_name = 'skopt'
         lazy_import.lazy_module(package_name)
 
 if sys.version_info < (3, 7, 0):
