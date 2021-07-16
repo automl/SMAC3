@@ -29,6 +29,7 @@ class SMAC4BO(SMAC4AC):
     DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
 
     Changes are:
+
     * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested
       10*D+1), we use an initial design of 8*D.
     * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones
@@ -58,11 +59,11 @@ class SMAC4BO(SMAC4AC):
 
         scenario = kwargs['scenario']
 
-        if len(scenario.cs.get_hyperparameters()) <= 40:
+        if len(scenario.cs.get_hyperparameters()) <= 21201:
             kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
         else:
             raise ValueError(
-                'The default initial design "Sobol sequence" can only handle up to 40 dimensions. '
+                'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
             )
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)

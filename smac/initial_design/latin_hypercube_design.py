@@ -1,8 +1,6 @@
 import typing
 
-import numpy as np
-
-import pyDOE
+from scipy.stats.qmc import LatinHypercube
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
@@ -36,15 +34,12 @@ class LHDesign(InitialDesign):
 
         params = self.cs.get_hyperparameters()
 
-        # seeding of lhd design
-        np.random.seed(self.rng.randint(1, 2 ** 20))
-
         constants = 0
         for p in params:
             if isinstance(p, Constant):
                 constants += 1
 
-        lhd = pyDOE.lhs(n=len(params) - constants, samples=self.init_budget)
+        lhd = LatinHypercube(d=len(params) - constants, seed=self.rng.randint(0, 1000000)).random(n=self.init_budget)
 
         return self._transform_continuous_designs(design=lhd,
                                                   origin='LHD',

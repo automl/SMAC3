@@ -3,9 +3,6 @@
     "emcee>=3.0.0",
     "scikit-optimize"
   ],
-  "lhd": [
-    "pyDOE"
-  ],
   "documentation": [
     "sphinx",
     "sphinx_rtd_theme",
