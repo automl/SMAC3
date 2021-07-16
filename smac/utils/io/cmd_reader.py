@@ -738,7 +738,7 @@ class CMDReader(object):
                                     "PCS-file.")
         scen_opts.add_argument("--save-results-instantly",
                                dest='save_results_instantly',
-                               default=False, type=bool,
+                               default=False, type=truthy,
                                help="[dev] If true, runhistory and stats are saved immediately on changes. "
                                     "Otherwise, runhistory and states are only saved once after the optimization "
                                     "process has finished.")
