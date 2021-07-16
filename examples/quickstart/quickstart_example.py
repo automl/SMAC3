@@ -10,13 +10,9 @@ Quickstart
 #
 # To get started, we will walk you through a few examples.
 #
-# * First, we explain the basic usage of *SMAC* by optimizing the `Branin`_-function as a toy example.
-# * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`_.
-# * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`_.
-#
-# __ branin-example_
-# __ svm-example_
-# __ spear-example_
+# * First, we explain the basic usage of *SMAC* by optimizing the :ref:`Branin <branin-example>`-function as a toy example.
+# * Second, we explain the usage of *SMAC* within Python by optimizing a :ref:`Support Vector Machine <svm-example>`.
+# * Third, we show a real-world example, using an algorithm-wrapper to optimize the :ref:`SPEAR SAT-solver <spear-example>`.
 #
 # .. _scenario: ../options.html#scenario
 # .. _PCS: ../options.html#paramcs
@@ -24,7 +20,8 @@ Quickstart
 
 
 ###############################################################################
-# .. _branin_example
+# .. _branin-example:
+#
 # Branin
 # ======
 # First of, we'll demonstrate the usage of *SMAC* on the minimization of
@@ -142,7 +139,8 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #
 # Furthermore, *SMACs* trajectory and runhistory will be stored in ``branin/``.
 #
-#
+
+###############################################################################
 # .. _svm-example:
 #
 # Using *SMAC* in Python: SVM
@@ -472,8 +470,6 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 # In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
 # across all instances as a starting point for the portfolio. In following iterations *Hydra* adds one configuration that
 # improves the portfolio performance.
-#
-# __ spear-example_
 #
 # To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
 #
