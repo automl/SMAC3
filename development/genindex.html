@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; SMAC 0.13.1 documentation</title>
+  <title>Index &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -217,10 +217,10 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -601,6 +601,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">_get_mean_costs() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
+</li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_next_inc_run">_get_next_inc_run() (smac.intensification.intensification.Intensifier method)</a>
 </li>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_next_racer">_get_next_racer() (smac.intensification.intensification.Intensifier method)</a>
@@ -618,6 +620,8 @@
       <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.AbstractRunHistory2EPM._get_t_run_dict">_get_t_run_dict() (smac.runhistory.runhistory2epm.AbstractRunHistory2EPM method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO._get_timebound_for_intensification">_get_timebound_for_intensification() (smac.optimizer.smbo.SMBO method)</a>
+</li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._get_validation_set">_get_validation_set() (smac.facade.experimental.hydra_facade.Hydra method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">_get_x_best() (smac.optimizer.epm_configuration_chooser.EPMChooser method)</a>
 </li>
@@ -796,6 +800,8 @@
 </li>
         <li><a href="apidoc/smac.initial_design.random_configuration_design.html#smac.initial_design.random_configuration_design.RandomConfigurations._select_configurations">(smac.initial_design.random_configuration_design.RandomConfigurations method)</a>
 </li>
+        <li><a href="apidoc/smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolDesign._select_configurations">(smac.initial_design.sobol_design.SobolDesign method)</a>
+</li>
       </ul></li>
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._set_has_conditions">_set_has_conditions() (smac.epm.base_gp.BaseModel method)</a>
 </li>
@@ -862,6 +868,8 @@
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._untransform_y">_untransform_y() (smac.epm.base_gp.BaseModel method)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace._update_cache">_update_cache() (smac.configspace.ConfigurationSpace method)</a>
+</li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._update_portfolio">_update_portfolio() (smac.facade.experimental.hydra_facade.Hydra method)</a>
 </li>
       <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband._Hyperband._update_stage">_update_stage() (smac.intensification.hyperband._Hyperband method)</a>
 
@@ -951,9 +959,11 @@
         <li><a href="apidoc/smac.epm.base_rf.html#smac.epm.base_rf.BaseModel">(class in smac.epm.base_rf)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner">BaseRunner (class in smac.tae.base)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner">BaseRunner (class in smac.tae.base)</a>
+      <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO">BOHB4HPO (class in smac.facade.smac_bohb_facade)</a>
 </li>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.bounds">bounds (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
 </li>
@@ -1023,6 +1033,8 @@
 </li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin.clone_with_theta">clone_with_theta() (smac.epm.gp_kernels.MagicMixin method)</a>
 </li>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
@@ -1043,6 +1055,8 @@
         <li><a href="apidoc/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.configs">(smac.initial_design.initial_design.InitialDesign attribute)</a>
 </li>
         <li><a href="apidoc/smac.initial_design.latin_hypercube_design.html#smac.initial_design.latin_hypercube_design.LHDesign.configs">(smac.initial_design.latin_hypercube_design.LHDesign attribute)</a>
+</li>
+        <li><a href="apidoc/smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolDesign.configs">(smac.initial_design.sobol_design.SobolDesign attribute)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ConfigurableHelpFormatter">ConfigurableHelpFormatter (class in smac.utils.io.cmd_reader)</a>
@@ -1169,11 +1183,13 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats.finished_ta_runs">finished_ta_runs (smac.stats.stats.Stats attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.tae.html#smac.tae.FirstRunCrashedException">FirstRunCrashedException</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.FixedSet">FixedSet (class in smac.optimizer.ei_optimization)</a>
+</li>
+      <li><a href="apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac">fmin_smac() (in module smac.facade.func_facade)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser.format_help">format_help() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
@@ -1206,6 +1222,8 @@
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace.get_all_unconditional_hyperparameters">get_all_unconditional_hyperparameters() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.Configuration.get_array">get_array() (smac.configspace.Configuration method)</a>
+</li>
+      <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids">get_best_incumbents_ids() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="apidoc/smac.utils.test_helpers.html#smac.utils.test_helpers.get_branin_config_space">get_branin_config_space() (in module smac.utils.test_helpers)</a>
 </li>
@@ -1247,10 +1265,10 @@
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace.get_idx_by_hyperparameter_name">get_idx_by_hyperparameter_name() (smac.configspace.ConfigurationSpace method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">get_instance_costs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_min_cost">get_min_cost() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.get_neighbors">get_neighbors() (smac.configspace.CategoricalHyperparameter method)</a>
@@ -1303,7 +1321,13 @@
 </li>
       <li><a href="apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_rng">get_rng() (in module smac.epm.util_funcs)</a>
 </li>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">get_runhistory() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
+</li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">get_runs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
+</li>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner">get_tae_runner() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
+</li>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">get_trajectory() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
 </li>
       <li><a href="apidoc/smac.epm.util_funcs.html#smac.epm.util_funcs.get_types">get_types() (in module smac.epm.util_funcs)</a>
 </li>
@@ -1335,9 +1359,13 @@
         <li><a href="apidoc/smac.configspace.html#smac.configspace.UniformIntegerHyperparameter.has_neighbors">(smac.configspace.UniformIntegerHyperparameter method)</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC">HB4AC (class in smac.facade.hyperband_facade)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.HorseshoePrior">HorseshoePrior (class in smac.epm.gp_base_prior)</a>
+</li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra">Hydra (class in smac.facade.experimental.hydra_facade)</a>
 </li>
       <li><a href="apidoc/smac.intensification.hyperband.html#smac.intensification.hyperband.Hyperband">Hyperband (class in smac.intensification.hyperband)</a>
 </li>
@@ -1469,8 +1497,6 @@
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch">LocalSearch (class in smac.optimizer.ei_optimization)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter.log">log() (smac.utils.logging.PickableLoggerAdapter method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI">LogEI (class in smac.optimizer.acquisition)</a>
@@ -1479,6 +1505,22 @@
 
       <ul>
         <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.logger">(smac.epm.rfr_imputator.RFRImputator attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.logger">(smac.facade.experimental.hydra_facade.Hydra attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.logger">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.logger">(smac.facade.hyperband_facade.HB4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR.logger">(smac.facade.roar_facade.ROAR attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.logger">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.logger">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.logger">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.logger">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction.logger">(smac.optimizer.acquisition.AbstractAcquisitionFunction attribute)</a>
 </li>
@@ -1489,6 +1531,8 @@
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.logger">(smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.LognormalPrior">LognormalPrior (class in smac.epm.gp_base_prior)</a>
 </li>
   </ul></td>
@@ -1498,6 +1542,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.MagicMixin">MagicMixin (class in smac.epm.gp_kernels)</a>
+</li>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.main_cli">main_cli() (smac.smac_cli.SMACCLI method)</a>
 </li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Matern">Matern (class in smac.epm.gp_kernels)</a>
 </li>
@@ -1567,6 +1613,24 @@
 </li>
         <li><a href="apidoc/smac.facade.experimental.html#module-smac.facade.experimental">smac.facade.experimental</a>
 </li>
+        <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#module-smac.facade.experimental.hydra_facade">smac.facade.experimental.hydra_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#module-smac.facade.experimental.psmac_facade">smac.facade.experimental.psmac_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.func_facade.html#module-smac.facade.func_facade">smac.facade.func_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">smac.facade.hyperband_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.roar_facade.html#module-smac.facade.roar_facade">smac.facade.roar_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#module-smac.facade.smac_ac_facade">smac.facade.smac_ac_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade">smac.facade.smac_bo_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#module-smac.facade.smac_bohb_facade">smac.facade.smac_bohb_facade</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#module-smac.facade.smac_hpo_facade">smac.facade.smac_hpo_facade</a>
+</li>
         <li><a href="apidoc/smac.initial_design.html#module-smac.initial_design">smac.initial_design</a>
 </li>
         <li><a href="apidoc/smac.initial_design.default_configuration_design.html#module-smac.initial_design.default_configuration_design">smac.initial_design.default_configuration_design</a>
@@ -1578,6 +1642,8 @@
         <li><a href="apidoc/smac.initial_design.latin_hypercube_design.html#module-smac.initial_design.latin_hypercube_design">smac.initial_design.latin_hypercube_design</a>
 </li>
         <li><a href="apidoc/smac.initial_design.random_configuration_design.html#module-smac.initial_design.random_configuration_design">smac.initial_design.random_configuration_design</a>
+</li>
+        <li><a href="apidoc/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design">smac.initial_design.sobol_design</a>
 </li>
         <li><a href="apidoc/smac.intensification.html#module-smac.intensification">smac.intensification</a>
 </li>
@@ -1616,6 +1682,8 @@
         <li><a href="apidoc/smac.scenario.html#module-smac.scenario">smac.scenario</a>
 </li>
         <li><a href="apidoc/smac.scenario.scenario.html#module-smac.scenario.scenario">smac.scenario.scenario</a>
+</li>
+        <li><a href="apidoc/smac.smac_cli.html#module-smac.smac_cli">smac.smac_cli</a>
 </li>
         <li><a href="apidoc/smac.stats.html#module-smac.stats">smac.stats</a>
 </li>
@@ -1722,6 +1790,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.old_traj_fn">old_traj_fn (smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
+      <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.optimize">optimize() (in module smac.facade.experimental.psmac_facade)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.optimize">(smac.facade.experimental.hydra_facade.Hydra method)</a>
+</li>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.optimize">(smac.facade.experimental.psmac_facade.PSMAC method)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.optimize">(smac.facade.smac_ac_facade.SMAC4AC method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.output_dir">output_dir (smac.utils.io.traj_logging.TrajLogger attribute)</a>
@@ -1770,6 +1848,12 @@
 </li>
       <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter">PickableLoggerAdapter (class in smac.utils.logging)</a>
 </li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.portfolio">portfolio (smac.facade.experimental.hydra_facade.Hydra attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.portfolio">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">predict() (smac.epm.base_epm.AbstractEPM method)</a>
 </li>
   </ul></td>
@@ -1813,6 +1897,8 @@
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ProcessRunObjectiveAction">ProcessRunObjectiveAction (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.Product">Product (class in smac.epm.gp_kernels)</a>
+</li>
+      <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC">PSMAC (class in smac.facade.experimental.psmac_facade)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1858,6 +1944,12 @@
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.ReadTrainInstFileAction">ReadTrainInstFileAction (class in smac.utils.io.cmd_reader)</a>
 </li>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.register_callback">register_callback() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
+</li>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state">restore_state() (smac.smac_cli.SMACCLI method)</a>
+</li>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI.restore_state_after_output_dir">restore_state_after_output_dir() (smac.smac_cli.SMACCLI method)</a>
+</li>
       <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.results">results (smac.tae.base.BaseRunner attribute)</a>
 
       <ul>
@@ -1884,6 +1976,12 @@
 </li>
       <li><a href="apidoc/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator">RFRImputator (class in smac.epm.rfr_imputator)</a>
 </li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.rh">rh (smac.facade.experimental.hydra_facade.Hydra attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.rh">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.rng">rng (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
 
       <ul>
@@ -1892,6 +1990,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
+</li>
       <li><a href="apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.RunInfoIntent.RUN">RUN (smac.intensification.abstract_racer.RunInfoIntent attribute)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">run() (smac.optimizer.smbo.SMBO method)</a>
@@ -1934,8 +2034,20 @@
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory">RunHistory (class in smac.runhistory.runhistory)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.runhistory">runhistory (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.runhistory">runhistory (smac.facade.hyperband_facade.HB4AC attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.runhistory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.runhistory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.runhistory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.runhistory">(smac.optimizer.smbo.SMBO attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost">RunHistory2EPM4Cost (class in smac.runhistory.runhistory2epm)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4EIPS">RunHistory2EPM4EIPS (class in smac.runhistory.runhistory2epm)</a>
@@ -2149,6 +2261,69 @@
 </li>
       </ul></li>
       <li>
+    smac.facade.experimental.hydra_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#module-smac.facade.experimental.hydra_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.experimental.psmac_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#module-smac.facade.experimental.psmac_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.func_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.func_facade.html#module-smac.facade.func_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.hyperband_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.roar_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.roar_facade.html#module-smac.facade.roar_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.smac_ac_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#module-smac.facade.smac_ac_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.smac_bo_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.smac_bohb_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#module-smac.facade.smac_bohb_facade">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.facade.smac_hpo_facade
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#module-smac.facade.smac_hpo_facade">module</a>
+</li>
+      </ul></li>
+      <li>
     smac.initial_design
 
       <ul>
@@ -2188,6 +2363,13 @@
 
       <ul>
         <li><a href="apidoc/smac.initial_design.random_configuration_design.html#module-smac.initial_design.random_configuration_design">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.initial_design.sobol_design
+
+      <ul>
+        <li><a href="apidoc/smac.initial_design.sobol_design.html#module-smac.initial_design.sobol_design">module</a>
 </li>
       </ul></li>
       <li>
@@ -2323,6 +2505,13 @@
 
       <ul>
         <li><a href="apidoc/smac.scenario.scenario.html#module-smac.scenario.scenario">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.smac_cli
+
+      <ul>
+        <li><a href="apidoc/smac.smac_cli.html#module-smac.smac_cli">module</a>
 </li>
       </ul></li>
       <li>
@@ -2486,12 +2675,38 @@
         <li><a href="apidoc/smac.utils.validate.html#module-smac.utils.validate">module</a>
 </li>
       </ul></li>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC">SMAC4AC (class in smac.facade.smac_ac_facade)</a>
+</li>
+      <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO">SMAC4BO (class in smac.facade.smac_bo_facade)</a>
+</li>
+      <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO">SMAC4HPO (class in smac.facade.smac_hpo_facade)</a>
+</li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser">SMACArgumentParser (class in smac.utils.io.cmd_reader)</a>
+</li>
+      <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.SMACCLI">SMACCLI (class in smac.smac_cli)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO">SMBO (class in smac.optimizer.smbo)</a>
 </li>
+      <li><a href="apidoc/smac.initial_design.sobol_design.html#smac.initial_design.sobol_design.SobolDesign">SobolDesign (class in smac.initial_design.sobol_design)</a>
+</li>
       <li><a href="apidoc/smac.epm.gp_base_prior.html#smac.epm.gp_base_prior.SoftTopHatPrior">SoftTopHatPrior (class in smac.epm.gp_base_prior)</a>
 </li>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.solver">solver (smac.facade.experimental.hydra_facade.Hydra attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.solver">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.solver">(smac.facade.hyperband_facade.HB4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.solver">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.solver">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.solver">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.solver">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.StandardHelpAction">StandardHelpAction (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">start() (smac.optimizer.smbo.SMBO method)</a>
@@ -2502,9 +2717,23 @@
 </li>
       <li><a href="apidoc/smac.stats.stats.html#smac.stats.stats.Stats">Stats (class in smac.stats.stats)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.stats">stats (smac.optimizer.smbo.SMBO attribute)</a>
+      <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.stats">stats (smac.facade.experimental.hydra_facade.Hydra attribute)</a>
 
       <ul>
+        <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.stats">(smac.facade.experimental.psmac_facade.PSMAC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.stats">(smac.facade.hyperband_facade.HB4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.stats">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.stats">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.stats">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.stats">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.stats">(smac.optimizer.smbo.SMBO attribute)</a>
+</li>
         <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.stats">(smac.tae.base.BaseRunner attribute)</a>
 </li>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.stats">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
@@ -2578,12 +2807,24 @@
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.train">train() (smac.epm.base_epm.AbstractEPM method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.train_perf">train_perf (smac.utils.io.traj_logging.TrajEntry attribute)</a>
 </li>
-      <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.trajectory">trajectory (smac.utils.io.traj_logging.TrajLogger attribute)</a>
+      <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.trajectory">trajectory (smac.facade.hyperband_facade.HB4AC attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.trajectory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
+        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.trajectory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">(smac.facade.smac_bohb_facade.BOHB4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.trajectory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
+</li>
+        <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.trajectory">(smac.utils.io.traj_logging.TrajLogger attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry">TrajEntry (class in smac.utils.io.traj_logging)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger">TrajLogger (class in smac.utils.io.traj_logging)</a>
@@ -2656,20 +2897,24 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">validate() (smac.optimizer.smbo.SMBO method)</a>
+      <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate">validate() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
 
       <ul>
+        <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">(smac.optimizer.smbo.SMBO method)</a>
+</li>
         <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate">(smac.utils.validate.Validator method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm">validate_epm() (smac.utils.validate.Validator method)</a>
 </li>
-      <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator">Validator (class in smac.utils.validate)</a>
+      <li><a href="apidoc/smac.facade.experimental.psmac_facade.html#smac.facade.experimental.psmac_facade.PSMAC.validate_incs">validate_incs() (smac.facade.experimental.psmac_facade.PSMAC method)</a>
 </li>
-      <li><a href="apidoc/smac.configspace.html#smac.configspace.Constant.value">value (smac.configspace.Constant attribute)</a>
+      <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator">Validator (class in smac.utils.validate)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="apidoc/smac.configspace.html#smac.configspace.Constant.value">value (smac.configspace.Constant attribute)</a>
+</li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.InCondition.values">values (smac.configspace.InCondition attribute)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.var_threshold">var_threshold (smac.epm.base_epm.AbstractEPM attribute)</a>

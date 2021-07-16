@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.optimizer.epm_configuration_chooser &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.optimizer.epm_configuration_chooser &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -217,10 +217,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -333,6 +333,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+
 <span class="sd">        scenario: smac.scenario.scenario.Scenario</span>
 <span class="sd">            Scenario object</span>
 <span class="sd">        stats: smac.stats.stats.Stats</span>
@@ -348,14 +349,15 @@
 <span class="sd">            incumbent to be used from the start. ONLY used to restore states.</span>
 <span class="sd">        rng: np.random.RandomState</span>
 <span class="sd">            Random number generator</span>
-<span class="sd">        random_configuration_chooser</span>
+<span class="sd">        random_configuration_chooser:</span>
 <span class="sd">            Chooser for random configuration -- one of</span>
+
 <span class="sd">            * ChooserNoCoolDown(modulus)</span>
 <span class="sd">            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</span>
 <span class="sd">        predict_x_best: bool</span>
 <span class="sd">            Choose x_best for computing the acquisition function via the model instead of via the observations.</span>
 <span class="sd">        min_samples_model: int</span>
-<span class="sd">-            Minimum number of samples to build a model</span>
+<span class="sd">            Minimum number of samples to build a model</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
@@ -473,8 +475,8 @@
 <span class="sd">        predict : bool</span>
 <span class="sd">            Whether to use the predicted or observed best.</span>
 
-<span class="sd">        Return</span>
-<span class="sd">        ------</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">        np.ndarry</span>
 <span class="sd">        Configuration</span>

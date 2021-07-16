@@ -35,7 +35,7 @@ The script to invoke *SMAC* is located in *scripts/smac*. Please see the
 
 .. code-block:: bash
 
-        python smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
+        python3 smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
 
 Required:
      * *scenario*: Path to the file that specifies the `scenario <options.html#scenario>`_ for this *SMAC*-run.

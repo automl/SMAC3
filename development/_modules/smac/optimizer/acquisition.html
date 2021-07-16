@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.optimizer.acquisition &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.optimizer.acquisition &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -217,10 +217,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -719,13 +719,10 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
                  <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
                  <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the probability of improvement for a given x over the best so far value as acquisition value.</span>
 
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the probability of improvement for a given x over the best so far value as</span>
-<span class="sd">        acquisition value.</span>
-
-<span class="sd">        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+})) :=</span>
-<span class="sd">        \Phi(\frac{\mu(\mathbf{X}) - f(\mathbf{X^+})}{\sigma(\mathbf{X})})`,</span>
-<span class="sd">        with :math:`f(X^+)` as the best location and :math:`\Phi` the cdf of the standard normal</span>
+<span class="sd">        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }</span>
+<span class="sd">        { \sigma(\mathbf{X}) })` with :math:`f(X^+)` as the incumbent and :math:`\Phi` the cdf of the standard normal</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -784,7 +781,7 @@
 <span class="sd">        model : AbstractEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
-<span class="sd">        par : float, default=0.0</span>
+<span class="sd">        par : float, default=1.0</span>
 <span class="sd">            Controls the balance between exploration and exploitation of the</span>
 <span class="sd">            acquisition function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Optimize the hyperparameters of a support vector machine &mdash; SMAC 0.13.1 documentation</title>
+  <title>Optimize the hyperparameters of a support vector machine &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -43,7 +43,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Optimizing average cross-validation performance with BOHB" href="BOHB4HPO_sgd_instances.html" />
-    <link rel="prev" title="Using the SMAC-HPO interface to tune a random forest" href="SMAC4HPO_rf.html" /> 
+    <link rel="prev" title="Optimizing an MLP with Parallel SuccesiveHalving" href="parallel_sh_mlp.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -219,10 +219,10 @@
 <li class="toctree-l2"><a class="reference internal" href="fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -345,8 +345,6 @@ We optimize a simple SVM on the IRIS-benchmark.</p>
     <span class="c1"># For deactivated parameters, the configuration stores None-values.</span>
     <span class="c1"># This is not accepted by the SVM, so we remove them.</span>
     <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cfg</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
-    <span class="c1"># We translate boolean values:</span>
-    <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;shrinking&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">else</span> <span class="kc">False</span>
     <span class="c1"># And for gamma, we set it to a fixed value or to &quot;auto&quot; (if used)</span>
     <span class="k">if</span> <span class="s2">&quot;gamma&quot;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="p">:</span>
         <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;gamma&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span> <span class="k">else</span> <span class="s2">&quot;auto&quot;</span>
@@ -369,14 +367,15 @@ We optimize a simple SVM on the IRIS-benchmark.</p>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameter</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
 
 <span class="c1"># There are some hyperparameters shared by all kernels</span>
-<span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-<span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;true&quot;</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;true&quot;</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">shrinking</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;shrinking&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">C</span><span class="p">,</span> <span class="n">shrinking</span><span class="p">])</span>
 
 <span class="c1"># Others are kernel-specific, so we can add conditions to limit the searchspace</span>
 <span class="n">degree</span> <span class="o">=</span> <span class="n">UniformIntegerHyperparameter</span><span class="p">(</span><span class="s2">&quot;degree&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Only used by kernel poly</span>
 <span class="n">coef0</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;coef0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># poly, sigmoid</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">degree</span><span class="p">,</span> <span class="n">coef0</span><span class="p">])</span>
+
 <span class="n">use_degree</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">degree</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">])</span>
 <span class="n">use_coef0</span> <span class="o">=</span> <span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">coef0</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;poly&quot;</span><span class="p">,</span> <span class="s2">&quot;sigmoid&quot;</span><span class="p">])</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_conditions</span><span class="p">([</span><span class="n">use_degree</span><span class="p">,</span> <span class="n">use_coef0</span><span class="p">])</span>
@@ -384,7 +383,7 @@ We optimize a simple SVM on the IRIS-benchmark.</p>
 <span class="c1"># This also works for parameters that are a mix of categorical and values from a range of numbers</span>
 <span class="c1"># For example, gamma can be either &quot;auto&quot; or a fixed float</span>
 <span class="n">gamma</span> <span class="o">=</span> <span class="n">CategoricalHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span> <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>  <span class="c1"># only rbf, poly, sigmoid</span>
-<span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gamma_value</span> <span class="o">=</span> <span class="n">UniformFloatHyperparameter</span><span class="p">(</span><span class="s2">&quot;gamma_value&quot;</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">default_value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_hyperparameters</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">gamma_value</span><span class="p">])</span>
 <span class="c1"># We only activate gamma_value if gamma is set to &quot;value&quot;</span>
 <span class="n">cs</span><span class="o">.</span><span class="n">add_condition</span><span class="p">(</span><span class="n">InCondition</span><span class="p">(</span><span class="n">child</span><span class="o">=</span><span class="n">gamma_value</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]))</span>
@@ -440,7 +439,7 @@ We optimize a simple SVM on the IRIS-benchmark.</p>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="BOHB4HPO_sgd_instances.html" class="btn btn-neutral float-right" title="Optimizing average cross-validation performance with BOHB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="SMAC4HPO_rf.html" class="btn btn-neutral float-left" title="Using the SMAC-HPO interface to tune a random forest" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parallel_sh_mlp.html" class="btn btn-neutral float-left" title="Optimizing an MLP with Parallel SuccesiveHalving" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

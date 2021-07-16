@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.facade.smac_bohb_facade module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.facade.smac_bohb_facade module &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -219,10 +219,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -302,8 +302,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="smac-facade-smac-bohb-facade-module">
-<h1>smac.facade.smac_bohb_facade module<a class="headerlink" href="#smac-facade-smac-bohb-facade-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-smac.facade.smac_bohb_facade">
+<span id="smac-facade-smac-bohb-facade-module"></span><h1>smac.facade.smac_bohb_facade module<a class="headerlink" href="#module-smac.facade.smac_bohb_facade" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.facade.smac_bohb_facade.</span></span><span class="sig-name descname"><span class="pre">BOHB4HPO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/smac_bohb_facade.html#BOHB4HPO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO" title="smac.facade.smac_hpo_facade.SMAC4HPO"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_hpo_facade.SMAC4HPO</span></code></a></p>
+<p>Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization</p>
+<p>see smac.facade.smac_Facade for API
+This facade overwrites options available via the SMAC facade</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.stats" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats">Stats</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO.solver">
+<span class="sig-name descname"><span class="pre">solver</span></span><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.solver" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO" title="smac.optimizer.smbo.SMBO">SMBO</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO.runhistory">
+<span class="sig-name descname"><span class="pre">runhistory</span></span><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List with information about previous runs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.facade.smac_bohb_facade.BOHB4HPO.trajectory">
+<span class="sig-name descname"><span class="pre">trajectory</span></span><a class="headerlink" href="#smac.facade.smac_bohb_facade.BOHB4HPO.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all incumbents</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Constructor
+see ~smac.facade.smac_facade for documentation</p>
+</dd></dl>
+
 </div>
 
 

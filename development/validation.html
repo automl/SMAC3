@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Validation &mdash; SMAC 0.13.1 documentation</title>
+  <title>Validation &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.13.2dev
               </div>
             
           
@@ -219,10 +219,10 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
@@ -319,7 +319,7 @@ reused from a given runhistory only on comparable hardware!</p>
 </div>
 <div class="section" id="commandline">
 <h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT <span class="o">[</span>--configs CONFIG_MODE<span class="o">]</span> <span class="o">[</span>--instances INSTANCE_MODE<span class="o">]</span> <span class="o">[</span>--<span class="o">[</span>no-<span class="o">]</span>epm<span class="o">]</span> <span class="o">[</span>--runhistory RUNHISTORY<span class="o">]</span> <span class="o">[</span>--seed SEED<span class="o">]</span> <span class="o">[</span>--repetitions REPETITIONS<span class="o">]</span> <span class="o">[</span>--n_jobs N_JOBS<span class="o">]</span> <span class="o">[</span>--tae TAE<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT <span class="o">[</span>--configs CONFIG_MODE<span class="o">]</span> <span class="o">[</span>--instances INSTANCE_MODE<span class="o">]</span> <span class="o">[</span>--<span class="o">[</span>no-<span class="o">]</span>epm<span class="o">]</span> <span class="o">[</span>--runhistory RUNHISTORY<span class="o">]</span> <span class="o">[</span>--seed SEED<span class="o">]</span> <span class="o">[</span>--repetitions REPETITIONS<span class="o">]</span> <span class="o">[</span>--n_jobs N_JOBS<span class="o">]</span> <span class="o">[</span>--tae TAE<span class="o">]</span>
 </pre></div>
 </div>
 <dl class="simple">
