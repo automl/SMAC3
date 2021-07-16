@@ -4,7 +4,6 @@ import unittest.mock
 import numpy as np
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
     Constant, CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.hyperparameters import Hyperparameter
 
 from smac.initial_design.latin_hypercube_design import LHDesign
 
@@ -39,7 +38,7 @@ class TestLHDesign(unittest.TestCase):
             self.cs.add_hyperparameter(UniformFloatHyperparameter('x%d' % (i + len(get_params)), 0, 1))
 
     def test_latin_hypercube_design(self):
-        sobol_kwargs = dict(
+        kwargs = dict(
             rng=np.random.RandomState(1),
             traj_logger=unittest.mock.Mock(),
             ta_run_limit=1000,
@@ -50,5 +49,5 @@ class TestLHDesign(unittest.TestCase):
         )
         LHDesign(
             cs=self.cs,
-            **sobol_kwargs
+            **kwargs
         ).select_configurations()
