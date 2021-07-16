@@ -1,3 +1,8 @@
+# 0.13.2
+
+## Minor Changes
+* Require emcee >= 3.0.0
+
 # 0.13.1
 
 ## Minor Changes
