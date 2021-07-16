@@ -300,13 +300,12 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span>
+<span class="kn">import</span> <span class="nn">sklearn.gaussian_process.kernels</span> <span class="k">as</span> <span class="nn">kernels</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 <span class="kn">import</span> <span class="nn">scipy.spatial.distance</span>
 <span class="kn">import</span> <span class="nn">scipy.special</span>
 
 <span class="kn">from</span> <span class="nn">smac.epm.gp_base_prior</span> <span class="kn">import</span> <span class="n">Prior</span>
-<span class="kn">import</span> <span class="nn">skopt.learning.gaussian_process.kernels</span> <span class="k">as</span> <span class="nn">kernels</span>
 
 <span class="c1"># This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!</span>
 
@@ -725,7 +724,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dists</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">X</span> <span class="o">/</span> <span class="n">length_scale</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
@@ -842,7 +841,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dists</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">pdist</span><span class="p">(</span><span class="n">X</span> <span class="o">/</span> <span class="n">length_scale</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;sqeuclidean&#39;</span><span class="p">)</span>
@@ -944,7 +943,7 @@
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div></div>
 
 
-<div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">HammingKernel</span><span class="p">):</span>
+<div class="viewcode-block" id="HammingKernel"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel">[docs]</a><span class="k">class</span> <span class="nc">HammingKernel</span><span class="p">(</span><span class="n">MagicMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">StationaryKernelMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">NormalizedKernelMixin</span><span class="p">,</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Kernel</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -954,10 +953,19 @@
         <span class="n">prior</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Prior</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">has_conditions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">HammingKernel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">length_scale</span><span class="o">=</span><span class="n">length_scale</span><span class="p">,</span> <span class="n">length_scale_bounds</span><span class="o">=</span><span class="n">length_scale_bounds</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span> <span class="o">=</span> <span class="n">length_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span> <span class="o">=</span> <span class="n">length_scale_bounds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_active_dims</span><span class="p">(</span><span class="n">operate_on</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">has_conditions</span> <span class="o">=</span> <span class="n">has_conditions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">hyperparameter_length_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">:</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span>
+        <span class="n">anisotropic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">iterable</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">length_scale</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="n">anisotropic</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">(</span><span class="s2">&quot;length_scale&quot;</span><span class="p">,</span> <span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">length_scale</span><span class="p">))</span>  <span class="c1"># type: ignore  # noqa: E501</span>
+        <span class="k">return</span> <span class="n">kernels</span><span class="o">.</span><span class="n">Hyperparameter</span><span class="p">(</span><span class="s2">&quot;length_scale&quot;</span><span class="p">,</span> <span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale_bounds</span><span class="p">)</span>
 
 <div class="viewcode-block" id="HammingKernel._call"><a class="viewcode-back" href="../../../apidoc/smac.epm.gp_kernels.html#smac.epm.gp_kernels.HammingKernel._call">[docs]</a>    <span class="k">def</span> <span class="nf">_call</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -998,7 +1006,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">gaussian_process</span><span class="o">.</span><span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
+        <span class="n">length_scale</span> <span class="o">=</span> <span class="n">kernels</span><span class="o">.</span><span class="n">_check_length_scale</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length_scale</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">Y</span> <span class="o">=</span> <span class="n">X</span>
