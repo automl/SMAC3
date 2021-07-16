@@ -1,7 +1,7 @@
-.. _examples-general:
+.. _examples:
 
-=======
-General
-=======
+========
+Examples
+========
 
 More examples of using SMAC.
