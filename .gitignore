@@ -32,6 +32,8 @@ doc/main_options.rst
 doc/scenario_options.rst
 doc/smac_options.rst
 doc/apidoc
+doc/examples
+doc/quickstart
 
 # Dask created work space
 dask-worker-space
