@@ -121,12 +121,12 @@ Using *SMAC* in Python: SVM
 To explain the use of *SMAC* within Python, let's look at a real-world example,
 optimizing the hyperparameters of a Support Vector Machine (SVM) trained on the widely known `IRIS-dataset
 <https://en.wikipedia.org/wiki/Iris_flower_data_set>`_.
-This example is located in :code:`examples/svm.py`.
+This example is located in :code:`examples/SMAC4HPO_svm.py`.
 
 To use *SMAC* directly with Python, we first import the necessary modules
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 14-25
+   :lines: 12-25
    :lineno-match:
    
 We import the `SVM from Scikit-Learn <http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html>`_, 
@@ -143,14 +143,14 @@ Let's start by creating a ConfigSpace-object and adding the first hyperparameter
 the kernel.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 65-69
+   :lines: 64-68
    :lineno-match:
 
 We can add Integers, Floats or Categoricals to the ConfigSpace-object all at
 once, by passing them in a list. 
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 72-74
+   :lines: 68-73
    :lineno-match:
 
 Not every kernel uses all the parameters. The sklearn-implementation of the SVM accepts all hyperparameters we want to optimize, but ignores all those incompatible with the chosen kernel.
@@ -159,7 +159,7 @@ Deactivated hyperparameters are not considered during optimization, limiting the
 This way human knowledge about the problem is introduced.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 77-82
+   :lines: 78-82
    :lineno-match:
 
 Conditions can be used for various reasons. The `gamma`-hyperparameter for
@@ -167,7 +167,7 @@ example can be set to "auto" or to a fixed float-value. We introduce a hyperpara
 that is only activated if `gamma` is not set to "auto".
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 86-92
+   :lines: 84-91
    :lineno-match:
 
 Of course we also define a function to evaluate the configured SVM on the IRIS-dataset.
@@ -187,7 +187,7 @@ The initialization of a scenario in the code uses the same keywords as a
 scenario-file, which we used in the Branin example.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 95-99
+   :lines: 93-98
    :lineno-match:
 
 Now we're ready to create a *SMAC*-instance, which handles the Bayesian
@@ -197,7 +197,7 @@ and evaluation of the function, SMAC needs as inputs the scenario object
 as well as the function.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 108-115
+   :lines: 105-110
    :lineno-match:
 
 We start the optimization loop.
@@ -210,19 +210,18 @@ After successful execution of the optimization loop the Stats object outputs the
 
     INFO:smac.stats.stats.Stats:##########################################################
     INFO:smac.stats.stats.Stats:Statistics:
-    INFO:smac.stats.stats.Stats:#Incumbent changed: 88
-    INFO:smac.stats.stats.Stats:#Target algorithm runs: 200 / 200.0
-    INFO:smac.stats.stats.Stats:Used wallclock time: 41.73 / inf sec 
-    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 17.44 / inf sec
+    INFO:smac.stats.stats.Stats:#Incumbent changed: 4
+    INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 50 / 50.0
+    INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 50 / 50.0
+    INFO:smac.stats.stats.Stats:#Configurations: 50
+    INFO:smac.stats.stats.Stats:Used wallclock time: 13.59 / inf sec
+    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.71 / inf sec
     INFO:smac.stats.stats.Stats:##########################################################
-    INFO:smac.facade.smac_facade.SMAC:Final Incumbent: Configuration:
-      C, Value: 357.4171743725004
-      coef0, Value: 9.593372746957046
-      degree, Value: 1
-      gamma, Value: 'value'
-      gamma_value, Value: 0.0029046235175726105
-      kernel, Value: 'poly'
-      shrinking, Value: 'false'
+    INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Final Incumbent: Configuration:
+      C, Value: 0.8974218388836273
+      kernel, Value: 'linear'
+      shrinking, Value: False
+
 
 We further query the target function at the incumbent, using the function evaluator
 so that as final output we can see the error value of the incumbent.
@@ -235,7 +234,7 @@ As a bonus, we can validate our results. This is more useful when optimizing on
 instances, but we include the code so it is easily applicable for any usecase.
 
 .. literalinclude:: ../examples/SMAC4HPO_svm.py
-   :lines: 118-121
+   :lines: 115-121
    :lineno-match:
 
 .. _spear-example:
