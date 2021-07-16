@@ -492,7 +492,8 @@ class SMBO(object):
         for callback in self._callbacks['_incorporate_run_results']:
             callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
 
-        self.save()
+        if self.scenario.save_results_instantly:
+            self.save()
 
         return
 
