@@ -656,7 +656,8 @@ class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.Normalize
         prior: Optional[Prior] = None,
         has_conditions: bool = False,
     ) -> None:
-        super(HammingKernel, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
+        self.length_scale = length_scale
+        self.length_scale_bounds = length_scale_bounds
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -664,9 +665,9 @@ class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.Normalize
     @property
     def hyperparameter_length_scale(self) -> kernels.Hyperparameter:
         length_scale = self.length_scale
-        anisotropic = np.iterable(length_scale) and len(length_scale) > 1
+        anisotropic = np.iterable(length_scale) and len(length_scale) > 1  # type: ignore
         if anisotropic:
-            return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds, len(length_scale))
+            return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds, len(length_scale))  # type: ignore  # noqa: E501
         return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds)
 
     def _call(

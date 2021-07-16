@@ -285,7 +285,6 @@ class GaussianProcessMCMC(BaseModel):
             optimizer=None,
             n_restarts_optimizer=-1,  # Do not use scikit-learn's optimization routine
             alpha=0,  # Governed by the kernel
-            noise=None,
         )
 
     def _ll(self, theta: np.ndarray) -> float:
