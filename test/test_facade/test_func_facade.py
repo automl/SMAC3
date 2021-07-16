@@ -37,8 +37,8 @@ class TestSMACFacade(unittest.TestCase):
     def test_parameter_order(self):
         def func(x):
             for i in range(len(x)):
-                self.assertLess(i - 1, x[i])
-                self.assertGreater(i, x[i])
+                self.assertLessEqual(i - 1, x[i])
+                self.assertGreaterEqual(i, x[i])
             return 1
 
         default = [i - 0.5 for i in range(10)]

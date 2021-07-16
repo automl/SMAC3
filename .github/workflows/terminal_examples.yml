@@ -1,4 +1,4 @@
-name: Tests
+name: examples
 
 on: [push, pull_request]
 
