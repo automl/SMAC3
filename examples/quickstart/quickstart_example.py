@@ -242,7 +242,7 @@ print("Default Value: %.2f" % (def_value))
 
 ###############################################################################
 # We need a Scenario-object to configure the optimization process.
-# We provide a `list of possible options`__ in the scenario.
+# We provide a :ref:`list of possible options <scenario>` in the scenario.
 #
 # The initialization of a scenario in the code uses the same keywords as a
 # scenario-file, which we used in the Branin example.
@@ -463,7 +463,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 # Hydra on Spear-QCP
 # ------------------
 #
-# For this example we use *Hydra* to build a portfolio on the same example data presented in `Spear-QCP`__.
+# For this example we use *Hydra* to build a portfolio on the same example data presented in :ref:`Spear-QCP <spear-example>`.
 # Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
 # already existing portfolio. To select these complementary configurations *Hydra* compares new configurations to the
 # portfolio and only considers configurations that improve the portfolio performance.
