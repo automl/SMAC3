@@ -143,8 +143,8 @@ We provide a bunch of examples in the [examples folder](examples), such as:
   * Optimization of an MLP
     * [parallel_sh_mlp.py](https://automl.github.io/SMAC3/master/examples/parallel_sh_mlp.html#sphx-glr-examples-parallel-sh-mlp-py) - Parallel Successive Halving
     * [hyperband_mlp.py](https://automl.github.io/SMAC3/master/examples/hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py) - Hyperband
-    * [BOHB4HPO_mlp.py](https://automl.github.io/SMAC3/master/examples/BOHB4HPO_mlp.html#sphx-glr-examples-bohb4hpo-mlp-py) - BOHB
-    * [BOHB4HPO_sgd_instances.py](https://automl.github.io/SMAC3/master/examples/BOHB4HPO_sgd_instances.html#sphx-glr-examples-bohb4hpo-sgd-instances-py) - BOHB across instances
+    * [SMAC4MF_mlp.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF_mlp.html#sphx-glr-examples-smac4mf-mlp-py) - SMAC4MF
+    * [SMAC4MF_sgd_instances.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF_sgd_instances.html#sphx-glr-examples-smac4mf-sgd-instances-py) - SMAC4MF across instances
 
 An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
 
