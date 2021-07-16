@@ -2,26 +2,26 @@
 ==========
 Quickstart
 ==========
-
-If you have not installed *SMAC* yet take a look at the `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
-Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
-
-To get started, we will walk you through a few examples.
-
-* First, we explain the basic usage of *SMAC* by optimizing the `Branin`__-function as a toy example.
-* Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
-* Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
-
-__ branin-example_
-__ svm-example_
-__ spear-example_
-
-.. _scenario: ../options.html#scenario
-.. _PCS: ../options.html#paramcs
 """
 
-
 ###############################################################################
+# If you have not installed *SMAC* yet take a look at the `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
+# Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
+#
+# To get started, we will walk you through a few examples.
+#
+# * First, we explain the basic usage of *SMAC* by optimizing the :ref:`Branin:branin-example`-function as a toy example.
+# * Second, we explain the usage of *SMAC* within Python by optimizing a `Support Vector Machine`__.
+# * Third, we show a real-world example, using an algorithm-wrapper to optimize the `SPEAR SAT-solver`__.
+#
+# __ branin-example_
+# __ svm-example_
+# __ spear-example_
+#
+# .. _scenario: ../options.html#scenario
+# .. _PCS: ../options.html#paramcs
+# .. _TAE: ../tae.html
+
 # .. _branin-example:
 #
 # Branin

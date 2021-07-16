@@ -16,7 +16,7 @@ Below are a curated list of examples to help get you up and running with SMAC.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="If you have not installed *SMAC* yet take a look at the `installation instructions &lt;../installa...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Quickstart">
 
 .. only:: html
 
