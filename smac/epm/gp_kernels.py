@@ -3,13 +3,12 @@ import math
 from typing import Optional, Union, Tuple, List, Callable, Dict, Any
 
 import numpy as np
-import sklearn.gaussian_process.kernels
+import sklearn.gaussian_process.kernels as kernels
 import scipy.optimize
 import scipy.spatial.distance
 import scipy.special
 
 from smac.epm.gp_base_prior import Prior
-import skopt.learning.gaussian_process.kernels as kernels
 
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
 
@@ -428,7 +427,7 @@ class Matern(MagicMixin, kernels.Matern):
         """
 
         X = np.atleast_2d(X)
-        length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
+        length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
             dists = scipy.spatial.distance.pdist(X / length_scale, metric='euclidean')
@@ -545,7 +544,7 @@ class RBF(MagicMixin, kernels.RBF):
         """
 
         X = np.atleast_2d(X)
-        length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
+        length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
             dists = scipy.spatial.distance.pdist(X / length_scale, metric='sqeuclidean')
@@ -647,7 +646,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
             return np.zeros((X.shape[0], Y.shape[0]))
 
 
-class HammingKernel(MagicMixin, kernels.HammingKernel):
+class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.NormalizedKernelMixin, kernels.Kernel):
 
     def __init__(
         self,
@@ -657,10 +656,19 @@ class HammingKernel(MagicMixin, kernels.HammingKernel):
         prior: Optional[Prior] = None,
         has_conditions: bool = False,
     ) -> None:
-        super(HammingKernel, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
+        self.length_scale = length_scale
+        self.length_scale_bounds = length_scale_bounds
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
+
+    @property
+    def hyperparameter_length_scale(self) -> kernels.Hyperparameter:
+        length_scale = self.length_scale
+        anisotropic = np.iterable(length_scale) and len(length_scale) > 1  # type: ignore
+        if anisotropic:
+            return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds, len(length_scale))  # type: ignore  # noqa: E501
+        return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds)
 
     def _call(
         self,
@@ -701,7 +709,7 @@ class HammingKernel(MagicMixin, kernels.HammingKernel):
         """
 
         X = np.atleast_2d(X)
-        length_scale = sklearn.gaussian_process.kernels._check_length_scale(X, self.length_scale)
+        length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
             Y = X
