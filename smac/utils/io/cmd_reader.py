@@ -736,7 +736,7 @@ class CMDReader(object):
                                type=str, action=ReadPCSFileAction,
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
-        scen_opts.add_argument("--save-results-instantly",
+        scen_opts.add_argument("--save-results-instantly", "--save-instantly",
                                dest='save_results_instantly',
                                default=False, type=truthy,
                                help="[dev] If true, runhistory and stats are saved immediately on changes. "
