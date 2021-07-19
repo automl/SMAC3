@@ -1,16 +1,17 @@
 """
-=========================================================
-Optimizing average cross-validation performance with BOHB
-=========================================================
+============================================================
+Optimizing average cross-validation performance with SMAC4MF
+============================================================
 
 An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.
 
-In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
-An "Instance" represents a specific scenario/condition (eg: different datasets, subsets, transformations)
-for the algorithm to run. SMAC then returns the algorithm that had the best performance across all the instances.
-In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
+In this example, we use instances as the budget in hyperband and optimize the average cross
+validation accuracy. An "Instance" represents a specific scenario/condition (eg: different datasets,
+subsets, transformations) for the algorithm to run. SMAC then returns the algorithm that had the
+best performance across all the instances. In this case, an instance is a binary dataset i.e.,
+digit-2 vs digit-3.
 """
 
 import itertools
@@ -26,11 +27,11 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bohb_facade import BOHB4HPO
+from smac.facade.smac_mf_facade import SMAC4MF
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
-# We load the MNIST-dataset (a widely used benchmark) and split it into a collection of binary datasets
+# We load the MNIST-dataset (a widely used benchmark) and split it into a list of binary datasets
 digits = datasets.load_digits()
 instances = [[str(a) + str(b)] for a, b in itertools.combinations(digits.target_names, 2)]
 
@@ -73,9 +74,9 @@ def sgd_from_cfg(cfg, seed, instance):
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
         # SGD classifier using given configuration
-        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'], l1_ratio=cfg['l1_ratio'],
-                            learning_rate=cfg['learning_rate'], eta0=cfg['eta0'],
-                            max_iter=30, early_stopping=True, random_state=seed)
+        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'],
+                            l1_ratio=cfg['l1_ratio'], learning_rate=cfg['learning_rate'],
+                            eta0=cfg['eta0'], max_iter=30, early_stopping=True, random_state=seed)
 
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
@@ -120,9 +121,9 @@ intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
                       }
 
 # To optimize, we pass the function to the SMAC-object
-smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=sgd_from_cfg,
-                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
+               tae_runner=sgd_from_cfg,
+               intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function
 # It returns: Status, Cost, Runtime, Additional Infos
