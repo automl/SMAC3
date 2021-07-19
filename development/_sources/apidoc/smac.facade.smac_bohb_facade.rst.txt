@@ -1,8 +1,0 @@
-smac.facade.smac\_bohb\_facade module
-=====================================
-
-.. automodule:: smac.facade.smac_bohb_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

@@ -138,8 +138,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -222,8 +222,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -328,7 +328,7 @@
 <span class="sd">    The `SuccessiveHalving` class can create multiple `_SuccessiveHalving` objects, to</span>
 <span class="sd">    allow parallelism in the method (up to the number of workers available). The user  interface</span>
 <span class="sd">    is expected to be `SuccessiveHalving`, yet this class (`_SuccessiveHalving`) contains the</span>
-<span class="sd">    actual single worker implementation of the BOHB method.</span>
+<span class="sd">    actual single worker implementation of the SMAC4MF method.</span>
 
 <span class="sd">    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</span>
 
@@ -674,6 +674,8 @@
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">StatusType</span><span class="o">.</span><span class="n">CAPPED</span> <span class="ow">and</span> <span class="n">run_info</span><span class="o">.</span><span class="n">config</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span><span class="p">[</span><span class="n">run_info</span><span class="o">.</span><span class="n">config</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span>  <span class="c1"># type: float # make mypy happy</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span>  <span class="c1"># type: int # make mypy happy</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ta_time</span> <span class="o">+=</span> <span class="n">result</span><span class="o">.</span><span class="n">time</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">num_run</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -880,6 +882,7 @@
                 <span class="c1"># We see a challenger for the first time, so no</span>
                 <span class="c1"># instance has been launched</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">curr_inst_idx</span><span class="p">[</span><span class="n">challenger</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span>  <span class="c1"># type: int # make mypy happy</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_chall_indx</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">running_challenger</span> <span class="o">=</span> <span class="n">challenger</span>
 
@@ -1355,8 +1358,8 @@
 
 <span class="sd">    Examples for successive halving (and hyperband) can be found here:</span>
 <span class="sd">    * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`</span>
-<span class="sd">    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`</span>
-<span class="sd">    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`</span>
+<span class="sd">    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4MF_sgd_instances.py`</span>
+<span class="sd">    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4MF_mlp.py`</span>
 
 <span class="sd">    This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to</span>
 <span class="sd">    prevent workers from being idle. The actual logic that implements the Successive halving method</span>

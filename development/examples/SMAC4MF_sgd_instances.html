@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Optimizing average cross-validation performance with BOHB &mdash; SMAC 0.13.2dev documentation</title>
+  <title>Optimizing average cross-validation performance with SMAC4MF &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Optimizing an MLP with BOHB" href="BOHB4HPO_mlp.html" />
+    <link rel="next" title="Optimizing an MLP with SMAC4MFB" href="SMAC4MF_mlp.html" />
     <link rel="prev" title="Optimize the hyperparameters of a support vector machine" href="SMAC4HPO_svm.html" /> 
 </head>
 
@@ -140,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -224,8 +224,8 @@
 <li class="toctree-l2"><a class="reference internal" href="hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -281,13 +281,13 @@
         
           <li><a href="index.html">Examples</a> &raquo;</li>
         
-      <li>Optimizing average cross-validation performance with BOHB</li>
+      <li>Optimizing average cross-validation performance with SMAC4MF</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/examples/BOHB4HPO_sgd_instances.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/examples/SMAC4MF_sgd_instances.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -302,17 +302,18 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-bohb4hpo-sgd-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4mf-sgd-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="optimizing-average-cross-validation-performance-with-bohb">
-<span id="sphx-glr-examples-bohb4hpo-sgd-instances-py"></span><h1>Optimizing average cross-validation performance with BOHB<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-bohb" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-example-title section" id="optimizing-average-cross-validation-performance-with-smac4mf">
+<span id="sphx-glr-examples-smac4mf-sgd-instances-py"></span><h1>Optimizing average cross-validation performance with SMAC4MF<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-smac4mf" title="Permalink to this headline">¶</a></h1>
 <p>An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using “Hyperband” intensification. We split the digits dataset (10 classes) into 45 binary datasets.</p>
-<p>In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
-An “Instance” represents a specific scenario/condition (eg: different datasets, subsets, transformations)
-for the algorithm to run. SMAC then returns the algorithm that had the best performance across all the instances.
-In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
+<p>In this example, we use instances as the budget in hyperband and optimize the average cross
+validation accuracy. An “Instance” represents a specific scenario/condition (eg: different datasets,
+subsets, transformations) for the algorithm to run. SMAC then returns the algorithm that had the
+best performance across all the instances. In this case, an instance is a binary dataset i.e.,
+digit-2 vs digit-3.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -326,11 +327,11 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 
 <span class="c1"># Import ConfigSpace and different types of parameters</span>
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_bohb_facade</span> <span class="kn">import</span> <span class="n">BOHB4HPO</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_mf_facade</span> <span class="kn">import</span> <span class="n">SMAC4MF</span>
 <span class="c1"># Import SMAC-utilities</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 
-<span class="c1"># We load the MNIST-dataset (a widely used benchmark) and split it into a collection of binary datasets</span>
+<span class="c1"># We load the MNIST-dataset (a widely used benchmark) and split it into a list of binary datasets</span>
 <span class="n">digits</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span>
 <span class="n">instances</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="p">)]</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">digits</span><span class="o">.</span><span class="n">target_names</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
 
@@ -373,9 +374,9 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
         <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ConvergenceWarning</span><span class="p">)</span>
 
         <span class="c1"># SGD classifier using given configuration</span>
-        <span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span> <span class="n">l1_ratio</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;l1_ratio&#39;</span><span class="p">],</span>
-                            <span class="n">learning_rate</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">],</span> <span class="n">eta0</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;eta0&#39;</span><span class="p">],</span>
-                            <span class="n">max_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">SGDClassifier</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="s1">&#39;elasticnet&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">],</span>
+                            <span class="n">l1_ratio</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;l1_ratio&#39;</span><span class="p">],</span> <span class="n">learning_rate</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">],</span>
+                            <span class="n">eta0</span><span class="o">=</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;eta0&#39;</span><span class="p">],</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
 
         <span class="c1"># get instance</span>
         <span class="n">data</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">generate_instances</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">instance</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
@@ -420,9 +421,9 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
                       <span class="p">}</span>
 
 <span class="c1"># To optimize, we pass the function to the SMAC-object</span>
-<span class="n">smac</span> <span class="o">=</span> <span class="n">BOHB4HPO</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
-                <span class="n">tae_runner</span><span class="o">=</span><span class="n">sgd_from_cfg</span><span class="p">,</span>
-                <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all arguments related to intensifier can be passed like this</span>
+<span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4MF</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+               <span class="n">tae_runner</span><span class="o">=</span><span class="n">sgd_from_cfg</span><span class="p">,</span>
+               <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">)</span>  <span class="c1"># all arguments related to intensifier can be passed like this</span>
 
 <span class="c1"># Example call of the function</span>
 <span class="c1"># It returns: Status, Cost, Runtime, Additional Infos</span>
@@ -446,12 +447,12 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-bohb4hpo-sgd-instances-py">
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4mf-sgd-instances-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/98aec4aea132c9631dc169fd91ae8e1f/BOHB4HPO_sgd_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">BOHB4HPO_sgd_instances.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/d7f117f018085f1168c244c0da398454/SMAC4MF_sgd_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4MF_sgd_instances.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/06cae64aff2cb1ad23b3fec2aded5627/BOHB4HPO_sgd_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">BOHB4HPO_sgd_instances.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/1171ebb167a21e4618bbdcd561625b1c/SMAC4MF_sgd_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4MF_sgd_instances.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -463,7 +464,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="BOHB4HPO_mlp.html" class="btn btn-neutral float-right" title="Optimizing an MLP with BOHB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="SMAC4MF_mlp.html" class="btn btn-neutral float-right" title="Optimizing an MLP with SMAC4MFB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="SMAC4HPO_svm.html" class="btn btn-neutral float-left" title="Optimize the hyperparameters of a support vector machine" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

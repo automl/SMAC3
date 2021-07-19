@@ -138,8 +138,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -222,8 +222,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../faq.html">F.A.Q.</a></li>
@@ -1033,11 +1033,12 @@
                                <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">ReadPCSFileAction</span><span class="p">,</span>
                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] Specifies the path to the &quot;</span>
                                     <span class="s2">&quot;PCS-file.&quot;</span><span class="p">)</span>
-        <span class="n">scen_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--save-results-instantly&quot;</span><span class="p">,</span>
+        <span class="n">scen_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--save-results-instantly&quot;</span><span class="p">,</span> <span class="s2">&quot;--save-instantly&quot;</span><span class="p">,</span>
                                <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;save_results_instantly&#39;</span><span class="p">,</span>
-                               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
+                               <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">truthy</span><span class="p">,</span>
                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;[dev] If true, runhistory and stats are saved immediately on changes. &quot;</span>
-                                    <span class="s2">&quot;Otherwise, runhistory and states are only saved once after the optimization process has finished.&quot;</span><span class="p">)</span>
+                                    <span class="s2">&quot;Otherwise, runhistory and states are only saved once after the optimization &quot;</span>
+                                    <span class="s2">&quot;process has finished.&quot;</span><span class="p">)</span>
         <span class="n">scen_opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cs&#39;</span><span class="p">,</span>
                                <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># ConfigSpace object, overridden by --paramfile</span>
                                <span class="n">help</span><span class="o">=</span><span class="n">SUPPRESS</span><span class="p">)</span>

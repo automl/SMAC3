@@ -1,7 +1,7 @@
 """
-===========================
-Optimizing an MLP with BOHB
-===========================
+===============================
+Optimizing an MLP with SMAC4MFB
+===============================
 
 An example for the usage of Hyperband intensifier in SMAC.
 We optimize a simple MLP on the digits dataset using "Hyperband" intensification.
@@ -23,7 +23,7 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bohb_facade import BOHB4HPO
+from smac.facade.smac_mf_facade import SMAC4MF
 from smac.scenario.scenario import Scenario
 
 digits = load_digits()
@@ -126,9 +126,9 @@ max_iters = 50
 # intensifier parameters
 intensifier_kwargs = {'initial_budget': 5, 'max_budget': max_iters, 'eta': 3}
 # To optimize, we pass the function to the SMAC-object
-smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                tae_runner=mlp_from_cfg,
-                intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
+               tae_runner=mlp_from_cfg,
+               intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
 # Example call of the function with default values
 # It returns: Status, Cost, Runtime, Additional Infos

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.facade.smac_bohb_facade &mdash; SMAC 0.13.2dev documentation</title>
+  <title>smac.facade.smac_mf_facade &mdash; SMAC 0.13.2dev documentation</title>
   
 
   
@@ -138,8 +138,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -222,8 +222,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -279,7 +279,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>smac.facade.smac_bohb_facade</li>
+      <li>smac.facade.smac_mf_facade</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -294,7 +294,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for smac.facade.smac_bohb_facade</h1><div class="highlight"><pre>
+  <h1>Source code for smac.facade.smac_mf_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
@@ -307,9 +307,10 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="BOHB4HPO"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_bohb_facade.html#smac.facade.smac_bohb_facade.BOHB4HPO">[docs]</a><span class="k">class</span> <span class="nc">BOHB4HPO</span><span class="p">(</span><span class="n">SMAC4HPO</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4MF"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_mf_facade.html#smac.facade.smac_mf_facade.SMAC4MF">[docs]</a><span class="k">class</span> <span class="nc">SMAC4MF</span><span class="p">(</span><span class="n">SMAC4HPO</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization</span>
+<span class="sd">    Facade to use SMAC with a Hyperband intensifier for hyperparameter optimization using multiple</span>
+<span class="sd">    fidelities</span>
 
 <span class="sd">    see smac.facade.smac_Facade for API</span>
 <span class="sd">    This facade overwrites options available via the SMAC facade</span>
@@ -361,7 +362,7 @@
         <span class="c1"># activate predict incumbent</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">predict_x_best</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c1"># BOHB requires at least D+1 no. of samples to build a model</span>
+        <span class="c1"># SMAC4MF requires at least D+1 no. of samples to build a model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">epm_chooser</span><span class="o">.</span><span class="n">min_samples_model</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span></div>
 </pre></div>
 

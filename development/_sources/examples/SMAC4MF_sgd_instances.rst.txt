@@ -1,24 +1,25 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_examples_BOHB4HPO_sgd_instances.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_examples_SMAC4MF_sgd_instances.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_examples_BOHB4HPO_sgd_instances.py:
+.. _sphx_glr_examples_SMAC4MF_sgd_instances.py:
 
 
-=========================================================
-Optimizing average cross-validation performance with BOHB
-=========================================================
+============================================================
+Optimizing average cross-validation performance with SMAC4MF
+============================================================
 
 An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.
 
-In this example, we use instances as the budget in hyperband and optimize the average cross validation accuracy.
-An "Instance" represents a specific scenario/condition (eg: different datasets, subsets, transformations)
-for the algorithm to run. SMAC then returns the algorithm that had the best performance across all the instances.
-In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
+In this example, we use instances as the budget in hyperband and optimize the average cross
+validation accuracy. An "Instance" represents a specific scenario/condition (eg: different datasets,
+subsets, transformations) for the algorithm to run. SMAC then returns the algorithm that had the
+best performance across all the instances. In this case, an instance is a binary dataset i.e.,
+digit-2 vs digit-3.
 
 
 .. code-block:: default
@@ -37,11 +38,11 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 
     # Import ConfigSpace and different types of parameters
     from smac.configspace import ConfigurationSpace
-    from smac.facade.smac_bohb_facade import BOHB4HPO
+    from smac.facade.smac_mf_facade import SMAC4MF
     # Import SMAC-utilities
     from smac.scenario.scenario import Scenario
 
-    # We load the MNIST-dataset (a widely used benchmark) and split it into a collection of binary datasets
+    # We load the MNIST-dataset (a widely used benchmark) and split it into a list of binary datasets
     digits = datasets.load_digits()
     instances = [[str(a) + str(b)] for a, b in itertools.combinations(digits.target_names, 2)]
 
@@ -84,9 +85,9 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
             warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
             # SGD classifier using given configuration
-            clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'], l1_ratio=cfg['l1_ratio'],
-                                learning_rate=cfg['learning_rate'], eta0=cfg['eta0'],
-                                max_iter=30, early_stopping=True, random_state=seed)
+            clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'],
+                                l1_ratio=cfg['l1_ratio'], learning_rate=cfg['learning_rate'],
+                                eta0=cfg['eta0'], max_iter=30, early_stopping=True, random_state=seed)
 
             # get instance
             data, target = generate_instances(int(instance[0]), int(instance[1]))
@@ -131,9 +132,9 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
                           }
 
     # To optimize, we pass the function to the SMAC-object
-    smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                    tae_runner=sgd_from_cfg,
-                    intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+    smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
+                   tae_runner=sgd_from_cfg,
+                   intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -161,7 +162,7 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
    **Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
-.. _sphx_glr_download_examples_BOHB4HPO_sgd_instances.py:
+.. _sphx_glr_download_examples_SMAC4MF_sgd_instances.py:
 
 
 .. only :: html
@@ -173,13 +174,13 @@ In this case, an instance is a binary dataset i.e., digit-2 vs digit-3.
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: BOHB4HPO_sgd_instances.py <BOHB4HPO_sgd_instances.py>`
+     :download:`Download Python source code: SMAC4MF_sgd_instances.py <SMAC4MF_sgd_instances.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: BOHB4HPO_sgd_instances.ipynb <BOHB4HPO_sgd_instances.ipynb>`
+     :download:`Download Jupyter notebook: SMAC4MF_sgd_instances.ipynb <SMAC4MF_sgd_instances.ipynb>`
 
 
 .. only:: html

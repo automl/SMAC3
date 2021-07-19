@@ -140,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -224,8 +224,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -334,8 +334,8 @@ It can be used to control anything by the target algorithm, Eg: number of epochs
 </ol>
 <p>Examples for successive halving (and hyperband) can be found here:
 * Runtime objective and multiple instances <em>(instances as budget)</em>: <cite>examples/spear_qcp/SMAC4AC_SH_spear_qcp.py</cite>
-* Quality objective and multiple instances <em>(instances as budget)</em>: <cite>examples/BOHB4HPO_sgd_instances.py</cite>
-* Quality objective and single instance <em>(real-valued budget)</em>: <cite>examples/BOHB4HPO_mlp.py</cite></p>
+* Quality objective and multiple instances <em>(instances as budget)</em>: <cite>examples/SMAC4MF_sgd_instances.py</cite>
+* Quality objective and single instance <em>(real-valued budget)</em>: <cite>examples/SMAC4MF_mlp.py</cite></p>
 <p>This class instantiates <cite>_SuccessiveHalving</cite> objects on a need basis, that is, to
 prevent workers from being idle. The actual logic that implements the Successive halving method
 lies on the _SuccessiveHalving class.</p>
@@ -429,7 +429,7 @@ Supplementary reference: <a class="reference external" href="http://proceedings.
 <p>The <cite>SuccessiveHalving</cite> class can create multiple <cite>_SuccessiveHalving</cite> objects, to
 allow parallelism in the method (up to the number of workers available). The user  interface
 is expected to be <cite>SuccessiveHalving</cite>, yet this class (<cite>_SuccessiveHalving</cite>) contains the
-actual single worker implementation of the BOHB method.</p>
+actual single worker implementation of the SMAC4MF method.</p>
 <p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</p>
 <ol class="arabic">
 <li><dl>
