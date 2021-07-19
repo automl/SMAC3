@@ -572,4 +572,4 @@ class TS(AbstractAcquisitionFunction):
                 rng = self.model.rng
             else:
                 rng = np.random.RandomState(self.model.seed)
-                return  rng.multivariate_normal(mu, var_, 1).T
+            return rng.multivariate_normal(mu, var_, 1).T
