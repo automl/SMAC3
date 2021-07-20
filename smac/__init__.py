@@ -4,7 +4,7 @@ import sys
 
 from smac.utils import dependencies
 
-__version__ = '0.13.2dev'
+__version__ = '0.14.0dev'
 __author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, ' \
              'André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner ' \
              'and Frank Hutter'
