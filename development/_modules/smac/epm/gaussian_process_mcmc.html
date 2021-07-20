@@ -300,8 +300,14 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">emcee</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">emcee</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+        <span class="s1">&#39;Could not import emcee - emcee is an optional dependency.</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="s1">&#39;Please install it manually with `pip install emcee`.&#39;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
+
+<span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_gp</span> <span class="kn">import</span> <span class="n">BaseModel</span>
