@@ -135,3 +135,52 @@ def get_rng(
         raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
                          'run_id=%s of type %s' % (rng, type(rng), str(run_id), type(run_id)))
     return run_id_return, rng_return
+
+
+def check_points_in_ss(X: np.ndarray,
+                       cont_dims: np.ndarray,
+                       cat_dims: np.ndarray,
+                       bounds_cont: np.ndarray,
+                       bounds_cat: typing.List[typing.List[typing.Tuple]],
+                       ):
+    """
+    check which points will be place inside a subspace
+    Parameters
+    ----------
+    X: np.ndarray(N,D),
+        points to be checked, where D = D_cont + D_cat
+    cont_dims: np.ndarray(D_cont)
+        which dimensions represent continuous hyperparameters
+    cat_dims: np.ndarray(D_cat)
+        which dimensions represent categorical hyperparameters
+    bounds_cont: typing.List[typing.Tuple]
+        subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
+    bounds_cat: np.ndarray(D_cont, 2)
+        subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
+    Return
+    ----------
+    indices_in_ss:np.ndarray(N)
+        indices of data that included in subspaces
+    """
+    if len(X.shape) == 1:
+        X = X[np.newaxis, :]
+
+    if cont_dims.size != 0:
+        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & \
+                     np.all(X[:, cont_dims] >= bounds_cont[:, 0], axis=1)
+
+        bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
+        bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
+        data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & \
+                     np.all(X[:, cont_dims] >= bound_left, axis=1)
+    else:
+        data_in_ss = np.ones(X.shape[-1], dtype=bool)
+
+    # TODO find out where cause the None value of  bounds_cat
+    if bounds_cat == None:
+        bounds_cat = [()]
+
+    for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
+        data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
+
+    return data_in_ss

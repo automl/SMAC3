@@ -1,12 +1,12 @@
 {
   "gp": [
-    "emcee>=2.1.0",
-    "scikit-optimize",
+    "emcee>=3.0.0"
+  ],
+  "gpytorch": [
     "torch>=1.9.0",
     "gpytorch>=1.5.0",
     "pyro-ppl>=1.7.0",
-    "botorch>=0.5.0"
-  ],
+    "botorch>=0.5.0"],
   "lhd": [
     "pyDOE"
   ],
