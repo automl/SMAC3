@@ -21,6 +21,8 @@ from smac.configspace import ConfigurationSpace
 from smac.utils.constants import VERY_SMALL_NUMBER
 from smac.epm.base_gp import BaseModel
 
+import warnings
+warnings.filterwarnings("ignore", module="gpytorch")
 gpytorch.settings.debug.off()
 
 

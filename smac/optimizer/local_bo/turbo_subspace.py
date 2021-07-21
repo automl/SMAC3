@@ -2,9 +2,8 @@ import typing
 import math
 
 import numpy as np
-from scipy.optimize._shgo_lib.sobol_seq import Sobol
+from scipy.stats.qmc import Sobol
 from scipy.stats.qmc import LatinHypercube
-
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperparameter, Constant, NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
@@ -18,6 +17,11 @@ from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition import EI
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
+
+import warnings
+
+warnings.filterwarnings('ignore', message="The balance properties of Sobol' points require"
+                              " n to be a power of 2.")
 
 
 class TurBOSubSpace(AbstractSubspace):
@@ -176,7 +180,6 @@ class TurBOSubSpace(AbstractSubspace):
         self.model.train(self.model_x, self.model_y)
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
-        sobol_gen = Sobol(scramble=True, seed=self.rng.randint(low=0, high=10000000))
         constants = 0
         params = self.cs_local.get_hyperparameters()
         n_hps = len(params)
@@ -184,7 +187,9 @@ class TurBOSubSpace(AbstractSubspace):
             if isinstance(p, Constant):
                 constants += 1
 
-        sobol_seq = sobol_gen.i4_sobol_generate(n_hps - constants, self.n_candidates)
+        sobol_gen = Sobol(d=n_hps - constants,
+                          scramble=True, seed=self.rng.randint(low=0, high=10000000))
+        sobol_seq = sobol_gen.random(self.n_candidates)
 
         # adjust length according to kernel length
         if isinstance(self.model, (GaussianProcess, GaussianProcessMCMC,
@@ -206,6 +211,7 @@ class TurBOSubSpace(AbstractSubspace):
             subspace_ub = np.clip(self.incumbent_array + subspace_length * 0.5, 0.0, 1.0)
             sobol_seq = sobol_seq * (subspace_ub - subspace_lb) + subspace_lb
 
+            #  mask is introdueced to not perturb all coordinates at once
             prob_perturb = min(20.0 / n_hps, 1.0)
             mask = np.random.rand(self.n_candidates, n_hps) <= prob_perturb
             ind = np.where(np.sum(mask, axis=1) == 0)[0]

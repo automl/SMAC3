@@ -1,5 +1,5 @@
 {
-  "gp": [
+  "gpmcmc": [
     "emcee>=3.0.0"
   ],
   "local_bo": [
@@ -8,12 +8,18 @@
     "pyro-ppl>=1.7.0",
     "botorch>=0.5.0"
   ],
-  "lhd": [
-    "pyDOE"
-  ],
   "documentation": [
     "sphinx",
     "sphinx_rtd_theme",
     "sphinx-gallery==0.5.0"
+  ],
+  "test": [
+    "pytest>=4.6",
+    "mypy",
+    "pytest-timeout",
+    "flaky",
+    "pre-commit",
+    "pytest-forked",
+    "pytest-cov"
   ]
 }

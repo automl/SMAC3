@@ -15,7 +15,6 @@ from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
 from smac.optimizer.acquisition import TS
-from smac.epm.util_funcs import check_points_in_ss
 
 
 class AbstractSubspace(ABC):
@@ -84,6 +83,7 @@ class AbstractSubspace(ABC):
         cont_dims = np.where(np.array(hps_types) == 0)[0]
 
         if activate_dims is None:
+            activate_dims = np.arange(n_hypers)
             activate_dims_cont = cont_dims
             activate_dims_cat = cat_dims
             self.activate_dims = np.arange(n_hypers)
@@ -103,6 +103,7 @@ class AbstractSubspace(ABC):
             self.cs_local = config_space
             self.new_config_space = False
             self.bounds_ss_cat = []
+            self.bounds_ss_cont = np.array([[0, 1]]).repeat(len(self.activate_dims_cont), axis=0)
             self.lbs = lbs
             self.scales = scales
             self.new_config = False
@@ -154,6 +155,7 @@ class AbstractSubspace(ABC):
                     idx_cont_num.append(i)
 
             self.bounds_ss_cat = bounds_ss_cat
+            self.bounds_ss_cont = np.array([[0, 1]]).repeat(len(self.activate_dims_cont), axis=0)
 
             lbs[dims_cont_num] = bounds_ss_cont[idx_cont_num, 0]
             # rescale numerical hyperparameters to [0., 1.]
@@ -327,7 +329,11 @@ class AbstractSubspace(ABC):
         self.model_x = np.vstack([self.model_x, X])
         self.model_y = np.vstack([self.model_y, y])
 
-        ss_indices = check_points_in_ss(X)
+        ss_indices = self.check_points_in_ss(X=X,
+                                        cont_dims=self.activate_dims_cont,
+                                        cat_dims=self.activate_dims_cat,
+                                        bounds_cont=self.bounds_ss_cont,
+                                        bounds_cat=self.bounds_ss_cat)
         self.ss_x = np.vstack([self.ss_x, X[ss_indices]])
         self.ss_y = np.vstack([self.ss_y, y[ss_indices]])
 
@@ -379,6 +385,36 @@ class AbstractSubspace(ABC):
             X_normalized[:, cat_idx] = X_i
 
         return X_normalized
+
+    def check_points_in_ss(self, X: np.ndarray):
+        """
+        check which points will be included in this subspace, unlike the implementation in smac.epm.util_funcs, here
+        the bounds for continuous hyperparameters are more strict, e.g., we do not expand the subspace to contian more
+        points
+        Parameters
+        ----------
+        X: np.ndarray(N,D),
+            points to be checked
+        Return
+        ----------
+        indices_in_ss:np.ndarray(N)
+            indices of data that included in subspaces
+        """
+        if len(X.shape) == 1:
+            X = X[np.newaxis, :]
+
+        if self.activate_dims_cont.size != 0:
+            data_in_ss = np.all(X[:, self.activate_dims_cont] <= self.bounds_ss_cont[:, 1], axis=1) & \
+                         np.all(X[:, self.activate_dims_cont] >= self.bounds_ss_cont[:, 0], axis=1)
+
+        else:
+            data_in_ss = np.ones(X.shape[-1], dtype=bool)
+
+        for bound_cat, cat_dim in zip(self.bounds_ss_cat, self.activate_dims_cat):
+            data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
+
+        data_in_ss = np.where(data_in_ss)[0]
+        return data_in_ss
 
 
 class ChallengerListLocal(typing.Iterator):

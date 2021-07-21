@@ -1,4 +1,6 @@
+import math
 from typing import Optional, Tuple
+import copy
 
 import torch
 from gpytorch import settings
@@ -392,9 +394,9 @@ class PartialSparseKernel(Kernel):
 
         cp = self.__class__(
             base_kernel=copy.deepcopy(self.base_kernel),
-            inducing_points=copy.deepcopy(self.X_inducing),
-            outer_points=self.X_out,
-            outer_y=self.y_out,
+            X_inducing=copy.deepcopy(self.X_inducing),
+            X_out=self.X_out,
+            y_out=self.y_out,
             likelihood=self.likelihood,
             active_dims=self.active_dims,
         )

@@ -21,7 +21,7 @@ from botorch.optim.utils import  _get_extra_mll_args
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
-from smac.epm.gp_kernels import PartialSparseKernel, PartialSparseMean
+from smac.epm.partial_sparse_gp_kernels import PartialSparseKernel, PartialSparseMean
 from smac.epm.util_funcs import check_points_in_ss
 
 gpytorch.settings.debug.off()
@@ -214,8 +214,10 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                                                            instance_features=instance_features,
                                                            pca_components=pca_components,
                                                            )
-        self.bounds_cont = bounds_cont,
-        self.bounds_cat = bounds_cat,
+        self.cont_dims = np.where(np.array(types) == 0)[0]
+        self.cat_dims = np.where(np.array(types) != 0)[0]
+        self.bounds_cont = bounds_cont
+        self.bounds_cat = bounds_cat
         self.num_inducing_points = num_inducing_points
 
     def update_attribute(self, **kwargs: typing.Dict):
@@ -228,7 +230,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
             setattr(self, key, kwargs[key])
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) ->\
-            typing.Optional['PartialSparseGaussianProcess', GaussianProcessGPyTorch]:
+            typing.Union['PartialSparseGaussianProcess', GaussianProcessGPyTorch]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -255,8 +257,8 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
         ss_data_indices = check_points_in_ss(X,
                                              cont_dims=self.cont_dims,
                                              cat_dims=self.cat_dims,
-                                             bounds_cont=self.bound_cont,
-                                             bounds_cat=self.bound_cat)
+                                             bounds_cont=self.bounds_cont,
+                                             bounds_cat=self.bounds_cat)
 
         if np.sum(ss_data_indices) > np.shape(y)[0] - self.num_inducing_points:
             # we initialize a vanilla GaussianProcessGPyTorch
@@ -339,7 +341,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                 while len(start_points) < 3:
                     new_start_point = np.random.rand(*x0.shape)
                     new_inducing_points = torch.from_numpy(
-                        lhd.random(n=X_out.shape[-1])).flatten()
+                        lhd.random(n=self.num_inducing_points)).flatten()
                     new_start_point[inducing_idx: inducing_idx + inducing_size] = new_inducing_points
                     start_points.append(new_start_point)
 
@@ -428,12 +430,12 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                             start_idx = start_idx + np.prod(attrs.shape)
                     else:
                         end_idx = start_idx + np.prod(attrs.shape)
-                        inducing_points = torch.tensor(
+                        X_inducing = torch.tensor(
                             theta_star[start_idx:end_idx], dtype=attrs.dtype, device=attrs.device
                         ).view(*attrs.shape)
                         break
                 # set inducing points for covariance module here
-                self.gp_model.initialize(**{'covar_module.inducing_points': inducing_points})
+                self.gp_model.initialize(**{'covar_module.X_inducing': X_inducing})
         else:
             self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
 
@@ -478,19 +480,19 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
             self.gp_model = ExactGPModel(X_in, y_in, likelihood=self.likelihood, base_covar_kernel=self.kernel).double()
         else:
             X_out = torch.from_numpy(X_out)
-            X_out = torch.from_numpy(X_out)
+            y_out = torch.from_numpy(y_out)
 
             if self.num_inducing_points <= y_in.shape[0]:
                 weights = torch.ones(y_in.shape[0]) / y_in.shape[0]
-                inducing_points = X_in[torch.multinomial(weights, self.num_inducing_points)]
+                X_inducing = X_in[torch.multinomial(weights, self.num_inducing_points)]
             else:
                 weights = torch.ones(y_out.shape[0]) / y_out.shape[0]
-                inducing_points = X_out[torch.multinomial(weights, self.num_inducing_points - y_in.shape[0])]
-                inducing_points = torch.cat([inducing_points, X_in])
+                X_inducing = X_out[torch.multinomial(weights, self.num_inducing_points - y_in.shape[0])]
+                X_inducing = torch.cat([X_inducing, X_in])
             self.gp_model = PartailSparseGPModel(X_in, y_in, X_out, y_out,
                                                  likelihood=self.likelihood,
                                                  base_covar_kernel=self.kernel,
-                                                 inducing_points=inducing_points).double()
+                                                 X_inducing=X_inducing).double()
 
         mll = ExactMarginalLogLikelihood(self.likelihood, self.gp_model)
         mll.double()
