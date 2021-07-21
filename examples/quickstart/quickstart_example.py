@@ -85,7 +85,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #
 # The Python command runs *SMAC* with the specified scenario. The scenario file consists of the following lines:
 #
-# .. literalinclude:: ../../examples/quickstart/branin/scenario.txt
+# .. literalinclude:: ../../../examples/quickstart/branin/scenario.txt
 #
 # The **algo** parameter specifies how *SMAC* calls the target algorithm to be optimized.
 # This is further explained in the chapter about the Target Algorithm Evaluator (TAE_).
@@ -98,7 +98,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #
 # The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
 #
-#     .. literalinclude:: ../../examples/quickstart/branin/param_config_space.pcs
+#     .. literalinclude:: ../../../examples/quickstart/branin/param_config_space.pcs
 #
 # ``x1`` and ``x2`` are both continuous parameters. ``x1`` can take any real value in the range ``[-5, 10]``, ``x2`` in the range ``[0, 15]`` and both have the default value ``0``.
 #
@@ -343,7 +343,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 # * **scenario.txt**
 #     The scenario_ file contains all the necessary information about the configuration scenario at hand.
 #
-#     .. literalinclude:: ../../examples/quickstart/spear_qcp/scenario.txt
+#     .. literalinclude:: ../../../examples/quickstart/spear_qcp/scenario.txt
 #
 #     For this example the following options are used:
 #
