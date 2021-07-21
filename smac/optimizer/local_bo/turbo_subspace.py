@@ -1,10 +1,10 @@
 import typing
 import math
 
-import pyDOE
-
 import numpy as np
 from scipy.optimize._shgo_lib.sobol_seq import Sobol
+from scipy.stats.qmc import LatinHypercube
+
 
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperparameter, Constant, NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
@@ -103,7 +103,6 @@ class TurBOSubSpace(AbstractSubspace):
 
         self.config_origin = "TurBO"
 
-
     def _restart_turbo(self,
                        n_init_points: int,
                        ):
@@ -128,7 +127,8 @@ class TurBOSubSpace(AbstractSubspace):
         self.ss_y = np.empty([0, 1])
 
         np.random.seed(self.rng.randint(1, 2 ** 20))
-        init_vectors = pyDOE.lhs(n=self.n_dims, samples=n_init_points)
+        lhd = LatinHypercube(d=self.n_dims, seed=self.rng.randint(0, 1000000))
+        init_vectors = lhd.random(n=n_init_points)
         self.init_configs = [Configuration(self.cs_local, vector=init_vector) for init_vector in init_vectors]
 
     def adjust_length(self, new_observation: typing.Union[float, np.ndarray]):
@@ -176,7 +176,7 @@ class TurBOSubSpace(AbstractSubspace):
         self.model.train(self.model_x, self.model_y)
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
-        sobol_gen = Sobol()
+        sobol_gen = Sobol(scramble=True, seed=self.rng.randint(low=0, high=10000000))
         constants = 0
         params = self.cs_local.get_hyperparameters()
         n_hps = len(params)

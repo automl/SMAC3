@@ -32,6 +32,8 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
             configuration vector x instance features
         Y: numpy.ndarray
             cost values
+        Y_raw: numpy.ndarray
+            cost values before transformation
         """
         X, Y_raw = super(RunHistory2EPM4CostWithRaw, self).transform(runhistory, budget_subset)
         Y = self.transform_raw_values(Y_raw)
