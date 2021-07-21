@@ -5,6 +5,10 @@ test:
 
 .PHONY: doc
 doc:
+	make -C doc html-noplot
+
+.PHONY: doc-with-examples
+doc-with-examples:
 	make -C doc html
 
 .PHONY: clean
