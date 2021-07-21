@@ -1,9 +1,9 @@
 from collections import OrderedDict
-from scipy.stats.qmc import LatinHypercube
 import typing
 
 import numpy as np
 from scipy import optimize
+from scipy.stats.qmc import LatinHypercube
 
 import torch
 import gpytorch
