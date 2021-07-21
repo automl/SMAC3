@@ -5,14 +5,18 @@ Quickstart
 """
 
 ###############################################################################
-# If you have not installed *SMAC* yet take a look at the `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
-# Examples to illustrate the usage of *SMAC* - either by reading in a scenario file, or by directly using *SMAC* in Python - are provided in the examples-folder.
+# If you have not installed *SMAC* yet take a look at the
+# `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
+# Examples to illustrate the usage of *SMAC* - either by reading in a scenario file,
+# or by directly using *SMAC* in Python - are provided in the examples-folder.
 #
 # To get started, we will walk you through a few examples.
 #
-# * First, we explain the basic usage of *SMAC* by optimizing the :ref:`Branin <branin-example>`-function as a toy example.
+# * First, we explain the basic usage of *SMAC* by optimizing the
+# :ref:`Branin <branin-example>`-function as a toy example.
 # * Second, we explain the usage of *SMAC* within Python by optimizing a :ref:`Support Vector Machine <svm-example>`.
-# * Third, we show a real-world example, using an algorithm-wrapper to optimize the :ref:`SPEAR SAT-solver <spear-example>`.
+# * Third, we show a real-world example, using an algorithm-wrapper to optimize the
+# :ref:`SPEAR SAT-solver <spear-example>`.
 #
 # .. _scenario: ../options.html#scenario
 # .. _PCS: ../options.html#paramcs
@@ -29,6 +33,7 @@ Quickstart
 #
 
 import numpy as np
+
 
 def branin(x):
     x1 = x[0]
@@ -51,6 +56,7 @@ def branin(x):
 # <apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_.
 # We import the fmin-function and wrap it around are simple branin function.
 #
+
 
 from smac.facade.func_facade import fmin_smac
 
@@ -96,11 +102,15 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #         <algo> <instance> <instance specific> <cutoff time> <runlength> <seed> <algorithm parameters>
 #         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
 #
-# The **paramfile** parameter tells *SMAC* which Parameter Configuration Space (PCS_)-file to use. This file contains a list of the algorithm's parameters, their domains and default values:
+# The **paramfile** parameter tells *SMAC* which Parameter Configuration Space
+# (PCS_)-file to use. This file contains a list of the algorithm's parameters,
+# their domains and default values:
 #
 #     .. literalinclude:: ../../../examples/quickstart/branin/param_config_space.pcs
 #
-# ``x1`` and ``x2`` are both continuous parameters. ``x1`` can take any real value in the range ``[-5, 10]``, ``x2`` in the range ``[0, 15]`` and both have the default value ``0``.
+# ``x1`` and ``x2`` are both continuous parameters. ``x1`` can take any real value
+# in the range ``[-5, 10]``, ``x2`` in the range ``[0, 15]`` and both have
+# the default value ``0``.
 #
 # The **run_obj** parameter specifies what *SMAC* is supposed to **optimize**. Here we optimize solution quality.
 # The **runcount_limit** specifies the maximum number of algorithm calls.
@@ -153,7 +163,6 @@ print("Optimum at {} with cost of {}".format(x, cost))
 # To use *SMAC* directly with Python, we first import the necessary modules
 #
 
-import numpy as np
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
@@ -209,6 +218,7 @@ print(cs)
 # Some options, such as the *kernel* or *C*, can be passed directly.
 # Others, such as *gamma*, need to be translated before the call to the SVM.
 
+
 def svm_from_cfg(cfg):
     """ Creates a SVM based on a configuration and evaluates it on the
     iris-dataset using cross-validation.
@@ -236,6 +246,7 @@ def svm_from_cfg(cfg):
     clf = svm.SVC(**cfg, random_state=42)
     scores = cross_val_score(clf, iris.data, iris.target, cv=5)
     return 1 - np.mean(scores)  # Minimize!
+
 
 def_value = svm_from_cfg(cs.get_default_configuration())
 print("Default Value: %.2f" % (def_value))
@@ -314,14 +325,15 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 # Spear-QCP
 # ---------
-# For this example we use *SMAC* to optimize the runtime required by the SAT solver `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_
+# For this example we use *SMAC* to optimize the runtime required by the SAT solver
+# `Spear <http://www.domagoj-babic.com/index.php/ResearchProjects/Spear>`_
 # to solve a small subset of the QCP-dataset.
 #
 # In *SMACs* root-directory type:
 #
 # .. code-block:: bash
 #
-#     cd examples/general/spear_qcp && ls -l
+#     cd examples/quickstart/spear_qcp && ls -l
 #
 # In this folder you see the following files and directories:
 #
@@ -338,7 +350,8 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #     +--------------------+--------------------+--------------------+-----+
 #
 # * **instances.txt**
-#     The `instance file <options.html#instance>`_ contains the names of all instances one might want to consider during the optimization process.
+#     The `instance file <options.html#instance>`_ contains the names of all
+# instances one might want to consider during the optimization process.
 #
 # * **scenario.txt**
 #     The scenario_ file contains all the necessary information about the configuration scenario at hand.
@@ -351,11 +364,16 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 #         .. code-block:: bash
 #
-#             python -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+#             python -u ./target_algorithm/scripts/SATCSSCWrapper.py \
+#               --mem-limit 1024 \
+#               --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 #
-#         This specifies the wrapper that *SMAC* executes with a pre-specified syntax in order to evaluate the algorithm to be optimized.
-#         This wrapper script takes an instantiation of the parameters as input, runs the algorithm with these parameters, and returns
-#         the cost of running the algorithm; since every algorithm has a different input and output format, this wrapper acts as an interface between the
+#         This specifies the wrapper that *SMAC* executes with a pre-specified
+#         syntax in order to evaluate the algorithm to be optimized.
+#         This wrapper script takes an instantiation of the parameters as input,
+#         runs the algorithm with these parameters, and returns
+#         the cost of running the algorithm; since every algorithm has a different
+#         input and output format, this wrapper acts as an interface between the
 #         algorithm and *SMAC*, which executes the wrapper through a command line call.
 #
 #         An example call would look something like this:
@@ -364,7 +382,8 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 #             <algo> <instance> <instance specifics> <cutoff time> <runlength> <seed> <algorithm parameters>
 #
-#         For *SMAC* to be able to interpret the results of the algorithm run, the wrapper returns the results of the algorithm run as follows:
+#         For *SMAC* to be able to interpret the results of the algorithm run,
+#         the wrapper returns the results of the algorithm run as follows:
 #
 #         .. code-block:: bash
 #
@@ -374,10 +393,13 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 #         This parameter specifies which pcs-file to use and where it is located.
 #
-#         The PCS-file specifies the Parameter Configuration Space file, which lists the algorithm's parameters, their domains, and default values (one per line)
+#         The PCS-file specifies the Parameter Configuration Space file, which
+#         lists the algorithm's parameters, their domains, and default values (one per line)
 #
-#         In this example we are dealing with 26 parameters of which 12 are categorical and 14 are continuous. Out of these 26
-#         parameters, 9 parameters are conditionals (they are only active if their parent parameter takes on a certain value).
+#         In this example we are dealing with 26 parameters of which 12 are categorical
+#         and 14 are continuous. Out of these 26
+#         parameters, 9 parameters are conditionals (they are only active if
+#         their parent parameter takes on a certain value).
 #
 #     * *execdir:* Specifies the directory in which the target algorithm will be run.
 #
@@ -450,11 +472,16 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 #
 #
-# The statistics further show the used wallclock time, target algorithm running time and the number of executed target algorithm runs,
+# The statistics further show the used wallclock time, target algorithm running
+# time and the number of executed target algorithm runs,
 # and the corresponding budgets---here we exhausted the wallclock time budget.
 #
 # The directory in which you invoked *SMAC* now contains a new folder called **SMAC3-output_YYYY-MM-DD_HH:MM:SS**.
-# The .json file contains the information about the target algorithms *SMAC* just executed. In this file you can see the *status* of the algorithm run, *misc*, the *instance* on which the algorithm was evaluated, which *seed* was used, how much *time* the algorithm needed and with which *configuration* the algorithm was run.
+# The .json file contains the information about the target algorithms *SMAC* just
+# executed. In this file you can see the *status* of the algorithm run, *misc*,
+# the *instance* on which the algorithm was evaluated, which *seed* was used,
+# how much *time* the algorithm needed and with which *configuration* the algorithm
+# was run.
 # In the folder *SMAC* generates a file for the runhistory, and two files for the trajectory.
 #
 #
@@ -463,12 +490,14 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 # Hydra on Spear-QCP
 # ------------------
 #
-# For this example we use *Hydra* to build a portfolio on the same example data presented in :ref:`Spear-QCP <spear-example>`.
+# For this example we use *Hydra* to build a portfolio on the same example data
+# presented in :ref:`Spear-QCP <spear-example>`
 # Hydra is a portfolio builder that aims to build a portfolio by iteratively adding complementary configurations to the
 # already existing portfolio. To select these complementary configurations *Hydra* compares new configurations to the
 # portfolio and only considers configurations that improve the portfolio performance.
 # In the first iteration Hydra runs standard *SMAC* to determine a well performing configuration
-# across all instances as a starting point for the portfolio. In following iterations *Hydra* adds one configuration that
+# across all instances as a starting point for the portfolio. In following iterations
+# *Hydra* adds one configuration that
 # improves the portfolio performance.
 #
 # To run Hydra for three iterations you can run the following code in the spear-qcp example folder.
@@ -478,8 +507,10 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #       python ../../scripts/smac --scenario scenario.txt --verbose DEBUG --mode Hydra --hydra_iterations 3
 #
 # As the individual SMAC scenario takes 30 seconds to run Hydra will run for ~90 seconds on this example.
-# You will see the same output to the terminal as with standard SMAC. In the folder where you executed the above command,
+# You will see the same output to the terminal as with standard SMAC. In the folder
+# where you executed the above command,
 # you will find a *hydra-output-yyy-mm-dd_hh:mm:ss_xyz* folder. This folder contains the results of all three performed
 # SMAC runs, as well as the resulting portfolio (as pkl file).
 #
-# The resulting portfolio can be used with any algorithm selector such as `AutoFolio <https://github.com/mlindauer/AutoFolio>`_
+# The resulting portfolio can be used with any algorithm selector such as
+# `AutoFolio <https://github.com/mlindauer/AutoFolio>`_

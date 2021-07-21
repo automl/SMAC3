@@ -29,6 +29,7 @@ import warnings
 
 digits = load_digits()
 
+
 # Target Algorithm
 # The signature of the function determines what arguments are passed to it
 # i.e., budget is passed to the target algorithm if it is present in the signature
