@@ -11,15 +11,11 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperp
     UniformIntegerHyperparameter, Constant, UniformFloatHyperparameter
 
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
-from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.configspace import get_one_exchange_neighbourhood
 from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
-from smac.optimizer.acquisition import EI, TS
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
+from smac.optimizer.acquisition import TS
+from smac.epm.util_funcs import check_points_in_ss
 
 
 class AbstractSubspace(ABC):
@@ -39,13 +35,17 @@ class AbstractSubspace(ABC):
                  incumbent_array: typing.Optional[np.ndarray] = None,
                  ):
         """
-        A subspace that is designed for local Bayesian Optimization
+        A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
+        this subspace is equivalent to the original configuration space which manage its own runhistory that allows to
+        implement its own optimizer in self._generate_challengers(), for example, turbo. Alternatively, this subspace
+        support local BO that only focus on a subset of the dimensions, where the missing values are filled by the
+        corresponding values in incumbent_array
         Parameters
         ----------
         config_space: ConfigurationSpace
             raw Configuration space
         bounds: typing.List[typing.Tuple[float, float]]
-            raw bounds of the Configuration space
+            raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space
         hps_types: typing.List[int],
             types of the hyperparameters
         bounds_ss_cont: np.ndarray(D_cont, 2)
@@ -61,7 +61,7 @@ class AbstractSubspace(ABC):
         acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction
             local acquisition function
         acq_func_local_kwargs: typing.Optional[typing.Dict]
-            argument for acquisiiton fucntion
+            argument for acquisition function
         activate_dims: typing.Optional[np.ndarray]
             activate dimensions in the subspace, if it is None, we preserve all the dimensions
         incumbent_array: typing.Optional[np.ndarray]
@@ -82,9 +82,6 @@ class AbstractSubspace(ABC):
 
         cat_dims = np.where(np.array(hps_types) != 0)[0]
         cont_dims = np.where(np.array(hps_types) == 0)[0]
-
-        if activate_dims is None:
-            activate_dims = np.arange(n_hypers)
 
         if activate_dims is None:
             activate_dims_cont = cont_dims
@@ -272,49 +269,21 @@ class AbstractSubspace(ABC):
         if initial_data is not None:
             X = initial_data[0]
             y = initial_data[1]
-
-            #X_normalized = self.noramlize_input(X=X)
             X = X[:, activate_dims]
 
             self.add_new_observations(X, y)
 
         self.config_origin = "subspace"
 
-    def check_points_in_ss(self,
-                           X: np.ndarray,
-                           ):
+    def update_model(self, predict_x_best: bool = True, update_incumbent_array: bool = False):
         """
-        check which points will be included in this subspace
+        update the model and acquisition function parameters
         Parameters
         ----------
-        X: np.ndarray(N,D),
-            points to be checked
-        Return
-        ----------
-        indices_in_ss:np.ndarray(N)
-            indices of data that included in subspaces
-        """
-        if len(X.shape) == 1:
-            X = X[np.newaxis, :]
-
-        bounds_cont = np.array([[0, 1]]).repeat(len(self.activate_dims_cont), axis=0)
-
-        if self.activate_dims_cont.size != 0:
-            data_in_ss = np.all(X[:, self.activate_dims_cont] <= bounds_cont[:, 1], axis=1) & \
-                         np.all(X[:, self.activate_dims_cont] >= bounds_cont[:, 0], axis=1)
-
-        else:
-            data_in_ss = np.ones(X.shape[-1], dtype=bool)
-
-        for bound_cat, cat_dim in zip(self.bounds_ss_cat, self.activate_dims_cat):
-            data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
-
-        data_in_ss = np.where(data_in_ss)[0]
-        return data_in_ss
-
-    def update_model(self, predict_x_best=True, update_incumbent_array=False):
-        """
-        update the model and acquisition function values
+        predict_x_best: bool,
+            if the incumbent is acquired by the prediceted mean of a surrogate model
+        update_incumbent_array: bool
+            if the incumbent_array of this subspaced is replace with the newly updated incumbent
         """
         self.model.train(self.model_x, self.model_y)
 
@@ -353,17 +322,17 @@ class AbstractSubspace(ABC):
             X = X[np.newaxis, :]
         if len(X.shape) == 1:
             y = y[np.newaxis, :]
-        X = self.noramlize_input(X=X)
+        X = self.normalize_input(X=X)
 
         self.model_x = np.vstack([self.model_x, X])
         self.model_y = np.vstack([self.model_y, y])
 
-        ss_indices = self.check_points_in_ss(X)
+        ss_indices = check_points_in_ss(X)
         self.ss_x = np.vstack([self.ss_x, X[ss_indices]])
         self.ss_y = np.vstack([self.ss_y, y[ss_indices]])
 
     def update_incumbent_array(self, new_incumbent):
-        self.incumbent_array = self.noramlize_input(X=new_incumbent)
+        self.incumbent_array = self.normalize_input(X=new_incumbent)
 
     def generate_challengers(self, **optimizer_kwargs):
         challengers = self._generate_challengers(**optimizer_kwargs)
@@ -380,9 +349,9 @@ class AbstractSubspace(ABC):
         """
         raise NotImplementedError
 
-    def noramlize_input(self, X: np.ndarray):
+    def normalize_input(self, X: np.ndarray):
         """
-        noramlize X to fit the subspace
+        normalize X to fit the local configuration space
         Parameters
         ----------
         X: np.ndarray(N,D)
