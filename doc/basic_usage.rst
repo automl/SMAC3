@@ -82,7 +82,7 @@ because the budget is still exhausted.
 to unexpected behaviour!**
 
 For an example of restoring states from within your Python code, there is an
-implementation with the Branin-example in "examples/branin/restore_state.py".
+implementation with the Branin-example in "examples/quickstart/branin/restore_state.py".
 
 
 .. _inpython:

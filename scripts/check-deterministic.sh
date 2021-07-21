@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $(dirname $0)/../examples/branin
+cd $(dirname $0)/../examples/quickstart/branin
 
 cat << EOF > /tmp/scenario.txt
 algo = python cmdline_wrapper.py

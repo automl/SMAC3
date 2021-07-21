@@ -52,7 +52,6 @@ help:
 
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf $(MAKEFILE_DIR)/quickstart
 	rm -rf $(MAKEFILE_DIR)/examples
 
 html:

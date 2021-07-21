@@ -6,15 +6,15 @@ from branin import branin
 This is a wrapper used by SMAC to optimize parameters on the branin-function.
 
 To run this example, execute:
-    $ cd examples/branin
+    $ cd examples/quickstart/branin
     $ python3 ../../scripts/smac --scenario scenario.txt
 
-We optimize the branin-function (see "examples/branin/branin.py").
+We optimize the branin-function (see "examples/quickstart/branin/branin.py").
 
 To use the commandline, we need two files:
-- a scenario-file: located in "examples/branin/scenario.txt"
+- a scenario-file: located in "examples/quickstart/branin/scenario.txt"
                    specifies SMAC-parameters, e.g. runtime, output, etc.
-- a pcs-file:      located in "examples/branin/param_config_space.pcs"
+- a pcs-file:      located in "examples/quickstart/branin/param_config_space.pcs"
                    specifies the parameter configuration space (here: x1, x2)
 
 SMAC calls this wrapper during optimization, because it is specified in the
