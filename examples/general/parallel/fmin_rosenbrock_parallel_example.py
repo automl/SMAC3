@@ -22,7 +22,7 @@ import os
 import sys
 
 # https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use
-cwd = os.path.dirname(__file__) if __file__ else os.getcwd()
+cwd = os.path.dirname(__file__) if '__file__' in globals() else os.getcwd()
 sys.path.append(os.path.join(cwd))
 from rosenbrock_2d_delayed_func import rosenbrock_2d  # noqa: E402
 # --------------------------------------------------------------
