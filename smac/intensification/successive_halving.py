@@ -31,7 +31,7 @@ class _SuccessiveHalving(AbstractRacer):
     The `SuccessiveHalving` class can create multiple `_SuccessiveHalving` objects, to
     allow parallelism in the method (up to the number of workers available). The user  interface
     is expected to be `SuccessiveHalving`, yet this class (`_SuccessiveHalving`) contains the
-    actual single worker implementation of the BOHB method.
+    actual single worker implementation of the SMAC4MF method.
 
     Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:
 
@@ -377,6 +377,8 @@ class _SuccessiveHalving(AbstractRacer):
         if result.status == StatusType.CAPPED and run_info.config == self.running_challenger:
             self.curr_inst_idx[run_info.config] = np.inf
         else:
+            self._ta_time = self._ta_time  # type: float # make mypy happy
+            self.num_run = self.num_run  # type: int # make mypy happy
             self._ta_time += result.time
             self.num_run += 1
 
@@ -583,6 +585,7 @@ class _SuccessiveHalving(AbstractRacer):
                 # We see a challenger for the first time, so no
                 # instance has been launched
                 self.curr_inst_idx[challenger] = 0
+                self._chall_indx = self._chall_indx  # type: int # make mypy happy
                 self._chall_indx += 1
                 self.running_challenger = challenger
 
@@ -1058,8 +1061,8 @@ class SuccessiveHalving(ParallelScheduler):
 
     Examples for successive halving (and hyperband) can be found here:
     * Runtime objective and multiple instances *(instances as budget)*: `examples/spear_qcp/SMAC4AC_SH_spear_qcp.py`
-    * Quality objective and multiple instances *(instances as budget)*: `examples/BOHB4HPO_sgd_instances.py`
-    * Quality objective and single instance *(real-valued budget)*: `examples/BOHB4HPO_mlp.py`
+    * Quality objective and multiple instances *(instances as budget)*: `examples/SMAC4MF_sgd_instances.py`
+    * Quality objective and single instance *(real-valued budget)*: `examples/SMAC4MF_mlp.py`
 
     This class instantiates `_SuccessiveHalving` objects on a need basis, that is, to
     prevent workers from being idle. The actual logic that implements the Successive halving method
