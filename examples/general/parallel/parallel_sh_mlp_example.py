@@ -24,19 +24,12 @@ from smac.scenario.scenario import Scenario
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.initial_design.random_configuration_design import RandomConfigurations
 
-# --------------------------------------------------------------
-# We need to provide a pickable function and use __main__
-# to be compliant with multiprocessing API
-# Below is a work around to have a packaged function called
-# mlp_from_cfg_func
-# --------------------------------------------------------------
 import os
 import sys
 # https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use
-# sys.path.append(os.path.join(os.path.dirname(__file__)))
-sys.path.append(os.getcwd())
+cwd = os.path.dirname(__file__) if __file__ else os.getcwd()
+sys.path.append(os.path.join(cwd))
 from mlp_from_cfg_func import mlp_from_cfg  # noqa: E402
-# --------------------------------------------------------------
 
 if __name__ == '__main__':
 
