@@ -131,7 +131,9 @@ html_theme = 'sphinx_rtd_theme'
 # documentation.
 html_theme_options = {
 # Insert options
-  'collapse_navigation': False
+  'collapse_navigation': False,
+  'includehidden': False,
+  'titles_only': True,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -312,14 +314,25 @@ cmd_reader.write_main_options_to_doc()
 cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
 
+from sphinx_gallery.sorting import ExplicitOrder
+
 # Sphinx-gallery configuration.
 sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
     'backreferences_dir': False,
     # path to the examples
-    'examples_dirs': ['../examples/general', '../examples/quickstart'],
+    'examples_dirs': '../examples',
+
+    # Ordering
+    'subsection_order': ExplicitOrder(['../examples/quickstart',
+                                       '../examples/function_minimization',
+                                       '../examples/parallel',
+                                       '../examples/SMAC4HPO',
+                                       '../examples/SMAC4BO',
+                                       '../examples/SMAC4MF',
+                                       '../examples/hyperband']),
     # path where to save gallery generated examples
-    'gallery_dirs': ['examples', 'quickstart'],
+    'gallery_dirs': 'examples',
     # compile execute examples in the examples dir
     'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.

@@ -20,11 +20,11 @@ Contents:
    :maxdepth: 1
 
    installation
-   quickstart/index
+   Quickstart <examples/quickstart/quickstart_example>
    usage_recomendation
+   smac_examples
    manual
    api
-   examples/index
    faq
    contact
    license

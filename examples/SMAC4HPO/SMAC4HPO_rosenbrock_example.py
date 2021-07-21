@@ -1,7 +1,7 @@
 """
-=========================================================================================
-Using the SMAC interface tuned for hyperparameter optimization for black-box optimization
-=========================================================================================
+===================================================
+Using SMAC tuned for HPO for black-box optimization
+===================================================
 """
 
 import logging
