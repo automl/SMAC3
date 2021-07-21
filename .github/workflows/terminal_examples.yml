@@ -50,4 +50,4 @@ jobs:
         # Activate anaconda so default python is from conda
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         cd examples/quickstart/branin
-        python ../../scripts/smac --scenario scenario.txt
+        python ../../../scripts/smac --scenario scenario.txt
