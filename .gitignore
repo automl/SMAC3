@@ -36,8 +36,7 @@ doc/examples
 doc/quickstart
 
 # Generated from running Sphinx-Gallery
-examples/general/smac3-output_*
-examples/quickstart/smac3-output_*
+*smac3-output_*
 
 # Dask created work space
 dask-worker-space
