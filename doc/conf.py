@@ -319,7 +319,7 @@ from sphinx_gallery.sorting import ExplicitOrder
 # Sphinx-gallery configuration.
 sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
-    'backreferences_dir': False,
+    'backreferences_dir': None,
     # path to the examples
     'examples_dirs': '../examples',
 
