@@ -1,7 +1,25 @@
 # 0.13.2
 
+## Major Changes
+* Drop support for Python 3.6 (#726)
+* Added Colab to try SMAC in your browser! (#697)
+* `BOHB4HPO` facade has been renamed to `SMAC4MF` facade
+
 ## Minor Changes
-* Require emcee >= 3.0.0
+* Require `emcee` >= 3.0.0 (#723)
+* Require `scipy` >= 1.7 (#729)
+* Added gradient boosting example
+* `lazy_import` dependency dropped (#741)
+* Dropped `pyDOE` requirement, using `scipy` instead (#735)
+* Uses scrambled Sobol Sequence (#733)
+
+## Bug Fixes
+* Github badges updated (#732)
+* Fixed memory limit issue for `pynisher` (#717)
+* More robust multiprocessing (#709, #712)
+* Fixed serialization with runhistory entries (#706)
+* runhistory is now saved after each individual run (#734)
+* Logging for Wallclock time limit reached changed to debug (#724)
 
 # 0.13.1
 
@@ -21,7 +39,7 @@
 * Drop support for Python 3.5
 
 ## Minor Changes
-* Update Readme 
+* Update Readme
 * Remove runhistory from TAE (#663)
 * Store SMAC's internal config id in the configuration object (#679)
 * Introduce Status Type STOP (#690)
