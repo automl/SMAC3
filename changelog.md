@@ -25,7 +25,6 @@
 * More robust multiprocessing (#709, #712)
 * Fixed serialization with runhistory entries (#706)
 * Separated evaluation from get next challengers in intensification (#734)
-* Logging for Wallclock time limit reached changed to debug (#724)
 * Doc fixes (#727, #714)
 
 # 0.13.1
