@@ -16,6 +16,8 @@
 * Uses scrambled Sobol Sequence (#733)
 * Moved to Github actions (#715)
 * Improved testing (#720, #723, #739, #743)
+* Added option `save_results_instantly` in scenario object to save results instantly (#728)
+* Changed level of intensification messages to debug (#724)
 
 ## Bug Fixes
 * Github badges updated (#732)
