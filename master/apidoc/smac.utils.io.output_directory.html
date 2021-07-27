@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.utils.io.output_directory module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.utils.io.output_directory module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -305,18 +307,22 @@
   <div class="section" id="module-smac.utils.io.output_directory">
 <span id="smac-utils-io-output-directory-module"></span><h1>smac.utils.io.output_directory module<a class="headerlink" href="#module-smac.utils.io.output_directory" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="smac.utils.io.output_directory.create_output_directory">
-<code class="sig-prename descclassname">smac.utils.io.output_directory.</code><code class="sig-name descname">create_output_directory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scenario</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario">smac.scenario.scenario.Scenario</a></span></em>, <em class="sig-param"><span class="n">run_id</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>logging.Logger<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/smac/utils/io/output_directory.html#create_output_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.output_directory.create_output_directory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.output_directory.create_output_directory">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.io.output_directory.</span></span><span class="sig-name descname"><span class="pre">create_output_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">logging.Logger</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/smac/utils/io/output_directory.html#create_output_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.output_directory.create_output_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create output directory for this run.</p>
 <p>Side effect: Adds the current output directory to the scenario object!</p>
-<p>scenario : ~smac.scenario.scenario.Scenario</p>
-<p>run_id : int</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – </p></li>
+<li><p><strong>run_id</strong> (<em>int</em>) – </p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>

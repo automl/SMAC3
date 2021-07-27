@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.epm.util_funcs module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.epm.util_funcs module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -303,8 +305,8 @@
   <div class="section" id="module-smac.epm.util_funcs">
 <span id="smac-epm-util-funcs-module"></span><h1>smac.epm.util_funcs module<a class="headerlink" href="#module-smac.epm.util_funcs" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="smac.epm.util_funcs.get_rng">
-<code class="sig-prename descclassname">smac.epm.util_funcs.</code><code class="sig-name descname">get_rng</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>Union<span class="p">[</span>int<span class="p">, </span>numpy.random.mtrand.RandomState<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">run_id</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>logging.Logger<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>int<span class="p">, </span>numpy.random.mtrand.RandomState<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_rng"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.util_funcs.get_rng">
+<span class="sig-prename descclassname"><span class="pre">smac.epm.util_funcs.</span></span><span class="sig-name descname"><span class="pre">get_rng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">logging.Logger</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_rng"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.util_funcs.get_rng" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize random number generator and set run_id</p>
 <ul class="simple">
 <li><p>If rng and run_id are None, initialize a new generator and sample a run_id</p></li>
@@ -316,7 +318,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rng</strong> (<em>np.random.RandomState|int|None</em>) – </p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em><em>|</em><em>int</em><em>|</em><em>None</em>) – </p></li>
 <li><p><strong>run_id</strong> (<em>int</em><em>, </em><em>optional</em>) – </p></li>
 <li><p><strong>logger</strong> (<em>logging.Logger</em><em>, </em><em>optional</em>) – </p></li>
 </ul>
@@ -332,8 +334,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="smac.epm.util_funcs.get_types">
-<code class="sig-prename descclassname">smac.epm.util_funcs.</code><code class="sig-name descname">get_types</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_space</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">instance_features</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">, </span>List<span class="p">[</span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.util_funcs.get_types" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.util_funcs.get_types">
+<span class="sig-prename descclassname"><span class="pre">smac.epm.util_funcs.</span></span><span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_space</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/util_funcs.html#get_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.util_funcs.get_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>TODO</p>
 </dd></dl>
 

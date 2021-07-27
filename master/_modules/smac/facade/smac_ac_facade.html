@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.facade.smac_ac_facade &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.facade.smac_ac_facade &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +68,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -136,8 +138,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -215,13 +217,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -295,7 +297,6 @@
   <h1>Source code for smac.facade.smac_ac_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">dask.distributed</span>
@@ -425,7 +426,7 @@
 <span class="sd">            incumbent</span>
 <span class="sd">        intensifier_kwargs: Optional[Dict]</span>
 <span class="sd">            arguments passed to the constructor of &#39;~intensifier&#39;</span>
-<span class="sd">        acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction</span>
+<span class="sd">        acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`</span>
 <span class="sd">            Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.</span>
 <span class="sd">            Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.</span>
 <span class="sd">            `~acquisition_function_kwargs` is passed to the class constructor.</span>
@@ -436,26 +437,26 @@
 <span class="sd">            hyperparameters (i.e. GaussianProcessMCMC).</span>
 <span class="sd">        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span>
 <span class="sd">            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.</span>
-<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.LocalAndSortedRandomSearch` if not set.</span>
-<span class="sd">        acquisition_function_optimizer_kwargs: Optional[Dict]</span>
-<span class="sd">            Arguments passed to constructor of &#39;~acquisition_function_optimizer&#39;</span>
+<span class="sd">            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.</span>
+<span class="sd">        acquisition_function_optimizer_kwargs: Optional[dict]</span>
+<span class="sd">            Arguments passed to constructor of `~acquisition_function_optimizer`</span>
 <span class="sd">        model : AbstractEPM</span>
 <span class="sd">            Model that implements train() and predict(). Will use a</span>
 <span class="sd">            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.</span>
-<span class="sd">        model_kwargs : Optional[Dict]</span>
-<span class="sd">            Arguments passed to constructor of &#39;~model&#39;</span>
+<span class="sd">        model_kwargs : Optional[dict]</span>
+<span class="sd">            Arguments passed to constructor of `~model`</span>
 <span class="sd">        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP</span>
 <span class="sd">            Object that implements the AbstractRunHistory2EPM. If None,</span>
 <span class="sd">            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`</span>
 <span class="sd">            if objective is cost or</span>
 <span class="sd">            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`</span>
 <span class="sd">            if objective is runtime.</span>
-<span class="sd">        runhistory2epm_kwargs: Optional[Dict]</span>
-<span class="sd">            Arguments passed to the constructor of &#39;~runhistory2epm&#39;</span>
+<span class="sd">        runhistory2epm_kwargs: Optional[dict]</span>
+<span class="sd">            Arguments passed to the constructor of `~runhistory2epm`</span>
 <span class="sd">        initial_design : InitialDesign</span>
 <span class="sd">            initial sampling design</span>
-<span class="sd">        initial_design_kwargs: Optional[Dict]</span>
-<span class="sd">            arguments passed to constructor of `~initial_design&#39;</span>
+<span class="sd">        initial_design_kwargs: Optional[dict]</span>
+<span class="sd">            arguments passed to constructor of `~initial_design`</span>
 <span class="sd">        initial_configurations : List[Configuration]</span>
 <span class="sd">            list of initial configurations for initial design --</span>
 <span class="sd">            cannot be used together with initial_design</span>
@@ -473,8 +474,8 @@
 <span class="sd">            chosen.</span>
 <span class="sd">        random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span>
 <span class="sd">            How often to choose a random configuration during the intensification procedure.</span>
-<span class="sd">        random_configuration_chooser_kwargs : Optional[Dict]</span>
-<span class="sd">            arguments of constructor for &#39;~random_configuration_chooser&#39;</span>
+<span class="sd">        random_configuration_chooser_kwargs : Optional[dict]</span>
+<span class="sd">            arguments of constructor for `~random_configuration_chooser`</span>
 <span class="sd">        dask_client : dask.distributed.Client</span>
 <span class="sd">            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
 <span class="sd">        n_jobs : int, optional</span>
@@ -657,7 +658,7 @@
             <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span>
             <span class="s1">&#39;par_factor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">par_factor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="s1">&#39;cost_for_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cost_for_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="s1">&#39;abort_on_first_run_crash&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">abort_on_first_run_crash</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
         <span class="p">}</span>
         <span class="k">if</span> <span class="n">tae_runner_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tae_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tae_runner_kwargs</span><span class="p">)</span>
@@ -674,6 +675,7 @@
         <span class="k">elif</span> <span class="n">callable</span><span class="p">(</span><span class="n">tae_runner</span><span class="p">):</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tae_runner</span>
             <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_pynisher&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">limit_resources</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="n">tae_def_kwargs</span><span class="p">[</span><span class="s1">&#39;memory_limit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">memory_limit</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="n">tae_runner_instance</span> <span class="o">=</span> <span class="n">ExecuteTAFuncDict</span><span class="p">(</span><span class="o">**</span><span class="n">tae_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Argument &#39;tae_runner&#39; is </span><span class="si">%s</span><span class="s2">, but must be &quot;</span>
@@ -891,7 +893,8 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final Incumbent: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs</span><span class="p">():</span>
@@ -900,10 +903,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">intensifier</span><span class="o">.</span><span class="n">traj_logger</span><span class="o">.</span><span class="n">trajectory</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span>
-                    <span class="n">fn</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
         <span class="k">return</span> <span class="n">incumbent</span></div>
 
 <div class="viewcode-block" id="SMAC4AC.validate"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>

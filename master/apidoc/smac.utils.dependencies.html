@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.utils.dependencies module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.utils.dependencies module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -303,40 +305,40 @@
   <div class="section" id="module-smac.utils.dependencies">
 <span id="smac-utils-dependencies-module"></span><h1>smac.utils.dependencies module<a class="headerlink" href="#module-smac.utils.dependencies" title="Permalink to this headline">¶</a></h1>
 <dl class="py exception">
-<dt id="smac.utils.dependencies.IncorrectPackageVersionError">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">IncorrectPackageVersionError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package_name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">installed_version</span><span class="p">:</span> <span class="n">distutils.version.LooseVersion</span></em>, <em class="sig-param"><span class="n">operation</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">required_version</span><span class="p">:</span> <span class="n">distutils.version.LooseVersion</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#IncorrectPackageVersionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.IncorrectPackageVersionError">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">smac.utils.dependencies.</span></span><span class="sig-name descname"><span class="pre">IncorrectPackageVersionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">installed_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">distutils.version.LooseVersion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">distutils.version.LooseVersion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#IncorrectPackageVersionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <dl class="py attribute">
-<dt id="smac.utils.dependencies.IncorrectPackageVersionError.error_message">
-<code class="sig-name descname">error_message</code><em class="property"> = &quot;'{name} {installed_version}' version mismatch ({operation}{required_version})&quot;</em><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError.error_message" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.IncorrectPackageVersionError.error_message">
+<span class="sig-name descname"><span class="pre">error_message</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;'{name}</span> <span class="pre">{installed_version}'</span> <span class="pre">version</span> <span class="pre">mismatch</span> <span class="pre">({operation}{required_version})&quot;</span></em><a class="headerlink" href="#smac.utils.dependencies.IncorrectPackageVersionError.error_message" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
-<dt id="smac.utils.dependencies.MissingPackageError">
-<em class="property">exception </em><code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">MissingPackageError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">package_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#MissingPackageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.MissingPackageError">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">smac.utils.dependencies.</span></span><span class="sig-name descname"><span class="pre">MissingPackageError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#MissingPackageError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <dl class="py attribute">
-<dt id="smac.utils.dependencies.MissingPackageError.error_message">
-<code class="sig-name descname">error_message</code><em class="property"> = &quot;Mandatory package '{name}' not found!&quot;</em><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError.error_message" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.MissingPackageError.error_message">
+<span class="sig-name descname"><span class="pre">error_message</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&quot;Mandatory</span> <span class="pre">package</span> <span class="pre">'{name}'</span> <span class="pre">not</span> <span class="pre">found!&quot;</span></em><a class="headerlink" href="#smac.utils.dependencies.MissingPackageError.error_message" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="smac.utils.dependencies._verify_package">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">_verify_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">operation</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">version</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/dependencies.html#_verify_package"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies._verify_package" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies._verify_package">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.dependencies.</span></span><span class="sig-name descname"><span class="pre">_verify_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#_verify_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.dependencies._verify_package" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="smac.utils.dependencies.are_valid_packages">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">are_valid_packages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">packages</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>str<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="../_modules/smac/utils/dependencies.html#are_valid_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.are_valid_packages" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.are_valid_packages">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.dependencies.</span></span><span class="sig-name descname"><span class="pre">are_valid_packages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#are_valid_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.dependencies.are_valid_packages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="smac.utils.dependencies.verify_packages">
-<code class="sig-prename descclassname">smac.utils.dependencies.</code><code class="sig-name descname">verify_packages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">packages</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>str<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/smac/utils/dependencies.html#verify_packages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.dependencies.verify_packages" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.dependencies.verify_packages">
+<span class="sig-prename descclassname"><span class="pre">smac.utils.dependencies.</span></span><span class="sig-name descname"><span class="pre">verify_packages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packages</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/utils/dependencies.html#verify_packages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.dependencies.verify_packages" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

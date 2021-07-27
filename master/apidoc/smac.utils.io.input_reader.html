@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.utils.io.input_reader module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.utils.io.input_reader module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -305,8 +307,8 @@
   <div class="section" id="module-smac.utils.io.input_reader">
 <span id="smac-utils-io-input-reader-module"></span><h1>smac.utils.io.input_reader module<a class="headerlink" href="#module-smac.utils.io.input_reader" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.utils.io.input_reader.InputReader">
-<em class="property">class </em><code class="sig-prename descclassname">smac.utils.io.input_reader.</code><code class="sig-name descname">InputReader</code><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.input_reader.InputReader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.utils.io.input_reader.</span></span><span class="sig-name descname"><span class="pre">InputReader</span></span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Reading all input files for SMAC (scenario file, instance files, …)</p>
 <dl class="simple">
@@ -315,8 +317,8 @@ on an earlier version!</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="smac.utils.io.input_reader.InputReader.read_instance_features_file">
-<code class="sig-name descname">read_instance_features_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.input_reader.InputReader.read_instance_features_file">
+<span class="sig-name descname"><span class="pre">read_instance_features_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_features_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_features_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_instances_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -334,8 +336,8 @@ second one is a dict with ‘instance name’ -
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.input_reader.InputReader.read_instance_file">
-<code class="sig-name descname">read_instance_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.input_reader.InputReader.read_instance_file">
+<span class="sig-name descname"><span class="pre">read_instance_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_instance_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_instance_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_instances_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -353,8 +355,8 @@ information for the specific instance.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.input_reader.InputReader.read_pcs_file">
-<em class="property">static </em><code class="sig-name descname">read_pcs_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">logger</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span><a class="reference internal" href="smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter" title="smac.utils.logging.PickableLoggerAdapter">smac.utils.logging.PickableLoggerAdapter</a><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; ConfigSpace.configuration_space.ConfigurationSpace<a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.input_reader.InputReader.read_pcs_file">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">read_pcs_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter" title="smac.utils.logging.PickableLoggerAdapter"><span class="pre">smac.utils.logging.PickableLoggerAdapter</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_pcs_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_pcs_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates generating configuration space object from file.</p>
 <p>Automatically detects whether the cs is saved in json, pcs or pcs_new.</p>
 <dl class="field-list simple">
@@ -371,8 +373,8 @@ information for the specific instance.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.utils.io.input_reader.InputReader.read_scenario_file">
-<code class="sig-name descname">read_scenario_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fn</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.utils.io.input_reader.InputReader.read_scenario_file">
+<span class="sig-name descname"><span class="pre">read_scenario_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/utils/io/input_reader.html#InputReader.read_scenario_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.io.input_reader.InputReader.read_scenario_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encapsulates read_scenario_file of pysmac</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

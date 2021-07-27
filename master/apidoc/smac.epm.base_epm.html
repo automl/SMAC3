@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.epm.base_epm module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.epm.base_epm module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -303,16 +305,16 @@
   <div class="section" id="module-smac.epm.base_epm">
 <span id="smac-epm-base-epm-module"></span><h1>smac.epm.base_epm module<a class="headerlink" href="#module-smac.epm.base_epm" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.epm.base_epm.AbstractEPM">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.base_epm.</code><code class="sig-name descname">AbstractEPM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">configspace</span><span class="p">:</span> <span class="n">ConfigSpace.configuration_space.ConfigurationSpace</span></em>, <em class="sig-param"><span class="n">types</span><span class="p">:</span> <span class="n">List<span class="p">[</span>int<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">bounds</span><span class="p">:</span> <span class="n">List<span class="p">[</span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">seed</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">instance_features</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pca_components</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">7</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.epm.base_epm.</span></span><span class="sig-name descname"><span class="pre">AbstractEPM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">7</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Abstract implementation of the EPM API.</p>
 <p><strong>Note:</strong> The input dimensionality of Y for training and the output dimensions
 of all predictions (also called <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>) depends on the concrete
 implementation of this abstract class.</p>
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.instance_features">
-<code class="sig-name descname">instance_features</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.instance_features">
+<span class="sig-name descname"><span class="pre">instance_features</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.instance_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains the K dimensional instance features
 of the I different instances</p>
 <dl class="field-list simple">
@@ -323,8 +325,8 @@ of the I different instances</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.pca">
-<code class="sig-name descname">pca</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.pca">
+<span class="sig-name descname"><span class="pre">pca</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to perform PCA</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -334,8 +336,8 @@ of the I different instances</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.pca_components">
-<code class="sig-name descname">pca_components</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.pca_components">
+<span class="sig-name descname"><span class="pre">pca_components</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.pca_components" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of components to keep or None</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -345,8 +347,8 @@ of the I different instances</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.n_feats">
-<code class="sig-name descname">n_feats</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.n_feats">
+<span class="sig-name descname"><span class="pre">n_feats</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_feats" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of instance features</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -356,8 +358,8 @@ of the I different instances</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.n_params">
-<code class="sig-name descname">n_params</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.n_params">
+<span class="sig-name descname"><span class="pre">n_params</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.n_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of parameters in a configuration (only available after train has
 been called)</p>
 <dl class="field-list simple">
@@ -368,8 +370,8 @@ been called)</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.scaler">
-<code class="sig-name descname">scaler</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.scaler">
+<span class="sig-name descname"><span class="pre">scaler</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.scaler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object to scale data to be withing [0, 1]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -379,8 +381,8 @@ been called)</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.var_threshold">
-<code class="sig-name descname">var_threshold</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.var_threshold">
+<span class="sig-name descname"><span class="pre">var_threshold</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.var_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lower bound vor variance. If estimated variance &lt; var_threshold, the set
 to var_threshold</p>
 <dl class="field-list simple">
@@ -391,8 +393,8 @@ to var_threshold</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.base_epm.AbstractEPM.types">
-<code class="sig-name descname">types</code><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.types">
+<span class="sig-name descname"><span class="pre">types</span></span><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.types" title="Permalink to this definition">¶</a></dt>
 <dd><p>If set, contains a list with feature types (cat,const) of input vector</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -422,8 +424,8 @@ set n_feats (&gt; pca_dims).</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="smac.epm.base_epm.AbstractEPM._predict">
-<code class="sig-name descname">_predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM._predict">
+<span class="sig-name descname"><span class="pre">_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_return_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'diagonal_cov'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -443,8 +445,8 @@ set n_feats (&gt; pca_dims).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.epm.base_epm.AbstractEPM._train">
-<code class="sig-name descname">_train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM._train">
+<span class="sig-name descname"><span class="pre">_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM._train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM._train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the random forest on X and y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -464,8 +466,8 @@ number of target names specified in the constructor.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.epm.base_epm.AbstractEPM.predict">
-<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">'diagonal_cov'</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_return_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'diagonal_cov'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict means and variances for given X.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -490,8 +492,8 @@ Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">
-<code class="sig-name descname">predict_marginalized_over_instances</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">
+<span class="sig-name descname"><span class="pre">predict_marginalized_over_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.predict_marginalized_over_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict mean and variance marginalized over all instances.</p>
 <p>Returns the predictive mean and variance marginalised over all
 instances for a set of configurations.</p>
@@ -510,8 +512,8 @@ instances for a set of configurations.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.epm.base_epm.AbstractEPM.train">
-<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">Y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; <a class="reference internal" href="#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.base_epm.AbstractEPM.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></span><a class="reference internal" href="../_modules/smac/epm/base_epm.html#AbstractEPM.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_epm.AbstractEPM.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trains the EPM on X and Y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

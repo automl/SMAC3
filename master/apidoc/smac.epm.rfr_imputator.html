@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.epm.rfr_imputator module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.epm.rfr_imputator module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -303,15 +305,15 @@
   <div class="section" id="module-smac.epm.rfr_imputator">
 <span id="smac-epm-rfr-imputator-module"></span><h1>smac.epm.rfr_imputator module<a class="headerlink" href="#module-smac.epm.rfr_imputator" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.epm.rfr_imputator.RFRImputator">
-<em class="property">class </em><code class="sig-prename descclassname">smac.epm.rfr_imputator.</code><code class="sig-name descname">RFRImputator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rng</span><span class="p">:</span> <span class="n">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="p">:</span> <span class="n">float</span></em>, <em class="sig-param"><span class="n">model</span><span class="p">:</span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">smac.epm.base_epm.AbstractEPM</a></span></em>, <em class="sig-param"><span class="n">change_threshold</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.epm.rfr_imputator.</span></span><span class="sig-name descname"><span class="pre">RFRImputator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_threshold</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.epm.base_imputor.html#smac.epm.base_imputor.BaseImputor" title="smac.epm.base_imputor.BaseImputor"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_imputor.BaseImputor</span></code></a></p>
 <p>Imputor using pyrfr’s Random Forest regressor.</p>
 <p><strong>Note:</strong> Sets var_threshold as the lower bound on the variance for the
 predictions of the random forest</p>
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.logger" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.logger" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>logging.Logger</p>
@@ -320,8 +322,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.max_iter">
-<code class="sig-name descname">max_iter</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.max_iter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.max_iter">
+<span class="sig-name descname"><span class="pre">max_iter</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.max_iter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>int</p>
@@ -330,8 +332,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.change_threshold">
-<code class="sig-name descname">change_threshold</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.change_threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.change_threshold">
+<span class="sig-name descname"><span class="pre">change_threshold</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.change_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -340,8 +342,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.cutoff">
-<code class="sig-name descname">cutoff</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.cutoff" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.cutoff">
+<span class="sig-name descname"><span class="pre">cutoff</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.cutoff" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -350,8 +352,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.threshold">
-<code class="sig-name descname">threshold</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.threshold">
+<span class="sig-name descname"><span class="pre">threshold</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -360,8 +362,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.seed">
-<code class="sig-name descname">seed</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.seed" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Created by drawing random int from rng</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -371,8 +373,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.model">
-<code class="sig-name descname">model</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.model" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predictive model (i.e. RandomForestWithInstances)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -382,8 +384,8 @@ predictions of the random forest</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.epm.rfr_imputator.RFRImputator.var_threshold">
-<code class="sig-name descname">var_threshold</code><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.var_threshold" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.var_threshold">
+<span class="sig-name descname"><span class="pre">var_threshold</span></span><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.var_threshold" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>float</p>
@@ -405,8 +407,8 @@ predictions of the random forest</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="smac.epm.rfr_imputator.RFRImputator.impute">
-<code class="sig-name descname">impute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">censored_X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">censored_y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">uncensored_X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">uncensored_y</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator.impute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.impute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.epm.rfr_imputator.RFRImputator.impute">
+<span class="sig-name descname"><span class="pre">impute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">censored_X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">censored_y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncensored_y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/rfr_imputator.html#RFRImputator.impute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.rfr_imputator.RFRImputator.impute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Imputes censored runs and returns new y values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

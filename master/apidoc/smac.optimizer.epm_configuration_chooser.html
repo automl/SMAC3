@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.optimizer.epm_configuration_chooser module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.optimizer.epm_configuration_chooser module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -303,52 +305,45 @@
   <div class="section" id="module-smac.optimizer.epm_configuration_chooser">
 <span id="smac-optimizer-epm-configuration-chooser-module"></span><h1>smac.optimizer.epm_configuration_chooser module<a class="headerlink" href="#module-smac.optimizer.epm_configuration_chooser" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser">
-<em class="property">class </em><code class="sig-prename descclassname">smac.optimizer.epm_configuration_chooser.</code><code class="sig-name descname">EPMChooser</code><span class="sig-paren">(</span><em class="sig-param">scenario: smac.scenario.scenario.Scenario</em>, <em class="sig-param">stats: smac.stats.stats.Stats</em>, <em class="sig-param">runhistory: smac.runhistory.runhistory.RunHistory</em>, <em class="sig-param">runhistory2epm: smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</em>, <em class="sig-param">model: smac.epm.rf_with_instances.RandomForestWithInstances</em>, <em class="sig-param">acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em>, <em class="sig-param">acquisition_func: smac.optimizer.acquisition.AbstractAcquisitionFunction</em>, <em class="sig-param">rng: numpy.random.mtrand.RandomState</em>, <em class="sig-param">restore_incumbent: Optional[ConfigSpace.configuration_space.Configuration] = None</em>, <em class="sig-param">random_configuration_chooser: smac.optimizer.random_configuration_chooser.RandomConfigurationChooser = &lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown object&gt;</em>, <em class="sig-param">predict_x_best: bool = True</em>, <em class="sig-param">min_samples_model: int = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.epm_configuration_chooser.EPMChooser">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.epm_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">EPMChooser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario:</span> <span class="pre">smac.scenario.scenario.Scenario</span></em>, <em class="sig-param"><span class="pre">stats:</span> <span class="pre">smac.stats.stats.Stats</span></em>, <em class="sig-param"><span class="pre">runhistory:</span> <span class="pre">smac.runhistory.runhistory.RunHistory</span></em>, <em class="sig-param"><span class="pre">runhistory2epm:</span> <span class="pre">smac.runhistory.runhistory2epm.AbstractRunHistory2EPM</span></em>, <em class="sig-param"><span class="pre">model:</span> <span class="pre">smac.epm.rf_with_instances.RandomForestWithInstances</span></em>, <em class="sig-param"><span class="pre">acq_optimizer:</span> <span class="pre">smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</span></em>, <em class="sig-param"><span class="pre">acquisition_func:</span> <span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></em>, <em class="sig-param"><span class="pre">rng:</span> <span class="pre">numpy.random.mtrand.RandomState</span></em>, <em class="sig-param"><span class="pre">restore_incumbent:</span> <span class="pre">Optional[ConfigSpace.configuration_space.Configuration]</span> <span class="pre">=</span> <span class="pre">None</span></em>, <em class="sig-param"><span class="pre">random_configuration_chooser:</span> <span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span> <span class="pre">=</span> <span class="pre">&lt;smac.optimizer.random_configuration_chooser.ChooserNoCoolDown</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">predict_x_best:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></em>, <em class="sig-param"><span class="pre">min_samples_model:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<blockquote>
-<div><p>Interface to train the EPM and generate next configurations</p>
-<dl class="simple">
-<dt>scenario: smac.scenario.scenario.Scenario</dt><dd><p>Scenario object</p>
-</dd>
-<dt>stats: smac.stats.stats.Stats</dt><dd><p>statistics object with configuration budgets</p>
-</dd>
-<dt>runhistory: smac.runhistory.runhistory.RunHistory</dt><dd><p>runhistory with all runs so far</p>
-</dd>
-<dt>model: smac.epm.rf_with_instances.RandomForestWithInstances</dt><dd><p>empirical performance model (right now, we support only
-RandomForestWithInstances)</p>
-</dd>
-<dt>acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</dt><dd><p>Optimizer of acquisition function.</p>
-</dd>
-<dt>restore_incumbent: Configuration</dt><dd><p>incumbent to be used from the start. ONLY used to restore states.</p>
-</dd>
-<dt>rng: np.random.RandomState</dt><dd><p>Random number generator</p>
-</dd>
-<dt>random_configuration_chooser</dt><dd><p>Chooser for random configuration – one of
-* ChooserNoCoolDown(modulus)
-* ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p>
-</dd>
-<dt>predict_x_best: bool</dt><dd><p>Choose x_best for computing the acquisition function via the model instead of via the observations.</p>
+<p>Interface to train the EPM and generate next configurations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>smac.scenario.scenario.Scenario</em></a>) – Scenario object</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>smac.stats.stats.Stats</em></a>) – statistics object with configuration budgets</p></li>
+<li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – runhistory with all runs so far</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances" title="smac.epm.rf_with_instances.RandomForestWithInstances"><em>smac.epm.rf_with_instances.RandomForestWithInstances</em></a>) – empirical performance model (right now, we support only
+RandomForestWithInstances)</p></li>
+<li><p><strong>acq_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer</em></a>) – Optimizer of acquisition function.</p></li>
+<li><p><strong>restore_incumbent</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – incumbent to be used from the start. ONLY used to restore states.</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random number generator</p></li>
+<li><p><strong>random_configuration_chooser</strong> – <p>Chooser for random configuration – one of</p>
+<ul>
+<li><p>ChooserNoCoolDown(modulus)</p></li>
+<li><p>ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)</p></li>
+</ul>
+</p></li>
+<li><p><strong>predict_x_best</strong> (<em>bool</em>) – Choose x_best for computing the acquisition function via the model instead of via the observations.</p></li>
+<li><p><strong>min_samples_model</strong> (<em>int</em>) – Minimum number of samples to build a model</p></li>
+</ul>
 </dd>
 </dl>
-<p>min_samples_model: int</p>
-</div></blockquote>
-<ul class="simple">
-<li><p>Minimum number of samples to build a model</p></li>
-</ul>
 <dl class="py method">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">
-<code class="sig-name descname">_collect_data_to_train_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._collect_data_to_train_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model">
+<span class="sig-name descname"><span class="pre">_collect_data_to_train_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._collect_data_to_train_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._collect_data_to_train_model" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">
-<code class="sig-name descname">_get_evaluated_configs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_evaluated_configs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs">
+<span class="sig-name descname"><span class="pre">_get_evaluated_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_evaluated_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_evaluated_configs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">
-<code class="sig-name descname">_get_x_best</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">predict</span><span class="p">:</span> <span class="n">bool</span></em>, <em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>numpy.ndarray<span class="p">]</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best">
+<span class="sig-name descname"><span class="pre">_get_x_best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser._get_x_best"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser._get_x_best" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get value, configuration, and array representation of the “best” configuration.</p>
 <p>The definition of best varies depending on the argument <code class="docutils literal notranslate"><span class="pre">predict</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>,
 this function will return the stats of the best configuration as predicted by the model,
@@ -369,8 +364,8 @@ otherwise it will return the stats for the best observed configuration.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">
-<code class="sig-name descname">choose_next</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incumbent_value</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Iterator<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser.choose_next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">
+<span class="sig-name descname"><span class="pre">choose_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incumbent_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/optimizer/epm_configuration_chooser.html#EPMChooser.choose_next"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Choose next candidate solution with Bayesian optimization. The
 suggested configurations depend on the argument <code class="docutils literal notranslate"><span class="pre">acq_optimizer</span></code> to
 the <code class="docutils literal notranslate"><span class="pre">SMBO</span></code> class.</p>

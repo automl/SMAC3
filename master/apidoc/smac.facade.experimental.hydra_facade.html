@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.facade.experimental.hydra_facade module &mdash; SMAC 0.13.1 documentation</title>
+  <title>smac.facade.experimental.hydra_facade module &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -305,18 +307,18 @@
   <div class="section" id="module-smac.facade.experimental.hydra_facade">
 <span id="smac-facade-experimental-hydra-facade-module"></span><h1>smac.facade.experimental.hydra_facade module<a class="headerlink" href="#module-smac.facade.experimental.hydra_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="smac.facade.experimental.hydra_facade.Hydra">
-<em class="property">class </em><code class="sig-prename descclassname">smac.facade.experimental.hydra_facade.</code><code class="sig-name descname">Hydra</code><span class="sig-paren">(</span><em class="sig-param">scenario: Type[smac.scenario.scenario.Scenario], n_iterations: int, val_set: str = 'train', incs_per_round: int = 1, n_optimizers: int = 1, rng: Optional[Union[int, numpy.random.mtrand.RandomState]] = None, run_id: int = 1, tae: Type[smac.tae.base.BaseRunner] = &lt;class 'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;, tae_kwargs: Optional[dict] = None, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.facade.experimental.hydra_facade.</span></span><span class="sig-name descname"><span class="pre">Hydra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario:</span> <span class="pre">Type[smac.scenario.scenario.Scenario],</span> <span class="pre">n_iterations:</span> <span class="pre">int,</span> <span class="pre">val_set:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'train',</span> <span class="pre">incs_per_round:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">n_optimizers:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">rng:</span> <span class="pre">Optional[Union[int,</span> <span class="pre">numpy.random.mtrand.RandomState]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">run_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">tae:</span> <span class="pre">Type[smac.tae.base.BaseRunner]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;,</span> <span class="pre">tae_kwargs:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use Hydra default mode</p>
 <dl class="py attribute">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.logger" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.logger" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.stats">
-<code class="sig-name descname">stats</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.stats" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>loggs information about used resources</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -326,8 +328,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.solver">
-<code class="sig-name descname">solver</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.solver" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.solver">
+<span class="sig-name descname"><span class="pre">solver</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>handles the actual algorithm calls</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -337,8 +339,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.rh">
-<code class="sig-name descname">rh</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.rh" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.rh">
+<span class="sig-name descname"><span class="pre">rh</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.rh" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with information about previous runs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -348,8 +350,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.portfolio">
-<code class="sig-name descname">portfolio</code><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.portfolio" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.portfolio">
+<span class="sig-name descname"><span class="pre">portfolio</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all incumbents</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -377,8 +379,8 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="smac.facade.experimental.hydra_facade.Hydra._get_validation_set">
-<code class="sig-name descname">_get_validation_set</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val_set</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">delete</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._get_validation_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._get_validation_set" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra._get_validation_set">
+<span class="sig-name descname"><span class="pre">_get_validation_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_set</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._get_validation_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._get_validation_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create small validation set for hydra to determine incumbent performance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -399,8 +401,8 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.facade.experimental.hydra_facade.Hydra._update_portfolio">
-<code class="sig-name descname">_update_portfolio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">incs</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">config_cost_per_inst</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._update_portfolio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._update_portfolio" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra._update_portfolio">
+<span class="sig-name descname"><span class="pre">_update_portfolio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_cost_per_inst</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra._update_portfolio"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra._update_portfolio" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates all configurations (in incs) and determines which ones to add to the portfolio</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -416,8 +418,8 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="smac.facade.experimental.hydra_facade.Hydra.optimize">
-<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>ConfigSpace.configuration_space.Configuration<span class="p">]</span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.optimize" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.optimize">
+<span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/facade/experimental/hydra_facade.html#Hydra.optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>

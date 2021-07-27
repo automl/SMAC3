@@ -92,6 +92,26 @@ Examples
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a GradientBoosting on an artificial...">
+
+.. only:: html
+
+ .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_gradientboosting_thumb.png
+
+     :ref:`sphx_glr_examples_SMAC4HPO_gradientboosting.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/SMAC4HPO_gradientboosting
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Changing the acquisition function">
 
 .. only:: html
@@ -152,26 +172,6 @@ Examples
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC-HPO interface to tune a random forest">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_rf_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4HPO_rf.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4HPO_rf
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a simple SVM on the IRIS-benchmark.">
 
 .. only:: html
@@ -196,9 +196,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_BOHB4HPO_sgd_instances_thumb.png
+ .. figure:: /examples/images/thumb/sphx_glr_SMAC4MF_sgd_instances_thumb.png
 
-     :ref:`sphx_glr_examples_BOHB4HPO_sgd_instances.py`
+     :ref:`sphx_glr_examples_SMAC4MF_sgd_instances.py`
 
 .. raw:: html
 
@@ -208,7 +208,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/BOHB4HPO_sgd_instances
+   /examples/SMAC4MF_sgd_instances
 
 .. raw:: html
 
@@ -216,9 +216,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_BOHB4HPO_mlp_thumb.png
+ .. figure:: /examples/images/thumb/sphx_glr_SMAC4MF_mlp_thumb.png
 
-     :ref:`sphx_glr_examples_BOHB4HPO_mlp.py`
+     :ref:`sphx_glr_examples_SMAC4MF_mlp.py`
 
 .. raw:: html
 
@@ -228,7 +228,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/BOHB4HPO_mlp
+   /examples/SMAC4MF_mlp
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
@@ -243,13 +243,13 @@ Examples
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Python source code: examples_python.zip <//home/travis/build/automl/SMAC3/doc/examples/examples_python.zip>`
+    :download:`Download all examples in Python source code: examples_python.zip <//home/runner/work/SMAC3/SMAC3/doc/examples/examples_python.zip>`
 
 
 
   .. container:: sphx-glr-download
 
-    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip <//home/travis/build/automl/SMAC3/doc/examples/examples_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip <//home/runner/work/SMAC3/SMAC3/doc/examples/examples_jupyter.zip>`
 
 
 .. only:: html

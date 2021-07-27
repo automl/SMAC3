@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Options and file formats &mdash; SMAC 0.13.1 documentation</title>
+  <title>Options and file formats &mdash; SMAC 0.14.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
 
   
@@ -30,10 +32,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -68,7 +70,7 @@
             
             
               <div class="version">
-                0.13.1
+                0.14.0
               </div>
             
           
@@ -138,8 +140,8 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bohb_facade.html">smac.facade.smac_bohb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.initial_design.html">smac.initial_design package</a><ul>
@@ -217,13 +219,13 @@
 <li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rf.html">Using the SMAC-HPO interface to tune a random forest</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_sgd_instances.html">Optimizing average cross-validation performance with BOHB</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/BOHB4HPO_mlp.html">Optimizing an MLP with BOHB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
@@ -396,7 +398,7 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <dd class="field-odd"><p>Minimum number of calls per configuration. Default: 1.</p>
 </dd>
 <dt class="field-even">output_dir</dt>
-<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2021-01-27_16:18:13_977599.</p>
+<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2021-07-27_15:54:31_919661.</p>
 </dd>
 <dt class="field-odd">rand_prob</dt>
 <dd class="field-odd"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
@@ -491,20 +493,23 @@ generated within custom code, you might not need <em>algo</em> or <em>paramfile<
 <dt class="field-even">run_obj</dt>
 <dd class="field-even"><p>Defines what metric to optimize. When optimizing runtime, <em>cutoff_time</em> is required as well.</p>
 </dd>
-<dt class="field-odd">ta</dt>
-<dd class="field-odd"><p>Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</p>
+<dt class="field-odd">save_instantly</dt>
+<dd class="field-odd"><p>If true, runhistory and stats are saved immediately on changes. Otherwise, runhistory and states are only saved once after the optimization process has finished.</p>
 </dd>
-<dt class="field-even">ta_run_limit</dt>
-<dd class="field-even"><p>Maximum number of algorithm-calls during optimization. Default: inf.</p>
+<dt class="field-even">ta</dt>
+<dd class="field-even"><p>Specifies the target algorithm call that <em>SMAC</em> will optimize. Interpreted as a bash-command.</p>
 </dd>
-<dt class="field-odd">test_inst_fn</dt>
-<dd class="field-odd"><p>Specifies the file with the test-instances.</p>
+<dt class="field-odd">ta_run_limit</dt>
+<dd class="field-odd"><p>Maximum number of algorithm-calls during optimization. Default: inf.</p>
 </dd>
-<dt class="field-even">train_inst_fn</dt>
-<dd class="field-even"><p>Specifies the file with the training-instances.</p>
+<dt class="field-even">test_inst_fn</dt>
+<dd class="field-even"><p>Specifies the file with the test-instances.</p>
 </dd>
-<dt class="field-odd">wallclock_limit</dt>
-<dd class="field-odd"><p>Maximum amount of wallclock-time used for optimization. Default: inf.</p>
+<dt class="field-odd">train_inst_fn</dt>
+<dd class="field-odd"><p>Specifies the file with the training-instances.</p>
+</dd>
+<dt class="field-even">wallclock_limit</dt>
+<dd class="field-even"><p>Maximum amount of wallclock-time used for optimization. Default: inf.</p>
 </dd>
 </dl>
 <p>These options are also available as command line switches: Prepend two “-” and replace each “_” by “-“,
