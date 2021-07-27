@@ -46,7 +46,7 @@ class TestFactorial(unittest.TestCase):
                 max_config_fracs=0.25,
                 init_budget=1,
             )
-            configs = FactorialInitialDesign(
+            FactorialInitialDesign(
                 cs=cs,
                 **factorial_kwargs
             ).select_configurations()

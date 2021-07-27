@@ -2,8 +2,7 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import Configuration, UniformFloatHyperparameter,\
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace import Configuration, UniformFloatHyperparameter
 
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultConfiguration

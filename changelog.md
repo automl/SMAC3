@@ -1,7 +1,31 @@
-# 0.13.2
+# 0.14.0
+
+## Breaking Changes
+* `BOHB4HPO` facade has been renamed to `SMAC4MF` facade (#738)
+* Require `scipy` >= 1.7 (#729)
+* Require `emcee` >= 3.0.0 (#723)
+
+## Major Changes
+* Drop support for Python 3.6 (#726)
+* Added Colab to try SMAC in your browser! (#697)
 
 ## Minor Changes
-* Require emcee >= 3.0.0
+* Added gradient boosting example, removed random forest example (#722)
+* `lazy_import` dependency dropped (#741)
+* Replaced `pyDOE` requirement with `scipy` for LHD design (#735)
+* Uses scrambled Sobol Sequence (#733)
+* Moved to Github actions (#715)
+* Improved testing (#720, #723, #739, #743)
+* Added option `save_results_instantly` in scenario object to save results instantly (#728)
+* Changed level of intensification messages to debug (#724)
+
+## Bug Fixes
+* Github badges updated (#732)
+* Fixed memory limit issue for `pynisher` (#717)
+* More robust multiprocessing (#709, #712)
+* Fixed serialization with runhistory entries (#706)
+* Separated evaluation from get next challengers in intensification (#734)
+* Doc fixes (#727, #714)
 
 # 0.13.1
 
@@ -16,12 +40,12 @@
 # 0.13.0
 
 ## Major Changes
-* Split choosing next challenger from evaluating challenger (#663)
+* Separated evaluation from get next challengers in intensification (#663)
 * Implemented parallel SMAC using dask (#675, #677, #681, #685, #686)
 * Drop support for Python 3.5
 
 ## Minor Changes
-* Update Readme 
+* Update Readme
 * Remove runhistory from TAE (#663)
 * Store SMAC's internal config id in the configuration object (#679)
 * Introduce Status Type STOP (#690)
