@@ -1,6 +1,6 @@
 # SMAC v3 Project
 
-Copyright (C) 2016-2018  [AutoML Group](http://www.automl.org/)
+Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/)
 
 __Attention__: This package is a reimplementation of the original SMAC tool
 (see reference below).
@@ -11,16 +11,18 @@ which can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 The documentation can be found [here](https://automl.github.io/SMAC3/).
 
 Status for master branch:
-
-[![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=master)](https://travis-ci.org/automl/SMAC3)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=master)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![examples](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml)
 [![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 Status for the development branch
-
-[![Build Status](https://travis-ci.org/automl/SMAC3.svg?branch=development)](https://travis-ci.org/automl/SMAC3)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/58f47a4bd25e45c9a4901ebca68118ff?branch=development)](https://www.codacy.com/app/automl/SMAC3?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=automl/SMAC3&amp;utm_campaign=Badge_Grade)
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![examples](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml)
 [![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
+
+Try SMAC directly in your Browser [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
 
 # OVERVIEW
 
@@ -38,16 +40,15 @@ we refer to
     In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-SMAC v3 is written in Python3 and continuously tested with Python 3.6 and
-python3.6. Its [Random Forest](https://github.com/automl/random_forest_run)
-is written in C++.
+SMAC v3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. 
+Its [Random Forest](https://github.com/automl/random_forest_run) is written in C++.
 
 # Installation
 
 ## Requirements
 
 Besides the listed requirements (see `requirements.txt`), the random forest
-used in SMAC3 requires SWIG (>= 3.0, <4.0) as a build dependency:
+used in SMAC3 requires SWIG as a build dependency:
 
 ```apt-get install swig```
 
@@ -124,15 +125,32 @@ target algorithms.
 
 # Examples
 
-See examples/
+We provide a bunch of examples in the [examples folder](examples), such as:
 
-  * examples/rosenbrock.py - example on how to optimize a Python function
-  * examples/spear_qcp/run.sh - example on how to optimize the SAT solver Spear
-    on a set of SAT formulas
+  * Optimization of a Python function directly with SMAC
+    * [branin/branin_fmin.py](examples/branin/branin_fmin.py)
+    * [fmin_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/fmin_rosenbrock.html#sphx-glr-examples-fmin-rosenbrock-py) - Optimization of the 2D Rosenbrock function
+    * [fmin_rosenbrock_parallel.py](https://automl.github.io/SMAC3/master/examples/fmin_rosenbrock_parallel.html#sphx-glr-examples-fmin-rosenbrock-parallel-py) - Example of parallel SMAC using dask
+  * Optimization of a black-box function with SMAC
+    * [SMAC4BO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4BO_rosenbrock.html#sphx-glr-examples-smac4bo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4BO_acq_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_acq_rosenbrock.html#sphx-glr-examples-smac4hpo-acq-rosenbrock-py) - Example to select the acquisition function
+  * Hyperparameter Optimization with SMAC
+    * [SMAC4HPO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_rosenbrock.html#sphx-glr-examples-smac4hpo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4HPO_rf.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py) - Optimization of a random forest
+    * [SMAC4HPO_svm.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py) - Optimization of an SVM [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+  * Optimization of a SAT solver across problem instances with SMAC
+    * [spear_qcp/run_SMAC.sh](examples/spear_qcp/run_SMAC.sh)
+  * Optimization of an MLP
+    * [parallel_sh_mlp.py](https://automl.github.io/SMAC3/master/examples/parallel_sh_mlp.html#sphx-glr-examples-parallel-sh-mlp-py) - Parallel Successive Halving
+    * [hyperband_mlp.py](https://automl.github.io/SMAC3/master/examples/hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py) - Hyperband
+    * [SMAC4MF_mlp.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF_mlp.html#sphx-glr-examples-smac4mf-mlp-py) - SMAC4MF
+    * [SMAC4MF_sgd_instances.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF_sgd_instances.html#sphx-glr-examples-smac4mf-sgd-instances-py) - SMAC4MF across instances
+
+An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
 
 # Contact
 
-SMAC3 is developed by the [AutoML Group of the University of Freiburg](http://www.automl.org/).
+SMAC3 is developed by the [AutoML Groups of the Universities of Hannover and Freiburg](http://www.automl.org/).
 
 If you found a bug, please report to <https://github.com/automl/SMAC3/issues>.
 

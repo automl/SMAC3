@@ -10,9 +10,10 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class BOHB4HPO(SMAC4HPO):
+class SMAC4MF(SMAC4HPO):
     """
-    Facade to use BOHB i.e., SMAC with a Hyperband intensifier for hyperparameter optimization
+    Facade to use SMAC with a Hyperband intensifier for hyperparameter optimization using multiple
+    fidelities
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -64,5 +65,5 @@ class BOHB4HPO(SMAC4HPO):
         # activate predict incumbent
         self.solver.epm_chooser.predict_x_best = True
 
-        # BOHB requires at least D+1 no. of samples to build a model
+        # SMAC4MF requires at least D+1 no. of samples to build a model
         self.solver.epm_chooser.min_samples_model = len(scenario.cs.get_hyperparameters()) + 1

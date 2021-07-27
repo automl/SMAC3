@@ -1,7 +1,6 @@
 import logging
 
 from branin import branin
-
 from smac.facade.func_facade import fmin_smac
 
 """

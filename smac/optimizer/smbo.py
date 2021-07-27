@@ -111,7 +111,7 @@ class SMBO(object):
         predict_x_best: bool
             Choose x_best for computing the acquisition function via the model instead of via the observations.
         min_samples_model: int
--            Minimum number of samples to build a model
+            Minimum number of samples to build a model.
         """
 
         self.logger = logging.getLogger(
@@ -449,14 +449,6 @@ class SMBO(object):
             )
         )
 
-        if result.status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
-                                    "exit. The last incumbent can be found "
-                                    "in the trajectory-file.")
-        elif result.status == StatusType.STOP:
-            self._stop = True
-            return
-
         self.runhistory.add(
             config=run_info.config,
             cost=result.cost,
@@ -471,6 +463,14 @@ class SMBO(object):
             additional_info=result.additional_info,
         )
         self.stats.n_configs = len(self.runhistory.config_ids)
+
+        if result.status == StatusType.ABORT:
+            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
+                                    "exit. The last incumbent can be found "
+                                    "in the trajectory-file.")
+        elif result.status == StatusType.STOP:
+            self._stop = True
+            return
 
         if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
             if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
@@ -492,4 +492,19 @@ class SMBO(object):
         for callback in self._callbacks['_incorporate_run_results']:
             callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
 
+        if self.scenario.save_results_instantly:  # type: ignore[attr-defined] # noqa F821
+            self.save()
+
         return
+
+    def save(self) -> None:
+        """
+        Saves the current stats and runhistory.
+        """
+        self.stats.save()
+
+        output_dir = self.scenario.output_dir_for_this_run
+        if output_dir is not None:
+            self.runhistory.save_json(
+                fn=os.path.join(output_dir, "runhistory.json")
+            )

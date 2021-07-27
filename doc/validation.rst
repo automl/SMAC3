@@ -22,7 +22,7 @@ Commandline
 
 .. code-block:: bash
 
-        python smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT [--configs CONFIG_MODE] [--instances INSTANCE_MODE] [--[no-]epm] [--runhistory RUNHISTORY] [--seed SEED] [--repetitions REPETITIONS] [--n_jobs N_JOBS] [--tae TAE]
+        python3 smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT [--configs CONFIG_MODE] [--instances INSTANCE_MODE] [--[no-]epm] [--runhistory RUNHISTORY] [--seed SEED] [--repetitions REPETITIONS] [--n_jobs N_JOBS] [--tae TAE]
 
 
 Required:

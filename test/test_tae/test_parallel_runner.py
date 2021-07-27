@@ -1,10 +1,13 @@
 import os
-import sys
 import tempfile
 import time
 import unittest
 import unittest.mock
 
+# Add below as a WA for
+# https://github.com/dask/distributed/issues/4168
+import multiprocessing.popen_spawn_posix  # noqa
+import dask  # noqa
 from dask.distributed import Client
 
 from smac.configspace import ConfigurationSpace
@@ -25,7 +28,6 @@ def target_delayed(x, seed, instance):
     return x ** 2, {'key': seed, 'instance': instance}
 
 
-@unittest.skipIf(sys.version_info < (3, 6), 'distributed requires Python >=3.6')
 class TestDaskRunner(unittest.TestCase):
 
     def setUp(self):
