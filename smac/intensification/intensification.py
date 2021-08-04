@@ -284,6 +284,7 @@ class Intensifier(AbstractRacer):
                     )
                     self.stage = IntensifierStage.RUN_INCUMBENT
 
+        inc_saturated = False  # Set to True if no further instance-seed pairs for incumbent are available.
         # LINES 3-7
         if self.stage in [IntensifierStage.RUN_FIRST_CONFIG, IntensifierStage.RUN_INCUMBENT]:
 
@@ -324,6 +325,7 @@ class Intensifier(AbstractRacer):
                 )
 
                 self.stage = IntensifierStage.RUN_CHALLENGER
+                inc_saturated = True
 
         # Understand who is the active challenger.
         if self.stage == IntensifierStage.RUN_BASIS:
@@ -402,7 +404,13 @@ class Intensifier(AbstractRacer):
 
                 # If no more time, stage transition is a must
                 if not is_there_time_due_to_adaptive_cap:
-                    self.stage = IntensifierStage.RUN_INCUMBENT
+                    if inc_saturated:
+                        # No more instance-seed pairs are available for the incumbent, and the challenger is ruled out by adaptive capping.
+                        # We prevent this challenger from running so that a new challenger is targeted in the next iteration.
+                        self.continue_challenger = False
+                        self.to_run = []
+                    else:
+                        self.stage = IntensifierStage.RUN_INCUMBENT
                     self.logger.debug(
                         "Stop challenger itensification due "
                         "to adaptive capping."
