@@ -6,7 +6,7 @@ Quickstart
 
 ###############################################################################
 # If you have not installed *SMAC* yet take a look at the
-# `installation instructions <../installation.html>`_ and make sure that all the requirements are fulfilled.
+# :ref:`installation instructions <installation>` and make sure that all the requirements are fulfilled.
 # Examples to illustrate the usage of *SMAC* - either by reading in a scenario file,
 # or by directly using *SMAC* in Python - are provided in the examples-folder.
 #
