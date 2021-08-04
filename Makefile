@@ -5,11 +5,17 @@ test:
 
 .PHONY: doc
 doc:
+	make -C doc clean
+	make -C doc buildapi
 	make -C doc html-noplot
+	make -C doc linkcheck
 
 .PHONY: doc-with-examples
 doc-with-examples:
+	make -C doc clean
+	make -C doc buildapi
 	make -C doc html
+	make -C doc linkcheck
 
 .PHONY: clean
 clean: clean-data
