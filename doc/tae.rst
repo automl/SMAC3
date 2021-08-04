@@ -1,5 +1,6 @@
-.. _branin: quickstart.html#branin
-.. _spear: quickstart.html#spear-example
+.. _branin: examples/quickstart/quickstart_example.html#branin-example
+.. _svm: examples/quickstart/quickstart_example.html#svm-example
+.. _spear: examples/quickstart/quickstart_example.html#spear-example
 
 .. _tae:
 
@@ -8,8 +9,7 @@ Target Algorithm Evaluator
 
 *SMAC* evaluates the algorithm to be optimized by invoking it through a Target
 Algorithm Evaluator (TAE). There are different TAEs implemented in *SMAC* which
-provide slightly different interfaces. You can see `SVM-example
-<quickstart.html#using-smac-in-python-svm>`_ for an example on the usage.
+provide slightly different interfaces. You can see SVM_ example for more on its usage.
 
 - `smac.tae.execute_ta_run_old <apidoc/smac.tae.execute_ta_run_old.html#module-smac.tae.execute_ta_run_old>`_:
   Used when calling *SMAC* via the `commandline <basic_usage.html#commandline>`_, where it takes the algorithm call

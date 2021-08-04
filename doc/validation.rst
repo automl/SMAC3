@@ -58,6 +58,6 @@ optimization), the `Validator <apidoc/smac.utils.validate.html#Validator>`_ can 
 methods, `validate <apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate>`_ and
 `validate_epm <apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm>`_. Both return runhistories
 containing results for all desired config/instance-pairs.
-To validate an actual `*SMAC*-object <apidoc/smac.facade.smac_facade.html>`_,
-there is also a `method <apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.validate>`_ within *SMAC*
-(see also: `SVM-example <quickstart.html#using-smac-in-python-svm>`_).
+To validate an actual `*SMAC*-object <apidoc/smac.facade.smac_ac_facade.html#module-smac.facade.smac_ac_facade>`_,
+there is also a `method <apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate>`_ within *SMAC*
+(see also: `SVM-example <examples/quickstart/quickstart_example.html#svm-example>`_).

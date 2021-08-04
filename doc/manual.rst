@@ -15,7 +15,7 @@ You can use the `command line <basic_usage.html#commandline>`_ to optimize
 algorithms that are invoked via a bash command,
 but you can also use *SMAC* `directly in Python <basic_usage.html#inpython>`_.
 
-We provide examples for the usage of *SMAC* in the `Quickstart guide <quickstart.html>`_.
+We provide examples for the usage of *SMAC* in the `Quickstart guide <example/quickstart/quickstart_example.html>`_.
 
 *SMAC* is written in Python 3 and hosted on `GitHub
 <https://github.com/automl/SMAC3/>`_.

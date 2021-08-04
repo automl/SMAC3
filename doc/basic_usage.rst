@@ -5,7 +5,7 @@ There are two ways to use *SMAC*, either over the commandline or within your
 Python-code.
 
 Either way, you need to provide the `target algorithm <tae.html#tae>`_ you want to
-optimize and the `configuration space <options.html#pcs>`_, which specifies the legal ranges and
+optimize and the `configuration space <options.html#paramcs>`_, which specifies the legal ranges and
 default values of the tunable parameters. In addition, you can configure the
 optimization process with the `scenario <options.html#scenario>`_-options.
 
@@ -29,7 +29,7 @@ Commandline
 ~~~~~~~~~~~
 To use *SMAC* via the commandline, you need a `scenario-file <options.html#scenario>`_ and a `PCS-file <options.html#pcs>`_.
 The script to invoke *SMAC* is located in *scripts/smac*. Please see the
-`Branin <quickstart.html#branin>`_-example to see how to use it.
+`Branin <examples/quickstart/quickstart_example.html#branin>`_-example to see how to use it.
 
 *SMAC* is called via the commandline with the following arguments:
 
@@ -58,7 +58,7 @@ Both will interpret paths *from the execution-directory*.
     Currently, running *SMAC* via the commandline will register the algorithm with a
     `Target Algorithm Evaluator (TAE) <tae.html#tae>`_, that requires the target algorithm to print
     the results to the console in the following format (see `Branin
-    <quickstart.html#branin>`_):
+    <examples/quickstart/quickstart_example.html#branin>`_):
     
     .. code-block:: bash
     
@@ -90,7 +90,7 @@ implementation with the Branin-example in "examples/quickstart/branin/restore_st
 Usage in Python
 ~~~~~~~~~~~~~~~
 The usage of *SMAC* from your Python-code is described in the `SVM-example
-<quickstart.html#svm-example>`_.
+<examples/quickstart/quickstart_example.html#svm-example>`_.
 Scenario and configuration space are both build within the code. The target
 algorithm needs to be registered with a `Target Algorithm Evaluator (TAE) <tae.html#tae>`_,
 which communicates between *SMAC* and the target algorithm. To optimize a function, you can instantiate
