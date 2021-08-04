@@ -18,9 +18,9 @@ Quickstart
 # * Third, we show a real-world example, using an algorithm-wrapper to optimize the
 # :ref:`SPEAR SAT-solver <spear-example>`.
 #
-# .. _scenario: ../options.html#scenario
-# .. _PCS: ../options.html#paramcs
-# .. _TAE: ../tae.html
+# .. _scenario: ../../options.html#scenario
+# .. _PCS: ../../options.html#paramcs
+# .. _TAE: ../../tae.html
 
 
 ###############################################################################
@@ -53,7 +53,7 @@ def branin(x):
 # f_min-wrapper
 # ~~~~~~~~~~~~~
 # The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
-# <apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_.
+# <../../apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_.
 # We import the fmin-function and wrap it around are simple branin function.
 #
 
@@ -339,7 +339,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 # * **features.txt**:
 #
-#     The `feature file <options.html#feature>`_ contains the features for each instance in a csv-format.
+#     The `feature file <../../options.html#feature>`_ contains the features for each instance in a csv-format.
 #
 #     +--------------------+--------------------+--------------------+-----+
 #     |      instance      | name of feature 1  | name of feature 2  | ... |
@@ -350,7 +350,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #     +--------------------+--------------------+--------------------+-----+
 #
 # * **instances.txt**
-#     The `instance file <options.html#instance>`_ contains the names of all
+#     The `instance file <../../options.html#instance>`_ contains the names of all
 # instances one might want to consider during the optimization process.
 #
 # * **scenario.txt**
