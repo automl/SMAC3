@@ -130,21 +130,21 @@ We provide a bunch of examples in the [examples folder](examples), such as:
   * Optimization of a Python function directly with SMAC
     * [branin/branin_fmin_example.py](examples/quickstart/branin/branin_fmin_example.py)
     * [fmin_rosenbrock_example.py](examples/function_minimization/fmin_rosenbrock_example.py) - Optimization of the 2D Rosenbrock function
-    * [fmin_rosenbrock_parallel.py](examples/parallel/fmin_rosenbrock_paralell_example.py) - Example of parallel SMAC using dask
+    * [fmin_rosenbrock_parallel_example.py](examples/parallel/fmin_rosenbrock_paralell_example.py) - Example of parallel SMAC using dask
   * Optimization of a black-box function with SMAC
-    * [SMAC4BO_rosenbrock.py](examples/SMAC4BO/SMAC4BO_rosenbrock_example.py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
-    * [SMAC4HPO_acq_rosenbrock.py](examples/SMAC4HPO/SMAC4HPO_acq_rosenbrock.py) - Example to select the acquisition function
+    * [SMAC4BO_rosenbrock_example.py](examples/SMAC4BO/SMAC4BO_rosenbrock_example.py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4HPO_acq_rosenbrock_example.py](examples/SMAC4HPO/SMAC4HPO_acq_rosenbrock_example.py) - Example to select the acquisition function
   * Hyperparameter Optimization with SMAC
-    * [SMAC4HPO_rosenbrock.py](examples/SMAC4HPO/SMAC4HPO_rosenbrock_example.py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
-    * [SMAC4HPO_gradientboosting.py](examples/SMAC4HPO/SMAC4HPO_gradientboosting_example.py) - Optimization of a gradient boosted classifier
-    * [SMAC4HPO_svm.py](examples/SMAC4HPO/SMAC4HPO_svm_example.py) - Optimization of an SVM [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4HPO_rosenbrock_example.py](examples/SMAC4HPO/SMAC4HPO_rosenbrock_example.py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
+    * [SMAC4HPO_gradientboosting_example.py](examples/SMAC4HPO/SMAC4HPO_gradientboosting_example.py) - Optimization of a gradient boosted classifier
+    * [SMAC4HPO_svm_example.py](examples/SMAC4HPO/SMAC4HPO_svm_example.py) - Optimization of an SVM [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
   * Optimization of a SAT solver across problem instances with SMAC
     * [spear_qcp/run_SMAC.sh](examples/quickstart/spear_qcp/run_SMAC.sh)
   * Optimization of an MLP
-    * [parallel_sh_mlp.py](examples/parallel/parallel_sh_mlp_example.py) - Parallel Successive Halving
+    * [parallel_sh_mlp_example.py](examples/parallel/parallel_sh_mlp_example.py) - Parallel Successive Halving
     * [hyperband_mlp.py](examples/hyperband/hyperband_mlp_example.py) - Hyperband
-    * [SMAC4MF_mlp.py](examples/SMAC4MF/SMAC4MF_mlp.py) - SMAC4MF
-    * [SMAC4MF_sgd_instances.py](examples/SMAC4MF/SMAC4MF_sgd_instances.py) - SMAC4MF across instances
+    * [SMAC4MF_mlp_example.py](examples/SMAC4MF/SMAC4MF_mlp_example.py) - SMAC4MF
+    * [SMAC4MF_sgd_instances_example.py](examples/SMAC4MF/SMAC4MF_sgd_instances_example.py) - SMAC4MF across instances
 
 An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
 
