@@ -4,10 +4,10 @@ Basic Usage
 There are two ways to use *SMAC*, either over the commandline or within your
 Python-code.
 
-Either way, you need to provide the `target algorithm <tae.html#tae>`_ you want to
-optimize and the `configuration space <options.html#paramcs>`_, which specifies the legal ranges and
+Either way, you need to provide the :ref:`target algorithm <tae>` you want to
+optimize and the :ref:`configuration space <paramcs>`, which specifies the legal ranges and
 default values of the tunable parameters. In addition, you can configure the
-optimization process with the `scenario <options.html#scenario>`_-options.
+optimization process with the :ref:`scenario <scenario>`-options.
 
 The most important scenario-options are:
 
@@ -19,17 +19,17 @@ The most important scenario-options are:
   are used to control maximum wallclock-time, number of algorithm calls and
   cpu-time used for optimization respectively.
 - **instance_file**, **test_instance_file** and **feature_file** specify the
-  paths to the instances and features (see `file-formats <options.html#instance>`_)
+  paths to the instances and features (see :ref:`file-formats <instance>`)
 
-For a full list, see `scenario-options <options.html#scenario>`_.
+For a full list, see :ref:`scenario-options <scenario>`.
 
 .. _commandline:
 
 Commandline 
 ~~~~~~~~~~~
-To use *SMAC* via the commandline, you need a `scenario-file <options.html#scenario>`_ and a `PCS-file <options.html#pcs>`_.
+To use *SMAC* via the commandline, you need a :ref:`scenario-file <scenario>` and a :ref:`PCS-file <paramcs>`.
 The script to invoke *SMAC* is located in *scripts/smac*. Please see the
-`Branin <examples/quickstart/quickstart_example.html#branin>`_-example to see how to use it.
+:ref:`Branin <branin-example>`-example to see how to use it.
 
 *SMAC* is called via the commandline with the following arguments:
 
@@ -38,7 +38,7 @@ The script to invoke *SMAC* is located in *scripts/smac*. Please see the
         python3 smac --scenario SCENARIO --seed INT --verbose_level LEVEL --mode MODE
 
 Required:
-     * *scenario*: Path to the file that specifies the `scenario <options.html#scenario>`_ for this *SMAC*-run.
+     * *scenario*: Path to the file that specifies the `scenario <scenario>` for this *SMAC*-run.
 Optional:
      * *seed*: The integer that the random-generator will be based upon. **Default**: 12345
      * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. **Default**: INFO
@@ -48,17 +48,16 @@ Optional:
 In the scenario file, there are two mandatory parameters: The **algo**-parameter
 defines how *SMAC* will call the target algorithm. Parameters will be appended to the call
 with ``-PARAMETER VALUE``, so make sure your algorithm will accept the parameters in this
-form. Read more in the section on `target algorithms <tae.html#tae>`_.
-The **paramfile**-parameter defines the path to the `PCS-file <options.html#pcs>`_,
+form. Read more in the section on :ref:`target algorithms <tae>`.
+The **paramfile**-parameter defines the path to the `PCS-file <paramcs>`,
 which describes the ranges and default values of the tunable parameters.
 Both will interpret paths *from the execution-directory*.
 
 .. note::
 
     Currently, running *SMAC* via the commandline will register the algorithm with a
-    `Target Algorithm Evaluator (TAE) <tae.html#tae>`_, that requires the target algorithm to print
-    the results to the console in the following format (see `Branin
-    <examples/quickstart/quickstart_example.html#branin>`_):
+    :ref:`Target Algorithm Evaluator (TAE) <tae>`, that requires the target algorithm to print
+    the results to the console in the following format (see :ref:`Branin <branin-example>`):
     
     .. code-block:: bash
     
@@ -89,23 +88,22 @@ implementation with the Branin-example in "examples/quickstart/branin/restore_st
 
 Usage in Python
 ~~~~~~~~~~~~~~~
-The usage of *SMAC* from your Python-code is described in the `SVM-example
-<examples/quickstart/quickstart_example.html#svm-example>`_.
+The usage of *SMAC* from your Python-code is described in the :ref:`SVM-example <svm-example>`.
 Scenario and configuration space are both build within the code. The target
-algorithm needs to be registered with a `Target Algorithm Evaluator (TAE) <tae.html#tae>`_,
+algorithm needs to be registered with a :ref:`Target Algorithm Evaluator (TAE) <tae>`,
 which communicates between *SMAC* and the target algorithm. To optimize a function, you can instantiate
-`ExecuteTAFuncDict <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict>`_ or
-`ExecuteTAFuncArray <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray>`_.
+:class:`ExecuteTAFuncDict <smac.tae.execute_func.ExecuteTAFuncDict>` or
+:class:`ExecuteTAFuncArray <smac.tae.execute_func.ExecuteTAFuncArray>`.
 In that case, the algorithm needs to return a cost, representing the quality of
 the solution, while time- and memory-limits are measured and enforced by `Pynisher
 <https://github.com/sfalkner/pynisher>`_, so no wrapper is needed for your
 algorithm here.
 
-- `ExecuteTAFuncDict <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict>`_:
+- :class:`ExecuteTAFuncDict <smac.tae.execute_func.ExecuteTAFuncDict>`:
   The target algorithm is called with a dict-like configuration and optionally
   with seed and instance, returning either the loss as a float or a tuple (loss,
   additional information).
-- `ExecuteTAFuncArray <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray>`_:
+- :class:`ExecuteTAFuncArray <smac.tae.execute_func.ExecuteTAFuncArray>`:
   The target algorithm is called with an array-like configuration and optionally
   with seed and instance, returning either the loss as a float or a tuple (loss,
   additional information).

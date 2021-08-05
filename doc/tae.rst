@@ -1,7 +1,3 @@
-.. _branin: examples/quickstart/quickstart_example.html#branin-example
-.. _svm: examples/quickstart/quickstart_example.html#svm-example
-.. _spear: examples/quickstart/quickstart_example.html#spear-example
-
 .. _tae:
 
 Target Algorithm Evaluator
@@ -9,11 +5,11 @@ Target Algorithm Evaluator
 
 *SMAC* evaluates the algorithm to be optimized by invoking it through a Target
 Algorithm Evaluator (TAE). There are different TAEs implemented in *SMAC* which
-provide slightly different interfaces. You can see SVM_ example for more on its usage.
+provide slightly different interfaces. You can see :ref:`SVM example <svm-example>` for more on its usage.
 
-- `smac.tae.execute_ta_run_old <apidoc/smac.tae.execute_ta_run_old.html#module-smac.tae.execute_ta_run_old>`_:
-  Used when calling *SMAC* via the `commandline <basic_usage.html#commandline>`_, where it takes the algorithm call
-  from the algo-parameter of the `scenario <options.html#scenario>`_.
+- :class:`smac.tae.execute_ta_run_old <smac.tae.execute_ta_run_old>`:
+  Used when calling *SMAC* via the :ref:`commandline <commandline>`, where it takes the algorithm call
+  from the algo-parameter of the :ref:`scenario <scenario>`.
   The parameters will be appended to the algorithm call, which in total looks
   like:
 
@@ -36,7 +32,7 @@ provide slightly different interfaces. You can see SVM_ example for more on its 
       Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
       Result for ParamILS: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
 
-  The examples Branin_ or SPEAR_ reflect the usage.
+  The examples :ref:`Branin <branin-example>` or :ref:`Spear <spear-example>` reflect the usage.
   
   * **STATUS** can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.
   * **running time** indicates the time that the execution took.
@@ -45,8 +41,8 @@ provide slightly different interfaces. You can see SVM_ example for more on its 
   * **seed** is the seed used for the algorithm call.
   * **instance-specifics** is additional information.
 
-- `ExecuteTAFuncDict <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict>`_ and
-  `ExecuteTAFuncArray <apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray>`_:
+- :class:`ExecuteTAFuncDict <smac.tae.execute_func.ExecuteTAFuncDict>` and
+  :class:`ExecuteTAFuncArray <smac.tae.execute_func.ExecuteTAFuncArray>`:
   The target algorithm is called with a dict- or array-like configuration and optionally
   with seed and instance, returning either the loss as a float or a tuple (loss,
   additional information). This is very handy when used within Python to

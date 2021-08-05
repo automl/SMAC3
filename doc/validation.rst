@@ -2,7 +2,7 @@ Validation
 ----------
 
 During optimization, *SMAC* does not automatically evaluate all configurations on all instances.
-The `validate-module <apidoc/smac.utils.validate.html>`_ provides a convenient
+The :mod:`validate-module <smac.utils.validate>` provides a convenient
 way to do this after a configuration run is finished. You can specify a set of configurations and a set of instances,
 whereupon the validator will run every configuration on every instance. This is
 either done by calling the target algorithm - or it is estimated using an EPM.
@@ -26,7 +26,7 @@ Commandline
 
 
 Required:
-     * *scenario*: Path to the file that specifies the `scenario <options.html#scenario>`_ THAT IS USED FOR THE VALIDATION.
+     * *scenario*: Path to the file that specifies the :ref:`scenario <scenario>` THAT IS USED FOR THE VALIDATION.
      * *trajectory*: Path to the trajectory of the *SMAC*-run.
      * *output*: Path to save output-runhistory to.
 Optional:
@@ -45,7 +45,7 @@ Optional:
      * *n_jobs*: if no-epm is used, this is the number of cores to use for
        evaluation in parallel **Default**: 1 
      * *tae* from [old, aclib], if no-epm is used, this specifies the format of
-       the target algorithm (see `tae <tae.html>`_) **Default**: old
+       the target algorithm (see :ref:`tae`) **Default**: old
      * *verbose_level*: in [INFO, DEBUG], specifies the logging-verbosity. **Default**: INFO
      * *seed*: seed to be used for validation
 
@@ -54,10 +54,10 @@ Usage in Python
 ~~~~~~~~~~~~~~~
 
 To validate directly in Python (e.g. to perform a validation immediately after an
-optimization), the `Validator <apidoc/smac.utils.validate.html#Validator>`_ can be used. It provides two different
-methods, `validate <apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate>`_ and
-`validate_epm <apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm>`_. Both return runhistories
+optimization), the :class:`Validator <smac.utils.validate.Validator>` can be used. It provides two different
+methods, :meth:`validate <smac.utils.validate.Validator.validate>` and
+:meth:`validate_epm <smac.utils.validate.Validator.validate_epm>`. Both return runhistories
 containing results for all desired config/instance-pairs.
-To validate an actual `*SMAC*-object <apidoc/smac.facade.smac_ac_facade.html#module-smac.facade.smac_ac_facade>`_,
-there is also a `method <apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate>`_ within *SMAC*
-(see also: `SVM-example <examples/quickstart/quickstart_example.html#svm-example>`_).
+To validate an actual :class:`*SMAC*-object <smac.facade.smac_ac_facade.SMAC4AC>`,
+it has its own method :meth:`validate <smac.facade.smac_ac_facade.SMAC4AC.validate>` within *SMAC*
+(see also: :ref:`SVM-example <svm-example>`).

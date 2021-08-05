@@ -18,8 +18,6 @@ Quickstart
 # * Third, we show a real-world example, using an algorithm-wrapper to optimize the
 # :ref:`SPEAR SAT-solver <spear-example>`.
 #
-# .. _scenario: ../../options.html#scenario
-# .. _PCS: ../../options.html#paramcs
 # .. _TAE: ../../tae.html
 
 
@@ -52,8 +50,8 @@ def branin(x):
 #
 # f_min-wrapper
 # ~~~~~~~~~~~~~
-# The easiest way to use *SMAC* is to use the `f_min SMAC wrapper
-# <../../apidoc/smac.facade.func_facade.html#smac.facade.func_facade.fmin_smac>`_.
+# The easiest way to use *SMAC* is to use the :func:`f_min SMAC wrapper
+# <smac.facade.func_facade.fmin_smac>`.
 # We import the fmin-function and wrap it around are simple branin function.
 #
 
@@ -69,7 +67,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 
 ###############################################################################
 # This way, you can optimize a blackbox-function with minimal effort. However, to
-# use all of *SMAC's* capability, a scenario_ object should be used.
+# use all of *SMAC's* capability, a :ref:`scenario` object should be used.
 #
 # Command line
 # ~~~~~~~~~~~~
@@ -94,7 +92,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 # .. literalinclude:: ../../../examples/quickstart/branin/scenario.txt
 #
 # The **algo** parameter specifies how *SMAC* calls the target algorithm to be optimized.
-# This is further explained in the chapter about the Target Algorithm Evaluator (TAE_).
+# This is further explained in the chapter about the Target Algorithm Evaluator (:ref:`TAE <tae>`).
 # An algorithm call by *SMAC* is of the following format:
 #
 #     .. code-block:: bash
@@ -103,7 +101,7 @@ print("Optimum at {} with cost of {}".format(x, cost))
 #         python branin.py 0 0 999999999.0 0 1148756733 -x1 -1.1338595629 -x2 13.8770222718
 #
 # The **paramfile** parameter tells *SMAC* which Parameter Configuration Space
-# (PCS_)-file to use. This file contains a list of the algorithm's parameters,
+# :ref:`PCS <paramcs>`-file to use. This file contains a list of the algorithm's parameters,
 # their domains and default values:
 #
 #     .. literalinclude:: ../../../examples/quickstart/branin/param_config_space.pcs
@@ -339,7 +337,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #
 # * **features.txt**:
 #
-#     The `feature file <../../options.html#feature>`_ contains the features for each instance in a csv-format.
+#     The :ref:`feature file <feature>` contains the features for each instance in a csv-format.
 #
 #     +--------------------+--------------------+--------------------+-----+
 #     |      instance      | name of feature 1  | name of feature 2  | ... |
@@ -350,7 +348,7 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #     +--------------------+--------------------+--------------------+-----+
 #
 # * **instances.txt**
-#     The `instance file <../../options.html#instance>`_ contains the names of all
+#     The ref:`instance` contains the names of all
 # instances one might want to consider during the optimization process.
 #
 # * **scenario.txt**
