@@ -348,83 +348,84 @@ smac.validate(config_mode='inc',  # We can choose which configurations to evalua
 #     +--------------------+--------------------+--------------------+-----+
 #
 # * **instances.txt**
-#     The ref:`instance` contains the names of all
-# instances one might want to consider during the optimization process.
+#   The ref:`instance` contains the names of all
+#   instances one might want to consider during the optimization process.
 #
 # * **scenario.txt**
-#     The scenario_ file contains all the necessary information about the configuration scenario at hand.
+#   The :ref:`scenario <scenario>` file contains all the necessary information about the configuration scenario at hand.
 #
-#     .. literalinclude:: ../../../examples/quickstart/spear_qcp/scenario.txt
+#   .. literalinclude:: ../../../examples/quickstart/spear_qcp/scenario.txt
 #
-#     For this example the following options are used:
+#   For this example the following options are used:
 #
-#     * *algo:*
+#   * *algo:*
 #
-#         .. code-block:: bash
+#     .. code-block:: bash
 #
-#             python -u ./target_algorithm/scripts/SATCSSCWrapper.py \
-#               --mem-limit 1024 \
-#               --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+#         python -u ./target_algorithm/scripts/SATCSSCWrapper.py \
+#             --mem-limit 1024 \
+#             --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 #
-#         This specifies the wrapper that *SMAC* executes with a pre-specified
-#         syntax in order to evaluate the algorithm to be optimized.
-#         This wrapper script takes an instantiation of the parameters as input,
-#         runs the algorithm with these parameters, and returns
-#         the cost of running the algorithm; since every algorithm has a different
-#         input and output format, this wrapper acts as an interface between the
-#         algorithm and *SMAC*, which executes the wrapper through a command line call.
+#     This specifies the wrapper that *SMAC* executes with a pre-specified
+#     syntax in order to evaluate the algorithm to be optimized.
+#     This wrapper script takes an instantiation of the parameters as input,
+#     runs the algorithm with these parameters, and returns
+#     the cost of running the algorithm; since every algorithm has a different
+#     input and output format, this wrapper acts as an interface between the
+#     algorithm and *SMAC*, which executes the wrapper through a command line call.
 #
-#         An example call would look something like this:
+#     An example call would look something like this:
 #
-#         .. code-block:: bash
+#     .. code-block:: bash
 #
-#             <algo> <instance> <instance specifics> <cutoff time> <runlength> <seed> <algorithm parameters>
+#         <algo> <instance> <instance specifics> <cutoff time> <runlength> <seed> <algorithm parameters>
 #
-#         For *SMAC* to be able to interpret the results of the algorithm run,
-#         the wrapper returns the results of the algorithm run as follows:
+#     For *SMAC* to be able to interpret the results of the algorithm run,
+#     the wrapper returns the results of the algorithm run as follows:
 #
-#         .. code-block:: bash
+#     .. code-block:: bash
 #
-#             STATUS, running time, runlength, quality, seed, instance-specifics
+#         STATUS, running time, runlength, quality, seed, instance-specifics
 #
-#     * *paramfile:*
+#   * *paramfile:*
 #
-#         This parameter specifies which pcs-file to use and where it is located.
+#     This parameter specifies which pcs-file to use and where it is located.
 #
-#         The PCS-file specifies the Parameter Configuration Space file, which
-#         lists the algorithm's parameters, their domains, and default values (one per line)
+#     The PCS-file specifies the Parameter Configuration Space file, which
+#     lists the algorithm's parameters, their domains, and default values (one per line)
 #
-#         In this example we are dealing with 26 parameters of which 12 are categorical
-#         and 14 are continuous. Out of these 26
-#         parameters, 9 parameters are conditionals (they are only active if
-#         their parent parameter takes on a certain value).
+#     In this example we are dealing with 26 parameters of which 12 are categorical
+#     and 14 are continuous. Out of these 26
+#     parameters, 9 parameters are conditionals (they are only active if
+#     their parent parameter takes on a certain value).
 #
-#     * *execdir:* Specifies the directory in which the target algorithm will be run.
+#   * *execdir:* Specifies the directory in which the target algorithm will be run.
 #
-#     * *deterministic:* Specifies if the target algorithm is deterministic.
+#   * *deterministic:* Specifies if the target algorithm is deterministic.
 #
-#     * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. running time or (solution) quality.
+#   * *run_obj:* This parameter tells *SMAC* what is to be optimized, i.e. running time or (solution) quality.
 #
-#     * *overall_obj:* Specifies how to evaluate the error values, e.g as mean or PARX.
+#   * *overall_obj:* Specifies how to evaluate the error values, e.g as mean or PARX.
 #
-#     * *cutoff_time:* The target algorithms cutoff time.
+#   * *cutoff_time:* The target algorithms cutoff time.
 #
-#     * *wallclock-limit:* This parameter is used to give the time budget for the configuration task in seconds.
+#   * *wallclock-limit:* This parameter is used to give the time budget for the configuration task in seconds.
 #
-#     * *instance_file:* See instances.txt above.
+#   * *instance_file:* See instances.txt above.
 #
-#     * *feature_file:* See features.txt above.
+#   * *feature_file:* See features.txt above.
 #
 # * **run.sh**
-#     A shell script calling *SMAC* with the following command:
+#   A shell script calling *SMAC* with the following command:
 #
-#         .. code-block:: bash
+#   .. code-block:: bash
 #
-#               python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
+#       python ../../scripts/smac --scenario scenario.txt --verbose DEBUG``
 #
-#     This runs *SMAC* with the scenario options specified in the scenario.txt file.
+#   This runs *SMAC* with the scenario options specified in the scenario.txt file.
 #
 # * **target_algorithms** contains the wrapper and the executable for Spear.
+#
 # * **instances** folder contains the instances on which *SMAC* will configure Spear.
 #
 # To run the example type one of the two commands below into a terminal:

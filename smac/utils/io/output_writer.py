@@ -67,8 +67,11 @@ class OutputWriter(object):
         the configspace, features, train_inst- and test-inst-lists are saved
         to output_dir, if they exist.
 
-        Parameters:
-        -----------
+        Sideeffects - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
+        output if possible, creates the files from attributes otherwise
+
+        Parameters
+        ----------
             scenario: Scenario
                 Scenario-file to be written
             key: string
@@ -76,15 +79,11 @@ class OutputWriter(object):
             value: Any
                 Corresponding attribute
 
-        Returns:
-        --------
+        Returns
+        -------
             new value: string
                 The altered value, to be written to file
 
-        Sideeffects:
-        ------------
-          - copies files pcs_fn, train_inst_fn, test_inst_fn and feature_fn to
-            output if possible, creates the files from attributes otherwise
         """
         if key in ['pcs_fn', 'train_inst_fn', 'test_inst_fn', 'feature_fn']:
             # Copy if file exists, else write to new file

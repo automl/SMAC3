@@ -49,7 +49,7 @@ class IntensifierStage(Enum):
 
 
 class Intensifier(AbstractRacer):
-    """Races challengers against an incumbent
+    """ Races challengers against an incumbent
 
     SMAC's intensification procedure, in detail:
 
@@ -59,12 +59,12 @@ class Intensifier(AbstractRacer):
     where:
     Θ_new: Sequence of parameter settings to evaluate, challengers in this class.
     θ_inc: incumbent parameter setting, incumbent in this class.
-    ____________________________________________________________
+
     1 for i := 1, . . . , length(Θ_new) do
     2     θ_new ← Θ_new[i]
-                            _____________________
+
                             STAGE-->RUN_INCUMBENT
-                            ---------------------
+
     3     if R contains less than maxR runs with configuration θ_inc then
     4         Π' ← {π'∈ Π | R contains less than or equal number of runs using θ_inc and π'
     0         than using θ_inc and any other π''∈ Π}
@@ -72,58 +72,22 @@ class Intensifier(AbstractRacer):
     6         s ← seed, drawn uniformly at random
     7         R ← ExecuteRun(R, θ_inc, π, s)
     8     N ← 1
-                            ______________________
-                            STAGE-->RUN_CHALLENGER
-                            ----------------------
-    9     while true do
-   10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
-   11         S_torun ←random subset of S_missing of size min(N, |S_missing|)
-   12         foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
-   13         S_missing ← S_missing \ S_torun
-   14         Π_common ← instances for which we previously ran both θ_inc and θ_new
-   15         if cˆ(θ_new, Π_common) > cˆ(θ_inc, Π_common) then break
-   16         else if S_missing = ∅ then θ_inc ← θ_new; break
-   17         else N ← 2 · N
-   18     if time spent in this call to this procedure exceeds t_intensify and i ≥ 2 then break
-   19 return [R, θ_inc]
 
-    Parameters
-    ----------
-    stats: Stats
-        stats object
-    traj_logger: TrajLogger
-        TrajLogger object to log all new incumbents
-    rng : np.random.RandomState
-    instances : typing.List[str]
-        list of all instance ids
-    instance_specifics : typing.Mapping[str,np.ndarray]
-        mapping from instance name to instance specific string
-    cutoff : int
-        runtime cutoff of TA runs
-    deterministic: bool
-        whether the TA is deterministic or not
-    run_obj_time: bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
-    always_race_against: Configuration
-        if incumbent changes race this configuration always against new incumbent;
-        can sometimes prevent over-tuning
-    use_ta_time_bound: bool,
-        if true, trust time reported by the target algorithms instead of
-        measuring the wallclock time for limiting the time of intensification
-    run_limit : int
-        Maximum number of target algorithm runs per call to intensify.
-    maxR : int
-        Maximum number of runs per config (summed over all calls to
-        intensifiy).
-    minR : int
-        Minimum number of run per config (summed over all calls to
-        intensify).
-    adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
-        minimal number of challengers to be considered
-        (even if time_bound is exhausted earlier)
+                            STAGE-->RUN_CHALLENGER
+
+    9     while true do
+    10        S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
+    11        S_torun ← random subset of S_missing of size min(N, size(S_missing))
+    12        foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
+    13        S_missing ← S_missing \ S_torun
+    14        Π_common ← instances for which we previously ran both θ_inc and θ_new
+    15        if cˆ(θ_new, Π_common) > cˆ(θ_inc, Π_common) then break
+    16        else if S_missing = ∅ then θ_inc ← θ_new; break
+    17        else N ← 2 · N
+    18    if time spent in this call to this procedure exceeds t_intensify and i ≥ 2 then break
+    19 return [R, θ_inc]
     """
+
 
     def __init__(self,
                  stats: Stats,
@@ -141,6 +105,45 @@ class Intensifier(AbstractRacer):
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int = 2,):
+        """ Creates an Intensifier object
+
+        Parameters
+        ----------
+        stats: Stats
+            stats object
+        traj_logger: TrajLogger
+            TrajLogger object to log all new incumbents
+        rng : np.random.RandomState
+        instances : typing.List[str]
+            list of all instance ids
+        instance_specifics : typing.Mapping[str,np.ndarray]
+            mapping from instance name to instance specific string
+        cutoff : int
+            runtime cutoff of TA runs
+        deterministic: bool
+            whether the TA is deterministic or not
+        run_obj_time: bool
+            whether the run objective is runtime or not (if true, apply adaptive capping)
+        always_race_against: Configuration
+            if incumbent changes race this configuration always against new incumbent;
+            can sometimes prevent over-tuning
+        use_ta_time_bound: bool,
+            if true, trust time reported by the target algorithms instead of
+            measuring the wallclock time for limiting the time of intensification
+        run_limit : int
+            Maximum number of target algorithm runs per call to intensify.
+        maxR : int
+            Maximum number of runs per config (summed over all calls to
+            intensifiy).
+        minR : int
+            Minimum number of run per config (summed over all calls to
+            intensify).
+        adaptive_capping_slackfactor: float
+            slack factor of adpative capping (factor * adpative cutoff)
+        min_chall: int
+            minimal number of challengers to be considered
+            (even if time_bound is exhausted earlier)
+        """
 
         super().__init__(stats=stats,
                          traj_logger=traj_logger,
@@ -476,13 +479,14 @@ class Intensifier(AbstractRacer):
         of a configuration execution.
 
         During intensification, the following can happen:
-        -> Challenger raced against incumbent
-        -> Also, during a challenger run, a capped exception
-           can be triggered, where no racer post processing is needed
-        -> A run on the incumbent for more confidence needs to
-           be processed, IntensifierStage.PROCESS_INCUMBENT_RUN
-        -> The first run results need to be processed
-           (PROCESS_FIRST_CONFIG_RUN)
+
+        *   Challenger raced against incumbent
+        *   Also, during a challenger run, a capped exception
+            can be triggered, where no racer post processing is needed
+        *   A run on the incumbent for more confidence needs to
+            be processed, IntensifierStage.PROCESS_INCUMBENT_RUN
+        *   The first run results need to be processed
+            (PROCESS_FIRST_CONFIG_RUN)
 
         At the end of any run, checks are done to move to a new iteration.
 
@@ -783,8 +787,7 @@ class Intensifier(AbstractRacer):
         challenger: Configuration,
         run_history: RunHistory,
     ) -> bool:
-        """
-        A check to see if there is no more time for a challenger
+        """ A check to see if there is no more time for a challenger
         given the fact, that we are optimizing time and the
         incumbent looks more promising
         Line 18
@@ -820,7 +823,7 @@ class Intensifier(AbstractRacer):
                                run_history: RunHistory,
                                log_traj: bool = True,
                                ) -> typing.Optional[Configuration]:
-        """Process the result of a racing configuration against the
+        """ Process the result of a racing configuration against the
         current incumbent. Might propose a new incumbent.
 
         Parameters
