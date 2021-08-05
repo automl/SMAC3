@@ -411,8 +411,7 @@ class Validator(object):
                   repetitions: int = 1,
                   runhistory: RunHistory = None,
                   ) -> typing.Tuple[typing.List[_Run], RunHistory]:
-        """
-        Generate list of SMAC-TAE runs to be executed. This means
+        """ Generate list of SMAC-TAE runs to be executed. This means
         combinations of configs with all instances on a certain number of seeds.
 
         side effect: Adds runs that don't need to be reevaluated to self.rh!
@@ -422,9 +421,9 @@ class Validator(object):
         configs: str or list<Configuration>
             string or directly a list of Configuration
             str from [def, inc, def+inc, wallclock_time, cpu_time, all]
-                time evaluates at cpu- or wallclock-timesteps of:
-                [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
-                with max_time being the highest recorded time
+            time evaluates at cpu- or wallclock-timesteps of:
+            [max_time/2^0, max_time/2^1, max_time/2^3, ..., default]
+            with max_time being the highest recorded time
         insts: str or list<str>
             what instances to use for validation, either from
             [train, test, train+test] or directly a list of instances
