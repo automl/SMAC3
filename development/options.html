@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Options and file formats</a></li>
@@ -214,20 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -306,24 +295,24 @@
 options:</p>
 <dl class="simple">
 <dt>Mandatory:</dt><dd><ul class="simple">
-<li><p><a class="reference external" href="basic_usage.html#commandline">Commandline</a>-options, with which <em>SMAC</em> is called directly (not needed if
+<li><p><a class="reference internal" href="basic_usage.html#commandline"><span class="std std-ref">Command line</span></a>-options, with which <em>SMAC</em> is called directly (not needed if
 <em>SMAC</em> is used within Python).</p></li>
 <li><p>Scenario-options, that are specified via a Scenario-object. Either directly
-in the Python-code or by using a <a class="reference internal" href="#scenario">scenario</a>-file.</p></li>
-<li><p>A Parameter Configuration Space (<a class="reference external" href="options.html#paramcs">PCS</a>), that provides the legal ranges of
+in the Python-code or by using a <a class="reference internal" href="#scenario"><span class="std std-ref">scenario</span></a>-file.</p></li>
+<li><p>A Parameter Configuration Space (<a class="reference internal" href="#paramcs"><span class="std std-ref">PCS</span></a>), that provides the legal ranges of
 parameters to optimize, their types (e.g. int or float) and their default
 values.</p></li>
 </ul>
 </dd>
 <dt>Optional:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="#instance">Instance</a>- and <a class="reference internal" href="#feature">feature</a>-files, that list the instances and features to
+<li><p><a class="reference internal" href="#instance"><span class="std std-ref">Instance</span></a>- and <a class="reference internal" href="#feature"><span class="std std-ref">feature</span></a>-files, that list the instances and features to
 optimize upon.</p></li>
 </ul>
 </dd>
 </dl>
 <div class="section" id="smac-options">
 <span id="id1"></span><h2>SMAC Options<a class="headerlink" href="#smac-options" title="Permalink to this headline">¶</a></h2>
-<p>The basic command line options are described in <a class="reference external" href="basic_usage.html#commandline">Basic Usage</a>.
+<p>The basic command line options are described in <a class="reference internal" href="basic_usage.html#commandline"><span class="std std-ref">Basic Usage</span></a>.
 The options are separated into three groups, <em>Main Options</em>, <em>SMAC Options</em> and <em>Scenario Options</em>.
 See the Main and SMAC Options below. Find the Scenario Options in the next section.</p>
 <p>Main Options:</p>
@@ -398,7 +387,7 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <dd class="field-odd"><p>Minimum number of calls per configuration. Default: 1.</p>
 </dd>
 <dt class="field-even">output_dir</dt>
-<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2021-07-27_15:10:13_245223.</p>
+<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2021-08-05_11:31:45_188137.</p>
 </dd>
 <dt class="field-odd">rand_prob</dt>
 <dd class="field-odd"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
@@ -444,8 +433,8 @@ See the Main and SMAC Options below. Find the Scenario Options in the next secti
 <div class="section" id="scenario">
 <span id="id2"></span><h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline">¶</a></h2>
 <p>The scenario-object (<a class="reference internal" href="apidoc/smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.scenario.scenario.Scenario</span></code></a>) is used to configure <em>SMAC</em> and can be constructed either by providing an actual
-scenario-object (see <a class="reference external" href="quickstart.html#using-smac-in-python-svm">SVM-example</a>), or by specifing the options in a
-scenario file (see <a class="reference external" href="quickstart.html#spear-example">SPEAR example</a>).</p>
+scenario-object (see <a class="reference internal" href="examples/quickstart/quickstart_example.html#svm-example"><span class="std std-ref">SVM-example</span></a>), or by specifing the options in a
+scenario file (see <a class="reference internal" href="examples/quickstart/quickstart_example.html#spear-example"><span class="std std-ref">SPEAR example</span></a>).</p>
 <p>The format of the scenario file is one option per line:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">OPTION1</span> <span class="o">=</span> VALUE1
 <span class="nv">OPTION2</span> <span class="o">=</span> VALUE2
@@ -555,11 +544,11 @@ strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.</
 <div class="section" id="instances-and-features">
 <span id="feature"></span><span id="instance"></span><h2>Instances and Features<a class="headerlink" href="#instances-and-features" title="Permalink to this headline">¶</a></h2>
 <p>To specify instances and features, simply provide text-files in the following
-format and provide the paths to the instances in the <a class="reference internal" href="#scenario">scenario</a>.</p>
+format and provide the paths to the instances in the <a class="reference internal" href="#scenario"><span class="std std-ref">scenario</span></a>.</p>
 <p>Instance-files are text-files with one instance per line. If you want to use
 training- and test-sets, separate files are expected.</p>
 <p>Feature-files are files following the comma-separated-value-format, as can also be
-seen in the <a class="reference external" href="quickstart.html#spear-qcp">SPEAR-example</a>:</p>
+seen in the <a class="reference internal" href="examples/quickstart/quickstart_example.html#spear-example"><span class="std std-ref">SPEAR-example</span></a>:</p>
 <blockquote>
 <div><table class="docutils align-default">
 <colgroup>

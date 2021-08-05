@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr_examples_function_minimization_sg_execution_times:
+
+Computation times
+=================
+**00:02.817** total execution time for **examples_function_minimization** files:
+
++------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_function_minimization_fmin_rosenbrock_example.py` (``fmin_rosenbrock_example.py``) | 00:02.817 | 0.0 MB |
++------------------------------------------------------------------------------------------------------------+-----------+--------+

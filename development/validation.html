@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
@@ -214,20 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -303,7 +292,7 @@
   <div class="section" id="validation">
 <h1>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h1>
 <p>During optimization, <em>SMAC</em> does not automatically evaluate all configurations on all instances.
-The <a class="reference external" href="apidoc/smac.utils.validate.html">validate-module</a> provides a convenient
+The <a class="reference internal" href="apidoc/smac.utils.validate.html#module-smac.utils.validate" title="smac.utils.validate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">validate-module</span></code></a> provides a convenient
 way to do this after a configuration run is finished. You can specify a set of configurations and a set of instances,
 whereupon the validator will run every configuration on every instance. This is
 either done by calling the target algorithm - or it is estimated using an EPM.
@@ -324,7 +313,7 @@ reused from a given runhistory only on comparable hardware!</p>
 </div>
 <dl class="simple">
 <dt>Required:</dt><dd><ul class="simple">
-<li><p><em>scenario</em>: Path to the file that specifies the <a class="reference external" href="options.html#scenario">scenario</a> THAT IS USED FOR THE VALIDATION.</p></li>
+<li><p><em>scenario</em>: Path to the file that specifies the <a class="reference internal" href="options.html#scenario"><span class="std std-ref">scenario</span></a> THAT IS USED FOR THE VALIDATION.</p></li>
 <li><p><em>trajectory</em>: Path to the trajectory of the <em>SMAC</em>-run.</p></li>
 <li><p><em>output</em>: Path to save output-runhistory to.</p></li>
 </ul>
@@ -345,7 +334,7 @@ config/instance-pair <strong>Default</strong>: 1</p></li>
 <li><p><em>n_jobs</em>: if no-epm is used, this is the number of cores to use for
 evaluation in parallel <strong>Default</strong>: 1</p></li>
 <li><p><em>tae</em> from [old, aclib], if no-epm is used, this specifies the format of
-the target algorithm (see <a class="reference external" href="tae.html">tae</a>) <strong>Default</strong>: old</p></li>
+the target algorithm (see <a class="reference internal" href="tae.html#tae"><span class="std std-ref">Target Algorithm Evaluator</span></a>) <strong>Default</strong>: old</p></li>
 <li><p><em>verbose_level</em>: in [INFO, DEBUG], specifies the logging-verbosity. <strong>Default</strong>: INFO</p></li>
 <li><p><em>seed</em>: seed to be used for validation</p></li>
 </ul>
@@ -355,13 +344,13 @@ the target algorithm (see <a class="reference external" href="tae.html">tae</a>)
 <div class="section" id="usage-in-python">
 <h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
 <p>To validate directly in Python (e.g. to perform a validation immediately after an
-optimization), the <a class="reference external" href="apidoc/smac.utils.validate.html#Validator">Validator</a> can be used. It provides two different
-methods, <a class="reference external" href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate">validate</a> and
-<a class="reference external" href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm">validate_epm</a>. Both return runhistories
+optimization), the <a class="reference internal" href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator" title="smac.utils.validate.Validator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></a> can be used. It provides two different
+methods, <a class="reference internal" href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate" title="smac.utils.validate.Validator.validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validate</span></code></a> and
+<a class="reference internal" href="apidoc/smac.utils.validate.html#smac.utils.validate.Validator.validate_epm" title="smac.utils.validate.Validator.validate_epm"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validate_epm</span></code></a>. Both return runhistories
 containing results for all desired config/instance-pairs.
-To validate an actual <a class="reference external" href="apidoc/smac.facade.smac_facade.html">*SMAC*-object</a>,
-there is also a <a class="reference external" href="apidoc/smac.facade.smac_facade.html#smac.facade.smac_facade.SMAC.validate">method</a> within <em>SMAC</em>
-(see also: <a class="reference external" href="quickstart.html#using-smac-in-python-svm">SVM-example</a>).</p>
+To validate an actual <a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC" title="smac.facade.smac_ac_facade.SMAC4AC"><code class="xref py py-class docutils literal notranslate"><span class="pre">*SMAC*-object</span></code></a>,
+it has its own method <a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate" title="smac.facade.smac_ac_facade.SMAC4AC.validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validate</span></code></a> within <em>SMAC</em>
+(see also: <a class="reference internal" href="examples/quickstart/quickstart_example.html#svm-example"><span class="std std-ref">SVM-example</span></a>).</p>
 </div>
 </div>
 

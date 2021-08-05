@@ -10,19 +10,19 @@ or try to run the installation first.
 
 Ensure that the gcc used to compile the pyrfr is the same as used for linking
 during execution. This often happens with Anaconda -- see
-`Installation <installation.html>`_ for a solution.
+:ref:`Installation <installation>` for a solution.
 
 .. rubric:: My target algorithm is not accepted, when using the scenario-file.
 
 Make sure that your algorithm accepts commandline options as provided by
-*SMAC*. Refer to `commandline execution <basic_usage.html#commandline>`_ for
+*SMAC*. Refer to :ref:`commandline execution <commandline>` for
 details on how to wrap your algorithm.
 
 You can also run SMAC with :code:`--verbose DEBUG` to see how *SMAC* tried to call your algorithm.
 
 .. rubric:: Can I restore SMAC from a previous state?
 
-Use the `restore-option <basic_usage.html#restorestate>`_.
+Use the :ref:`restore-option <restorestate>`_.
 
 .. rubric:: I discovered a bug or SMAC does not behave as expected. Where should I report to?
 
