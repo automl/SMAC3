@@ -130,7 +130,7 @@ We provide a bunch of examples in the [examples folder](examples), such as:
   * Optimization of a Python function directly with SMAC
     * [branin/branin_fmin_example.py](examples/quickstart/branin/branin_fmin_example.py)
     * [fmin_rosenbrock_example.py](examples/function_minimization/fmin_rosenbrock_example.py) - Optimization of the 2D Rosenbrock function
-    * [fmin_rosenbrock_parallel_example.py](examples/parallel/fmin_rosenbrock_paralell_example.py) - Example of parallel SMAC using dask
+    * [fmin_rosenbrock_parallel_example.py](examples/parallel/fmin_rosenbrock_parallel_example.py) - Example of parallel SMAC using dask
   * Optimization of a black-box function with SMAC
     * [SMAC4BO_rosenbrock_example.py](examples/SMAC4BO/SMAC4BO_rosenbrock_example.py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
     * [SMAC4HPO_acq_rosenbrock_example.py](examples/SMAC4HPO/SMAC4HPO_acq_rosenbrock_example.py) - Example to select the acquisition function
