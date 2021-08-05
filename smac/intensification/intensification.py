@@ -88,7 +88,6 @@ class Intensifier(AbstractRacer):
     19 return [R, θ_inc]
     """
 
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
