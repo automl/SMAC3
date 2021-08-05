@@ -5,6 +5,7 @@ Using SMAC tuned for HPO for black-box optimization
 """
 
 import logging
+logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -31,30 +32,30 @@ def rosenbrock_2d(x):
     return val
 
 
-logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
+if __name__ == "__main__":
+    # Build Configuration Space which defines all parameters and their ranges
+    cs = ConfigurationSpace()
+    x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
+    x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
+    cs.add_hyperparameters([x0, x1])
 
-# Build Configuration Space which defines all parameters and their ranges
-cs = ConfigurationSpace()
-x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
-x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
-cs.add_hyperparameters([x0, x1])
+    # Scenario object
+    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                         "runcount-limit": 10,
+                         # max. number of function evaluations; for this example set to a low number
+                         "cs": cs,  # configuration space
+                         "deterministic": "true"
+                         })
 
-# Scenario object
-scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                     "runcount-limit": 10,  # max. number of function evaluations; for this example set to a low number
-                     "cs": cs,  # configuration space
-                     "deterministic": "true"
-                     })
+    # Example call of the function
+    # It returns: Status, Cost, Runtime, Additional Infos
+    def_value = rosenbrock_2d(cs.get_default_configuration())
+    print("Default Value: %.2f" % def_value)
 
-# Example call of the function
-# It returns: Status, Cost, Runtime, Additional Infos
-def_value = rosenbrock_2d(cs.get_default_configuration())
-print("Default Value: %.2f" % def_value)
+    # Optimize, using a SMAC-object
+    print("Optimizing! Depending on your machine, this might take a few minutes.")
+    smac = SMAC4HPO(scenario=scenario,
+                    rng=np.random.RandomState(42),
+                    tae_runner=rosenbrock_2d)
 
-# Optimize, using a SMAC-object
-print("Optimizing! Depending on your machine, this might take a few minutes.")
-smac = SMAC4HPO(scenario=scenario,
-                rng=np.random.RandomState(42),
-                tae_runner=rosenbrock_2d)
-
-smac.optimize()
+    smac.optimize()

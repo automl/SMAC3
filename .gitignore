@@ -9,6 +9,7 @@ dist
 
 # IDEs
 .idea
+.history
 
 # SMAC output
 runhistory.json

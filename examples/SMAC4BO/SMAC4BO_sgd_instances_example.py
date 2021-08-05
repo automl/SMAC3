@@ -14,8 +14,10 @@ best performance across all the instances. In this case, an instance is a binary
 digit-2 vs digit-3.
 """
 
-import itertools
 import logging
+logging.basicConfig(level=logging.INFO)
+
+import itertools
 import warnings
 
 import numpy as np
@@ -86,61 +88,62 @@ def sgd_from_cfg(cfg, seed, instance):
     return 1 - np.mean(scores)  # Minimize!
 
 
-logger = logging.getLogger("Hyperband-instances-example")
-logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
+if __name__ == "__main__":
+    # Build Configuration Space which defines all parameters and their ranges
+    cs = ConfigurationSpace()
 
-# Build Configuration Space which defines all parameters and their ranges
-cs = ConfigurationSpace()
+    # We define a few possible parameters for the SGD classifier
+    alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
+    l1_ratio = UniformFloatHyperparameter("l1_ratio", 0, 1, default_value=0.5)
+    learning_rate = CategoricalHyperparameter("learning_rate", choices=['constant', 'invscaling', 'adaptive'],
+                                              default_value='constant')
+    eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
+    # Add the parameters to configuration space
+    cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
-# We define a few possible parameters for the SGD classifier
-alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
-l1_ratio = UniformFloatHyperparameter("l1_ratio", 0, 1, default_value=0.5)
-learning_rate = CategoricalHyperparameter("learning_rate", choices=['constant', 'invscaling', 'adaptive'],
-                                          default_value='constant')
-eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
-# Add the parameters to configuration space
-cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
+    # SMAC scenario object
+    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
+                         "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+                         "cs": cs,  # configuration space
+                         "deterministic": True,
+                         "limit_resources": True,  # Uses pynisher to limit memory and runtime
+                         "memory_limit": 3072,  # adapt this to reasonable value for your hardware
+                         "cutoff": 3,  # runtime limit for the target algorithm
+                         "instances": instances  # Optimize across all given instances
+                         })
 
-# SMAC scenario object
-scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
-                     "cs": cs,  # configuration space
-                     "deterministic": True,
-                     "limit_resources": True,  # Uses pynisher to limit memory and runtime
-                     "memory_limit": 3072,  # adapt this to reasonable value for your hardware
-                     "cutoff": 3,  # runtime limit for the target algorithm
-                     "instances": instances  # Optimize across all given instances
-                     })
+    # intensifier parameters
+    # if no argument provided for budgets, hyperband decides them based on the number of instances available
+    intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
+                          # You can also shuffle the order of using instances by this parameter.
+                          'instance_order': None,
+                          # 'shuffle' will shuffle instances before each SH run and
+                          # 'shuffle_once' will shuffle instances once before the 1st SH iteration begins
+                          }
 
-# intensifier parameters
-# if no argument provided for budgets, hyperband decides them based on the number of instances available
-intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
-                      'instance_order': None,  # You can also shuffle the order of using instances by this parameter.
-                      # 'shuffle' will shuffle instances before each SH run and
-                      # 'shuffle_once' will shuffle instances once before the 1st SH iteration begins
-                      }
+    # To optimize, we pass the function to the SMAC-object
+    smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
+                   tae_runner=sgd_from_cfg,
+                   intensifier_kwargs=intensifier_kwargs
+                   # all arguments related to intensifier can be passed like this
+                   )
 
-# To optimize, we pass the function to the SMAC-object
-smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
-               tae_runner=sgd_from_cfg,
-               intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+    # Example call of the function
+    # It returns: Status, Cost, Runtime, Additional Infos
+    def_costs = []
+    for i in instances:
+        cost = smac.get_tae_runner().run(cs.get_default_configuration(), i[0])[1]
+        def_costs.append(cost)
+    print("Value for default configuration: %.4f" % (np.mean(def_costs)))
 
-# Example call of the function
-# It returns: Status, Cost, Runtime, Additional Infos
-def_costs = []
-for i in instances:
-    cost = smac.get_tae_runner().run(cs.get_default_configuration(), i[0])[1]
-    def_costs.append(cost)
-print("Value for default configuration: %.4f" % (np.mean(def_costs)))
+    # Start optimization
+    try:
+        incumbent = smac.optimize()
+    finally:
+        incumbent = smac.solver.incumbent
 
-# Start optimization
-try:
-    incumbent = smac.optimize()
-finally:
-    incumbent = smac.solver.incumbent
-
-inc_costs = []
-for i in instances:
-    cost = smac.get_tae_runner().run(incumbent, i[0])[1]
-    inc_costs.append(cost)
-print("Optimized Value: %.4f" % (np.mean(inc_costs)))
+    inc_costs = []
+    for i in instances:
+        cost = smac.get_tae_runner().run(incumbent, i[0])[1]
+        inc_costs.append(cost)
+    print("Optimized Value: %.4f" % (np.mean(inc_costs)))

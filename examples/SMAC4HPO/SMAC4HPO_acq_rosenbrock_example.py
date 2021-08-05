@@ -5,6 +5,7 @@ Changing the acquisition function
 """
 
 import logging
+logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -34,38 +35,38 @@ def rosenbrock_2d(x):
     return val
 
 
-logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
+if __name__ == "__main__":
+    # Build Configuration Space which defines all parameters and their ranges
+    cs = ConfigurationSpace()
+    x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
+    x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
+    cs.add_hyperparameters([x0, x1])
 
-# Build Configuration Space which defines all parameters and their ranges
-cs = ConfigurationSpace()
-x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
-x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
-cs.add_hyperparameters([x0, x1])
+    # Scenario object
+    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                         "runcount-limit": 10,
+                         # max. number of function evaluations for this example set to a low number
+                         "cs": cs,  # configuration space
+                         "deterministic": "true"
+                         })
 
-# Scenario object
-scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                     "runcount-limit": 10,  # max. number of function evaluations; for this example set to a low number
-                     "cs": cs,  # configuration space
-                     "deterministic": "true"
-                     })
+    # Example call of the function
+    # It returns: Status, Cost, Runtime, Additional Infos
+    def_value = rosenbrock_2d(cs.get_default_configuration())
+    print("Default Value: %.2f" % def_value)
 
-# Example call of the function
-# It returns: Status, Cost, Runtime, Additional Infos
-def_value = rosenbrock_2d(cs.get_default_configuration())
-print("Default Value: %.2f" % def_value)
+    # Optimize, using a SMAC-object
+    for acquisition_func in (LCB, EI, PI):
+        print("Optimizing with %s! Depending on your machine, this might take a few minutes." % acquisition_func)
+        smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+                        tae_runner=rosenbrock_2d,
+                        initial_design=LHDesign,
+                        initial_design_kwargs={'n_configs_x_params': 4,
+                                               'max_config_fracs': 1.0},
+                        runhistory2epm=RunHistory2EPM4InvScaledCost,
+                        acquisition_function_optimizer_kwargs={'max_steps': 100},
+                        acquisition_function=acquisition_func,
+                        acquisition_function_kwargs={'par': 0.01}
+                        )
 
-# Optimize, using a SMAC-object
-for acquisition_func in (LCB, EI, PI):
-    print("Optimizing with %s! Depending on your machine, this might take a few minutes." % acquisition_func)
-    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
-                    tae_runner=rosenbrock_2d,
-                    initial_design=LHDesign,
-                    initial_design_kwargs={'n_configs_x_params': 4,
-                                           'max_config_fracs': 1.0},
-                    runhistory2epm=RunHistory2EPM4InvScaledCost,
-                    acquisition_function_optimizer_kwargs={'max_steps': 100},
-                    acquisition_function=acquisition_func,
-                    acquisition_function_kwargs={'par': 0.01}
-                    )
-
-    smac.optimize()
+        smac.optimize()

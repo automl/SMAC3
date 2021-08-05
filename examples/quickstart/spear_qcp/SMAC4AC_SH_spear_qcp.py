@@ -8,14 +8,14 @@ SMAC's own "intensifier" approach.
 """
 
 import logging
+logging.basicConfig(level=logging.INFO)
 
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.scenario.scenario import Scenario
 
-if __name__ == '__main__':
-    logging.basicConfig(level=20)  # 10: debug; 20: info
 
+if __name__ == '__main__':
     scenario = Scenario('scenario.txt')
 
     # provide arguments for the intensifier like this

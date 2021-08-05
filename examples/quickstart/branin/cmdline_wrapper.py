@@ -32,6 +32,7 @@ crucial. The format of the results must be:
     Result for SMAC: <STATUS>, <runtime>, <runlength>, <quality>, <seed>, <instance-specifics>
 """
 
+
 if __name__ == '__main__':
     # Unused in this example:
     # instance, instance_specific, cutoff, runlength = sys.argv[1:5]

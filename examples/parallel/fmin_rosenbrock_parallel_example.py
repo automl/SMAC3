@@ -8,6 +8,7 @@ launch parallel configurations via n_workers
 """
 
 import logging
+logging.basicConfig(level=logging.INFO)
 
 from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.facade.func_facade import fmin_smac
@@ -27,12 +28,8 @@ sys.path.append(os.path.join(cwd))
 from rosenbrock_2d_delayed_func import rosenbrock_2d  # noqa: E402
 # --------------------------------------------------------------
 
+
 if __name__ == '__main__':
-
-    # debug output
-    logging.basicConfig(level=20)
-    logger = logging.getLogger("Optimizer")  # Enable to show Debug outputs
-
     # fmin_smac assumes that the function is deterministic
     # and uses under the hood the SMAC4HPO
     # n_workers tells the SMBO loop to execute in parallel
@@ -45,4 +42,5 @@ if __name__ == '__main__':
         rng=3,
         n_jobs=4,
     )  # Passing a seed makes fmin_smac determistic
+
     print("Best x: %s; with cost: %f" % (str(x), cost))

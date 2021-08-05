@@ -13,6 +13,7 @@ advantage of the idle resources.
 """
 
 import logging
+logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
@@ -31,11 +32,8 @@ cwd = os.path.dirname(__file__) if '__file__' in globals() else os.getcwd()
 sys.path.append(os.path.join(cwd))
 from mlp_from_cfg_func import mlp_from_cfg  # noqa: E402
 
+
 if __name__ == '__main__':
-
-    logger = logging.getLogger("MLP-example")
-    logging.basicConfig(level=logging.INFO)
-
     # Build Configuration Space which defines all parameters and their ranges.
     # To illustrate different parameter types,
     # we use continuous, integer and categorical parameters.

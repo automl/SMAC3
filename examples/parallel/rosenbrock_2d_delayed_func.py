@@ -28,4 +28,5 @@ def rosenbrock_2d(x):
 
     val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
     time.sleep(3)
+
     return val
