@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 
 import numpy as np
 from ConfigSpace import Configuration, UniformFloatHyperparameter
@@ -119,3 +120,18 @@ class TestSingleInitialDesign(unittest.TestCase):
             'but provided none of them.',
         ):
             InitialDesign(**kwargs, n_configs_x_params=None)
+
+    def test__select_configurations(self):
+        kwargs = dict(
+            cs=self.cs,
+            rng=np.random.RandomState(1),
+            traj_logger=unittest.mock.Mock(),
+            ta_run_limit=1000,
+            configs=None,
+            n_configs_x_params=None,
+            max_config_fracs=0.25,
+            init_budget=1,
+        )
+        init_design = InitialDesign(**kwargs)
+        with self.assertRaises(NotImplementedError):
+            init_design._select_configurations()
