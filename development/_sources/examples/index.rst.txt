@@ -324,9 +324,9 @@ SMAC4MF
 
 .. only:: html
 
- .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_sgd_instances_thumb.png
+ .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_sgd_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_instances.py`
+     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py`
 
 .. raw:: html
 
@@ -336,7 +336,7 @@ SMAC4MF
 .. toctree::
    :hidden:
 
-   /examples/SMAC4MF/SMAC4MF_sgd_instances
+   /examples/SMAC4MF/SMAC4MF_sgd_example
 
 .. raw:: html
 
@@ -344,9 +344,9 @@ SMAC4MF
 
 .. only:: html
 
- .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_mlp_thumb.png
+ .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_mlp_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp.py`
+     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp_example.py`
 
 .. raw:: html
 
@@ -356,7 +356,7 @@ SMAC4MF
 .. toctree::
    :hidden:
 
-   /examples/SMAC4MF/SMAC4MF_mlp
+   /examples/SMAC4MF/SMAC4MF_mlp_example
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

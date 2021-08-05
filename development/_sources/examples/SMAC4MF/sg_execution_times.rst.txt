@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_examples_SMAC4MF_sg_execution_times:
+
+Computation times
+=================
+**03:34.967** total execution time for **examples_SMAC4MF** files:
+
++--------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp_example.py` (``SMAC4MF_mlp_example.py``) | 01:47.531 | 0.0 MB |
++--------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py` (``SMAC4MF_sgd_example.py``) | 01:47.436 | 0.0 MB |
++--------------------------------------------------------------------------------------+-----------+--------+

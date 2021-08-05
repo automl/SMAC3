@@ -340,17 +340,16 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
 <dd><p>Decides if it is possible to add a new intensifier instance,
 and adds it.
 If a new intensifier instance is added, True is returned, else False.</p>
-<dl class="simple">
-<dt>num_workers: int</dt><dd><p>the maximum number of workers available
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_workers</strong> (<em>int</em>) – the maximum number of workers available
 at a given time.</p>
 </dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Whether or not a new instance was added</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Whether or not a new instance was added</p>
 </dd>
 </dl>
 </dd></dl>
@@ -420,6 +419,42 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
 * highest_budget - incumbent is selected only based on the highest budget
 * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
 <li><p><strong>identifier</strong> (<em>int</em>) – Allows to identify the _Hyperband instance in case of multiple ones</p></li>
+<li><p><strong>stats</strong> – stats object</p></li>
+<li><p><strong>traj_logger</strong> – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>rng</strong> – </p></li>
+<li><p><strong>instances</strong> – list of all instance ids</p></li>
+<li><p><strong>instance_specifics</strong> – mapping from instance name to instance specific string</p></li>
+<li><p><strong>cutoff</strong> – cutoff of TA runs</p></li>
+<li><p><strong>deterministic</strong> – whether the TA is deterministic or not</p></li>
+<li><p><strong>initial_budget</strong> – minimum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>max_budget</strong> – maximum budget allowed for 1 run of successive halving</p></li>
+<li><p><strong>eta</strong> – ‘halving’ factor after each iteration in a successive halving run. Defaults to 3</p></li>
+<li><p><strong>_all_budgets</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
+<li><p><strong>_n_configs_in_stage</strong> (<em>typing.Optional</em><em>[</em><em>typing.List</em><em>[</em><em>int</em><em>]</em><em>] </em><em>= None</em>) – Used internally when HB uses SH as a subrouting</p></li>
+<li><p><strong>num_initial_challengers</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – number of challengers to consider for the initial budget. If None, calculated internally</p></li>
+<li><p><strong>run_obj_time</strong> – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
+<li><p><strong>n_seeds</strong> – Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</p></li>
+<li><p><strong>instance_order</strong> – <p>how to order instances. Can be set to: [None, shuffle_once, shuffle]</p>
+<ul>
+<li><p>None - use as is given by the user</p></li>
+<li><p>shuffle_once - shuffle once and use across all SH run (default)</p></li>
+<li><p>shuffle - shuffle before every SH run</p></li>
+</ul>
+</p></li>
+<li><p><strong>adaptive_capping_slackfactor</strong> – slack factor of adpative capping (factor * adaptive cutoff)</p></li>
+<li><p><strong>inst_seed_pairs</strong> (<em>typing.List</em><em>[</em><em>typing.Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Do not set this argument, it will only be used by hyperband!</p></li>
+<li><p><strong>min_chall</strong> – minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
+raise an exception if a value larger than 1 is passed.</p></li>
+<li><p><strong>incumbent_selection</strong> – <p>How to select incumbent in successive halving. Only active for real-valued budgets.
+Can be set to: [highest_executed_budget, highest_budget, any_budget]</p>
+<ul>
+<li><p>highest_executed_budget - incumbent is the best in the highest budget run so far (default)</p></li>
+<li><p>highest_budget - incumbent is selected only based on the highest budget</p></li>
+<li><p>any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
+</ul>
+</p></li>
+<li><p><strong>identifier</strong> – Adds a numerical identifier on this SH instance. Used for debug and tagging
+logger messages properly</p></li>
 </ul>
 </dd>
 </dl>

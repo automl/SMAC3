@@ -302,24 +302,25 @@
 The complexity of running a configuration as well as handling the
 results is abstracted to the SMBO via a BaseRunner.</p>
 <p>From SMBO perspective, launching a configuration follows a
-submit/collect scheme as follows:
-1- A run is launched via submit_run()
-1.1- Submit_run internally calls run_wrapper(), a method that</p>
-<blockquote>
-<div><p>contains common processing functions among different runners,
-for example, handling capping and stats checking.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>1.2- A class that implements BaseRunner defines run() which is</dt><dd><p>really the algorithm to translate a RunInfo to a RunValue, i.e.
-a configuration to an actual result.</p>
-</dd>
-<dt>2- A completed run is collected via get_finished_runs(), which returns</dt><dd><p>any finished runs, if any.</p>
-</dd>
-<dt>3- This interface also offers the method wait() as a mechanism to make</dt><dd><p>sure we have enough data in the next iteration to make a decision. For
+submit/collect scheme as follows:</p>
+<ol class="arabic simple">
+<li><p>A run is launched via submit_run()</p>
+<ol class="arabic simple">
+<li><p>Submit_run internally calls run_wrapper(), a method that
+contains common processing functions among different runners,
+for example, handling capping and stats checking.</p></li>
+<li><p>A class that implements BaseRunner defines run() which is
+really the algorithm to translate a RunInfo to a RunValue, i.e.
+a configuration to an actual result.</p></li>
+</ol>
+</li>
+<li><p>A completed run is collected via get_finished_runs(), which returns
+any finished runs, if any.</p></li>
+<li><p>This interface also offers the method wait() as a mechanism to make
+sure we have enough data in the next iteration to make a decision. For
 example, the intensifier might not be able to select the next challenger
-until more results are available.</p>
-</dd>
-</dl>
+until more results are available.</p></li>
+</ol>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.base.BaseRunner.results">
 <span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.tae.base.BaseRunner.results" title="Permalink to this definition">¶</a></dt>

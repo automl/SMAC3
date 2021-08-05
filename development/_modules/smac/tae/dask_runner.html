@@ -316,49 +316,20 @@
 <span class="sd">    RunValue object.</span>
 
 <span class="sd">    To be more precise, the work model is then:</span>
-<span class="sd">    1- The smbo.intensifier dictates &quot;what&quot; to run (a configuration/instance/seed)</span>
-<span class="sd">       via a RunInfo object.</span>
-<span class="sd">    2- a tae_runner takes this RunInfo object and launches the task via</span>
-<span class="sd">       tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers</span>
-<span class="sd">       receive a pickle-object of DaskParallelRunner.single_worker, each with a</span>
-<span class="sd">       run() method coming from DaskParallelRunner.single_worker.run()</span>
-<span class="sd">    3- RunInfo objects are run in a distributed fashion, an their results are</span>
-<span class="sd">       available locally to each worker. Such result is collected by</span>
-<span class="sd">       DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</span>
-<span class="sd">    4- Exceptions are also locally available to each worker and need to be</span>
-<span class="sd">       collected.</span>
+<span class="sd">    1.  The smbo.intensifier dictates &quot;what&quot; to run (a configuration/instance/seed)</span>
+<span class="sd">        via a RunInfo object.</span>
+<span class="sd">    2.  a tae_runner takes this RunInfo object and launches the task via</span>
+<span class="sd">        tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers</span>
+<span class="sd">        receive a pickle-object of DaskParallelRunner.single_worker, each with a</span>
+<span class="sd">        run() method coming from DaskParallelRunner.single_worker.run()</span>
+<span class="sd">    3.  RunInfo objects are run in a distributed fashion, an their results are</span>
+<span class="sd">        available locally to each worker. Such result is collected by</span>
+<span class="sd">        DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</span>
+<span class="sd">    4.  Exceptions are also locally available to each worker and need to be</span>
+<span class="sd">        collected.</span>
 
 <span class="sd">    Dask works with Future object which are managed via the DaskParallelRunner.client.</span>
 
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-
-<span class="sd">    results</span>
-<span class="sd">    ta</span>
-<span class="sd">    stats</span>
-<span class="sd">    run_obj</span>
-<span class="sd">    par_factor</span>
-<span class="sd">    cost_for_crash</span>
-<span class="sd">    abort_i_first_run_crash</span>
-<span class="sd">    n_workers</span>
-<span class="sd">    futures</span>
-<span class="sd">    client</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ---------</span>
-<span class="sd">    single_worker: BaseRunner</span>
-<span class="sd">        A runner to run in a distributed fashion</span>
-<span class="sd">    n_workers: int</span>
-<span class="sd">        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.</span>
-<span class="sd">    patience: int</span>
-<span class="sd">        How much to wait for workers to be available if one fails</span>
-<span class="sd">    output_directory: str, optional</span>
-<span class="sd">        If given, this will be used for the dask worker directory and for storing server information.</span>
-<span class="sd">        If a dask client is passed, it will only be used for storing server information as the</span>
-<span class="sd">        worker directory must be set by the program/user starting the workers.</span>
-<span class="sd">    dask_client: dask.distributed.Client</span>
-<span class="sd">        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -368,6 +339,35 @@
         <span class="n">output_directory</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dask_client</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        results</span>
+<span class="sd">        ta</span>
+<span class="sd">        stats</span>
+<span class="sd">        run_obj</span>
+<span class="sd">        par_factor</span>
+<span class="sd">        cost_for_crash</span>
+<span class="sd">        abort_i_first_run_crash</span>
+<span class="sd">        n_workers</span>
+<span class="sd">        futures</span>
+<span class="sd">        client</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ---------</span>
+<span class="sd">        single_worker: BaseRunner</span>
+<span class="sd">            A runner to run in a distributed fashion</span>
+<span class="sd">        n_workers: int</span>
+<span class="sd">            Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.</span>
+<span class="sd">        patience: int</span>
+<span class="sd">            How much to wait for workers to be available if one fails</span>
+<span class="sd">        output_directory: str, optional</span>
+<span class="sd">            If given, this will be used for the dask worker directory and for storing server information.</span>
+<span class="sd">            If a dask client is passed, it will only be used for storing server information as the</span>
+<span class="sd">            worker directory must be set by the program/user starting the workers.</span>
+<span class="sd">        dask_client: dask.distributed.Client</span>
+<span class="sd">            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DaskParallelRunner</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">ta</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">ta</span><span class="p">,</span>
             <span class="n">stats</span><span class="o">=</span><span class="n">single_worker</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
@@ -410,9 +410,9 @@
 <span class="sd">        to produce a result locally to each worker.</span>
 
 <span class="sd">        The execution of a configuration follows this procedure:</span>
-<span class="sd">        1- SMBO/intensifier generates a run_info</span>
-<span class="sd">        2- SMBO calls submit_run so that a worker launches the run_info</span>
-<span class="sd">        3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()</span>
+<span class="sd">        1.  SMBO/intensifier generates a run_info</span>
+<span class="sd">        2.  SMBO calls submit_run so that a worker launches the run_info</span>
+<span class="sd">        3.  submit_run internally calls self.run(). it does so via a call to self.run_wrapper()</span>
 <span class="sd">        which contains common code that any run() method will otherwise have to implement, like</span>
 <span class="sd">        capping check.</span>
 
@@ -478,7 +478,7 @@
 <span class="sd">        This function collects the completed futures and move</span>
 <span class="sd">        them from self.futures to self.results.</span>
 
-<span class="sd">        *** We make sure futures never exceed the capacity of</span>
+<span class="sd">        We make sure futures never exceed the capacity of</span>
 <span class="sd">        the scheduler</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

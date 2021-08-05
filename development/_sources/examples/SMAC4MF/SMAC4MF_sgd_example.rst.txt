@@ -1,10 +1,10 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_examples_SMAC4BO_SMAC4BO_sgd_instances_example.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_examples_SMAC4MF_SMAC4MF_sgd_example.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_examples_SMAC4BO_SMAC4BO_sgd_instances_example.py:
+.. _sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py:
 
 
 ============================================================
@@ -117,7 +117,7 @@ digit-2 vs digit-3.
       warnings.warn("{} is intended to be used "
     /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    Optimized Value: 0.0041
+    Optimized Value: 0.0040
 
 
 
@@ -128,6 +128,7 @@ digit-2 vs digit-3.
 
 
 .. code-block:: default
+
 
 
     import logging
@@ -219,7 +220,7 @@ digit-2 vs digit-3.
 
         # SMAC scenario object
         scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                             "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+                            "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
                              "cs": cs,  # configuration space
                              "deterministic": True,
                              "limit_resources": True,  # Uses pynisher to limit memory and runtime
@@ -233,8 +234,8 @@ digit-2 vs digit-3.
         intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
                               # You can also shuffle the order of using instances by this parameter.
                               'instance_order': None,
-                              # 'shuffle' will shuffle instances before each SH run and
-                              # 'shuffle_once' will shuffle instances once before the 1st SH iteration begins
+                              # 'shuffle' will shuffle instances before each SH run and 'shuffle_once'
+                              # will shuffle instances once before the 1st SH iteration begins
                               }
 
         # To optimize, we pass the function to the SMAC-object
@@ -267,10 +268,10 @@ digit-2 vs digit-3.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  47.518 seconds)
+   **Total running time of the script:** ( 1 minutes  47.436 seconds)
 
 
-.. _sphx_glr_download_examples_SMAC4BO_SMAC4BO_sgd_instances_example.py:
+.. _sphx_glr_download_examples_SMAC4MF_SMAC4MF_sgd_example.py:
 
 
 .. only :: html
@@ -282,13 +283,13 @@ digit-2 vs digit-3.
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: SMAC4BO_sgd_instances_example.py <SMAC4BO_sgd_instances_example.py>`
+     :download:`Download Python source code: SMAC4MF_sgd_example.py <SMAC4MF_sgd_example.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: SMAC4BO_sgd_instances_example.ipynb <SMAC4BO_sgd_instances_example.ipynb>`
+     :download:`Download Jupyter notebook: SMAC4MF_sgd_example.ipynb <SMAC4MF_sgd_example.ipynb>`
 
 
 .. only:: html

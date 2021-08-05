@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**02:27.501** total execution time for **examples_parallel** files:
+**02:21.871** total execution time for **examples_parallel** files:
 
 +-----------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_parallel_parallel_sh_mlp_example.py` (``parallel_sh_mlp_example.py``)                   | 01:59.400 | 0.0 MB |
+| :ref:`sphx_glr_examples_parallel_parallel_sh_mlp_example.py` (``parallel_sh_mlp_example.py``)                   | 01:50.202 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_parallel_fmin_rosenbrock_parallel_example.py` (``fmin_rosenbrock_parallel_example.py``) | 00:28.101 | 0.0 MB |
+| :ref:`sphx_glr_examples_parallel_fmin_rosenbrock_parallel_example.py` (``fmin_rosenbrock_parallel_example.py``) | 00:31.669 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------------+-----------+--------+

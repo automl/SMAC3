@@ -308,21 +308,21 @@ this wrapper class called DaskParallelRunner uses dask to initialize
 N number of BaseRunner that actively wait of a RunInfo to produce a
 RunValue object.</p>
 <p>To be more precise, the work model is then:
-1- The smbo.intensifier dictates “what” to run (a configuration/instance/seed)</p>
+1.  The smbo.intensifier dictates “what” to run (a configuration/instance/seed)</p>
 <blockquote>
 <div><p>via a RunInfo object.</p>
 </div></blockquote>
-<dl class="simple">
-<dt>2- a tae_runner takes this RunInfo object and launches the task via</dt><dd><p>tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
+<ol class="arabic simple" start="2">
+<li><p>a tae_runner takes this RunInfo object and launches the task via
+tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
 receive a pickle-object of DaskParallelRunner.single_worker, each with a
-run() method coming from DaskParallelRunner.single_worker.run()</p>
-</dd>
-<dt>3- RunInfo objects are run in a distributed fashion, an their results are</dt><dd><p>available locally to each worker. Such result is collected by
-DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</p>
-</dd>
-<dt>4- Exceptions are also locally available to each worker and need to be</dt><dd><p>collected.</p>
-</dd>
-</dl>
+run() method coming from DaskParallelRunner.single_worker.run()</p></li>
+<li><p>RunInfo objects are run in a distributed fashion, an their results are
+available locally to each worker. Such result is collected by
+DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</p></li>
+<li><p>Exceptions are also locally available to each worker and need to be
+collected.</p></li>
+</ol>
 <p>Dask works with Future object which are managed via the DaskParallelRunner.client.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.dask_runner.DaskParallelRunner.results">
@@ -403,7 +403,7 @@ worker directory must be set by the program/user starting the workers.</p></li>
 <dd><p>A run is over, when a future has done() equal true.
 This function collects the completed futures and move
 them from self.futures to self.results.</p>
-<p><a href="#id1"><span class="problematic" id="id2">**</span></a>* We make sure futures never exceed the capacity of
+<p>We make sure futures never exceed the capacity of
 the scheduler</p>
 </dd></dl>
 
@@ -490,9 +490,9 @@ algorithm. Handled by the target algorithm internally</p></li>
 embedded in a run_info object, and uses one of the workers
 to produce a result locally to each worker.</p>
 <p>The execution of a configuration follows this procedure:
-1- SMBO/intensifier generates a run_info
-2- SMBO calls submit_run so that a worker launches the run_info
-3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
+1.  SMBO/intensifier generates a run_info
+2.  SMBO calls submit_run so that a worker launches the run_info
+3.  submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
 which contains common code that any run() method will otherwise have to implement, like
 capping check.</p>
 <p>Child classes must implement a run() method.

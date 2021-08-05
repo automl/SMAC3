@@ -298,19 +298,18 @@
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.intensification.intensification.</span></span><span class="sig-name descname"><span class="pre">Intensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><span class="pre">smac.stats.stats.Stats</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_logger</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><span class="pre">smac.utils.io.traj_logging.TrajLogger</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specifics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_obj_time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">always_race_against</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2147483647</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_ta_time_bound</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minR</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxR</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adaptive_capping_slackfactor</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_chall</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.abstract_racer.AbstractRacer</span></code></a></p>
 <p>Races challengers against an incumbent</p>
-<blockquote>
-<div><p>SMAC’s intensification procedure, in detail:</p>
+<p>SMAC’s intensification procedure, in detail:</p>
 <p>Procedure 2: Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, cˆ)
 cˆ(θ, Π’) denotes the empirical cost of θ on the subset of instances
 Π’ ⊆ Π, based on the runs in R; maxR is a parameter
 where:
 Θ_new: Sequence of parameter settings to evaluate, challengers in this class.
-θ_inc: incumbent parameter setting, incumbent in this class.
-____________________________________________________________
-1 for i := 1, … , length(Θ_new) do
+θ_inc: incumbent parameter setting, incumbent in this class.</p>
+<p>1 for i := 1, … , length(Θ_new) do
 2     θ_new ← Θ_new[i]</p>
 <blockquote>
-<div></div></blockquote>
+<div><p>STAGE–&gt;RUN_INCUMBENT</p>
+</div></blockquote>
 <p>3     if R contains less than maxR runs with configuration θ_inc then
 4         Π’ ← {π’∈ Π | R contains less than or equal number of runs using θ_inc and π’
 0         than using θ_inc and any other π’’∈ Π}
@@ -319,61 +318,46 @@ ____________________________________________________________
 7         R ← ExecuteRun(R, θ_inc, π, s)
 8     N ← 1</p>
 <blockquote>
-<div></div></blockquote>
-<p>9     while true do</p>
+<div><p>STAGE–&gt;RUN_CHALLENGER</p>
 </div></blockquote>
-<p>10         S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
-11         S_torun ←random subset of S_missing of size min(N, <a href="#id1"><span class="problematic" id="id2">|S_missing|</span></a>)
-12         foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
-13         S_missing ← S_missing S_torun
-14         Π_common ← instances for which we previously ran both θ_inc and θ_new
-15         if cˆ(θ_new, Π_common) &gt; cˆ(θ_inc, Π_common) then break
-16         else if S_missing = ∅ then θ_inc ← θ_new; break
-17         else N ← 2 · N
-18     if time spent in this call to this procedure exceeds t_intensify and i ≥ 2 then break
+<p>9     while true do
+10        S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
+11        S_torun ← random subset of S_missing of size min(N, size(S_missing))
+12        foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
+13        S_missing ← S_missing S_torun
+14        Π_common ← instances for which we previously ran both θ_inc and θ_new
+15        if cˆ(θ_new, Π_common) &gt; cˆ(θ_inc, Π_common) then break
+16        else if S_missing = ∅ then θ_inc ← θ_new; break
+17        else N ← 2 · N
+18    if time spent in this call to this procedure exceeds t_intensify and i ≥ 2 then break
 19 return [R, θ_inc]</p>
-<blockquote>
-<div><dl class="simple">
-<dt>stats: Stats</dt><dd><p>stats object</p>
-</dd>
-<dt>traj_logger: TrajLogger</dt><dd><p>TrajLogger object to log all new incumbents</p>
-</dd>
-</dl>
-<p>rng : np.random.RandomState
-instances : typing.List[str]</p>
-<blockquote>
-<div><p>list of all instance ids</p>
-</div></blockquote>
-<dl class="simple">
-<dt>instance_specifics<span class="classifier">typing.Mapping[str,np.ndarray]</span></dt><dd><p>mapping from instance name to instance specific string</p>
-</dd>
-<dt>cutoff<span class="classifier">int</span></dt><dd><p>runtime cutoff of TA runs</p>
-</dd>
-<dt>deterministic: bool</dt><dd><p>whether the TA is deterministic or not</p>
-</dd>
-<dt>run_obj_time: bool</dt><dd><p>whether the run objective is runtime or not (if true, apply adaptive capping)</p>
-</dd>
-<dt>always_race_against: Configuration</dt><dd><p>if incumbent changes race this configuration always against new incumbent;
-can sometimes prevent over-tuning</p>
-</dd>
-<dt>use_ta_time_bound: bool,</dt><dd><p>if true, trust time reported by the target algorithms instead of
-measuring the wallclock time for limiting the time of intensification</p>
-</dd>
-<dt>run_limit<span class="classifier">int</span></dt><dd><p>Maximum number of target algorithm runs per call to intensify.</p>
-</dd>
-<dt>maxR<span class="classifier">int</span></dt><dd><p>Maximum number of runs per config (summed over all calls to
-intensifiy).</p>
-</dd>
-<dt>minR<span class="classifier">int</span></dt><dd><p>Minimum number of run per config (summed over all calls to
-intensify).</p>
-</dd>
-<dt>adaptive_capping_slackfactor: float</dt><dd><p>slack factor of adpative capping (factor * adpative cutoff)</p>
-</dd>
-<dt>min_chall: int</dt><dd><p>minimal number of challengers to be considered
-(even if time_bound is exhausted earlier)</p>
+<p>Creates an Intensifier object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object</p></li>
+<li><p><strong>traj_logger</strong> (<a class="reference internal" href="smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger" title="smac.utils.io.traj_logging.TrajLogger"><em>TrajLogger</em></a>) – TrajLogger object to log all new incumbents</p></li>
+<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>typing.List</em><em>[</em><em>str</em><em>]</em>) – list of all instance ids</p></li>
+<li><p><strong>instance_specifics</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>np.ndarray</em><em>]</em>) – mapping from instance name to instance specific string</p></li>
+<li><p><strong>cutoff</strong> (<em>int</em>) – runtime cutoff of TA runs</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – whether the TA is deterministic or not</p></li>
+<li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
+<li><p><strong>always_race_against</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a>) – if incumbent changes race this configuration always against new incumbent;
+can sometimes prevent over-tuning</p></li>
+<li><p><strong>use_ta_time_bound</strong> (<em>bool</em><em>,</em>) – if true, trust time reported by the target algorithms instead of
+measuring the wallclock time for limiting the time of intensification</p></li>
+<li><p><strong>run_limit</strong> (<em>int</em>) – Maximum number of target algorithm runs per call to intensify.</p></li>
+<li><p><strong>maxR</strong> (<em>int</em>) – Maximum number of runs per config (summed over all calls to
+intensifiy).</p></li>
+<li><p><strong>minR</strong> (<em>int</em>) – Minimum number of run per config (summed over all calls to
+intensify).</p></li>
+<li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adpative cutoff)</p></li>
+<li><p><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered
+(even if time_bound is exhausted earlier)</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensification.intensification.Intensifier._generate_challengers">
 <span class="sig-name descname"><span class="pre">_generate_challengers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">challengers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chooser</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><span class="pre">smac.optimizer.epm_configuration_chooser.EPMChooser</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier._generate_challengers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier._generate_challengers" title="Permalink to this definition">¶</a></dt>
@@ -626,18 +610,16 @@ at a given time.</p></li>
 <span class="sig-name descname"><span class="pre">process_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><span class="pre">smac.runhistory.runhistory.RunInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">incumbent</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_history</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_bound</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_traj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/intensification/intensification.html#Intensifier.process_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.intensification.Intensifier.process_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>The intensifier stage will be updated based on the results/status
 of a configuration execution.</p>
-<p>During intensification, the following can happen:
--&gt; Challenger raced against incumbent
--&gt; Also, during a challenger run, a capped exception</p>
-<blockquote>
-<div><p>can be triggered, where no racer post processing is needed</p>
-</div></blockquote>
-<dl class="simple">
-<dt>-&gt; A run on the incumbent for more confidence needs to</dt><dd><p>be processed, IntensifierStage.PROCESS_INCUMBENT_RUN</p>
-</dd>
-<dt>-&gt; The first run results need to be processed</dt><dd><p>(PROCESS_FIRST_CONFIG_RUN)</p>
-</dd>
-</dl>
+<p>During intensification, the following can happen:</p>
+<ul class="simple">
+<li><p>Challenger raced against incumbent</p></li>
+<li><p>Also, during a challenger run, a capped exception
+can be triggered, where no racer post processing is needed</p></li>
+<li><p>A run on the incumbent for more confidence needs to
+be processed, IntensifierStage.PROCESS_INCUMBENT_RUN</p></li>
+<li><p>The first run results need to be processed
+(PROCESS_FIRST_CONFIG_RUN)</p></li>
+</ul>
 <p>At the end of any run, checks are done to move to a new iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

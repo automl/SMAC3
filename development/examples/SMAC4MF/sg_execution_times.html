@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>scipy-style fmin interface &mdash; SMAC 0.14.0 documentation</title>
+  <title>Computation times &mdash; SMAC 0.14.0 documentation</title>
   
 
   
@@ -41,9 +41,7 @@
 
     
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Parallel Intensifier with No Intensification" href="../parallel/fmin_rosenbrock_parallel_example.html" />
-    <link rel="prev" title="SMAC Examples" href="../../smac_examples.html" /> 
+    <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -268,15 +266,13 @@
     
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="../../smac_examples.html">SMAC Examples</a> &raquo;</li>
-        
-      <li>scipy-style fmin interface</li>
+      <li>Computation times</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/examples/function_minimization/fmin_rosenbrock_example.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/examples/SMAC4MF/sg_execution_times.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -289,88 +285,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-function-minimization-fmin-rosenbrock-example-py"><span class="std std-ref">here</span></a> to download the full example code</p>
-</div>
-<div class="sphx-glr-example-title section" id="scipy-style-fmin-interface">
-<span id="sphx-glr-examples-function-minimization-fmin-rosenbrock-example-py"></span><h1>scipy-style fmin interface<a class="headerlink" href="#scipy-style-fmin-interface" title="Permalink to this headline">¶</a></h1>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-08-05_13:35:10_506228
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
-INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:&lt;class &#39;smac.facade.smac_hpo_facade.SMAC4HPO&#39;&gt;
-INFO:smac.optimizer.smbo.SMBO:Running initial design
-INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.intensification.Intensifier:Updated estimated cost of incumbent on 1 runs: 11690.4846
-INFO:smac.intensification.intensification.Intensifier:Challenger (11690.0601) is better than incumbent (11690.4846) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x1 : -2.815051511861384 -&gt; -2.8139004314557674
-INFO:smac.intensification.intensification.Intensifier:  x2 : -2.881006710231304 -&gt; -2.887293724969028
-INFO:smac.stats.stats.Stats:##########################################################
-INFO:smac.stats.stats.Stats:Statistics:
-INFO:smac.stats.stats.Stats:#Incumbent changed: 1
-INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 10 / 10.0
-INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 10 / 10.0
-INFO:smac.stats.stats.Stats:#Configurations: 10
-INFO:smac.stats.stats.Stats:Used wallclock time: 3.78 / inf sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.09 / inf sec
-INFO:smac.stats.stats.Stats:##########################################################
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Final Incumbent: Configuration:
-  x1, Value: -2.8139004314557674
-  x2, Value: -2.887293724969028
-
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Estimated cost of incumbent: 11690.060101
-Best x: [-2.81390043 -2.88729372]; with cost: 11690.060101
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">smac.facade.func_facade</span> <span class="kn">import</span> <span class="n">fmin_smac</span>
-
-
-<span class="k">def</span> <span class="nf">rosenbrock_2d</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; The 2 dimensional Rosenbrock function as a toy model</span>
-<span class="sd">    The Rosenbrock function is well know in the optimization community and</span>
-<span class="sd">    often serves as a toy problem. It can be defined for arbitrary</span>
-<span class="sd">    dimensions. The minimium is always at x_i = 1 with a function value of</span>
-<span class="sd">    zero. All input parameters are continuous. The search domain for</span>
-<span class="sd">    all x&#39;s is the interval [-5, 10].</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="n">val</span> <span class="o">=</span> <span class="mf">100.</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span> <span class="o">**</span> <span class="mf">2.</span><span class="p">)</span> <span class="o">**</span> <span class="mf">2.</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span> <span class="o">**</span> <span class="mf">2.</span>
-    <span class="k">return</span> <span class="n">val</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># fmin_smac assumes that the function is deterministic</span>
-    <span class="c1"># and uses under the hood the SMAC4HPO</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">fmin_smac</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">rosenbrock_2d</span><span class="p">,</span>
-                           <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">],</span>
-                           <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)],</span>
-                           <span class="n">maxfun</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-                           <span class="n">rng</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Passing a seed makes fmin_smac determistic</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best x: </span><span class="si">%s</span><span class="s2">; with cost: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cost</span><span class="p">))</span>
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.786 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-function-minimization-fmin-rosenbrock-example-py">
-<div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/ca291fc8fc88abe6d8477d8875ebb796/fmin_rosenbrock_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fmin_rosenbrock_example.py</span></code></a></p>
-</div>
-<div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/84b786484ef999bfca72ceb4e39d8009/fmin_rosenbrock_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">fmin_rosenbrock_example.ipynb</span></code></a></p>
-</div>
-</div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+  <div class="section" id="computation-times">
+<span id="sphx-glr-examples-smac4mf-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this headline">¶</a></h1>
+<p><strong>03:34.967</strong> total execution time for <strong>examples_SMAC4MF</strong> files:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 82%" />
+<col style="width: 10%" />
+<col style="width: 8%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="SMAC4MF_mlp_example.html#sphx-glr-examples-smac4mf-smac4mf-mlp-example-py"><span class="std std-ref">Optimizing an MLP with SMAC4MFB</span></a> (<code class="docutils literal notranslate"><span class="pre">SMAC4MF_mlp_example.py</span></code>)</p></td>
+<td><p>01:47.531</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="SMAC4MF_sgd_example.html#sphx-glr-examples-smac4mf-smac4mf-sgd-example-py"><span class="std std-ref">Optimizing average cross-validation performance with SMAC4MF</span></a> (<code class="docutils literal notranslate"><span class="pre">SMAC4MF_sgd_example.py</span></code>)</p></td>
+<td><p>01:47.436</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
@@ -378,10 +312,6 @@ Best x: [-2.81390043 -2.88729372]; with cost: 11690.060101
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../parallel/fmin_rosenbrock_parallel_example.html" class="btn btn-neutral float-right" title="Parallel Intensifier with No Intensification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="../../smac_examples.html" class="btn btn-neutral float-left" title="SMAC Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

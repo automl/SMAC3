@@ -459,16 +459,13 @@ contained subobjects that are estimators.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.epm.gp_kernels.Matern._call">
 <span class="sig-name descname"><span class="pre">_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#Matern._call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gp_kernels.Matern._call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the kernel k(X, Y) and optionally its gradient.
-:param X: Left argument of the returned kernel k(X, Y)
-:type X: array, shape (n_samples_X, n_features)
-:param Y: Right argument of the returned kernel k(X, Y). If None, k(X, X)</p>
-<blockquote>
-<div><p>if evaluated instead.</p>
-</div></blockquote>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
 <li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
 hyperparameter is determined. Only supported when Y is None.</p></li>
 <li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>
@@ -614,16 +611,13 @@ is True.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.epm.gp_kernels.WhiteKernel._call">
 <span class="sig-name descname"><span class="pre">_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_gradient</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/epm/gp_kernels.html#WhiteKernel._call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gp_kernels.WhiteKernel._call" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the kernel k(X, Y) and optionally its gradient.
-:param X: Left argument of the returned kernel k(X, Y)
-:type X: array, shape (n_samples_X, n_features)
-:param Y: Right argument of the returned kernel k(X, Y). If None, k(X, X)</p>
-<blockquote>
-<div><p>if evaluated instead.</p>
-</div></blockquote>
+<dd><p>Return the kernel k(X, Y) and optionally its gradient.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>)</em>) – Left argument of the returned kernel k(X, Y)</p></li>
+<li><p><strong>Y</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_samples_Y</em><em>, </em><em>n_features</em><em>)</em><em>, </em><em>(</em><em>optional</em><em>, </em><em>default=None</em><em>)</em>) – Right argument of the returned kernel k(X, Y). If None, k(X, X)
+if evaluated instead.</p></li>
 <li><p><strong>eval_gradient</strong> (<em>bool</em><em> (</em><em>optional</em><em>, </em><em>default=False</em><em>)</em>) – Determines whether the gradient with respect to the kernel
 hyperparameter is determined. Only supported when Y is None.</p></li>
 <li><p><strong>active</strong> (<em>np.ndarray</em><em> (</em><em>n_samples_X</em><em>, </em><em>n_features</em><em>) </em><em>(</em><em>optional</em><em>)</em>) – Boolean array specifying which hyperparameters are active.</p></li>

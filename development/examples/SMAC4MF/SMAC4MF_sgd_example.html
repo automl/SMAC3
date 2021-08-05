@@ -42,7 +42,7 @@
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Optimizing an MLP with SMAC4MFB" href="SMAC4MF_mlp.html" />
+    <link rel="next" title="Optimizing an MLP with SMAC4MFB" href="SMAC4MF_mlp_example.html" />
     <link rel="prev" title="Optimizing an MLP with SMAC4MFB" href="../SMAC4BO/SMAC4BO_mlp_example.html" /> 
 </head>
 
@@ -276,7 +276,7 @@
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../_sources/examples/SMAC4MF/SMAC4MF_sgd_instances.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/examples/SMAC4MF/SMAC4MF_sgd_example.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -291,10 +291,10 @@
             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4mf-smac4mf-sgd-instances-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-smac4mf-smac4mf-sgd-example-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="optimizing-average-cross-validation-performance-with-smac4mf">
-<span id="sphx-glr-examples-smac4mf-smac4mf-sgd-instances-py"></span><h1>Optimizing average cross-validation performance with SMAC4MF<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-smac4mf" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-examples-smac4mf-smac4mf-sgd-example-py"></span><h1>Optimizing average cross-validation performance with SMAC4MF<a class="headerlink" href="#optimizing-average-cross-validation-performance-with-smac4mf" title="Permalink to this headline">¶</a></h1>
 <p>An example for the usage of Hyperband intensifier in SMAC with multiple instances.
 We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using “Hyperband” intensification. We split the digits dataset (10 classes) into 45 binary datasets.</p>
@@ -303,6 +303,100 @@ validation accuracy. An “Instance” represents a specific scenario/condition 
 subsets, transformations) for the algorithm to run. SMAC then returns the algorithm that had the
 best performance across all the instances. In this case, an instance is a binary dataset i.e.,
 digit-2 vs digit-3.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Value for default configuration: 0.1450
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+Optimized Value: 0.0040
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
@@ -438,13 +532,13 @@ digit-2 vs digit-3.</p>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">inc_costs</span><span class="p">)))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4mf-smac4mf-sgd-instances-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  47.436 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-smac4mf-smac4mf-sgd-example-py">
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/f6c1a2f87710a871921528d0a9f7f0c5/SMAC4MF_sgd_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4MF_sgd_instances.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/cd97fc6cc0bc65cbb37a013cdb68cf64/SMAC4MF_sgd_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">SMAC4MF_sgd_example.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/1ed19b5ad14ca9c24f31f5e97e04b226/SMAC4MF_sgd_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4MF_sgd_instances.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/6ad4c4c64e8e4997a63a3a62142ab688/SMAC4MF_sgd_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">SMAC4MF_sgd_example.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -456,7 +550,7 @@ digit-2 vs digit-3.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="SMAC4MF_mlp.html" class="btn btn-neutral float-right" title="Optimizing an MLP with SMAC4MFB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="SMAC4MF_mlp_example.html" class="btn btn-neutral float-right" title="Optimizing an MLP with SMAC4MFB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../SMAC4BO/SMAC4BO_mlp_example.html" class="btn btn-neutral float-left" title="Optimizing an MLP with SMAC4MFB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

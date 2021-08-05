@@ -605,7 +605,7 @@ instances, but we include the code so it is easily applicable for any usecase.</
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Specified 100 repetitions, but fixing to 1, because algorithm is deterministic.
 
-&lt;smac.runhistory.runhistory.RunHistory object at 0x7fc36dc60400&gt;
+&lt;smac.runhistory.runhistory.RunHistory object at 0x7f2854b2c490&gt;
 </pre></div>
 </div>
 </div>
@@ -652,16 +652,11 @@ to solve a small subset of the QCP-dataset.</p>
 </table>
 </div></blockquote>
 </li>
-<li><dl class="simple">
-<dt><strong>instances.txt</strong></dt><dd><p>The ref:<cite>instance</cite> contains the names of all</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>instances one might want to consider during the optimization process.</p>
-<ul>
-<li><dl>
-<dt><strong>scenario.txt</strong></dt><dd><p>The <a href="#id1"><span class="problematic" id="id2">scenario_</span></a> file contains all the necessary information about the configuration scenario at hand.</p>
+<li><p><strong>instances.txt</strong>
+The ref:<cite>instance</cite> contains the names of all
+instances one might want to consider during the optimization process.</p></li>
+<li><p><strong>scenario.txt</strong>
+The <a class="reference internal" href="../../options.html#scenario"><span class="std std-ref">scenario</span></a> file contains all the necessary information about the configuration scenario at hand.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">algo</span> <span class="o">=</span> <span class="n">python3</span> <span class="o">-</span><span class="n">u</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">scripts</span><span class="o">/</span><span class="n">SATCSSCWrapper</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">mem</span><span class="o">-</span><span class="n">limit</span> <span class="mi">1024</span> <span class="o">--</span><span class="n">script</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spearCSSCWrapper</span><span class="o">.</span><span class="n">py</span>
 <span class="n">paramfile</span> <span class="o">=</span> <span class="o">./</span><span class="n">target_algorithm</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">python</span><span class="o">/</span><span class="n">spear</span><span class="o">-</span><span class="n">params</span><span class="o">-</span><span class="n">mixed</span><span class="o">.</span><span class="n">pcs</span>
 <span class="n">execdir</span> <span class="o">=</span> <span class="o">.</span>
@@ -677,10 +672,9 @@ to solve a small subset of the QCP-dataset.</p>
 <p>For this example the following options are used:</p>
 <ul>
 <li><p><em>algo:</em></p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py <span class="se">\</span>
-  --mem-limit <span class="m">1024</span> <span class="se">\</span>
-  --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -u ./target_algorithm/scripts/SATCSSCWrapper.py <span class="se">\</span>
+    --mem-limit <span class="m">1024</span> <span class="se">\</span>
+    --script ./target_algorithm/spear-python/spearCSSCWrapper.py
 </pre></div>
 </div>
 <p>This specifies the wrapper that <em>SMAC</em> executes with a pre-specified
@@ -699,18 +693,15 @@ the wrapper returns the results of the algorithm run as follows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>STATUS, running time, runlength, quality, seed, instance-specifics
 </pre></div>
 </div>
-</div></blockquote>
 </li>
 <li><p><em>paramfile:</em></p>
-<blockquote>
-<div><p>This parameter specifies which pcs-file to use and where it is located.</p>
+<p>This parameter specifies which pcs-file to use and where it is located.</p>
 <p>The PCS-file specifies the Parameter Configuration Space file, which
 lists the algorithm’s parameters, their domains, and default values (one per line)</p>
 <p>In this example we are dealing with 26 parameters of which 12 are categorical
 and 14 are continuous. Out of these 26
 parameters, 9 parameters are conditionals (they are only active if
 their parent parameter takes on a certain value).</p>
-</div></blockquote>
 </li>
 <li><p><em>execdir:</em> Specifies the directory in which the target algorithm will be run.</p></li>
 <li><p><em>deterministic:</em> Specifies if the target algorithm is deterministic.</p></li>
@@ -721,19 +712,13 @@ their parent parameter takes on a certain value).</p>
 <li><p><em>instance_file:</em> See instances.txt above.</p></li>
 <li><p><em>feature_file:</em> See features.txt above.</p></li>
 </ul>
-</dd>
-</dl>
 </li>
-<li><dl>
-<dt><strong>run.sh</strong></dt><dd><p>A shell script calling <em>SMAC</em> with the following command:</p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python ../../scripts/smac --scenario scenario.txt --verbose DEBUG<span class="sb">``</span>
+<li><p><strong>run.sh</strong>
+A shell script calling <em>SMAC</em> with the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python ../../scripts/smac --scenario scenario.txt --verbose DEBUG<span class="sb">``</span>
 </pre></div>
 </div>
-</div></blockquote>
 <p>This runs <em>SMAC</em> with the scenario options specified in the scenario.txt file.</p>
-</dd>
-</dl>
 </li>
 <li><p><strong>target_algorithms</strong> contains the wrapper and the executable for Spear.</p></li>
 <li><p><strong>instances</strong> folder contains the instances on which <em>SMAC</em> will configure Spear.</p></li>
@@ -808,7 +793,7 @@ you will find a <em>hydra-output-yyy-mm-dd_hh:mm:ss_xyz</em> folder. This folder
 SMAC runs, as well as the resulting portfolio (as pkl file).</p>
 <p>The resulting portfolio can be used with any algorithm selector such as
 <a class="reference external" href="https://github.com/mlindauer/AutoFolio">AutoFolio</a></p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.138 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.593 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-quickstart-quickstart-example-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/778db316d59431b174fa6990ab5d350f/quickstart_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">quickstart_example.py</span></code></a></p>

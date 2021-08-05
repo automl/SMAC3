@@ -689,7 +689,8 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+        <span class="sd">&quot;&quot;&quot; Return the kernel k(X, Y) and optionally its gradient.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        X : array, shape (n_samples_X, n_features)</span>
@@ -702,6 +703,7 @@
 <span class="sd">            hyperparameter is determined. Only supported when Y is None.</span>
 <span class="sd">        active : np.ndarray (n_samples_X, n_features) (optional)</span>
 <span class="sd">            Boolean array specifying which hyperparameters are active.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
@@ -887,7 +889,8 @@
         <span class="n">eval_gradient</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">active</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-        <span class="sd">&quot;&quot;&quot;Return the kernel k(X, Y) and optionally its gradient.</span>
+        <span class="sd">&quot;&quot;&quot; Return the kernel k(X, Y) and optionally its gradient.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        X : array, shape (n_samples_X, n_features)</span>
@@ -900,6 +903,7 @@
 <span class="sd">            hyperparameter is determined. Only supported when Y is None.</span>
 <span class="sd">        active : np.ndarray (n_samples_X, n_features) (optional)</span>
 <span class="sd">            Boolean array specifying which hyperparameters are active.</span>
+
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        K : array, shape (n_samples_X, n_samples_Y)</span>
