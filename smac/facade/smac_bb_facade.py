@@ -17,9 +17,9 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BO(SMAC4AC):
+class SMAC4BB(SMAC4AC):
     """
-    Facade to use SMAC for BO using a GP
+    Facade to use SMAC for Black-Box optimization using a GP
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
