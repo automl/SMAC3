@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Python Module Index &mdash; SMAC 0.14.0 documentation</title>
+  <title>Python Module Index &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -98,8 +98,11 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
@@ -140,7 +143,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -213,20 +216,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
@@ -440,7 +429,7 @@
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade"><code class="xref">smac.facade.smac_bo_facade</code></a></td><td>
+       <a href="apidoc/smac.facade.smac_bb_facade.html#module-smac.facade.smac_bb_facade"><code class="xref">smac.facade.smac_bb_facade</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -714,7 +703,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.intensification.successive_halving module &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.intensification.successive_halving module &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
@@ -139,7 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -212,20 +215,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -377,17 +366,16 @@ Can be set to: [highest_executed_budget, highest_budget, any_budget]
 <dd><p>Decides if it is possible to add a new intensifier instance,
 and adds it.
 If a new intensifier instance is added, True is returned, else False.</p>
-<dl class="simple">
-<dt>num_workers: int</dt><dd><p>the maximum number of workers available
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_workers</strong> (<em>int</em>) – the maximum number of workers available
 at a given time.</p>
 </dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Whether or not a successive halving instance was added</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Whether or not a successive halving instance was added</p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,23 +420,24 @@ is expected to be <cite>SuccessiveHalving</cite>, yet this class (<cite>_Success
 actual single worker implementation of the SMAC4MF method.</p>
 <p>Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</p>
 <ol class="arabic">
-<li><dl>
-<dt><strong>‘Instances’ as budget</strong>:</dt><dd><p>When multiple instances are provided or when run objective is “runtime”, this is the criterion used as budget
-for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated
-on at a time. Top challengers for the next iteration are selected based on the combined performance across
-all instances used.</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are not provided, then they are set to 1 and total number
-of available instances respectively by default.</p>
-</dd>
-</dl>
+<li><p><strong>‘Instances’ as budget</strong>:</p>
+<p>When multiple instances are provided or when run objective is “runtime”,
+this is the criterion used as budget
+for successive halving iterations i.e., the budget determines how many
+instances the challengers are evaluated
+on at a time. Top challengers for the next iteration are selected based
+on the combined performance across all instances used.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are not provided, then they are
+set to 1 and total number of available instances respectively by default.</p>
 </li>
-<li><dl>
-<dt><strong>‘Real-valued’ budget</strong>:</dt><dd><p>This is used when there is only one instance provided and when run objective is “quality”,
-i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.
-It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</p>
-<p><code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are required parameters for this type of budget.</p>
-</dd>
-</dl>
+<li><p><strong>‘Real-valued’ budget</strong>:</p>
+<p>This is used when there is only one instance provided and when run
+objective is “quality”, i.e. budget is a positive, real-valued number
+that can be passed to the target algorithm as an argument.
+It can be used to control anything by the target algorithm,
+Eg: number of epochs for training a neural network.</p>
+<p><code class="docutils literal notranslate"><span class="pre">initial_budget</span></code> and <code class="docutils literal notranslate"><span class="pre">max_budget</span></code> are required parameters for
+this type of budget.</p>
 </li>
 </ol>
 <dl class="field-list simple">
@@ -469,19 +458,25 @@ It can be used to control anything by the target algorithm, Eg: number of epochs
 <li><p><strong>num_initial_challengers</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – number of challengers to consider for the initial budget. If None, calculated internally</p></li>
 <li><p><strong>run_obj_time</strong> (<em>bool</em>) – whether the run objective is runtime or not (if true, apply adaptive capping)</p></li>
 <li><p><strong>n_seeds</strong> (<em>typing.Optional</em><em>[</em><em>int</em><em>]</em>) – Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</p></li>
-<li><p><strong>instance_order</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – how to order instances. Can be set to: [None, shuffle_once, shuffle]
-* None - use as is given by the user
-* shuffle_once - shuffle once and use across all SH run (default)
-* shuffle - shuffle before every SH run</p></li>
+<li><p><strong>instance_order</strong> (<em>typing.Optional</em><em>[</em><em>str</em><em>]</em>) – <p>how to order instances. Can be set to: [None, shuffle_once, shuffle]</p>
+<ul>
+<li><p>None - use as is given by the user</p></li>
+<li><p>shuffle_once - shuffle once and use across all SH run (default)</p></li>
+<li><p>shuffle - shuffle before every SH run</p></li>
+</ul>
+</p></li>
 <li><p><strong>adaptive_capping_slackfactor</strong> (<em>float</em>) – slack factor of adpative capping (factor * adaptive cutoff)</p></li>
 <li><p><strong>inst_seed_pairs</strong> (<em>typing.List</em><em>[</em><em>typing.Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Do not set this argument, it will only be used by hyperband!</p></li>
 <li><p><strong>min_chall</strong> (<em>int</em>) – minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
 raise an exception if a value larger than 1 is passed.</p></li>
-<li><p><strong>incumbent_selection</strong> (<em>str</em>) – How to select incumbent in successive halving. Only active for real-valued budgets.
-Can be set to: [highest_executed_budget, highest_budget, any_budget]
-* highest_executed_budget - incumbent is the best in the highest budget run so far (default)
-* highest_budget - incumbent is selected only based on the highest budget
-* any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
+<li><p><strong>incumbent_selection</strong> (<em>str</em>) – <p>How to select incumbent in successive halving. Only active for real-valued budgets.
+Can be set to: [highest_executed_budget, highest_budget, any_budget]</p>
+<ul>
+<li><p>highest_executed_budget - incumbent is the best in the highest budget run so far (default)</p></li>
+<li><p>highest_budget - incumbent is selected only based on the highest budget</p></li>
+<li><p>any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</p></li>
+</ul>
+</p></li>
 <li><p><strong>identifier</strong> (<em>int</em>) – Adds a numerical identifier on this SH instance. Used for debug and tagging
 logger messages properly</p></li>
 </ul>
@@ -558,7 +553,7 @@ based on the given incumbent selection design.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.intensification.successive_halving._SuccessiveHalving._init_sh_params">
 <span class="sig-name descname"><span class="pre">_init_sh_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_initial_challengers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_all_budgets</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_n_configs_in_stage</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/intensification/successive_halving.html#_SuccessiveHalving._init_sh_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.successive_halving._SuccessiveHalving._init_sh_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>initialize Successive Halving parameters</p>
+<dd><p>Initialize Successive Halving parameters</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -685,7 +680,7 @@ a challenger/incumbent.</p></li>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

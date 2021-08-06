@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.intensification.successive_halving &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.intensification.successive_halving &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -95,8 +95,11 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../options.html">Options and file formats</a></li>
@@ -137,7 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -210,20 +213,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -318,8 +307,7 @@
 
 
 <div class="viewcode-block" id="_SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving._SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">_SuccessiveHalving</span><span class="p">(</span><span class="n">AbstractRacer</span><span class="p">):</span>
-
-    <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
+    <span class="sd">&quot;&quot;&quot; Races multiple challengers against an incumbent using Successive Halving method</span>
 
 <span class="sd">    This class contains the logic to implement:</span>
 <span class="sd">    &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
@@ -333,73 +321,28 @@
 <span class="sd">    Successive Halving intensifier (and Hyperband) can operate on two kinds of budgets:</span>
 
 <span class="sd">    1. **&#39;Instances&#39; as budget**:</span>
-<span class="sd">        When multiple instances are provided or when run objective is &quot;runtime&quot;, this is the criterion used as budget</span>
-<span class="sd">        for successive halving iterations i.e., the budget determines how many instances the challengers are evaluated</span>
-<span class="sd">        on at a time. Top challengers for the next iteration are selected based on the combined performance across</span>
-<span class="sd">        all instances used.</span>
 
-<span class="sd">        If ``initial_budget`` and ``max_budget`` are not provided, then they are set to 1 and total number</span>
-<span class="sd">        of available instances respectively by default.</span>
+<span class="sd">       When multiple instances are provided or when run objective is &quot;runtime&quot;,</span>
+<span class="sd">       this is the criterion used as budget</span>
+<span class="sd">       for successive halving iterations i.e., the budget determines how many</span>
+<span class="sd">       instances the challengers are evaluated</span>
+<span class="sd">       on at a time. Top challengers for the next iteration are selected based</span>
+<span class="sd">       on the combined performance across all instances used.</span>
+
+<span class="sd">       If ``initial_budget`` and ``max_budget`` are not provided, then they are</span>
+<span class="sd">       set to 1 and total number of available instances respectively by default.</span>
 
 <span class="sd">    2. **&#39;Real-valued&#39; budget**:</span>
-<span class="sd">        This is used when there is only one instance provided and when run objective is &quot;quality&quot;,</span>
-<span class="sd">        i.e., budget is a positive, real-valued number that can be passed to the target algorithm as an argument.</span>
-<span class="sd">        It can be used to control anything by the target algorithm, Eg: number of epochs for training a neural network.</span>
 
-<span class="sd">        ``initial_budget`` and ``max_budget`` are required parameters for this type of budget.</span>
+<span class="sd">       This is used when there is only one instance provided and when run</span>
+<span class="sd">       objective is &quot;quality&quot;, i.e. budget is a positive, real-valued number</span>
+<span class="sd">       that can be passed to the target algorithm as an argument.</span>
+<span class="sd">       It can be used to control anything by the target algorithm,</span>
+<span class="sd">       Eg: number of epochs for training a neural network.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    stats: smac.stats.stats.Stats</span>
-<span class="sd">        stats object</span>
-<span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
-<span class="sd">        TrajLogger object to log all new incumbents</span>
-<span class="sd">    rng : np.random.RandomState</span>
-<span class="sd">    instances : typing.List[str]</span>
-<span class="sd">        list of all instance ids</span>
-<span class="sd">    instance_specifics : typing.Mapping[str,np.ndarray]</span>
-<span class="sd">        mapping from instance name to instance specific string</span>
-<span class="sd">    cutoff : typing.Optional[int]</span>
-<span class="sd">        cutoff of TA runs</span>
-<span class="sd">    deterministic : bool</span>
-<span class="sd">        whether the TA is deterministic or not</span>
-<span class="sd">    initial_budget : typing.Optional[float]</span>
-<span class="sd">        minimum budget allowed for 1 run of successive halving</span>
-<span class="sd">    max_budget : typing.Optional[float]</span>
-<span class="sd">        maximum budget allowed for 1 run of successive halving</span>
-<span class="sd">    eta : float</span>
-<span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
-<span class="sd">    _all_budgets: typing.Optional[typing.List[float]] = None</span>
-<span class="sd">        Used internally when HB uses SH as a subrouting</span>
-<span class="sd">    _n_configs_in_stage: typing.Optional[typing.List[int]] = None</span>
-<span class="sd">        Used internally when HB uses SH as a subrouting</span>
-<span class="sd">    num_initial_challengers : typing.Optional[int]</span>
-<span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
-<span class="sd">    run_obj_time : bool</span>
-<span class="sd">        whether the run objective is runtime or not (if true, apply adaptive capping)</span>
-<span class="sd">    n_seeds : typing.Optional[int]</span>
-<span class="sd">        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
-<span class="sd">    instance_order : typing.Optional[str]</span>
-<span class="sd">        how to order instances. Can be set to: [None, shuffle_once, shuffle]</span>
-<span class="sd">        * None - use as is given by the user</span>
-<span class="sd">        * shuffle_once - shuffle once and use across all SH run (default)</span>
-<span class="sd">        * shuffle - shuffle before every SH run</span>
-<span class="sd">    adaptive_capping_slackfactor : float</span>
-<span class="sd">        slack factor of adpative capping (factor * adaptive cutoff)</span>
-<span class="sd">    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional</span>
-<span class="sd">        Do not set this argument, it will only be used by hyperband!</span>
-<span class="sd">    min_chall: int</span>
-<span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will</span>
-<span class="sd">        raise an exception if a value larger than 1 is passed.</span>
-<span class="sd">    incumbent_selection: str</span>
-<span class="sd">        How to select incumbent in successive halving. Only active for real-valued budgets.</span>
-<span class="sd">        Can be set to: [highest_executed_budget, highest_budget, any_budget]</span>
-<span class="sd">        * highest_executed_budget - incumbent is the best in the highest budget run so far (default)</span>
-<span class="sd">        * highest_budget - incumbent is selected only based on the highest budget</span>
-<span class="sd">        * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</span>
-<span class="sd">    identifier: int</span>
-<span class="sd">        Adds a numerical identifier on this SH instance. Used for debug and tagging</span>
-<span class="sd">        logger messages properly</span>
+<span class="sd">       ``initial_budget`` and ``max_budget`` are required parameters for</span>
+<span class="sd">       this type of budget.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
@@ -425,6 +368,63 @@
                  <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;highest_executed_budget&#39;</span><span class="p">,</span>
                  <span class="n">identifier</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                  <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        stats: smac.stats.stats.Stats</span>
+<span class="sd">            stats object</span>
+<span class="sd">        traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
+<span class="sd">            TrajLogger object to log all new incumbents</span>
+<span class="sd">        rng : np.random.RandomState</span>
+<span class="sd">        instances : typing.List[str]</span>
+<span class="sd">            list of all instance ids</span>
+<span class="sd">        instance_specifics : typing.Mapping[str,np.ndarray]</span>
+<span class="sd">            mapping from instance name to instance specific string</span>
+<span class="sd">        cutoff : typing.Optional[int]</span>
+<span class="sd">            cutoff of TA runs</span>
+<span class="sd">        deterministic : bool</span>
+<span class="sd">            whether the TA is deterministic or not</span>
+<span class="sd">        initial_budget : typing.Optional[float]</span>
+<span class="sd">            minimum budget allowed for 1 run of successive halving</span>
+<span class="sd">        max_budget : typing.Optional[float]</span>
+<span class="sd">            maximum budget allowed for 1 run of successive halving</span>
+<span class="sd">        eta : float</span>
+<span class="sd">            &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
+<span class="sd">        _all_budgets: typing.Optional[typing.List[float]] = None</span>
+<span class="sd">            Used internally when HB uses SH as a subrouting</span>
+<span class="sd">        _n_configs_in_stage: typing.Optional[typing.List[int]] = None</span>
+<span class="sd">            Used internally when HB uses SH as a subrouting</span>
+<span class="sd">        num_initial_challengers : typing.Optional[int]</span>
+<span class="sd">            number of challengers to consider for the initial budget. If None, calculated internally</span>
+<span class="sd">        run_obj_time : bool</span>
+<span class="sd">            whether the run objective is runtime or not (if true, apply adaptive capping)</span>
+<span class="sd">        n_seeds : typing.Optional[int]</span>
+<span class="sd">            Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
+<span class="sd">        instance_order : typing.Optional[str]</span>
+<span class="sd">            how to order instances. Can be set to: [None, shuffle_once, shuffle]</span>
+
+<span class="sd">            * None - use as is given by the user</span>
+<span class="sd">            * shuffle_once - shuffle once and use across all SH run (default)</span>
+<span class="sd">            * shuffle - shuffle before every SH run</span>
+
+<span class="sd">        adaptive_capping_slackfactor : float</span>
+<span class="sd">            slack factor of adpative capping (factor * adaptive cutoff)</span>
+<span class="sd">        inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional</span>
+<span class="sd">            Do not set this argument, it will only be used by hyperband!</span>
+<span class="sd">        min_chall: int</span>
+<span class="sd">            minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will</span>
+<span class="sd">            raise an exception if a value larger than 1 is passed.</span>
+<span class="sd">        incumbent_selection: str</span>
+<span class="sd">            How to select incumbent in successive halving. Only active for real-valued budgets.</span>
+<span class="sd">            Can be set to: [highest_executed_budget, highest_budget, any_budget]</span>
+
+<span class="sd">            * highest_executed_budget - incumbent is the best in the highest budget run so far (default)</span>
+<span class="sd">            * highest_budget - incumbent is selected only based on the highest budget</span>
+<span class="sd">            * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget</span>
+<span class="sd">        identifier: int</span>
+<span class="sd">            Adds a numerical identifier on this SH instance. Used for debug and tagging</span>
+<span class="sd">            logger messages properly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                          <span class="n">traj_logger</span><span class="o">=</span><span class="n">traj_logger</span><span class="p">,</span>
@@ -534,8 +534,7 @@
                         <span class="n">_all_budgets</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="n">_n_configs_in_stage</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        initialize Successive Halving parameters</span>
+        <span class="sd">&quot;&quot;&quot; Initialize Successive Halving parameters</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1332,8 +1331,7 @@
 
 
 <div class="viewcode-block" id="SuccessiveHalving"><a class="viewcode-back" href="../../../apidoc/smac.intensification.successive_halving.html#smac.intensification.successive_halving.SuccessiveHalving">[docs]</a><span class="k">class</span> <span class="nc">SuccessiveHalving</span><span class="p">(</span><span class="n">ParallelScheduler</span><span class="p">):</span>
-
-    <span class="sd">&quot;&quot;&quot;Races multiple challengers against an incumbent using Successive Halving method</span>
+    <span class="sd">&quot;&quot;&quot; Races multiple challengers against an incumbent using Successive Halving method</span>
 
 <span class="sd">    Implementation following the description in</span>
 <span class="sd">    &quot;BOHB: Robust and Efficient Hyperparameter Optimization at Scale&quot; (Falkner et al. 2018)</span>
@@ -1501,8 +1499,8 @@
 <span class="sd">        and adds it.</span>
 <span class="sd">        If a new intensifier instance is added, True is returned, else False.</span>
 
-<span class="sd">        Parameters:</span>
-<span class="sd">        -----------</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
 <span class="sd">        num_workers: int</span>
 <span class="sd">            the maximum number of workers available</span>
 <span class="sd">            at a given time.</span>
@@ -1548,7 +1546,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

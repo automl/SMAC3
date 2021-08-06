@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_examples_parallel_sg_execution_times:
+
+Computation times
+=================
+**02:20.265** total execution time for **examples_parallel** files:
+
++-----------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_parallel_parallel_sh_mlp_example.py` (``parallel_sh_mlp_example.py``)                   | 01:49.846 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_parallel_fmin_rosenbrock_parallel_example.py` (``fmin_rosenbrock_parallel_example.py``) | 00:30.419 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------------------+-----------+--------+

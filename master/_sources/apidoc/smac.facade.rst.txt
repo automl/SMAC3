@@ -22,6 +22,6 @@ Subpackages
    smac.facade.hyperband_facade
    smac.facade.roar_facade
    smac.facade.smac_ac_facade
-   smac.facade.smac_bo_facade
+   smac.facade.smac_bb_facade
    smac.facade.smac_hpo_facade
    smac.facade.smac_mf_facade

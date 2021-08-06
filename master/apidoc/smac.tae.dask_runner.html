@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.tae.dask_runner module &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.tae.dask_runner module &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
@@ -139,7 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -212,20 +215,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -319,21 +308,21 @@ this wrapper class called DaskParallelRunner uses dask to initialize
 N number of BaseRunner that actively wait of a RunInfo to produce a
 RunValue object.</p>
 <p>To be more precise, the work model is then:
-1- The smbo.intensifier dictates “what” to run (a configuration/instance/seed)</p>
+1.  The smbo.intensifier dictates “what” to run (a configuration/instance/seed)</p>
 <blockquote>
 <div><p>via a RunInfo object.</p>
 </div></blockquote>
-<dl class="simple">
-<dt>2- a tae_runner takes this RunInfo object and launches the task via</dt><dd><p>tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
+<ol class="arabic simple" start="2">
+<li><p>a tae_runner takes this RunInfo object and launches the task via
+tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
 receive a pickle-object of DaskParallelRunner.single_worker, each with a
-run() method coming from DaskParallelRunner.single_worker.run()</p>
-</dd>
-<dt>3- RunInfo objects are run in a distributed fashion, an their results are</dt><dd><p>available locally to each worker. Such result is collected by
-DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</p>
-</dd>
-<dt>4- Exceptions are also locally available to each worker and need to be</dt><dd><p>collected.</p>
-</dd>
-</dl>
+run() method coming from DaskParallelRunner.single_worker.run()</p></li>
+<li><p>RunInfo objects are run in a distributed fashion, an their results are
+available locally to each worker. Such result is collected by
+DaskParallelRunner.get_finished_runs() and then passed to the SMBO.</p></li>
+<li><p>Exceptions are also locally available to each worker and need to be
+collected.</p></li>
+</ol>
 <p>Dask works with Future object which are managed via the DaskParallelRunner.client.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.dask_runner.DaskParallelRunner.results">
@@ -414,7 +403,7 @@ worker directory must be set by the program/user starting the workers.</p></li>
 <dd><p>A run is over, when a future has done() equal true.
 This function collects the completed futures and move
 them from self.futures to self.results.</p>
-<p><a href="#id1"><span class="problematic" id="id2">**</span></a>* We make sure futures never exceed the capacity of
+<p>We make sure futures never exceed the capacity of
 the scheduler</p>
 </dd></dl>
 
@@ -501,9 +490,9 @@ algorithm. Handled by the target algorithm internally</p></li>
 embedded in a run_info object, and uses one of the workers
 to produce a result locally to each worker.</p>
 <p>The execution of a configuration follows this procedure:
-1- SMBO/intensifier generates a run_info
-2- SMBO calls submit_run so that a worker launches the run_info
-3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
+1.  SMBO/intensifier generates a run_info
+2.  SMBO calls submit_run so that a worker launches the run_info
+3.  submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
 which contains common code that any run() method will otherwise have to implement, like
 capping check.</p>
 <p>Child classes must implement a run() method.
@@ -541,7 +530,7 @@ This class waits until 1 run completes</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

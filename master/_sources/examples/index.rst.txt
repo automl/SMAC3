@@ -4,9 +4,59 @@
 
 .. _sphx_glr_examples:
 
-========
-Examples
-========
+.. _examples:
+
+
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_quickstart:
+
+.. _quickstart:
+
+==========
+Quickstart
+==========
+
+Below are a curated list of examples to help get you up and running with SMAC.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Quickstart">
+
+.. only:: html
+
+ .. figure:: /examples/quickstart/images/thumb/sphx_glr_quickstart_example_thumb.png
+
+     :ref:`sphx_glr_examples_quickstart_quickstart_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/quickstart/quickstart_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_function_minimization:
+
+.. _fmin_examples:
+
+=====================
+Function Minimization
+=====================
 
 
 
@@ -16,9 +66,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_fmin_rosenbrock_thumb.png
+ .. figure:: /examples/function_minimization/images/thumb/sphx_glr_fmin_rosenbrock_example_thumb.png
 
-     :ref:`sphx_glr_examples_fmin_rosenbrock.py`
+     :ref:`sphx_glr_examples_function_minimization_fmin_rosenbrock_example.py`
 
 .. raw:: html
 
@@ -28,7 +78,22 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/fmin_rosenbrock
+   /examples/function_minimization/fmin_rosenbrock_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_parallel:
+
+.. _parallel_examples:
+
+========
+Parallel
+========
+
+
 
 .. raw:: html
 
@@ -36,29 +101,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_fmin_rosenbrock_parallel_thumb.png
+ .. figure:: /examples/parallel/images/thumb/sphx_glr_fmin_rosenbrock_parallel_example_thumb.png
 
-     :ref:`sphx_glr_examples_fmin_rosenbrock_parallel.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/fmin_rosenbrock_parallel
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Using the SMAC interface tuned for hyperparameter optimization for black-box optimization">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_rosenbrock_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4HPO_rosenbrock.py`
+     :ref:`sphx_glr_examples_parallel_fmin_rosenbrock_parallel_example.py`
 
 .. raw:: html
 
@@ -68,87 +113,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4HPO_rosenbrock
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Using the black-box optimization interface of SMAC">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4BO_rosenbrock_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4BO_rosenbrock.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4BO_rosenbrock
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a GradientBoosting on an artificial...">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_gradientboosting_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4HPO_gradientboosting.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4HPO_gradientboosting
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Changing the acquisition function">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_acq_rosenbrock_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4HPO_acq_rosenbrock.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4HPO_acq_rosenbrock
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ...">
-
-.. only:: html
-
- .. figure:: /examples/images/thumb/sphx_glr_hyperband_mlp_thumb.png
-
-     :ref:`sphx_glr_examples_hyperband_mlp.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/hyperband_mlp
+   /examples/parallel/fmin_rosenbrock_parallel_example
 
 .. raw:: html
 
@@ -156,9 +121,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_parallel_sh_mlp_thumb.png
+ .. figure:: /examples/parallel/images/thumb/sphx_glr_parallel_sh_mlp_example_thumb.png
 
-     :ref:`sphx_glr_examples_parallel_sh_mlp.py`
+     :ref:`sphx_glr_examples_parallel_parallel_sh_mlp_example.py`
 
 .. raw:: html
 
@@ -168,7 +133,82 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/parallel_sh_mlp
+   /examples/parallel/parallel_sh_mlp_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_SMAC4HPO:
+
+.. _SMAC4HPO_examples:
+
+========
+SMAC4HPO
+========
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using SMAC tuned for HPO for black-box optimization">
+
+.. only:: html
+
+ .. figure:: /examples/SMAC4HPO/images/thumb/sphx_glr_SMAC4HPO_rosenbrock_example_thumb.png
+
+     :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_rosenbrock_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/SMAC4HPO/SMAC4HPO_rosenbrock_example
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of SMAC within Python. We optimize a GradientBoosting on an artificial...">
+
+.. only:: html
+
+ .. figure:: /examples/SMAC4HPO/images/thumb/sphx_glr_SMAC4HPO_gradientboosting_example_thumb.png
+
+     :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_gradientboosting_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/SMAC4HPO/SMAC4HPO_gradientboosting_example
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Changing the acquisition function">
+
+.. only:: html
+
+ .. figure:: /examples/SMAC4HPO/images/thumb/sphx_glr_SMAC4HPO_acq_rosenbrock_example_thumb.png
+
+     :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_acq_rosenbrock_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/SMAC4HPO/SMAC4HPO_acq_rosenbrock_example
 
 .. raw:: html
 
@@ -176,9 +216,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4HPO_svm_thumb.png
+ .. figure:: /examples/SMAC4HPO/images/thumb/sphx_glr_SMAC4HPO_svm_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4HPO_svm.py`
+     :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_svm_example.py`
 
 .. raw:: html
 
@@ -188,7 +228,55 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4HPO_svm
+   /examples/SMAC4HPO/SMAC4HPO_svm_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_SMAC4BB:
+
+=======
+SMAC4BB
+=======
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Using the black-box optimization interface of SMAC">
+
+.. only:: html
+
+ .. figure:: /examples/SMAC4BB/images/thumb/sphx_glr_SMAC4BB_rosenbrock_example_thumb.png
+
+     :ref:`sphx_glr_examples_SMAC4BB_SMAC4BB_rosenbrock_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/SMAC4BB/SMAC4BB_rosenbrock_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_SMAC4MF:
+
+.. _SMAC4MF_examples:
+
+=======
+SMAC4MF
+=======
+
+
 
 .. raw:: html
 
@@ -196,9 +284,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4MF_sgd_instances_thumb.png
+ .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_sgd_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4MF_sgd_instances.py`
+     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py`
 
 .. raw:: html
 
@@ -208,7 +296,7 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4MF_sgd_instances
+   /examples/SMAC4MF/SMAC4MF_sgd_example
 
 .. raw:: html
 
@@ -216,9 +304,9 @@ Examples
 
 .. only:: html
 
- .. figure:: /examples/images/thumb/sphx_glr_SMAC4MF_mlp_thumb.png
+ .. figure:: /examples/SMAC4MF/images/thumb/sphx_glr_SMAC4MF_mlp_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4MF_mlp.py`
+     :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp_example.py`
 
 .. raw:: html
 
@@ -228,7 +316,42 @@ Examples
 .. toctree::
    :hidden:
 
-   /examples/SMAC4MF_mlp
+   /examples/SMAC4MF/SMAC4MF_mlp_example
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_hyperband:
+
+.. _hyperband_examples:
+
+=========
+Hyperband
+=========
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of a model-free Hyperband intensifier in SMAC. The configurations are ...">
+
+.. only:: html
+
+ .. figure:: /examples/hyperband/images/thumb/sphx_glr_hyperband_mlp_example_thumb.png
+
+     :ref:`sphx_glr_examples_hyperband_hyperband_mlp_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/hyperband/hyperband_mlp_example
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

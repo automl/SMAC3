@@ -1,8 +1,0 @@
-smac.facade.smac\_bo\_facade module
-===================================
-
-.. automodule:: smac.facade.smac_bo_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

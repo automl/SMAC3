@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.tae.execute_func module &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.tae.execute_func module &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
@@ -139,7 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -212,20 +215,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -321,6 +310,59 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.results">
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.results" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[Tuple[<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">smac.runhistory.runhistory.RunInfo</a>, <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">smac.runhistory.runhistory.RunValue</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.ta">
+<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.run_obj">
+<span class="sig-name descname"><span class="pre">run_obj</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.run_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.par_factor">
+<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.par_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.cost_for_crash">
+<span class="sig-name descname"><span class="pre">cost_for_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.cost_for_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.abort_first_run_crash">
+<span class="sig-name descname"><span class="pre">abort_first_run_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.abort_first_run_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ta</strong> (<em>typing.Union</em><em>[</em><em>typing.List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>typing.Callable</em><em>]</em>) – target algorithm</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object to collect statistics about runtime/additional info</p></li>
+<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
+<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
+<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
+that returned NaN or inf)</p></li>
+<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -331,8 +373,8 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.tae.execute_func.AbstractTAFunc.results">
-<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.tae.execute_func.AbstractTAFunc.results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -399,6 +441,59 @@ the target algorithm.</p>
 </dd>
 </dl>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.results">
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.results" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>typing.List[typing.Tuple[<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">RunValue</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.ta">
+<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.run_obj">
+<span class="sig-name descname"><span class="pre">run_obj</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.run_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.par_factor">
+<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.par_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.cost_for_crash">
+<span class="sig-name descname"><span class="pre">cost_for_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.cost_for_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.abort_first_run_crash">
+<span class="sig-name descname"><span class="pre">abort_first_run_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.abort_first_run_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ta</strong> (<em>typing.Union</em><em>[</em><em>typing.List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>typing.Callable</em><em>]</em>) – target algorithm</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object to collect statistics about runtime/additional info</p></li>
+<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
+<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
+<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
+that returned NaN or inf)</p></li>
+<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -409,8 +504,8 @@ the target algorithm.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncArray.results">
-<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncArray.results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -445,6 +540,59 @@ the target algorithm.</p>
 </dd>
 </dl>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.results">
+<span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.results" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>typing.List[typing.Tuple[<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo">RunInfo</a>, <a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue">RunValue</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.ta">
+<span class="sig-name descname"><span class="pre">ta</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.ta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.stats">
+<span class="sig-name descname"><span class="pre">stats</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.run_obj">
+<span class="sig-name descname"><span class="pre">run_obj</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.run_obj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.par_factor">
+<span class="sig-name descname"><span class="pre">par_factor</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.par_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.cost_for_crash">
+<span class="sig-name descname"><span class="pre">cost_for_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.cost_for_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.abort_first_run_crash">
+<span class="sig-name descname"><span class="pre">abort_first_run_crash</span></span><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.abort_first_run_crash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ta</strong> (<em>typing.Union</em><em>[</em><em>typing.List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>typing.Callable</em><em>]</em>) – target algorithm</p></li>
+<li><p><strong>stats</strong> (<a class="reference internal" href="smac.stats.stats.html#smac.stats.stats.Stats" title="smac.stats.stats.Stats"><em>Stats</em></a>) – stats object to collect statistics about runtime/additional info</p></li>
+<li><p><strong>run_obj</strong> (<em>str</em>) – run objective of SMAC</p></li>
+<li><p><strong>par_factor</strong> (<em>int</em>) – penalization factor</p></li>
+<li><p><strong>cost_for_crash</strong> (<em>float</em>) – cost that is used in case of crashed runs (including runs
+that returned NaN or inf)</p></li>
+<li><p><strong>abort_on_first_run_crash</strong> (<em>bool</em>) – if true and first run crashes, raise FirstRunCrashedException</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -455,8 +603,8 @@ the target algorithm.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.tae.execute_func.ExecuteTAFuncDict.results">
-<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.tae.execute_func.ExecuteTAFuncDict.results" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="pre">:</span> <span class="pre">typing.List</span><span class="p"><span class="pre">[</span></span><span class="pre">typing.Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">RunInfo</span><span class="p"><span class="pre">,</span> </span><span class="pre">RunValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -477,7 +625,7 @@ the target algorithm.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

@@ -1,0 +1,12 @@
+
+:orphan:
+
+.. _sphx_glr_examples_hyperband_sg_execution_times:
+
+Computation times
+=================
+**01:50.978** total execution time for **examples_hyperband** files:
+
++--------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_hyperband_hyperband_mlp_example.py` (``hyperband_mlp_example.py``) | 01:50.978 | 0.0 MB |
++--------------------------------------------------------------------------------------------+-----------+--------+

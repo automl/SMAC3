@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>F.A.Q. &mdash; SMAC 0.14.0 documentation</title>
+  <title>F.A.Q. &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -43,7 +43,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Contact" href="contact.html" />
-    <link rel="prev" title="Optimizing an MLP with SMAC4MFB" href="examples/SMAC4MF_mlp.html" /> 
+    <link rel="prev" title="smac.smac_cli module" href="apidoc/smac.smac_cli.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
@@ -139,7 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -212,20 +215,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">F.A.Q.</a></li>
@@ -306,14 +295,14 @@ or try to run the installation first.</p>
 <p class="rubric">pyrfr raises cryptic import errors.</p>
 <p>Ensure that the gcc used to compile the pyrfr is the same as used for linking
 during execution. This often happens with Anaconda – see
-<a class="reference external" href="installation.html">Installation</a> for a solution.</p>
+<a class="reference internal" href="installation.html#installation"><span class="std std-ref">Installation</span></a> for a solution.</p>
 <p class="rubric">My target algorithm is not accepted, when using the scenario-file.</p>
 <p>Make sure that your algorithm accepts commandline options as provided by
-<em>SMAC</em>. Refer to <a class="reference external" href="basic_usage.html#commandline">commandline execution</a> for
+<em>SMAC</em>. Refer to <a class="reference internal" href="basic_usage.html#commandline"><span class="std std-ref">commandline execution</span></a> for
 details on how to wrap your algorithm.</p>
 <p>You can also run SMAC with <code class="code docutils literal notranslate"><span class="pre">--verbose</span> <span class="pre">DEBUG</span></code> to see how <em>SMAC</em> tried to call your algorithm.</p>
 <p class="rubric">Can I restore SMAC from a previous state?</p>
-<p>Use the <a class="reference external" href="basic_usage.html#restorestate">restore-option</a>.</p>
+<p>Use the <a href="#id1"><span class="problematic" id="id2">:ref:`restore-option &lt;restorestate&gt;`_</span></a>.</p>
 <p class="rubric">I discovered a bug or SMAC does not behave as expected. Where should I report to?</p>
 <p>Open an issue in our issue list on GitHub. Before you report a bug, please make sure that:</p>
 <blockquote>
@@ -357,14 +346,14 @@ to evaluate the performance on that instance. Nevertheless the default seed 0 is
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="contact.html" class="btn btn-neutral float-right" title="Contact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="examples/SMAC4MF_mlp.html" class="btn btn-neutral float-left" title="Optimizing an MLP with SMAC4MFB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="apidoc/smac.smac_cli.html" class="btn btn-neutral float-left" title="smac.smac_cli module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

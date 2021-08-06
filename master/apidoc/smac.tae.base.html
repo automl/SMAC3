@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.tae.base module &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.tae.base module &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -97,8 +97,11 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
@@ -139,7 +142,7 @@
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -212,20 +215,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
@@ -313,24 +302,25 @@
 The complexity of running a configuration as well as handling the
 results is abstracted to the SMBO via a BaseRunner.</p>
 <p>From SMBO perspective, launching a configuration follows a
-submit/collect scheme as follows:
-1- A run is launched via submit_run()
-1.1- Submit_run internally calls run_wrapper(), a method that</p>
-<blockquote>
-<div><p>contains common processing functions among different runners,
-for example, handling capping and stats checking.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>1.2- A class that implements BaseRunner defines run() which is</dt><dd><p>really the algorithm to translate a RunInfo to a RunValue, i.e.
-a configuration to an actual result.</p>
-</dd>
-<dt>2- A completed run is collected via get_finished_runs(), which returns</dt><dd><p>any finished runs, if any.</p>
-</dd>
-<dt>3- This interface also offers the method wait() as a mechanism to make</dt><dd><p>sure we have enough data in the next iteration to make a decision. For
+submit/collect scheme as follows:</p>
+<ol class="arabic simple">
+<li><p>A run is launched via submit_run()</p>
+<ol class="arabic simple">
+<li><p>Submit_run internally calls run_wrapper(), a method that
+contains common processing functions among different runners,
+for example, handling capping and stats checking.</p></li>
+<li><p>A class that implements BaseRunner defines run() which is
+really the algorithm to translate a RunInfo to a RunValue, i.e.
+a configuration to an actual result.</p></li>
+</ol>
+</li>
+<li><p>A completed run is collected via get_finished_runs(), which returns
+any finished runs, if any.</p></li>
+<li><p>This interface also offers the method wait() as a mechanism to make
+sure we have enough data in the next iteration to make a decision. For
 example, the intensifier might not be able to select the next challenger
-until more results are available.</p>
-</dd>
-</dl>
+until more results are available.</p></li>
+</ol>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.tae.base.BaseRunner.results">
 <span class="sig-name descname"><span class="pre">results</span></span><a class="headerlink" href="#smac.tae.base.BaseRunner.results" title="Permalink to this definition">¶</a></dt>
@@ -515,7 +505,7 @@ This method waits until 1 run completes</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

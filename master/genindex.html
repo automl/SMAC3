@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; SMAC 0.14.0 documentation</title>
+  <title>Index &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -95,8 +95,11 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
@@ -137,7 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -210,20 +213,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">F.A.Q.</a></li>
@@ -353,6 +342,8 @@
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI._abc_impl">(smac.optimizer.acquisition.LogEI attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.PI._abc_impl">(smac.optimizer.acquisition.PI attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.TS._abc_impl">(smac.optimizer.acquisition.TS attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer._abc_impl">(smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer attribute)</a>
 </li>
@@ -515,6 +506,8 @@
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI._compute">(smac.optimizer.acquisition.LogEI method)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.PI._compute">(smac.optimizer.acquisition.PI method)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.TS._compute">(smac.optimizer.acquisition.TS method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger._convert_dict_to_config">_convert_dict_to_config() (smac.utils.io.traj_logging.TrajLogger static method)</a>
@@ -760,6 +753,8 @@
 </li>
         <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.PI._required_updates">(smac.optimizer.acquisition.PI attribute)</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.TS._required_updates">(smac.optimizer.acquisition.TS attribute)</a>
+</li>
       </ul></li>
       <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate._Run">_Run (in module smac.utils.validate)</a>
 </li>
@@ -894,7 +889,21 @@
       <li><a href="apidoc/smac.tae.html#smac.tae.StatusType.ABORT">ABORT (smac.tae.StatusType attribute)</a>
 </li>
       <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.abort_first_run_crash">abort_first_run_crash (smac.tae.base.BaseRunner attribute)</a>
+
+      <ul>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.abort_first_run_crash">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
 </li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.abort_first_run_crash">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.abort_first_run_crash">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.abort_first_run_crash">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.abort_first_run_crash">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.abort_first_run_crash">(smac.tae.serial_runner.SerialRunner attribute)</a>
+</li>
+      </ul></li>
       <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.abort_i_first_run_crash">abort_i_first_run_crash (smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 
       <ul>
@@ -911,14 +920,14 @@
 </li>
       <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc">AbstractTAFunc (class in smac.tae.execute_func)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.aclib_traj_fn">aclib_traj_fn (smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer">AcquisitionFunctionMaximizer (class in smac.optimizer.ei_optimization)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.add">add() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace.add_condition">add_condition() (smac.configspace.ConfigurationSpace method)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.ConfigurationSpace.add_conditions">add_conditions() (smac.configspace.ConfigurationSpace method)</a>
@@ -1033,12 +1042,12 @@
 </li>
       <li><a href="apidoc/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
 </li>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.compare">compare() (smac.configspace.CategoricalHyperparameter method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.configspace.html#smac.configspace.CategoricalHyperparameter.compare_vector">compare_vector() (smac.configspace.CategoricalHyperparameter method)</a>
 </li>
       <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.compute_all_costs">compute_all_costs() (smac.runhistory.runhistory.RunHistory method)</a>
@@ -1080,7 +1089,17 @@
       <ul>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.cost_for_crash">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.cost_for_crash">(smac.tae.serial_runner.SerialRunner attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.cost_for_crash">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.cost_for_crash">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.cost_for_crash">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.cost_for_crash">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.cost_for_crash">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id5">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.cost_for_crash">[1]</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.tae.html#smac.tae.StatusType.CRASHED">CRASHED (smac.tae.StatusType attribute)</a>
@@ -1516,7 +1535,7 @@
 </li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.logger">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.logger">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB.logger">(smac.facade.smac_bb_facade.SMAC4BB attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.logger">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -1625,7 +1644,7 @@
 </li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#module-smac.facade.smac_ac_facade">smac.facade.smac_ac_facade</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade">smac.facade.smac_bo_facade</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#module-smac.facade.smac_bb_facade">smac.facade.smac_bb_facade</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#module-smac.facade.smac_hpo_facade">smac.facade.smac_hpo_facade</a>
 </li>
@@ -1817,7 +1836,17 @@
       <ul>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.par_factor">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.par_factor">(smac.tae.serial_runner.SerialRunner attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.par_factor">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.par_factor">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.par_factor">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.par_factor">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.par_factor">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id4">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.par_factor">[1]</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler">ParallelScheduler (class in smac.intensification.parallel_scheduling)</a>
@@ -1848,6 +1877,8 @@
 </li>
       <li><a href="apidoc/smac.utils.logging.html#smac.utils.logging.PickableLoggerAdapter">PickableLoggerAdapter (class in smac.utils.logging)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra.portfolio">portfolio (smac.facade.experimental.hydra_facade.Hydra attribute)</a>
 
       <ul>
@@ -1856,8 +1887,6 @@
       </ul></li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">predict() (smac.epm.base_epm.AbstractEPM method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">predict_marginalized_over_instances() (smac.epm.base_epm.AbstractEPM method)</a>
 
       <ul>
@@ -1955,19 +1984,19 @@
       <ul>
         <li><a href="apidoc/smac.tae.dask_runner.html#id0">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>, <a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.results">[1]</a>
 </li>
-        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.results">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#id0">(smac.tae.execute_func.AbstractTAFunc attribute)</a>, <a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.results">[1]</a>
 </li>
-        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.results">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#id1">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>, <a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.results">[1]</a>
 </li>
-        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.results">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#id2">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>, <a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.results">[1]</a>
 </li>
-        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.results">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#id0">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>, <a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.results">[1]</a>
 </li>
         <li><a href="apidoc/smac.tae.execute_ta_run_hydra.html#smac.tae.execute_ta_run_hydra.ExecuteTARunHydra.results">(smac.tae.execute_ta_run_hydra.ExecuteTARunHydra attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.results">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#id0">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>, <a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.results">[1]</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#id0">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.results">[1]</a>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id0">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#id6">[1]</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.results">[2]</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.rf">rf (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>
@@ -1988,12 +2017,12 @@
         <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.rng">(smac.optimizer.smbo.SMBO attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.facade.roar_facade.html#smac.facade.roar_facade.ROAR">ROAR (class in smac.facade.roar_facade)</a>
 </li>
       <li><a href="apidoc/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.RunInfoIntent.RUN">RUN (smac.intensification.abstract_racer.RunInfoIntent attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.run">run() (smac.optimizer.smbo.SMBO method)</a>
 
       <ul>
@@ -2027,7 +2056,17 @@
 </li>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.run_obj">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.run_obj">(smac.tae.serial_runner.SerialRunner attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.run_obj">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.run_obj">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.run_obj">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.run_obj">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.run_obj">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id3">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.run_obj">[1]</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.tae.base.html#smac.tae.base.BaseRunner.run_wrapper">run_wrapper() (smac.tae.base.BaseRunner method)</a>
@@ -2039,7 +2078,7 @@
       <ul>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.runhistory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.runhistory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB.runhistory">(smac.facade.smac_bb_facade.SMAC4BB attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.runhistory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -2307,10 +2346,10 @@
 </li>
       </ul></li>
       <li>
-    smac.facade.smac_bo_facade
+    smac.facade.smac_bb_facade
 
       <ul>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#module-smac.facade.smac_bo_facade">module</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#module-smac.facade.smac_bb_facade">module</a>
 </li>
       </ul></li>
       <li>
@@ -2439,8 +2478,6 @@
         <li><a href="apidoc/smac.optimizer.acquisition.html#module-smac.optimizer.acquisition">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.ei_optimization
 
@@ -2455,6 +2492,8 @@
         <li><a href="apidoc/smac.optimizer.epm_configuration_chooser.html#module-smac.optimizer.epm_configuration_chooser">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.pSMAC
 
@@ -2681,7 +2720,7 @@
       </ul></li>
       <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC">SMAC4AC (class in smac.facade.smac_ac_facade)</a>
 </li>
-      <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO">SMAC4BO (class in smac.facade.smac_bo_facade)</a>
+      <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB">SMAC4BB (class in smac.facade.smac_bb_facade)</a>
 </li>
       <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO">SMAC4HPO (class in smac.facade.smac_hpo_facade)</a>
 </li>
@@ -2706,7 +2745,7 @@
 </li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.solver">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.solver">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB.solver">(smac.facade.smac_bb_facade.SMAC4BB attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.solver">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -2732,7 +2771,7 @@
 </li>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.stats">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.stats">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB.stats">(smac.facade.smac_bb_facade.SMAC4BB attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.stats">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -2744,7 +2783,17 @@
 </li>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.stats">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.stats">(smac.tae.serial_runner.SerialRunner attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.stats">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.stats">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.stats">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.stats">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.stats">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id2">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.stats">[1]</a>
 </li>
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.stats">(smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
@@ -2784,7 +2833,17 @@
       <ul>
         <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.ta">(smac.tae.dask_runner.DaskParallelRunner attribute)</a>
 </li>
-        <li><a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.ta">(smac.tae.serial_runner.SerialRunner attribute)</a>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.ta">(smac.tae.execute_func.AbstractTAFunc attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray.ta">(smac.tae.execute_func.ExecuteTAFuncArray attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncDict.ta">(smac.tae.execute_func.ExecuteTAFuncDict attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_aclib.html#smac.tae.execute_ta_run_aclib.ExecuteTARunAClib.ta">(smac.tae.execute_ta_run_aclib.ExecuteTARunAClib attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.execute_ta_run_old.html#smac.tae.execute_ta_run_old.ExecuteTARunOld.ta">(smac.tae.execute_ta_run_old.ExecuteTARunOld attribute)</a>
+</li>
+        <li><a href="apidoc/smac.tae.serial_runner.html#id1">(smac.tae.serial_runner.SerialRunner attribute)</a>, <a href="apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner.ta">[1]</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.ta_runs">ta_runs (smac.utils.io.traj_logging.TrajEntry attribute)</a>
@@ -2815,12 +2874,14 @@
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry.train_perf">train_perf (smac.utils.io.traj_logging.TrajEntry attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.facade.hyperband_facade.html#smac.facade.hyperband_facade.HB4AC.trajectory">trajectory (smac.facade.hyperband_facade.HB4AC attribute)</a>
 
       <ul>
         <li><a href="apidoc/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.trajectory">(smac.facade.smac_ac_facade.SMAC4AC attribute)</a>
 </li>
-        <li><a href="apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO.trajectory">(smac.facade.smac_bo_facade.SMAC4BO attribute)</a>
+        <li><a href="apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB.trajectory">(smac.facade.smac_bb_facade.SMAC4BB attribute)</a>
 </li>
         <li><a href="apidoc/smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO.trajectory">(smac.facade.smac_hpo_facade.SMAC4HPO attribute)</a>
 </li>
@@ -2829,8 +2890,6 @@
         <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger.trajectory">(smac.utils.io.traj_logging.TrajLogger attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajEntry">TrajEntry (class in smac.utils.io.traj_logging)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.traj_logging.html#smac.utils.io.traj_logging.TrajLogger">TrajLogger (class in smac.utils.io.traj_logging)</a>
@@ -2856,6 +2915,8 @@
 </li>
       </ul></li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.truthy">truthy() (in module smac.utils.io.cmd_reader)</a>
+</li>
+      <li><a href="apidoc/smac.optimizer.acquisition.html#smac.optimizer.acquisition.TS">TS (class in smac.optimizer.acquisition)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.types">types (smac.epm.base_epm.AbstractEPM attribute)</a>
 
@@ -2991,7 +3052,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>

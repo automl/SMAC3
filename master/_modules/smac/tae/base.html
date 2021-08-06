@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.tae.base &mdash; SMAC 0.14.0 documentation</title>
+  <title>smac.tae.base &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                0.14.0
+                1.0.0
               </div>
             
           
@@ -95,8 +95,11 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/quickstart/quickstart_example.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage_recomendation.html">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../smac_examples.html">SMAC Examples</a><ul>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../manual.html">Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../options.html">Options and file formats</a></li>
@@ -137,7 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -210,20 +213,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../apidoc/smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock.html">scipy-style fmin interface</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/fmin_rosenbrock_parallel.html">Parallel Intensifier with No Intensification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_rosenbrock.html">Using the SMAC interface tuned for hyperparameter optimization for black-box optimization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4BO_rosenbrock.html">Using the black-box optimization interface of SMAC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_gradientboosting.html">Optimizing GradientBoosting with SMAC4HPO</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_acq_rosenbrock.html">Changing the acquisition function</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/hyperband_mlp.html">Optimizing an MLP with Hyperband</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/parallel_sh_mlp.html">Optimizing an MLP with Parallel SuccesiveHalving</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4HPO_svm.html">Optimize the hyperparameters of a support vector machine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_sgd_instances.html">Optimizing average cross-validation performance with SMAC4MF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../examples/SMAC4MF_mlp.html">Optimizing an MLP with SMAC4MFB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../faq.html">F.A.Q.</a></li>
@@ -322,47 +311,25 @@
 
 <span class="sd">    From SMBO perspective, launching a configuration follows a</span>
 <span class="sd">    submit/collect scheme as follows:</span>
-<span class="sd">    1- A run is launched via submit_run()</span>
-<span class="sd">    1.1- Submit_run internally calls run_wrapper(), a method that</span>
-<span class="sd">         contains common processing functions among different runners,</span>
-<span class="sd">         for example, handling capping and stats checking.</span>
-<span class="sd">    1.2- A class that implements BaseRunner defines run() which is</span>
-<span class="sd">         really the algorithm to translate a RunInfo to a RunValue, i.e.</span>
-<span class="sd">         a configuration to an actual result.</span>
-<span class="sd">    2- A completed run is collected via get_finished_runs(), which returns</span>
+
+<span class="sd">    1. A run is launched via submit_run()</span>
+
+<span class="sd">       1. Submit_run internally calls run_wrapper(), a method that</span>
+<span class="sd">          contains common processing functions among different runners,</span>
+<span class="sd">          for example, handling capping and stats checking.</span>
+
+<span class="sd">       2. A class that implements BaseRunner defines run() which is</span>
+<span class="sd">          really the algorithm to translate a RunInfo to a RunValue, i.e.</span>
+<span class="sd">          a configuration to an actual result.</span>
+
+<span class="sd">    2. A completed run is collected via get_finished_runs(), which returns</span>
 <span class="sd">       any finished runs, if any.</span>
-<span class="sd">    3- This interface also offers the method wait() as a mechanism to make</span>
+
+<span class="sd">    3. This interface also offers the method wait() as a mechanism to make</span>
 <span class="sd">       sure we have enough data in the next iteration to make a decision. For</span>
 <span class="sd">       example, the intensifier might not be able to select the next challenger</span>
 <span class="sd">       until more results are available.</span>
 
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-
-<span class="sd">    results</span>
-<span class="sd">    ta</span>
-<span class="sd">    stats</span>
-<span class="sd">    run_obj</span>
-<span class="sd">    par_factor</span>
-<span class="sd">    cost_for_crash</span>
-<span class="sd">    abort_first_run_crash</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ---------</span>
-<span class="sd">    ta : typing.Union[typing.List[str], typing.Callable]</span>
-<span class="sd">        target algorithm</span>
-<span class="sd">    stats: Stats</span>
-<span class="sd">         stats object to collect statistics about runtime/additional info</span>
-<span class="sd">    run_obj: str</span>
-<span class="sd">        run objective of SMAC</span>
-<span class="sd">    par_factor: int</span>
-<span class="sd">        penalization factor</span>
-<span class="sd">    cost_for_crash : float</span>
-<span class="sd">        cost that is used in case of crashed runs (including runs</span>
-<span class="sd">        that returned NaN or inf)</span>
-<span class="sd">    abort_on_first_run_crash: bool</span>
-<span class="sd">        if true and first run crashes, raise FirstRunCrashedException</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -373,6 +340,33 @@
         <span class="n">cost_for_crash</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">MAXINT</span><span class="p">),</span>
         <span class="n">abort_on_first_run_crash</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        results</span>
+<span class="sd">        ta</span>
+<span class="sd">        stats</span>
+<span class="sd">        run_obj</span>
+<span class="sd">        par_factor</span>
+<span class="sd">        cost_for_crash</span>
+<span class="sd">        abort_first_run_crash</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ta : typing.Union[typing.List[str], typing.Callable]</span>
+<span class="sd">            target algorithm</span>
+<span class="sd">        stats: Stats</span>
+<span class="sd">             stats object to collect statistics about runtime/additional info</span>
+<span class="sd">        run_obj: str</span>
+<span class="sd">            run objective of SMAC</span>
+<span class="sd">        par_factor: int</span>
+<span class="sd">            penalization factor</span>
+<span class="sd">        cost_for_crash : float</span>
+<span class="sd">            cost that is used in case of crashed runs (including runs</span>
+<span class="sd">            that returned NaN or inf)</span>
+<span class="sd">        abort_on_first_run_crash: bool</span>
+<span class="sd">            if true and first run crashes, raise FirstRunCrashedException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># The results is a FIFO structure, implemented via a list</span>
         <span class="c1"># (because the Queue lock is not pickable). Finished runs are</span>
@@ -627,7 +621,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner and Frank Hutter.
+        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
 
     </p>
   </div>
