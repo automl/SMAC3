@@ -9,8 +9,8 @@ To make the usage of *SMAC* as easy as possible, we provide several facades desi
 when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
 +-----------------------+----------------------+-------------------------+-------------------------+
-|                       | SMAC4BB              | SMAC4HPO (Hyper-        | SMAC4MF                 |
-|                       | (Black-Box)          | parameter Optimization) | (Multi-Fidelity)        |
+|                       | SMAC4BB              | SMAC4HPO (Hyper-        | SMAC4AC (Algorithm-     |
+|                       | (Black-Box)          | parameter Optimization) | Configuration)          |
 +=======================+======================+=========================+=========================+
 | # parameter           | low                  | low/medium/high         | low/medium/high         |
 +-----------------------+----------------------+-------------------------+-------------------------+
@@ -39,7 +39,7 @@ Some examples of typical use cases:
   - Minimize objective values of problems that are noisy and/or yield crashed runs (e.g. due to mem-outs).
   - Finding the best setting of an RL-agent to minimize regret (or a set of RL problems)
 
-*SMAC4MF*: Algorithm configuration using a *Random Forest*
+*SMAC4AC*: Algorithm configuration using a *Random Forest*
   - Minimizing the average time it takes for a SAT-solver to solve a set of SAT instances
   - Configuring a MIP solver to solve a set of mixed-integer-problems as fast as possible
   - Optimizing the average quality of solutions returned by a configurable TSP solver
