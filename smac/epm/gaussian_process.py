@@ -307,7 +307,7 @@ class GaussianProcess(BaseModel):
 
         Returns
         ----------
-        function_samples: np.array(F, N)
+        function_samples: np.array(N, F)
             The F function values drawn at the N test points.
         """
 

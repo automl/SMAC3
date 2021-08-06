@@ -12,7 +12,7 @@ from smac.facade.roar_facade import ROAR
 from smac.facade.experimental.hydra_facade import Hydra  # type: ignore[attr-defined] # noqa F821
 from smac.facade.experimental.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.facade.smac_bo_facade import SMAC4BO
+from smac.facade.smac_bb_facade import SMAC4BB
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
@@ -126,8 +126,8 @@ class SMACCLI(object):
                 stats=stats,
                 restore_incumbent=incumbent,
                 run_id=main_args_.seed)
-        elif main_args_.mode == "SMAC4BO":
-            optimizer = SMAC4BO(
+        elif main_args_.mode == "SMAC4BB":
+            optimizer = SMAC4BB(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,

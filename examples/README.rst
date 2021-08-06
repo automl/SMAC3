@@ -1,3 +1,1 @@
-========
-Examples
-========
+.. _examples:
