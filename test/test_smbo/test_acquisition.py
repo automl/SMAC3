@@ -44,6 +44,26 @@ class MockModelDual(object):
             np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
 
 
+class MockModelRNG(MockModel):
+    def __init__(self, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self.seed = seed
+        self.rng = np.random.RandomState(self.seed)
+
+
+class MockModelSampler(MockModelRNG):
+    def __init__(self, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self.seed = seed
+        self.rng = np.random.RandomState(seed)
+
+    def sample_functions(self, X, n_funcs=1):
+        m = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
+        var = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
+        var = np.diag(var)
+        return self.rng.multivariate_normal(m, var, n_funcs).T
+
+
 class TestAcquisitionFunction(unittest.TestCase):
     def setUp(self):
         self.model = unittest.mock.Mock()
@@ -296,6 +316,7 @@ class TestLCB(unittest.TestCase):
 
 class TestTS(unittest.TestCase):
     def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'seed'
         self.model = MockModel()
         self.ei = TS(self.model)
 
@@ -316,3 +337,18 @@ class TestTS(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], -0.00988738)
         self.assertAlmostEqual(acq[1][0], -0.22654082)
         self.assertAlmostEqual(acq[2][0], -2.76405235)
+
+
+class TestTSRNG(TestTS):
+    def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'rng'
+        self.model = MockModelRNG()
+        self.ei = TS(self.model)
+
+
+class TestTSSampler(unittest.TestCase):
+    def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'sample_functions'
+        self.model = MockModelSampler()
+        self.ei = TS(self.model)
+
