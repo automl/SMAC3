@@ -440,7 +440,7 @@ class Hyperband(ParallelScheduler):
         and adds it.
         If a new intensifier instance is added, True is returned, else False.
 
-        Parameters:
+        Parameters
         -----------
         num_workers: int
             the maximum number of workers available
