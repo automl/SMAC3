@@ -235,10 +235,10 @@ SMAC4HPO
 
 
 
-.. _sphx_glr_examples_SMAC4BO:
+.. _sphx_glr_examples_SMAC4BB:
 
 =======
-SMAC4BO
+SMAC4BB
 =======
 
 
@@ -249,29 +249,9 @@ SMAC4BO
 
 .. only:: html
 
- .. figure:: /examples/SMAC4BO/images/thumb/sphx_glr_SMAC4BO_rosenbrock_example_thumb.png
+ .. figure:: /examples/SMAC4BB/images/thumb/sphx_glr_SMAC4BB_rosenbrock_example_thumb.png
 
-     :ref:`sphx_glr_examples_SMAC4BO_SMAC4BO_rosenbrock_example.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4BO/SMAC4BO_rosenbrock_example
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC with multiple instances. We optimize ...">
-
-.. only:: html
-
- .. figure:: /examples/SMAC4BO/images/thumb/sphx_glr_SMAC4BO_sgd_instances_example_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4BO_SMAC4BO_sgd_instances_example.py`
+     :ref:`sphx_glr_examples_SMAC4BB_SMAC4BB_rosenbrock_example.py`
 
 .. raw:: html
 
@@ -281,27 +261,7 @@ SMAC4BO
 .. toctree::
    :hidden:
 
-   /examples/SMAC4BO/SMAC4BO_sgd_instances_example
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="An example for the usage of Hyperband intensifier in SMAC. We optimize a simple MLP on the digi...">
-
-.. only:: html
-
- .. figure:: /examples/SMAC4BO/images/thumb/sphx_glr_SMAC4BO_mlp_example_thumb.png
-
-     :ref:`sphx_glr_examples_SMAC4BO_SMAC4BO_mlp_example.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /examples/SMAC4BO/SMAC4BO_mlp_example
+   /examples/SMAC4BB/SMAC4BB_rosenbrock_example
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

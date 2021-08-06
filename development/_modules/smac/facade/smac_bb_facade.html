@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.facade.smac_bo_facade &mdash; SMAC 1.0.0 documentation</title>
+  <title>smac.facade.smac_bb_facade &mdash; SMAC 1.0.0 documentation</title>
   
 
   
@@ -140,7 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -268,7 +268,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>smac.facade.smac_bo_facade</li>
+      <li>smac.facade.smac_bb_facade</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -283,7 +283,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for smac.facade.smac_bo_facade</h1><div class="highlight"><pre>
+  <h1>Source code for smac.facade.smac_bb_facade</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">typing</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -303,9 +303,9 @@
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<div class="viewcode-block" id="SMAC4BO"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_bo_facade.html#smac.facade.smac_bo_facade.SMAC4BO">[docs]</a><span class="k">class</span> <span class="nc">SMAC4BO</span><span class="p">(</span><span class="n">SMAC4AC</span><span class="p">):</span>
+<div class="viewcode-block" id="SMAC4BB"><a class="viewcode-back" href="../../../apidoc/smac.facade.smac_bb_facade.html#smac.facade.smac_bb_facade.SMAC4BB">[docs]</a><span class="k">class</span> <span class="nc">SMAC4BB</span><span class="p">(</span><span class="n">SMAC4AC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Facade to use SMAC for BO using a GP</span>
+<span class="sd">    Facade to use SMAC for Black-Box optimization using a GP</span>
 
 <span class="sd">    see smac.facade.smac_Facade for API</span>
 <span class="sd">    This facade overwrites options available via the SMAC facade</span>

@@ -140,7 +140,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.smac_bo_facade.html">smac.facade.smac_bo_facade module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../apidoc/smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
 </ul>
@@ -298,7 +298,7 @@
 <span class="kn">from</span> <span class="nn">smac.facade.experimental.hydra_facade</span> <span class="kn">import</span> <span class="n">Hydra</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 <span class="kn">from</span> <span class="nn">smac.facade.experimental.psmac_facade</span> <span class="kn">import</span> <span class="n">PSMAC</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_bo_facade</span> <span class="kn">import</span> <span class="n">SMAC4BO</span>
+<span class="kn">from</span> <span class="nn">smac.facade.smac_bb_facade</span> <span class="kn">import</span> <span class="n">SMAC4BB</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.merge_foreign_data</span> <span class="kn">import</span> <span class="n">merge_foreign_data_from_file</span>
@@ -412,8 +412,8 @@
                 <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
                 <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
                 <span class="n">run_id</span><span class="o">=</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC4BO&quot;</span><span class="p">:</span>
-            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC4BO</span><span class="p">(</span>
+        <span class="k">elif</span> <span class="n">main_args_</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SMAC4BB&quot;</span><span class="p">:</span>
+            <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SMAC4BB</span><span class="p">(</span>
                 <span class="n">scenario</span><span class="o">=</span><span class="n">scen</span><span class="p">,</span>
                 <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">main_args_</span><span class="o">.</span><span class="n">seed</span><span class="p">),</span>
                 <span class="n">runhistory</span><span class="o">=</span><span class="n">rh</span><span class="p">,</span>

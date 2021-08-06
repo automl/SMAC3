@@ -12,7 +12,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bo_facade import SMAC4BO
+from smac.facade.smac_bb_facade import SMAC4BB
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4BO(scenario=scenario,
+    smac = SMAC4BB(scenario=scenario,
                    rng=np.random.RandomState(42),
                    tae_runner=rosenbrock_2d)
 
