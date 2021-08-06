@@ -561,10 +561,7 @@ class TS(AbstractAcquisitionFunction):
             return - sample_function(X, n_funcs=1)
 
         m, var_ = self.model.predict_marginalized_over_instances(X)
-        if hasattr(self.model, "rng"):
-            rng = self.model.rng
-        else:
-            rng = np.random.RandomState(self.model.seed)
+        rng = getattr(self.model, 'rng', np.random.RandomState(self.model.seed))
         m = m.flatten()
         var_ = np.diag(var_.flatten())
         return - rng.multivariate_normal(m, var_, 1).T
