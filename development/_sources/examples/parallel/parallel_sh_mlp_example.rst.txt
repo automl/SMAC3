@@ -129,7 +129,7 @@ advantage of the idle resources.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  4.452 seconds)
+   **Total running time of the script:** ( 1 minutes  49.516 seconds)
 
 
 .. _sphx_glr_download_examples_parallel_parallel_sh_mlp_example.py:

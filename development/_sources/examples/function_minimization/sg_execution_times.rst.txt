@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:03.154** total execution time for **examples_function_minimization** files:
+**00:03.798** total execution time for **examples_function_minimization** files:
 
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_function_minimization_fmin_rosenbrock_example.py` (``fmin_rosenbrock_example.py``) | 00:03.154 | 0.0 MB |
+| :ref:`sphx_glr_examples_function_minimization_fmin_rosenbrock_example.py` (``fmin_rosenbrock_example.py``) | 00:03.798 | 0.0 MB |
 +------------------------------------------------------------------------------------------------------------+-----------+--------+
