@@ -1,7 +1,3 @@
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
-__license__ = "3-clause BSD"
-
-
 """
 ==========
 Quickstart
