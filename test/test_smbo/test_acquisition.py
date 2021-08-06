@@ -346,7 +346,7 @@ class TestTSRNG(TestTS):
         self.ei = TS(self.model)
 
 
-class TestTSSampler(unittest.TestCase):
+class TestTSSampler(TestTS):
     def setUp(self):
         # Test TS acqusition function with model that only has attribute 'sample_functions'
         self.model = MockModelSampler()
