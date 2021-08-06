@@ -10,6 +10,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 ## Major changes
 * Examples are separated into categories.
 * Renamed facade SMAC4BO to SMAC4BB (black-box).
+* Add thompson sampling as a new acquisition function
 
 ## Minor Changes
 * Included linkcheck and buildapi to the `make doc` command.
@@ -19,6 +20,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Fixes pydoc issues.
 * Fixed links in the README.
 * Fixed warnings given during the doc build.
+* Fixed inconsistent output shape described in `smac.epm.gaussian_process.GaussianProcess.sample_functions`
 * Examples are wrapped inside `if __name__ == "__main__"`, fixing problems on mac.
 
 # 0.14.0
