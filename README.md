@@ -125,28 +125,7 @@ target algorithms.
 
 # Examples
 
-We provide a bunch of examples in the [examples folder](examples), such as:
-
-  * Optimization of a Python function directly with SMAC
-    * [branin/branin_fmin.py](examples/quickstart/branin/branin_fmin.py)
-    * [fmin_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/function_minimization/fmin_rosenbrock.html#sphx-glr-examples-fmin-rosenbrock-py) - Optimization of the 2D Rosenbrock function
-    * [fmin_rosenbrock_parallel.py](https://automl.github.io/SMAC3/master/examples/parallel/fmin_rosenbrock_parallel.html#sphx-glr-examples-fmin-rosenbrock-parallel-py) - Example of parallel SMAC using dask
-  * Optimization of a black-box function with SMAC
-    * [SMAC4BO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4BO/SMAC4BO_rosenbrock.html#sphx-glr-examples-smac4bo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
-    * [SMAC4BO_acq_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO/SMAC4HPO_acq_rosenbrock.html#sphx-glr-examples-smac4hpo-acq-rosenbrock-py) - Example to select the acquisition function
-  * Hyperparameter Optimization with SMAC
-    * [SMAC4HPO_rosenbrock.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO/SMAC4HPO_rosenbrock.html#sphx-glr-examples-smac4hpo-rosenbrock-py) [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
-    * [SMAC4HPO_rf.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO/SMAC4HPO_rf.html#sphx-glr-examples-smac4hpo-rf-py) - Optimization of a random forest
-    * [SMAC4HPO_svm.py](https://automl.github.io/SMAC3/master/examples/SMAC4HPO/SMAC4HPO_svm.html#sphx-glr-examples-smac4hpo-svm-py) - Optimization of an SVM [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
-  * Optimization of a SAT solver across problem instances with SMAC
-    * [spear_qcp/run_SMAC.sh](examples/quickstart/spear_qcp/run_SMAC.sh)
-  * Optimization of an MLP
-    * [parallel_sh_mlp.py](https://automl.github.io/SMAC3/master/examples/parallel/parallel_sh_mlp.html#sphx-glr-examples-parallel-sh-mlp-py) - Parallel Successive Halving
-    * [hyperband_mlp.py](https://automl.github.io/SMAC3/master/examples/hyperband/hyperband_mlp.html#sphx-glr-examples-hyperband-mlp-py) - Hyperband
-    * [SMAC4MF_mlp.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF/SMAC4MF_mlp.html#sphx-glr-examples-smac4mf-mlp-py) - SMAC4MF
-    * [SMAC4MF_sgd_instances.py](https://automl.github.io/SMAC3/master/examples/SMAC4MF/SMAC4MF_sgd_instances.html#sphx-glr-examples-smac4mf-sgd-instances-py) - SMAC4MF across instances
-
-An overview of all examples can be seen in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
+Please see an overview of all examples in our [documentation](https://automl.github.io/SMAC3/master/examples/index.html).
 
 # Contact
 

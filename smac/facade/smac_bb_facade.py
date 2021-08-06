@@ -17,7 +17,7 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BO(SMAC4AC):
+class SMAC4BB(SMAC4AC):
     """
     Facade to use SMAC for BO using a GP
 
