@@ -106,7 +106,7 @@ Changing the acquisition function
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.639 seconds)
+   **Total running time of the script:** ( 0 minutes  3.719 seconds)
 
 
 .. _sphx_glr_download_examples_SMAC4HPO_SMAC4HPO_acq_rosenbrock_example.py:
