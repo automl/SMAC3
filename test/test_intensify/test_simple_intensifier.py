@@ -14,6 +14,9 @@ from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def get_config_space():
     cs = ConfigurationSpace()

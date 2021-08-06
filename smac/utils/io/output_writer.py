@@ -8,6 +8,9 @@ from smac.utils.logging import PickableLoggerAdapter
 if typing.TYPE_CHECKING:
     from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class OutputWriter(object):
     """Writing scenario to file."""

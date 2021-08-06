@@ -4,6 +4,8 @@ import sys
 
 from smac.utils import dependencies
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 __version__ = '1.0.0'
 __author__ = 'Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, ' \
              'Difan Deng, Carolin Benjamins, René Sass ' \

@@ -1,6 +1,9 @@
 import logging
 import typing
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class PickableLoggerAdapter(object):
     def __init__(self, name: str) -> None:

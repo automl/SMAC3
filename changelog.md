@@ -1,3 +1,9 @@
+# 1.0.1
+
+## Minor Changes
+* Added license information to every file.
+* Fixed a display bug inside usage recommendation. 
+
 # 1.0.0
 
 The main purpose of this release is to be synchronized with our upcoming paper.

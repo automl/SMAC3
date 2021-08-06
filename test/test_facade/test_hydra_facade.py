@@ -11,6 +11,9 @@ from smac.facade.experimental.hydra_facade import Hydra, PSMAC
 from smac.utils.io.output_writer import OutputWriter
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 MOCKCALLS = 0
 

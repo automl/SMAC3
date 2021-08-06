@@ -28,7 +28,6 @@ from smac.tae.base import BaseRunner
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
-
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -472,7 +471,7 @@ class SMBO(object):
             self._stop = True
             return
 
-        if self.scenario.abort_on_first_run_crash :  # type: ignore[attr-defined] # noqa F821
+        if self.scenario.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
             if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
                 raise FirstRunCrashedException(
                     "First run crashed, abort. Please check your setup -- we assume that your default "

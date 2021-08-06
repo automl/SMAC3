@@ -7,6 +7,9 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 # A common function to be optimized by a Real valued Intensifier
 digits = load_digits()

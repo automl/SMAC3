@@ -6,6 +6,9 @@ import scipy.stats as sps
 
 from smac.utils.constants import VERY_SMALL_NUMBER
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class Prior(object):
 

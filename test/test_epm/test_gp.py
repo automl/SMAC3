@@ -15,6 +15,9 @@ from smac.configspace import (
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel

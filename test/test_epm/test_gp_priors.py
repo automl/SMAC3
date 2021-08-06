@@ -6,6 +6,9 @@ import scipy.optimize
 from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
 from smac.utils.constants import VERY_SMALL_NUMBER
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def wrap_ln(theta, prior):
     return np.exp(prior.lnprob(np.log(theta)))

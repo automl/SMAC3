@@ -1,8 +1,3 @@
-'''
-Created on Mar 29, 2015
-
-@author: Andre Biedenkapp
-'''
 import sys
 import os
 import logging
@@ -22,6 +17,10 @@ from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 in_reader = InputReader()
 

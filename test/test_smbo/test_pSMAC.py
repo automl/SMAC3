@@ -9,6 +9,9 @@ from smac.utils import test_helpers
 from smac.tae import StatusType
 from smac.optimizer import pSMAC
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestPSMAC(unittest.TestCase):
     def setUp(self):

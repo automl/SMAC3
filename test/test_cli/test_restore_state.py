@@ -12,6 +12,9 @@ from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.stats.stats import Stats
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestSMACCLI(unittest.TestCase):
 

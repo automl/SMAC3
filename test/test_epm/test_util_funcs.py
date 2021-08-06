@@ -8,6 +8,9 @@ import numpy as np
 
 from smac.epm.util_funcs import get_types
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestUtilFuncs(unittest.TestCase):
     def test_get_types(self):

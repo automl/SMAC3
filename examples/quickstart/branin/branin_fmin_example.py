@@ -4,6 +4,10 @@ logging.basicConfig(level=logging.INFO)
 from branin import branin
 from smac.facade.func_facade import fmin_smac
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 """
 Example for the use of fmin_smac, a basic SMAC-wrapper to optimize a
 function.

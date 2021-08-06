@@ -7,6 +7,9 @@ from smac.tae import StatusType
 from smac.tae.base import BaseRunner
 from smac.utils.constants import MAXINT
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class SerialRunner(BaseRunner):
     """Interface to submit and collect a job in a serial fashion.
@@ -45,6 +48,7 @@ class SerialRunner(BaseRunner):
     abort_on_first_run_crash: bool
         if true and first run crashes, raise FirstRunCrashedException
     """
+
     def __init__(
         self,
         ta: typing.Union[typing.List[str], typing.Callable],

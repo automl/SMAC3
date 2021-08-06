@@ -8,6 +8,9 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     OrdinalHyperparameter
 from smac.utils.constants import MAXINT
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def get_types(
     config_space: ConfigurationSpace,

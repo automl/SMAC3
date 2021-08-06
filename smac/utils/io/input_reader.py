@@ -12,6 +12,7 @@ __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
+
 INSTANCE_TYPE = typing.List[typing.List[str]]
 INSTANCE_FEATURES_TYPE = typing.Tuple[typing.List[str], np.ndarray]
 

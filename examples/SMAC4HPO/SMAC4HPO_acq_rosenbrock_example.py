@@ -19,6 +19,9 @@ from smac.runhistory.runhistory2epm import RunHistory2EPM4InvScaledCost
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model

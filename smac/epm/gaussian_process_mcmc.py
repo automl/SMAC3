@@ -20,6 +20,10 @@ from smac.epm.gp_base_prior import Prior
 from sklearn.gaussian_process.kernels import Kernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 logger = logging.getLogger(__name__)
 
 

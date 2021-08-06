@@ -7,6 +7,9 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
 
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestFactorial(unittest.TestCase):
     def test_factorial(self):

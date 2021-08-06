@@ -1,10 +1,8 @@
-'''
-Created on Nov 19, 2015
-
-@author: lindauer
-'''
-
 import sys
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 if __name__ == '__main__':
 

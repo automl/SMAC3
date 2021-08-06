@@ -14,6 +14,9 @@ from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def generate_config(cs, rs):
     i = rs.randint(-10, 10)
@@ -48,6 +51,7 @@ class Scen(scenario.Scenario):
     """
     DUMMY class to fake scenario
     """
+
     def __init__(self):
         self.run_obj = None
         self.overall_obj = None

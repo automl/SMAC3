@@ -4,6 +4,9 @@ from scipy.optimize import fmin_l_bfgs_b
 import shutil
 from smac.facade.func_facade import fmin_smac
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def rosenbrock_2d(x, seed=1):
 

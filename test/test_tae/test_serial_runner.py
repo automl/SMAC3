@@ -10,6 +10,9 @@ from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.serial_runner import SerialRunner
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def target(x, seed, instance):
     return x ** 2, {'key': seed, 'instance': instance}

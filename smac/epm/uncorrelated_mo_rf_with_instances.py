@@ -6,6 +6,9 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 
 from typing import List, Dict, Any, Optional, Tuple
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
