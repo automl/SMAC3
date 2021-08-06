@@ -534,8 +534,7 @@ class TS(AbstractAcquisitionFunction):
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
-            Controls the balance between exploration and exploitation of the
-            acquisition function.
+            TS does not require par here, we only wants to make it consistent with other acquisition functions
         """
         super(TS, self).__init__(model)
         self.long_name = 'Thompson Sampling'
@@ -552,7 +551,7 @@ class TS(AbstractAcquisitionFunction):
         Returns
         -------
         np.ndarray(N,1)
-            Expected Improvement of X
+            negative sample value of X
         """
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
