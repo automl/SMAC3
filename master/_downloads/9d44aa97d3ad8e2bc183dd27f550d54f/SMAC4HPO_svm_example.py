@@ -25,6 +25,10 @@ from smac.facade.smac_hpo_facade import SMAC4HPO
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 # We load the iris-dataset (a widely used benchmark)
 iris = datasets.load_iris()
 

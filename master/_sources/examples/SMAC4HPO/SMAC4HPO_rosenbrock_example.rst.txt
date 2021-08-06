@@ -46,6 +46,9 @@ Using SMAC tuned for HPO for black-box optimization
     # Import SMAC-utilities
     from smac.scenario.scenario import Scenario
 
+    __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+    __license__ = "3-clause BSD"
+
 
     def rosenbrock_2d(x):
         """ The 2 dimensional Rosenbrock function as a toy model
@@ -93,7 +96,7 @@ Using SMAC tuned for HPO for black-box optimization
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.360 seconds)
+   **Total running time of the script:** ( 0 minutes  2.865 seconds)
 
 
 .. _sphx_glr_download_examples_SMAC4HPO_SMAC4HPO_rosenbrock_example.py:

@@ -25,7 +25,7 @@ launch parallel configurations via n_workers
 
     /opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
       warnings.warn("The balance properties of Sobol' points require"
-    Best x: [-0.77765605  0.6089022 ]; with cost: 3.161786
+    Best x: [0.49537894 0.3309987 ]; with cost: 0.987351
 
 
 
@@ -53,6 +53,10 @@ launch parallel configurations via n_workers
     import os
     import sys
 
+    __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+    __license__ = "3-clause BSD"
+
+
     # https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use
     cwd = os.path.dirname(__file__) if '__file__' in globals() else os.getcwd()
     sys.path.append(os.path.join(cwd))
@@ -79,7 +83,7 @@ launch parallel configurations via n_workers
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  30.419 seconds)
+   **Total running time of the script:** ( 0 minutes  28.451 seconds)
 
 
 .. _sphx_glr_download_examples_parallel_fmin_rosenbrock_parallel_example.py:

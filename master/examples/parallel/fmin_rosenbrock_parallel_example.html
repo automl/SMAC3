@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Parallel Intensifier with No Intensification &mdash; SMAC 1.0.0 documentation</title>
+  <title>Parallel Intensifier with No Intensification &mdash; SMAC 1.0.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -300,7 +300,7 @@ launch parallel configurations via n_workers</p>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol&#39; points require n to be a power of 2.
   warnings.warn(&quot;The balance properties of Sobol&#39; points require&quot;
-Best x: [-0.77765605  0.6089022 ]; with cost: 3.161786
+Best x: [0.49537894 0.3309987 ]; with cost: 0.987351
 </pre></div>
 </div>
 <div class="line-block">
@@ -320,6 +320,10 @@ Best x: [-0.77765605  0.6089022 ]; with cost: 3.161786
 <span class="c1"># --------------------------------------------------------------</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
 
 <span class="c1"># https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use</span>
 <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;__file__&#39;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -345,7 +349,7 @@ Best x: [-0.77765605  0.6089022 ]; with cost: 3.161786
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best x: </span><span class="si">%s</span><span class="s2">; with cost: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  30.419 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  28.451 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-parallel-fmin-rosenbrock-parallel-example-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/00f5a70a626aacc7f03c3d6618ded787/fmin_rosenbrock_parallel_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fmin_rosenbrock_parallel_example.py</span></code></a></p>

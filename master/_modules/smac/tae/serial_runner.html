@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>smac.tae.serial_runner &mdash; SMAC 1.0.0 documentation</title>
+  <title>smac.tae.serial_runner &mdash; SMAC 1.0.1 documentation</title>
   
 
   
@@ -68,7 +68,7 @@
             
             
               <div class="version">
-                1.0.0
+                1.0.1
               </div>
             
           
@@ -295,6 +295,9 @@
 <span class="kn">from</span> <span class="nn">smac.tae.base</span> <span class="kn">import</span> <span class="n">BaseRunner</span>
 <span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
 
 <div class="viewcode-block" id="SerialRunner"><a class="viewcode-back" href="../../../apidoc/smac.tae.serial_runner.html#smac.tae.serial_runner.SerialRunner">[docs]</a><span class="k">class</span> <span class="nc">SerialRunner</span><span class="p">(</span><span class="n">BaseRunner</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Interface to submit and collect a job in a serial fashion.</span>
@@ -333,6 +336,7 @@
 <span class="sd">    abort_on_first_run_crash: bool</span>
 <span class="sd">        if true and first run crashes, raise FirstRunCrashedException</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">ta</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">],</span>
