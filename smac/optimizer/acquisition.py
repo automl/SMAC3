@@ -543,11 +543,12 @@ class TS(AbstractAcquisitionFunction):
         self._required_updates = ('model', )
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the LCB value.
+        """Sample a new value from a gaussian distribution whose mean and covariance values are given by model
         Parameters
         ----------
         X: np.ndarray(N, D)
-           Points to be evaluated where we could sample a value. N is the number of points and D the dimension for the points
+           Points to be evaluated where we could sample a value. N is the number of points and D the dimension
+           for the points
         Returns
         -------
         np.ndarray(N,1)
