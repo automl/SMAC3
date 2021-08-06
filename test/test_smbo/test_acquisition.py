@@ -9,6 +9,7 @@ from smac.optimizer.acquisition import (
     EIPS,
     PI,
     LCB,
+    TS,
     IntegratedAcquisitionFunction,
 )
 
@@ -25,8 +26,9 @@ class ConfigurationMock(object):
 
 
 class MockModel(object):
-    def __init__(self, num_targets=1):
+    def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
+        self.seed = seed
 
     def predict_marginalized_over_instances(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)),\
@@ -290,3 +292,27 @@ class TestLCB(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], 0.045306943655446116)
         self.assertAlmostEqual(acq[1][0], 1.3358936353814157)
         self.assertAlmostEqual(acq[2][0], 3.5406943655446117)
+
+
+class TestTS(unittest.TestCase):
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = TS(self.model)
+
+    def test_1xD(self):
+        self.ei.update(model=self.model)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], -1.74737338)
+
+    def test_NxD(self):
+        self.ei.update(model=self.model)
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], -0.00988738)
+        self.assertAlmostEqual(acq[1][0], -0.22654082)
+        self.assertAlmostEqual(acq[2][0], -2.76405235)
