@@ -691,6 +691,58 @@ acquisition function.</p></li>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.optimizer.acquisition.TS">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.TS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
+<p>Do a Thompson Sampling for a given x over the best so far value as
+acquisition value.
+:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>TS(X) ~ mathcal{N}(mu(mathbf{X}),sigma(mathbf{X}))’
+Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+:param model:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>A model that implements at least</dt><dd><ul class="simple">
+<li><p>predict_marginalized_over_instances(X)</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>par</strong> (<em>float</em><em>, </em><em>default=0.0</em>) – TS does not require par here, we only wants to make it consistent with other acquisition functions</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.optimizer.acquisition.TS._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.acquisition.TS._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.optimizer.acquisition.TS._compute">
+<span class="sig-name descname"><span class="pre">_compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#TS._compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.TS._compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample a new value from a gaussian distribution whose mean and covariance values are given by model
+:param X: Points to be evaluated where we could sample a value. N is the number of points and D the dimension</p>
+<blockquote>
+<div><p>for the points</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>negative sample value of X</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray(N,1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.optimizer.acquisition.TS._required_updates">
+<span class="sig-name descname"><span class="pre">_required_updates</span></span><em class="property"><span class="pre">:</span> <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#smac.optimizer.acquisition.TS._required_updates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 
 

@@ -25,7 +25,7 @@ launch parallel configurations via n_workers
 
     /opt/hostedtoolcache/Python/3.8.11/x64/lib/python3.8/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
       warnings.warn("The balance properties of Sobol' points require"
-    Best x: [-0.54340177  0.28591288]; with cost: 2.390874
+    Best x: [0.43597079 0.16130787]; with cost: 0.400858
 
 
 
@@ -79,7 +79,7 @@ launch parallel configurations via n_workers
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  30.153 seconds)
+   **Total running time of the script:** ( 0 minutes  31.387 seconds)
 
 
 .. _sphx_glr_download_examples_parallel_fmin_rosenbrock_parallel_example.py:
