@@ -57,6 +57,11 @@ advantage of the idle resources.
 
     import os
     import sys
+
+    __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+    __license__ = "3-clause BSD"
+
+
     # https://sphinx-gallery.github.io/stable/faq.html#why-is-file-not-defined-what-can-i-use
     cwd = os.path.dirname(__file__) if '__file__' in globals() else os.getcwd()
     sys.path.append(os.path.join(cwd))
@@ -124,7 +129,7 @@ advantage of the idle resources.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  49.205 seconds)
+   **Total running time of the script:** ( 1 minutes  49.667 seconds)
 
 
 .. _sphx_glr_download_examples_parallel_parallel_sh_mlp_example.py:

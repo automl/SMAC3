@@ -8,22 +8,21 @@ Usage Recommendation
 To make the usage of *SMAC* as easy as possible, we provide several facades designed for these different use cases. Here we give some general recommendations on
 when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
-+-----------------------+----------------------+-------------------------+-------------------------+
-|                       | SMAC4BB              | SMAC4HPO (Hyper-        | SMAC4AC (Algorithm-     |
-|                       | (Black-Box)          | parameter Optimization) | Configuration)          |
-+=======================+======================+=========================+=========================+
-| # parameter           | low                  | low/medium/high         | low/medium/high         |
-+-----------------------+----------------------+-------------------------+-------------------------+
-| categorical parameter | yes                  | supported               | supported               |
-+-----------------------+----------------------+-------------------------+-------------------------+
-| conditional parameter | yes                  | supported               | supported               |
-+-----------------------+----------------------+-------------------------+-------------------------+
-| instances             | no                   | None or CV-folds        | yes                     |
-+-----------------------+----------------------+-------------------------+-------------------------+
-| stochasticity         | no                   | supported               | supported               |
-+-----------------------+----------------------+-------------------------+-------------------------+
-| objective             | any (except runtime) | e.g. validation loss    | e.g. runtime or quality |
-+-----------------------+----------------------+-------------------------+-------------------------+
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+|                       | SMAC4BB (Black-Box)  | SMAC4HPO (Hyperparameter Optimization)  | SMAC4AC (Algorithm Configuration) |
++=======================+======================+=========================================+===================================+
+| # parameter           | low                  | low/medium/high                         | low/medium/high                   |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| categorical parameter | yes                  | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| conditional parameter | yes                  | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| instances             | no                   | None or CV-folds                        | yes                               |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| stochasticity         | no                   | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| objective             | any (except runtime) | e.g. validation loss                    | e.g. runtime or quality           |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
 
 Some examples of typical use cases:
 

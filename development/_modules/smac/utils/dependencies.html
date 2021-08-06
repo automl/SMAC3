@@ -290,6 +290,10 @@
 <span class="kn">import</span> <span class="nn">typing</span>
 <span class="kn">from</span> <span class="nn">distutils.version</span> <span class="kn">import</span> <span class="n">LooseVersion</span>
 
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
 <span class="n">SUBPATTERN</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;((?P&lt;operation</span><span class="si">%d</span><span class="s1">&gt;==|&gt;=|&gt;|&lt;)(?P&lt;version</span><span class="si">%d</span><span class="s1">&gt;(\d+)?(\.[a-zA-Z0-9]+)?(\.\d+)?))&#39;</span>
 <span class="n">RE_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
     <span class="sa">r</span><span class="s1">&#39;^(?P&lt;name&gt;[\w\-]+)</span><span class="si">%s</span><span class="s1">?(,</span><span class="si">%s</span><span class="s1">)?$&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">SUBPATTERN</span> <span class="o">%</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">SUBPATTERN</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>

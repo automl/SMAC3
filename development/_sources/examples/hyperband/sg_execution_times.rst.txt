@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**02:02.612** total execution time for **examples_hyperband** files:
+**01:51.871** total execution time for **examples_hyperband** files:
 
 +--------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_hyperband_hyperband_mlp_example.py` (``hyperband_mlp_example.py``) | 02:02.612 | 0.0 MB |
+| :ref:`sphx_glr_examples_hyperband_hyperband_mlp_example.py` (``hyperband_mlp_example.py``) | 01:51.871 | 0.0 MB |
 +--------------------------------------------------------------------------------------------+-----------+--------+

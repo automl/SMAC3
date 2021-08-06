@@ -27,31 +27,39 @@ optimize the average accuracy on a 5-fold cross validation.
  .. code-block:: none
 
     Value for default configuration: 0.1970
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:149: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+      warnings.warn("{} is intended to be used "
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+      warnings.warn("{} is intended to be used "
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+      warnings.warn("{} is intended to be used "
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+      warnings.warn("{} is intended to be used "
+    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
     Optimized Value: 0.0184
 
@@ -83,6 +91,10 @@ optimize the average accuracy on a 5-fold cross validation.
     from smac.scenario.scenario import Scenario
 
     import warnings
+
+    __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+    __license__ = "3-clause BSD"
+
 
     digits = load_digits()
 
@@ -186,7 +198,7 @@ optimize the average accuracy on a 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  2.612 seconds)
+   **Total running time of the script:** ( 1 minutes  51.871 seconds)
 
 
 .. _sphx_glr_download_examples_hyperband_hyperband_mlp_example.py:

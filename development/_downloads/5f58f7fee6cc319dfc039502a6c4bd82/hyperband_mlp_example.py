@@ -28,6 +28,10 @@ from smac.scenario.scenario import Scenario
 
 import warnings
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 digits = load_digits()
 
 
