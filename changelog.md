@@ -9,6 +9,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 
 ## Major changes
 * Examples are separated into categories.
+* Renamed facade SMAC4BO to SMAC4BB (black-box).
 
 ## Minor Changes
 * Included linkcheck and buildapi to the `make doc` command.
