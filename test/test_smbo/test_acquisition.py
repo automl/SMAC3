@@ -351,4 +351,3 @@ class TestTSSampler(unittest.TestCase):
         # Test TS acqusition function with model that only has attribute 'sample_functions'
         self.model = MockModelSampler()
         self.ei = TS(self.model)
-
