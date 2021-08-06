@@ -1,8 +1,3 @@
-'''
-Created on Nov 15, 2018
-
-@author: biedenk
-'''
 import os
 import unittest
 import shlex
@@ -13,6 +8,9 @@ from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 from smac.tae import StatusType
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class TaeHydra(unittest.TestCase):

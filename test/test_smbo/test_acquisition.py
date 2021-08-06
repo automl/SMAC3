@@ -13,6 +13,9 @@ from smac.optimizer.acquisition import (
     IntegratedAcquisitionFunction,
 )
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class ConfigurationMock(object):
 

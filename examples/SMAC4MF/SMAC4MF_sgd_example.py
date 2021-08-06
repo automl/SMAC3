@@ -34,6 +34,10 @@ from smac.facade.smac_mf_facade import SMAC4MF
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 # We load the MNIST-dataset (a widely used benchmark) and split it into a list of binary datasets
 digits = datasets.load_digits()
 instances = [[str(a) + str(b)] for a, b in itertools.combinations(digits.target_names, 2)]

@@ -9,6 +9,9 @@ logging.basicConfig(level=20)
 
 from smac.facade.func_facade import fmin_smac
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def rosenbrock_2d(x):
     """ The 2 dimensional Rosenbrock function as a toy model

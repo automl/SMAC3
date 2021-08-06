@@ -8,6 +8,9 @@ from unittest import mock
 from smac.smac_cli import SMACCLI
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestDeterministicSMAC(unittest.TestCase):
 

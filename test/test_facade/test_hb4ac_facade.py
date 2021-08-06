@@ -12,6 +12,9 @@ from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.epm.random_epm import RandomEPM
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestHBFacade(unittest.TestCase):
 

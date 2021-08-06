@@ -10,6 +10,9 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class SimpleIntensifier(AbstractRacer):
 

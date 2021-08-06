@@ -1,8 +1,10 @@
 from typing import List
-
 import numpy as np
 
 from smac.configspace import Configuration
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 def convert_configurations_to_array(configs: List[Configuration]) -> np.ndarray:

@@ -22,6 +22,9 @@ sys.path.insert(0, '..')
 import smac
 from smac.utils.io.cmd_reader import CMDReader
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

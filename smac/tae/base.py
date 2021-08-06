@@ -13,6 +13,9 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class BaseRunner(ABC):
     """Interface class to handle the execution of SMAC' configurations.
@@ -43,6 +46,7 @@ class BaseRunner(ABC):
        until more results are available.
 
     """
+
     def __init__(
         self,
         ta: typing.Union[typing.List[str], typing.Callable],

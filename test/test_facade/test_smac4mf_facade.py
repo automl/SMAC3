@@ -10,6 +10,9 @@ from smac.facade.smac_mf_facade import SMAC4MF
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestSMAC4MFFacade(unittest.TestCase):
 

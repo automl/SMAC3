@@ -1,8 +1,3 @@
-'''
-Created on Dec 15, 2015
-
-@author: Aaron Klein
-'''
 import unittest
 import unittest.mock
 import os
@@ -19,6 +14,9 @@ from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.utils import test_helpers
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class ConfigurationMock(object):

@@ -4,6 +4,10 @@ if TYPE_CHECKING:
     from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunInfo, RunValue
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 """Callbacks for SMAC.
 
 Callbacks allow customizing the behavior of SMAC to ones needs. Currently, the list of implemented callbacks is

@@ -1,12 +1,10 @@
-'''
-Created on Nov 19, 2015
-
-@author: lindauer
-'''
 import os
 import unittest
 
 from ConfigSpace.read_and_write import pcs
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class ConfigSpaceTest(unittest.TestCase):

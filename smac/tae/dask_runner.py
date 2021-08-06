@@ -11,6 +11,9 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.tae import StatusType
 from smac.tae.base import BaseRunner
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class DaskParallelRunner(BaseRunner):
     """Interface to submit and collect a job in a distributed fashion.
@@ -43,6 +46,7 @@ class DaskParallelRunner(BaseRunner):
     Dask works with Future object which are managed via the DaskParallelRunner.client.
 
     """
+
     def __init__(
         self,
         single_worker: BaseRunner,

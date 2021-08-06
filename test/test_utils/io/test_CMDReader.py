@@ -1,13 +1,11 @@
-'''
-Created on Apr 12, 2015
-
-@author: Andre Biedenkapp
-'''
 import os
 import unittest
 import logging
 
 from smac.utils.io.cmd_reader import CMDReader
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class TestArgs:

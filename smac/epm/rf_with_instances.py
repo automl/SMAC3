@@ -7,7 +7,6 @@ from smac.configspace import ConfigurationSpace
 from smac.epm.base_rf import BaseModel
 from smac.utils.constants import N_TREES, VERY_SMALL_NUMBER
 
-
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"

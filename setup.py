@@ -3,6 +3,9 @@ import json
 import os
 from setuptools import setup
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 with open('requirements.txt') as fh:
     requirements = [line.strip() for line in fh.readlines()]

@@ -4,6 +4,9 @@ from smac.configspace import ConfigurationSpace
 
 import typing
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def merge_foreign_data_from_file(scenario: Scenario,
                                  runhistory: RunHistory,

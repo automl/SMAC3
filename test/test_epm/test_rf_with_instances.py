@@ -12,6 +12,9 @@ from smac.epm.util_funcs import get_types
 import smac
 import smac.configspace
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestRFWithInstances(unittest.TestCase):
 

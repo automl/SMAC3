@@ -14,7 +14,6 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.tae import StatusType
 from smac.utils.io.traj_logging import TrajLogger
 
-
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
