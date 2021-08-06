@@ -22,6 +22,9 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 # load data and split it into training and test dataset
 X, y = make_hastie_10_2(random_state=0)

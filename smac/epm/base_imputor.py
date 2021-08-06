@@ -2,7 +2,6 @@ from abc import abstractmethod
 
 import numpy as np
 
-
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"

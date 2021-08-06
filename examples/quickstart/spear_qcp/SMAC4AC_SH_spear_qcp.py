@@ -14,6 +14,9 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 if __name__ == '__main__':
     scenario = Scenario('scenario.txt')

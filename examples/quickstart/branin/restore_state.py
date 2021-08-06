@@ -9,6 +9,10 @@ from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 """
 This file runs SMAC and then restores the run with an extended computation
 budget. This will also work for SMAC runs that have crashed and are continued.

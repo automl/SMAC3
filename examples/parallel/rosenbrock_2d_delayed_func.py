@@ -1,5 +1,9 @@
 import time
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 # --------------------------------------------------------------
 # When working with multiprocessing, we need to provide a pickable
 # function and use __main__. Details can be found on:

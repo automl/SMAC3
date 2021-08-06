@@ -20,6 +20,10 @@ from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     req_opts = parser.add_argument_group("Required Options")

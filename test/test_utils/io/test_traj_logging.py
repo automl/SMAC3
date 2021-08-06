@@ -1,8 +1,3 @@
-'''
-Created on Apr 25, 2015
-
-@author: Andre Biedenkapp
-'''
 import tempfile
 import logging
 import json
@@ -18,6 +13,9 @@ from smac.configspace import ConfigurationSpace,\
     Configuration, CategoricalHyperparameter, Constant, UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class TrajLoggerTest(unittest.TestCase):

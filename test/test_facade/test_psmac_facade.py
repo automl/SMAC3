@@ -10,6 +10,9 @@ from smac.facade.experimental.psmac_facade import PSMAC
 from smac.optimizer.smbo import SMBO
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class MockSMBO(SMBO):
     def __init__(self, **kwargs):

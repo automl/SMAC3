@@ -1,11 +1,3 @@
-'''
-Created on Jan 31, 2017
-
-copied from test_exec_tae_old and modified to test exceptions
-
-@author: lindauer
-@modified: marben
-'''
 import os
 import sys
 import unittest
@@ -23,6 +15,9 @@ if sys.version_info[0] == 2:
     import mock
 else:
     from unittest import mock
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class TaeTest(unittest.TestCase):

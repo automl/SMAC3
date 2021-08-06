@@ -13,6 +13,7 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
+
 TrajEntry = collections.namedtuple(
     'TrajEntry', ['train_perf', 'incumbent_id', 'incumbent',
                   'ta_runs', 'ta_time_used', 'wallclock_time', 'budget'])

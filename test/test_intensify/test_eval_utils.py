@@ -2,6 +2,9 @@ from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def eval_challenger(
     run_info: RunInfo,

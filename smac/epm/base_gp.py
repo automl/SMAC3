@@ -10,6 +10,9 @@ import sklearn.gaussian_process
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 from sklearn.gaussian_process import GaussianProcessRegressor
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class BaseModel(AbstractEPM):
 

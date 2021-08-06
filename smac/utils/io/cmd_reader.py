@@ -26,6 +26,7 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
+
 in_reader = InputReader()
 PARSED_SCENARIO_ARGS_TYPE = typing.Dict[
     str, typing.Union[str, int, typing.Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, typing.List[str]]

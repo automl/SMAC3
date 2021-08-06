@@ -7,6 +7,10 @@ from ConfigSpace.read_and_write import pcs, pcs_new, json
 from ConfigSpace.util import get_one_exchange_neighbourhood
 from smac.configspace.util import convert_configurations_to_array
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 __all__ = ["ConfigurationSpace",
            "Configuration",
            "Constant",

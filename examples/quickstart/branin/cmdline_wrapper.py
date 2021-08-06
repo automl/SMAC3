@@ -2,6 +2,10 @@ import sys
 
 from branin import branin
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 """
 This is a wrapper used by SMAC to optimize parameters on the branin-function.
 

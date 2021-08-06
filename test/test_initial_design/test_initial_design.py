@@ -13,6 +13,9 @@ from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.tae.execute_func import ExecuteTAFuncDict
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestSingleInitialDesign(unittest.TestCase):
 

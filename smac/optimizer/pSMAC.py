@@ -8,6 +8,10 @@ import glob
 from smac.runhistory.runhistory import RunHistory
 from smac.configspace import ConfigurationSpace
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 RUNHISTORY_FILEPATTERN = 'runhistory.json'
 RUNHISTORY_RE = r'runhistory\.json$'
 VALIDATEDRUNHISTORY_RE = r'validated_runhistory\.json$'

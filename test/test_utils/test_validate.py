@@ -16,6 +16,9 @@ from smac.utils.validate import Validator, _Run
 
 from unittest import mock
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class ValidationTest(unittest.TestCase):
 

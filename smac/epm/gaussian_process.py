@@ -12,6 +12,10 @@ from smac.utils.constants import VERY_SMALL_NUMBER
 from sklearn.gaussian_process.kernels import Kernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 logger = logging.getLogger(__name__)
 
 
