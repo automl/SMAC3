@@ -812,6 +812,10 @@
 
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Do a Thompson Sampling for a given x over the best so far value as</span>
 <span class="sd">        acquisition value.</span>
+
+<span class="sd">        Thompson Sampling can only be used together with smac.optimizer.ei_optimization.RandomSearch, please do not</span>
+<span class="sd">        use smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS acquisition function!!!</span>
+
 <span class="sd">        :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))&#39;</span>
 <span class="sd">        Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.</span>
 <span class="sd">        Parameters</span>

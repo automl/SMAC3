@@ -696,8 +696,10 @@ acquisition function.</p></li>
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.acquisition.</span></span><span class="sig-name descname"><span class="pre">TS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><span class="pre">smac.epm.base_epm.AbstractEPM</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">par</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/acquisition.html#TS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.acquisition.TS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.acquisition.AbstractAcquisitionFunction</span></code></a></p>
 <p>Do a Thompson Sampling for a given x over the best so far value as
-acquisition value.
-:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>TS(X) ~ mathcal{N}(mu(mathbf{X}),sigma(mathbf{X}))’
+acquisition value.</p>
+<p>Thompson Sampling can only be used together with smac.optimizer.ei_optimization.RandomSearch, please do not
+use smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS acquisition function!!!</p>
+<p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>TS(X) ~ mathcal{N}(mu(mathbf{X}),sigma(mathbf{X}))’
 Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
 :param model:</p>
 <blockquote>
