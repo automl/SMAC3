@@ -11,7 +11,6 @@ cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from smac.runhistory.runhistory import average_cost
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -83,13 +82,16 @@ if __name__ == "__main__":
     scenario = Scenario(args_.scenario, cmd_options={'output_dir': ""})
     traj_logger = TrajLogger(None, Stats(scenario))
     trajectory = traj_logger.read_traj_aclib_format(args_.trajectory, scenario.cs)
+    stats = Stats(scenario)
     if args_.tae == "old":
         tae = ExecuteTARunOld(ta=scenario.ta,
+                              stats=stats,
                               run_obj=scenario.run_obj,
                               par_factor=scenario.par_factor,
                               cost_for_crash=scenario.cost_for_crash)
     if args_.tae == "aclib":
         tae = ExecuteTARunAClib(ta=scenario.ta,
+                                stats=stats,
                                 run_obj=scenario.run_obj,
                                 par_factor=scenario.par_factor,
                                 cost_for_crash=scenario.cost_for_crash)
@@ -98,7 +100,7 @@ if __name__ == "__main__":
 
     # Load runhistory
     if args_.runhistory:
-        runhistory = RunHistory(average_cost)
+        runhistory = RunHistory()
         for rh_path in args_.runhistory:
             runhistory.update_from_json(rh_path, scenario.cs)
     else:
