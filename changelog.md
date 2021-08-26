@@ -1,3 +1,8 @@
+# 1.0.2
+
+## Minor Changes
+* Made smac-validate.py consistent with runhistory and tae.
+
 # 1.0.1
 
 ## Minor Changes
