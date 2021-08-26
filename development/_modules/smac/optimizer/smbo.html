@@ -587,7 +587,7 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">is_budget_exhausted</span><span class="p">():</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Exhausted configuration budget&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shutting down because a configuration returned status STOP&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shutting down because a configuration or callback returned status STOP&quot;</span><span class="p">)</span>
 
                 <span class="c1"># The budget can be exhausted  for 2 reasons: number of ta runs or</span>
                 <span class="c1"># time. If the number of ta runs is reached, but there is still budget,</span>
@@ -775,7 +775,12 @@
         <span class="p">)</span>
 
         <span class="k">for</span> <span class="n">callback</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span><span class="p">[</span><span class="s1">&#39;_incorporate_run_results&#39;</span><span class="p">]:</span>
-            <span class="n">callback</span><span class="p">(</span><span class="n">smbo</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">time_left</span><span class="o">=</span><span class="n">time_left</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">callback</span><span class="p">(</span><span class="n">smbo</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_info</span><span class="o">=</span><span class="n">run_info</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">time_left</span><span class="o">=</span><span class="n">time_left</span><span class="p">)</span>
+            <span class="c1"># If a callback returns False, the optimization loop should be interrupted</span>
+            <span class="c1"># the other callbacks are still being called</span>
+            <span class="k">if</span> <span class="n">response</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;An IncorporateRunResultCallback returned False, requesting abort.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">save_results_instantly</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>

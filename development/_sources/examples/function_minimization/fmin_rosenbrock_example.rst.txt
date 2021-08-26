@@ -20,7 +20,7 @@ scipy-style fmin interface
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-08-26_07:17:21_075792
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-08-26_08:03:43_223636
     INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
     INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
     INFO:smac.facade.smac_hpo_facade.SMAC4HPO:<class 'smac.facade.smac_hpo_facade.SMAC4HPO'>
@@ -38,8 +38,8 @@ scipy-style fmin interface
     INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 10 / 10.0
     INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 10 / 10.0
     INFO:smac.stats.stats.Stats:#Configurations: 10
-    INFO:smac.stats.stats.Stats:Used wallclock time: 3.46 / inf sec 
-    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.07 / inf sec
+    INFO:smac.stats.stats.Stats:Used wallclock time: 3.25 / inf sec 
+    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.06 / inf sec
     INFO:smac.stats.stats.Stats:##########################################################
     INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Final Incumbent: Configuration:
       x1, Value: -1.345753380449037
@@ -97,7 +97,7 @@ scipy-style fmin interface
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.467 seconds)
+   **Total running time of the script:** ( 0 minutes  3.264 seconds)
 
 
 .. _sphx_glr_download_examples_function_minimization_fmin_rosenbrock_example.py:
