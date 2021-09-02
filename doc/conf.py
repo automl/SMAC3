@@ -320,6 +320,13 @@ cmd_reader.write_scenario_options_to_doc()
 from sphinx_gallery.sorting import ExplicitOrder
 
 # Sphinx-gallery configuration.
+
+# get current branch
+binder_branch = 'master'
+import smac
+if "dev" in smac.__version__:
+    binder_branch = "development"
+
 sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
     'backreferences_dir': None,
@@ -339,5 +346,18 @@ sphinx_gallery_conf = {
     # compile execute examples in the examples dir
     'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.
-    'ignore_pattern': '.*_func.py'
+    'ignore_pattern': '.*_func.py',
+    'binder': {
+        # Required keys
+        'org': 'automl',
+        'repo': 'SMAC3',
+        'branch': binder_branch,
+        'binderhub_url': 'https://mybinder.org',
+        'dependencies': ['../.binder/apt.txt', '../.binder/requirements.txt'],
+        # 'filepath_prefix': '<prefix>' # A prefix to prepend to any filepaths in Binder links.
+        # Jupyter notebooks for Binder will be copied to this directory (relative to built documentation root).
+        'notebooks_dir': 'notebooks/',
+        'use_jupyter_lab': True,
+        # Whether Binder links should start Jupyter Lab instead of the Jupyter Notebook interface.
+    },
 }
