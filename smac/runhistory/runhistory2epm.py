@@ -79,7 +79,8 @@ class AbstractRunHistory2EPM(object):
             scaled y-transformation use a percentile to estimate distance to optimum;
             only used by some subclasses of AbstractRunHistory2EPM
         rng : numpy.random.RandomState
-            only used for reshuffling data after imputation
+            Only used for reshuffling data after imputation.
+            If None, use np.random.RandomState(seed=1).
         """
 
         self.logger = logging.getLogger(
