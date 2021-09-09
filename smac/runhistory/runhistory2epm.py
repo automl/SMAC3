@@ -63,7 +63,7 @@ class AbstractRunHistory2EPM(object):
             number of parameters in config space
         success_states: list, optional
             List of states considered as successful (such as StatusType.SUCCESS).
-            If None, raises TypeError.
+            If None, raise TypeError.
         impute_censored_data: bool, optional
             Should we impute data?
         consider_for_higher_budgets_state: list, optional
