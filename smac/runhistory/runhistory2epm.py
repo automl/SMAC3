@@ -73,7 +73,8 @@ class AbstractRunHistory2EPM(object):
         impute_state: list, optional
             List of states that mark censored data (such as StatusType.TIMEOUT)
             in combination with runtime < cutoff_time
-            If None, set to [StatusType.CAPPED, ]
+            If None, set to empty list [].
+            If None and impute_censored_data is True, raise TypeError.
         scale_perc: int
             scaled y-transformation use a percentile to estimate distance to optimum;
             only used by some subclasses of AbstractRunHistory2EPM
