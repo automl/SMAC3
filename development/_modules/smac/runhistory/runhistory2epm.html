@@ -348,8 +348,8 @@
 <span class="sd">        num_params : int</span>
 <span class="sd">            number of parameters in config space</span>
 <span class="sd">        success_states: list, optional</span>
-<span class="sd">            List of states considered as successful (such as StatusType.SUCCESS)</span>
-<span class="sd">            If None, set to [StatusType.SUCCESS, ]</span>
+<span class="sd">            List of states considered as successful (such as StatusType.SUCCESS).</span>
+<span class="sd">            If None, raise TypeError.</span>
 <span class="sd">        impute_censored_data: bool, optional</span>
 <span class="sd">            Should we impute data?</span>
 <span class="sd">        consider_for_higher_budgets_state: list, optional</span>
@@ -359,12 +359,14 @@
 <span class="sd">        impute_state: list, optional</span>
 <span class="sd">            List of states that mark censored data (such as StatusType.TIMEOUT)</span>
 <span class="sd">            in combination with runtime &lt; cutoff_time</span>
-<span class="sd">            If None, set to [StatusType.CAPPED, ]</span>
+<span class="sd">            If None, set to empty list [].</span>
+<span class="sd">            If None and impute_censored_data is True, raise TypeError.</span>
 <span class="sd">        scale_perc: int</span>
 <span class="sd">            scaled y-transformation use a percentile to estimate distance to optimum;</span>
 <span class="sd">            only used by some subclasses of AbstractRunHistory2EPM</span>
 <span class="sd">        rng : numpy.random.RandomState</span>
-<span class="sd">            only used for reshuffling data after imputation</span>
+<span class="sd">            Only used for reshuffling data after imputation.</span>
+<span class="sd">            If None, use np.random.RandomState(seed=1).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
