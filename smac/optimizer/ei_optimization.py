@@ -12,6 +12,7 @@ from smac.configspace import (
     Configuration,
     ConfigurationSpace,
     convert_configurations_to_array,
+    ForbiddenValueError,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
@@ -402,18 +403,25 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
                             # Found a better configuration
                             if acq_val[acq_index] > acq_val_candidates[i]:
-                                self.logger.debug(
-                                    "Local search %d: Switch to one of the neighbors (after %d configurations).",
-                                    i,
-                                    neighbors_looked_at[i],
-                                )
-                                candidates[i] = neighbors[acq_index]
-                                acq_val_candidates[i] = acq_val[acq_index]
-                                new_neighborhood[i] = True
-                                improved[i] = True
-                                local_search_steps[i] += 1
-                                neighbors_w_equal_acq[i] = []
-                                obtain_n[i] = 1
+                                is_valid = False
+                                try:
+                                    neighbors[acq_index].is_valid_configuration()
+                                    is_valid = True
+                                except (ValueError, ForbiddenValueError) as e:
+                                    self.logger.debug("Local search %d: %s", i, e)
+                                if is_valid:
+                                    self.logger.debug(
+                                        "Local search %d: Switch to one of the neighbors (after %d configurations).",
+                                        i,
+                                        neighbors_looked_at[i],
+                                    )
+                                    candidates[i] = neighbors[acq_index]
+                                    acq_val_candidates[i] = acq_val[acq_index]
+                                    new_neighborhood[i] = True
+                                    improved[i] = True
+                                    local_search_steps[i] += 1
+                                    neighbors_w_equal_acq[i] = []
+                                    obtain_n[i] = 1
                             # Found an equally well performing configuration, keeping it for plateau walking
                             elif acq_val[acq_index] == acq_val_candidates[i]:
                                 neighbors_w_equal_acq[i].append(neighbors[acq_index])
