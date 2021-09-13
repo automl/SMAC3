@@ -12,6 +12,10 @@ from smac.utils.constants import VERY_SMALL_NUMBER
 from sklearn.gaussian_process.kernels import Kernel
 from sklearn.gaussian_process import GaussianProcessRegressor
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -307,7 +311,7 @@ class GaussianProcess(BaseModel):
 
         Returns
         ----------
-        function_samples: np.array(F, N)
+        function_samples: np.array(N, F)
             The F function values drawn at the N test points.
         """
 

@@ -8,7 +8,6 @@ from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
 from smac.utils.io.cmd_reader import CMDReader
 
-
 __author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"

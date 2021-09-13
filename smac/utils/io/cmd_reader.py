@@ -26,6 +26,7 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
+
 in_reader = InputReader()
 PARSED_SCENARIO_ARGS_TYPE = typing.Dict[
     str, typing.Union[str, int, typing.Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, typing.List[str]]
@@ -458,7 +459,7 @@ class CMDReader(object):
                               default=logging.INFO, choices=["INFO", "DEBUG"],
                               help="Verbosity level.")
         opt_opts.add_argument("--mode",
-                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "Hydra", "PSMAC", "SMAC4HPO", "SMAC4BO"],
+                              default="SMAC4AC", choices=["SMAC4AC", "ROAR", "Hydra", "PSMAC", "SMAC4HPO", "SMAC4BB"],
                               help="Configuration mode.")
         opt_opts.add_argument("--restore-state", "--restore_state", dest="restore_state",
                               default=None,

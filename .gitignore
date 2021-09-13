@@ -9,6 +9,7 @@ dist
 
 # IDEs
 .idea
+.history
 
 # SMAC output
 runhistory.json
@@ -32,6 +33,11 @@ doc/main_options.rst
 doc/scenario_options.rst
 doc/smac_options.rst
 doc/apidoc
+doc/examples
+doc/quickstart
+
+# Generated from running Sphinx-Gallery
+*smac3-output_*
 
 # Dask created work space
 dask-worker-space

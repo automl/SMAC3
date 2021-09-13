@@ -7,6 +7,9 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
 
 from smac.initial_design.latin_hypercube_design import LHDesign
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestLHDesign(unittest.TestCase):
     def setUp(self):

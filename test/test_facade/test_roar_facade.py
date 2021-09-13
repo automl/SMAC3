@@ -11,6 +11,9 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.roar_facade import ROAR
 from smac.scenario.scenario import Scenario
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestROARFacade(unittest.TestCase):
 

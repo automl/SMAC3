@@ -10,6 +10,10 @@ import scipy.special
 
 from smac.epm.gp_base_prior import Prior
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
 
 
@@ -403,7 +407,8 @@ class Matern(MagicMixin, kernels.Matern):
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-        """Return the kernel k(X, Y) and optionally its gradient.
+        """ Return the kernel k(X, Y) and optionally its gradient.
+
         Parameters
         ----------
         X : array, shape (n_samples_X, n_features)
@@ -416,6 +421,7 @@ class Matern(MagicMixin, kernels.Matern):
             hyperparameter is determined. Only supported when Y is None.
         active : np.ndarray (n_samples_X, n_features) (optional)
             Boolean array specifying which hyperparameters are active.
+
         Returns
         -------
         K : array, shape (n_samples_X, n_samples_Y)
@@ -517,7 +523,6 @@ class RBF(MagicMixin, kernels.RBF):
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-
         """Return the kernel k(X, Y) and optionally its gradient.
 
         Parameters
@@ -601,7 +606,8 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-        """Return the kernel k(X, Y) and optionally its gradient.
+        """ Return the kernel k(X, Y) and optionally its gradient.
+
         Parameters
         ----------
         X : array, shape (n_samples_X, n_features)
@@ -614,6 +620,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
             hyperparameter is determined. Only supported when Y is None.
         active : np.ndarray (n_samples_X, n_features) (optional)
             Boolean array specifying which hyperparameters are active.
+
         Returns
         -------
         K : array, shape (n_samples_X, n_samples_Y)

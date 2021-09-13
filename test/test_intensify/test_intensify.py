@@ -20,6 +20,9 @@ from smac.utils.io.traj_logging import TrajLogger
 
 from .test_eval_utils import eval_challenger
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def get_config_space():
     cs = ConfigurationSpace()

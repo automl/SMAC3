@@ -7,6 +7,9 @@ from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
 
 from smac.initial_design.random_configuration_design import RandomConfigurations
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestRandomConfigurationDesign(unittest.TestCase):
     def setUp(self):

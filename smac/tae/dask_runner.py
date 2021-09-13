@@ -11,6 +11,9 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.tae import StatusType
 from smac.tae.base import BaseRunner
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class DaskParallelRunner(BaseRunner):
     """Interface to submit and collect a job in a distributed fashion.
@@ -28,50 +31,22 @@ class DaskParallelRunner(BaseRunner):
     RunValue object.
 
     To be more precise, the work model is then:
-    1- The smbo.intensifier dictates "what" to run (a configuration/instance/seed)
-       via a RunInfo object.
-    2- a tae_runner takes this RunInfo object and launches the task via
-       tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
-       receive a pickle-object of DaskParallelRunner.single_worker, each with a
-       run() method coming from DaskParallelRunner.single_worker.run()
-    3- RunInfo objects are run in a distributed fashion, an their results are
-       available locally to each worker. Such result is collected by
-       DaskParallelRunner.get_finished_runs() and then passed to the SMBO.
-    4- Exceptions are also locally available to each worker and need to be
-       collected.
+    1.  The smbo.intensifier dictates "what" to run (a configuration/instance/seed)
+        via a RunInfo object.
+    2.  a tae_runner takes this RunInfo object and launches the task via
+        tae_runner.submit_run(). In the case of DaskParallelRunner, n_workers
+        receive a pickle-object of DaskParallelRunner.single_worker, each with a
+        run() method coming from DaskParallelRunner.single_worker.run()
+    3.  RunInfo objects are run in a distributed fashion, an their results are
+        available locally to each worker. Such result is collected by
+        DaskParallelRunner.get_finished_runs() and then passed to the SMBO.
+    4.  Exceptions are also locally available to each worker and need to be
+        collected.
 
     Dask works with Future object which are managed via the DaskParallelRunner.client.
 
-
-    Attributes
-    ----------
-
-    results
-    ta
-    stats
-    run_obj
-    par_factor
-    cost_for_crash
-    abort_i_first_run_crash
-    n_workers
-    futures
-    client
-
-    Parameters
-    ---------
-    single_worker: BaseRunner
-        A runner to run in a distributed fashion
-    n_workers: int
-        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
-    patience: int
-        How much to wait for workers to be available if one fails
-    output_directory: str, optional
-        If given, this will be used for the dask worker directory and for storing server information.
-        If a dask client is passed, it will only be used for storing server information as the
-        worker directory must be set by the program/user starting the workers.
-    dask_client: dask.distributed.Client
-        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
     """
+
     def __init__(
         self,
         single_worker: BaseRunner,
@@ -80,6 +55,35 @@ class DaskParallelRunner(BaseRunner):
         output_directory: typing.Optional[str] = None,
         dask_client: typing.Optional[dask.distributed.Client] = None,
     ):
+        """
+        Attributes
+        ----------
+        results
+        ta
+        stats
+        run_obj
+        par_factor
+        cost_for_crash
+        abort_i_first_run_crash
+        n_workers
+        futures
+        client
+
+        Parameters
+        ---------
+        single_worker: BaseRunner
+            A runner to run in a distributed fashion
+        n_workers: int
+            Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
+        patience: int
+            How much to wait for workers to be available if one fails
+        output_directory: str, optional
+            If given, this will be used for the dask worker directory and for storing server information.
+            If a dask client is passed, it will only be used for storing server information as the
+            worker directory must be set by the program/user starting the workers.
+        dask_client: dask.distributed.Client
+            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+        """
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
             stats=single_worker.stats,
@@ -122,9 +126,9 @@ class DaskParallelRunner(BaseRunner):
         to produce a result locally to each worker.
 
         The execution of a configuration follows this procedure:
-        1- SMBO/intensifier generates a run_info
-        2- SMBO calls submit_run so that a worker launches the run_info
-        3- submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
+        1.  SMBO/intensifier generates a run_info
+        2.  SMBO calls submit_run so that a worker launches the run_info
+        3.  submit_run internally calls self.run(). it does so via a call to self.run_wrapper()
         which contains common code that any run() method will otherwise have to implement, like
         capping check.
 
@@ -190,7 +194,7 @@ class DaskParallelRunner(BaseRunner):
         This function collects the completed futures and move
         them from self.futures to self.results.
 
-        *** We make sure futures never exceed the capacity of
+        We make sure futures never exceed the capacity of
         the scheduler
         """
 

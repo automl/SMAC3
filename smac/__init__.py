@@ -4,9 +4,11 @@ import sys
 
 from smac.utils import dependencies
 
-__version__ = '0.14.0'
-__author__ = 'Marius Lindauer, Matthias Feurer, Katharina Eggensperger, Joshua Marben, ' \
-             'André Biedenkapp, Francisco Rivera, Ashwin Raaghav, Aaron Klein, Stefan Falkner ' \
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+__version__ = '1.0.1'
+__author__ = 'Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, ' \
+             'Difan Deng, Carolin Benjamins, René Sass ' \
              'and Frank Hutter'
 
 

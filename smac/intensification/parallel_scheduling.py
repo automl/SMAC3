@@ -10,6 +10,9 @@ from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class ParallelScheduler(AbstractRacer):
 
@@ -262,8 +265,8 @@ class ParallelScheduler(AbstractRacer):
         and adds it.
         If a new intensifier instance is added, True is returned, else False.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         num_workers: int
             the maximum number of workers available
             at a given time.

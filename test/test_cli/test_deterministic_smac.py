@@ -8,6 +8,9 @@ from unittest import mock
 from smac.smac_cli import SMACCLI
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestDeterministicSMAC(unittest.TestCase):
 
@@ -100,9 +103,9 @@ class TestDeterministicSMAC(unittest.TestCase):
                 initial_configurations=None, restore_incumbent=None, run_id=2,
                 runhistory=None, stats=None, scenario=mock.ANY, rng=mock.ANY)
 
-        testargs[-1] = 'SMAC4BO'
+        testargs[-1] = 'SMAC4BB'
         cli = SMACCLI()
-        with mock.patch("smac.smac_cli.SMAC4BO") as MSMAC:
+        with mock.patch("smac.smac_cli.SMAC4BB") as MSMAC:
             MSMAC.return_value.optimize.return_value = True
             cli.main_cli(testargs[1:])
             MSMAC.assert_called_once_with(

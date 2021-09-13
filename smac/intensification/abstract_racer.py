@@ -15,7 +15,6 @@ from smac.utils.io.traj_logging import TrajLogger
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 
-
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"

@@ -1,5 +1,9 @@
 import sys
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
+
 if __name__ == '__main__':
     # Unused in this example:
     # instance, instance_specific, cutoff, runlength = sys.argv[1:5]

@@ -13,6 +13,9 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class BaseRunner(ABC):
     """Interface class to handle the execution of SMAC' configurations.
@@ -23,48 +26,27 @@ class BaseRunner(ABC):
 
     From SMBO perspective, launching a configuration follows a
     submit/collect scheme as follows:
-    1- A run is launched via submit_run()
-    1.1- Submit_run internally calls run_wrapper(), a method that
-         contains common processing functions among different runners,
-         for example, handling capping and stats checking.
-    1.2- A class that implements BaseRunner defines run() which is
-         really the algorithm to translate a RunInfo to a RunValue, i.e.
-         a configuration to an actual result.
-    2- A completed run is collected via get_finished_runs(), which returns
+
+    1. A run is launched via submit_run()
+
+       1. Submit_run internally calls run_wrapper(), a method that
+          contains common processing functions among different runners,
+          for example, handling capping and stats checking.
+
+       2. A class that implements BaseRunner defines run() which is
+          really the algorithm to translate a RunInfo to a RunValue, i.e.
+          a configuration to an actual result.
+
+    2. A completed run is collected via get_finished_runs(), which returns
        any finished runs, if any.
-    3- This interface also offers the method wait() as a mechanism to make
+
+    3. This interface also offers the method wait() as a mechanism to make
        sure we have enough data in the next iteration to make a decision. For
        example, the intensifier might not be able to select the next challenger
        until more results are available.
 
-
-    Attributes
-    ----------
-
-    results
-    ta
-    stats
-    run_obj
-    par_factor
-    cost_for_crash
-    abort_first_run_crash
-
-    Parameters
-    ---------
-    ta : typing.Union[typing.List[str], typing.Callable]
-        target algorithm
-    stats: Stats
-         stats object to collect statistics about runtime/additional info
-    run_obj: str
-        run objective of SMAC
-    par_factor: int
-        penalization factor
-    cost_for_crash : float
-        cost that is used in case of crashed runs (including runs
-        that returned NaN or inf)
-    abort_on_first_run_crash: bool
-        if true and first run crashes, raise FirstRunCrashedException
     """
+
     def __init__(
         self,
         ta: typing.Union[typing.List[str], typing.Callable],
@@ -74,6 +56,33 @@ class BaseRunner(ABC):
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
+        """
+        Attributes
+        ----------
+        results
+        ta
+        stats
+        run_obj
+        par_factor
+        cost_for_crash
+        abort_first_run_crash
+
+        Parameters
+        ----------
+        ta : typing.Union[typing.List[str], typing.Callable]
+            target algorithm
+        stats: Stats
+             stats object to collect statistics about runtime/additional info
+        run_obj: str
+            run objective of SMAC
+        par_factor: int
+            penalization factor
+        cost_for_crash : float
+            cost that is used in case of crashed runs (including runs
+            that returned NaN or inf)
+        abort_on_first_run_crash: bool
+            if true and first run crashes, raise FirstRunCrashedException
+        """
 
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are

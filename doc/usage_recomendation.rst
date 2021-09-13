@@ -8,25 +8,25 @@ Usage Recommendation
 To make the usage of *SMAC* as easy as possible, we provide several facades designed for these different use cases. Here we give some general recommendations on
 when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
-+-----------------------+----------------------+-----------------------+-------------------------+
-|                       | SMAC4BO              | SMAC4HPO              | SMAC4AC                 |
-+=======================+======================+=======================+=========================+
-| # parameter           | low                  | low/medium/high       | low/medium/high         |
-+-----------------------+----------------------+-----------------------+-------------------------+
-| categorical parameter | yes                  | supported             | supported               |
-+-----------------------+----------------------+-----------------------+-------------------------+
-| conditional parameter | yes                  | supported             | supported               |
-+-----------------------+----------------------+-----------------------+-------------------------+
-| instances             | no                   | None or CV-folds      | yes                     |
-+-----------------------+----------------------+-----------------------+-------------------------+
-| stochasticity         | no                   | supported             | supported               |
-+-----------------------+----------------------+-----------------------+-------------------------+
-| objective             | any (except runtime) | e.g. validation loss  | e.g. runtime or quality |
-+-----------------------+----------------------+-----------------------+-------------------------+
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+|                       | SMAC4BB (Black-Box)  | SMAC4HPO (Hyperparameter Optimization)  | SMAC4AC (Algorithm Configuration) |
++=======================+======================+=========================================+===================================+
+| # parameter           | low                  | low/medium/high                         | low/medium/high                   |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| categorical parameter | yes                  | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| conditional parameter | yes                  | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| instances             | no                   | None or CV-folds                        | yes                               |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| stochasticity         | no                   | supported                               | supported                         |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
+| objective             | any (except runtime) | e.g. validation loss                    | e.g. runtime or quality           |
++-----------------------+----------------------+-----------------------------------------+-----------------------------------+
 
 Some examples of typical use cases:
 
-*SMAC4BO*: Bayesian Optimization using a *Gaussian Process* and *Expected Improvement*
+*SMAC4BB*: Bayesian Optimization using a *Gaussian Process* and *Expected Improvement*
    - Optimizing the objective value of Branin and other low dimensional artificial test functions
    - Finding the best learning rate for training a neural network wrt. RMSE on a validation dataset
    - Optimizing the choice of kernel and penalty of a SVM wrt. RMSE on a validation dataset

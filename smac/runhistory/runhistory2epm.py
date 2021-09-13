@@ -62,8 +62,8 @@ class AbstractRunHistory2EPM(object):
         num_params : int
             number of parameters in config space
         success_states: list, optional
-            List of states considered as successful (such as StatusType.SUCCESS)
-            If None, set to [StatusType.SUCCESS, ]
+            List of states considered as successful (such as StatusType.SUCCESS).
+            If None, raise TypeError.
         impute_censored_data: bool, optional
             Should we impute data?
         consider_for_higher_budgets_state: list, optional
@@ -73,12 +73,14 @@ class AbstractRunHistory2EPM(object):
         impute_state: list, optional
             List of states that mark censored data (such as StatusType.TIMEOUT)
             in combination with runtime < cutoff_time
-            If None, set to [StatusType.CAPPED, ]
+            If None, set to empty list [].
+            If None and impute_censored_data is True, raise TypeError.
         scale_perc: int
             scaled y-transformation use a percentile to estimate distance to optimum;
             only used by some subclasses of AbstractRunHistory2EPM
         rng : numpy.random.RandomState
-            only used for reshuffling data after imputation
+            Only used for reshuffling data after imputation.
+            If None, use np.random.RandomState(seed=1).
         """
 
         self.logger = logging.getLogger(

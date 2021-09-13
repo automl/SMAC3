@@ -8,6 +8,9 @@ from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.tae import StatusType
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 def mock_ranker(sh):
     return sh.stage, len(sh.run_tracker)

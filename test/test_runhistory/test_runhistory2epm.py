@@ -1,10 +1,3 @@
-__author__ = "Katharina Eggensperger"
-__copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "GPLv3"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
-__version__ = "0.0.1"
-
 import unittest
 
 import numpy as np
@@ -18,6 +11,13 @@ from smac.scenario.scenario import Scenario
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
+
+__author__ = "Katharina Eggensperger"
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "GPLv3"
+__maintainer__ = "Katharina Eggensperger"
+__email__ = "eggenspk@cs.uni-freiburg.de"
+__version__ = "0.0.1"
 
 
 def get_config_space():

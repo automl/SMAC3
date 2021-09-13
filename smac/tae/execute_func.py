@@ -14,7 +14,6 @@ from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.tae.serial_runner import SerialRunner
 from smac.utils.logging import PickableLoggerAdapter
 
-
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"

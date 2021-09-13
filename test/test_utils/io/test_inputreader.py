@@ -1,8 +1,3 @@
-'''
-Created on Oct 16, 2017
-
-@author: Joshua Marben
-'''
 import os
 import unittest
 import logging
@@ -12,6 +7,9 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.configspace import pcs
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class InputReaderTest(unittest.TestCase):

@@ -33,6 +33,9 @@ from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, Choos
 from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 class TestSMACFacade(unittest.TestCase):
 

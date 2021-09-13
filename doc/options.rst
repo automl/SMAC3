@@ -4,23 +4,23 @@ In the optimization-process of *SMAC*, there are several ways to configure the
 options:
 
 Mandatory:
-    * `Commandline <basic_usage.html#commandline>`_-options, with which *SMAC* is called directly (not needed if
+    * :ref:`Command line <commandline>`-options, with which *SMAC* is called directly (not needed if
       *SMAC* is used within Python).
     * Scenario-options, that are specified via a Scenario-object. Either directly
-      in the Python-code or by using a scenario_-file.
-    * A Parameter Configuration Space (`PCS <options.html#paramcs>`_), that provides the legal ranges of
+      in the Python-code or by using a :ref:`scenario <scenario>`-file.
+    * A Parameter Configuration Space (:ref:`PCS <paramcs>`), that provides the legal ranges of
       parameters to optimize, their types (e.g. int or float) and their default
       values.
 
 Optional:
-    * Instance_- and feature_-files, that list the instances and features to
+    * :ref:`Instance <instance>`- and :ref:`feature <feature>`-files, that list the instances and features to
       optimize upon.
 
 .. _smac_options:
 
 SMAC Options
 ~~~~~~~~~~~~
-The basic command line options are described in `Basic Usage <basic_usage.html#commandline>`_.
+The basic command line options are described in :ref:`Basic Usage <commandline>`.
 The options are separated into three groups, *Main Options*, *SMAC Options* and *Scenario Options*.
 See the Main and SMAC Options below. Find the Scenario Options in the next section.
 
@@ -37,8 +37,8 @@ SMAC Options:
 Scenario
 ~~~~~~~~
 The scenario-object (:class:`smac.scenario.scenario.Scenario`) is used to configure *SMAC* and can be constructed either by providing an actual
-scenario-object (see `SVM-example <quickstart.html#using-smac-in-python-svm>`_), or by specifing the options in a
-scenario file (see `SPEAR example <quickstart.html#spear-example>`_).
+scenario-object (see :ref:`SVM-example <svm-example>`), or by specifing the options in a
+scenario file (see :ref:`SPEAR example <spear-example>`).
 
 The format of the scenario file is one option per line:
 
@@ -112,13 +112,13 @@ strategy. Therefore, SMAC cannot handle efficiently highly constrained spaces.
 Instances and Features
 ~~~~~~~~~~~~~~~~~~~~~~
 To specify instances and features, simply provide text-files in the following
-format and provide the paths to the instances in the scenario_.
+format and provide the paths to the instances in the :ref:`scenario <scenario>`.
 
 Instance-files are text-files with one instance per line. If you want to use
 training- and test-sets, separate files are expected.
 
 Feature-files are files following the comma-separated-value-format, as can also be
-seen in the `SPEAR-example <quickstart.html#spear-qcp>`_:
+seen in the :ref:`SPEAR-example <spear-example>`:
 
      +--------------------+--------------------+--------------------+-----+
      |      instance      | name of feature 1  | name of feature 2  | ... |

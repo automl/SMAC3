@@ -22,6 +22,9 @@ sys.path.insert(0, '..')
 import smac
 from smac.utils.io.cmd_reader import CMDReader
 
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -130,8 +133,10 @@ html_theme = 'sphinx_rtd_theme'
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-# Insert options
-  'collapse_navigation': False
+    # Insert options
+    'collapse_navigation': False,
+    'includehidden': False,
+    'titles_only': True,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -227,24 +232,24 @@ htmlhelp_basename = 'SMAC3doc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-# The paper size ('letterpaper' or 'a4paper').
-#'papersize': 'letterpaper',
+    # The paper size ('letterpaper' or 'a4paper').
+    # 'papersize': 'letterpaper',
 
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
+    # The font size ('10pt', '11pt' or '12pt').
+    # 'pointsize': '10pt',
 
-# Additional stuff for the LaTeX preamble.
-#'preamble': '',
+    # Additional stuff for the LaTeX preamble.
+    # 'preamble': '',
 
-# Latex figure (float) alignment
-#'figure_align': 'htbp',
+    # Latex figure (float) alignment
+    # 'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.__author__, 'manual'),
+    (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.__author__, 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -287,9 +292,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'SMAC3', u'SMAC3 Documentation',
-   author, 'SMAC3', 'One line description of project.',
-   'Miscellaneous'),
+    (master_doc, 'SMAC3', u'SMAC3 Documentation',
+     author, 'SMAC3', 'One line description of project.',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -312,12 +317,23 @@ cmd_reader.write_main_options_to_doc()
 cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
 
+from sphinx_gallery.sorting import ExplicitOrder
+
 # Sphinx-gallery configuration.
 sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
-    'backreferences_dir': False,
+    'backreferences_dir': None,
     # path to the examples
     'examples_dirs': '../examples',
+
+    # Ordering
+    'subsection_order': ExplicitOrder(['../examples/quickstart',
+                                       '../examples/function_minimization',
+                                       '../examples/parallel',
+                                       '../examples/SMAC4HPO',
+                                       '../examples/SMAC4BB',
+                                       '../examples/SMAC4MF',
+                                       '../examples/hyperband']),
     # path where to save gallery generated examples
     'gallery_dirs': 'examples',
     # compile execute examples in the examples dir

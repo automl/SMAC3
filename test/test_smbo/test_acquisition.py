@@ -9,8 +9,12 @@ from smac.optimizer.acquisition import (
     EIPS,
     PI,
     LCB,
+    TS,
     IntegratedAcquisitionFunction,
 )
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
 
 
 class ConfigurationMock(object):
@@ -25,8 +29,9 @@ class ConfigurationMock(object):
 
 
 class MockModel(object):
-    def __init__(self, num_targets=1):
+    def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
+        self.seed = seed
 
     def predict_marginalized_over_instances(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)),\
@@ -40,6 +45,26 @@ class MockModelDual(object):
     def predict_marginalized_over_instances(self, X):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), \
             np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
+
+
+class MockModelRNG(MockModel):
+    def __init__(self, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self.seed = seed
+        self.rng = np.random.RandomState(self.seed)
+
+
+class MockModelSampler(MockModelRNG):
+    def __init__(self, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self.seed = seed
+        self.rng = np.random.RandomState(seed)
+
+    def sample_functions(self, X, n_funcs=1):
+        m = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
+        var = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
+        var = np.diag(var)
+        return self.rng.multivariate_normal(m, var, n_funcs).T
 
 
 class TestAcquisitionFunction(unittest.TestCase):
@@ -290,3 +315,42 @@ class TestLCB(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], 0.045306943655446116)
         self.assertAlmostEqual(acq[1][0], 1.3358936353814157)
         self.assertAlmostEqual(acq[2][0], 3.5406943655446117)
+
+
+class TestTS(unittest.TestCase):
+    def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'seed'
+        self.model = MockModel()
+        self.ei = TS(self.model)
+
+    def test_1xD(self):
+        self.ei.update(model=self.model)
+        configurations = [ConfigurationMock([.5, .5, .5])]
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+        self.assertAlmostEqual(acq[0][0], -1.74737338)
+
+    def test_NxD(self):
+        self.ei.update(model=self.model)
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = self.ei(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        self.assertAlmostEqual(acq[0][0], -0.00988738)
+        self.assertAlmostEqual(acq[1][0], -0.22654082)
+        self.assertAlmostEqual(acq[2][0], -2.76405235)
+
+
+class TestTSRNG(TestTS):
+    def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'rng'
+        self.model = MockModelRNG()
+        self.ei = TS(self.model)
+
+
+class TestTSSampler(TestTS):
+    def setUp(self):
+        # Test TS acqusition function with model that only has attribute 'sample_functions'
+        self.model = MockModelSampler()
+        self.ei = TS(self.model)

@@ -1,8 +1,12 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunInfo, RunValue
+
+__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
+__license__ = "3-clause BSD"
+
 
 """Callbacks for SMAC.
 
@@ -27,12 +31,16 @@ How to add a new callback
 
 class IncorporateRunResultCallback:
 
-    """Callback to react on a new run result. Called after the finished run is added to the runhistory."""
+    """Callback to react on a new run result.
+
+    Called after the finished run is added to the runhistory.
+    Optionally return `False` to (gracefully) stop the optimization.
+    """
 
     def __call__(
             self, smbo: 'SMBO',
             run_info: RunInfo,
             result: RunValue,
             time_left: float,
-    ) -> None:
+    ) -> Optional[bool]:
         pass
