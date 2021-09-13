@@ -407,7 +407,6 @@ class Intensifier(AbstractRacer):
                     # The challenger is ruled out by adaptive capping.
                     # We prevent this challenger from running again so that a new challenger is targeted in the next iteration.
                     # Otherwise, the current challenger would be ruled out by adaptive capping again.
-                    self.continue_challenger = False
                     self.to_run = []
                     self.stage = IntensifierStage.RUN_INCUMBENT
                     self.logger.debug(
