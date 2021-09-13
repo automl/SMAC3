@@ -404,9 +404,8 @@ class Intensifier(AbstractRacer):
 
                 # If no more time, stage transition is a must
                 if not is_there_time_due_to_adaptive_cap:
-                    # The challenger is ruled out by adaptive capping.
-                    # We prevent this challenger from running again so that a new challenger is targeted in the next iteration.
-                    # Otherwise, the current challenger would be ruled out by adaptive capping again.
+                    # Since the challenger fails to outperform the incumbent due to adaptive capping,
+                    # we discard all the forthcoming runs.
                     self.to_run = []
                     self.stage = IntensifierStage.RUN_INCUMBENT
                     self.logger.debug(
