@@ -134,3 +134,17 @@ SMAC3 is developed by the [AutoML Groups of the Universities of Hannover and Fre
 If you found a bug, please report to <https://github.com/automl/SMAC3/issues>.
 
 Our guidelines for contributing to this package can be found [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md)
+
+# Citation
+
+If you use the SMAC3 package, please cite our paper (in addition to the original SMAC paper by Hutter et al. 2011):
+
+```
+@inproceedings {lindauer-arxiv21a,
+  author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+  title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+  booktitle = {ArXiv: 2109.09831},
+  year = {2021},
+  url = {https://arxiv.org/abs/2109.09831}
+}
+```
