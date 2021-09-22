@@ -3,7 +3,7 @@ import unittest.mock
 
 import numpy as np
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
+    Constant, CategoricalHyperparameter, OrdinalHyperparameter, ForbiddenEqualsClause
 
 from smac.initial_design.latin_hypercube_design import LHDesign
 
@@ -37,6 +37,10 @@ class TestLHDesign(unittest.TestCase):
             param_name = f"x{j}"
             self.cs.add_hyperparameter(get_param(param_name))
 
+        param_constrained = CategoricalHyperparameter("constrained", choices=["a", "b", "c"])
+        self.cs.add_hyperparameter(param_constrained)
+        self.cs.add_forbidden_clause(ForbiddenEqualsClause(param_constrained, "b"))
+
         for i in range(5):
             self.cs.add_hyperparameter(UniformFloatHyperparameter('x%d' % (i + len(get_params)), 0, 1))
 
@@ -48,7 +52,7 @@ class TestLHDesign(unittest.TestCase):
             configs=None,
             n_configs_x_params=None,
             max_config_fracs=0.25,
-            init_budget=1,
+            init_budget=1000,
         )
         LHDesign(
             cs=self.cs,
