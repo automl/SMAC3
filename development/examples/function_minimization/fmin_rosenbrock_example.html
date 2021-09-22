@@ -201,7 +201,7 @@
 <section class="sphx-glr-example-title" id="scipy-style-fmin-interface">
 <span id="sphx-glr-examples-function-minimization-fmin-rosenbrock-example-py"></span><h1>scipy-style fmin interface<a class="headerlink" href="#scipy-style-fmin-interface" title="Permalink to this headline">¶</a></h1>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-09-22_11:12:33_608232
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-09-22_11:14:11_941328
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
 INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:&lt;class &#39;smac.facade.smac_hpo_facade.SMAC4HPO&#39;&gt;
@@ -209,25 +209,25 @@ INFO:smac.optimizer.smbo.SMBO:Running initial design
 INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
 INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
 INFO:smac.intensification.intensification.Intensifier:Updated estimated cost of incumbent on 1 runs: 11690.4846
-INFO:smac.intensification.intensification.Intensifier:Challenger (11690.0601) is better than incumbent (11690.4846) on 1 runs.
+INFO:smac.intensification.intensification.Intensifier:Challenger (3747.6995) is better than incumbent (11690.4846) on 1 runs.
 INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x1 : -2.815051511861384 -&gt; -2.8139004314557674
-INFO:smac.intensification.intensification.Intensifier:  x2 : -2.881006710231304 -&gt; -2.887293724969028
+INFO:smac.intensification.intensification.Intensifier:  x1 : -2.815051511861384 -&gt; -1.345753380449037
+INFO:smac.intensification.intensification.Intensifier:  x2 : -2.881006710231304 -&gt; 7.928402065112291
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.stats.stats.Stats:Statistics:
 INFO:smac.stats.stats.Stats:#Incumbent changed: 1
 INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 10 / 10.0
 INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 10 / 10.0
 INFO:smac.stats.stats.Stats:#Configurations: 10
-INFO:smac.stats.stats.Stats:Used wallclock time: 3.75 / inf sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.09 / inf sec
+INFO:smac.stats.stats.Stats:Used wallclock time: 3.59 / inf sec
+INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.07 / inf sec
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Final Incumbent: Configuration:
-  x1, Value: -2.8139004314557674
-  x2, Value: -2.887293724969028
+  x1, Value: -1.345753380449037
+  x2, Value: 7.928402065112291
 
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Estimated cost of incumbent: 11690.060101
-Best x: [-2.81390043 -2.88729372]; with cost: 11690.060101
+INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Estimated cost of incumbent: 3747.699544
+Best x: [-1.34575338  7.92840207]; with cost: 3747.699544
 </pre></div>
 </div>
 <div class="line-block">
@@ -269,7 +269,7 @@ Best x: [-2.81390043 -2.88729372]; with cost: 11690.060101
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best x: </span><span class="si">%s</span><span class="s2">; with cost: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.756 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.604 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-function-minimization-fmin-rosenbrock-example-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ca291fc8fc88abe6d8477d8875ebb796/fmin_rosenbrock_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fmin_rosenbrock_example.py</span></code></a></p>
