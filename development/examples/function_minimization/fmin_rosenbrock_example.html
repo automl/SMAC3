@@ -1,81 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>scipy-style fmin interface &mdash; SMAC 1.0.1 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/gallery.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Parallel Intensifier with No Intensification" href="../parallel/fmin_rosenbrock_parallel_example.html" />
     <link rel="prev" title="SMAC Examples" href="../../smac_examples.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../../index.html" class="icon icon-home"> SMAC
-          
-
-          
-            
             <img src="../../_static/SMAC3.png" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 1.0.1
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -83,18 +41,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart/quickstart_example.html">Quickstart</a></li>
@@ -222,81 +169,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">SMAC</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
           <li><a href="../../smac_examples.html">SMAC Examples</a> &raquo;</li>
-        
       <li>scipy-style fmin interface</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../../_sources/examples/function_minimization/fmin_rosenbrock_example.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p>Click <a class="reference internal" href="#sphx-glr-download-examples-function-minimization-fmin-rosenbrock-example-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="scipy-style-fmin-interface">
+<section class="sphx-glr-example-title" id="scipy-style-fmin-interface">
 <span id="sphx-glr-examples-function-minimization-fmin-rosenbrock-example-py"></span><h1>scipy-style fmin interface<a class="headerlink" href="#scipy-style-fmin-interface" title="Permalink to this headline">¶</a></h1>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-09-09_12:06:54_210770
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2021-09-22_11:12:33_608232
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
 INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:&lt;class &#39;smac.facade.smac_hpo_facade.SMAC4HPO&#39;&gt;
@@ -304,25 +209,25 @@ INFO:smac.optimizer.smbo.SMBO:Running initial design
 INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
 INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
 INFO:smac.intensification.intensification.Intensifier:Updated estimated cost of incumbent on 1 runs: 11690.4846
-INFO:smac.intensification.intensification.Intensifier:Challenger (3747.6995) is better than incumbent (11690.4846) on 1 runs.
+INFO:smac.intensification.intensification.Intensifier:Challenger (11690.0601) is better than incumbent (11690.4846) on 1 runs.
 INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x1 : -2.815051511861384 -&gt; -1.345753380449037
-INFO:smac.intensification.intensification.Intensifier:  x2 : -2.881006710231304 -&gt; 7.928402065112291
+INFO:smac.intensification.intensification.Intensifier:  x1 : -2.815051511861384 -&gt; -2.8139004314557674
+INFO:smac.intensification.intensification.Intensifier:  x2 : -2.881006710231304 -&gt; -2.887293724969028
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.stats.stats.Stats:Statistics:
 INFO:smac.stats.stats.Stats:#Incumbent changed: 1
 INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 10 / 10.0
 INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 10 / 10.0
 INFO:smac.stats.stats.Stats:#Configurations: 10
-INFO:smac.stats.stats.Stats:Used wallclock time: 3.26 / inf sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.07 / inf sec
+INFO:smac.stats.stats.Stats:Used wallclock time: 3.75 / inf sec
+INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.09 / inf sec
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Final Incumbent: Configuration:
-  x1, Value: -1.345753380449037
-  x2, Value: 7.928402065112291
+  x1, Value: -2.8139004314557674
+  x2, Value: -2.887293724969028
 
-INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Estimated cost of incumbent: 3747.699544
-Best x: [-1.34575338  7.92840207]; with cost: 3747.699544
+INFO:smac.facade.smac_hpo_facade.SMAC4HPO:Estimated cost of incumbent: 11690.060101
+Best x: [-2.81390043 -2.88729372]; with cost: 11690.060101
 </pre></div>
 </div>
 <div class="line-block">
@@ -364,7 +269,7 @@ Best x: [-1.34575338  7.92840207]; with cost: 3747.699544
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best x: </span><span class="si">%s</span><span class="s2">; with cost: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cost</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.268 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.756 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-function-minimization-fmin-rosenbrock-example-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ca291fc8fc88abe6d8477d8875ebb796/fmin_rosenbrock_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">fmin_rosenbrock_example.py</span></code></a></p>
@@ -374,54 +279,37 @@ Best x: [-1.34575338  7.92840207]; with cost: 3747.699544
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../parallel/fmin_rosenbrock_parallel_example.html" class="btn btn-neutral float-right" title="Parallel Intensifier with No Intensification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../../smac_examples.html" class="btn btn-neutral float-left" title="SMAC Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../parallel/fmin_rosenbrock_parallel_example.html" class="btn btn-neutral float-right" title="Parallel Intensifier with No Intensification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
-
-    </p>
+    <p>&#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

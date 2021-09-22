@@ -5,14 +5,14 @@
 
 Computation times
 =================
-**02:45.101** total execution time for **examples_SMAC4HPO** files:
+**02:54.286** total execution time for **examples_SMAC4HPO** files:
 
 +-------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_gradientboosting_example.py` (``SMAC4HPO_gradientboosting_example.py``) | 02:10.994 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_gradientboosting_example.py` (``SMAC4HPO_gradientboosting_example.py``) | 02:20.104 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_svm_example.py` (``SMAC4HPO_svm_example.py``)                           | 00:26.790 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_svm_example.py` (``SMAC4HPO_svm_example.py``)                           | 00:26.896 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_rosenbrock_example.py` (``SMAC4HPO_rosenbrock_example.py``)             | 00:03.847 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_acq_rosenbrock_example.py` (``SMAC4HPO_acq_rosenbrock_example.py``)     | 00:03.875 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_acq_rosenbrock_example.py` (``SMAC4HPO_acq_rosenbrock_example.py``)     | 00:03.470 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4HPO_SMAC4HPO_rosenbrock_example.py` (``SMAC4HPO_rosenbrock_example.py``)             | 00:03.411 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------------+-----------+--------+

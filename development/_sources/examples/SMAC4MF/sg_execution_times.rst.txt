@@ -5,10 +5,10 @@
 
 Computation times
 =================
-**03:41.277** total execution time for **examples_SMAC4MF** files:
+**03:38.131** total execution time for **examples_SMAC4MF** files:
 
 +--------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp_example.py` (``SMAC4MF_mlp_example.py``) | 01:53.123 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_mlp_example.py` (``SMAC4MF_mlp_example.py``) | 01:50.001 | 0.0 MB |
 +--------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py` (``SMAC4MF_sgd_example.py``) | 01:48.154 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4MF_SMAC4MF_sgd_example.py` (``SMAC4MF_sgd_example.py``) | 01:48.130 | 0.0 MB |
 +--------------------------------------------------------------------------------------+-----------+--------+

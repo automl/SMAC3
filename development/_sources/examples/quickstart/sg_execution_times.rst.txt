@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:05.018** total execution time for **examples_quickstart** files:
+**00:05.862** total execution time for **examples_quickstart** files:
 
 +---------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_quickstart_quickstart_example.py` (``quickstart_example.py``) | 00:05.018 | 0.0 MB |
+| :ref:`sphx_glr_examples_quickstart_quickstart_example.py` (``quickstart_example.py``) | 00:05.862 | 0.0 MB |
 +---------------------------------------------------------------------------------------+-----------+--------+
