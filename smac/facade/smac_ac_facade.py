@@ -124,7 +124,7 @@ class SMAC4AC(object):
             arguments passed to constructor of runhistory.
             We strongly advise against changing the aggregation function,
             since it will break some code assumptions
-        intensifier : Intensifier
+        intensifier : AbstractRacer
             intensification object or class to issue a racing to decide the current
             incumbent. Default: `Intensifier`
         intensifier_kwargs: Optional[Dict]
@@ -416,7 +416,7 @@ class SMAC4AC(object):
         if intensifier is None:
             intensifier = Intensifier
 
-        if isinstance(intensifier, Intensifier):
+        if isinstance(intensifier, AbstractRacer):
             intensifier_instance = intensifier
         elif inspect.isclass(intensifier):
             # initialize intensification
