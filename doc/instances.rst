@@ -48,7 +48,6 @@ Lastly, here are some more examples to incorporate instances in your code:
 F.A.Q.
 ~~~~~~
 
-.. rubric:: When using subsets, does it make sense to use instances over having cross-validation
-directly in my TAE?
+.. rubric:: When using subsets, does it make sense to use instances over having cross-validation directly in my TAE?
 
 It is recommended if the sum of the performance values across the subsets makes sense, and dividing the sum is a certain amount of information about the total sum. Ultimately, SMAC optimizes for the total and can take advantage of the fact that only parts are evaluated if there are bad configurations.
