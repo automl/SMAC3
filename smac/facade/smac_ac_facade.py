@@ -125,8 +125,8 @@ class SMAC4AC(object):
             We strongly advise against changing the aggregation function,
             since it will break some code assumptions
         intensifier : Intensifier
-            intensification object to issue a racing to decide the current
-            incumbent
+            intensification class to issue a racing to decide the current
+            incumbent. Default: `Intensifier`
         intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
