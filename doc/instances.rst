@@ -2,10 +2,11 @@ Instances
 ---------
 
 Often you want to optimize the cost across different datasets, subsets, or even different
-transformations. For this purpose, you can use instances. A randomly selected instance is passed to the target algorithm evaluator, in which you can use its instance features.
+transformations. For this purpose, you can use instances. A randomly selected instance is passed to
+the target algorithm evaluator, in which you can access it.
 
-To work with instances, you need to add your predefined instances (list) to the scenario object.
-In the following example, I want to use five different subsets:
+To work with instances, you need to add your predefined instances (list) to the scenario object. The
+items of the instances can be chosen individually. In the following example, I want to use five different subsets, identified by its id:
 
 .. code-block:: bash
     instances = [0, 1, 2, 3, 4]
