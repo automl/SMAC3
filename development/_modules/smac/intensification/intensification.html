@@ -597,6 +597,9 @@
 
                 <span class="c1"># If no more time, stage transition is a must</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">is_there_time_due_to_adaptive_cap</span><span class="p">:</span>
+                    <span class="c1"># Since the challenger fails to outperform the incumbent due to adaptive capping,</span>
+                    <span class="c1"># we discard all the forthcoming runs.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span> <span class="o">=</span> <span class="p">[]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="n">IntensifierStage</span><span class="o">.</span><span class="n">RUN_INCUMBENT</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                         <span class="s2">&quot;Stop challenger itensification due &quot;</span>
