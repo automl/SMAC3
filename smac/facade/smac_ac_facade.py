@@ -125,7 +125,7 @@ class SMAC4AC(object):
             We strongly advise against changing the aggregation function,
             since it will break some code assumptions
         intensifier : Intensifier
-            intensification class to issue a racing to decide the current
+            intensification object or class to issue a racing to decide the current
             incumbent. Default: `Intensifier`
         intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
@@ -416,7 +416,9 @@ class SMAC4AC(object):
         if intensifier is None:
             intensifier = Intensifier
 
-        if inspect.isclass(intensifier):
+        if isinstance(intensifier, Intensifier):
+            intensifier_instance = intensifier
+        elif inspect.isclass(intensifier):
             # initialize intensification
             intensifier_def_kwargs = {
                 'stats': self.stats,
