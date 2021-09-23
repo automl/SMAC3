@@ -126,7 +126,7 @@ class SMAC4AC(object):
             since it will break some code assumptions
         intensifier : AbstractRacer
             intensification object or class to issue a racing to decide the current
-            incumbent. Default: `Intensifier`
+            incumbent. Default: class `Intensifier`
         intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
