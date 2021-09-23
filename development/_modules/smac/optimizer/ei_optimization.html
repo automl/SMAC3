@@ -205,6 +205,7 @@
     <span class="n">Configuration</span><span class="p">,</span>
     <span class="n">ConfigurationSpace</span><span class="p">,</span>
     <span class="n">convert_configurations_to_array</span><span class="p">,</span>
+    <span class="n">ForbiddenValueError</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">RunHistory</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
@@ -560,10 +561,15 @@
                             <span class="n">n</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">neighborhood_iterator</span><span class="p">)</span>
                             <span class="n">neighbors_generated</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
                             <span class="n">neighbors_for_i</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="c1"># `neighborhood_iterator` raises `ValueError` with some probability when it reaches</span>
+                            <span class="c1"># an invalid configuration.</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                            <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
-                            <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors_for_i</span><span class="p">)</span>
                             <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="k">break</span>
+                    <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors_for_i</span><span class="p">)</span>
                     <span class="n">neighbors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">neighbors_for_i</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbors</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
@@ -591,18 +597,25 @@
 
                             <span class="c1"># Found a better configuration</span>
                             <span class="k">if</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">acq_val_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                                    <span class="s2">&quot;Local search </span><span class="si">%d</span><span class="s2">: Switch to one of the neighbors (after </span><span class="si">%d</span><span class="s2"> configurations).&quot;</span><span class="p">,</span>
-                                    <span class="n">i</span><span class="p">,</span>
-                                    <span class="n">neighbors_looked_at</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                                <span class="p">)</span>
-                                <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
-                                <span class="n">acq_val_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
-                                <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="n">local_search_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-                                <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-                                <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                                <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">try</span><span class="p">:</span>
+                                    <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span><span class="o">.</span><span class="n">is_valid_configuration</span><span class="p">()</span>
+                                    <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">ForbiddenValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Local search </span><span class="si">%d</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="n">is_valid</span><span class="p">:</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                                        <span class="s2">&quot;Local search </span><span class="si">%d</span><span class="s2">: Switch to one of the neighbors (after </span><span class="si">%d</span><span class="s2"> configurations).&quot;</span><span class="p">,</span>
+                                        <span class="n">i</span><span class="p">,</span>
+                                        <span class="n">neighbors_looked_at</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                    <span class="p">)</span>
+                                    <span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
+                                    <span class="n">acq_val_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span>
+                                    <span class="n">new_neighborhood</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">improved</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">local_search_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                                    <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                                    <span class="n">obtain_n</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
                             <span class="c1"># Found an equally well performing configuration, keeping it for plateau walking</span>
                             <span class="k">elif</span> <span class="n">acq_val</span><span class="p">[</span><span class="n">acq_index</span><span class="p">]</span> <span class="o">==</span> <span class="n">acq_val_candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
                                 <span class="n">neighbors_w_equal_acq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbors</span><span class="p">[</span><span class="n">acq_index</span><span class="p">])</span>
