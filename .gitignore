@@ -23,6 +23,7 @@ target_algo_runs.json
 *~
 .html/
 .mypy_cache/
+.DS_Store
 
 #eclipse files
 .pydevproject
