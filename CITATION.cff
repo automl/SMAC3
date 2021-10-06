@@ -69,7 +69,6 @@ preferred-citation:
   month: "9"
   year: "2021"
   url: "https://arxiv.org/abs/2109.09831"
-  repository-code: "https://github.com/automl/SMAC3"
 
   authors:
     - family-names: "Lindauer"
