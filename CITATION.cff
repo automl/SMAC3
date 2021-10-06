@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-@inproceedings {lindauer-arxiv21a,
-  author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
-  title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
-  booktitle = {ArXiv: 2109.09831},
-  year = {2021},
-  url = {https://arxiv.org/abs/2109.09831}
-}
-=======
 ---
 cff-version: 1.2.0
 
@@ -116,4 +107,3 @@ preferred-citation:
       given-names: "Frank"
       affiliation: "University of Freiburg, Germany"
 ...
->>>>>>> c4ca5484 (Added CITATION.cff and updated docs reference)
