@@ -93,7 +93,7 @@ We import the fmin-function and wrap it around are simple branin function.
 
  .. code-block:: none
 
-    Optimum at [8.61079059 7.27786213] with cost of 32.60909600773213
+    Optimum at [8.88310791 3.4050313 ] with cost of 3.592344048741719
 
 
 
@@ -453,7 +453,7 @@ We can also validate our results (though this makes a lot more sense with instan
 
     Specified 100 repetitions, but fixing to 1, because algorithm is deterministic.
 
-    <smac.runhistory.runhistory.RunHistory object at 0x7fc1a9b1d580>
+    <smac.runhistory.runhistory.RunHistory object at 0x7f84b95f2d60>
 
 
 
@@ -655,7 +655,7 @@ The resulting portfolio can be used with any algorithm selector such as
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.604 seconds)
+   **Total running time of the script:** ( 0 minutes  3.940 seconds)
 
 
 .. _sphx_glr_download_examples_quickstart_quickstart_example.py:

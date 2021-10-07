@@ -318,9 +318,9 @@
 <span class="sd">            arguments passed to constructor of runhistory.</span>
 <span class="sd">            We strongly advise against changing the aggregation function,</span>
 <span class="sd">            since it will break some code assumptions</span>
-<span class="sd">        intensifier : Intensifier</span>
-<span class="sd">            intensification object to issue a racing to decide the current</span>
-<span class="sd">            incumbent</span>
+<span class="sd">        intensifier : AbstractRacer</span>
+<span class="sd">            intensification object or class to issue a racing to decide the current</span>
+<span class="sd">            incumbent. Default: class `Intensifier`</span>
 <span class="sd">        intensifier_kwargs: Optional[Dict]</span>
 <span class="sd">            arguments passed to the constructor of &#39;~intensifier&#39;</span>
 <span class="sd">        acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`</span>
@@ -607,34 +607,35 @@
                              <span class="s2">&quot;the scenario must be the same, but are &#39;</span><span class="si">%s</span><span class="s2">&#39; and &quot;</span>
                              <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tae_runner_instance</span><span class="o">.</span><span class="n">run_obj</span><span class="p">,</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span><span class="p">))</span>  <span class="c1"># type: ignore[union-attr] # noqa F821</span>
 
-        <span class="c1"># initialize intensification</span>
-        <span class="n">intensifier_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
-            <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
-            <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
-            <span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;run_obj_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;instance_specifics&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;adaptive_capping_slackfactor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-        <span class="p">}</span>
-
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">Intensifier</span><span class="p">)</span> \
-                <span class="ow">or</span> <span class="p">(</span><span class="n">intensifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">Intensifier</span><span class="p">)):</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;always_race_against&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_ta_time_bound&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;minR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">minR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-            <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;maxR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
-        <span class="k">if</span> <span class="n">intensifier_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intensifier_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">intensifier_kwargs</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">intensifier</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">Intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
-            <span class="p">)</span>  <span class="c1"># type: AbstractRacer</span>
+            <span class="n">intensifier</span> <span class="o">=</span> <span class="n">Intensifier</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">AbstractRacer</span><span class="p">):</span>
+            <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="n">intensifier</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">):</span>
+            <span class="c1"># initialize intensification</span>
+            <span class="n">intensifier_def_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;stats&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+                <span class="s1">&#39;traj_logger&#39;</span><span class="p">:</span> <span class="n">traj_logger</span><span class="p">,</span>
+                <span class="s1">&#39;rng&#39;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span>
+                <span class="s1">&#39;instances&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;cutoff&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">deterministic</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;run_obj_time&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">run_obj</span> <span class="o">==</span> <span class="s2">&quot;runtime&quot;</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;instance_specifics&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">instance_specific</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;adaptive_capping_slackfactor&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_adaptive_capping_slackfactor</span><span class="p">,</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">intens_min_chall</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">intensifier</span><span class="p">,</span> <span class="n">Intensifier</span><span class="p">):</span>
+                <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;always_race_against&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">()</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;use_ta_time_bound&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">use_ta_time</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;minR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">minR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+                <span class="n">intensifier_def_kwargs</span><span class="p">[</span><span class="s1">&#39;maxR&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">maxR</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
+
+            <span class="k">if</span> <span class="n">intensifier_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">intensifier_def_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">intensifier_kwargs</span><span class="p">)</span>
+
             <span class="n">intensifier_instance</span> <span class="o">=</span> <span class="n">intensifier</span><span class="p">(</span><span class="o">**</span><span class="n">intensifier_def_kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>

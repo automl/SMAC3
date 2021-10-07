@@ -266,8 +266,8 @@ If not set, it will be initialized with the
 <li><p><strong>runhistory_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – arguments passed to constructor of runhistory.
 We strongly advise against changing the aggregation function,
 since it will break some code assumptions</p></li>
-<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.intensification.html#smac.intensification.intensification.Intensifier" title="smac.intensification.intensification.Intensifier"><em>Intensifier</em></a>) – intensification object to issue a racing to decide the current
-incumbent</p></li>
+<li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><em>AbstractRacer</em></a>) – intensification object or class to issue a racing to decide the current
+incumbent. Default: class <cite>Intensifier</cite></p></li>
 <li><p><strong>intensifier_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – arguments passed to the constructor of ‘~intensifier’</p></li>
 <li><p><strong>acquisition_function</strong> (<cite>~smac.optimizer.acquisition.AbstractAcquisitionFunction</cite>) – Class or object that implements the <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.AbstractAcquisitionFunction" title="smac.optimizer.acquisition.AbstractAcquisitionFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractAcquisitionFunction</span></code></a>.
 Will use <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.EI" title="smac.optimizer.acquisition.EI"><code class="xref py py-class docutils literal notranslate"><span class="pre">EI</span></code></a> or <a class="reference internal" href="smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI" title="smac.optimizer.acquisition.LogEI"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogEI</span></code></a> if not set.

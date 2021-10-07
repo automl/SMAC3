@@ -117,17 +117,7 @@ digit-2 vs digit-3.
       warnings.warn("{} is intended to be used "
     /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/doc/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    Optimized Value: 0.0042
+    Optimized Value: 0.0039
 
 
 
@@ -282,7 +272,7 @@ digit-2 vs digit-3.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  46.584 seconds)
+   **Total running time of the script:** ( 1 minutes  47.899 seconds)
 
 
 .. _sphx_glr_download_examples_SMAC4MF_SMAC4MF_sgd_example.py:

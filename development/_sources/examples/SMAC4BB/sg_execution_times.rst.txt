@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:12.932** total execution time for **examples_SMAC4BB** files:
+**00:10.897** total execution time for **examples_SMAC4BB** files:
 
 +----------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_SMAC4BB_SMAC4BB_rosenbrock_example.py` (``SMAC4BB_rosenbrock_example.py``) | 00:12.932 | 0.0 MB |
+| :ref:`sphx_glr_examples_SMAC4BB_SMAC4BB_rosenbrock_example.py` (``SMAC4BB_rosenbrock_example.py``) | 00:10.897 | 0.0 MB |
 +----------------------------------------------------------------------------------------------------+-----------+--------+
