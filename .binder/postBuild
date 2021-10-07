@@ -17,7 +17,7 @@ if [[ ! -f /.dockerenv ]]; then
     exit 1
 fi
 
-# Copy content we need from the auto-sklearn repo
+# Copy content we need from the SMAC3 repo
 TMP_CONTENT_DIR=/tmp/SMAC3
 mkdir -p $TMP_CONTENT_DIR
 cp -r examples .binder $TMP_CONTENT_DIR
