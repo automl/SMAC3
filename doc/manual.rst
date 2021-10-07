@@ -24,5 +24,6 @@ We provide examples for the usage of *SMAC* in the :ref:`Quickstart guide <brani
     basic_usage
     options
     tae
+    instances
     psmac
     validation
