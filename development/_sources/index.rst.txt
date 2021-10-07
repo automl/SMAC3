@@ -47,12 +47,13 @@ Contents:
    please cite us:
 
 
-     | @misc{smac-2017,
-     |    title={SMAC v3: Algorithm Configuration in Python},
-     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and Stefan Falkner and André Biedenkapp and Frank Hutter},
-     |    year={2017},
-     |    publisher={GitHub},
-     |    howpublished={\\url{https://github.com/automl/SMAC3}}
+     | @misc{lindauer2021smac3,
+     |    title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}
+     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+     |    year={2021},
+     |    eprint={2109.09831},
+     |    archivePrefix={arXiv},
+     |    primaryClass={cs.LG}
      | }
 
 SMAC3 is mainly written in Python 3 and continuously tested with Python 3.7-3.9.
