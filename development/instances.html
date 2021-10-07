@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Usage Recommendation &mdash; SMAC 1.0.1 documentation</title>
+  <title>Instances &mdash; SMAC 1.0.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SMAC Examples" href="smac_examples.html" />
-    <link rel="prev" title="Quickstart" href="examples/quickstart/quickstart_example.html" /> 
+    <link rel="next" title="Parallel SMAC (pSMAC)" href="psmac.html" />
+    <link rel="prev" title="Target Algorithm Evaluator" href="tae.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,15 +45,15 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/quickstart/quickstart_example.html">Quickstart</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage Recommendation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_recomendation.html">Usage Recommendation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="smac_examples.html">SMAC Examples</a><ul>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="manual.html">Manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="basic_usage.html">Basic Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">Options and file formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tae.html">Target Algorithm Evaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="instances.html">Instances</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Instances</a></li>
 <li class="toctree-l2"><a class="reference internal" href="psmac.html">Parallel SMAC (pSMAC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
 </ul>
@@ -184,9 +184,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Usage Recommendation</li>
+          <li><a href="manual.html">Manual</a> &raquo;</li>
+      <li>Instances</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/usage_recomendation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/instances.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -194,90 +195,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="usage-recommendation">
-<h1>Usage Recommendation<a class="headerlink" href="#usage-recommendation" title="Permalink to this headline">¶</a></h1>
-<p><em>SMAC</em> of course itself offers a lot of design choices, some of which are crucial to achieve peak performance. Luckily, often it is sufficient to distinguish between a few problem classes.
-To make the usage of <em>SMAC</em> as easy as possible, we provide several facades designed for these different use cases. Here we give some general recommendations on
-when to use which facade. These recommendations are based on our experience and technical limitations and is by far not intended to be complete:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 18%" />
-<col style="width: 34%" />
-<col style="width: 29%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>SMAC4BB (Black-Box)</p></th>
-<th class="head"><p>SMAC4HPO (Hyperparameter Optimization)</p></th>
-<th class="head"><p>SMAC4AC (Algorithm Configuration)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p># parameter</p></td>
-<td><p>low</p></td>
-<td><p>low/medium/high</p></td>
-<td><p>low/medium/high</p></td>
-</tr>
-<tr class="row-odd"><td><p>categorical parameter</p></td>
-<td><p>yes</p></td>
-<td><p>supported</p></td>
-<td><p>supported</p></td>
-</tr>
-<tr class="row-even"><td><p>conditional parameter</p></td>
-<td><p>yes</p></td>
-<td><p>supported</p></td>
-<td><p>supported</p></td>
-</tr>
-<tr class="row-odd"><td><p>instances</p></td>
-<td><p>no</p></td>
-<td><p>None or CV-folds</p></td>
-<td><p>yes</p></td>
-</tr>
-<tr class="row-even"><td><p>stochasticity</p></td>
-<td><p>no</p></td>
-<td><p>supported</p></td>
-<td><p>supported</p></td>
-</tr>
-<tr class="row-odd"><td><p>objective</p></td>
-<td><p>any (except runtime)</p></td>
-<td><p>e.g. validation loss</p></td>
-<td><p>e.g. runtime or quality</p></td>
-</tr>
-</tbody>
-</table>
-<p>Some examples of typical use cases:</p>
-<dl class="simple">
-<dt><em>SMAC4BB</em>: Bayesian Optimization using a <em>Gaussian Process</em> and <em>Expected Improvement</em></dt><dd><ul class="simple">
-<li><p>Optimizing the objective value of Branin and other low dimensional artificial test functions</p></li>
-<li><p>Finding the best learning rate for training a neural network wrt. RMSE on a validation dataset</p></li>
-<li><p>Optimizing the choice of kernel and penalty of a SVM wrt. RMSE on a validation dataset</p></li>
-</ul>
-</dd>
-<dt><em>SMAC4HPO</em>: Bayesian optimization using a <em>Random Forest</em></dt><dd><ul class="simple">
-<li><p>Finding the optimal choice of machine learning algorithm and its hyperparameters wrt. validation error</p></li>
-<li><p>Tuning the architecture and training parameters of a neural network wrt. classification error on a validation dataset</p></li>
-<li><p>Optimize hyperparameters of a SVM wrt. the CV-fold error</p></li>
-<li><p>Minimize objective values of problems that are noisy and/or yield crashed runs (e.g. due to mem-outs).</p></li>
-<li><p>Finding the best setting of an RL-agent to minimize regret (or a set of RL problems)</p></li>
-</ul>
-</dd>
-<dt><em>SMAC4AC</em>: Algorithm configuration using a <em>Random Forest</em></dt><dd><ul class="simple">
-<li><p>Minimizing the average time it takes for a SAT-solver to solve a set of SAT instances</p></li>
-<li><p>Configuring a MIP solver to solve a set of mixed-integer-problems as fast as possible</p></li>
-<li><p>Optimizing the average quality of solutions returned by a configurable TSP solver</p></li>
-</ul>
-</dd>
-</dl>
-<p><strong>Important:</strong> If your problem is not covered in this table, this doesn’t mean you can’t benefit from using our tool. In case of doubt, please create an issue on Github.</p>
+  <section id="instances">
+<h1>Instances<a class="headerlink" href="#instances" title="Permalink to this headline">¶</a></h1>
+<p>Often you want to optimize the cost across different datasets, subsets, or even different
+transformations. For this purpose, you can use instances. A randomly selected instance is passed to
+the target algorithm evaluator, in which you can access it.</p>
+<p>To work with instances, you need to add your predefined instances (list) to the scenario object. The
+items of the instances can be chosen individually. In the following example, I want to use five different subsets, identified by its id:</p>
+<p>Alternatively, you can also pass <cite>instance_file</cite> to the scenario object.
+Additionally to the instances, there is the option to define <cite>features</cite>. Those instance features are
+used to expand the internal X matrix and thus play a role in training the underlying optimizer. See <a class="reference external" href="https://github.com/automl/SMAC3/blob/master/smac/runhistory/runhistory2epm.py#L423">here</a> for
+the exact implementation.</p>
+<p>For example, if I want to add the number of samples and the mean for each subset, I can do as
+follows:</p>
+<p>Lastly, here are some more examples to incorporate instances in your code:
+- <a class="reference external" href="https://github.com/automl/SMAC3/blob/master/examples/SMAC4MF/SMAC4MF_sgd_example.py">SMAC4MF SGD</a>
+- <a href="#id1"><span class="problematic" id="id2">`SMAC4MF MLP &lt;https://automl.github.io/SMAC3/master/examples/SMAC4MF/SMAC4MF_mlp_example.html#sphx-glr-examples-smac4mf-smac4mf-mlp-example-py`_</span></a>
+- <a href="#id3"><span class="problematic" id="id4">`Spear &lt;https://github.com/automl/SMAC3/tree/master/examples/quickstart/spear_qcp`_</span></a></p>
+<section id="f-a-q">
+<h2>F.A.Q.<a class="headerlink" href="#f-a-q" title="Permalink to this headline">¶</a></h2>
+<p class="rubric">When using subsets, does it make sense to use instances over having cross-validation directly in my TAE?</p>
+<p>It is recommended if the sum of the performance values across the subsets makes sense, and dividing the sum is a certain amount of information about the total sum. Ultimately, SMAC optimizes for the total and can take advantage of the fact that only parts are evaluated if there are bad configurations.</p>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="examples/quickstart/quickstart_example.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="smac_examples.html" class="btn btn-neutral float-right" title="SMAC Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tae.html" class="btn btn-neutral float-left" title="Target Algorithm Evaluator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="psmac.html" class="btn btn-neutral float-right" title="Parallel SMAC (pSMAC)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
