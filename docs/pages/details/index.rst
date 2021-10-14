@@ -6,4 +6,6 @@ Details
 
     facades
     scenario
+    target_algorithm_evaluator
+    validation
 
