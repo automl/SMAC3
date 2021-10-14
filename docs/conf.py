@@ -43,7 +43,7 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # 'sphinx.ext.autodoc',
+    'sphinx.ext.autodoc',
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',
@@ -115,7 +115,7 @@ language = None
 #show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None  # 'sphinx'
+pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
