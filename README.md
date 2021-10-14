@@ -1,4 +1,138 @@
-# SMAC v3 Project
+# Sequential Model Algorithm Configuration (SMAC)
+
+
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![examples](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml)
+[![codecov
+Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
+
+SMAC is a tool for algorithm configuration to optimize the parameters of
+arbitrary algorithms, including hyperparameter optimization of Machine Learning algorithms. The main core consists of
+Bayesian Optimization in combination with an aggressive racing mechanism to
+efficiently decide which of two configurations performs better.
+
+
+For a detailed description of the main ideas,
+we refer to:
+
+```
+Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
+Sequential Model-Based Optimization for General Algorithm Configuration
+In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
+```
+
+```
+Lindauer et al.
+SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
+```
+
+SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
+Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
+
+
+## Installation
+
+Create a new environment with python 3.9 and make sure swig is installed either on your system or
+inside the environment. We demonstrate the installation via anaconda.
+
+Create and activate environment:
+```
+conda create -n SMAC python=3.9
+conda activate SMAC
+```
+
+Install swig:
+```
+conda install gxx_linux-64 gcc_linux-64 swig
+```
+
+Install SMAC via PyPI:
+```
+pip install smac
+```
+
+Alternatively, clone the environment:
+```
+git clone https://github.com/automl/SMAC3.git && cd SMAC3
+pip install -r requirements.txt
+pip install .
+```
+
+We refer to the [documention](https://automl.github.io/SMAC3) for further installation options.
+
+
+## Minimal Example
+
+```py
+import numpy as np
+
+from sklearn.ensemble import RandomForestClassifier
+from ConfigSpace import ConfigurationSpace
+from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+from smac.facade.smac_bb_facade import SMAC4BB
+from smac.scenario.scenario import Scenario
+
+
+X_train, y_train = np.random.randint(2, size=(20, 2)), np.random.randint(2, size=20)
+X_val, y_val = np.random.randint(2, size=(5, 2)), np.random.randint(2, size=5)
+
+
+def train_random_forest(config):
+    """ 
+    Trains a random forest on the given hyperparameters, defined by config, and returns the accuracy
+    on the validation data.
+
+    Input:
+        config (Configuration): Configuration object derived from ConfigurationSpace.
+
+    Return:
+        cost (float): Performance measure on the validation data.
+    """
+    model = RandomForestClassifier(max_depth=config["depth"])
+    model.fit(X_train, y_train)
+
+    # define the evaluation metric as return
+    return 1 - model.score(X_val, y_val)
+
+
+if __name__ == "__main__":
+    # Define your hyperparameters
+    configspace = ConfigurationSpace()
+    configspace.add_hyperparameter(UniformIntegerHyperparameter("depth", 2, 100))
+
+    # Provide meta data for the optimization
+    scenario = Scenario({
+        "run_obj": "quality",  # Optimize quality (alternatively runtime)
+        "runcount-limit": 10,  # Max number of function evaluations (the more the better)
+        "cs": configspace,
+    })
+
+    smac = SMAC4BB(scenario=scenario, tae_runner=train_random_forest)
+    best_found_config = smac.optimize()
+
+```
+
+More examples can be found in the [documention](https://automl.github.io/SMAC3).
+
+
+
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/)
 
@@ -10,17 +144,7 @@ which can be found [here](http://www.cs.ubc.ca/labs/beta/Projects/SMAC/).
 
 The documentation can be found [here](https://automl.github.io/SMAC3/).
 
-Status for master branch:
-[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
-[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
-[![examples](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml)
-[![codecov Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
-Status for the development branch
-[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
-[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
-[![examples](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml/badge.svg?branch=development)](https://github.com/automl/SMAC3/actions/workflows/terminal_examples.yml)
-[![codecov](https://codecov.io/gh/automl/SMAC3/branch/development/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
 Try SMAC directly in your Browser [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1v0ZH5S9Sfift30GxHAp96e0yZZUFS0Ah)
 
