@@ -1,4 +1,4 @@
-Usage Recommendation
+Facades
 --------------------
 SMAC of course itself offers a lot of design choices, some of which are crucial to achieve peak performance.
 Luckily, often it is sufficient to distinguish between a few problem classes.
@@ -7,19 +7,19 @@ Here we give some general recommendations on when to use which facade.
 These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
 .. csv-table::
-    :header: "", "SMAC4BB", "SMAC4HPO", "SMAC4AC", "SMAC4MF", "pSMAC†", "Hydra†"
-    :widths: 15, 10, 10, 10, 10, 10, 10
+    :header: "", "SMAC4BB", "SMAC4HPO", "SMAC4MF", "SMAC4AC"
+    :widths: 15, 10, 10, 10, 10
 
     "# parameter", "low", "low/medium/high", "low/medium/high", "low/medium/high"
     "categorical parameter", "yes", "supported", "supported", "supported"
     "conditional parameter", "yes", "supported", "supported", "supported"
-    "instances", "no", "None or CV-folds", "yes", "None or CV-folds"
+    "instances", "no", "None or CV-folds", "None or CV-folds", "yes"
     "stochasticity",  "no", "supported", "supported", "supported"
-    "objective", "any (except runtime)", "e.g. validation loss ", "e.g. runtime or quality", "e.g. validation loss "
-    "multi-fidelity", "no", "no", "no", "yes"
-    "parallelism", "no", "no", "no", "no", "yes", "no"
+    "objective", "any (except runtime)", "e.g. validation loss ",  "e.g. validation loss ", "e.g. runtime or quality"
+    "multi-fidelity", "no", "no", "yes", "no"
+    "parallelism", "no", "no", "no", "no"
+    "search strategy", ":term:`GP` or :term:`GP-MCMC`", ":term:`RF`", ":term:`RF`", ":term:`RF`, :term:`GP`, :term:`GP-MCMC` or Random"
 
-†Please note that these facades are experimental.
 
 Here we show the class inheritance of the different facades. The different facades provide a interface to and configure
 SMAC4AC for pre-set problem types.
@@ -32,4 +32,3 @@ SMAC4AC for pre-set problem types.
 
     Class inheritance of the SMAC facades.
 
-What does None/Cv folds mean for instances??

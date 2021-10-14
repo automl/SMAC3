@@ -9,6 +9,8 @@ Home
    pages/details/index
    pages/api/index
    pages/glossary
+   pages/FAQ
+   pages/contact_citation_license
 
 
 SMAC is a tool for algorithm configuration to optimize the parameters of
