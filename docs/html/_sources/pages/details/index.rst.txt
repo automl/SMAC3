@@ -1,0 +1,8 @@
+Details
+=======
+
+.. toctree::
+    :hidden:
+
+    facades
+
