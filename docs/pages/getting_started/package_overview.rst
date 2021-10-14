@@ -17,13 +17,16 @@ It offers several `facadesTODO <linktofacades>`_ and pre-sets for typical use ca
 SMAC has following characteristics and capabilities:
 
 - global optimizer
-    - Bayesian Optimization → sample-efficient.
+    - Bayesian Optimization → sample-efficient, no gradients required.
+- optimize following types of functions:
+    - black-box (BB): A function where we can only observe input and output behaviour. Can be undifferentiable.
+    - grey-box: We have access to intermediate results/performances.
 - optimize few up to many hyperparameters
 - optimize categorical, continuous and conditional (hierarchical) hyperparameters
-- instances
-    - Find well-performing hyperparameter configurations not only for one instance of an algorithm, but for many.
+- different/any objectives possible, e.g., quality or runtime
 - multi-fidelity
-    - If you can specify the budget with which your algorithm can run (e.g., certain number of epochs,
+    - If you want to optimize a grey-box function and you can specify the budget with which your algorithm can run (e.g., certain number of epochs,
       iterations or steps or total runtime), SMAC can take intermediate performance into account and already discard
       unsuitable hyperparameter configurations early on → speed-up.
-- different/any objectives possible, e.g., quality or runtime
+- instances
+    - Find well-performing hyperparameter configurations not only for one instance of an algorithm, but for many.
