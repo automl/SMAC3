@@ -3,7 +3,7 @@
 Using the black-box optimization interface of SMAC
 ==================================================
 An example for the usage of SMAC4BB.
-We use SAMC4BB to optimize a 2d rosenbrock function.
+We use SAMC4BB to optimize a synthetic function, here it is a 2d rosenbrock function.
 
 SMAC4BB uses a Gaussian Process (gp) or a set of Gaussian Processes whose hyperparameters are integrated by
 MCMC (gp_mcmc) as its surrogate model. SMAC4BB works best on numerical hyperparameter configuration space and should not
