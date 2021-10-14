@@ -12,9 +12,7 @@ arbitrary algorithms, including hyperparameter optimization of Machine Learning 
 Bayesian Optimization in combination with an aggressive racing mechanism to
 efficiently decide which of two configurations performs better.
 
-
-For a detailed description of the main ideas,
-we refer to:
+For a detailed description of the main ideas, we refer to:
 
 ```
 Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
@@ -23,7 +21,7 @@ In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION
 ```
 
 ```
-Lindauer et al.
+Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter
 SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
 ```
 
@@ -34,7 +32,7 @@ Forest is written in C++. In further texts, SMAC is representatively mentioned f
 ## Installation
 
 Create a new environment with python 3.9 and make sure swig is installed either on your system or
-inside the environment. We demonstrate the installation via anaconda.
+inside the environment. We demonstrate the installation via anaconda in the following:
 
 Create and activate environment:
 ```
@@ -52,7 +50,7 @@ Install SMAC via PyPI:
 pip install smac
 ```
 
-Alternatively, clone the environment:
+Or alternatively, clone the environment:
 ```
 git clone https://github.com/automl/SMAC3.git && cd SMAC3
 pip install -r requirements.txt
@@ -114,6 +112,44 @@ if __name__ == "__main__":
 ```
 
 More examples can be found in the [documention](https://automl.github.io/SMAC3).
+
+
+
+## License
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the 3-clause BSD license (please see the LICENSE file).
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+You should have received a copy of the 3-clause BSD license
+along with this program (see LICENSE file).
+If not, see [here](https://opensource.org/licenses/BSD-3-Clause).
+
+## Miscellaneous
+
+SMAC3 is developed by the [AutoML Groups of the Universities of Hannover and
+Freiburg](http://www.automl.org/).
+
+If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are appreciating any kind of help.
+Find our guidlines for contributing to this package [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md).
+
+If you use SMAC in one of your research projects, please cite us:
+```
+@misc{lindauer2021smac3,
+      title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
+      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+      year={2021},
+      eprint={2109.09831},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
+
+Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/)
 
 
 
