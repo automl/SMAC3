@@ -1,5 +1,5 @@
-API
-===
+API Reference
+=============
 
 This page gives an overview of all public SMAC objects, functions and methods.
 
