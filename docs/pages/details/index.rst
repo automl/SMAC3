@@ -5,4 +5,5 @@ Details
     :hidden:
 
     facades
+    scenario
 

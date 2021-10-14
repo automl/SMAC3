@@ -1,18 +1,23 @@
 Glossary
 ========
 
-.. csv-table::
-    :header: "Abbreviation", "Full Name", "Description"
-    :widths: 15, 15, 15
+.. glossary::
 
-    "SMAC", "Sequential Model-Based Algorithm Configuration"
-    "HP", "Hyperparameter"
-    "BB", "Black-Box"
-    "BO", "Bayesian Optimization"
-    "MF", "Multi-Fidelity"
-    "TAE", "Target Algorithm Evaluator", "Your model, which uses the configuration+budget+instance and returns a cost"
-    "Hydra"
+    BO
+        Bayesian Optimization. 
 
+    SMAC
+        Sequential Model-Based Algorithm Configuration.
 
+    BB
+        Black-Box. 
 
+    MF
+        Multi-Fidelity. 
 
+    TAE
+        Target Algorithm Evaluator. Your model, which returns a cost based on the given config,
+        budget and instance.
+
+    Hydra
+        Keine Ahnung.
