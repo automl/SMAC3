@@ -2,6 +2,12 @@
 ==================================================
 Using the black-box optimization interface of SMAC
 ==================================================
+An example for the usage of SMAC4BB.
+We use SAMC4BB to optimize a 2d rosenbrock function.
+
+SMAC4BB uses a Gaussian Process (gp) or a set of Gaussian Processes whose hyperparameters are integrated by
+MCMC (gp_mcmc) as its surrogate model. SMAC4BB works best on numerical hyperparameter configuration space and should not
+ be applied to the problems with large evaluation budgets (up to 1000 evaluations).
 """
 
 import logging
@@ -49,6 +55,9 @@ if __name__ == "__main__":
                          "deterministic": "true"
                          })
 
+    # one could use 'gp' or 'gp_mcmc' here
+    model_type = 'gp'
+
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = rosenbrock_2d(cs.get_default_configuration())
@@ -57,6 +66,7 @@ if __name__ == "__main__":
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = SMAC4BB(scenario=scenario,
+                   model_type=model_type,
                    rng=np.random.RandomState(42),
                    tae_runner=rosenbrock_2d)
 
