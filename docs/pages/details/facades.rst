@@ -7,8 +7,8 @@ Here we give some general recommendations on when to use which facade.
 These recommendations are based on our experience and technical limitations and is by far not intended to be complete:
 
 .. csv-table::
-    :header: "Characteristic", "SMAC4BB", "SMAC4HPO", "SMAC4AC", "SMAC4MF"
-    :widths: 15, 10, 10, 10, 10
+    :header: "", "SMAC4BB", "SMAC4HPO", "SMAC4AC", "SMAC4MF", "pSMAC†", "Hydra†"
+    :widths: 15, 10, 10, 10, 10, 10, 10
 
     "# parameter", "low", "low/medium/high", "low/medium/high", "low/medium/high"
     "categorical parameter", "yes", "supported", "supported", "supported"
@@ -17,5 +17,19 @@ These recommendations are based on our experience and technical limitations and 
     "stochasticity",  "no", "supported", "supported", "supported"
     "objective", "any (except runtime)", "e.g. validation loss ", "e.g. runtime or quality", "e.g. validation loss "
     "multi-fidelity", "no", "no", "no", "yes"
+    "parallelism", "no", "no", "no", "no", "yes", "no"
+
+†Please note that these facades are experimental.
+
+Here we show the class inheritance of the different facades. The different facades provide a interface to and configure
+SMAC4AC for pre-set problem types.
+
+.. figure:: docs/images/smac_facades_all_classes.png
+    :width: 700px
+    :align: center
+    :alt: Class diagram of the SMAC facades.
+    :figclass: align-center
+
+    Class inheritance of the SMAC facades.
 
 What does None/Cv folds mean for instances??
