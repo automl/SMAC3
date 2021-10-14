@@ -1,1 +1,3 @@
 sphinx-build -b html docs docs/html -a
+
+sphinx-apidoc -feTMo docs/apidoc/ ./smac/

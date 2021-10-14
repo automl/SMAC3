@@ -123,7 +123,7 @@ def add_toctree_functions(app, pagename, templatename, context, doctree):
                 ul.attrs["class"] = ul.attrs.get("class", []) + ["nav", "bd-sidenav"]
 
             # Add icons and labels for collapsible nested sections
-            # _add_collapse_checkboxes(soup)
+            _add_collapse_checkboxes(soup)
 
             out = soup.prettify()
 

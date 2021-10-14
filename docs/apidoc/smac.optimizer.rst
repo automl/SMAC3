@@ -1,0 +1,20 @@
+smac.optimizer package
+======================
+
+.. automodule:: smac.optimizer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   smac.optimizer.acquisition
+   smac.optimizer.ei_optimization
+   smac.optimizer.epm_configuration_chooser
+   smac.optimizer.pSMAC
+   smac.optimizer.random_configuration_chooser
+   smac.optimizer.smbo

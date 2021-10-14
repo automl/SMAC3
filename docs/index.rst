@@ -7,6 +7,7 @@ Home
 
    pages/getting_started/index
    pages/details/index
+   pages/api/index
    pages/glossary
 
 

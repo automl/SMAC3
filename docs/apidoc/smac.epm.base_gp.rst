@@ -1,0 +1,7 @@
+smac.epm.base\_gp module
+========================
+
+.. automodule:: smac.epm.base_gp
+   :members:
+   :undoc-members:
+   :show-inheritance:

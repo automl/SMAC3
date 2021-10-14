@@ -1,0 +1,7 @@
+smac.facade.hyperband\_facade module
+====================================
+
+.. automodule:: smac.facade.hyperband_facade
+   :members:
+   :undoc-members:
+   :show-inheritance:

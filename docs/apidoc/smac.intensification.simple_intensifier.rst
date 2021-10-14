@@ -1,0 +1,7 @@
+smac.intensification.simple\_intensifier module
+===============================================
+
+.. automodule:: smac.intensification.simple_intensifier
+   :members:
+   :undoc-members:
+   :show-inheritance:

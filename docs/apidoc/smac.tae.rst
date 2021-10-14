@@ -1,0 +1,21 @@
+smac.tae package
+================
+
+.. automodule:: smac.tae
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   smac.tae.base
+   smac.tae.dask_runner
+   smac.tae.execute_func
+   smac.tae.execute_ta_run_aclib
+   smac.tae.execute_ta_run_hydra
+   smac.tae.execute_ta_run_old
+   smac.tae.serial_runner

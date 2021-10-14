@@ -43,6 +43,7 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'numpydoc',
     'sphinx.ext.autodoc',
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
@@ -51,8 +52,11 @@ extensions = [
     # 'sphinx.ext.autosummary',
     # 'sphinx.ext.napoleon',
     # 'sphinx_gallery.gen_gallery',
+    # 'autoapi.extension'
     'smac_theme',
 ]
+
+numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['templates', '_templates']
@@ -317,8 +321,8 @@ texinfo_documents = [
 #autoclass_content = 'both'
 
 cmd_reader = CMDReader()
-cmd_reader.write_main_options_to_doc()
-cmd_reader.write_smac_options_to_doc()
+# cmd_reader.write_main_options_to_doc()
+# cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
 
 from sphinx_gallery.sorting import ExplicitOrder

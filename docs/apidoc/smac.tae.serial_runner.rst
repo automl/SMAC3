@@ -1,0 +1,7 @@
+smac.tae.serial\_runner module
+==============================
+
+.. automodule:: smac.tae.serial_runner
+   :members:
+   :undoc-members:
+   :show-inheritance:
