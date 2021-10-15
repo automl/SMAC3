@@ -9,7 +9,7 @@ MCMC (gp_mcmc) as its surrogate model. SMAC4BB works best on numerical hyperpara
 
 Function optimized by SMAC4BB normally requires the following input
 
-- *cfg*,  the input configuration, example can be found [here](./SMAC4BB_rosenbrock_example.py).
+- *cfg*,  the input configuration, example can be found [here](./SMAC4BB_synthetic_function_example.py).
 
 Note: SMAC4BB's optimizer is set default as gp_mcmc, where extra dependencies are required, you need to install SMAC with the following command:
 
