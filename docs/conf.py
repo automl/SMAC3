@@ -16,7 +16,6 @@ import datetime
 import sys
 import os
 import shlex
-import sphinx_rtd_theme
 
 sys.path.insert(0, '..')
 import smac
