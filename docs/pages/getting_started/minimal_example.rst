@@ -1,6 +1,8 @@
 Minimal Example
 ===============
 
+The following code optimizes the depth of a random forest:
+
 .. code-block:: python
 
     import numpy as np

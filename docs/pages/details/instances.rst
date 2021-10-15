@@ -19,8 +19,8 @@ I want to use five different subsets, identified by its id:
     })
 
 
-Alternatively, you can also pass `instance_file` to the scenario object.
-Additionally to the instances, there is the option to define `features`. Those instance features are
+Alternatively, you can also pass ``instance_file`` to the scenario object.
+Additionally to the instances, there is the option to define ``features``. Those instance features are
 used to expand the internal X matrix and thus play a role in training the underlying optimizer.
 See `here <https://github.com/automl/SMAC3/blob/master/smac/runhistory/runhistory2epm.py#L423>`_ for
 the exact implementation.
@@ -46,14 +46,9 @@ follows:
 
 Lastly, here are some more examples to incorporate instances in your code:
 
+:ref:`add_correct_links here`
+
 - `SMAC4MF SGD <https://github.com/automl/SMAC3/blob/master/examples/SMAC4MF/SMAC4MF_sgd_example.py>`_
 - `SMAC4MF MLP <https://automl.github.io/SMAC3/master/examples/SMAC4MF/SMAC4MF_mlp_example.html#sphx-glr-examples-smac4mf-smac4mf-mlp-example-py`_
 - `Spear <https://github.com/automl/SMAC3/tree/master/examples/quickstart/spear_qcp`_
 
-
-For Subsets: Instances or Cross-Validation?
--------------------------------------------
-When using subsets, does it make sense to use instances over having cross-validation directly in my :term:`TAE`?
-It is recommended if the sum of the performance values across the subsets makes sense, and dividing the sum is a certain
-amount of information about the total sum. Ultimately, SMAC optimizes for the total and can take advantage of the fact
-that only parts are evaluated if there are bad configurations.

@@ -1,7 +1,0 @@
-smac.intensification.parallel\_scheduling module
-================================================
-
-.. automodule:: smac.intensification.parallel_scheduling
-   :members:
-   :undoc-members:
-   :show-inheritance:

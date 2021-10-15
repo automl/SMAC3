@@ -1,7 +1,0 @@
-smac.tae.dask\_runner module
-============================
-
-.. automodule:: smac.tae.dask_runner
-   :members:
-   :undoc-members:
-   :show-inheritance:

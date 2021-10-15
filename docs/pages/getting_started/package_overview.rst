@@ -2,31 +2,67 @@ Package Overview
 ================
 
 SMAC supports you in determining well-performing hyperparameter configurations for your algorithms.
-By being a robust and flexible framework for `Bayesian Optimization (BO) TODO <linktoBO>`_ SMAC can improve performance whithin few function evaluations.
-It offers several `facadesTODO <linktofacades>`_ and pre-sets for typical use cases, such as optimizing hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem `instancesTODO <linktoinstances>`_.
+By being a robust and flexible framework for :term:`BO`, SMAC can improve performance within few function evaluations.
+It offers several :ref:`Facades` and pre-sets for typical use cases, such as optimizing
+hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem :ref:`Instances`.
 
 
 .. note::
-    Attention: This package is a reimplementation of the original SMAC tool
-    (see reference below).
+
+    Attention: This package is a reimplementation of the original SMAC tool.
     However, the reimplementation slightly differs from the original SMAC.
     For comparisons against the original SMAC, we refer to a stable release of SMAC (v2) in Java
     which can be found `here <http://www.cs.ubc.ca/labs/beta/Projects/SMAC/>`_.
 
 
+Features
+~~~~~~~~~
+
 SMAC has following characteristics and capabilities:
 
-- global optimizer
-    - Bayesian Optimization → sample-efficient, no gradients required.
-- optimize following types of functions:
-    - black-box (BB): A function where we can only observe input and output behaviour. Can be undifferentiable.
-    - grey-box: We have access to intermediate results/performances.
-- optimize few up to many hyperparameters
-- optimize categorical, continuous and conditional (hierarchical) hyperparameters
-- different/any objectives possible, e.g., quality or runtime
-- multi-fidelity
-    - If you want to optimize a grey-box function and you can specify the budget with which your algorithm can run (e.g., certain number of epochs,
-      iterations or steps or total runtime), SMAC can take intermediate performance into account and already discard
-      unsuitable hyperparameter configurations early on → speed-up.
-- instances
-    - Find well-performing hyperparameter configurations not only for one instance of an algorithm, but for many.
+Global optimizer
+    :term:`Bayesian Optimization<BO>` is used for sample-efficient optimization.
+
+Optimize :term:`Black-Box<BB>` functions
+    Works if only input and output are given.
+
+Flexible hyperparameters
+    Use categorical, continuous or hierarchical hyperparameters. SMAC can optimize up to 100
+    hyperparameters efficiently.
+
+Any objectives
+    Optimization with any :term:`objective<Objective>` (e.g., quality or runtime) is possible.
+
+:term:`Multi-Fidelity<MF>` Optimization
+    Judge configurations on multiple :term:`budgets<Budget>` to discard unsuitable configurations
+    early on. This will result in a massive speed-up, depending on the budgets.
+    
+:ref:`Instances`
+    Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
+    an algorithm, but for many.
+    
+Commandline
+    SMAC can not only be executed within a python file but also from the commandline. Consequently,
+    not only algorithms in python can be optimized but in other languages as well.
+
+
+Components
+~~~~~~~~~~
+
+Surrogate Models
+    - Gaussian Process
+    - Random Forest (with instances and without)
+
+Acquisition Functions
+    - Probability of Improvement (PI)
+    - Expected Improvement (EI)
+    - Lower Confidence Bound (LCB)
+
+Intensification
+    - Aggressive Racing
+    - Successive Halving
+    - Hyperband
+
+Please see the following figure for a more detailed overview:
+
+.. figure:: ../../images/components.png

@@ -1,7 +1,0 @@
-smac.facade.experimental.hydra\_facade module
-=============================================
-
-.. automodule:: smac.facade.experimental.hydra_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:

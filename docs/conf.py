@@ -45,6 +45,7 @@ sys.path.append(os.path.abspath("./themes/smac"))
 extensions = [
     'numpydoc',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',  # use :ref:`` on all headlines
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',

@@ -1,7 +1,0 @@
-smac.facade.experimental.psmac\_facade module
-=============================================
-
-.. automodule:: smac.facade.experimental.psmac_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:

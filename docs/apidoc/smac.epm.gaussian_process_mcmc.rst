@@ -1,7 +1,0 @@
-smac.epm.gaussian\_process\_mcmc module
-=======================================
-
-.. automodule:: smac.epm.gaussian_process_mcmc
-   :members:
-   :undoc-members:
-   :show-inheritance:

@@ -7,7 +7,7 @@ scenario-object or by specifing the options in a scenario file.
 Create Scenario
 ~~~~~~~~~~~~~~~
 
-Specify the options directly
+Specify the options directly:
 
 .. code-block:: python
 
