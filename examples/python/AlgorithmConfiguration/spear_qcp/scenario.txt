@@ -1,0 +1,10 @@
+algo = python3 -u ./target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./target_algorithm/spear-python/spearCSSCWrapper.py
+paramfile = ./target_algorithm/spear-python/spear-params-mixed.pcs
+execdir = .
+deterministic = 0
+run_obj = runtime
+overall_obj = PAR10
+cutoff_time = 5
+wallclock-limit = 60
+instance_file = instances.txt
+feature_file = features.txt
