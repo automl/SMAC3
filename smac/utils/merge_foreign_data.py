@@ -17,7 +17,7 @@ def merge_foreign_data_from_file(scenario: Scenario,
     <in_scenario> assuming the same pcs, feature space, but different instances
 
     Parameters
-    ---------
+    ----------
     scenario: Scenario
         original scenario -- feature dictionary will be extended
     runhistory: RunHistory
@@ -56,7 +56,7 @@ def merge_foreign_data(scenario: Scenario,
     <in_scenario> assuming the same pcs, feature space, but different instances
 
     Parameters
-    ---------
+    ----------
     scenario: Scenario
         original scenario -- feature dictionary will be extended
     runhistory: RunHistory

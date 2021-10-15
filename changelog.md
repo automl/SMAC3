@@ -1,7 +1,10 @@
-# 1.0.2
+# 1.1
 
 ## Features
 * Option to use an own stopping strategy using `IncorporateRunResultCallback`.
+
+## Major Changes
+* Changed scripts/smac to scripts/smac.py
 
 ## Minor Changes
 * Made smac-validate.py consistent with runhistory and tae.

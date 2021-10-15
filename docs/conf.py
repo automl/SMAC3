@@ -16,7 +16,6 @@ import datetime
 import sys
 import os
 import shlex
-import sphinx_rtd_theme
 
 sys.path.insert(0, '..')
 import smac
@@ -43,16 +42,21 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'numpydoc',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',  # use :ref:`` on all headlines
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',
     # 'sphinx.ext.viewcode',
     # 'sphinx.ext.autosummary',
     # 'sphinx.ext.napoleon',
-    # 'sphinx_gallery.gen_gallery',
+    'sphinx_gallery.gen_gallery',
+    # 'autoapi.extension'
     'smac_theme',
 ]
+
+numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['templates', '_templates']
@@ -316,10 +320,10 @@ texinfo_documents = [
 # Show init as well as moduledoc
 #autoclass_content = 'both'
 
-#cmd_reader = CMDReader()
-# cmd_reader.write_main_options_to_doc()
-# cmd_reader.write_smac_options_to_doc()
-# cmd_reader.write_scenario_options_to_doc()
+cmd_reader = CMDReader()
+cmd_reader.write_main_options_to_doc()
+cmd_reader.write_smac_options_to_doc()
+cmd_reader.write_scenario_options_to_doc()
 
 from sphinx_gallery.sorting import ExplicitOrder
 
@@ -328,7 +332,7 @@ sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
     # 'backreferences_dir': None,
     # path to the examples
-    # 'examples_dirs': '../examples',
+    'examples_dirs': '../examples',
 
     # Ordering
     # 'subsection_order': ExplicitOrder(['../examples/quickstart',
@@ -339,9 +343,12 @@ sphinx_gallery_conf = {
     #                                   '../examples/SMAC4MF',
     #                                   '../examples/hyperband']),
     # path where to save gallery generated examples
-    # 'gallery_dirs': 'examples',
+    'gallery_dirs': 'pages/examples',
+    'show_signature': 'False',
+    'show_memory': 'False',
+    'plot_gallery': 'False',
     # compile execute examples in the examples dir
     # 'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.
-    'ignore_pattern': '.*_func.py'
+    # 'ignore_pattern': '.*_func.py'
 }
