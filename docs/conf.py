@@ -322,8 +322,8 @@ texinfo_documents = [
 #autoclass_content = 'both'
 
 cmd_reader = CMDReader()
-# cmd_reader.write_main_options_to_doc()
-# cmd_reader.write_smac_options_to_doc()
+cmd_reader.write_main_options_to_doc()
+cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
 
 from sphinx_gallery.sorting import ExplicitOrder

@@ -20,14 +20,14 @@ efficiently decide which of two configurations performs better.
 
 For a detailed description of the main ideas, we refer to:
 
-.. code-block:: txt
+.. code-block:: text
 
    Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
    Sequential Model-Based Optimization for General Algorithm Configuration
    In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-.. code-block:: txt
+.. code-block:: text
 
    Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter
    SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization
@@ -49,7 +49,7 @@ Citation
 --------
 If you use the SMAC3 package, please cite our paper in addition to the original SMAC paper by Hutter et al. 2011:
 
-.. code-block:: txt
+.. code-block:: text
 
     @inproceedings {lindauer-arxiv21a,
       author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},

@@ -7,6 +7,7 @@ Details
     facades
     target_algorithm_evaluator
     scenario
+    arguments
     instances
     validation
     parallelism

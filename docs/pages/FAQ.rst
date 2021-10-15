@@ -55,7 +55,7 @@ What is the meaning of *deterministic*?
 
 
 I want my algorithm to be optimized across different datasets. How should I realize that?
-  Generally, you have two options: Validate all datasets within your :ref:`TAE` or use instances.
+  Generally, you have two options: Validate all datasets within your :ref:`TAE<Target Algorithm Evaluator>` or use instances.
   The significant advantage of instances is that not all datasets necessarily have to be processed.
   If the first instances already perform worse, the configuration might be discarded early. This
   will lead to a speed-up.
