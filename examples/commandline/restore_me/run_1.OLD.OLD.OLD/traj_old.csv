@@ -1,0 +1,4 @@
+"CPU Time Used","Estimated Training Performance","Wallclock Time","Incumbent ID","Automatic Configurator (CPU) Time","Configuration..."
+0.000000, 2147483648.000000, 0.000077, 1, 0.000077, x1='0.0', x2='0.0'
+-1.000000, 55.602113, 0.185044, 1, 1.185044, x1='0.0', x2='0.0'
+-2.000000, 6.275561, 0.539814, 2, 2.539814, x1='4.018127562611527', x2='0.13531378471246192'
