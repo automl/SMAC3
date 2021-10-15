@@ -18,7 +18,7 @@ Specify the options directly:
         ...
     })
 
-or pecify the options in a scenario.txt file:
+or specify the options in a scenario.txt file:
 
 .. code-block:: 
 

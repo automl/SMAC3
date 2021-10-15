@@ -51,7 +51,7 @@ extensions = [
     # 'sphinx.ext.viewcode',
     # 'sphinx.ext.autosummary',
     # 'sphinx.ext.napoleon',
-    # 'sphinx_gallery.gen_gallery',
+    'sphinx_gallery.gen_gallery',
     # 'autoapi.extension'
     'smac_theme',
 ]
@@ -332,7 +332,7 @@ sphinx_gallery_conf = {
     # disable mini galleries clustered by the used functions
     # 'backreferences_dir': None,
     # path to the examples
-    # 'examples_dirs': '../examples',
+    'examples_dirs': '../examples',
 
     # Ordering
     # 'subsection_order': ExplicitOrder(['../examples/quickstart',
@@ -343,9 +343,12 @@ sphinx_gallery_conf = {
     #                                   '../examples/SMAC4MF',
     #                                   '../examples/hyperband']),
     # path where to save gallery generated examples
-    # 'gallery_dirs': 'examples',
+    'gallery_dirs': 'pages/examples',
+    'show_signature': 'False',
+    'show_memory': 'False',
+    'plot_gallery': 'False',
     # compile execute examples in the examples dir
     # 'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.
-    'ignore_pattern': '.*_func.py'
+    # 'ignore_pattern': '.*_func.py'
 }

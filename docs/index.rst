@@ -6,7 +6,7 @@ Home
    :maxdepth: 2
 
    pages/getting_started/index
-   pages/examples
+   pages/examples/index
    pages/details/index
    pages/glossary
    pages/faq
