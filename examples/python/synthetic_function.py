@@ -2,12 +2,17 @@
 ==================================================
 Using the black-box optimization interface of SMAC
 ==================================================
-An example for the usage of SMAC4BB.
-We use SAMC4BB to optimize a synthetic function, here it is a 2d rosenbrock function.
+An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).
+
+SMAC4BB is designed for black-box function optimization.
 
 SMAC4BB uses a Gaussian Process (gp) or a set of Gaussian Processes whose hyperparameters are integrated by
 MCMC (gp_mcmc) as its surrogate model. SMAC4BB works best on numerical hyperparameter configuration space and should not
  be applied to the problems with large evaluation budgets (up to 1000 evaluations).
+
+ Function optimized by SMAC4BB normally requires the following input
+ - *cfg*,  the input configuration.
+
 """
 
 import logging
@@ -19,6 +24,8 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bb_facade import SMAC4BB
+from smac.optimizer.acquisition import LCB, EI, PI
+
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
@@ -63,11 +70,15 @@ if __name__ == "__main__":
     def_value = rosenbrock_2d(cs.get_default_configuration())
     print("Default Value: %.2f" % def_value)
 
+    # One could also select PI, LCB as acquisition functions
+    acquisition_func = EI
+
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = SMAC4BB(scenario=scenario,
                    model_type=model_type,
                    rng=np.random.RandomState(42),
+                   acquisition_func=acquisition_func,
                    tae_runner=rosenbrock_2d)
 
     smac.optimize()
