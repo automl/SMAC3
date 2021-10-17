@@ -1,13 +1,15 @@
 """
-============================================================
-Optimizing average cross-validation performance with SMAC4MF
-============================================================
-An example for the usage of multi instances optimization
+SGD on Instances
+^^^^^^^^^^^^^^^^
+
+TODO: Rewrite text.
+
+An example for the usage of multi instances optimization.
 
 An instance could mean one fold in a cross-validation task or one dataset when you aim at optimizing the mean
 performance across different datasets. By applying multi-fidelity optimization, we do not need to evaluate each
 configuration on all the instances. This example shows you how to use a Hyperband intensifier in SMAC with multiple
- instances. We optimize a SGD classifier on the digits dataset as multiple binary classification problems
+instances. We optimize a SGD classifier on the digits dataset as multiple binary classification problems
 using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.
 
 In this example, we use instances as the budget in hyperband and optimize the average cross
@@ -53,9 +55,11 @@ def generate_instances(a: int, b: int):
     """
     # get indices of both classes
     indices = np.where(np.logical_or(a == digits.target, b == digits.target))
+
     # get data
     data = digits.data[indices]
     target = digits.target[indices]
+
     return data, target
 
 
@@ -84,16 +88,24 @@ def sgd_from_cfg(cfg, seed, instance):
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
         # SGD classifier using given configuration
-        clf = SGDClassifier(loss='log', penalty='elasticnet', alpha=cfg['alpha'],
-                            l1_ratio=cfg['l1_ratio'], learning_rate=cfg['learning_rate'],
-                            eta0=cfg['eta0'], max_iter=30, early_stopping=True, random_state=seed)
+        clf = SGDClassifier(
+            loss='log',
+            penalty='elasticnet',
+            alpha=cfg['alpha'],
+            l1_ratio=cfg['l1_ratio'],
+            learning_rate=cfg['learning_rate'],
+            eta0=cfg['eta0'],
+            max_iter=30,
+            early_stopping=True,
+            random_state=seed)
 
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
 
         cv = StratifiedKFold(n_splits=4, random_state=seed, shuffle=True)  # to make CV splits consistent
         scores = cross_val_score(clf, data, target, cv=cv)
-    return 1 - np.mean(scores)  # Minimize!
+
+    return 1 - np.mean(scores)
 
 
 if __name__ == "__main__":
@@ -101,40 +113,48 @@ if __name__ == "__main__":
     cs = ConfigurationSpace()
 
     # We define a few possible parameters for the SGD classifier
-    alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
-    l1_ratio = UniformFloatHyperparameter("l1_ratio", 0, 1, default_value=0.5)
-    learning_rate = CategoricalHyperparameter("learning_rate", choices=['constant', 'invscaling', 'adaptive'],
-                                              default_value='constant')
-    eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
+    alpha = UniformFloatHyperparameter(
+        "alpha", 0, 1, default_value=1.0)
+    l1_ratio = UniformFloatHyperparameter(
+        "l1_ratio", 0, 1, default_value=0.5)
+    learning_rate = CategoricalHyperparameter(
+        "learning_rate", choices=['constant', 'invscaling', 'adaptive'], default_value='constant')
+    eta0 = UniformFloatHyperparameter(
+        "eta0", 0.00001, 1, default_value=0.1, log=True)
     # Add the parameters to configuration space
     cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
     # SMAC scenario object
-    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                        "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
-                         "cs": cs,  # configuration space
-                         "deterministic": True,
-                         "limit_resources": True,  # Uses pynisher to limit memory and runtime
-                         "memory_limit": 3072,  # adapt this to reasonable value for your hardware
-                         "cutoff": 3,  # runtime limit for the target algorithm
-                         "instances": instances  # Optimize across all given instances
-                         })
+    scenario = Scenario({
+        "run_obj": "quality",  # we optimize quality (alternative to runtime)
+        "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+        "cs": cs,  # configuration space
+        "deterministic": True,
+        "limit_resources": True,  # Uses pynisher to limit memory and runtime
+        "memory_limit": 3072,  # adapt this to reasonable value for your hardware
+        "cutoff": 3,  # runtime limit for the target algorithm
+        "instances": instances  # Optimize across all given instances
+    })
 
     # intensifier parameters
     # if no argument provided for budgets, hyperband decides them based on the number of instances available
-    intensifier_kwargs = {'initial_budget': 1, 'max_budget': 45, 'eta': 3,
-                          # You can also shuffle the order of using instances by this parameter.
-                          'instance_order': None,
-                          # 'shuffle' will shuffle instances before each SH run and 'shuffle_once'
-                          # will shuffle instances once before the 1st SH iteration begins
-                          }
+    intensifier_kwargs = {
+        'initial_budget': 1,
+        'max_budget': 45,
+        'eta': 3,
+        # You can also shuffle the order of using instances by this parameter.
+        # 'shuffle' will shuffle instances before each SH run and 'shuffle_once'
+        # will shuffle instances once before the 1st SH iteration begins
+        'instance_order': None,
+    }
 
     # To optimize, we pass the function to the SMAC-object
-    smac = SMAC4MF(scenario=scenario, rng=np.random.RandomState(42),
-                   tae_runner=sgd_from_cfg,
-                   intensifier_kwargs=intensifier_kwargs
-                   # all arguments related to intensifier can be passed like this
-                   )
+    smac = SMAC4MF(
+        scenario=scenario,
+        rng=np.random.RandomState(42),
+        tae_runner=sgd_from_cfg,
+        intensifier_kwargs=intensifier_kwargs
+    )
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos

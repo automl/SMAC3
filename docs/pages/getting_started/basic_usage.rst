@@ -26,7 +26,7 @@ Commandline
 
 To use SMAC via the commandline, you need a :ref:`scenario-file <Scenario>` and a :term:`PCS-file <PCS>`.
 The script to invoke SMAC is located in *scripts/smac*. Please see the
-:ref:`Branin <branin-example>`-example to see how to use it.
+:ref:`Branin`-example to see how to use it.
 
 SMAC is called via the commandline with the following arguments:
 
@@ -46,7 +46,7 @@ Both will interpret paths from the execution-directory.
 
 Currently, running SMAC via the commandline will register the algorithm with a :ref:`Target
 Algorithm Evaluator<Target Algorithm Evaluator>`, that requires the target algorithm to print the
-results to the console in the following format (see :ref:`Branin <branin-example>`):
+results to the console in the following format (see :ref:`Branin`):
     
 .. code-block:: bash
 

@@ -9,20 +9,19 @@
 
 Restore Branin
 ^^^^^^^^^^^^^^
-This file runs SMAC and then restores the run with an extended computation
+This file runs SMAC and then restores the branin run with an extended computation
 budget. This will also work for SMAC runs that have crashed and are continued.
 
 
 .. code-block:: default
 
 
-
     import logging
+    logging.basicConfig(level=logging.INFO)
+
     import os
-    import shutil
 
     from smac.facade.smac_ac_facade import SMAC4AC
-
     from smac.runhistory.runhistory import RunHistory
     from smac.scenario.scenario import Scenario
     from smac.stats.stats import Stats
@@ -38,7 +37,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.
         # Initialize scenario, using runcount_limit as budget.
         origiginal_scenario_dict = {
             'algo': 'python branin.py',
-            'paramfile': 'configspace.pcs',
+            'paramfile': 'branin/configspace.pcs',
             'run_obj': 'quality',
             'runcount_limit': 25,
             'deterministic': True,
@@ -48,7 +47,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.
         smac = SMAC4AC(scenario=original_scenario, run_id=1)
         smac.optimize()
 
-        print("\n########## BUDGET EXHAUSTED! Restoring optimization: ##########\n")
+        print("\nBudget exhausted! Starting restoring optimization ...\n")
 
         # Now the output is in the folder 'restore_me/run_1' (or whatever run_id has
         # been passed to the SMAC-object above)
@@ -69,7 +68,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.
 
         # We load the runhistory
         rh_path = os.path.join(old_output_dir, "runhistory.json")
-        runhistory = RunHistory(aggregate_func=None)
+        runhistory = RunHistory()
         runhistory.load_json(rh_path, new_scenario.cs)
 
         # And the stats
@@ -80,7 +79,8 @@ budget. This will also work for SMAC runs that have crashed and are continued.
         # And the trajectory
         traj_path = os.path.join(old_output_dir, "traj_aclib2.json")
         trajectory = TrajLogger.read_traj_aclib_format(
-            fn=traj_path, cs=new_scenario.cs)
+            fn=traj_path,
+            cs=new_scenario.cs)
         incumbent = trajectory[-1]["incumbent"]
 
         # Now we can initialize SMAC with the recovered objects and restore the
@@ -95,8 +95,8 @@ budget. This will also work for SMAC runs that have crashed and are continued.
         # Because we changed the output_dir, we might want to copy the old
         # trajectory-file (runhistory and stats will be complete, but trajectory is
         # written sequentially)
-        new_traj_path = os.path.join(new_scenario.output_dir, "run_1", "traj_aclib2.json")
-        shutil.copy(traj_path, new_traj_path)
+        # new_traj_path = os.path.join(new_scenario.output_dir, "run_1", "traj_aclib2.json")
+        # shutil.copy(traj_path, new_traj_path)
 
         smac.optimize()
 

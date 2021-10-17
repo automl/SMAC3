@@ -1,15 +1,13 @@
 """
-=========================================
-Optimizing GradientBoosting with SMAC4HPO
-=========================================
+Non-Deterministic Gradient-Boosting
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example for the usage of SMAC within Python.
-We optimize a GradientBoosting on an artificially created binary classification dataset. The results are not
-deterministic so we need to evaluate each configuration multiple times
+We optimize a GradientBoosting on an artificially created binary classification dataset.
+The results are not deterministic so we need to evaluate each configuration
+multiple times.
 
 To evaluate undeterministic function, we need to set "deterministic" as "false".
-Besides 'cfg', the function needs to receive an additional parameter:
- - *seed*, random seed.
+Additional to the configuration, the function should make use of the seed parameter as well.
 """
 
 import logging
@@ -22,7 +20,6 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from sklearn.datasets import make_hastie_10_2
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import KFold
 
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
@@ -40,11 +37,10 @@ y_train, y_test = y[:8400], y[8400:]
 
 # Gradient Boosting scored with cross validation
 def xgboost_from_cfg(cfg, seed=0):
-    print(cfg)
-    print(seed)
+    # TODO: Do we need seed at all?
     clf = GradientBoostingClassifier(**cfg, random_state=0).fit(X_train, y_train)
-    cv = KFold(n_splits=5, shuffle=True, random_state=seed)
     scores = cross_val_score(clf, X_train, y_train)
+
     return 1 - np.mean(scores)
 
 
@@ -65,22 +61,24 @@ if __name__ == "__main__":
     subsample = UniformFloatHyperparameter("subsample", 0.5, 1, default_value=0.8)
     cs.add_hyperparameter(subsample)
 
-    print("default cross validation score: %.2f" % (xgboost_from_cfg(cs.get_default_configuration())))
+    print("Default cross validation score: %.2f" % (xgboost_from_cfg(cs.get_default_configuration())))
     cfg = cs.get_default_configuration()
     clf = GradientBoostingClassifier(**cfg, random_state=0).fit(X_train, y_train)
     def_test_score = 1 - clf.score(X_test, y_test)
-    print("default test score: %.2f" % def_test_score)
+    print("Default test score: %.2f" % def_test_score)
 
     # scenario object
-    scenario = Scenario({"run_obj": "quality",
-                        "runcount-limit": 100,
-                         "cs": cs,
-                         "deterministic": "false", # the evaluations are not deterministic,we need to repeat each
-                         # configuration several times and take the mean value of these repetitions
-                         "wallclock_limit": 120,
-                         "maxR": 3, # Each configuration will be evaluated maximal 3 times with various seeds
-                         "minR": 1, # Each configuration will be repeated at least 1 time with different seeds
-                         })
+    scenario = Scenario({
+        "run_obj": "quality",
+        "runcount-limit": 100,
+        "cs": cs,
+        # the evaluations are not deterministic, we need to repeat each
+        # configuration several times and take the mean value of these repetitions
+        "deterministic": "false",
+        "wallclock_limit": 120,
+        "maxR": 3,  # Each configuration will be evaluated maximal 3 times with various seeds
+        "minR": 1,  # Each configuration will be repeated at least 1 time with different seeds
+    })
 
     smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(0), tae_runner=xgboost_from_cfg)
 

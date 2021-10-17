@@ -39,3 +39,6 @@ Glossary
 
     PCS
         ConfigurationSpace can be written/read from a PCS file.
+
+    Intensification
+        ...

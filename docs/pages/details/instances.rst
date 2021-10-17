@@ -44,11 +44,4 @@ follows:
       ...
     })
 
-Lastly, here are some more examples to incorporate instances in your code:
-
-:ref:`add_correct_links here`
-
-- `SMAC4MF SGD <https://github.com/automl/SMAC3/blob/master/examples/SMAC4MF/SMAC4MF_sgd_example.py>`_
-- `SMAC4MF MLP <https://automl.github.io/SMAC3/master/examples/SMAC4MF/SMAC4MF_mlp_example.html#sphx-glr-examples-smac4mf-smac4mf-mlp-example-py`_
-- `Spear <https://github.com/automl/SMAC3/tree/master/examples/quickstart/spear_qcp`_
 

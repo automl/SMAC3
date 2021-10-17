@@ -16,7 +16,7 @@ SMAC is tested on Linux and Mac (Intel) machines with python 3.7, 3.8, and 3.9.
 
 .. warning::
     When using Mac, make sure ``smac.optimize`` is
-    wrapped inside a ``if __name__ == "__main__"``.
+    wrapped inside ``if __name__ == "__main__"``.
 
 Anaconda
 ~~~~~~~~

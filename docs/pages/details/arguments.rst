@@ -1,18 +1,14 @@
 Arguments
 =========
 
-Python
-~~~~~~
+If you are using Python, have a look :ref:`here<smac.facade package>` for a detailed API reference. When
+using the comamndline, view the basic command options via 
 
-Depending on your facade, you have different options. Please have a look into the API reference for
-further information.
+.. code-block::
 
+    python smac.py --help
 
-Commandline
-~~~~~~~~~~~
-
-In addition to the basic command line options described in :ref:`Basic Usage`, all other options are
-displayed here:
+or view all other options in the following:
 
 
 Main Options

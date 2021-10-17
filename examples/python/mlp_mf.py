@@ -1,6 +1,6 @@
-'''
-Multi-Layer Perceptron with Multi-Fidelity
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""
+MLP with Multi-Fidelity
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the SMAC4MF facade is a good choice. By default,
@@ -9,8 +9,10 @@ aggressive racing mechanism and successive halving.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
-'''
+"""
 
+import logging
+logging.basicConfig(level=logging.INFO)
 
 import warnings
 import numpy as np

@@ -17,7 +17,8 @@ To run this example in the terminal, execute:
 
     cd examples/commandline
     python ../../scripts/smac.py --scenario scenario.txt
-    
+
+
 Inside the scenario, this file and also ``configspace.pcs`` is referenced and therefore used
 for the optimization. A full call by SMAC looks like this:
 
@@ -25,6 +26,7 @@ for the optimization. A full call by SMAC looks like this:
 
     <algo>           <instance> <instance specific> <cutoff time>  <runlength> <seed> <parameters>
     python branin.py 0          0                   9999999        0           12345  -x1 0 -x2 0
+
 
 Since SMAC processes results from the commandline, print-statements are
 crucial. The format of the results must be the following to ensure correct usage:
@@ -39,8 +41,6 @@ crucial. The format of the results must be the following to ensure correct usage
 
     import sys
     import numpy as np
-
-    from branin import branin
 
     __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
     __license__ = "3-clause BSD"

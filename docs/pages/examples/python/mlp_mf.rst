@@ -1,14 +1,14 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_pages_examples_python_mlp.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_pages_examples_python_mlp_mf.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_pages_examples_python_mlp.py:
+.. _sphx_glr_pages_examples_python_mlp_mf.py:
 
 
-Multi-Layer Perceptron with Multi-Fidelity
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+MLP with Multi-Fidelity
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the SMAC4MF facade is a good choice. By default,
@@ -22,6 +22,8 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 .. code-block:: default
 
 
+    import logging
+    logging.basicConfig(level=logging.INFO)
 
     import warnings
     import numpy as np
@@ -181,7 +183,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
    **Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
-.. _sphx_glr_download_pages_examples_python_mlp.py:
+.. _sphx_glr_download_pages_examples_python_mlp_mf.py:
 
 
 .. only :: html
@@ -193,13 +195,13 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: mlp.py <mlp.py>`
+     :download:`Download Python source code: mlp_mf.py <mlp_mf.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: mlp.ipynb <mlp.ipynb>`
+     :download:`Download Jupyter notebook: mlp_mf.ipynb <mlp_mf.ipynb>`
 
 
 .. only:: html

@@ -14,8 +14,8 @@ reusing results from runhistories.
 
 .. warning::
 
-        When evaluating the cost via target-algorithm runs (no EPM), runs should be
-        reused from a given runhistory only on comparable hardware!
+      When evaluating the cost via target-algorithm runs (no EPM), runs should be
+      reused from a given runhistory only on comparable hardware!
 
 
 Python
@@ -26,9 +26,8 @@ optimization), the :class:`Validator <smac.utils.validate.Validator>` can be use
 methods, :meth:`validate <smac.utils.validate.Validator.validate>` and
 :meth:`validate_epm <smac.utils.validate.Validator.validate_epm>`. Both return runhistories
 containing results for all desired config/instance-pairs.
-To validate an actual :class:`*SMAC*-object <smac.facade.smac_ac_facade.SMAC4AC>`,
-it has its own method :meth:`validate <smac.facade.smac_ac_facade.SMAC4AC.validate>` within *SMAC*
-(see also: :ref:`SVM-example <svm-example>`).
+To validate an actual :class:`SMAC-object <smac.facade.smac_ac_facade.SMAC4AC>`,
+it has its own method :meth:`validate <smac.facade.smac_ac_facade.SMAC4AC.validate>` within SMAC.
 
 
 Commandline
@@ -36,7 +35,7 @@ Commandline
 
 .. code-block:: bash
 
-        python3 smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT [--configs CONFIG_MODE] [--instances INSTANCE_MODE] [--[no-]epm] [--runhistory RUNHISTORY] [--seed SEED] [--repetitions REPETITIONS] [--n_jobs N_JOBS] [--tae TAE]
+      python3 smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT [--configs CONFIG_MODE] [--instances INSTANCE_MODE] [--[no-]epm] [--runhistory RUNHISTORY] [--seed SEED] [--repetitions REPETITIONS] [--n_jobs N_JOBS] [--tae TAE]
 
 
 Required:

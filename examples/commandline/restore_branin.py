@@ -6,11 +6,12 @@ budget. This will also work for SMAC runs that have crashed and are continued.
 
 """
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 import os
-import shutil
 
 from smac.facade.smac_ac_facade import SMAC4AC
-
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
@@ -26,7 +27,7 @@ if "__main__" == __name__:
     # Initialize scenario, using runcount_limit as budget.
     origiginal_scenario_dict = {
         'algo': 'python branin.py',
-        'paramfile': 'configspace.pcs',
+        'paramfile': 'branin/configspace.pcs',
         'run_obj': 'quality',
         'runcount_limit': 25,
         'deterministic': True,
@@ -84,7 +85,7 @@ if "__main__" == __name__:
     # Because we changed the output_dir, we might want to copy the old
     # trajectory-file (runhistory and stats will be complete, but trajectory is
     # written sequentially)
-    #new_traj_path = os.path.join(new_scenario.output_dir, "run_1", "traj_aclib2.json")
-    #shutil.copy(traj_path, new_traj_path)
+    # new_traj_path = os.path.join(new_scenario.output_dir, "run_1", "traj_aclib2.json")
+    # shutil.copy(traj_path, new_traj_path)
 
     smac.optimize()

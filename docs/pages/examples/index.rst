@@ -75,13 +75,13 @@ Python
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
+    <div class="sphx-glr-thumbcontainer" tooltip="We optimize the SPEAR algorithm on QCP to demonstrate the powerful SMAC4AC facade. Algorithm an...">
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_mlp_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_spear_mf_instances_thumb.png
 
-     :ref:`sphx_glr_pages_examples_python_mlp.py`
+     :ref:`sphx_glr_pages_examples_python_spear_mf_instances.py`
 
 .. raw:: html
 
@@ -91,7 +91,107 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/mlp
+   /pages/examples/python/spear_mf_instances
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_synthetic_function_thumb.png
+
+     :ref:`sphx_glr_pages_examples_python_synthetic_function.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/synthetic_function
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We optimize a GradientBoosting on an artificially created binary classification dataset. The re...">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_gb_non_deterministic_thumb.png
+
+     :ref:`sphx_glr_pages_examples_python_gb_non_deterministic.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/gb_non_deterministic
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed for hyperparame...">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_svm_cv_thumb.png
+
+     :ref:`sphx_glr_pages_examples_python_svm_cv.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/svm_cv
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="TODO: Rewrite text.">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_sgd_instances_thumb.png
+
+     :ref:`sphx_glr_pages_examples_python_sgd_instances.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/sgd_instances
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_mlp_mf_thumb.png
+
+     :ref:`sphx_glr_pages_examples_python_mlp_mf.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/mlp_mf
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

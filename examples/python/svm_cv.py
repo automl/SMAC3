@@ -1,23 +1,15 @@
 """
-========================================================
-Optimize the hyperparameters of a support vector machine
-========================================================
+SVM with Cross-Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example for the usage of SMAC within Python.
-We optimize a simple SVM on the IRIS-benchmark.
-We evaluate each configuration once.
+An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed
+for hyperparameter optimization (HPO) problems and uses an RF as its surrogate model. 
+It is able to scale to higher evaluation budgets (more than 1000) and higher number of
+dimensions. Also, you can use mixed data types as well as conditional hyperparameters.
 
-SMAC4HPO is designed for hyperparameter optimization (HPO) problems.
+SMAC4HPO by default only contains single fidelity approach. Therefore, only the configuration is
+processed by the :term:`TAE`.
 
-SMAC4HPO uses an RF as its surrogate model. It is able to scale to higher evaluation budgets (more than 1000)
-and higher number of dimensions. It is recommended to apply SMAC4HPO to mixed data types as well as conditional
-hyperparameters.
-
-SMAC4HPO by default only contains single fidelity approach. Typical functions optimized by SMAC4HPO
-requires the following inputs:
- - *cfg*, the input configuration.
-
-Note: SMAC-documentation uses linenumbers to generate docs from this file.
 """
 
 import logging
@@ -25,15 +17,13 @@ logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.conditions import InCondition
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import \
+    CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
 from sklearn import svm, datasets
 from sklearn.model_selection import cross_val_score
 
-# Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
-# Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -77,9 +67,10 @@ if __name__ == "__main__":
     cs = ConfigurationSpace()
 
     # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
-    kernel = CategoricalHyperparameter("kernel",
-                                       ["linear", "rbf", "poly", "sigmoid"],
-                                       default_value="poly")
+    kernel = CategoricalHyperparameter(
+        "kernel",
+        ["linear", "rbf", "poly", "sigmoid"],
+        default_value="poly")
     cs.add_hyperparameter(kernel)
 
     # There are some hyperparameters shared by all kernels
@@ -111,10 +102,11 @@ if __name__ == "__main__":
     cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
 
     # Scenario object
-    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                         "runcount-limit": 50,  # max. number of function evaluations
-                         "cs": cs,  # configuration space
-                         "deterministic": "true"})
+    scenario = Scenario({
+        "run_obj": "quality",  # we optimize quality (alternatively runtime)
+        "runcount-limit": 50,  # max. number of function evaluations
+        "cs": cs,  # configuration space
+        "deterministic": "true"})
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -123,17 +115,18 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42),
+    smac = SMAC4HPO(scenario=scenario,
+                    rng=np.random.RandomState(42),
                     tae_runner=svm_from_cfg)
 
     incumbent = smac.optimize()
 
     inc_value = svm_from_cfg(incumbent)
-
     print("Optimized Value: %.2f" % (inc_value))
 
     # We can also validate our results (though this makes a lot more sense with instances)
-    smac.validate(config_mode='inc',  # We can choose which configurations to evaluate
-                  # instance_mode='train+test',  # Defines what instances to validate
-                  repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
-                  n_jobs=1)  # How many cores to use in parallel for optimization
+    smac.validate(
+        config_mode='inc',  # We can choose which configurations to evaluate
+        # instance_mode='train+test',  # Defines what instances to validate
+        repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
+        n_jobs=1)  # How many cores to use in parallel for optimization

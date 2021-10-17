@@ -42,24 +42,27 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'numpydoc',
-    'sphinx.ext.autodoc',
+    # 'sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',  # use :ref:`` on all headlines
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',
     # 'sphinx.ext.viewcode',
-    # 'sphinx.ext.autosummary',
     # 'sphinx.ext.napoleon',
+    # 'autoapi.extension',
+    # 'numpydoc',
+    # 'sphinx.ext.autosummary',
     'sphinx_gallery.gen_gallery',
-    # 'autoapi.extension'
     'smac_theme',
 ]
+
+autoapi_type = 'python'
+autoapi_dirs = ['../smac']
 
 numpydoc_show_class_members = False
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['templates', '_templates']
+# templates_path = ['templates', '_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -140,12 +143,12 @@ html_theme = 'smac'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    # Insert options
-    # 'collapse_navigation': False,
-    # 'includehidden': False,
-    # 'titles_only': True,
-}
+# html_theme_options = {
+# Insert options
+# 'collapse_navigation': False,
+# 'includehidden': False,
+# 'titles_only': True,
+# }
 
 # Add any paths that contain custom themes here, relative to this directory.
 html_theme_path = ['themes']
@@ -235,30 +238,30 @@ html_logo = "images/SMAC3.png"
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SMAC3doc'
+# htmlhelp_basename = 'SMAC3doc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    # 'papersize': 'letterpaper',
+# latex_elements = {
+# The paper size ('letterpaper' or 'a4paper').
+# 'papersize': 'letterpaper',
 
-    # The font size ('10pt', '11pt' or '12pt').
-    # 'pointsize': '10pt',
+# The font size ('10pt', '11pt' or '12pt').
+# 'pointsize': '10pt',
 
-    # Additional stuff for the LaTeX preamble.
-    # 'preamble': '',
+# Additional stuff for the LaTeX preamble.
+# 'preamble': '',
 
-    # Latex figure (float) alignment
-    # 'figure_align': 'htbp',
-}
+# Latex figure (float) alignment
+# 'figure_align': 'htbp',
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    # (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.__author__, 'manual'),
-]
+# latex_documents = [
+# (master_doc, 'SMAC3.tex', u'SMAC3 Documentation', smac.__author__, 'manual'),
+# ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
@@ -285,10 +288,10 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    # (master_doc, 'smac3', u'SMAC3 Documentation',
-    # [author], 1)
-]
+# man_pages = [
+# (master_doc, 'smac3', u'SMAC3 Documentation',
+# [author], 1)
+# ]
 
 # If true, show URL addresses after external links.
 #man_show_urls = False
@@ -299,11 +302,11 @@ man_pages = [
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    # (master_doc, 'SMAC3', u'SMAC3 Documentation',
-    # author, 'SMAC3', 'One line description of project.',
-    # 'Miscellaneous'),
-]
+# texinfo_documents = [
+# (master_doc, 'SMAC3', u'SMAC3 Documentation',
+# author, 'SMAC3', 'One line description of project.',
+# 'Miscellaneous'),
+# ]
 
 # Documents to append as an appendix to all manuals.
 #texinfo_appendices = []
@@ -325,33 +328,13 @@ cmd_reader.write_main_options_to_doc()
 cmd_reader.write_smac_options_to_doc()
 cmd_reader.write_scenario_options_to_doc()
 
-from sphinx_gallery.sorting import ExplicitOrder
-
 # Sphinx-gallery configuration.
 sphinx_gallery_conf = {
-    # disable mini galleries clustered by the used functions
-    # 'backreferences_dir': None,
     # path to the examples
     'examples_dirs': '../examples',
-
-    # Ordering
-    # 'subsection_order': ExplicitOrder(['../examples/quickstart',
-    #                                   '../examples/function_minimization',
-    #                                   '../examples/parallel',
-    #                                   '../examples/SMAC4HPO',
-    #                                   '../examples/SMAC4BB',
-    #                                   '../examples/SMAC4MF',
-    #                                   '../examples/hyperband']),
-    # path where to save gallery generated examples
     'gallery_dirs': 'pages/examples',
     'show_signature': 'False',
     'show_memory': 'False',
     'plot_gallery': 'False',
-    # compile execute examples in the examples dir
-    # 'filename_pattern': '.*example.py$|.*tutorial.py$',
-    # TODO: fix back/forward references for the examples.
-    'ignore_pattern': '.*pcs$|.*scenario.txt$|.*_restore_state.py$',
-    # '.*_func.py'
-    # '*scenario.txt'
-
+    'ignore_pattern': '.*pcs$|.*scenario.txt$|.*spear_qcp$'
 }
