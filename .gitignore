@@ -15,6 +15,10 @@ dist
 runhistory.json
 target_algo_runs.json
 
+# Example outputs
+examples/*restored
+examples/*restore_me
+
 # Other
 .tox
 .pypirc

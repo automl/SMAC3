@@ -350,5 +350,8 @@ sphinx_gallery_conf = {
     # compile execute examples in the examples dir
     # 'filename_pattern': '.*example.py$|.*tutorial.py$',
     # TODO: fix back/forward references for the examples.
-    # 'ignore_pattern': '.*_func.py'
+    'ignore_pattern': '.*pcs$|.*scenario.txt$|.*_restore_state.py$',
+    # '.*_func.py'
+    # '*scenario.txt'
+
 }

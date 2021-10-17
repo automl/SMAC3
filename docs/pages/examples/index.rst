@@ -7,7 +7,8 @@
 Examples
 ========
 
-Blublub...
+We provide several examples for both python and commandline. Practical use-cases were chosen to show the
+variety of SMAC.
 
 .. raw:: html
 
@@ -20,18 +21,16 @@ Blublub...
 Commandline
 ~~~~~~~~~~~
 
-commandline
-
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example doesn&#x27;t do much, it just makes a simple plot">
+    <div class="sphx-glr-thumbcontainer" tooltip="This file is a wrapper used by SMAC to optimize parameters on the branin function. To run this ...">
 
 .. only:: html
 
- .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_example1_thumb.png
+ .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_branin_thumb.png
 
-     :ref:`sphx_glr_pages_examples_commandline_example1.py`
+     :ref:`sphx_glr_pages_examples_commandline_branin.py`
 
 .. raw:: html
 
@@ -41,7 +40,27 @@ commandline
 .. toctree::
    :hidden:
 
-   /pages/examples/commandline/example1
+   /pages/examples/commandline/branin
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Restore Branin">
+
+.. only:: html
+
+ .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_restore_branin_thumb.png
+
+     :ref:`sphx_glr_pages_examples_commandline_restore_branin.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/commandline/restore_branin
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
@@ -53,18 +72,16 @@ commandline
 Python
 ~~~~~~
 
-blublub
-
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example doesn&#x27;t do much, it just makes a simple plot">
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ...">
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_example2_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_mlp_thumb.png
 
-     :ref:`sphx_glr_pages_examples_python_example2.py`
+     :ref:`sphx_glr_pages_examples_python_mlp.py`
 
 .. raw:: html
 
@@ -74,27 +91,7 @@ blublub
 .. toctree::
    :hidden:
 
-   /pages/examples/python/example2
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="- Short description of the usecase - What is covered in the example? - Why is the facade chosen...">
-
-.. only:: html
-
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_rosenbrock_thumb.png
-
-     :ref:`sphx_glr_pages_examples_python_rosenbrock.py`
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-   /pages/examples/python/rosenbrock
+   /pages/examples/python/mlp
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
