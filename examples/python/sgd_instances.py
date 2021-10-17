@@ -2,23 +2,16 @@
 SGD on Instances
 ^^^^^^^^^^^^^^^^
 
-TODO: Rewrite text.
+Example for optimizing a Multi-Layer Perceptron (MLP) using multiple instances.
 
-An example for the usage of multi instances optimization.
-
-An instance could mean one fold in a cross-validation task or one dataset when you aim at optimizing the mean
-performance across different datasets. By applying multi-fidelity optimization, we do not need to evaluate each
-configuration on all the instances. This example shows you how to use a Hyperband intensifier in SMAC with multiple
-instances. We optimize a SGD classifier on the digits dataset as multiple binary classification problems
-using "Hyperband" intensification. We split the digits dataset (10 classes) into 45 binary datasets.
-
-In this example, we use instances as the budget in hyperband and optimize the average cross
-validation accuracy. An "Instance" represents a specific scenario/condition (eg: different datasets,
-subsets, transformations) for the algorithm to run. SMAC then returns the algorithm that had the
-best performance across all the instances. In this case, an instance is a binary dataset i.e.,
+Alternative to "budgets", here we consider "instances" as a fidelity type. An "Instance" represents a specific
+scenario/condition (eg: different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
+algorithm that had the best performance across all the instances. In this case, an instance is a binary dataset i.e.,
 digit-2 vs digit-3.
-"""
 
+If we use instance as our fidelity, we need to initialize "scenario" with argument "instance". In this case the argument
+"budget" is no longer required by the target function.
+"""
 
 import logging
 logging.basicConfig(level=logging.INFO)

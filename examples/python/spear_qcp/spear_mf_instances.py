@@ -20,7 +20,7 @@ __license__ = "3-clause BSD"
 
 
 if __name__ == '__main__':
-    scenario = Scenario('scenario.txt')
+    scenario = Scenario('./scenario.txt')
 
     # provide arguments for the intensifier like this
     intensifier_kwargs = {

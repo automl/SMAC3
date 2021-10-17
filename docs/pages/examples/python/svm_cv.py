@@ -3,7 +3,7 @@ SVM with Cross-Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed
-for hyperparameter optimization (HPO) problems and uses an RF as its surrogate model. 
+for hyperparameter optimization (HPO) problems and uses an RF as its surrogate model.
 It is able to scale to higher evaluation budgets (more than 1000) and higher number of
 dimensions. Also, you can use mixed data types as well as conditional hyperparameters.
 
