@@ -36,7 +36,7 @@ On the command line an exemplary call could be:
 
         python3 smac --scenario SCENARIO --seed INT --shared_model True --input_psmac_dirs smac3-output*
 
-If you want to verify that all arguments are correct and pSMAC finds all file on the file space,
+If you want to verify that all arguments are correct and pSMAC finds all files on the file space,
 please set the ``verbose`` level to DEBUG and grep in the following way:
 
 .. code-block:: bash

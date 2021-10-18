@@ -71,7 +71,7 @@ These can be installed from PyPI or manually:
 
     pip install .[gp,lhd]
 
-For convenience, there is also an all meta-dependency that installs all optional dependencies:
+For convenience, there is also an all meta-dependency that installs ``all`` optional dependencies:
 
 .. code-block::
 

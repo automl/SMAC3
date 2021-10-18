@@ -20,8 +20,8 @@ The following code optimizes the depth of a random forest:
 
     def train_random_forest(config):
         """ 
-        Trains a random forest on the given hyperparameters, defined by config, and returns the accuracy
-        on the validation data.
+        Train a random forest model on a single given hyperparameter configuration,
+        defined by config and return the accuracy on the validation data.
 
         Input:
             config (Configuration): Configuration object derived from ConfigurationSpace.

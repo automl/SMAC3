@@ -13,7 +13,7 @@ The target algorithm is called with a dict- or array-like configuration and opti
 with seed and instance, returning either the loss as a float or a tuple (loss,
 additional information). This is very handy when used within Python to
 optimize any blackbox-function. Using this TAE, there is no need to print a
-result string; the error will be interpreted from the return value. With this TAE, `Pynisher <https://github.com/sfalkner/pynisher>`_ is used to
+result string; the error will be interpreted from the return object. With this TAE, `Pynisher <https://github.com/sfalkner/pynisher>`_ is used to
 enforce time- and memory-limits.
 
 .. warning::

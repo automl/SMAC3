@@ -24,7 +24,7 @@ Global optimizer
     :term:`Bayesian Optimization<BO>` is used for sample-efficient optimization.
 
 Optimize :term:`Black-Box<BB>` functions
-    Works if only input and output are given.
+    Optimization is only aware of input and output. It is agnostic to internals of the function.
 
 Flexible hyperparameters
     Use categorical, continuous or hierarchical hyperparameters. SMAC can optimize up to 100

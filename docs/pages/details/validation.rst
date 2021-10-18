@@ -5,7 +5,7 @@ During optimization, SMAC does not automatically evaluate all configurations on 
 The :mod:`validate-module <smac.utils.validate>` provides a convenient
 way to do this after a configuration run is finished. You can specify a set of configurations and a set of instances,
 whereupon the validator will run every configuration on every instance. This is
-either done by calling the target algorithm - or it is estimated using an EPM.
+either done by calling the target algorithm or it is estimated using an EPM.
 This functionality can be important when comparing default and incumbent, giving
 a best estimate of the actual quality of the incumbent or investigating the
 quality of the incumbents founds over the time of the optimization.
