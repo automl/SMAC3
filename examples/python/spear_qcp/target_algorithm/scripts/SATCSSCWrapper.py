@@ -101,7 +101,7 @@ class SatCSSCWrapper(AbstractWrapper):
                                  default=None,
                                  help="File with \"<instance> {SATISFIABLE|UNSATISFIABLE|UNKNOWN}\" ")
         self.parser.add_argument("--sat-checker", dest="sat_checker",
-                                 default="./target_algorithms/sat/scripts/SAT",
+                                 default="./spear_qcp/target_algorithms/scripts/SAT",
                                  help="binary of SAT checker")
 
         self._instance = ""
