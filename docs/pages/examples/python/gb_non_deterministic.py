@@ -4,9 +4,10 @@ Non-Deterministic Gradient-Boosting
 
 We optimize a GradientBoosting on an artificially created binary classification dataset.
 The results are not deterministic so we need to evaluate each configuration
-multiple times.
+multiple times. To ensure fair comparison, SMAC will only sample from a fixed set of random seeds and apply them to
+control the randomness of the function to be evaluated.
 
-To evaluate undeterministic function, we need to set "deterministic" as "false".
+To evaluate undeterministic functions, we need to set "deterministic" as "false".
 Additional to the configuration, the function should make use of the seed parameter as well.
 """
 
@@ -20,6 +21,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter, UniformInteg
 from sklearn.datasets import make_hastie_10_2
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
 
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
@@ -37,11 +39,23 @@ y_train, y_test = y[:8400], y[8400:]
 
 # Gradient Boosting scored with cross validation
 def xgboost_from_cfg(cfg, seed=0):
-    # TODO: Do we need seed at all?
-    clf = GradientBoostingClassifier(**cfg, random_state=0).fit(X_train, y_train)
-    scores = cross_val_score(clf, X_train, y_train)
+    # use random seed to control the randomness of the model and cross validator
+    clf = GradientBoostingClassifier(**cfg, random_state=seed).fit(X_train, y_train)
+    cv = KFold(n_splits=5, shuffle=True, random_state=seed)
+    scores = cross_val_score(clf, X_train, y_train, cv=cv)
 
     return 1 - np.mean(scores)
+
+
+def eval_undeterministic_model(cfg, seeds):
+    # Evaluate an undeterminstic model with the given configuration and a seed pool
+    cfg_cv_scores = [0.] * len(run_seeds)
+    cfg_test_scores = [0.] * len(run_seeds)
+    for i, seed in enumerate(seeds):
+        cfg_cv_scores[i] = xgboost_from_cfg(cfg, seed=seed)
+        clf = GradientBoostingClassifier(**cfg, random_state=seed).fit(X_train, y_train)
+        cfg_test_scores[i] = 1 - clf.score(X_test, y_test)
+    return cfg_cv_scores, cfg_test_scores
 
 
 if __name__ == "__main__":
@@ -80,14 +94,31 @@ if __name__ == "__main__":
         "minR": 1,  # Each configuration will be repeated at least 1 time with different seeds
     })
 
-    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(0), tae_runner=xgboost_from_cfg)
+    intensifier_kwargs = {
+        "maxR": 3,  # Each configuration will be evaluated maximal 3 times with various seeds
+        "minR": 1,  # Each configuration will be repeated at least 1 time with different seeds
+    }
 
-    # the optimization process is called
+    smac = SMAC4HPO(scenario=scenario,
+                    rng=np.random.RandomState(0),
+                    intensifier_kwargs=intensifier_kwargs,
+                    tae_runner=xgboost_from_cfg)
+
     incumbent = smac.optimize()
 
-    # a classifier is trained with the hyperparameters returned from the optimizer
-    clf_incumbent = GradientBoostingClassifier(**incumbent, random_state=0).fit(X_train, y_train)
+    # get all the seeds applied to incumbent
+    run_seeds = []
+    for inst_seed_budget in smac.get_runhistory().get_runs_for_config(incumbent, only_max_observed_budget=True):
+        run_seeds.append(inst_seed_budget.seed)
 
-    # evaluated on test
-    inc_value_1 = 1 - clf_incumbent.score(X_test, y_test)
-    print("Score on test set: %.2f" % (inc_value_1))
+    cfg_default = cs.get_default_configuration()
+
+    cfg_default_cv_scores, cfg_default_test_scores = eval_undeterministic_model(cfg_default, seeds=run_seeds)
+
+    print("Default cross validation score: %.2f" % (np.mean(cfg_default_cv_scores)))
+    print("Default test score: %.2f" % np.mean(cfg_default_test_scores))
+
+    # the optimization process is called
+    cfg_inc_cv_scores, cfg_inc_test_scores = eval_undeterministic_model(cfg_default, seeds=run_seeds)
+    # a classifier is trained with the hyperparameters returned from the optimizer
+    print("Score on test set: %.2f" % np.mean(cfg_inc_test_scores))

@@ -129,7 +129,7 @@ class AbstractWrapper(object):
                                      help="""directory for temporary files (relative to -exec-dir in SMAC scenario).
                                              If 'NONE' use $TMPDIR if available, otherwise './'""")
             self.parser.add_argument("--temp-file-dir-algo", dest="tmp_dir_algo",
-                                     default=True,  # TODO: set default to False
+                                     default=False,
                                      type=bool,
                                      help="create a directory for temporary files from target algo")
             self.parser.add_argument("--mem-limit", dest="mem_limit",
