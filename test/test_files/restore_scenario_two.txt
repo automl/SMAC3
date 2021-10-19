@@ -1,5 +1,6 @@
-paramfile = examples/quickstart/branin/param_config_space.pcs
+paramfile = examples/commandline/branin/configspace.pcs
 run_obj = quality
 runcount_limit = 10
 output_dir = test/test_files/test_restored_state
-algo = python examples/quickstart/branin/cmdline_wrapper.py
+algo = python examples/quickstart/branin/branin.py
+
