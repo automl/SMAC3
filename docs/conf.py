@@ -17,7 +17,8 @@ import sys
 import os
 import shlex
 
-sys.path.insert(0, '..')
+#sys.path.insert(0, '..')
+sys.path.insert(0, os.path.abspath('..'))
 import smac
 from smac.utils.io.cmd_reader import CMDReader
 
@@ -42,8 +43,23 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
+    # 'sphinx.ext.coverage',
+    # 'sphinx.ext.mathjax',
+    # 'sphinx.ext.viewcode',
+    # 'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',  # Enables to understand NumPy docstring
+    'sphinx_gallery.gen_gallery',
+
+    'smac_theme',
+
+
+
     # 'sphinx.ext.autodoc',
-    'sphinx.ext.autosectionlabel',  # use :ref:`` on all headlines
+    # 'sphinx.ext.autosectionlabel',  # use :ref:`` on all headlines
     # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',
@@ -52,14 +68,15 @@ extensions = [
     # 'autoapi.extension',
     # 'numpydoc',
     # 'sphinx.ext.autosummary',
-    'sphinx_gallery.gen_gallery',
-    'smac_theme',
+    # 'sphinx_gallery.gen_gallery',
+    # 'smac_theme',
 ]
 
-autoapi_type = 'python'
-autoapi_dirs = ['../smac']
+#autoapi_type = 'python'
+#autoapi_dirs = ['../smac']
 
-numpydoc_show_class_members = False
+#numpydoc_show_class_members = False
+autosectionlabel_maxdepth = 1
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['templates', '_templates']
@@ -73,7 +90,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'pages/index'
 
 # General information about the project.
 project = u'SMAC3 Documentation'

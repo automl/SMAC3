@@ -155,7 +155,7 @@ Python
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="TODO: Rewrite text.">
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple instances.">
 
 .. only:: html
 

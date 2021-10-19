@@ -21,7 +21,7 @@ class Stats(object):
     All statistics collected during configuration run.
     Written to output-directory to be restored
 
-    Attributes
+    Parameters
     ----------
     submitted_ta_runs
     finished_ta_runs

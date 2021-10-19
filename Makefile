@@ -3,23 +3,16 @@
 test:
 	pytest -v --cov=smac test --durations=20
 
-.PHONY: doc
+.PHONY: docs
 doc:
 	make -C doc clean
 	make -C doc buildapi
-	make -C doc html-noplot
-	make -C doc linkcheck
-
-.PHONY: doc-with-examples
-doc-with-examples:
-	make -C doc clean
-	make -C doc buildapi
 	make -C doc html
-	make -C doc linkcheck
 
 .PHONY: clean
-clean: clean-data
-	make -C doc clean
+clean:
+	clean-data
+	make -C docs clean
 
 .PHONY: clean-data
 clean-data:

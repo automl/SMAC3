@@ -515,6 +515,7 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
     """TODO"""
+
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
         super().__init__(**kwargs)
         if self.instance_features is not None:
@@ -549,6 +550,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
     """TODO"""
+
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
         super().__init__(**kwargs)
         if self.instance_features is not None:
