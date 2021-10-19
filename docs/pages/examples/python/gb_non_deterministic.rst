@@ -12,9 +12,10 @@ Non-Deterministic Gradient-Boosting
 
 We optimize a GradientBoosting on an artificially created binary classification dataset.
 The results are not deterministic so we need to evaluate each configuration
-multiple times.
+multiple times. To ensure fair comparison, SMAC will only sample from a fixed set of random seeds and apply them to
+control the randomness of the function to be evaluated.
 
-To evaluate undeterministic function, we need to set "deterministic" as "false".
+To evaluate undeterministic functions, we need to set "deterministic" as "false".
 Additional to the configuration, the function should make use of the seed parameter as well.
 
 

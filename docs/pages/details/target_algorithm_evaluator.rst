@@ -59,7 +59,7 @@ Finally, pass your function to your SMAC facade:
 Commandline
 -----------
 
-When using the commandline, SMAC takes the algorithm call from the ``algo``parameter of the
+When using the commandline, SMAC takes the algorithm call from the ``algo`` parameter of the
 :ref:`scenario<Scenario>`. The parameters will be appended to the algorithm call, which in total
 looks like:
 
@@ -81,7 +81,7 @@ It expects the target algorithm to print a string during execution with on of th
   Result for SMAC: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
   Result for ParamILS: <STATUS>, <running time>, <runlength>, <quality>, <seed>, <instance-specifics>
 
-The example :ref:`Commandline <commandline-example>`reflect the usage.
+The example :ref:`Branin` reflect the usage.
 
 * **STATUS** can be one of [SAT, UNSAT, SUCCESS, TIMEOUT, MEMOUT, CRASHED, ABORT]. SAT and UNSAT are mainly supported for backcompatibility and are treated as SUCCESS. The difference between CRASHED and ABORT is that ABORT is called when all future calls are assumed to crash and will abort the whole optimization, whereas CRASHED only indicates a single failed run.
 * **running time** indicates the time that the execution took.

@@ -31,7 +31,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
 
 
     if __name__ == '__main__':
-        scenario = Scenario('scenario.txt')
+        scenario = Scenario('./spear_qcp/scenario.txt')
 
         # provide arguments for the intensifier like this
         intensifier_kwargs = {

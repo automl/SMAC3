@@ -5,12 +5,13 @@ Home
    :hidden:
    :maxdepth: 2
 
-   pages/getting_started/index
-   pages/examples/index
-   pages/details/index
-   pages/glossary
-   pages/faq
-   pages/license
+   getting_started/index
+   examples/index
+   details/index
+   api/index
+   glossary
+   faq
+   license
 
 
 SMAC is a tool for algorithm configuration to optimize the parameters of
