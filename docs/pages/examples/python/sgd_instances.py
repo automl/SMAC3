@@ -8,6 +8,13 @@ Alternative to "budgets", here we consider "instances" as a fidelity type. An "I
 scenario/condition (eg: different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
 algorithm that had the best performance across all the instances. In this case, an instance is a binary dataset i.e.,
 digit-2 vs digit-3.
+<<<<<<< HEAD
+=======
+
+If we use instance as our fidelity, we need to initialize "scenario" with argument "instance". In this case the argument
+"budget" is no longer required by the target function.
+"""
+>>>>>>> 88d4ee98c59926022b4f64df745ac3967af7830d
 
 If we use instance as our fidelity, we need to initialize "scenario" with argument "instance". In this case the argument
 "budget" is no longer required by the target function.
