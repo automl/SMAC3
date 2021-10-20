@@ -15,6 +15,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e .[all]
+        pip install bs4
 
     - name: Make docs
       run: |

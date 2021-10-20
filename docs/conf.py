@@ -15,10 +15,9 @@
 import datetime
 import sys
 import os
-import shlex
 
-#sys.path.insert(0, '..')
-sys.path.insert(0, os.path.abspath('..'))
+sys.path.insert(0, '..')
+#sys.path.insert(0, os.path.abspath('..'))
 import smac
 from smac.utils.io.cmd_reader import CMDReader
 
