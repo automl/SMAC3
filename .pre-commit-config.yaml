@@ -6,7 +6,7 @@ repos:
         args: [--show-error-codes, --ignore-missing-imports, --disallow-untyped-decorators, --disallow-incomplete-defs, --disallow-untyped-defs, --follow-imports, skip]
         name: mypy SMAC
         files: smac/.*
-        
+
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.3
     hooks:

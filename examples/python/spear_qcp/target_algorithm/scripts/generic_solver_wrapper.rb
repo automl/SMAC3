@@ -35,7 +35,7 @@ seed = ARGV[5].to_i
 
 #=== Require solver-specific callstring file, and generate absolute paths.
 require File.expand_path("#{solver_directory_name}/callstring_generator.rb")
-$true_solubility_file = File.expand_path("./instances/sat/true_solubility.txt") 
+$true_solubility_file = File.expand_path("./instances/sat/true_solubility.txt")
 $orig_input_file = input_file
 runsolver_executable = File.expand_path("./target_algorithms/runsolver/runsolver")
 SAT_executable = File.expand_path("./target_algorithms/sat/scripts/SAT")
@@ -62,12 +62,12 @@ remainingArgs.each_index { |i|
 		param_value = param_value.gsub(/'/,"")
 		param_hashmap[param_name] = param_value
 	end
-}		
+}
 
 
-#=== If instance is zipped, unzip it. 
+#=== If instance is zipped, unzip it.
 created_instance_file=nil
-if input_file =~ /.bz2$/ 
+if input_file =~ /.bz2$/
 	instance_filename=" spear_instance#{rand}.cnf"
 	system "bunzip2 --stdout #{input_file} > #{instance_filename}"
 	created_instance_file=1
@@ -161,11 +161,11 @@ if solved == "SAT" # check the witness
 	File.open(tmp_checking_outfilename){|file|
 		while line = file.gets
 			if line =~ /Solution verified./
-				solved = "SAT" 
+				solved = "SAT"
 			end
 		end
 	}
-	
+
 end
 
 #=== Output for configurators.
