@@ -4,16 +4,21 @@
 * Option to use an own stopping strategy using `IncorporateRunResultCallback`.
 
 ## Major Changes
-* Changed scripts/smac to scripts/smac.py
+* Documentation was updated thoroughly. A new theme with a new structure is provided and all pages
+  have been updated. Also, the examples revised and up-to-date.
+* Changed scripts/smac to scripts/smac.py.
 
 ## Minor Changes
+* README.md updated.
 * Made smac-validate.py consistent with runhistory and tae.
+
 
 # 1.0.1
 
 ## Minor Changes
 * Added license information to every file.
 * Fixed a display bug inside usage recommendation. 
+
 
 # 1.0.0
 
@@ -39,6 +44,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Fixed warnings given during the doc build.
 * Fixed inconsistent output shape described in `smac.epm.gaussian_process.GaussianProcess.sample_functions`
 * Examples are wrapped inside `if __name__ == "__main__"`, fixing problems on mac.
+
 
 # 0.14.0
 
@@ -69,6 +75,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Separated evaluation from get next challengers in intensification (#734)
 * Doc fixes (#727, #714)
 
+
 # 0.13.1
 
 ## Minor Changes
@@ -78,6 +85,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 ## Bug fixes
 * Fix a bug which could make successive halving fail if run in parallel (#695).
 * Fix a bug which could cause hyperband to ignore the lowest budget (#701).
+
 
 # 0.13.0
 
@@ -97,6 +105,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Fix wrong initialization of list in local search (#680)
 * Fix setting random seed with a too small range in Latin Hypercube design (#688)
 
+
 # 0.12.3
 
 ## Minor Changes
@@ -110,6 +119,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
   hyperparameters (#666)
 * Fixes an issue in the Gaussian process MCMC which resulted in reduced execution speed and reduced performance (#666)
 
+
 # 0.12.2
 
 ## Bug Fixes
@@ -118,6 +128,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Correctly attributes the configurations' origin if using the `FixedSet` acquisition function optimizer (#653)
 * Fixes an infinite loop which could occur if using only a single configuration per iteration (#654)
 * Fixes a bug in the kernel construction of the `BOFacade` (#655)
+
 
 # 0.12.1
 
@@ -134,6 +145,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 ## Bug Fixes
 * Fixes a bug which caused SH/HB to consider TIMEOUTS on all budgets for model building (#632)
 * Fixed a bug in adaptive capping for SH (#619,#622)
+
 
 # 0.12.0
 
@@ -170,6 +182,7 @@ Since many urgent features were already taken care of in 0.14.0, this release ma
 * Fixes a bug with respect saving data as json (#555).
 * Better error message for a sobol initial design of size `>40` ( #564).
 * Add a missing return statement to `GaussianProcess._train`.
+
 
 # 0.11.1
 
