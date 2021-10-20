@@ -1,301 +1,398 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>smac.optimizer.random_configuration_chooser module &mdash; SMAC 1.0.1 documentation</title>
-  
 
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <title>smac.optimizer.random_configuration_chooser module &#8212; SMAC3 Documentation 1.1 documentation</title>
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
 
     
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.optimizer.smbo module" href="smac.optimizer.smbo.html" />
-    <link rel="prev" title="smac.optimizer.pSMAC module" href="smac.optimizer.pSMAC.html" /> 
-</head>
-
-<body class="wy-body-for-nav">
-
-   
-  <div class="wy-grid-for-nav">
+    <link rel="prev" title="smac.optimizer.pSMAC module" href="smac.optimizer.pSMAC.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
     
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-          
 
-          
-            <a href="../index.html" class="icon icon-home"> SMAC
-          
-
-          
-            
-            <img src="../_static/SMAC3.png" class="logo" alt="Logo"/>
-          
-          </a>
-
-          
-            
-            
-              <div class="version">
-                1.0.1
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../validation.html">Validation</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="smac.callbacks.html">smac.callbacks module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.optimizer.random_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory.html">smac.runhistory.runhistory module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
-</ul>
-
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">SMAC</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
+    <!-- Google Analytics -->
     
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../api.html">API Documentation</a> &raquo;</li>
-        
-          <li><a href="smac.optimizer.html">smac.optimizer package</a> &raquo;</li>
-        
-      <li>smac.optimizer.random_configuration_chooser module</li>
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
     
     
-      <li class="wy-breadcrumbs-aside">
-        
-          
-            <a href="../_sources/apidoc/smac.optimizer.random_configuration_chooser.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
+
+<a class="navbar-brand" href="../index.html">
+  <img src="../_static/SMAC3.png" class="logo" alt="logo">
+</a>
+
+
     
-  </ul>
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
   
-  <hr/>
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
             
-  <div class="section" id="module-smac.optimizer.random_configuration_chooser">
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+<div class="mb-3">v1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/getting_started/index.html">
+   Getting Started
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/installation.html">
+     Installation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/minimal_example.html">
+     Minimal Example
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/package_overview.html">
+     Package Overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/comparison.html">
+     Comparison
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/basic_usage.html">
+     Basic Usage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/branin.html">
+     Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/restore_branin.html">
+     Restore Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
+     SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/gb_non_deterministic.html">
+     Non-Deterministic Gradient-Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/svm_cv.html">
+     SVM with Cross-Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/sgd_instances.html">
+     SGD on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/mlp_mf.html">
+     MLP with Multi-Fidelity
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/details/index.html">
+   Details
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/facades.html">
+     Facades
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/target_algorithm_evaluator.html">
+     Target Algorithm Evaluator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/scenario.html">
+     Scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/arguments.html">
+     Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/validation.html">
+     Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/cuda.html">
+     CUDA
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/restoring.html">
+     Restoring
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../pages/api/index.html">
+   API Reference
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification package
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.optimizer.html">
+     smac.optimizer package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.tae.html">
+     smac.tae package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.utils.html">
+     smac.utils package
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../pages/glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../pages/faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../pages/license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-smac.optimizer.random_configuration_chooser">
 <span id="smac-optimizer-random-configuration-chooser-module"></span><h1>smac.optimizer.random_configuration_chooser module<a class="headerlink" href="#module-smac.optimizer.random_configuration_chooser" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserCosineAnnealing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserCosineAnnealing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_max</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_min</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration according to a given probability which is decreased according to a cosine
 annealing schedule.</p>
@@ -311,18 +408,18 @@ annealing schedule.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.next_smbo_iteration">
-<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserCosineAnnealing.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
@@ -330,34 +427,22 @@ annealing schedule.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserLinearCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulus_increment</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserLinearCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulus_increment</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
-<p>Interleave a random configuration, decreasing the fraction of random configurations over time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>start_modulus</strong> (<em>float</em>) – Initially, every modulus-th configuration will be at random</p></li>
-<li><p><strong>modulus_increment</strong> (<em>float</em>) – Increase modulus by this amount in every iteration</p></li>
-<li><p><strong>end_modulus</strong> (<em>float</em>) – Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
-further increased. If it is not reached before the optimization is over, there will be no adjustment to make
-sure that the <code class="docutils literal notranslate"><span class="pre">end_modulus</span></code> is reached.</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration">
-<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserLinearCoolDown.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserLinearCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
@@ -365,7 +450,7 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserNoCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserNoCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulus</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
 <p>Interleave a random configuration after a constant number of configurations found by Bayesian optimization.</p>
 <dl class="field-list simple">
@@ -375,18 +460,18 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration">
-<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserNoCoolDown.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserNoCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
@@ -394,31 +479,22 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProb">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserProb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserProb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
-<p>Interleave a random configuration according to a given probability.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProb._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProb.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProb.next_smbo_iteration">
-<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProb.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProb.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
@@ -426,32 +502,22 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserProbCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cool_down_fac</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">ChooserProbCoolDown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cool_down_fac</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.random_configuration_chooser.RandomConfigurationChooser</span></code></a></p>
-<p>Interleave a random configuration according to a given probability which is decreased over time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob</strong> (<em>float</em>) – Probility of a random configuration</p></li>
-<li><p><strong>cool_down_fac</strong> (<em>float</em>) – Multiply the <code class="docutils literal notranslate"><span class="pre">prob</span></code> by <code class="docutils literal notranslate"><span class="pre">cool_down_fac</span></code> in each iteration</p></li>
-<li><p><strong>rng</strong> (<em>np.random.RandomState</em>) – Random state</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check">
-<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.next_smbo_iteration">
-<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#ChooserProbCoolDown.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.ChooserProbCoolDown.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
@@ -459,77 +525,78 @@ sure that the <code class="docutils literal notranslate"><span class="pre">end_m
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">RandomConfigurationChooser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.random_configuration_chooser.</span></span><span class="sig-name descname"><span class="pre">RandomConfigurationChooser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.random.mtrand.RandomState</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Abstract base of helper classes to configure interleaving of
 random configurations in a list of challengers.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser._abc_impl" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the next configuration should be at random</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/optimizer/random_configuration_chooser.html#RandomConfigurationChooser.next_smbo_iteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">next_smbo_iteration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.optimizer.random_configuration_chooser.RandomConfigurationChooser.next_smbo_iteration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicate beginning of next SMBO iteration</p>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
-           </div>
-           
-          </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="smac.optimizer.smbo.html" class="btn btn-neutral float-right" title="smac.optimizer.smbo module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="smac.optimizer.pSMAC.html" class="btn btn-neutral float-left" title="smac.optimizer.pSMAC module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="smac.optimizer.pSMAC.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">smac.optimizer.pSMAC module</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="smac.optimizer.smbo.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">smac.optimizer.smbo module</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
       </div>
-
-    </section>
-
-  </div>
+    </div>
   
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
     
-   
-
-</body>
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+4.2.0. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
 </html>

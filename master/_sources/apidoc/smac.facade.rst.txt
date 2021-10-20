@@ -8,12 +8,15 @@ smac.facade package
    :private-members:
 
 Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4
 
    smac.facade.experimental
 
+Submodules
+----------
 
 .. toctree::
    :maxdepth: 4

@@ -7,6 +7,8 @@ smac.scenario package
    :show-inheritance:
    :private-members:
 
+Submodules
+----------
 
 .. toctree::
    :maxdepth: 4
