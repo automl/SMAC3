@@ -41,8 +41,9 @@ class TestSMACFacade(unittest.TestCase):
 
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.scenario = Scenario({'cs': self.cs, 'run_obj': 'quality',
-                                  'output_dir': ''})
+        self.scenario_dict_default = {'cs': self.cs, 'run_obj': 'quality',
+                                      'output_dir': ''}
+        self.scenario = Scenario(self.scenario_dict_default)
         self.sh_intensifier_kwargs = {'n_seeds': 1,
                                       'initial_budget': 1,
                                       'eta': 3,
@@ -217,6 +218,18 @@ class TestSMACFacade(unittest.TestCase):
         )
         self.assertIsInstance(smbo.solver.intensifier, DummyIntensifier)
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
+
+        # Assert that minR, maxR and use_ta_time propagate from scenario to the default intensifier.
+        for scenario_dict in [{}, {'minR': self.scenario.minR + 1, 'maxR': self.scenario.maxR + 1,
+                                   'use_ta_time': not self.scenario.use_ta_time}]:
+            for k, v in self.scenario_dict_default.items():
+                if k not in scenario_dict:
+                    scenario_dict[k] = v
+            scenario = Scenario(scenario_dict)
+            smac = SMAC4AC(scenario=scenario)
+            self.assertEqual(scenario.minR, smac.solver.intensifier.minR)
+            self.assertEqual(scenario.maxR, smac.solver.intensifier.maxR)
+            self.assertEqual(scenario.use_ta_time, smac.solver.intensifier.use_ta_time_bound)
 
     def test_construct_initial_design(self):
 

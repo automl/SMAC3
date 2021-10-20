@@ -124,9 +124,9 @@ class SMAC4AC(object):
             arguments passed to constructor of runhistory.
             We strongly advise against changing the aggregation function,
             since it will break some code assumptions
-        intensifier : Intensifier
-            intensification object to issue a racing to decide the current
-            incumbent
+        intensifier : AbstractRacer
+            intensification object or class to issue a racing to decide the current
+            incumbent. Default: class `Intensifier`
         intensifier_kwargs: Optional[Dict]
             arguments passed to the constructor of '~intensifier'
         acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
@@ -413,34 +413,35 @@ class SMAC4AC(object):
                              "the scenario must be the same, but are '%s' and "
                              "'%s'" % (tae_runner_instance.run_obj, scenario.run_obj))  # type: ignore[union-attr] # noqa F821
 
-        # initialize intensification
-        intensifier_def_kwargs = {
-            'stats': self.stats,
-            'traj_logger': traj_logger,
-            'rng': rng,
-            'instances': scenario.train_insts,  # type: ignore[attr-defined] # noqa F821
-            'cutoff': scenario.cutoff,  # type: ignore[attr-defined] # noqa F821
-            'deterministic': scenario.deterministic,  # type: ignore[attr-defined] # noqa F821
-            'run_obj_time': scenario.run_obj == "runtime",  # type: ignore[attr-defined] # noqa F821
-            'instance_specifics': scenario.instance_specific,  # type: ignore[attr-defined] # noqa F821
-            'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
-            'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
-        }
-
-        if isinstance(intensifier, Intensifier) \
-                or (intensifier is not None and inspect.isclass(intensifier) and issubclass(intensifier, Intensifier)):
-            intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821
-            intensifier_def_kwargs['use_ta_time_bound'] = scenario.use_ta_time  # type: ignore[attr-defined] # noqa F821
-            intensifier_def_kwargs['minR'] = scenario.minR  # type: ignore[attr-defined] # noqa F821
-            intensifier_def_kwargs['maxR'] = scenario.maxR  # type: ignore[attr-defined] # noqa F821
-        if intensifier_kwargs is not None:
-            intensifier_def_kwargs.update(intensifier_kwargs)
-
         if intensifier is None:
-            intensifier_instance = (
-                Intensifier(**intensifier_def_kwargs)  # type: ignore[arg-type] # noqa F821
-            )  # type: AbstractRacer
+            intensifier = Intensifier
+
+        if isinstance(intensifier, AbstractRacer):
+            intensifier_instance = intensifier
         elif inspect.isclass(intensifier):
+            # initialize intensification
+            intensifier_def_kwargs = {
+                'stats': self.stats,
+                'traj_logger': traj_logger,
+                'rng': rng,
+                'instances': scenario.train_insts,  # type: ignore[attr-defined] # noqa F821
+                'cutoff': scenario.cutoff,  # type: ignore[attr-defined] # noqa F821
+                'deterministic': scenario.deterministic,  # type: ignore[attr-defined] # noqa F821
+                'run_obj_time': scenario.run_obj == "runtime",  # type: ignore[attr-defined] # noqa F821
+                'instance_specifics': scenario.instance_specific,  # type: ignore[attr-defined] # noqa F821
+                'adaptive_capping_slackfactor': scenario.intens_adaptive_capping_slackfactor,  # type: ignore[attr-defined] # noqa F821
+                'min_chall': scenario.intens_min_chall  # type: ignore[attr-defined] # noqa F821
+            }
+
+            if issubclass(intensifier, Intensifier):
+                intensifier_def_kwargs['always_race_against'] = scenario.cs.get_default_configuration()  # type: ignore[attr-defined] # noqa F821
+                intensifier_def_kwargs['use_ta_time_bound'] = scenario.use_ta_time  # type: ignore[attr-defined] # noqa F821
+                intensifier_def_kwargs['minR'] = scenario.minR  # type: ignore[attr-defined] # noqa F821
+                intensifier_def_kwargs['maxR'] = scenario.maxR  # type: ignore[attr-defined] # noqa F821
+
+            if intensifier_kwargs is not None:
+                intensifier_def_kwargs.update(intensifier_kwargs)
+
             intensifier_instance = intensifier(**intensifier_def_kwargs)  # type: ignore[arg-type] # noqa F821
         else:
             raise TypeError(
