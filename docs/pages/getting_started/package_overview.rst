@@ -19,7 +19,9 @@ Optimize :term:`Black-Box<BB>` functions
     Optimization is only aware of input and output. It is agnostic to internals of the function.
 
 Flexible hyperparameters
-    Use categorical, continuous or hierarchical hyperparameters with the well-integrated `ConfigurationSpace<https://automl.github.io/ConfigSpace/master/API-Doc.html>`_. SMAC can optimize up to 100
+    Use categorical, continuous or hierarchical hyperparameters with the well-integrated
+    `ConfigurationSpace <https://automl.github.io/ConfigSpace/master/API-Doc.html>`_. SMAC can
+    optimize up to 100
     hyperparameters efficiently.
 
 Any objectives

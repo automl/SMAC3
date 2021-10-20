@@ -4,7 +4,7 @@ MLP with Multi-Fidelity
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the SMAC4MF facade is a good choice. By default,
-SMAC4MF internally runs with `hyperband<https://arxiv.org/abs/1603.06560>`_, which is a combination of an
+SMAC4MF internally runs with `hyperband <https://arxiv.org/abs/1603.06560>`_, which is a combination of an
 aggressive racing mechanism and successive halving.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset

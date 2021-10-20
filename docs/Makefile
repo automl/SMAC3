@@ -12,8 +12,9 @@ endif
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  clean      remove rendered files"
-	@echo "  html       to make standalone HTML files"
 	@echo "  buildapi   to rebuild the api-documentation"
+	@echo "  html       to make standalone HTML files"
+	@echo "  all        clean, buildapi, html"
 
 clean:
 	rm -rf apidoc
@@ -28,3 +29,8 @@ buildapi:
 
 html:
 	sphinx-build -b html . html -a
+
+all:
+	make clean
+	make buildapi
+	make html

@@ -3,20 +3,10 @@ repos:
     rev: v0.761
     hooks:
       - id: mypy
-        # We would like to have the following options set, 
-        # but for now we have to use the ones above to get started
-        # --ignore-missing-imports --strict"
-        # --disallow-any-unimported"
-        # --disallow-any-expr"
-        # --disallow-any-decorated"
-        # --disallow-any-explicit"
-        # --disallow-any-generics"
-        # Add the following once the scenario is removed from the main code or typed
-        # https://mypy.readthedocs.io/en/stable/command_line.html#configuring-warnings
-        # --warn-unused-ignores"
         args: [--show-error-codes, --ignore-missing-imports, --disallow-untyped-decorators, --disallow-incomplete-defs, --disallow-untyped-defs, --follow-imports, skip]
         name: mypy SMAC
         files: smac/.*
+        
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.3
     hooks:

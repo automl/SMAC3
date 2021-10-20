@@ -5,9 +5,9 @@ test:
 
 .PHONY: docs
 doc:
-	make -C doc clean
-	make -C doc buildapi
-	make -C doc html
+	make -C docs clean
+	make -C docs buildapi
+	make -C docs html
 
 .PHONY: clean
 clean:
