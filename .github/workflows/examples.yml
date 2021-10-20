@@ -1,4 +1,4 @@
-name: examples
+name: Examples
 
 on: [push, pull_request]
 
