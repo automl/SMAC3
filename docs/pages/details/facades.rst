@@ -12,8 +12,8 @@ These recommendations are based on our experience and technical limitations and 
     :widths: 15, 10, 10, 10, 10
 
     "# parameter", "low", "low/medium/high", "low/medium/high", "low/medium/high"
-    "Categorical parameters", "Yes", "Supported", "Supported", "Supported"
-    "Conditional parameters", "Yes", "Supported", "Supported", "Supported"
+    "Categorical hyperparameters", "Supported", "Supported", "Supported", "Supported"
+    "Conditional hyperparameters", "Supported", "Supported", "Supported", "Supported"
     "Instances", "No", "None or :term:`CV`", "None or :term:`CV`", "Yes"
     "Stochasticity",  "No", "Supported", "Supported", "Supported"
     "Objective", "Any (except runtime)", "e.g. validation loss",  "e.g. validation loss", "Any"

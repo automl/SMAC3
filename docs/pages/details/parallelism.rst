@@ -14,6 +14,10 @@ such that all SMAC runs are better informed and can work together.
 	So, a requirement for pSMAC is that it can write to a shared file space.
 
 
+.. note::
+
+	SMAC also supports DASH. The documentation is in progress.
+
 
 Commandline 
 ~~~~~~~~~~~

@@ -51,6 +51,7 @@ Acquisition Functions
     - Probability of Improvement (PI)
     - Expected Improvement (EI)
     - Lower Confidence Bound (LCB)
+    - Thompson Sampling (TS)
 
 Intensification
     - Aggressive Racing

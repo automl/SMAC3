@@ -12,7 +12,7 @@ Glossary
 
     ROAR
         Random Online Adaptive Racing. A simple model-free instantiation of the general SMBO framework.
-        It selects parameter configurations uniformly random and iteratively compares them against the current incumbent
+        It selects configurations uniformly random and iteratively compares them against the current incumbent
         using the intensification mechanism. See `SMAC extended <https://ai.dmi.unibas.ch/research/reading_group/hutter-et-al-tr2010.pdf>`_
         chapter 3.2 for details.
 
