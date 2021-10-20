@@ -26,6 +26,7 @@ buildapi:
 
 	sphinx-apidoc -fePTMo apidoc/ ../smac/
 	rm apidoc/smac.rst
+	rm apidoc/smac.configspace.rst
 
 html:
 	sphinx-build -b html . html -a
