@@ -3,15 +3,22 @@
 ## Features
 * Option to use an own stopping strategy using `IncorporateRunResultCallback`.
 
+
 ## Major Changes
 * Documentation was updated thoroughly. A new theme with a new structure is provided and all pages
   have been updated. Also, the examples revised and up-to-date.
-* Changed scripts/smac to scripts/smac.py.
+* Changed `scripts/smac` to `scripts/smac.py`.
 
 ## Minor Changes
-* README.md updated.
-* Made smac-validate.py consistent with runhistory and tae.
+* `README.md` updated.
+* `CITATION.cff` added.
+* Made `smac-validate.py` consistent with runhistory and tae. (#762)
+* `minR`, `maxR` and `use_ta_time` can be initialized by scenario. (#775)
 
+
+## Bug Fixes
+* Fixed an incorrect adaptive capping behaviour. (#749)
+* Avoid the potential `ValueError` raised by `LocalSearch._do_search`. (#773)
 
 # 1.0.1
 
