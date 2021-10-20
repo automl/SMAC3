@@ -471,7 +471,6 @@ class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
                  par: float = 1.0):
-
         r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
@@ -523,9 +522,12 @@ class TS(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
                  par: float = 0.0):
-
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
+
+        Thompson Sampling can only be used together with smac.optimizer.ei_optimization.RandomSearch, please do not
+        use smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS acquisition function!!!
+
         :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
         Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
         Parameters

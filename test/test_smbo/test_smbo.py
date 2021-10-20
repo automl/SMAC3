@@ -50,7 +50,8 @@ class TestSMBO(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
-                                  'output_dir': 'data-test_smbo'})
+                                  'output_dir': 'data-test_smbo',
+                                  "runcount-limit": 5})
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
 
@@ -410,6 +411,35 @@ class TestSMBO(unittest.TestCase):
         smbo._incorporate_run_results(run_info=run_info, result=result, time_left=time_left)
         self.assertEqual(callback.num_call, 1)
         self.assertEqual(callback.config, config)
+
+    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, 'process_results')
+    def test_incorporate_run_results_callback_stop_loop(self, process_results_mock):
+
+        def target(x):
+            return 5
+
+        process_results_mock.return_value = None, None
+
+        class TestCallback(IncorporateRunResultCallback):
+            def __init__(self):
+                self.num_call = 0
+
+            def __call__(self, smbo, run_info, result, time_left) -> None:
+                self.num_call += 1
+                if self.num_call > 2:
+                    return False
+
+        callback = TestCallback()
+
+        self.scenario.output_dir = None
+        smac = SMAC4AC(self.scenario, tae_runner=target, rng=1)
+        smac.register_callback(callback)
+
+        self.output_dirs.append(smac.output_dir)
+
+        smac.optimize()
+
+        self.assertEqual(callback.num_call, 3)
 
 
 if __name__ == "__main__":
