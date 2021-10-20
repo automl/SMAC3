@@ -14,6 +14,7 @@
 * `CITATION.cff` added.
 * Made `smac-validate.py` consistent with runhistory and tae. (#762)
 * `minR`, `maxR` and `use_ta_time` can now be initialized by the scenario. (#775)
+* `ConfigSpace.util.get_one_exchange_neighborhood`'s invalid configurations are ignored. (#773)
 
 
 ## Bug Fixes
