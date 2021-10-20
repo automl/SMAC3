@@ -219,6 +219,10 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(smbo.solver.intensifier, DummyIntensifier)
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
 
+        dummy_intensifier = DummyIntensifier(stats=None, traj_logger=None, rng=rng, instances=self.scenario.train_insts)
+        smbo = SMAC4AC(self.scenario, intensifier=dummy_intensifier)
+        self.assertEqual(smbo.solver.intensifier, dummy_intensifier)
+
         # Assert that minR, maxR and use_ta_time propagate from scenario to the default intensifier.
         for scenario_dict in [{}, {'minR': self.scenario.minR + 1, 'maxR': self.scenario.maxR + 1,
                                    'use_ta_time': not self.scenario.use_ta_time}]:
