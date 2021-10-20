@@ -29,6 +29,7 @@ Commandline
 .. only:: html
 
  .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_branin_thumb.png
+     :alt: Branin
 
      :ref:`sphx_glr_pages_examples_commandline_branin.py`
 
@@ -49,6 +50,7 @@ Commandline
 .. only:: html
 
  .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_restore_branin_thumb.png
+     :alt: Restore Branin
 
      :ref:`sphx_glr_pages_examples_commandline_restore_branin.py`
 
@@ -80,6 +82,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_spear_mf_instances_thumb.png
+     :alt: SPEAR-QCP with Multi-Fidelity on Instances
 
      :ref:`sphx_glr_pages_examples_python_spear_mf_instances.py`
 
@@ -100,6 +103,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_synthetic_function_thumb.png
+     :alt: Synthetic Function with few Hyperparameters
 
      :ref:`sphx_glr_pages_examples_python_synthetic_function.py`
 
@@ -120,6 +124,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_gb_non_deterministic_thumb.png
+     :alt: Non-Deterministic Gradient-Boosting
 
      :ref:`sphx_glr_pages_examples_python_gb_non_deterministic.py`
 
@@ -140,6 +145,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_svm_cv_thumb.png
+     :alt: SVM with Cross-Validation
 
      :ref:`sphx_glr_pages_examples_python_svm_cv.py`
 
@@ -160,6 +166,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_sgd_instances_thumb.png
+     :alt: SGD on Instances
 
      :ref:`sphx_glr_pages_examples_python_sgd_instances.py`
 
@@ -180,6 +187,7 @@ Python
 .. only:: html
 
  .. figure:: /pages/examples/python/images/thumb/sphx_glr_mlp_mf_thumb.png
+     :alt: MLP with Multi-Fidelity
 
      :ref:`sphx_glr_pages_examples_python_mlp_mf.py`
 
@@ -204,15 +212,15 @@ Python
     :class: sphx-glr-footer-gallery
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-python
 
-    :download:`Download all examples in Python source code: examples_python.zip <//home/runner/work/SMAC3/SMAC3/docs/pages/examples/examples_python.zip>`
+    :download:`Download all examples in Python source code: examples_python.zip </pages/examples/examples_python.zip>`
 
 
 
-  .. container:: sphx-glr-download
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip <//home/runner/work/SMAC3/SMAC3/docs/pages/examples/examples_jupyter.zip>`
+    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip </pages/examples/examples_jupyter.zip>`
 
 
 .. only:: html

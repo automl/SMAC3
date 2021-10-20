@@ -48,6 +48,10 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
     border: 0 !important;
 }
 
+.sphx-glr-thumbcontainer figcaption {
+    padding: 0 !important;
+}
+
 .sphx-glr-thumbcontainer a.headerlink {
     display: none;
 }
@@ -56,7 +60,7 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
     margin: 0 !important;
 }
 
-.sphx-glr-thumbcontainer .figure {
+.sphx-glr-thumbcontainer .figure, .sphx-glr-thumbcontainer figure {
     height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
