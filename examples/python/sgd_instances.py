@@ -4,13 +4,13 @@ SGD on Instances
 
 Example for optimizing a Multi-Layer Perceptron (MLP) using multiple instances.
 
-Alternative to "budgets", here we consider "instances" as a fidelity type. An "Instance" represents a specific
-scenario/condition (eg: different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
+Alternative to budgets, here we consider instances as a fidelity type. An instance represents a specific
+scenario/condition (e.g. different datasets, subsets, transformations) for the algorithm to run. SMAC then returns the
 algorithm that had the best performance across all the instances. In this case, an instance is a binary dataset i.e.,
 digit-2 vs digit-3.
 
-If we use instance as our fidelity, we need to initialize "scenario" with argument "instance". In this case the argument
-"budget" is no longer required by the target function.
+If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
+budget is no longer required by the target function.
 """
 
 import logging
@@ -81,16 +81,15 @@ def sgd_from_cfg(cfg, seed, instance):
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
 
         # SGD classifier using given configuration
-        clf = SGDClassifier(
-            loss='log',
-            penalty='elasticnet',
-            alpha=cfg['alpha'],
-            l1_ratio=cfg['l1_ratio'],
-            learning_rate=cfg['learning_rate'],
-            eta0=cfg['eta0'],
-            max_iter=30,
-            early_stopping=True,
-            random_state=seed)
+        clf = SGDClassifier(loss='log',
+                            penalty='elasticnet',
+                            alpha=cfg['alpha'],
+                            l1_ratio=cfg['l1_ratio'],
+                            learning_rate=cfg['learning_rate'],
+                            eta0=cfg['eta0'],
+                            max_iter=30,
+                            early_stopping=True,
+                            random_state=seed)
 
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
