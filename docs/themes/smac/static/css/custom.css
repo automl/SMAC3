@@ -1,15 +1,15 @@
 .bd-search {
-    margin: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .bd-search .icon {
-    left: 10px;
+    left: 10;
 }
 
 #navbar-collapsible {
-    padding: 0px;
+    padding: 0;
 }
 
 #navbar-icon-links {
@@ -39,12 +39,12 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
 }
 
 .sphx-glr-thumbcontainer {
-    margin: 1px 0px !important;
+    margin: 1px 0 !important;
     background-color: grey;
     min-height: auto !important;
-    padding: 0px !important;
+    padding: 0 !important;
     width: 100% !important;
-    border: 0px !important;
+    border: 0 !important;
 }
 
 .sphx-glr-thumbcontainer a.headerlink {
@@ -52,18 +52,18 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
 }
 
 .sphx-glr-thumbcontainer p {
-    margin: 0px !important;
+    margin: 0 !important;
 }
 
 .sphx-glr-thumbcontainer .figure {
     height: auto !important;
-    margin: 0px !important;
-    padding: 0px !important;
+    margin: 0 !important;
+    padding: 0 !important;
     width: 100% !important;
 }
 
 .sphx-glr-thumbcontainer .figure p.caption {
-    padding: 0px !important;
+    padding: 0 !important;
 }
 
 .sphx-glr-thumbcontainer .figure p.caption:hover {
@@ -77,17 +77,17 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
 
 .sphx-glr-thumbcontainer a.internal {
     position: relative !important;
-    padding: 30px 15px !important;
+    padding: 30 15px !important;
     background-color: rgb(128, 128, 128) !important;
     color: white !important;
-    border: 0px !important;
+    border: 0 !important;
     vertical-align: middle;
     border-radius: 5px;
 }
 
 .sphx-glr-thumbcontainer a.internal:hover {
     background-color: rgb(60, 60, 60) !important;
-    border: 0px !important;
+    border: 0 !important;
 
     box-shadow: 0 !important;
     -webkit-box-shadow: 0 !important;
@@ -101,7 +101,7 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
 }
 
 .sphx-glr-thumbcontainer:hover {
-    border: 0px !important;
+    border: 0 !important;
     box-shadow: none !important;
 }
 

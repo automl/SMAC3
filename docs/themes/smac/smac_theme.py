@@ -184,7 +184,6 @@ def add_toctree_functions(app, pagename, templatename, context, doctree):
         else:
             return soup
 
-    # TODO: Deprecate in v0.7.0
     def get_nav_object(maxdepth=None, collapse=False, includehidden=True, **kwargs):
         """Return a list of nav links that can be accessed from Jinja.
 
@@ -214,7 +213,6 @@ def add_toctree_functions(app, pagename, templatename, context, doctree):
 
         return nav_object
 
-    # TODO: Deprecate in v0.7.0
     def get_page_toc_object():
         """Return a list of within-page TOC links that can be accessed from Jinja."""
 
@@ -290,8 +288,8 @@ def add_toctree_functions(app, pagename, templatename, context, doctree):
                 """
             soup = bs(script, "html.parser")
             return soup
-        else:
-            return ""
+
+        return ""
 
     context["generate_nav_html"] = generate_nav_html
     context["generate_toc_html"] = generate_toc_html
