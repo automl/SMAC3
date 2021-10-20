@@ -7,6 +7,8 @@ smac.tae package
    :show-inheritance:
    :private-members:
 
+Submodules
+----------
 
 .. toctree::
    :maxdepth: 4

@@ -1,206 +1,390 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>smac.runhistory.runhistory module &mdash; SMAC 1.0.1 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>smac.runhistory.runhistory module &#8212; SMAC3 Documentation 1.1 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.runhistory.runhistory2epm module" href="smac.runhistory.runhistory2epm.html" />
-    <link rel="prev" title="smac.runhistory package" href="smac.runhistory.html" /> 
-</head>
+    <link rel="prev" title="smac.runhistory package" href="smac.runhistory.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> SMAC
-            <img src="../_static/SMAC3.png" class="logo" alt="Logo"/>
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../index.html">
+  <img src="../_static/SMAC3.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
           </a>
-              <div class="version">
-                1.0.1
-              </div>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/quickstart/quickstart_example.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage_recomendation.html">Usage Recommendation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../smac_examples.html">SMAC Examples</a><ul>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../manual.html">Manual</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../basic_usage.html">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../options.html">Options and file formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tae.html">Target Algorithm Evaluator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../instances.html">Instances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../psmac.html">Parallel SMAC (pSMAC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../validation.html">Validation</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="smac.callbacks.html">smac.callbacks module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="smac.configspace.html">smac.configspace package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.configspace.util.html">smac.configspace.util module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.epm.html">smac.epm package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_epm.html">smac.epm.base_epm module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_gp.html">smac.epm.base_gp module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_imputor.html">smac.epm.base_imputor module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.base_rf.html">smac.epm.base_rf module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process.html">smac.epm.gaussian_process module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_base_prior.html">smac.epm.gp_base_prior module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.gp_kernels.html">smac.epm.gp_kernels module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.random_epm.html">smac.epm.random_epm module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rf_with_instances.html">smac.epm.rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.rfr_imputator.html">smac.epm.rfr_imputator module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.epm.util_funcs.html">smac.epm.util_funcs module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.facade.html">smac.facade package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.experimental.html">smac.facade.experimental package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.hydra_facade.html">smac.facade.experimental.hydra_facade module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.facade.experimental.psmac_facade.html">smac.facade.experimental.psmac_facade module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.func_facade.html">smac.facade.func_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.hyperband_facade.html">smac.facade.hyperband_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.roar_facade.html">smac.facade.roar_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_ac_facade.html">smac.facade.smac_ac_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_bb_facade.html">smac.facade.smac_bb_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_hpo_facade.html">smac.facade.smac_hpo_facade module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.facade.smac_mf_facade.html">smac.facade.smac_mf_facade module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.initial_design.html">smac.initial_design package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.default_configuration_design.html">smac.initial_design.default_configuration_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.factorial_design.html">smac.initial_design.factorial_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.initial_design.html">smac.initial_design.initial_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.latin_hypercube_design.html">smac.initial_design.latin_hypercube_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.random_configuration_design.html">smac.initial_design.random_configuration_design module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.initial_design.sobol_design.html">smac.initial_design.sobol_design module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.intensification.html">smac.intensification package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.abstract_racer.html">smac.intensification.abstract_racer module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.hyperband.html">smac.intensification.hyperband module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.intensification.html">smac.intensification.intensification module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.parallel_scheduling.html">smac.intensification.parallel_scheduling module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.simple_intensifier.html">smac.intensification.simple_intensifier module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.intensification.successive_halving.html">smac.intensification.successive_halving module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.optimizer.html">smac.optimizer package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.acquisition.html">smac.optimizer.acquisition module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.ei_optimization.html">smac.optimizer.ei_optimization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.pSMAC.html">smac.optimizer.pSMAC module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.random_configuration_chooser.html">smac.optimizer.random_configuration_chooser module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.optimizer.smbo.html">smac.optimizer.smbo module</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="reference internal" href="smac.runhistory.html">smac.runhistory package</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">smac.runhistory.runhistory module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.runhistory.runhistory2epm.html">smac.runhistory.runhistory2epm module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.scenario.html">smac.scenario package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.scenario.scenario.html">smac.scenario.scenario module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.stats.html">smac.stats package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.stats.stats.html">smac.stats.stats module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.tae.html">smac.tae package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.base.html">smac.tae.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.dask_runner.html">smac.tae.dask_runner module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_func.html">smac.tae.execute_func module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_aclib.html">smac.tae.execute_ta_run_aclib module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_hydra.html">smac.tae.execute_ta_run_hydra module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.execute_ta_run_old.html">smac.tae.execute_ta_run_old module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.tae.serial_runner.html">smac.tae.serial_runner module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.utils.html">smac.utils package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.io.html">smac.utils.io package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.cmd_reader.html">smac.utils.io.cmd_reader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.input_reader.html">smac.utils.io.input_reader module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_directory.html">smac.utils.io.output_directory module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.output_writer.html">smac.utils.io.output_writer module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="smac.utils.io.traj_logging.html">smac.utils.io.traj_logging module</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.constants.html">smac.utils.constants module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.dependencies.html">smac.utils.dependencies module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.logging.html">smac.utils.logging module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.merge_foreign_data.html">smac.utils.merge_foreign_data module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.test_helpers.html">smac.utils.test_helpers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="smac.utils.validate.html">smac.utils.validate module</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="smac.smac_cli.html">smac.smac_cli module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">F.A.Q.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../contact.html">Contact</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
-</ul>
-
-        </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
       </div>
-    </nav>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">SMAC</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../api.html">API Documentation</a> &raquo;</li>
-          <li><a href="smac.runhistory.html">smac.runhistory package</a> &raquo;</li>
-      <li>smac.runhistory.runhistory module</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/apidoc/smac.runhistory.runhistory.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
+      </div>
+      
+    </div>
+  </div>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+<div class="mb-3">v1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/getting_started/index.html">
+   Getting Started
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/installation.html">
+     Installation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/minimal_example.html">
+     Minimal Example
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/package_overview.html">
+     Package Overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/comparison.html">
+     Comparison
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/getting_started/basic_usage.html">
+     Basic Usage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/branin.html">
+     Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/restore_branin.html">
+     Restore Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
+     SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/gb_non_deterministic.html">
+     Non-Deterministic Gradient-Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/svm_cv.html">
+     SVM with Cross-Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/sgd_instances.html">
+     SGD on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/mlp_mf.html">
+     MLP with Multi-Fidelity
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../pages/details/index.html">
+   Details
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/facades.html">
+     Facades
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/target_algorithm_evaluator.html">
+     Target Algorithm Evaluator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/scenario.html">
+     Scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/arguments.html">
+     Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/validation.html">
+     Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/cuda.html">
+     CUDA
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/restoring.html">
+     Restoring
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../pages/api/index.html">
+   API Reference
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.optimizer.html">
+     smac.optimizer package
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.tae.html">
+     smac.tae package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.utils.html">
+     smac.utils package
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../pages/glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../pages/license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
   <section id="module-smac.runhistory.runhistory">
 <span id="smac-runhistory-runhistory-module"></span><h1>smac.runhistory.runhistory module<a class="headerlink" href="#module-smac.runhistory.runhistory" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.DataOrigin">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">DataOrigin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#DataOrigin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">DataOrigin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.DataOrigin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>Definition of how data in the runhistory is used.</p>
 <ul class="simple">
@@ -241,44 +425,15 @@ saved to disk and only used for EPM building.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.EnumEncoder">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">EnumEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#EnumEncoder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">EnumEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.encoder.JSONEncoder</span></code></p>
 <p>Custom encoder for enum-serialization
 (implemented for StatusType from tae).
 Using encoder implied using object_hook as defined in StatusType
 to deserialize from json.</p>
-<p>Constructor for JSONEncoder, with sensible defaults.</p>
-<p>If skipkeys is false, then it is a TypeError to attempt
-encoding of keys that are not str, int, float or None.  If
-skipkeys is True, such items are simply skipped.</p>
-<p>If ensure_ascii is true, the output is guaranteed to be str
-objects with all incoming non-ASCII characters escaped.  If
-ensure_ascii is false, the output can contain non-ASCII characters.</p>
-<p>If check_circular is true, then lists, dicts, and custom encoded
-objects will be checked for circular references during encoding to
-prevent an infinite recursion (which would cause an OverflowError).
-Otherwise, no such check takes place.</p>
-<p>If allow_nan is true, then NaN, Infinity, and -Infinity will be
-encoded as such.  This behavior is not JSON specification compliant,
-but is consistent with most JavaScript based encoders and decoders.
-Otherwise, it will be a ValueError to encode such floats.</p>
-<p>If sort_keys is true, then the output of dictionaries will be
-sorted by key; this is useful for regression tests to ensure
-that JSON serializations can be compared on a day-to-day basis.</p>
-<p>If indent is a non-negative integer, then JSON array
-elements and object members will be pretty-printed with that
-indent level.  An indent level of 0 will only insert newlines.
-None is the most compact representation.</p>
-<p>If specified, separators should be an (item_separator, key_separator)
-tuple.  The default is (’, ‘, ‘: ‘) if <em>indent</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code> and
-(‘,’, ‘: ‘) otherwise.  To get the most compact JSON representation,
-you should specify (‘,’, ‘:’) to eliminate whitespace.</p>
-<p>If specified, default is a function that gets called for objects
-that can’t otherwise be serialized.  It should return a JSON encodable
-version of the object or raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.EnumEncoder.default">
-<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#EnumEncoder.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.default" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.EnumEncoder.default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implement this method in a subclass such that it returns
 a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
 (to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
@@ -303,7 +458,6 @@ implement default like this:</p>
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedBudgetKey">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">InstSeedBudgetKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of InstSeedBudgetKey(instance, seed, budget)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedBudgetKey._asdict">
 <span class="sig-name descname"><span class="pre">_asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedBudgetKey._asdict" title="Permalink to this definition">¶</a></dt>
@@ -318,11 +472,6 @@ implement default like this:</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedBudgetKey._fields">
 <span class="sig-name descname"><span class="pre">_fields</span></span><em class="property"> <span class="pre">=</span> <span class="pre">('instance',</span> <span class="pre">'seed',</span> <span class="pre">'budget')</span></em><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedBudgetKey._fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedBudgetKey._fields_defaults">
-<span class="sig-name descname"><span class="pre">_fields_defaults</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedBudgetKey._fields_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -361,7 +510,6 @@ implement default like this:</p>
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedKey">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">InstSeedKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of InstSeedKey(instance, seed)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedKey._asdict">
 <span class="sig-name descname"><span class="pre">_asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey._asdict" title="Permalink to this definition">¶</a></dt>
@@ -376,11 +524,6 @@ implement default like this:</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedKey._fields">
 <span class="sig-name descname"><span class="pre">_fields</span></span><em class="property"> <span class="pre">=</span> <span class="pre">('instance',</span> <span class="pre">'seed')</span></em><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey._fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runhistory.runhistory.InstSeedKey._fields_defaults">
-<span class="sig-name descname"><span class="pre">_fields_defaults</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#smac.runhistory.runhistory.InstSeedKey._fields_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -411,7 +554,7 @@ implement default like this:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite_existing_runs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite_existing_runs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Container for target algorithm run information.</p>
 <p>Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
@@ -431,7 +574,7 @@ neither used nor tested.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.data">
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO</p>
+<dd><p>Internal data representation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>collections.OrderedDict()</p>
@@ -478,29 +621,21 @@ neither used nor tested.</p></li>
 it is overwritten.</p>
 </dd>
 </dl>
-<p>Constructor</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em>) – allows to overwrites old results if pairs of
-algorithm-instance-seed were measured
-multiple times</p>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory._add">
-<span class="sig-name descname"><span class="pre">_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><span class="pre">smac.runhistory.runhistory.RunKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory._add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._add" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><span class="pre">smac.runhistory.runhistory.RunKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Actual function to add new entry to data structures</p>
 <p>TODO</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory._check_json_serializable">
-<span class="sig-name descname"><span class="pre">_check_json_serializable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">json.encoder.JSONEncoder</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runkey</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><span class="pre">smac.runhistory.runhistory.RunKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">runvalue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory._check_json_serializable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._check_json_serializable" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_check_json_serializable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">json.encoder.JSONEncoder</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runkey</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><span class="pre">smac.runhistory.runhistory.RunKey</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">runvalue</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunValue" title="smac.runhistory.runhistory.RunValue"><span class="pre">smac.runhistory.runhistory.RunValue</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._check_json_serializable" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory._cost">
-<span class="sig-name descname"><span class="pre">_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory._cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return array of all costs for the given config for further calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -521,7 +656,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.INTERNAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_update</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.INTERNAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_update</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a data of a new target algorithm (TA) run;
 it will update data if the same key values are used
 (config, instance_id, seed)</p>
@@ -548,7 +683,7 @@ information from TA or fields such as start time and host_id)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.average_cost">
-<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration.</p>
 <p>This is the mean of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -570,7 +705,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.compute_all_costs">
-<span class="sig-name descname"><span class="pre">compute_all_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.compute_all_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_all_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.compute_all_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the cost of all configurations from scratch and overwrites
 self.cost_perf_config and self.runs_per_config accordingly;</p>
 <div class="admonition note">
@@ -586,7 +721,7 @@ self.cost_perf_config and self.runs_per_config accordingly;</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.empty">
-<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.empty" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether or not the RunHistory is empty.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -601,7 +736,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_all_configs">
-<span class="sig-name descname"><span class="pre">get_all_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_all_configs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configurations in this RunHistory object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -615,7 +750,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">
-<span class="sig-name descname"><span class="pre">get_all_configs_per_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_all_configs_per_budget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_all_configs_per_budget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">budget_subset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all configs in this RunHistory object that have been run on one of these budgets</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -632,7 +767,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_cost">
-<span class="sig-name descname"><span class="pre">get_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns empirical cost for a configuration.</p>
 <p>See the class docstring for how the costs are computed. The costs are not re-computed, but are read from cache.</p>
 <dl class="field-list simple">
@@ -650,7 +785,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config">
-<span class="sig-name descname"><span class="pre">get_instance_costs_for_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_instance_costs_for_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_instance_costs_for_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_instance_costs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the average cost per instance (across seeds) for a configuration</p>
 <p>If the runhistory contains budgets, only the highest budget for a configuration is returned.</p>
 <div class="admonition note">
@@ -672,7 +807,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_min_cost">
-<span class="sig-name descname"><span class="pre">get_min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_min_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_min_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_min_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the lowest empirical cost for a configuration, across all runs (budgets)</p>
 <p>See the class docstring for how the costs are computed. The costs are not re-computed, but are read from cache.</p>
 <dl class="field-list simple">
@@ -690,7 +825,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.get_runs_for_config">
-<span class="sig-name descname"><span class="pre">get_runs_for_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_max_observed_budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.get_runs_for_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_runs_for_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_max_observed_budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.get_runs_for_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return all runs (instance seed pairs) for a configuration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -714,7 +849,7 @@ False otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.incremental_update_cost">
-<span class="sig-name descname"><span class="pre">incremental_update_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.incremental_update_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">incremental_update_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.incremental_update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Incrementally updates the performance of a configuration by using a
 moving average;</p>
 <dl class="field-list simple">
@@ -729,7 +864,7 @@ moving average;</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.load_json">
-<span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.load_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.load_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load and runhistory in json representation from disk.</p>
 <p>Overwrites current runhistory!</p>
 <dl class="field-list simple">
@@ -744,7 +879,7 @@ moving average;</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.min_cost">
-<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.min_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the minimum cost of a configuration</p>
 <p>This is the minimum cost of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -766,7 +901,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.save_json">
-<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'runhistory.json'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_external</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'runhistory.json'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_external</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.save_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>saves runhistory on disk</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -780,7 +915,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.sum_cost">
-<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -802,7 +937,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runhistory</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a RunHistory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -818,7 +953,7 @@ and be available <code class="xref py py-meth docutils literal notranslate"><spa
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.update_cost">
-<span class="sig-name descname"><span class="pre">update_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the performance of a configuration across the instances in
 self.cost_per_config and also updates self.runs_per_config;</p>
 <div class="admonition note">
@@ -834,7 +969,7 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.update_from_json">
-<span class="sig-name descname"><span class="pre">update_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">update_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.EXTERNAL_SAME_INSTANCES</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_from_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the current runhistory by adding new runs from a json file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -851,23 +986,20 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunInfo">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specific</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capped</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specific</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capped</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory.RunInfo" title="smac.runhistory.runhistory.RunInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory.RunInfo</span></code></a></p>
-<p>Create new instance of RunInfo(config, instance, instance_specific, seed, cutoff, capped, budget, source_id)</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunKey">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunKey" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.runhistory.runhistory.RunKey" title="smac.runhistory.runhistory.RunKey"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.runhistory.runhistory.RunKey</span></code></a></p>
-<p>Create new instance of RunKey(config_id, instance_id, seed, budget)</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunValue">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.runhistory.runhistory.</span></span><span class="sig-name descname"><span class="pre">RunValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cost</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
-<p>Create new instance of RunValue(cost, time, status, starttime, endtime, additional_info)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunValue._asdict">
 <span class="sig-name descname"><span class="pre">_asdict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#smac.runhistory.runhistory.RunValue._asdict" title="Permalink to this definition">¶</a></dt>
@@ -882,11 +1014,6 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunValue._fields">
 <span class="sig-name descname"><span class="pre">_fields</span></span><em class="property"> <span class="pre">=</span> <span class="pre">('cost',</span> <span class="pre">'time',</span> <span class="pre">'status',</span> <span class="pre">'starttime',</span> <span class="pre">'endtime',</span> <span class="pre">'additional_info')</span></em><a class="headerlink" href="#smac.runhistory.runhistory.RunValue._fields" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="smac.runhistory.runhistory.RunValue._fields_defaults">
-<span class="sig-name descname"><span class="pre">_fields_defaults</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{}</span></em><a class="headerlink" href="#smac.runhistory.runhistory.RunValue._fields_defaults" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -942,34 +1069,52 @@ self.cost_per_config and also updates self.runs_per_config;</p>
 </section>
 
 
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="smac.runhistory.html" class="btn btn-neutral float-left" title="smac.runhistory package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="smac.runhistory.runhistory2epm.html" class="btn btn-neutral float-right" title="smac.runhistory.runhistory2epm module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="smac.runhistory.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">smac.runhistory package</p>
         </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    </a>
+    <a class='right-next' id="next-link" href="smac.runhistory.runhistory2epm.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">smac.runhistory.runhistory2epm module</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
 
-</body>
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+4.2.0. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
 </html>

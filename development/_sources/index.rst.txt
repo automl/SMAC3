@@ -1,70 +1,52 @@
-.. SMAC3 documentation master file, created by
-   sphinx-quickstart on Mon Sep 14 12:36:21 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Home
+====
 
-SMAC3 documentation!
-=================================
-SMAC is a tool for algorithm configuration.
-It optimizes configurations of arbitrary algorithms across a set of instances.
-This includes, but is not limited to, optimization of parameters of hard combinatorial problem solvers and
-hyperparameter optimization of various machine learning algorithms.
-The main core consists of Bayesian Optimization in combination with a simple racing mechanism on
-the instances to efficiently decide which of two configurations performs better.
-
-
-Contents:
----------
 .. toctree::
-   :titlesonly:
-   :maxdepth: 1
+   :hidden:
+   :maxdepth: 2
 
-   installation
-   Quickstart <examples/quickstart/quickstart_example>
-   usage_recomendation
-   smac_examples
-   manual
-   api
-   faq
-   contact
-   license
+   pages/getting_started/index
+   pages/examples/index
+   pages/details/index
+   pages/api/index
+   pages/glossary
+   pages/faq
+   pages/license
 
 
-.. note::
+SMAC is a tool for algorithm configuration to optimize the parameters of
+arbitrary algorithms, including hyperparameter optimization of Machine Learning algorithms. The main core consists of
+Bayesian Optimization in combination with an aggressive racing mechanism to
+efficiently decide which of two configurations performs better.
 
-   For a detailed description of its main idea, we refer to:
+SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
+Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-      Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
-      Sequential Model-Based Optimization for General Algorithm Configuration
-      In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
+If you use SMAC, please cite our paper:
 
-   The SMAC3 package is not meant to be a reference implementation for SMAC according the above cited LION paper.
-   Please use SMAC v2 (Java) for comparisons against SMAC.
+.. code-block:: text
 
-.. note::
+    @inproceedings {lindauer-arxiv21a,
+      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+      title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+      booktitle = {ArXiv: 2109.09831},
+      year = {2021},
+      url = {https://arxiv.org/abs/2109.09831}
+    }
 
-   If you used SMAC in one of your research projects,
-   please cite us:
+For the original idea, we refer to:
 
+.. code-block:: text
 
-     | @misc{lindauer2021smac3,
-     |    title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}
-     |    author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
-     |    year={2021},
-     |    eprint={2109.09831},
-     |    archivePrefix={arXiv},
-     |    primaryClass={cs.LG}
-     | }
-
-SMAC3 is mainly written in Python 3 and continuously tested with Python 3.7-3.9.
-Its `Random Forest <https://github.com/automl/random_forest_run>`_ is written in
-C++11.
+   Hutter, F. and Hoos, H. H. and Leyton-Brown, K.
+   Sequential Model-Based Optimization for General Algorithm Configuration
+   In: Proceedings of the conference on Learning and Intelligent OptimizatioN (LION 5)
 
 
-.. Indices and tables
-.. ------------------
-..
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-.. * :ref:`search`
+Contact
+-------
+
+SMAC3 is developed by `<automl.org>`_.
+If you want to contribute or found an issue please visit our github page `<https://github.com/automl/SMAC3>`_.
+Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/master/CONTRIBUTING.md>`_.
 

@@ -8,12 +8,15 @@ smac.utils package
    :private-members:
 
 Subpackages
+-----------
 
 .. toctree::
    :maxdepth: 4
 
    smac.utils.io
 
+Submodules
+----------
 
 .. toctree::
    :maxdepth: 4
