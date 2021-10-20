@@ -1,6 +1,9 @@
 """
 Bootstrap-based sphinx theme from the PyData community
 """
+
+# mypy: ignore-errors
+
 import os
 
 from sphinx.errors import ExtensionError
