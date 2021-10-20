@@ -613,6 +613,7 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
         [Local Search] number of local search iterations
 
     """
+
     def __init__(
             self,
             acquisition_function: AbstractAcquisitionFunction,

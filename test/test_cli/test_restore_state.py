@@ -45,11 +45,11 @@ class TestSMACCLI(unittest.TestCase):
         Testing basic restore functionality.
         """
         # Run for 5 algo-calls
-        testargs = ["python", "scripts/smac", "--scenario_file",
+        testargs = ["python", "scripts/smac.py", "--scenario_file",
                     self.scenario_one, "--verbose", "DEBUG"]
         self.smaccli.main_cli(testargs[2:])
         # Increase limit and run for 10 (so 5 more) by using restore_state
-        testargs = ["python", "scripts/smac", "--restore_state",
+        testargs = ["python", "scripts/smac.py", "--restore_state",
                     self.output_one, "--scenario_file",
                     self.scenario_two, "--verbose", "DEBUG"]
         self.smaccli.main_cli(testargs[2:])
@@ -58,7 +58,7 @@ class TestSMACCLI(unittest.TestCase):
         """
         Testing error if dir is missing.
         """
-        testargs = ["python", "scripts/smac", "--restore_state",
+        testargs = ["python", "scripts/smac.py", "--restore_state",
                     "nonsense_test_dir", "--scenario_file",
                     self.scenario_two, "--verbose", "DEBUG"]
         self.assertRaises(FileNotFoundError, lambda: self.smaccli.main_cli(testargs[2:]))
@@ -86,11 +86,11 @@ class TestSMACCLI(unittest.TestCase):
         Testing possible error using same dir for restore
         """
         # Run for 5 algo-calls
-        testargs = ["python", "scripts/smac", "--scenario",
+        testargs = ["python", "scripts/smac.py", "--scenario",
                     self.scenario_one, "--verbose", "DEBUG"]
         self.smaccli.main_cli(testargs[2:])
         # Increase limit and run for 10 (so 5 more) by using restore_state
-        testargs = ["python", "scripts/smac", "--restore_state",
+        testargs = ["python", "scripts/smac.py", "--restore_state",
                     self.output_one, "--scenario",
                     self.scenario_two, "--verbose", "DEBUG"]
         # TODO: fix
