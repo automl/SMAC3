@@ -340,6 +340,11 @@ style="width: 100%;">
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="../pages/faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="../pages/license.html">
    License
   </a>
@@ -415,12 +420,12 @@ output if possible, creates the files from attributes otherwise</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.utils.io.output_writer.OutputWriter.save_configspace">
-<span class="sig-name descname"><span class="pre">save_configspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="ConfigSpace.configuration_space.ConfigurationSpace"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_configspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_format</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.utils.io.output_writer.OutputWriter.save_configspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writing ConfigSpace to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cs</strong> (<a class="reference internal" href="smac.configspace.html#smac.configspace.ConfigurationSpace" title="smac.configspace.ConfigurationSpace"><em>ConfigurationSpace</em></a>) – Config-space to be written</p></li>
+<li><p><strong>cs</strong> (<em>ConfigurationSpace</em>) – Config-space to be written</p></li>
 <li><p><strong>fn</strong> (<em>str</em>) – Output-file-path</p></li>
 <li><p><strong>output_format</strong> (<em>str</em>) – Output format of the configuration space file. Currently,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> and <code class="docutils literal notranslate"><span class="pre">pcs_new</span></code> are supported.</p></li>

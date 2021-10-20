@@ -340,6 +340,11 @@ style="width: 100%;">
   </a>
  </li>
  <li class="toctree-l1">
+  <a class="reference internal" href="../pages/faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
   <a class="reference internal" href="../pages/license.html">
    License
   </a>
@@ -438,12 +443,12 @@ style="width: 100%;">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs">
-<span class="sig-name descname"><span class="pre">_get_mean_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_rh</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_get_mean_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_rh</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><span class="pre">smac.runhistory.runhistory.RunHistory</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC._get_mean_costs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute mean cost per instance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>incs</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – incumbents determined by all parallel SMAC runs</p></li>
+<li><p><strong>incs</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – incumbents determined by all parallel SMAC runs</p></li>
 <li><p><strong>new_rh</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – runhistory to determine mean performance</p></li>
 </ul>
 </dd>
@@ -459,11 +464,11 @@ style="width: 100%;">
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids">
-<span class="sig-name descname"><span class="pre">get_best_incumbents_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_best_incumbents_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigSpace.configuration_space.Configuration</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determines the IDs and costs of the best configurations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>incs</strong> (<em>typing.List</em><em>[</em><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration"><em>Configuration</em></a><em>]</em>) – incumbents determined by all parallel SMAC runs</p>
+<dd class="field-odd"><p><strong>incs</strong> (<em>typing.List</em><em>[</em><em>Configuration</em><em>]</em>) – incumbents determined by all parallel SMAC runs</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
@@ -502,7 +507,7 @@ style="width: 100%;">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.facade.experimental.psmac_facade.optimize">
-<span class="sig-prename descclassname"><span class="pre">smac.facade.experimental.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><span class="pre">smac.tae.base.BaseRunner</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="ConfigSpace.configuration_space.Configuration"><span class="pre">ConfigSpace.configuration_space.Configuration</span></a></span></span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">smac.facade.experimental.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><span class="pre">smac.tae.base.BaseRunner</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></span><a class="headerlink" href="#smac.facade.experimental.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unbound method to be called in a subprocess</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -518,7 +523,7 @@ style="width: 100%;">
 <dd class="field-even"><p><strong>incumbent</strong> – The incumbent configuration of this run</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="smac.configspace.html#smac.configspace.Configuration" title="smac.configspace.Configuration">Configuration</a></p>
+<dd class="field-odd"><p>Configuration</p>
 </dd>
 </dl>
 </dd></dl>
