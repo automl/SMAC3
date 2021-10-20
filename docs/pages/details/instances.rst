@@ -25,7 +25,7 @@ used to expand the internal X matrix and thus play a role in training the underl
 See `here <https://github.com/automl/SMAC3/blob/master/smac/runhistory/runhistory2epm.py#L423>`_ for
 the exact implementation.
 
-For example, if I want to add the number of samples and the mean for each subset, I can do as
+For example, if I want to add the number of samples and the mean of each subset, I can do as
 follows:
 
 .. code-block:: bash

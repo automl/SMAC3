@@ -2,6 +2,14 @@ F.A.Q.
 ======
 
 
+Should I use SMAC2 or SMAC3?
+  SMAC3 is a reimplementation of the original SMAC tool (Sequential Model-Based Optimization for
+  General Algorithm Configuration, Hutter et al., 2021). However, the reimplementation slightly differs from the original
+  SMAC. For comparisons against the original SMAC, we refer to a stable release of SMAC (v2) in Java
+  which can be found `here <http://www.cs.ubc.ca/labs/beta/Projects/SMAC/>`_.
+  Since SMAC3 is actively maintained, we recommend to use SMAC3 for any AutoML applications.
+
+
 SMAC cannot be imported.
   Try to either run SMAC from SMAC's root directory
   or try to run the installation first.

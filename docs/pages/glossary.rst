@@ -44,7 +44,7 @@ Glossary
         the data subset the algorithm is trained on.
 
     PCS
-        ConfigurationSpace can be written/read from a PCS file.
+        `ConfigurationSpace<https://automl.github.io/ConfigSpace/master/API-Doc.html>`_ can be written/read from a PCS file.
 
     EPM
         Empirical Performance Models. Empirical performance models are regression models that characterize a given
@@ -56,3 +56,6 @@ Glossary
     Intensification
         A mechanism, that governs how many evaluations to perform with each configuration and when to trust a configuration
         enough to make it the new current best known configuration (the incumbent).
+
+    CV
+        Cross-Validation. 

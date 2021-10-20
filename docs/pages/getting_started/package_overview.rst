@@ -7,14 +7,6 @@ It offers several :ref:`Facades` and pre-sets for typical use cases, such as opt
 hyperparameters, solving low dimensional continuous (artificial) global optimization problems and configuring algorithms to perform well across multiple problem :ref:`Instances<Instances and Features>`.
 
 
-.. note::
-
-    Attention: This package is a reimplementation of the original SMAC tool.
-    However, the reimplementation slightly differs from the original SMAC.
-    For comparisons against the original SMAC, we refer to a stable release of SMAC (v2) in Java
-    which can be found `here <http://www.cs.ubc.ca/labs/beta/Projects/SMAC/>`_.
-
-
 Features
 ~~~~~~~~~
 
@@ -27,7 +19,7 @@ Optimize :term:`Black-Box<BB>` functions
     Optimization is only aware of input and output. It is agnostic to internals of the function.
 
 Flexible hyperparameters
-    Use categorical, continuous or hierarchical hyperparameters. SMAC can optimize up to 100
+    Use categorical, continuous or hierarchical hyperparameters with the well-integrated `ConfigurationSpace<https://automl.github.io/ConfigSpace/master/API-Doc.html>`_. SMAC can optimize up to 100
     hyperparameters efficiently.
 
 Any objectives

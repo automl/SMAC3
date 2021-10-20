@@ -12,12 +12,12 @@ These recommendations are based on our experience and technical limitations and 
     :widths: 15, 10, 10, 10, 10
 
     "# parameter", "low", "low/medium/high", "low/medium/high", "low/medium/high"
-    "Categorical parameters", "yes", "supported", "supported", "supported"
-    "Conditional parameters", "yes", "supported", "supported", "supported"
-    "Instances", "no", "None or CV-folds", "None or CV-folds", "yes"
-    "Stochasticity",  "no", "supported", "supported", "supported"
-    "Objective", "any (except runtime)", "e.g. validation loss ",  "e.g. validation loss ", "any"
-    "Multi-Fidelity", "no", "no", "yes", "yes"
+    "Categorical parameters", "Yes", "Supported", "Supported", "Supported"
+    "Conditional parameters", "Yes", "Supported", "Supported", "Supported"
+    "Instances", "No", "None or :term:`CV`", "None or :term:`CV`", "Yes"
+    "Stochasticity",  "No", "Supported", "Supported", "Supported"
+    "Objective", "Any (except runtime)", "e.g. validation loss",  "e.g. validation loss", "Any"
+    "Multi-Fidelity", "No", "No", "Yes", "Yes"
     "Search Strategy", ":term:`Gaussian Process<GP>` or :term:`GP-MCMC`", ":term:`Random Forest<RF>`", ":term:`Random
     Forest<RF>`", ":term:`Random Forest<RF>`, :term:`Gaussian Process<GP>`, :term:`GP-MCMC` or Random"
 
