@@ -3,9 +3,8 @@
     "emcee>=3.0.0"
   ],
   "documentation": [
-    "sphinx",
-    "sphinx_rtd_theme",
-    "sphinx-gallery==0.5.0"
+    "sphinx==4.2.0",
+    "sphinx-gallery==0.10.0"
   ],
   "test": [
     "pytest>=4.6",
