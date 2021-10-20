@@ -13,7 +13,7 @@
 * `README.md` updated.
 * `CITATION.cff` added.
 * Made `smac-validate.py` consistent with runhistory and tae. (#762)
-* `minR`, `maxR` and `use_ta_time` can be initialized by scenario. (#775)
+* `minR`, `maxR` and `use_ta_time` can now be initialized by the scenario. (#775)
 
 
 ## Bug Fixes
