@@ -69,7 +69,9 @@ class SMBO(object):
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
-                 min_samples_model: int = 1):
+                 min_samples_model: int = 1,
+                 epm_chooser: EPMChooser=EPMChooser,
+                 epm_chooser_kwargs: typing.Optional[typing.Dict]=None):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -130,19 +132,22 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
+        if epm_chooser_kwargs is None:
+            epm_chooser_kwargs = {}
         # initialize the chooser to get configurations from the EPM
-        self.epm_chooser = EPMChooser(scenario=scenario,
-                                      stats=stats,
-                                      runhistory=runhistory,
-                                      runhistory2epm=runhistory2epm,
-                                      model=model,
-                                      acq_optimizer=acq_optimizer,
-                                      acquisition_func=acquisition_func,
-                                      rng=rng,
-                                      restore_incumbent=restore_incumbent,
-                                      random_configuration_chooser=random_configuration_chooser,
-                                      predict_x_best=predict_x_best,
-                                      min_samples_model=min_samples_model)
+        self.epm_chooser = epm_chooser(scenario=scenario,
+                                       stats=stats,
+                                       runhistory=runhistory,
+                                       runhistory2epm=runhistory2epm,
+                                       model=model,
+                                       acq_optimizer=acq_optimizer,
+                                       acquisition_func=acquisition_func,
+                                       rng=rng,
+                                       restore_incumbent=restore_incumbent,
+                                       random_configuration_chooser=random_configuration_chooser,
+                                       predict_x_best=predict_x_best,
+                                       min_samples_model=min_samples_model,
+                                       **epm_chooser_kwargs)
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False

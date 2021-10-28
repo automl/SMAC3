@@ -96,6 +96,7 @@ class SMAC4AC(object):
                  restore_incumbent: Optional[Configuration] = None,
                  rng: Optional[Union[np.random.RandomState, int]] = None,
                  smbo_class: Optional[Type[SMBO]] = None,
+                 smbo_kwargs: Optional[Dict] = None,
                  run_id: Optional[int] = None,
                  random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
                  random_configuration_chooser_kwargs: Optional[Dict] = None,
@@ -172,6 +173,8 @@ class SMAC4AC(object):
         smbo_class : ~smac.optimizer.smbo.SMBO
             Class implementing the SMBO interface which will be used to
             instantiate the optimizer class.
+        smbo_kwargs : ~ Optional[Dict]
+            Arguments passed to the constructor of '~smbo'
         run_id : int (optional)
             Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be
             chosen.
@@ -577,6 +580,8 @@ class SMAC4AC(object):
             'random_configuration_chooser': random_configuration_chooser_instance,
             'tae_runner': tae_runner_instance,
         }  # type: Dict[str, Any]
+        if smbo_kwargs is not None:
+            smbo_args.update(smbo_kwargs)
 
         if smbo_class is None:
             self.solver = SMBO(**smbo_args)  # type: ignore[arg-type] # noqa F821

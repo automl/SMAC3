@@ -530,6 +530,7 @@ class TS(AbstractAcquisitionFunction):
 
         :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
         Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+
         Parameters
         ----------
         model : AbstractEPM
@@ -537,6 +538,7 @@ class TS(AbstractAcquisitionFunction):
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
             TS does not require par here, we only wants to make it consistent with other acquisition functions
+
         """
         super(TS, self).__init__(model)
         self.long_name = 'Thompson Sampling'
@@ -567,3 +569,4 @@ class TS(AbstractAcquisitionFunction):
         m = m.flatten()
         var_ = np.diag(var_.flatten())
         return - rng.multivariate_normal(m, var_, 1).T
+
