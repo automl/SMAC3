@@ -41,8 +41,6 @@ class GaussianProcessGPyTorch(BaseModel):
                  configspace: ConfigurationSpace,
                  types: typing.List[int],
                  bounds: typing.List[typing.Tuple[float, float]],
-                 bounds_cont: np.ndarray,
-                 bounds_cat: typing.List[typing.List[typing.Tuple]],
                  seed: int,
                  kernel: Kernel,
                  likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
@@ -104,8 +102,6 @@ class GaussianProcessGPyTorch(BaseModel):
                 noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
             ).double()
         self.likelihood = likelihood
-        self.bound_cont = bounds_cont
-        self.bound_cat = bounds_cat
 
         self.cat_dims = np.where(np.array(types) != 0)[0]
         self.cont_dims = np.where(np.array(types) == 0)[0]

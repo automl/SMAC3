@@ -518,8 +518,6 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
         super(PartialSparseGaussianProcess, self).__init__(configspace=configspace,
                                                            types=types,
                                                            bounds=bounds,
-                                                           bounds_cont=bounds_cont,
-                                                           bounds_cat=bounds_cat,
                                                            seed=seed,
                                                            kernel=kernel,
                                                            likelihood=likelihood,
@@ -528,6 +526,8 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                                                            instance_features=instance_features,
                                                            pca_components=pca_components,
                                                            )
+        self.bounds_cont = bounds_cont,
+        self.bounds_cat = bounds_cat,
         self.num_inducing_points = num_inducing_points
 
     def update_attribute(self, **kwargs: typing.Any):

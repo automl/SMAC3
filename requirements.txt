@@ -9,4 +9,3 @@ pyrfr>=0.8.0
 dask
 distributed
 emcee
-
