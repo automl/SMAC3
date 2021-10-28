@@ -90,7 +90,7 @@ SMAC comes with a set of optional dependencies that can be installed using `setu
 extras <https://setuptools.pypa.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_:
 
 
-For convenience, there is also an all meta-dependency that installs ``all`` optional dependencies:
+For convenience, there is an all meta-dependency that installs ``all`` optional dependencies:
 
 .. code-block::
 
