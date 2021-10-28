@@ -89,14 +89,6 @@ Optional Dependencies
 SMAC comes with a set of optional dependencies that can be installed using `setuptools
 extras <https://setuptools.pypa.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_:
 
-- `gpmcmc`: Gaussian Process Models whose hyperparameters are integrated by Markov Chain Monte Carlo
-
-These can be installed from PyPI or manually:
-
-.. code-block::
-
-    pip install smac[gpmcmc]
-
 
 For convenience, there is also an all meta-dependency that installs ``all`` optional dependencies:
 
