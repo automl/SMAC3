@@ -14,7 +14,6 @@ from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProces
 from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-<<<<<<< HEAD
 from smac.optimizer.acquisition import TS
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
