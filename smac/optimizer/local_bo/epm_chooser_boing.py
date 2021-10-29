@@ -17,7 +17,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
-from smac.optimizer.local_bo.turbo_subspace import TurBOSubSpace
+from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
 from smac.optimizer.local_bo.boing_subspace import BOinGSubspace
 from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4CostWithRaw
 
@@ -46,52 +46,33 @@ class EPMChooserBOinG(EPMChooser):
                  turbo_kwargs: typing.Optional[typing.Dict] = None,
                  ):
         """
-        Interface to train the EPM and generate next configurations with outer loop level and inner loop level
+        Interface to train the EPM and generate next configurations with both global and local models
 
         Parameters
         ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        stats: smac.stats.stats.Stats
-            statistics object with configuration budgets
-        runhistory: smac.runhistory.runhistory.RunHistory
-            runhistory with all runs so far
         runhistory2epm: RunHistory2EPM4CostWithRaw,
-            a transformer to transform rh to vectors, needs also to provide the raw values for optimizer in different
-            stages
+            a transformer to transform rh to vectors, different from the rh2epm used in vanilla EPMChooser, this rh2epm
+            object needs to provide the raw values for optimizer in different stages
         model: smac.epm.rf_with_instances.RandomForestWithInstances
-            empirical performance model (right now, we support only
-            RandomForestWithInstances) in the outer loop
+            empirical performance model (right now, we support only RandomForestWithInstances) as a global model
         acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-            Optimizer of acquisition function in the outer loop
+            Optimizer of acquisition function of global models
         model_local: AbstractEPM,
-            local empirical performance model
+            local empirical performance model, used in subspace
         model_local_kwargs: typing.Optional[typing.Dict] = None,
             parameters for initializing a local model
         acquisition_func_local: AbstractAcquisitionFunction,
-            local acquisition function
+            local acquisition function,  used in subspace
         acquisition_func_local_kwargs: typing.Optional[typing.Dict] = None,
-            parameters for initializing a acquisition function
-        restore_incumbent: Configuration
-            incumbent to be used from the start. ONLY used to restore states.
-        rng: np.random.RandomState
-            Random number generator
-        random_configuration_chooser
-            Chooser for random configuration -- one of
-            * ChooserNoCoolDown(modulus)
-            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-
-        predict_x_best: bool
-            Choose x_best for computing the acquisition function via the model instead of via the observations.
         max_configs_local_fracs : float
-            Maximal number of fractions of samples to be included in the inner loop. If the number of samples in the
+            Maximal number of fractions of samples to be included in the  subapce. If the number of samples in the
             subsapce is beyond this value and n_min_config_inner, the subspace will be cropped to fit the requirement
         min_configs_local: int,
             Minimum number of samples included in the inner loop model
         do_switching: bool
-           if we want to switch between turbo and boing
+           if we want to switch between turbo and boing or do a pure BOinG search
         turbo_kwargs: typing.Optional[typing.Dict] = None
-           parameters for building a turbo subspace
+           parameters for building a turbo optimizer
         """
         # initialize the original EPM_Chooser
         super(EPMChooserBOinG, self).__init__(scenario=scenario,
@@ -133,6 +114,7 @@ class EPMChooserBOinG(EPMChooser):
 
         self.ss_threshold = 0.1 ** len(self.scenario.cs.get_hyperparameters())
         if self.do_switching:
+            # If we want to switch between BOinG and TurBO
             self.run_turBO = False
             self.failcount_BOinG = 0
             self.failcount_TurBO = 0
@@ -152,9 +134,25 @@ class EPMChooserBOinG(EPMChooser):
                 turbo_opt_kwargs.update(turbo_kwargs)
             self.turbo_optimizer = TurBOSubSpace(**turbo_opt_kwargs)
 
-    def restart_TurBOinG(self, X, Y, Y_raw, train_model=False):
+    def restart_TurBOinG(self,
+                         X: np.ndarray,
+                         Y: np.ndarray,
+                         Y_raw: np.ndarray,
+                         train_model: bool=False):
         """
-        Restart a new TurBO Optimizer, the bounds of the TurBO Optimizer is selected by a RF 
+        Restart a new TurBO Optimizer, the bounds of the TurBO Optimizer is determined by a RF, we randomly sample 20
+        points and extract subspaces that contain at least self.min_configs_local points, and we select the subspace
+        with the largest volume to construct a turbo optimizer
+        Parameters
+        ----------
+        X: np.ndarray (N, D)
+            previous evaluated configurations
+        Y: np.ndarray (N,)
+            performances of previous evaluated configurations (transformed by rh2epm transformer)
+        Y_raw: np.ndarray (N,)
+            performances of previous evaluated configurations (raw values, not transformed)
+        train_model: bool
+            if we retrain the model with the given X and Y
         """
         if train_model:
             self.model.train(X, Y)
@@ -181,14 +179,17 @@ class EPMChooserBOinG(EPMChooser):
         ss_data_indices = union_indices[ss_idx]
 
         # we only consder numerical(continuous) hyperparameters here
-        self.turbo_optimizer = TurBOSubSpace(**self.turbo_kwargs,
+        self.turbo_optimizer = TuRBOSubSpace(**self.turbo_kwargs,
                                              bounds_ss_cont=ss_turbo,
                                              initial_data=(X[ss_data_indices], Y_raw[ss_data_indices]))
 
     def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The
-        suggested configurations depend on the argument ``acq_optimizer_outer`` and ''acq_optimizer_inner'' to
-        the ``SMBO`` class.
+        """
+        Choose next candidate solution with Bayesian optimization. We use TurBO optimizer or BOinG to suggest
+         the next configuration.
+        If we switch local model between TurBO and BOinG, we gradually increase the probability to switch to another optimizer if we
+        cannot make further process. (Or if TurBO find a new incumbent, we will switch to BOinG to do further
+        exploitation)
 
         Parameters
         ----------
@@ -201,17 +202,17 @@ class EPMChooserBOinG(EPMChooser):
         -------
         Iterator
         """
+        # we also need the untransformed raw y values to used for local models
         X, Y, Y_raw, X_configurations = self._collect_data_to_train_model()
-        # X, Y, X_configurations = self._collect_data_to_train_model()
-        # Y_raw = Y
         if self.do_switching:
             if self.run_turBO:
                 X, Y, Y_raw, X_configurations = self._collect_data_to_train_model()
 
-                num_new_bservations = 1 # here we only consider batch_size ==1
+                num_new_bservations = 1  # here we only consider batch_size ==1
 
                 new_observations = Y_raw[-num_new_bservations:]
 
+                # give new suggestions from initialized values in TurBO
                 if len(self.turbo_optimizer.init_configs) > 0:
                     self.turbo_optimizer.add_new_observations(X[-num_new_bservations:],
                                                               Y_raw[-num_new_bservations:])
@@ -219,10 +220,9 @@ class EPMChooserBOinG(EPMChooser):
 
                 self.turbo_optimizer.adjust_length(new_observations)
 
+                # if we need to restart TurBO, we first check if we want to switch to BOinG
                 if self.turbo_optimizer.length < self.turbo_optimizer.length_min:
                     optimal_turbo = np.min(self.turbo_optimizer.ss_y)
-                    # self.optimal_value = Y_raw[-1].item()
-                    # self.optimal_config = X[-1]
 
                     self.logger.debug(f'Best Found value by TurBO: {optimal_turbo}')
 
@@ -233,11 +233,13 @@ class EPMChooserBOinG(EPMChooser):
                         # compute the distance between the previous incumbent and new incumbent
                         cfg_diff = X[min_idx] - self.optimal_config
                         self.optimal_config = X[min_idx]
-                        # we avoid sticking to a local minimum too often
+                        # we avoid sticking to a local minimum too often, e.g. either we have a relative much better
+                        # configuration or the new configuration is a little bit far away from the current incumbent
                         if increment < -1e-3 * np.abs(self.optimal_value) or np.abs(
                                 np.product(cfg_diff)) >= self.ss_threshold:
                             self.failcount_TurBO -= 1
-                            # switch to BOinG as TurBO found a better model and we could do a exploration
+                            # switch to BOinG as TurBO found a better model and we could do exploration
+                            # also we halve the failcount of BOinG to avoid switching to TurBO too frequently
                             self.failcount_BOinG = self.failcount_BOinG // 2
                             self.run_turBO = False
                             self.logger.debug('Optimizer switches to BOinG!')
@@ -245,10 +247,8 @@ class EPMChooserBOinG(EPMChooser):
                     else:
                         self.failcount_TurBO += 1
 
-                    if self.failcount_TurBO < 4:
-                        prob_to_BOinG = 0.5 ** (4 - self.failcount_TurBO)
-                    else:
-                        prob_to_BOinG = 1 - 0.5 ** (self.failcount_TurBO - 4)
+                    # The probability is a linear curve.
+                    prob_to_BOinG = 0.1 * self.failcount_TurBO
 
                     self.logger.debug(f'failure count TurBO :{self.failcount_TurBO}')
                     rand_value = self.rng.random()
@@ -271,8 +271,8 @@ class EPMChooserBOinG(EPMChooser):
             return self._random_search.maximize(
                 runhistory=self.runhistory, stats=self.stats, num_points=1
             )
-        # if the number of points is not big enough, we simply build one subspace and
-        # fits the model with that single model
+        # if the number of points is not big enough, we simply build one subspace (the raw configuration space) and
+        # the local model becomes global model
         if X.shape[0] < (self.min_configs_local / self.frac_to_start_bi):
             ss = BOinGSubspace(config_space=self.scenario.cs,
                                bounds=self.bounds,
@@ -306,10 +306,10 @@ class EPMChooserBOinG(EPMChooser):
             num_data=len(self._get_evaluated_configs()),
             X=X_configurations,
         )
-        list_sub_space = []
 
         if self.do_switching:
             # check if we need to switch to turbo
+            # same as above
             self.failcount_BOinG += 1
             increment = Y_raw[-1].item() - self.optimal_value
             if increment < 0:
@@ -328,16 +328,11 @@ class EPMChooserBOinG(EPMChooser):
                     self.optimal_config = X[idx_min]
                     self.failcount_BOinG = 0
 
+            # similar to TurBO, we do a judgement every n_dimension times
             amplify_param = self.failcount_BOinG // (X.shape[-1] * 1)
 
             if self.failcount_BOinG % (X.shape[-1] * 1) == 0:
-                if amplify_param > 4:
-                    prob_to_TurBO = 1 - 0.5 ** min(amplify_param - 4, 3)
-                else:
-                    if amplify_param < 1:
-                        prob_to_TurBO = 0
-                    else:
-                        prob_to_TurBO = 0.5 ** max(4 - amplify_param, self.random_search_upper_log)
+                prob_to_TurBO = 0.1 * amplify_param
 
                 rand_value = self.rng.random()
                 if rand_value < prob_to_TurBO:
@@ -347,18 +342,20 @@ class EPMChooserBOinG(EPMChooser):
                     self.failcount_TurBO = self.failcount_TurBO // 2
                     self.restart_TurBOinG(X=X, Y=Y, Y_raw=Y_raw, train_model=False)
 
-        challengers = self.acq_optimizer.maximize(
+        challengers_global = self.acq_optimizer.maximize(
             runhistory=self.runhistory,
             stats=self.stats,
             num_points=self.scenario.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser=self.random_configuration_chooser
         )
 
-        cfg_challenger = next(challengers)
-        challenger_global = cfg_challenger.get_array()
+        cfg_challenger_global = next(challengers_global)
+        challenger_global = cfg_challenger_global.get_array()
 
         num_max_configs = int(X.shape[0] * self.max_configs_local_fracs)
 
+        # to avoid the case that num_max_configs is only a little bit larger than self.min_configs_local and we drop
+        # some subspace too early without sparing too much time
         num_max = MAXINT if num_max_configs <= 2 * self.min_configs_local else num_max_configs,
 
         bounds_ss_cont, bounds_ss_cat, ss_data_indices = subspace_extraction(X=X,
@@ -387,27 +384,33 @@ class EPMChooserBOinG(EPMChooser):
                            )
         return ss.generate_challengers()
 
-    def _get_x_best(self, predict: bool, X: np.ndarray, use_inner_model: bool = False) \
+
+    def _get_x_best(self, predict: bool, X: np.ndarray, use_local_model: bool = False) \
             -> typing.Tuple[float, np.ndarray]:
         """Get value, configuration, and array representation of the "best" configuration.
 
         The definition of best varies depending on the argument ``predict``. If set to ``True``,
         this function will return the stats of the best configuration as predicted by the model,
-        otherwise it will return the stats for the best observed configuration.
+        otherwise it will return the stats for the best observed configuration. Unlike the implementation in
+        EPMChooser, we also need to consider if the model is a local model or not
 
         Parameters
         ----------
         predict : bool
             Whether to use the predicted or observed best.
-
+        X: np.ndarray (N,D)
+            Previous evaluated points
+        use_local_model: bool
+            if we want to use local model to predict the performances of X
         Return
         ------
-        float
-        np.ndarry
-        Configuration
+        x_best_array: np.ndarry
+            best array of the configuration
+        best_observation: float
+            best observations until now
         """
         if predict:
-            if use_inner_model:
+            if use_local_model:
                 costs = list(map(
                     lambda x: (
                         self.model_inner.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
@@ -441,6 +444,9 @@ class EPMChooserBOinG(EPMChooser):
         return x_best_array, best_observation
 
     def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """
+        Similar to the implementaiton of EPMChooser, however, we also return the raw values here.
+        """
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for run_key in self.runhistory.data.keys():
@@ -473,20 +479,31 @@ def subspace_extraction(X: np.ndarray,
     extract a subspace that contains at least num_min but no more than num_max
     Parameters
     ----------
-    X: points used to train the model
-    challenger: the challenger where the subspace would grow
-    model: a rf model
-    num_min: minimal number of points to be included in the subspace
-    num_max: maximal number of points to be included in the subspace
-    bounds: bounds of the entire space
-    cat_dims: categorical dimensions
-    cont_dims: continuous dimensions
+    X: np.ndarray (N, D)
+        points used to train the model
+    challenger: np.ndarray (1, D)
+        the challenger where the subspace would grow
+    model: RandomForestWithInstances
+        a rf model
+    num_min: int
+        minimal number of points to be included in the subspace
+    num_max: int
+        maximal number of points to be included in the subspace
+    bounds: np.ndarray(D, 2)
+        bounds of the entire space, D = D_cat + D_cont
+    cat_dims: np.ndarray (D_cat)
+        categorical dimensions
+    cont_dims: np.ndarray(D_cont)
+    continuous dimensions
 
     Returns
     -------
-    union_bounds_cont: np.ndarray, the continuous bounds of the subregion
-    union_bounds_cat, List[Tuple], the categorical bounds of the subregion
-    in_ss_dims: indices of the points that lie inside the subregion
+    union_bounds_cont: np.ndarray(D_cont, 2),
+         the continuous bounds of the subregion
+    union_bounds_cat, List[Tuple],
+        the categorical bounds of the subregion
+    in_ss_dims:
+        indices of the points that lie inside the subregion
     """
     trees = model.rf.get_all_trees()
     num_trees = len(trees)
@@ -529,14 +546,17 @@ def subspace_extraction(X: np.ndarray,
             feature_idx = node.get_feature_index()
             cont_feature_idx = np.where(feature_idx == cont_dims)[0]
             if cont_feature_idx.size == 0:
+                # This node split the subspace w.r.t. the categorical hyperparameters
                 cat_feature_idx = np.where(feature_idx == cat_dims)[0][0]
                 split_value = node.get_cat_split()
                 intersect = np.intersect1d(ss_bounds_cat[cat_feature_idx], split_value, assume_unique=True)
 
                 if len(intersect) == len(ss_bounds_cat[cat_feature_idx]):
+                    # will fall into the left child
                     temp_child_idx = 0
                     node_indices[i] = node.get_child_index(temp_child_idx)
                 elif len(intersect) == 0:
+                    # will fall into the left child
                     temp_child_idx = 1
                     node_indices[i] = node.get_child_index(temp_child_idx)
                 else:
@@ -549,7 +569,7 @@ def subspace_extraction(X: np.ndarray,
                         temp_node_indices = ss_indices & np.in1d(X[:, feature_idx], split_value, invert=True)
                         temp_bound_ss = np.setdiff1d(ss_bounds_cat[cat_feature_idx], split_value)
                     if sum(temp_node_indices) > num_min:
-                        # number of points inside subspace is still greater than num_min
+                        # number of points inside subspace is still greater than num_min, we could go deeper
                         ss_bounds_cat[cat_feature_idx] = temp_bound_ss
                         ss_indices = temp_node_indices
                         node_indices[i] = node.get_child_index(temp_child_idx)
@@ -557,8 +577,11 @@ def subspace_extraction(X: np.ndarray,
                         if check_num_min:
                             stop_update[i] = True
                         else:
+                            # if we don't check the num_min, we will stay go deeper into the child nodes without
+                            # splitting the subspace
                             node_indices[i] = node.get_child_index(temp_child_idx)
             else:
+                # This node split the subspace w.r.t. the continuous hyperparameters
                 split_value = node.get_num_split_value()
                 cont_feature_idx = cont_feature_idx.item()
                 if ss_bounds_cont[cont_feature_idx][0] <= split_value <= ss_bounds_cont[cont_feature_idx][1]:
@@ -589,6 +612,7 @@ def subspace_extraction(X: np.ndarray,
         traverse_forest()
 
     if sum(ss_indices) > num_max:
+        # number of points inside the subregion have a larger value than num_max
         stop_update = [False] * num_trees
         while sum(stop_update) < num_trees:
             traverse_forest(False)

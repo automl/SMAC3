@@ -1,23 +1,13 @@
-import logging
 import typing
 
 import numpy as np
-import math
-
-import pyDOE
-
-from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
-from smac.configspace.util import convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
-    RandomSearch
-from smac.optimizer.local_bo.turbo_subspace import TurBOSubSpace
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
+from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserNoCoolDown
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory
@@ -49,32 +39,11 @@ class EPMChooserTurBO(EPMChooser):
                  n_candidate_max: int = 5000,
                  ):
         """
-        Interface to train the EPM and generate next configurations
+        Interface to train the EPM and generate next configurations with TurBO:
+        D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
+        https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf
         Parameters
         ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        stats: smac.stats.stats.Stats
-            statistics object with configuration budgets
-        runhistory: smac.runhistory.runhistory.RunHistory
-            runhistory with all runs so far
-        model: smac.epm.rf_with_instances.RandomForestWithInstances
-            empirical performance model (right now, we support only
-            RandomForestWithInstances)
-        acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-            Optimizer of acquisition function.
-        restore_incumbent: Configuration
-            incumbent to be used from the start. ONLY used to restore states.
-        rng: np.random.RandomState
-            Random number generator
-        random_configuration_chooser
-            Chooser for random configuration -- one of
-            * ChooserNoCoolDown(modulus)
-            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-        predict_x_best: bool
-            Choose x_best for computing the acquisition function via the model instead of via the observations.
-        min_samples_model: int
-            Minimum number of samples to build a model
         length_init: float
             Initialized length after restarting
         length_min: float
@@ -105,7 +74,7 @@ class EPMChooserTurBO(EPMChooser):
                                               min_samples_model=min_samples_model)
         types, bounds = get_types(self.scenario.cs, instance_features=None)
 
-        self.turbo = TurBOSubSpace(config_space=scenario.cs,
+        self.turbo = TuRBOSubSpace(config_space=scenario.cs,
                                    bounds=bounds,
                                    hps_types=types,
                                    model_local=model,
@@ -119,9 +88,7 @@ class EPMChooserTurBO(EPMChooser):
                                    n_candidate_max=n_candidate_max,)
 
     def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The
-        suggested configurations depend on the argument ``acq_optimizer`` to
-        the ``SMBO`` class.
+        """Choose next candidate solution with TuRBO
         Parameters
         ----------
         incumbent_value: float
@@ -135,7 +102,7 @@ class EPMChooserTurBO(EPMChooser):
         self.logger.debug("Search for next configuration")
         X, Y, X_configurations = self._collect_data_to_train_model()
 
-        num_new_bservations = len(Y) - len(self.turbo.ss_y)
+        num_new_bservations = 1 # here we only consider batch size = 1
 
         new_observations = Y[-num_new_bservations:]
         if len(self.turbo.init_configs) > 0:

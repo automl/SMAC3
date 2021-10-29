@@ -21,7 +21,9 @@ from smac.configspace import ConfigurationSpace
 from smac.utils.constants import VERY_SMALL_NUMBER
 from smac.epm.base_gp import BaseModel
 
-gpytorch.settings.debug.off()
+
+import warnings
+warnings.filterwarnings("ignore", module="gpytorch")
 
 
 class ExactGPModel(ExactGP):
@@ -228,7 +230,7 @@ class GaussianProcessGPyTorch(BaseModel):
 
         p0 = [x0]
 
-        # To Avoid infinite sampling
+        # Avoid infinite sampling
         n_tries = 5000
         for i in range(n_tries):
             try:

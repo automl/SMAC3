@@ -1,3 +1,4 @@
+import copy
 from inspect import signature, Signature
 import math
 from typing import Optional, Union, Tuple, List, Callable, Dict, Any
@@ -12,6 +13,7 @@ from smac.epm.gp_base_prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
+
 
 
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
@@ -29,7 +31,6 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> n
 
 
 class MagicMixin:
-
     # This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
     # it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
     # Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know
@@ -39,11 +40,11 @@ class MagicMixin:
     prior = None  # type: Optional[Prior]
 
     def __call__(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
 
         if active is None and self.has_conditions:  # type: ignore[attr-defined] # noqa F821
@@ -203,22 +204,22 @@ class MagicMixin:
 class Sum(MagicMixin, kernels.Sum):
 
     def __init__(
-        self,
-        k1: kernels.Kernel,
-        k2: kernels.Kernel,
-        operate_on: np.ndarray = None,
-        has_conditions: bool = False,
+            self,
+            k1: kernels.Kernel,
+            k2: kernels.Kernel,
+            operate_on: np.ndarray = None,
+            has_conditions: bool = False,
     ) -> None:
         super(Sum, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: np.ndarray = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: np.ndarray = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Return the kernel k(X, Y) and optionally its gradient.
 
@@ -259,22 +260,22 @@ class Sum(MagicMixin, kernels.Sum):
 class Product(MagicMixin, kernels.Product):
 
     def __init__(
-        self,
-        k1: kernels.Kernel,
-        k2: kernels.Kernel,
-        operate_on: np.ndarray = None,
-        has_conditions: bool = False,
+            self,
+            k1: kernels.Kernel,
+            k2: kernels.Kernel,
+            operate_on: np.ndarray = None,
+            has_conditions: bool = False,
     ) -> None:
         super(Product, self).__init__(k1=k1, k2=k2)
         self.set_active_dims(operate_on)
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: np.ndarray = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: np.ndarray = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Return the kernel k(X, Y) and optionally its gradient.
 
@@ -316,12 +317,12 @@ class Product(MagicMixin, kernels.Product):
 class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 
     def __init__(
-        self,
-        constant_value: float = 1.0,
-        constant_value_bounds: Tuple[float, float] = (1e-5, 1e5),
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
-        has_conditions: bool = False,
+            self,
+            constant_value: float = 1.0,
+            constant_value_bounds: Tuple[float, float] = (1e-5, 1e5),
+            operate_on: Optional[np.ndarray] = None,
+            prior: Optional[Prior] = None,
+            has_conditions: bool = False,
     ) -> None:
 
         super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
@@ -330,11 +331,11 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Return the kernel k(X, Y) and optionally its gradient.
 
@@ -386,13 +387,13 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 class Matern(MagicMixin, kernels.Matern):
 
     def __init__(
-        self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
-        nu: float = 1.5,
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
-        has_conditions: bool = False,
+            self,
+            length_scale: Union[float, Tuple[float, ...]] = 1.0,
+            length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+            nu: float = 1.5,
+            operate_on: Optional[np.ndarray] = None,
+            prior: Optional[Prior] = None,
+            has_conditions: bool = False,
     ) -> None:
 
         super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
@@ -401,11 +402,11 @@ class Matern(MagicMixin, kernels.Matern):
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """ Return the kernel k(X, Y) and optionally its gradient.
 
@@ -503,12 +504,12 @@ class Matern(MagicMixin, kernels.Matern):
 class RBF(MagicMixin, kernels.RBF):
 
     def __init__(
-        self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
-        has_conditions: bool = False,
+            self,
+            length_scale: Union[float, Tuple[float, ...]] = 1.0,
+            length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+            operate_on: Optional[np.ndarray] = None,
+            prior: Optional[Prior] = None,
+            has_conditions: bool = False,
     ) -> None:
 
         super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
@@ -517,11 +518,11 @@ class RBF(MagicMixin, kernels.RBF):
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Return the kernel k(X, Y) and optionally its gradient.
 
@@ -586,12 +587,12 @@ class RBF(MagicMixin, kernels.RBF):
 class WhiteKernel(MagicMixin, kernels.WhiteKernel):
 
     def __init__(
-        self,
-        noise_level: Union[float, Tuple[float, ...]] = 1.0,
-        noise_level_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
-        has_conditions: bool = False,
+            self,
+            noise_level: Union[float, Tuple[float, ...]] = 1.0,
+            noise_level_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+            operate_on: Optional[np.ndarray] = None,
+            prior: Optional[Prior] = None,
+            has_conditions: bool = False,
     ) -> None:
 
         super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
@@ -600,11 +601,11 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
         self.has_conditions = has_conditions
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """ Return the kernel k(X, Y) and optionally its gradient.
 
@@ -656,12 +657,12 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
 class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.NormalizedKernelMixin, kernels.Kernel):
 
     def __init__(
-        self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
-        operate_on: Optional[np.ndarray] = None,
-        prior: Optional[Prior] = None,
-        has_conditions: bool = False,
+            self,
+            length_scale: Union[float, Tuple[float, ...]] = 1.0,
+            length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+            operate_on: Optional[np.ndarray] = None,
+            prior: Optional[Prior] = None,
+            has_conditions: bool = False,
     ) -> None:
         self.length_scale = length_scale
         self.length_scale_bounds = length_scale_bounds
@@ -678,11 +679,11 @@ class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.Normalize
         return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds)
 
     def _call(
-        self,
-        X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        eval_gradient: bool = False,
-        active: Optional[np.ndarray] = None,
+            self,
+            X: np.ndarray,
+            Y: Optional[np.ndarray] = None,
+            eval_gradient: bool = False,
+            active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Return the kernel k(X, Y) and optionally its gradient.
 
@@ -726,7 +727,7 @@ class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.Normalize
             Y = np.atleast_2d(Y)
 
         indicator = np.expand_dims(X, axis=1) != Y
-        K = (-1 / (2 * length_scale**2) * indicator).sum(axis=2)
+        K = (-1 / (2 * length_scale ** 2) * indicator).sum(axis=2)
         K = np.exp(K)
 
         if active is not None:

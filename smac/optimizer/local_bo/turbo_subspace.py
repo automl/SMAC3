@@ -14,6 +14,7 @@ from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProces
 from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+<<<<<<< HEAD
 from smac.optimizer.acquisition import TS
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
@@ -99,20 +100,20 @@ class TuRBOSubSpace(AbstractSubspace):
 
         self.lb = np.zeros(self.n_dims)
         self.ub = np.ones(self.n_dims)
-
         self.config_origin = "TuRBO"
 
     def _restart_turbo(self,
                        n_init_points: int,
                        ):
         """
-        restart TurBO with a certain number of initialized points. New points are initialized with latin
+        restart TurBO with a certain number of initialized points. New points are initialized with latin hypercube
+
         Parameters
         ----------
         n_init_points: int
             number of points required for initializing a new subspace
         """
-        self.logger.debug("Current length is smaller than the minimal value, a new TurBO restarts")
+        self.logger.debug("Current length is smaller than the minimal value, a new TuRBO restarts")
         self.success_count = 0
         self.failure_count = 0
 
