@@ -102,7 +102,7 @@ class EPMChooserTurBO(EPMChooser):
         self.logger.debug("Search for next configuration")
         X, Y, X_configurations = self._collect_data_to_train_model()
 
-        num_new_bservations = 1 # here we only consider batch size = 1
+        num_new_bservations = 1  # here we only consider batch size = 1
 
         new_observations = Y[-num_new_bservations:]
         if len(self.turbo.init_configs) > 0:

@@ -87,9 +87,7 @@ class BOinGSubspace(AbstractSubspace):
                                            n_steps_plateau_walk=n_steps_plateau_walk
                                            )
 
-        next_configs_by_acq_value = (
-                candidates_random + candidates_local
-        )
+        next_configs_by_acq_value = candidates_random + candidates_local
 
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
 

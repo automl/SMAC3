@@ -569,4 +569,3 @@ class TS(AbstractAcquisitionFunction):
         m = m.flatten()
         var_ = np.diag(var_.flatten())
         return - rng.multivariate_normal(m, var_, 1).T
-

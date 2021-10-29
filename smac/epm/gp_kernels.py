@@ -1,4 +1,3 @@
-import copy
 from inspect import signature, Signature
 import math
 from typing import Optional, Union, Tuple, List, Callable, Dict, Any
@@ -13,7 +12,6 @@ from smac.epm.gp_base_prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
-
 
 
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
@@ -31,6 +29,7 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> n
 
 
 class MagicMixin:
+
     # This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
     # it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
     # Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know

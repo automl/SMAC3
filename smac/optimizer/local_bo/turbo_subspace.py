@@ -17,6 +17,10 @@ from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition import TS
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
+import warnings
+warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require"
+                                          " n to be a power of 2.")
+
 
 class TuRBOSubSpace(AbstractSubspace):
     def __init__(self,
@@ -44,7 +48,7 @@ class TuRBOSubSpace(AbstractSubspace):
         """
         Subspace designed for TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-        https://arxiv.org/pdf/1910.01739.pdf
+        https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html
         The hyperparameters are the same as teh setting under supplementary D TuRBO details
         Parameters
         ----------

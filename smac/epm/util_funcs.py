@@ -13,8 +13,8 @@ __license__ = "3-clause BSD"
 
 
 def get_types(
-    config_space: ConfigurationSpace,
-    instance_features: typing.Optional[np.ndarray] = None,
+        config_space: ConfigurationSpace,
+        instance_features: typing.Optional[np.ndarray] = None,
 ) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
     """TODO"""
     # Extract types vector for rf from config space and the bounds
@@ -145,6 +145,7 @@ def check_points_in_ss(X: np.ndarray,
                        cat_dims: np.ndarray,
                        bounds_cont: np.ndarray,
                        bounds_cat: typing.List[typing.List[typing.Tuple]],
+                       expand_bound: bool = False,
                        ):
     """
     check which points will be place inside a subspace
@@ -160,6 +161,8 @@ def check_points_in_ss(X: np.ndarray,
         subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
     bounds_cat: np.ndarray(D_cont, 2)
         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
+    expand_bound: bool
+        if the bound needs to be expanded to contain more points rather than the points inside the subregion
     Return
     ----------
     indices_in_ss:np.ndarray(N)
@@ -169,18 +172,18 @@ def check_points_in_ss(X: np.ndarray,
         X = X[np.newaxis, :]
 
     if cont_dims.size != 0:
-        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & \
-                     np.all(X[:, cont_dims] >= bounds_cont[:, 0], axis=1)
+        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(X[:, cont_dims] >= bounds_cont[:, 0],
+                                                                                   axis=1)
 
-        bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
-        bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
-        data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & \
-                     np.all(X[:, cont_dims] >= bound_left, axis=1)
+        if expand_bound:
+            bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
+            bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
+            data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & np.all(X[:, cont_dims] >= bound_left, axis=1)
     else:
         data_in_ss = np.ones(X.shape[-1], dtype=bool)
 
     # TODO find out where cause the None value of  bounds_cat
-    if bounds_cat == None:
+    if bounds_cat is None:
         bounds_cat = [()]
 
     for bound_cat, cat_dim in zip(bounds_cat, cat_dims):

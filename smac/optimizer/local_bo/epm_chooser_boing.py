@@ -132,13 +132,13 @@ class EPMChooserBOinG(EPMChooser):
             self.turbo_kwargs = turbo_opt_kwargs
             if turbo_kwargs is not None:
                 turbo_opt_kwargs.update(turbo_kwargs)
-            self.turbo_optimizer = TurBOSubSpace(**turbo_opt_kwargs)
+            self.turbo_optimizer = TuRBOSubSpace(**turbo_opt_kwargs)
 
     def restart_TurBOinG(self,
                          X: np.ndarray,
                          Y: np.ndarray,
                          Y_raw: np.ndarray,
-                         train_model: bool=False):
+                         train_model: bool = False):
         """
         Restart a new TurBO Optimizer, the bounds of the TurBO Optimizer is determined by a RF, we randomly sample 20
         points and extract subspaces that contain at least self.min_configs_local points, and we select the subspace
@@ -187,9 +187,9 @@ class EPMChooserBOinG(EPMChooser):
         """
         Choose next candidate solution with Bayesian optimization. We use TurBO optimizer or BOinG to suggest
          the next configuration.
-        If we switch local model between TurBO and BOinG, we gradually increase the probability to switch to another optimizer if we
-        cannot make further process. (Or if TurBO find a new incumbent, we will switch to BOinG to do further
-        exploitation)
+        If we switch local model between TurBO and BOinG, we gradually increase the probability to switch to another
+        optimizer if we cannot make further process. (Or if TurBO find a new incumbent, we will switch to BOinG to do
+        further exploitation)
 
         Parameters
         ----------
@@ -384,7 +384,6 @@ class EPMChooserBOinG(EPMChooser):
                            )
         return ss.generate_challengers()
 
-
     def _get_x_best(self, predict: bool, X: np.ndarray, use_local_model: bool = False) \
             -> typing.Tuple[float, np.ndarray]:
         """Get value, configuration, and array representation of the "best" configuration.
@@ -506,6 +505,7 @@ def subspace_extraction(X: np.ndarray,
         indices of the points that lie inside the subregion
     """
     trees = model.rf.get_all_trees()
+    trees = [tree for tree in trees]
     num_trees = len(trees)
     node_indices = [0] * num_trees
 

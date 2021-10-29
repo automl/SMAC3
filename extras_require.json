@@ -5,9 +5,6 @@
     "pyro-ppl>=1.7.0",
     "botorch>=0.5.0"
   ],
-  "gpmcmc": [
-    "emcee>=3.0.0"
-  ],
   "documentation": [
     "sphinx==4.2.0",
     "sphinx-gallery==0.10.0",

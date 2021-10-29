@@ -1,19 +1,12 @@
-import copy
-import math
-import typing
 from collections import OrderedDict
-import pyDOE
 import typing
 
 import numpy as np
 from scipy import optimize
+from scipy.stats.qmc import LatinHypercube
 
 import torch
 import gpytorch
-from gpytorch import settings
-from gpytorch.utils.cholesky import psd_safe_cholesky
-from gpytorch.means.mean import Mean
-from gpytorch.lazy import DiagLazyTensor, MatmulLazyTensor, PsdSumLazyTensor, RootLazyTensor, delazify
 
 from gpytorch.models import ExactGP
 from gpytorch.means import ZeroMean
@@ -26,7 +19,7 @@ from gpytorch.mlls import ExactMarginalLogLikelihood
 from gpytorch.utils.errors import NanError
 
 from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import  _get_extra_mll_args
+from botorch.optim.utils import _get_extra_mll_args
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
@@ -44,8 +37,7 @@ class PartailSparseGPModel(ExactGP):
                  y_out: torch.tensor,
                  likelihood: GaussianLikelihood,
                  base_covar_kernel: Kernel,
-                 X_inducing: torch.tensor,
-                 batch_shape=torch.Size(), ):
+                 X_inducing: torch.tensor):
         """
         A Partial Sparse Gaussian Process (PSGP), it is dense inside a given subregion and the impact of all other
         points are approximated by a sparse GP.
@@ -129,8 +121,8 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
     def __init__(self, kernel: Kernel, X_inducing: torch.tensor):
         """
         Initialize a Variational GP
-        we set the lower bound and upper bounds of indcuing points for numerical hyperparmaters between 0 and 1, that is,
-        we constraint the indcuing points to lay inside the subregion.
+        we set the lower bound and upper bounds of indcuing points for numerical hyperparmaters between 0 and 1,
+        that is, we constraint the indcuing points to lay inside the subregion.
         Parameters:
         ----------
         kernel: Kernel
@@ -266,7 +258,8 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                                              cont_dims=self.cont_dims,
                                              cat_dims=self.cat_dims,
                                              bounds_cont=self.bounds_cont,
-                                             bounds_cat=self.bounds_cat)
+                                             bounds_cat=self.bounds_cat,
+                                             expand_bound=True)
 
         if np.sum(ss_data_indices) > np.shape(y)[0] - self.num_inducing_points:
             # we initialize a vanilla GaussianProcessGPyTorch

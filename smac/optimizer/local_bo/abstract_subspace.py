@@ -13,6 +13,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperp
 from smac.configspace import Configuration, ConfigurationSpace
 
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.util_funcs import check_points_in_ss
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
 from smac.optimizer.acquisition import TS
@@ -99,10 +100,11 @@ class AbstractSubspace(ABC):
         lbs = np.full(n_hypers, 0.)
         scales = np.full(n_hypers, 1.)
 
-        if bounds_ss_cont is None or bounds_ss_cat is None:
+        if bounds_ss_cont is None and bounds_ss_cat is None:
             # cs_inner is cs
             self.cs_local = config_space
             self.new_config_space = False
+            self.bounds_ss_cont = np.tile([0., 1.], [len(self.activate_dims_cont), 1])
             self.bounds_ss_cat = []
             self.lbs = lbs
             self.scales = scales
@@ -116,19 +118,23 @@ class AbstractSubspace(ABC):
 
             # deal with categorical hyperaprameters
             for i, cat_idx in enumerate(cat_dims):
-                hp_cat = hps[cat_idx]
+                hp_cat = hps[cat_idx]  # type: CategoricalHyperparameter
                 parents = config_space.get_parents_of(hp_cat.name)
                 if len(parents) == 0:
                     can_be_inactive = False
                 else:
                     can_be_inactive = True
-                n_cats = len(bounds_ss_cat[i])
+                if bounds_ss_cat is None:
+                    n_cats = len(hp_cat.choices)
+                else:
+                    n_cats = len(bounds_ss_cat[i])
                 if can_be_inactive:
                     n_cats = n_cats + 1
                 model_types[cat_idx] = n_cats
                 model_bounds[cat_idx] = (int(n_cats), np.nan)
 
-            # store the dimensions of numerical hyperparameters, UniformFloatHyperparameter and UniformIntegerHyperparameter
+            # store the dimensions of numerical hyperparameters, UniformFloatHyperparameter and
+            # UniformIntegerHyperparameter
             dims_cont_num = []
             idx_cont_num = []
             dims_cont_ord = []
@@ -144,24 +150,36 @@ class AbstractSubspace(ABC):
                         can_be_inactive = False
                     else:
                         can_be_inactive = True
-                    n_cats = bounds_ss_cont[i][1] - bounds_ss_cont[i][0] + 1
+                    if bounds_ss_cont is None:
+                        n_cats = len(param.sequence)
+                    else:
+                        n_cats = bounds_ss_cont[i][1] - bounds_ss_cont[i][0] + 1
                     if can_be_inactive:
                         model_bounds[cont_idx] = (0, int(n_cats))
                     else:
                         model_bounds[cont_idx] = (0, int(n_cats) - 1)
-                    lbs[cont_idx] = bounds_ss_cont[i][0]  # in subapce, it should start from 0
+                    if bounds_ss_cont is None:
+                        lbs[cont_idx] = 0  # in subapce, it should start from 0
+                        ord_hps[param.name] = (0, int(n_cats))
+                    else:
+                        lbs[cont_idx] = bounds_ss_cont[i][0]  # in subapce, it should start from 0
+                        ord_hps[param.name] = bounds_ss_cont[i]
                     dims_cont_ord.append(cont_idx)
                     idx_cont_ord.append(i)
-                    ord_hps[param.name] = bounds_ss_cont[i]
                 else:
                     dims_cont_num.append(cont_idx)
                     idx_cont_num.append(i)
 
             self.bounds_ss_cat = bounds_ss_cat
+            self.bounds_ss_cont = bounds_ss_cont
 
-            lbs[dims_cont_num] = bounds_ss_cont[idx_cont_num, 0]
-            # rescale numerical hyperparameters to [0., 1.]
-            scales[dims_cont_num] = 1. / (bounds_ss_cont[idx_cont_num, 1] - bounds_ss_cont[idx_cont_num, 0])
+            if bounds_ss_cont is None:
+                lbs[dims_cont_num] = 0.
+                scales[dims_cont_num] = 1.
+            else:
+                lbs[dims_cont_num] = bounds_ss_cont[idx_cont_num, 0]
+                # rescale numerical hyperparameters to [0., 1.]
+                scales[dims_cont_num] = 1. / (bounds_ss_cont[idx_cont_num, 1] - bounds_ss_cont[idx_cont_num, 0])
 
             self.lbs = lbs
             self.scales = scales
@@ -176,11 +194,15 @@ class AbstractSubspace(ABC):
             for idx in self.activate_dims:
                 param = hps[idx]
                 if isinstance(param, CategoricalHyperparameter):
-                    choices = [param.choices[int(choice_idx)] for choice_idx in bounds_ss_cat[idx_cat]]
-                    # cat_freq_arr = np.array((cats_freq[idx_cat]))
-                    # weights = cat_freq_arr / np.sum(cat_freq_arr)
-                    hp_new = CategoricalHyperparameter(param.name, choices=choices)  # , weights=weights)
-                    idx_cat += 1
+                    if bounds_ss_cat is None:
+                        hp_new = copy.deepcopy(param)
+                        idx_cat += 1
+                    else:
+                        choices = [param.choices[int(choice_idx)] for choice_idx in bounds_ss_cat[idx_cat]]
+                        # cat_freq_arr = np.array((cats_freq[idx_cat]))
+                        # weights = cat_freq_arr / np.sum(cat_freq_arr)
+                        hp_new = CategoricalHyperparameter(param.name, choices=choices)  # , weights=weights)
+                        idx_cat += 1
 
                 elif isinstance(param, OrdinalHyperparameter):
                     param_seq = ord_hps.get(param.name)
@@ -192,49 +214,57 @@ class AbstractSubspace(ABC):
 
                 elif isinstance(param, Constant):
                     hp_new = copy.deepcopy(param)
-
-                elif isinstance(param, UniformFloatHyperparameter):
-                    lower = param.lower
-                    upper = param.upper
-                    if param.log:
-                        lower_log = np.log(lower)
-                        upper_log = np.log(upper)
-                        hp_new_lower = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)
-                        hp_new_upper = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
-                        hp_new = UniformFloatHyperparameter(name=param.name,
-                                                            lower=max(hp_new_lower, lower),
-                                                            upper=min(hp_new_upper, upper),
-                                                            log=True)
+                elif isinstance(param, (UniformFloatHyperparameter, UniformIntegerHyperparameter)):
+                    if bounds_ss_cont is None:
+                        hp_new = copy.deepcopy(param)
+                        idx_cont += 1
                     else:
-                        hp_new_lower = (upper - lower) * bounds_ss_cont[idx_cont][0] + lower
-                        hp_new_upper = (upper - lower) * bounds_ss_cont[idx_cont][1] + lower
-                        hp_new = UniformFloatHyperparameter(name=param.name,
-                                                            lower=max(hp_new_lower, lower),
-                                                            upper=min(hp_new_upper, upper),
-                                                            log=False)
-                    idx_cont += 1
-                elif isinstance(param, UniformIntegerHyperparameter):
-                    lower = param.lower
-                    upper = param.upper
-                    if param.log:
-                        lower_log = np.log(lower)
-                        upper_log = np.log(upper)
-                        hp_new_lower = int(
-                            math.floor(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)))
-                        hp_new_upper = int(
-                            math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)))
-                        hp_new = UniformIntegerHyperparameter(name=param.name,
-                                                              lower=max(hp_new_lower, lower),
-                                                              upper=min(hp_new_upper, upper),
-                                                              log=True)
-                    else:
-                        hp_new_lower = int(math.floor((upper - lower) * bounds_ss_cont[idx_cont][0])) + lower
-                        hp_new_upper = int(math.ceil((upper - lower) * bounds_ss_cont[idx_cont][1])) + lower
-                        hp_new = UniformIntegerHyperparameter(name=param.name,
-                                                              lower=max(hp_new_lower, lower),
-                                                              upper=min(hp_new_upper, upper),
-                                                              log=False)
-                    idx_cont += 1
+                        if isinstance(param, UniformFloatHyperparameter):
+                            lower = param.lower
+                            upper = param.upper
+                            if param.log:
+                                lower_log = np.log(lower)
+                                upper_log = np.log(upper)
+                                hp_new_lower = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)
+                                hp_new_upper = np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
+                                hp_new = UniformFloatHyperparameter(name=param.name,
+                                                                    lower=max(hp_new_lower, lower),
+                                                                    upper=min(hp_new_upper, upper),
+                                                                    log=True)
+                            else:
+                                hp_new_lower = (upper - lower) * bounds_ss_cont[idx_cont][0] + lower
+                                hp_new_upper = (upper - lower) * bounds_ss_cont[idx_cont][1] + lower
+                                hp_new = UniformFloatHyperparameter(name=param.name,
+                                                                    lower=max(hp_new_lower, lower),
+                                                                    upper=min(hp_new_upper, upper),
+                                                                    log=False)
+                            idx_cont += 1
+                        elif isinstance(param, UniformIntegerHyperparameter):
+                            lower = param.lower
+                            upper = param.upper
+                            if param.log:
+                                lower_log = np.log(lower)
+                                upper_log = np.log(upper)
+                                hp_new_lower = int(
+                                    math.floor(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][0] + lower_log)
+                                               )
+                                )
+                                hp_new_upper = int(
+                                    math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
+                                              )
+                                )
+                                hp_new = UniformIntegerHyperparameter(name=param.name,
+                                                                      lower=max(hp_new_lower, lower),
+                                                                      upper=min(hp_new_upper, upper),
+                                                                      log=True)
+                            else:
+                                hp_new_lower = int(math.floor((upper - lower) * bounds_ss_cont[idx_cont][0])) + lower
+                                hp_new_upper = int(math.ceil((upper - lower) * bounds_ss_cont[idx_cont][1])) + lower
+                                hp_new = UniformIntegerHyperparameter(name=param.name,
+                                                                      lower=max(hp_new_lower, lower),
+                                                                      upper=min(hp_new_upper, upper),
+                                                                      log=False)
+                            idx_cont += 1
                 else:
                     raise ValueError(f"Unsupported type of Hyperparameter: {type(param)}")
                 hp_list.append(hp_new)
@@ -293,13 +323,17 @@ class AbstractSubspace(ABC):
         update_incumbent_array: bool
             if the incumbent_array of this subspaced is replace with the newly updated incumbent
         """
-        self.model.train(self.model_x, self.model_y)
-
         acq_func_kwargs = {'model': self.model,
                            'num_data': len(self.ss_x)}
 
         if predict_x_best:
-            mu, _ = self.model.predict(self.ss_x)
+            try:
+                mu, _ = self.model.predict(self.ss_x)
+            except Exception as e:
+                # Some times it could occur that LGPGA fails to predict the mean value of ss_x because of
+                # numerical issues
+                self.logger.warning(f"Fail to predict ss_x due to {e}")
+                mu = self.ss_y
             idx_eta = np.argmin(mu)
             incumbent_array = self.ss_x[idx_eta]
             acq_func_kwargs.update({'incumbent_array': incumbent_array, 'eta': mu[idx_eta]})
@@ -331,13 +365,18 @@ class AbstractSubspace(ABC):
         if len(X.shape) == 1:
             y = y[np.newaxis, :]
 
+        ss_indices = check_points_in_ss(X=X,
+                                        cont_dims=self.activate_dims_cont,
+                                        cat_dims=self.activate_dims_cat,
+                                        bounds_cont=self.bounds_ss_cont,
+                                        bounds_cat=self.bounds_ss_cat,
+                                        )
+
         X = self.normalize_input(X=X)
 
         self.model_x = np.vstack([self.model_x, X])
         self.model_y = np.vstack([self.model_y, y])
 
-
-        ss_indices = self.check_points_in_ss(X=X)
         self.ss_x = np.vstack([self.ss_x, X[ss_indices]])
         self.ss_y = np.vstack([self.ss_y, y[ss_indices]])
 
@@ -390,36 +429,6 @@ class AbstractSubspace(ABC):
 
         return X_normalized
 
-    def check_points_in_ss(self, X: np.ndarray):
-        """
-        check which points will be included in this subspace, unlike the implementation in smac.epm.util_funcs, here
-        the bounds for continuous hyperparameters are more strict, e.g., we do not expand the subspace to contian more
-        points
-        Parameters
-        ----------
-        X: np.ndarray(N,D),
-            points to be checked
-        Return
-        ----------
-        indices_in_ss:np.ndarray(N)
-            indices of data that included in subspaces
-        """
-        if len(X.shape) == 1:
-            X = X[np.newaxis, :]
-
-        if self.activate_dims_cont.size != 0:
-            data_in_ss = np.all(X[:, self.activate_dims_cont] <= self.bounds_ss_cont[:, 1], axis=1) & \
-                         np.all(X[:, self.activate_dims_cont] >= self.bounds_ss_cont[:, 0], axis=1)
-
-        else:
-            data_in_ss = np.ones(X.shape[-1], dtype=bool)
-
-        for bound_cat, cat_dim in zip(self.bounds_ss_cat, self.activate_dims_cat):
-            data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)
-
-        data_in_ss = np.where(data_in_ss)[0]
-        return data_in_ss
-
 
 class ChallengerListLocal(typing.Iterator):
     def __init__(
@@ -458,7 +467,6 @@ class ChallengerListLocal(typing.Iterator):
         if self.expand_dims and self.incumbent_array is None:
             raise ValueError("Incumbent array must be provided if the global configuration space has more "
                              "hyperparameters then the local configuration space")
-
 
     def __next__(self) -> Configuration:
         if self.challengers is not None and self._index == len(self.challengers):

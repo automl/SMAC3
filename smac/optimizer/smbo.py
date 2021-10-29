@@ -70,8 +70,8 @@ class SMBO(object):
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
                  min_samples_model: int = 1,
-                 epm_chooser: EPMChooser=EPMChooser,
-                 epm_chooser_kwargs: typing.Optional[typing.Dict]=None):
+                 epm_chooser: EPMChooser = EPMChooser,
+                 epm_chooser_kwargs: typing.Optional[typing.Dict] = None):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -80,7 +80,7 @@ class SMBO(object):
         scenario: smac.scenario.scenario.Scenario
             Scenario object
         stats: Stats
-            statistics object with configuration budgets
+            statistics object with confition budgets
         initial_design: InitialDesign
             initial sampling design
         runhistory: RunHistory
@@ -286,7 +286,6 @@ class SMBO(object):
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
-
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
                 self._incorporate_run_results(run_info, result, time_left)
@@ -294,7 +293,8 @@ class SMBO(object):
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                 assert self.scenario.output_dir_for_this_run is not None  # please mypy
                 pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
+                            output_directory=self.scenario.output_dir_for_this_run,
+                            # type: ignore[attr-defined] # noqa F821
                             logger=self.logger)
 
             self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
@@ -372,7 +372,8 @@ class SMBO(object):
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:
-            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")  # type: typing.Optional[str] # noqa E501
+            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run,
+                                       "validated_runhistory.json")  # type: typing.Optional[str] # noqa E501
         else:
             new_rh_path = None
 

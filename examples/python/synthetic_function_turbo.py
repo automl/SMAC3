@@ -1,18 +1,13 @@
 """
-Synthetic Function with few Hyperparameters
+Synthetic Function with TuRBO as optimizer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+An example of applying SMAC with trust region BO(TuRBO) to optimize a
+synthetic function (2d rosenbrock function).
 
-An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).
-
-We use the SMAC4BB facade because it is designed for black-box function optimization.
-SMAC4BB uses a :term:`Gaussian Process<GP>` or a set of Gaussian Processes whose
-hyperparameters are integrated by Markov-Chain Monte-Carlo as its surrogate model.
-SMAC4BB works best on numerical hyperparameter configuration space and should not
-be applied to the problems with large evaluation budgets (up to 1000 evaluations).
+TuRBO optimizer requires EPMChooserTurBO to suggest next configuration to be evaluated
 """
 
 import logging
-logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -20,13 +15,10 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.optimizer.acquisition import EI
+from smac.optimizer.local_bo.epm_chooser_turbo import EPMChooserTurBO
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
-
-__copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
-__license__ = "3-clause BSD"
 
 
 def rosenbrock_2d(x):
@@ -37,7 +29,6 @@ def rosenbrock_2d(x):
     zero. All input parameters are continuous. The search domain for
     all x's is the interval [-5, 10].
     """
-
     x1 = x["x0"]
     x2 = x["x1"]
 
@@ -45,7 +36,9 @@ def rosenbrock_2d(x):
     return val
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
+
     # Build Configuration Space which defines all parameters and their ranges
     cs = ConfigurationSpace()
     x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
@@ -54,13 +47,10 @@ if __name__ == "__main__":
 
     # Scenario object
     scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                         "runcount-limit": 10,  # max. number of function evaluations
+                         "runcount-limit": 100,
                          "cs": cs,  # configuration space
                          "deterministic": "true"
                          })
-
-    # Use 'gp' or 'gp_mcmc' here
-    model_type = 'gp'
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -70,9 +60,11 @@ if __name__ == "__main__":
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = SMAC4BB(scenario=scenario,
-                   model_type=model_type,
                    rng=np.random.RandomState(42),
-                   acquisition_function=EI,  # or others like PI, LCB as acquisition functions
-                   tae_runner=rosenbrock_2d)
+                   model_type="gp",
+                   smbo_kwargs={"epm_chooser": EPMChooserTurBO},
+                   initial_design_kwargs={"init_budget": 0},
+                   tae_runner=rosenbrock_2d,
+                   )
 
     smac.optimize()
