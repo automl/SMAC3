@@ -47,6 +47,7 @@ class ExactGPModel(ExactGP):
             GP likelihood
         """
         super(ExactGPModel, self).__init__(train_X, train_y, likelihood)
+        # in our experiments we find that ZeroMean more robust than ConstantMean when y is normalized
         self.mean_module = ZeroMean()
         self.covar_module = base_covar_kernel
 
@@ -198,6 +199,7 @@ class GaussianProcessGPyTorch(BaseModel):
             a GPyTorch model with Zero Mean and user specified covariance
         """
         if X is None:
+            # To be compatible with the base model
             return None
 
         X = torch.from_numpy(X)
@@ -226,6 +228,7 @@ class GaussianProcessGPyTorch(BaseModel):
 
         p0 = [x0]
 
+        # To Avoid infinite sampling
         n_tries = 5000
         for i in range(n_tries):
             try:

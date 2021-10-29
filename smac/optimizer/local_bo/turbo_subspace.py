@@ -1,12 +1,10 @@
 import typing
 import math
 
-import pyDOE
-
 import numpy as np
-from scipy.optimize._shgo_lib.sobol_seq import Sobol
+from scipy.stats.qmc import Sobol, LatinHypercube
 
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperparameter, Constant, NumericalHyperparameter
+from ConfigSpace.hyperparameters import NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.configspace import Configuration, ConfigurationSpace
@@ -16,11 +14,11 @@ from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProces
 from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.acquisition import EI
+from smac.optimizer.acquisition import TS
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
 
-class TurBOSubSpace(AbstractSubspace):
+class TuRBOSubSpace(AbstractSubspace):
     def __init__(self,
                  config_space: ConfigurationSpace,
                  bounds: typing.List[typing.Tuple[float, float]],
@@ -29,7 +27,7 @@ class TurBOSubSpace(AbstractSubspace):
                  bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
                  model_local: AbstractEPM = PartialSparseGaussianProcess,
                  model_local_kwargs: typing.Optional[typing.Dict] = None,
-                 acq_func_local: AbstractAcquisitionFunction = EI,
+                 acq_func_local: AbstractAcquisitionFunction = TS,
                  acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
                  rng: typing.Optional[np.random.RandomState] = None,
                  initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
@@ -46,7 +44,8 @@ class TurBOSubSpace(AbstractSubspace):
         """
         Subspace designed for TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-        https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf
+        https://arxiv.org/pdf/1910.01739.pdf
+        The hyperparameters are the same as teh setting under supplementary D TuRBO details
         Parameters
         ----------
         length_init: float
@@ -65,7 +64,7 @@ class TurBOSubSpace(AbstractSubspace):
         n_candidate_max: int
             Maximal Number of points used as candidates
         """
-        super(TurBOSubSpace, self).__init__(config_space=config_space,
+        super(TuRBOSubSpace, self).__init__(config_space=config_space,
                                             bounds=bounds,
                                             hps_types=hps_types,
                                             bounds_ss_cont=bounds_ss_cont,
@@ -101,34 +100,34 @@ class TurBOSubSpace(AbstractSubspace):
         self.lb = np.zeros(self.n_dims)
         self.ub = np.ones(self.n_dims)
 
-        self.config_origin = "TurBO"
-
+        self.config_origin = "TuRBO"
 
     def _restart_turbo(self,
                        n_init_points: int,
                        ):
         """
-        restart TurBO with given number of initialized points
+        restart TurBO with a certain number of initialized points. New points are initialized with latin
         Parameters
         ----------
         n_init_points: int
             number of points required for initializing a new subspace
         """
-        self.logger.debug("Current length is smaller than the minimal value, we restart a new TurBO run")
+        self.logger.debug("Current length is smaller than the minimal value, a new TurBO restarts")
         self.success_count = 0
         self.failure_count = 0
 
         self.num_eval_this_round = 0
-        self.last_incumbent = np.inf
+        self.last_incumbent_value = np.inf
         self.length = self.length_init
 
-        self.model_x = np.empty([0, len(self.activate_dims)])
-        self.ss_x = np.empty([0, len(self.activate_dims)])
+        self.model_x = np.empty([0, self.n_dims])
+        self.ss_x = np.empty([0, self.n_dims])
         self.model_y = np.empty([0, 1])
         self.ss_y = np.empty([0, 1])
 
-        np.random.seed(self.rng.randint(1, 2 ** 20))
-        init_vectors = pyDOE.lhs(n=self.n_dims, samples=n_init_points)
+        init_vectors = LatinHypercube(d=self.n_dims,
+                                      seed=np.random.seed(self.rng.randint(1, 2 ** 20))).random(n=n_init_points)
+
         self.init_configs = [Configuration(self.cs_local, vector=init_vector) for init_vector in init_vectors]
 
     def adjust_length(self, new_observation: typing.Union[float, np.ndarray]):
@@ -139,20 +138,28 @@ class TurBOSubSpace(AbstractSubspace):
         new_observation: typing.Union[float, np.ndarray]
             new observations
         """
+        # see Section 2: 'Trust regions'
         optim_observation = new_observation if np.isscalar(new_observation) else np.min(new_observation)
+
+        # We define a ``success'' as a candidate that improves upon $\xbest$, and a ``failure'' as a candidate that
+        # does not.
         if optim_observation < np.min(self.model_y) - 1e-3 * math.fabs(np.min(self.model_y)):
-            self.logger.debug("New suggested value is better than the incumbent, we increase success_count")
+            self.logger.debug("New suggested value is better than the incumbent, success_count increases")
             self.success_count += 1
             self.failure_count = 0
         else:
-            self.logger.debug("New suggested value is worse than the incumbent, we increase failure_count")
+            self.logger.debug("New suggested value is worse than the incumbent, failure_count increases")
             self.success_count = 0
             self.failure_count += 1
 
+        # After $\tau_{\text{succ}}$ consecutive successes, we double the size of the TR,
+        # i.e., $\len \gets \min\{\len_{\textrm{max}}, 2\len\}$.
         if self.success_count == self.success_tol:  # Expand trust region
             self.length = min([2.0 * self.length, self.length_max])
             self.success_count = 0
             self.logger.debug(f"Subspace length expands to {self.length}")
+        # After $\tau_{\text{fail}}$ consecutive failures, we halve the size of the TR: $\len \gets \len/2$.
+        # We reset the success and failure counters to zero after we change the size of the TR.
         elif self.failure_count == self.failure_tol:  # Shrink trust region
             self.length /= 2.0
             self.failure_count = 0
@@ -176,15 +183,8 @@ class TurBOSubSpace(AbstractSubspace):
         self.model.train(self.model_x, self.model_y)
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
-        sobol_gen = Sobol()
-        constants = 0
-        params = self.cs_local.get_hyperparameters()
-        n_hps = len(params)
-        for p in params:
-            if isinstance(p, Constant):
-                constants += 1
-
-        sobol_seq = sobol_gen.i4_sobol_generate(n_hps - constants, self.n_candidates)
+        sobol_gen = Sobol(d=self.n_dims, scramble=True, seed=self.rng.randint(low=0, high=10000000))
+        sobol_seq = sobol_gen.random(self.n_candidates)
 
         # adjust length according to kernel length
         if isinstance(self.model, (GaussianProcess, GaussianProcessMCMC,
@@ -193,12 +193,14 @@ class TurBOSubSpace(AbstractSubspace):
                 kernel_length = np.exp(self.model.hypers[1:-1])
             elif isinstance(self.model, GaussianProcessMCMC):
                 kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))
-            elif isinstance(self.model, GaussianProcessGPyTorch):
-                kernel_length = self.model.kernel.base_kernel.lengthscale.detach().numpy()
+            elif isinstance(self.model, (GaussianProcessGPyTorch, PartialSparseGaussianProcess)):
+                kernel_length = self.model.kernel.base_kernel.lengthscale.cpu().detach().numpy()
 
+            # See section 'Trust regions' of section 2
+            #  $\len_i = \lambda_i L / (\prod_{j=1}^d \lambda_j)^{1/d}$,
             kernel_length = kernel_length / kernel_length.mean()  # This will make the next line more stable
             subspace_scale = kernel_length / np.prod(
-                np.power(kernel_length, 1.0 / len(kernel_length)))  # We now have weights.prod() = 1
+                np.power(kernel_length, 1.0 / self.n_dims))  # We now have weights.prod() = 1
 
             subspace_length = self.length * subspace_scale
 
@@ -206,39 +208,22 @@ class TurBOSubSpace(AbstractSubspace):
             subspace_ub = np.clip(self.incumbent_array + subspace_length * 0.5, 0.0, 1.0)
             sobol_seq = sobol_seq * (subspace_ub - subspace_lb) + subspace_lb
 
-            prob_perturb = min(20.0 / n_hps, 1.0)
-            mask = np.random.rand(self.n_candidates, n_hps) <= prob_perturb
+            # See Supplementary D, 'TuRBO details':
+            # In order to not perturb all coordinates at once, we use the value in the Sobol sequence
+            # with probability min{1,20/d}for a given candidate and dimension, and the value of the center otherwise
+            prob_perturb = min(20.0 / self.n_dims, 1.0)
+            mask = np.random.rand(self.n_candidates, self.n_dims) <= prob_perturb
             ind = np.where(np.sum(mask, axis=1) == 0)[0]
-            mask[ind, np.random.randint(0, n_hps - 1, size=len(ind))] = 1
+            mask[ind, np.random.randint(0, self.n_dims - 1, size=len(ind))] = 1
 
             # Create candidate points
-            design = self.incumbent_array * np.ones((self.n_candidates, n_hps))
+            design = self.incumbent_array * np.ones((self.n_candidates, self.n_dims))
             design[mask] = sobol_seq[mask]
         else:
             design = sobol_seq
 
-        # TODO we could consider smac/initial_design/initial_design._transform_continuous_designs as
-        # a statistical method and get rid of the duplicated code here
-        for idx, param in enumerate(params):
-            if isinstance(param, NumericalHyperparameter):
-                continue
-            elif isinstance(param, Constant):
-                # add a vector with zeros
-                design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
-                design_[:, :idx] = design[:, :idx]
-                design_[:, idx + 1:] = design[:, idx:]
-                design = design_
-            elif isinstance(param, CategoricalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.choices), dtype=np.int)
-            elif isinstance(param, OrdinalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
-            else:
-                raise ValueError("Hyperparameter not supported")
-
+        # Only numerical hyperpameters are considered for TuRBO, we don't need to transfer the vectors to fit the
+        # requirements of other sorts of hyperparameters
         configs = []
         if _sorted:
             origin = "Sobol Sequnce (Sorted)"

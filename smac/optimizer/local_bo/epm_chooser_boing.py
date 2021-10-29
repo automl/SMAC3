@@ -22,7 +22,6 @@ from smac.optimizer.local_bo.boing_subspace import BOinGSubspace
 from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4CostWithRaw
 
 
-
 class EPMChooserBOinG(EPMChooser):
     def __init__(self,
                  scenario: Scenario,

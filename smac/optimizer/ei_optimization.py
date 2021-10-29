@@ -7,10 +7,6 @@ import numpy as np
 
 from typing import List, Union, Tuple, Optional, Set, Iterator, Callable
 
-from ConfigSpace.hyperparameters import NumericalHyperparameter, \
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
-
 from smac.configspace import (
     get_one_exchange_neighbourhood,
     Configuration,
@@ -23,7 +19,6 @@ from smac.stats.stats import Stats
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
 
-from scipy.optimize._shgo_lib.sobol_seq import Sobol
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -679,164 +674,6 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
             str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]])
         )
         return next_configs_by_acq_value
-
-
-class SobolSearch(AcquisitionFunctionMaximizer):
-    """Get candidate solutions via Sobol Sequence, used for EPMChooserTurBO
-
-    Parameters
-    ----------
-    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-
-    config_space : ~smac.configspace.ConfigurationSpace
-
-    rng : np.random.RandomState or int, optional
-    """
-
-    def maximize(
-        self,
-        runhistory: RunHistory,
-        stats: Stats,
-        num_points: int,
-        _sorted: bool = True,
-        random_configuration_chooser: Optional[RandomConfigurationChooser] = None,
-        subspace_center: Optional[np.array] = None,
-        subspace_length: Optional[np.array] = None
-    ) -> Iterator[Configuration]:
-        """Maximize acquisition function using ``_maximize``.
-
-        Parameters
-        ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
-        num_points: int
-            number of points to be sampled
-        random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser, optional
-            part of the returned ChallengerList such
-            that we can interleave random configurations
-            by a scheme defined by the random_configuration_chooser;
-            random_configuration_chooser.next_smbo_iteration()
-            is called at the end of this function
-        subspace_center: Optional[np.array]
-            center of the subspace, when it is None, subspace equals the entire space
-        subspace_lengths: Optional[np.array]
-            length of the subspace, when it is None, subspace equals the entire space
-        Returns
-        -------
-        iterable
-            An iterable consisting of :class:`smac.configspace.Configuration`.
-        """
-        def next_configs_by_acq_value() -> List[Configuration]:
-            return [t[1] for t in self._maximize(runhistory, stats, num_points, _sorted, subspace_center, subspace_length)]
-
-        challengers = ChallengerList(next_configs_by_acq_value,
-                                     self.config_space,
-                                     random_configuration_chooser)
-
-        if random_configuration_chooser is not None:
-            random_configuration_chooser.next_smbo_iteration()
-        return challengers
-
-    def _maximize(
-            self,
-            runhistory: RunHistory,
-            stats: Stats,
-            num_points: int,
-            _sorted: bool = True,
-            subspace_center: Optional[np.ndarray] = None,
-            subspace_length: Optional[np.ndarray] = None,
-    ) -> List[Tuple[float, Configuration]]:
-        """Randomly sampled configurations
-
-        Parameters
-        ----------
-        runhistory: ~smac.runhistory.runhistory.RunHistory
-            runhistory object
-        stats: ~smac.stats.stats.Stats
-            current stats object
-        num_points: int
-            number of points to be sampled
-        _sorted: bool
-            whether random configurations are sorted according to acquisition function
-         subspace_center: Optional[np.array]
-            center of the subspace, when it is None, subspace equals the entire space
-        subspace_lengths: Optional[np.array]
-            length of the subspace, when it is None, subspace equals the entire space
-        Returns
-        -------
-        iterable
-            An iterable consistng of
-            tuple(acqusition_value, :class:`smac.configspace.Configuration`).
-        """
-        params = self.config_space.get_hyperparameters()
-        n_hps = len(params)
-
-        constants = 0
-        for p in params:
-            if isinstance(p, Constant):
-                constants += 1
-
-        sobol_gen = Sobol()
-        sobol_seq = sobol_gen.i4_sobol_generate(n_hps - constants, num_points)
-
-        if subspace_center is not None and subspace_length is not None:
-            subspace_lb = np.clip(subspace_center - subspace_length * 0.5, 0.0, 1.0)
-            subspace_ub = np.clip(subspace_center + subspace_length * 0.5, 0.0, 1.0)
-            sobol_seq = sobol_seq * (subspace_ub - subspace_lb) + subspace_lb
-
-            # Create a perturbation mask
-            prob_perturb = min(20.0 / n_hps, 1.0)
-            mask = np.random.rand(num_points, n_hps) <= prob_perturb
-            ind = np.where(np.sum(mask, axis=1) == 0)[0]
-            mask[ind, np.random.randint(0, n_hps - 1, size=len(ind))] = 1
-
-            # Create candidate points
-            design = subspace_center * np.ones((num_points, n_hps))
-            design[mask] = sobol_seq[mask]
-        else:
-            design = sobol_seq
-
-        # TODO we could consider smac/initial_design/initial_design._transform_continuous_designs as
-        # a statistical method and get rid of the duplicated code here
-        for idx, param in enumerate(params):
-            if isinstance(param, NumericalHyperparameter):
-                continue
-            elif isinstance(param, Constant):
-                # add a vector with zeros
-                design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
-                design_[:, :idx] = design[:, :idx]
-                design_[:, idx + 1:] = design[:, idx:]
-                design = design_
-            elif isinstance(param, CategoricalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.choices), dtype=np.int)
-            elif isinstance(param, OrdinalHyperparameter):
-                v_design = design[:, idx]
-                v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
-            else:
-                raise ValueError("Hyperparameter not supported")
-
-        configs = []
-        if _sorted:
-            origin = "Sobol Sequnce (Sorted)"
-        else:
-            origin = "Sobol Sequence"
-        for vector in design:
-            conf = deactivate_inactive_hyperparameters(configuration=None,
-                                                       configuration_space=self.config_space,
-                                                       vector=vector)
-            conf.origin = origin
-            configs.append(conf)
-
-        if _sorted:
-            return self._sort_configs_by_acq_value(configs)
-        else:
-            return [(0, configs[i]) for i in range(len(configs))]
-
 
 
 class ChallengerList(Iterator):

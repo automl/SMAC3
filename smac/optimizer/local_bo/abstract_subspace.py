@@ -135,6 +135,7 @@ class AbstractSubspace(ABC):
             idx_cont_num = []
             dims_cont_ord = []
             idx_cont_ord = []
+            ord_hps = {}
             # deal with ordinary hyperaprameters
             for i, cont_idx in enumerate(cont_dims):
                 param = hps[cont_idx]
@@ -152,6 +153,7 @@ class AbstractSubspace(ABC):
                     lbs[cont_idx] = bounds_ss_cont[i][0]  # in subapce, it should start from 0
                     dims_cont_ord.append(cont_idx)
                     idx_cont_ord.append(i)
+                    ord_hps[param.name] = bounds_ss_cont[i]
                 else:
                     dims_cont_num.append(cont_idx)
                     idx_cont_num.append(i)
@@ -182,7 +184,11 @@ class AbstractSubspace(ABC):
                     idx_cat += 1
 
                 elif isinstance(param, OrdinalHyperparameter):
-                    hp_new = OrdinalHyperparameter(param.name, sequence=np.arrange(model_bounds[idx]))
+                    param_seq = ord_hps.get(param.name)
+                    raw_seq = param.sequence
+                    ord_indices = np.arange(*param_seq)
+                    new_seq = [raw_seq[idx] for idx in ord_indices]
+                    hp_new = OrdinalHyperparameter(param.name, sequence=new_seq)
                     idx_cont += 1
 
                 elif isinstance(param, Constant):
@@ -245,7 +251,7 @@ class AbstractSubspace(ABC):
                             bounds=model_bounds,
                             bounds_cont=np.array([[0, 1.] for _ in range(len(activate_dims_cont))]),
                             bounds_cat=bounds_ss_cat,
-                            seed=np.random.randint(0, 2 ** 20))
+                            seed=self.rng.randint(0, 2 ** 20))
 
         if inspect.isclass(model_local):
             if model_local_kwargs is not None:
@@ -278,7 +284,7 @@ class AbstractSubspace(ABC):
 
             self.add_new_observations(X, y)
 
-        self.config_origin = "subspace"
+        self.config_origin = "AbstractSubspace"
 
     def check_points_in_ss(self,
                            X: np.ndarray,
@@ -447,8 +453,8 @@ class ChallengerListLocal(typing.Iterator):
         self.incumbent_array = incumbent_array
 
         if self.expand_dims and self.incumbent_array is None:
-            raise ValueError("Incumbent array must be provided if global configuration space has more hyperparameters"
-                             "then local configuration space")
+            raise ValueError("Incumbent array must be provided if the global configuration space has more "
+                             "hyperparameters then the local configuration space")
 
     def __next__(self) -> Configuration:
         if self.challengers is not None and self._index == len(self.challengers):
