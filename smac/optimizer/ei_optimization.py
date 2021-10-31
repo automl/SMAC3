@@ -257,59 +257,83 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             # initiate local search
             configs_previous_runs = runhistory.get_all_configs()
 
-            # configurations with the highest previous EI
-            configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
-            configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
+            init_points = self._get_init_points_from_previous_configs(num_points,
+                                                                      configs_previous_runs,
+                                                                      additional_start_points)
+        return init_points
 
-            # configurations with the lowest predictive cost, check for None to make unit tests work
-            if self.acquisition_function.model is not None:
-                conf_array = convert_configurations_to_array(configs_previous_runs)
-                costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
-                assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
+    def _get_init_points_from_previous_configs(self,
+                                               num_points: int,
+                                               configs_previous_runs: List[Configuration],
+                                               additional_start_points: Optional[List[Tuple[float, Configuration]]],
+                                               ) -> List[Configuration]:
+        """
+        a function that generates a set of initial points from the previous configurations and additional points (if
+        applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal
+        form (List[Configuration]).
+        ----------
+        num_points: int
+            Number of initial points to be generated
+        configs_previous_runs: List[Configuration]
+            previous configuration from runhistory
+        additional_start_points: Optional[List[Tuple[float, Configuration]]]
+            if we want to specify another set of points as initial points
+        Returns
+        -------
+        init_points: List[Configuration]
+            a set of initial points
+        """
+        # configurations with the highest previous EI
+        configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
+        configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
 
-                # In case of the predictive model returning the prediction for more than one objective per configuration
-                # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
-                # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
-                if len(costs.shape) == 2 and costs.shape[1] > 1:
-                    weights = np.array([self.rng.rand() for _ in range(costs.shape[1])])
-                    weights = weights / np.sum(weights)
-                    costs = costs @ weights
+        # configurations with the lowest predictive cost, check for None to make unit tests work
+        if self.acquisition_function.model is not None:
+            conf_array = convert_configurations_to_array(configs_previous_runs)
+            costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
+            assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
-                # From here
-                # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
-                random = self.rng.rand(len(costs))
-                # Last column is primary sort key!
-                indices = np.lexsort((random.flatten(), costs.flatten()))
+            # In case of the predictive model returning the prediction for more than one objective per configuration
+            # (for example multi-objective or EIPS) it is not immediately clear how to sort according to the cost
+            # of a configuration. Therefore, we simply follow the ParEGO approach and use a random scalarization.
+            if len(costs.shape) == 2 and costs.shape[1] > 1:
+                weights = np.array([self.rng.rand() for _ in range(costs.shape[1])])
+                weights = weights / np.sum(weights)
+                costs = costs @ weights
 
-                # Cannot use zip here because the indices array cannot index the
-                # rand_configs list, because the second is a pure python list
-                configs_previous_runs_sorted_by_cost = [configs_previous_runs[ind] for ind in indices][:num_points]
-            else:
-                configs_previous_runs_sorted_by_cost = []
+            # From here
+            # http://stackoverflow.com/questions/20197990/how-to-make-argsort-result-to-be-random-between-equal-values
+            random = self.rng.rand(len(costs))
+            # Last column is primary sort key!
+            indices = np.lexsort((random.flatten(), costs.flatten()))
 
-            if additional_start_points is not None:
-                additional_start_points = [asp[1] for asp in additional_start_points[:num_points]]
-            else:
-                additional_start_points = []
+            # Cannot use zip here because the indices array cannot index the
+            # rand_configs list, because the second is a pure python list
+            configs_previous_runs_sorted_by_cost = [configs_previous_runs[ind] for ind in indices][:num_points]
+        else:
+            configs_previous_runs_sorted_by_cost = []
 
-            init_points = []
-            init_points_as_set = set()  # type: Set[Configuration]
-            for cand in itertools.chain(
+        if additional_start_points is not None:
+            additional_start_points = [asp[1] for asp in additional_start_points[:num_points]]
+        else:
+            additional_start_points = []
+
+        init_points = []
+        init_points_as_set = set()  # type: Set[Configuration]
+        for cand in itertools.chain(
                 configs_previous_runs_sorted,
                 configs_previous_runs_sorted_by_cost,
                 additional_start_points,
-            ):
-                if cand not in init_points_as_set:
-                    init_points.append(cand)
-                    init_points_as_set.add(cand)
-
+        ):
+            if cand not in init_points_as_set:
+                init_points.append(cand)
+                init_points_as_set.add(cand)
         return init_points
 
     def _do_search(
             self,
             start_points: List[Configuration],
     ) -> List[Tuple[float, Configuration]]:
-
         # Gather data strucuture for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
