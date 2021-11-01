@@ -235,8 +235,15 @@ class GaussianProcessGPyTorch(BaseModel):
         n_tries = 5000
         for i in range(n_tries):
             try:
-                #gp_model = self.gp.pyro_sample_from_prior()
-                sample, _, _ = module_to_array(module=self.gp)
+                gp_model = self.gp.pyro_sample_from_prior()
+                x_out = []
+                for key in property_dict.keys():
+                    param = gp_model
+                    param_names = key.split('.')
+                    for name in param_names:
+                        param = getattr(param, name)
+                    x_out.append(param.detach().view(-1).cpu().double().clone().numpy())
+                sample = np.concatenate(x_out)
                 p0.append(sample.astype(np.float64))
             except RuntimeError as e:
                 if i == n_tries - 1:
@@ -261,6 +268,8 @@ class GaussianProcessGPyTorch(BaseModel):
                 )
             except NotPSDError as e:
                 self.logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
+                f_opt = np.inf
+                theta = start_point
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
                 theta_star = theta
