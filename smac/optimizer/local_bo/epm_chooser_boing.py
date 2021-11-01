@@ -40,6 +40,8 @@ class EPMChooserBOinG(EPMChooser):
                  acquisition_func_local: AbstractAcquisitionFunction = EI,
                  model_local_kwargs: typing.Optional[typing.Dict] = None,
                  acquisition_func_local_kwargs: typing.Optional[typing.Dict] = None,
+                 acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
+                 acq_optimizer_local_kwargs: typing.Optional[typing.Dict] = None,
                  max_configs_local_fracs: float = 0.5,
                  min_configs_local: typing.Optional[int] = None,
                  do_switching: bool = False,
@@ -64,6 +66,11 @@ class EPMChooserBOinG(EPMChooser):
         acquisition_func_local: AbstractAcquisitionFunction,
             local acquisition function,  used in subspace
         acquisition_func_local_kwargs: typing.Optional[typing.Dict] = None,
+            parameters for initializing a local acquisition function optimizer
+        acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
+            Optimizer of acquisition function of local models
+        acq_optimizer_local_kwargs: typing: typing.Optional[typing.Dict] = None,
+            parameters for the optimizer of acquisition function of local models
         max_configs_local_fracs : float
             Maximal number of fractions of samples to be included in the  subapce. If the number of samples in the
             subsapce is beyond this value and n_min_config_inner, the subspace will be cropped to fit the requirement
@@ -87,10 +94,13 @@ class EPMChooserBOinG(EPMChooser):
                                               random_configuration_chooser=random_configuration_chooser,
                                               predict_x_best=predict_x_best,
                                               min_samples_model=min_samples_model)
-        self.model_local = model_local
-        self.model_local_kwargs = model_local_kwargs
-        self.acquisition_func_local = acquisition_func_local
-        self.acquisition_func_local_kwargs = acquisition_func_local_kwargs
+
+        self.subspac_info = {'model_local': model_local,
+                             'model_local_kwargs': model_local_kwargs,
+                             'acq_func_local': acquisition_func_local,
+                             'acq_func_local_kwargs': acquisition_func_local_kwargs,
+                             'acq_optimizer_local': acq_optimizer_local,
+                             'acq_optimizer_local_kwargs': acq_optimizer_local_kwargs}
 
         self.max_configs_local_fracs = max_configs_local_fracs
         self.min_configs_local = min_configs_local if min_configs_local is not None \
@@ -277,13 +287,14 @@ class EPMChooserBOinG(EPMChooser):
             ss = BOinGSubspace(config_space=self.scenario.cs,
                                bounds=self.bounds,
                                hps_types=self.types,
-                               model_local=self.model_local,
-                               model_local_kwargs=self.model_local_kwargs,
-                               acq_func_local=self.acquisition_func_local,
-                               acq_func_local_kwargs=self.acquisition_func_local_kwargs,
                                rng=self.rng,
                                initial_data=(X, Y_raw),
                                incumbent_array=None,
+                               model_local=self.subspac_info['model_local'],
+                               model_local_kwargs=self.subspac_info['model_local_kwargs'],
+                               acq_func_local=self.subspac_info['acq_func_local'],
+                               acq_func_local_kwargs=self.subspac_info['acq_func_local_kwargs'],
+                               acq_optimizer_local=self.acq_optimizer,
                                )
             return ss.generate_challengers()
 
@@ -374,13 +385,10 @@ class EPMChooserBOinG(EPMChooser):
                            hps_types=self.types,
                            bounds_ss_cont=bounds_ss_cont,
                            bounds_ss_cat=bounds_ss_cat,
-                           model_local=self.model_local,
-                           model_local_kwargs=self.model_local_kwargs,
-                           acq_func_local=self.acquisition_func_local,
-                           acq_func_local_kwargs=self.acquisition_func_local_kwargs,
                            rng=self.rng,
                            initial_data=(X, Y_raw),
                            incumbent_array=challenger_global,
+                           **self.subspac_info
                            )
         return ss.generate_challengers()
 

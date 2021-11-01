@@ -100,13 +100,17 @@ if __name__ == '__main__':
     epm_chooser_kwargs = {"model_local": PartialSparseGaussianProcess,
                           "model_local_kwargs": dict(kernel=kernel,
                                                      likelihood=likelihood),
+                          'min_configs_local': 30,
                           "do_switching": False}
+    # same as SMAC4BB
+    random_configuration_chooser_kwargs = {'prob': 0.08447232371720552}
 
     smac = SMAC4HPO(scenario=scenario,
                     rng=np.random.RandomState(42),
                     smbo_kwargs={"epm_chooser": EPMChooserBOinG,
                                  "epm_chooser_kwargs": epm_chooser_kwargs},
                     tae_runner=rosenbrock_2d,
+                    random_configuration_chooser_kwargs=random_configuration_chooser_kwargs,
                     runhistory2epm=RunHistory2EPM4LogCostWithRaw
                     )
 

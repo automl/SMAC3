@@ -230,7 +230,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         -------
         List
         """
-
         init_points = self._get_initial_points(num_points, runhistory, additional_start_points)
         configs_acq = self._do_search(init_points)
 

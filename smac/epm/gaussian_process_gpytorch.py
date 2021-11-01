@@ -16,6 +16,7 @@ from gpytorch.priors import HorseshoePrior
 from gpytorch.distributions.multivariate_normal import MultivariateNormal
 from botorch.optim.numpy_converter import module_to_array, set_params_with_array
 from botorch.optim.utils import _scipy_objective_and_grad
+from gpytorch.utils.errors import NotPSDError
 
 from smac.configspace import ConfigurationSpace
 from smac.utils.constants import VERY_SMALL_NUMBER
@@ -234,7 +235,7 @@ class GaussianProcessGPyTorch(BaseModel):
         n_tries = 5000
         for i in range(n_tries):
             try:
-                self.gp.pyro_sample_from_prior()
+                #gp_model = self.gp.pyro_sample_from_prior()
                 sample, _, _ = module_to_array(module=self.gp)
                 p0.append(sample.astype(np.float64))
             except RuntimeError as e:
@@ -258,9 +259,8 @@ class GaussianProcessGPyTorch(BaseModel):
                     args=(self.gp, property_dict),
                     bounds=bounds,
                 )
-            except RuntimeError as e:
+            except NotPSDError as e:
                 self.logger.warning(f"Fail to optimize the GP hyperparameters as an Error occurs: {e}")
-                continue
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
                 theta_star = theta

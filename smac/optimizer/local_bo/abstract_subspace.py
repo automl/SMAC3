@@ -483,7 +483,10 @@ class ChallengerListLocal(typing.Iterator):
             config = Configuration(configuration_space=self.cs_global, values=incumbent_array)
         else:
             config = Configuration(configuration_space=self.cs_global, values=value)
-        config.origin = self.config_origin
+        if self.config_origin is not None:
+            config.origin = self.config_origin
+        else:
+            config.origin = challenger.origin
         return config
 
     def __len__(self) -> int:
