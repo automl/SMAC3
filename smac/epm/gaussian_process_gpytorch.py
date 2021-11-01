@@ -320,7 +320,7 @@ class GaussianProcessGPyTorch(BaseModel):
                     var = var ** 2  # since we get standard deviation for faster computation
                 else:
                     # output full covariance
-                    var = observed_pred.covariance_matrix().numpy()
+                    var = observed_pred.covariance_matrix.numpy()
 
                 # Clip negative variances and set them to the smallest
                 # positive float value
