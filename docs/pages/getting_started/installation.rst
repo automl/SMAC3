@@ -54,7 +54,9 @@ Or alternatively, clone the environment from GitHub directly:
 
 .. warning::
 
-    Please note that :term:`CLI` is only available when installing from GitHub.
+    Please note that calling SMAC via :term:`CLI` is only available when installing from GitHub. We
+    refer to :ref:`Branin` for more details.
+
 
 
 Conda-forge
