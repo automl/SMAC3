@@ -59,3 +59,6 @@ Glossary
 
     CV
         Cross-Validation. 
+
+    CLI
+        Command-Line Interface.
