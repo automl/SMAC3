@@ -1,3 +1,11 @@
+# 1.1.1
+
+## Minor Changes
+* Added comparison between SMAC and similar tools.
+* Updated installation guide.
+* Added a warning that CLI is only available when installing from GitHub.
+
+
 # 1.1
 
 ## Features
