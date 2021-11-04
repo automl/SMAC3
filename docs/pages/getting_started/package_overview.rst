@@ -69,7 +69,7 @@ The following table provides an overview of SMAC's capabilities in comparison wi
 
 .. csv-table::
     :header: "Package", "Complex Hyperparameter Spaces", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
-    :widths: 15, 15, 15, 15, 15, 15, 15
+    :widths: 14, 14, 14, 14, 14, 14, 14
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
     Optuna, ✅, ✅, ❌, ❌, ✅, ✅
