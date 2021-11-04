@@ -68,16 +68,16 @@ Comparison
 The following table provides an overview of SMAC's capabilities in comparison with other optimization tools.
 
 .. csv-table::
-    :header: "Package", "Flexible Hyperparameters", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
+    :header: "Package", "Complex Hyperparameter Spaces", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
     :widths: 15, 15, 15, 15, 15, 15, 15
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
     Optuna, ✅, ✅, ❌, ❌, ✅, ✅
-    Hyperopt, ✅, ❌, ❌, ❌, ✅, ✅
+    Hyperopt, ✅, (✅) †, ❌, ❌, ✅, ✅
     BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
     OpenBox, ✅, ✅, ❌, ❌, ❌, ✅
-    HpBandSter, ✅, ❌, ✅, ❌, ❌, ✅
-    SMAC, ✅, ✅ †, ✅, ✅, ✅, ✅
+    HpBandSter, ✅, (✅) †, ✅, ❌, ❌, ✅
+    SMAC, ✅, (✅) †, ✅, ✅, ✅, ✅
 
 † Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
 
