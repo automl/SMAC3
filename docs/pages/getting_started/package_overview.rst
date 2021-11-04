@@ -58,7 +58,7 @@ Intensification
     - Successive Halving
     - Hyperband
 
-Please see the following figure for a more detailed overview:
+Please see the following figure for a more detailed overview.
 
 .. figure:: ../../images/components.png
 
@@ -68,7 +68,7 @@ Comparison
 The following table provides an overview of SMAC's capabilities in comparison with other optimization tools.
 
 .. csv-table::
-    :header: "Package", "Flexible Hyperparameters", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallel Evaluations"
+    :header: "Package", "Flexible Hyperparameters", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
     :widths: 15, 15, 15, 15, 15, 15, 15
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
@@ -77,8 +77,8 @@ The following table provides an overview of SMAC's capabilities in comparison wi
     BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
     OpenBox, ✅, ✅, ❌, ❌, ❌, ✅
     HpBandSter, ✅, ❌, ✅, ❌, ❌, ✅
-    SMAC, ✅, ✅ *, ✅, ✅, ✅, ✅
+    SMAC, ✅, ✅ †, ✅, ✅, ✅, ✅
 
-* Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
+† Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
 
 
