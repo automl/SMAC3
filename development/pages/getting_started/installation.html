@@ -376,17 +376,10 @@ style="width: 100%;">
   <a class="reference internal nav-link" href="#anaconda">
    Anaconda
   </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#conda-forge">
-     Conda-forge
-    </a>
-   </li>
-  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optional-dependencies">
-   Optional Dependencies
+  <a class="reference internal nav-link" href="#conda-forge">
+   Conda-forge
   </a>
  </li>
 </ul>
@@ -453,35 +446,19 @@ wrapped inside <code class="docutils literal notranslate"><span class="pre">if</
 <p>Please note that calling SMAC via <a class="reference internal" href="../glossary.html#term-CLI"><span class="xref std std-term">CLI</span></a> is only available when installing from GitHub. We
 refer to <a class="reference internal" href="../examples/commandline/branin.html#branin"><span class="std std-ref">Branin</span></a> for more details.</p>
 </div>
+</section>
 <section id="conda-forge">
-<h3>Conda-forge<a class="headerlink" href="#conda-forge" title="Permalink to this headline">¶</a></h3>
-<p>Installing <cite>auto-sklearn</cite> from the <cite>conda-forge</cite> channel can be achieved by adding <cite>conda-forge</cite> to your channels with:</p>
+<h2>Conda-forge<a class="headerlink" href="#conda-forge" title="Permalink to this headline">¶</a></h2>
+<p>Installing SMAC from the <cite>conda-forge</cite> channel can be achieved by adding <cite>conda-forge</cite> to your channels with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
 conda config --set channel_priority strict
 </pre></div>
 </div>
-<p>You must have <cite>conda &gt;=4.9</cite>. To update conda or check your current conda version, please follow the instructions from <a class="reference external" href="https://docs.anaconda.com/anaconda/install/update-version/">the official anaconda documentation</a> . Once the <cite>conda-forge</cite> channel has been enabled, <cite>auto-sklearn</cite> can be installed with:</p>
+<p>You must have <cite>conda &gt;= 4.9</cite> installed. To update conda or check your current conda version, please follow the instructions from <a class="reference external" href="https://docs.anaconda.com/anaconda/install/update-version/">the official anaconda documentation</a> . Once the <cite>conda-forge</cite> channel has been enabled, SMAC can be installed with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda install smac
 </pre></div>
 </div>
-<p>It is possible to list all of the versions of <cite>smac</cite> available on your platform with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda search smac --channel conda-forge
-</pre></div>
-</div>
-<p>to read in more details check
-<a class="reference external" href="https://github.com/conda-forge/smac-feedstock">smac feedstock</a>.</p>
-<p>for more information about Conda forge check
-<a class="reference external" href="https://conda-forge.org/docs/">conda-forge documentations</a>.</p>
-</section>
-</section>
-<section id="optional-dependencies">
-<h2>Optional Dependencies<a class="headerlink" href="#optional-dependencies" title="Permalink to this headline">¶</a></h2>
-<p>SMAC comes with a set of optional dependencies that can be installed using <a class="reference external" href="https://setuptools.pypa.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies">setuptools
-extras</a>:</p>
-<p>For convenience, there is an all meta-dependency that installs <code class="docutils literal notranslate"><span class="pre">all</span></code> optional dependencies:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">smac</span><span class="p">[</span><span class="nb">all</span><span class="p">]</span>
-</pre></div>
-</div>
+<p>Read <a class="reference external" href="https://github.com/conda-forge/smac-feedstock">SMAC feedstock</a> for more details.</p>
 </section>
 </section>
 
