@@ -72,7 +72,7 @@ if __name__ == "__main__":
     smac = SMAC4BB(scenario=scenario,
                    model_type=model_type,
                    rng=np.random.RandomState(42),
-                   acquisition_func=EI,  # or others like PI, LCB as acquisition functions
+                   acquisition_function=EI,  # or others like PI, LCB as acquisition functions
                    tae_runner=rosenbrock_2d)
 
     smac.optimize()
