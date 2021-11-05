@@ -51,6 +51,14 @@ Or alternatively, clone the environment from GitHub directly:
     pip install -r requirements.txt
     pip install .
 
+
+.. warning::
+
+    Please note that calling SMAC via :term:`CLI` is only available when installing from GitHub. We
+    refer to :ref:`Branin` for more details.
+
+
+
 Conda-forge
 ^^^^^^^^^^^^
 
@@ -59,7 +67,6 @@ Installing `auto-sklearn` from the `conda-forge` channel can be achieved by addi
 .. code:: bash
 
     conda config --add channels conda-forge
-
     conda config --set channel_priority strict
 
 
