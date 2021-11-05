@@ -8,8 +8,6 @@ from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
 
-from test import requires_extra
-
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
@@ -62,7 +60,6 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     return model
 
 
-@requires_extra('gpmcmc')
 class TestGPMCMC(unittest.TestCase):
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)

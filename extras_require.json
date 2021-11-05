@@ -1,7 +1,4 @@
 {
-  "gpmcmc": [
-    "emcee>=3.0.0"
-  ],
   "documentation": [
     "sphinx==4.2.0",
     "sphinx-gallery==0.10.0",
