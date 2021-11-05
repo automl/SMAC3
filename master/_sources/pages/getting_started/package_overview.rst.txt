@@ -35,7 +35,7 @@ Any objectives
     Find well-performing hyperparameter configurations not only for one instance (e.g. dataset) of
     an algorithm, but for many.
     
-Commandline
+Commandline (:term:`CLI`)
     SMAC can not only be executed within a python file but also from the commandline. Consequently,
     not only algorithms in python can be optimized but in other languages as well.
 
@@ -58,6 +58,27 @@ Intensification
     - Successive Halving
     - Hyperband
 
-Please see the following figure for a more detailed overview:
+Please see the following figure for a more detailed overview.
 
 .. figure:: ../../images/components.png
+
+
+Comparison
+~~~~~~~~~~
+The following table provides an overview of SMAC's capabilities in comparison with other optimization tools.
+
+.. csv-table::
+    :header: "Package", "Complex Hyperparameter Spaces", "Multi-:term:`Objective` ", ":term:`Multi-Fidelity<MF>`", ":ref:`Instances<Instances and Features>`", ":term:`CLI`", "Parallelism"
+    :widths: 14, 14, 14, 14, 14, 14, 14
+
+    HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
+    Optuna, ✅, ✅, ❌, ❌, ✅, ✅
+    Hyperopt, ✅, (✅) †, ❌, ❌, ✅, ✅
+    BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
+    OpenBox, ✅, ✅, ❌, ❌, ❌, ✅
+    HpBandSter, ✅, (✅) †, ✅, ❌, ❌, ✅
+    SMAC, ✅, (✅) †, ✅, ✅, ✅, ✅
+
+† Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
+
+
