@@ -18,7 +18,7 @@ with open(os.path.join(os.path.dirname(__file__), 'requirements.txt')) as fh:
 with open(os.path.join(os.path.dirname(__file__), 'extras_require.json')) as fh:
     extras_require = json.load(fh)
 
-extras_installed = set()
+extras_installed = set()  # type: set
 for name, requirements in extras_require.items():
     if name in ['documentation', 'test']:
         continue
