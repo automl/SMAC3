@@ -13,15 +13,6 @@ RE_PATTERN = re.compile(
     r'^(?P<name>[\w\-]+)%s?(,%s)?$' % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2)))
 
 
-def are_valid_packages(packages: typing.Union[typing.List[str], str]) -> bool:
-    try:
-        verify_packages(packages)
-    except (MissingPackageError, IncorrectPackageVersionError):
-        return False
-    else:
-        return True
-
-
 def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
     if not packages:
         return
