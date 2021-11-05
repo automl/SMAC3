@@ -22,8 +22,6 @@ extras_installed = set()
 for name, requirements in extras_require.items():
     if name in ['documentation', 'test']:
         continue
-    if dependencies.are_valid_packages(requirements):
-        extras_installed.add(name)
 
 if sys.version_info < (3, 7, 0):
     raise ValueError("SMAC requires Python 3.7.0 or newer.")
