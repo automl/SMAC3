@@ -60,9 +60,9 @@ Or alternatively, clone the environment from GitHub directly:
 
 
 Conda-forge
-^^^^^^^^^^^^
+~~~~~~~~~~~
 
-Installing `auto-sklearn` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing SMAC from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 .. code:: bash
 
@@ -70,37 +70,12 @@ Installing `auto-sklearn` from the `conda-forge` channel can be achieved by addi
     conda config --set channel_priority strict
 
 
-You must have `conda >=4.9`. To update conda or check your current conda version, please follow the instructions from `the official anaconda documentation <https://docs.anaconda.com/anaconda/install/update-version/>`_ . Once the `conda-forge` channel has been enabled, `auto-sklearn` can be installed with:
+You must have `conda >= 4.9` installed. To update conda or check your current conda version, please follow the instructions from `the official anaconda documentation <https://docs.anaconda.com/anaconda/install/update-version/>`_ . Once the `conda-forge` channel has been enabled, SMAC can be installed with:
 
 .. code:: bash
 
     conda install smac
+    
 
-
-It is possible to list all of the versions of `smac` available on your platform with:
-
-.. code:: bash
-
-    conda search smac --channel conda-forge
-
-to read in more details check
-`smac feedstock <https://github.com/conda-forge/smac-feedstock>`_.
-
-for more information about Conda forge check
-`conda-forge documentations <https://conda-forge.org/docs/>`_.
-
-
-Optional Dependencies
-~~~~~~~~~~~~~~~~~~~~~
-
-SMAC comes with a set of optional dependencies that can be installed using `setuptools
-extras <https://setuptools.pypa.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_:
-
-
-For convenience, there is an all meta-dependency that installs ``all`` optional dependencies:
-
-.. code-block::
-
-    pip install smac[all]
-
+Read `SMAC feedstock <https://github.com/conda-forge/smac-feedstock>`_ for more details.
     
