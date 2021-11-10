@@ -141,25 +141,25 @@ def get_rng(
 
 
 def check_points_in_ss(X: np.ndarray,
-                       cont_dims: np.ndarray,
-                       cat_dims: np.ndarray,
-                       bounds_cont: np.ndarray,
-                       bounds_cat: typing.List[typing.List[typing.Tuple]],
+                       cont_dims: typing.Union[np.ndarray, typing.List] = [],
+                       cat_dims: typing.Union[np.ndarray, typing.List] = [],
+                       bounds_cont: typing.Optional[np.ndarray] = None,
+                       bounds_cat: typing.Optional[typing.List[typing.Tuple]] = None,
                        expand_bound: bool = False,
-                       ):
+                       ) -> np.ndarray:
     """
     check which points will be place inside a subspace
     Parameters
     ----------
-    X: np.ndarray(N,D),
+    X: typing.Optional[np.ndarray(N,D)],
         points to be checked, where D = D_cont + D_cat
-    cont_dims: np.ndarray(D_cont)
+    cont_dims: typing.Union[np.ndarray(D_cont), typing.List]
         which dimensions represent continuous hyperparameters
-    cat_dims: np.ndarray(D_cat)
+    cat_dims: typing.Union[np.ndarray(D_cat), typing.List]
         which dimensions represent categorical hyperparameters
-    bounds_cont: typing.List[typing.Tuple]
-        subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
-    bounds_cat: np.ndarray(D_cont, 2)
+    bounds_cont: typing.optional[typing.List[typing.Tuple]]
+        subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
+    bounds_cat: typing.Optional[typing.List[typing.Tuple]]
         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
     expand_bound: bool
         if the bound needs to be expanded to contain more points rather than the points inside the subregion
@@ -170,8 +170,17 @@ def check_points_in_ss(X: np.ndarray,
     """
     if len(X.shape) == 1:
         X = X[np.newaxis, :]
+    if len(cont_dims) == 0 and len(cat_dims) == 0:
+        return np.ones(X.shape[0], dtype=bool)
 
-    if cont_dims.size != 0:
+    if len(cont_dims) > 0:
+        if bounds_cont is None:
+            raise ValueError('bounds_cont must be given if cont_dims provided')
+
+        if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
+            raise ValueError(f'bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of'
+                             f'{len(cont_dims)}, 2)')
+
         data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(X[:, cont_dims] >= bounds_cont[:, 0],
                                                                                    axis=1)
 
@@ -180,11 +189,16 @@ def check_points_in_ss(X: np.ndarray,
             bound_right = bounds_cont[:, 1] + np.min(bounds_cont[:, 1] - X[data_in_ss][:, cont_dims], axis=0)
             data_in_ss = np.all(X[:, cont_dims] <= bound_right, axis=1) & np.all(X[:, cont_dims] >= bound_left, axis=1)
     else:
-        data_in_ss = np.ones(X.shape[-1], dtype=bool)
+        data_in_ss = np.ones(X.shape[0], dtype=bool)
 
-    # TODO find out where cause the None value of  bounds_cat
+    if len(cat_dims) == 0:
+        return data_in_ss
     if bounds_cat is None:
-        bounds_cat = [()]
+        raise ValueError('bounds_cat must be given if cat_dims provided')
+
+    if len(bounds_cat) != len(cat_dims):
+        raise ValueError(f'bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have '
+                         f'the same number of elements')
 
     for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
         data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)

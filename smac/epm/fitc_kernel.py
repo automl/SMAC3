@@ -1,8 +1,9 @@
 import math
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 import copy
 
 import torch
+import gpytorch
 from gpytorch import settings
 from gpytorch.utils.cholesky import psd_safe_cholesky
 from gpytorch.means.mean import Mean
@@ -11,21 +12,22 @@ from gpytorch.kernels import Kernel
 from gpytorch.likelihoods import GaussianLikelihood
 
 
-class PartialSparseKernel(Kernel):
+class FITCKernel(Kernel):
     def __init__(self,
                  base_kernel: Kernel,
-                 X_inducing: torch.tensor,
+                 X_inducing: torch.Tensor,
                  likelihood: GaussianLikelihood,
-                 X_out: torch.tensor,
-                 y_out: torch.tensor,
+                 X_out: torch.Tensor,
+                 y_out: torch.Tensor,
                  active_dims: Optional[Tuple[int]] = None):
         """
-        A kernel for partial sparse gaussian process. When doing forward, it needs to pass two GP kernel where the
-        two kernels share the same hyperparameters (kernel length, kernel scale and noises), the first one is a sparse
-        GP kernel and has inducing points as its hyperparameter. When computing the posterior of the partial sparse
-        kernel, we first compute the posterior w.r.t. outer_X and outer_y. Then we consider this posterior as a prior
-        of the second stage where we compute the posterior distribution of X_in (the input of forward function)
-        Parameters
+        A reimplementation of FITC Kernel that computes the posterior explictly for globally augmented local GP.
+        This should work exactly the same as a gpytorch.kernel.InducingPointKernel.
+         However, it takes much less time when combined with LGPGA.
+         References: Edward Snelson and Zoubin Ghahramani. Sparse Gaussian processes using pseudo-inputs. Advances in
+         Neural Information Processing Systems 18, Cambridge, Massachussetts, 2006. The MIT Press.
+         https://papers.nips.cc/paper/2005/hash/4491777b1aa8b5b32c2e8666dbe1a495-Abstract.html
+
         Mean value is computed with:
         \mathbf{\mu_{l'}}  = \mathbf{K_{l',u} \Sigma K_{u,1} \Lambda}^{-1}\mathbf{y_g} \label{eq:mean_sgp}
         and variance value:
@@ -35,20 +37,20 @@ class PartialSparseKernel(Kernel):
         ----------
         base_kernel: Kernel
             base kernel function
-        X_inducing: torch.tensor (N_inducing, D)
+        X_inducing: torch.Tensor (N_inducing, D)
             inducing points, should be of size (N_inducing, D), N_inducing is the number of the inducing points
         likelihood: GaussianLikelihood
             GP likelihood
-        X_out: torch.tensor (N_out,D)
+        X_out: torch.Tensor (N_out,D)
             data features outside the subregion, needs to be of size (N_out, D), N_out is the number of points outside
             the subspace
-        y_out: torch.tensor
+        y_out: torch.Tensor
             data observations outside the subregion
         active_dims: typing.Optional[typing.Tuple[int]] = None
             Set this if you want to compute the covariance of only a few input dimensions. The ints
             corresponds to the indices of the dimensions. Default: `None`.
         """
-        super(PartialSparseKernel, self).__init__(active_dims=active_dims)
+        super(FITCKernel, self).__init__(active_dims=active_dims)
         self.has_lengthscale = base_kernel.has_lengthscale
         self.base_kernel = base_kernel
         self.likelihood = likelihood
@@ -77,21 +79,21 @@ class PartialSparseKernel(Kernel):
             del self._cached_poster_mean_mat
         if hasattr(self, "_train_cached_k_u1"):
             del self._train_cached_k_u1
-        if hasattr(self, "_train_cached_inducing_sigma_inv_root"):
-            del self._train_cached_inducing_sigma_inv_root
         if hasattr(self, "_train_cached_lambda_diag_inv"):
             del self._train_cached_lambda_diag_inv
-        if hasattr(self, "_cached_posterior_mean"):
-            del self._cached_posterior_mean
-        return super(PartialSparseKernel, self).train(mode)
+        if hasattr(self, "_train_cached_posterior_mean"):
+            del self._train_cached_posterior_mean
+        if hasattr(self, '_cached_kernel_inv_root'):
+            del self._cached_kernel_inv_root
+        return super(FITCKernel, self).train(mode)
 
     @property
-    def _inducing_mat(self) -> torch.tensor:
+    def _inducing_mat(self) -> torch.Tensor:
         """
         computes inducing matrix, K(X_inducing, X_inducing)
         Returns
         -------
-        res: torch.tensor (N_inducing, N_inducing)
+        res: torch.Tensor (N_inducing, N_inducing)
         K(X_inducing, X_inducing)
         """
         if not self.training and hasattr(self, "_cached_kernel_mat"):
@@ -99,16 +101,16 @@ class PartialSparseKernel(Kernel):
         else:
             res = delazify(self.base_kernel(self.X_inducing, self.X_inducing))
             if not self.training:
-                self._cached_kernel_mat = res
+                self._cached_kernel_mat = res  # type: torch.Tensor
             return res
 
     @property
-    def _inducing_inv_root(self) -> torch.tensor:
+    def _inducing_inv_root(self) -> torch.Tensor:
         """
         computes the inverse of the inducing matrix: K_inv(X_inducing, X_inducing) = K(X_inducing, X_inducing)^(-1)
         Returns
         -------
-        res: torch.tensor (N_inducing, N_inducing)
+        res: torch.Tensor (N_inducing, N_inducing)
         K_inv(X_inducing, X_inducing)
         """
         if not self.training and hasattr(self, "_cached_kernel_inv_root"):
@@ -120,16 +122,16 @@ class PartialSparseKernel(Kernel):
 
             res = inv_root
             if not self.training:
-                self._cached_kernel_inv_root = res
+                self._cached_kernel_inv_root = res  # type: torch.Tensor
             return res
 
     @property
-    def _k_u1(self) -> torch.tensor:
+    def _k_u1(self) -> torch.Tensor:
         """
         computes the covariance matrix between the X_inducing and X_out : K(X_inducing, X_out)
         Returns
         -------
-        res: torch.tensor (N_inducing, N_out)
+        res: torch.Tensor (N_inducing, N_out)
          K(X_inducing, X_out)
         """
         if not self.training and hasattr(self, "_cached_k_u1"):
@@ -137,20 +139,20 @@ class PartialSparseKernel(Kernel):
         else:
             res = delazify(self.base_kernel(self.X_inducing, self.X_out))
             if not self.training:
-                self._cached_k_u1 = res
+                self._cached_k_u1 = res  # type: torch.Tensor
             else:
-                self._train_cached_k_u1 = res.clone()
+                self._train_cached_k_u1 = res  # type: torch.Tensor
             return res
 
     @property
-    def _lambda_diag_inv(self):
+    def _lambda_diag_inv(self) -> torch.Tensor:
         """
         computes the inverse of lambda matrix, is computed by
         \Lambda = diag[\mathbf{K_{X_out,X_out}-Q_{X_out,X_out}} + \sigma^2_{noise}\idenmat] and
         Q{X_out, X_out} = K(X_out, X_inducing) K^{-1}(X_inducing,X_inducing) K(X_inducing, X_out)
         Returns
         -------
-        res: torch.tensor (N_out, N_out)
+        res: torch.Tensor (N_out, N_out)
         inverse of the diagonal matrix lambda
         """
         if not self.training and hasattr(self, "_cached_lambda_diag_inv"):
@@ -168,20 +170,20 @@ class PartialSparseKernel(Kernel):
             res = delazify(DiagLazyTensor((correction + sigma).reciprocal()))
 
             if not self.training:
-                self._cached_lambda_diag_inv = res
+                self._cached_lambda_diag_inv = res  # type: torch.Tensor
             else:
-                self._train_cached_lambda_diag_inv = res.clone()
+                self._train_cached_lambda_diag_inv = res  # type: torch.Tensor
             return res
 
     @property
-    def _inducing_sigma(self):
+    def _inducing_sigma(self) -> torch.Tensor:
         """
         computes the inverse of lambda matrix, is computed by
         \mathbf{\Sigma} = (\mathbf{K_{X_inducing,X_inducing}} +
          \mathbf{K_{X_inducing, X_out} \Lambda}^{-1}\mathbf{K_{X_out,X_inducing}})
         Returns
         -------
-        res: torch.tensor (N_inducing, N_inducing)
+        res: torch.Tensor (N_inducing, N_inducing)
         \Sigma
         """
         if not self.training and hasattr(self, "_cached_inducing_sigma"):
@@ -192,17 +194,17 @@ class PartialSparseKernel(Kernel):
                                                                                                k_u1.transpose(-1, -2))))
             res = delazify(res)
             if not self.training:
-                self._cached_inducing_sigma = res
+                self._cached_inducing_sigma = res  # type: torch.Tensor
 
             return res
 
     @property
-    def _inducing_sigma_inv_root(self):
+    def _inducing_sigma_inv_root(self) -> torch.Tensor:
         """
         inverse of Sigma matrix:
         Returns
         -------
-        res: torch.tensor (N_inducing, N_inducing)
+        res: torch.Tensor (N_inducing, N_inducing)
         \Sigma ^{-1}
         """
         if not self.training and hasattr(self, "_cached_inducing_sigma_inv_root"):
@@ -214,18 +216,16 @@ class PartialSparseKernel(Kernel):
             inv_root = torch.triangular_solve(eye, chol)[0]
             res = inv_root
             if not self.training:
-                self._cached_inducing_sigma_inv_root = res
-            else:
-                self._train_cached_inducing_sigma_inv_root = res.clone()
+                self._cached_inducing_sigma_inv_root = res  # type: torch.Tensor
             return res
 
     @property
-    def _poster_mean_mat(self):
+    def _poster_mean_mat(self) -> torch.Tensor:
         """
         A cached value for computing posterior mean of a sparse kernel:
         Returns
         -------
-        res: torch.tensor (N_inducing, 1)
+        res: torch.Tensor (N_inducing, 1)
         a cached value for computing the posterior mean,
         is defined by  \Sigma K_{u, 1} \Lambda}^{-1}\mathbf{y_out}
         """
@@ -243,22 +243,22 @@ class PartialSparseKernel(Kernel):
             res = torch.matmul(res_mat, self.y_out)
 
             if not self.training:
-                self._cached_poster_mean_mat = res
+                self._cached_poster_mean_mat = res  # type: torch.Tensor
             return res
 
-    def _get_covariance(self, x1: torch.tensor, x2: torch.tensor):
+    def _get_covariance(self, x1: torch.Tensor, x2: torch.Tensor) -> gpytorch.lazy.LazyTensor:
         """
         Compute the posterior covariance matrix of the sparse kernel (will serve as the prior for the GP
         kernel in the second stage)
         Parameters
         ----------
-        x1: torch.tensor(N_x1, D)
+        x1: torch.Tensor(N_x1, D)
         first input of the partial sparse kernel
-        x2: torch.tensor(N_x2, D)
+        x2: torch.Tensor(N_x2, D)
         second input of the partial sparse kernel
         Returns
         -------
-        res: torch.tensor (N_x1, 1) or PsdSumLazyTensor
+        res: torch.Tensor (N_x1, 1) or PsdSumLazyTensor
         a cached value for computing the posterior mean,
         is defined by  \Sigma K_{u, 1} \Lambda}^{-1}\mathbf{y_out}
         """
@@ -281,7 +281,7 @@ class PartialSparseKernel(Kernel):
         covar = PsdSumLazyTensor(k_x1x2, -1. * q_x1x2, s_x1x2)
 
         if self.training:
-            k_iu = self.base_kernel(x1, self.inducing_points)
+            k_iu = self.base_kernel(x1, self.X_inducing)
             sigma = RootLazyTensor(inducing_sigma_inv_root)
 
             k_u1 = self._train_cached_k_u1 if hasattr(self, "_train_cached_k_u1") else self._k_u1
@@ -290,44 +290,25 @@ class PartialSparseKernel(Kernel):
 
             mean = torch.matmul(
                 delazify(MatmulLazyTensor(k_iu, MatmulLazyTensor(sigma, MatmulLazyTensor(k_u1, lambda_diag_inv)))),
-                self.outer_y)
+                self.y_out)
 
-            self._cached_posterior_mean = mean
+            self._train_cached_posterior_mean = mean  # type: torch.Tensor
         return covar
 
-    def _covar_diag(self, inputs):
-        """
-        covar matrix diagonal
-        Parameters
-        ----------
-        inputs: torch.tensor(N_inputs, D)
-        input of the partial sparse kernel
-        Returns
-        -------
-        res: DiagLazyTensor (N_inputs, 1)
-        a diagional matrix
-        """
-        if inputs.ndimension() == 1:
-            inputs = inputs.unsqueeze(1)
-
-        # Get diagonal of covar
-        covar_diag = delazify(self.base_kernel(inputs, diag=True))
-        return DiagLazyTensor(covar_diag)
-
-    def posterior_mean(self, inputs):
+    def posterior_mean(self, inputs: torch.Tensor) -> torch.Tensor:
         """
         posterior mean of the sparse kernel, will serve as the prior mean of the dense kernel
         Parameters
         ----------
-        inputs: torch.tensor(N_inputs, D)
+        inputs: torch.Tensor(N_inputs, D)
         input of the partial sparse kernel
         Returns
         -------
-        res: Torch.tensor (N_inputs, 1)
+        res: Torch.Tensor (N_inputs, 1)
         posterior mean of sparse Kernel
         """
-        if self.training and hasattr(self, "_cached_posterior_mean"):
-            return self._cached_posterior_mean
+        if self.training and hasattr(self, "_train_cached_posterior_mean"):
+            return self._train_cached_posterior_mean
         if inputs.ndimension() == 1:
             inputs = inputs.unsqueeze(1)
 
@@ -336,7 +317,10 @@ class PartialSparseKernel(Kernel):
         res = torch.matmul(k_iu, poster_mean)
         return res
 
-    def forward(self, x1, x2, diag=False, **kwargs):
+    def forward(self, x1: torch.Tensor,
+                x2: torch.Tensor,
+                diag: bool = False,
+                **kwargs: Dict) -> gpytorch.lazy.LazyTensor:
         covar = self._get_covariance(x1, x2)
         if self.training:
             if not torch.equal(x1, x2):
@@ -347,13 +331,16 @@ class PartialSparseKernel(Kernel):
         else:
             return covar
 
-    def num_outputs_per_input(self, x1, x2) -> int:
+    def num_outputs_per_input(self, x1: torch.Tensor, x2: torch.Tensor) -> int:
         """
         Number of outputs given the inputs
+        if x1 is size `n x d` and x2 is size `m x d`, then the size of the kernel
+        will be `(n * num_outputs_per_input) x (m * num_outputs_per_input)`
         Parameters
         ----------
-        x1: torch.tensor(N_x1, D)
+        x1: torch.Tensor
         input of the partial sparse kernel
+        x2: torch.Tensor
         Returns
         -------
         res: int
@@ -361,7 +348,7 @@ class PartialSparseKernel(Kernel):
         """
         return self.base_kernel.num_outputs_per_input(x1, x2)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict) -> 'FITCKernel':
         replace_inv_root = False
         replace_kernel_mat = False
         replace_k_u1 = False
@@ -397,7 +384,7 @@ class PartialSparseKernel(Kernel):
             X_inducing=copy.deepcopy(self.X_inducing),
             X_out=self.X_out,
             y_out=self.y_out,
-            likelihood=self.likelihood,
+            likelihood=copy.deepcopy(self.likelihood),
             active_dims=self.active_dims,
         )
 
@@ -414,7 +401,7 @@ class PartialSparseKernel(Kernel):
             cp._cached_lambda_diag_inv = lambda_diag_inv
 
         if replace_inducing_sigma:
-            cp._inducing_sigma = inducing_sigma
+            cp._cached_inducing_sigma = inducing_sigma
 
         if replace_inducing_sigma_inv_root:
             cp._cached_inducing_sigma_inv_root = inducing_sigma_inv_root
@@ -425,10 +412,10 @@ class PartialSparseKernel(Kernel):
         return cp
 
 
-class PartialSparseMean(Mean):
-    def __init__(self, covar_module: PartialSparseKernel, batch_shape=torch.Size(), **kwargs):
+class FITCMean(Mean):
+    def __init__(self, covar_module: FITCKernel, batch_shape: int = torch.Size(), **kwargs: Dict):
         """
-        Read the posterior mean value of the given partial sparse kernel and serve as a prior mean value for the
+        Read the posterior mean value of the given fitc kernel and serve as a prior mean value for the
         second stage
         Parameters
         ----------
@@ -437,21 +424,21 @@ class PartialSparseMean(Mean):
         batch_shape: torch.size
         batch size
         """
-        super(PartialSparseMean, self).__init__()
+        super(FITCMean, self).__init__()
         self.covar_module = covar_module
         self.batch_shape = batch_shape
         self.covar_module = covar_module
 
-    def forward(self, input: torch.tensor):
+    def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
         Compute the posterior mean from the cached value of partial sparse kernel
         Parameters
         ----------
-        input: torch.tensor(N_xin, D)
-        input torch tensor
+        input: torch.Tensor(N_xin, D)
+        input torch Tensor
         Returns
         -------
-        res: torch.tensor(N_xin)
+        res: torch.Tensor(N_xin)
         posterior mean value of sparse GP model
         """
         # detach is applied here to avoid updating the same parameter twice in the same iteration

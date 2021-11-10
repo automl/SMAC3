@@ -70,7 +70,7 @@ class SMBO(object):
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
                  min_samples_model: int = 1,
-                 epm_chooser: EPMChooser = EPMChooser,
+                 epm_chooser: typing.Type[EPMChooser] = EPMChooser,
                  epm_chooser_kwargs: typing.Optional[typing.Dict] = None):
         """
         Interface that contains the main Bayesian optimization loop
@@ -147,7 +147,8 @@ class SMBO(object):
                                        random_configuration_chooser=random_configuration_chooser,
                                        predict_x_best=predict_x_best,
                                        min_samples_model=min_samples_model,
-                                       **epm_chooser_kwargs)
+                                       **epm_chooser_kwargs,
+                                       )
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False

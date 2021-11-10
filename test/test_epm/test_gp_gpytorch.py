@@ -1,10 +1,9 @@
 import unittest.mock
 
 import numpy as np
-import sklearn
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter, CategoricalHyperparameter
-from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch, ExactGPModel
+from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from botorch.models.kernels.categorical import CategoricalKernel
 import torch
 import pyro
@@ -13,30 +12,16 @@ from gpytorch.kernels import ProductKernel, MaternKernel, ScaleKernel
 from gpytorch.priors import LogNormalPrior, HorseshoePrior, UniformPrior
 from gpytorch.constraints.constraints import Interval
 from gpytorch.utils.errors import NotPSDError
-
-from test import requires_extra
+from gpytorch.mlls.exact_marginal_log_likelihood import ExactMarginalLogLikelihood
+from gpytorch.models.exact_gp import ExactGP
 
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 
+from .. import requires_extra
+from .test_gp import get_cont_data, get_cat_data, TestGP
+
 torch.manual_seed(0)
 pyro.set_rng_seed(0)
-
-
-def get_cont_data(rs):
-    X = rs.rand(20, 10)
-    Y = rs.rand(10, 1)
-    n_dims = 10
-    return X, Y, n_dims
-
-
-def get_cat_data(rs):
-    X_cont = rs.rand(20, 5)
-    X_cat = rs.randint(low=0, high=3, size=(20, 5))
-    X = np.concatenate([X_cat, X_cont], axis=1)
-    Y = rs.rand(10, 1)
-    cat_dims = [0, 1, 2, 3, 4]
-    cont_dims = [5, 6, 7, 8, 9]
-    return X, Y, cat_dims, cont_dims
 
 
 @requires_extra('gpytorch')
@@ -157,12 +142,34 @@ def get_mixed_gp(cat_dims, cont_dims, rs, normalize_y=True):
 
 
 @requires_extra('gpytorch')
-class TestGPGPyTorch(unittest.TestCase):
+class TestGPGPyTorch(TestGP):
+    def test_gp_model(self):
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+        model = get_gp(n_dims, rs, normalize_y=True)
+        self.assertTrue(model.normalize_y)
+        self.assertIsNone(model.gp)
+        self.assertEqual(np.shape(model.hypers), (0,))
+        self.assertEqual(model.is_trained, False)
+        self.assertEqual(bool(model.property_dict), False)
+
+        mll = model._get_gp(X, Y)
+        self.assertIsInstance(mll, ExactMarginalLogLikelihood)
+        self.assertIsInstance(mll.model, ExactGP)
+
     def test_likelihood(self):
         rs = np.random.RandomState(1)
         X, Y, n_dims = get_cont_data(rs)
         model = get_gp(n_dims, rs)
         self.assertIsInstance(model.likelihood, GaussianLikelihood)
+        for prior in model.likelihood.named_priors():
+            self.assertIsInstance(prior[1].noise_prior, HorseshoePrior)
+
+        for constraint_name, constraint in model.likelihood.named_constraints():
+            self.assertIsInstance(constraint, Interval)
+            np.testing.assert_almost_equal(constraint.lower_bound.numpy(), torch.tensor(np.exp(-25)).numpy())
+            np.testing.assert_almost_equal(constraint.upper_bound.numpy(), torch.tensor(np.exp(2)).numpy())
+
         self.assertEqual(torch.tensor([0.]), model.likelihood.raw_noise.data)
         noise_level = 1e-3
         model = get_gp(n_dims, rs, noise=1e-3)
@@ -183,7 +190,6 @@ class TestGPGPyTorch(unittest.TestCase):
 
     def test_train_do_optimize(self):
         # Check that do_optimize does not mess with the kernel hyperparameters given to the Gaussian process!
-
         rs = np.random.RandomState(1)
         X, Y, n_dims = get_cont_data(rs)
 
@@ -195,11 +201,47 @@ class TestGPGPyTorch(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(hypers, fixture)
 
-
         model._train(X[:10], Y[:10], do_optimize=True)
         hypers = model.hypers
         self.assertFalse(np.any(hypers == fixture))
 
+    @unittest.mock.patch('gpytorch.module.Module.pyro_sample_from_prior')
+    def test_exception_1(self, fit_mock):
+        # Check that training will not continue sampling if pyro raises an error
+        class Dummy1:
+            counter = 0
+
+            def __call__(self):
+                self.counter += 1
+                raise RuntimeError('Unable to sample new cfgs')
+
+        fit_mock.side_effect = Dummy1()
+
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+
+        model = get_gp(n_dims, rs)
+        with self.assertRaises(RuntimeError):
+            model._train(X[:10], Y[:10], do_optimize=True)
+
+    @unittest.mock.patch('gpytorch.models.exact_gp.ExactGP.__init__')
+    def test_exception_2(self, fit_mock):
+        class Dummy2:
+            counter = 0
+
+            def __call__(self, train_inputs, train_targets, likelihood):
+                self.counter += 1
+                raise RuntimeError('Unable to initialize a new GP')
+
+        fit_mock.side_effect = Dummy2()
+        rs = np.random.RandomState(1)
+        X, Y, n_dims = get_cont_data(rs)
+
+        model = get_gp(n_dims, rs)
+        with self.assertRaises(RuntimeError):
+            model._train(X[:10], Y[:10], do_optimize=False)
+        with self.assertRaises(RuntimeError):
+            model._get_gp(X[:10], Y[:10])
 
     @unittest.mock.patch('gpytorch.mlls.exact_marginal_log_likelihood.ExactMarginalLogLikelihood.forward')
     def test_train_continue_on_linalg_error(self, fit_mock):
@@ -222,7 +264,7 @@ class TestGPGPyTorch(unittest.TestCase):
         model = get_gp(n_dims, rs)
         model._train(X[:10], Y[:10], do_optimize=True)
 
-        fixture = np.array([0.0, 2., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
+        fixture = np.array([0., 2., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.])
 
         hypers = model.hypers
 
@@ -253,9 +295,11 @@ class TestGPGPyTorch(unittest.TestCase):
         model = get_gp(3, rs)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
+        self.assertEqual(model.is_trained, True)
+
         mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
-            y.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
+                y.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
         ):
             self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
@@ -265,8 +309,7 @@ class TestGPGPyTorch(unittest.TestCase):
 
         self.assertAlmostEqual(mu_hat[0][0], 54.612500000000004)
         # There's a slight difference between my local installation and travis
-        self.assertLess(abs(var_hat[0][0] - 1017.1374468449195), 2)
-
+        self.assertLess(abs(var_hat[0][0] - 1017.1374468449195), 15)
 
         # test other covariance results
         _, var_fc = model.predict(X, cov_return_type='full_cov')
@@ -281,6 +324,12 @@ class TestGPGPyTorch(unittest.TestCase):
         _, var_sd = model.predict(np.array([[10., 10., 10.]]), cov_return_type='diagonal_std')
         self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
+        _, var_fc = model.predict(np.array([[10., 10., 10.], [5., 5., 5.]]), cov_return_type='full_cov')
+        self.assertEqual(var_fc.shape, (2, 2))
+
+    def test_normalization(self):
+        super(TestGPGPyTorch, self).test_normalization()
+
     def test_sampling_shape(self):
         X = np.arange(-5, 5, 0.1).reshape((-1, 1))
         X_test = np.arange(-5.05, 5.05, 0.1).reshape((-1, 1))
@@ -293,8 +342,8 @@ class TestGPGPyTorch(unittest.TestCase):
 
             rng = np.random.RandomState(1)
             for gp in (
-                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
-                get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
+                    get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False),
+                    get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True),
             ):
                 gp._train(X, y)
                 func = gp.sample_functions(X_test=X_test, n_funcs=1)

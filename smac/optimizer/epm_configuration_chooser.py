@@ -32,7 +32,8 @@ class EPMChooser(object):
                  restore_incumbent: Configuration = None,
                  random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
-                 min_samples_model: int = 1
+                 min_samples_model: int = 1,
+                 **epm_chooser_kwargs: dict
                  ):
         """
         Interface to train the EPM and generate next configurations

@@ -5,7 +5,7 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
-from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.acquisition import AbstractAcquisitionFunction, TS
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
 from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserNoCoolDown
@@ -72,13 +72,14 @@ class EPMChooserTurBO(EPMChooser):
                                               random_configuration_chooser=random_configuration_chooser,
                                               predict_x_best=predict_x_best,
                                               min_samples_model=min_samples_model)
-        types, bounds = get_types(self.scenario.cs, instance_features=None)
+        cs = self.scenario.cs   # type: ignore
+        types, bounds = get_types(cs, instance_features=None)
 
-        self.turbo = TuRBOSubSpace(config_space=scenario.cs,
+        self.turbo = TuRBOSubSpace(config_space=cs,
                                    bounds=bounds,
                                    hps_types=types,
                                    model_local=model,
-                                   acq_func_local=acquisition_func,
+                                   acq_func_local=TS,
                                    length_init=length_init,
                                    length_min=length_min,
                                    length_max=length_max,

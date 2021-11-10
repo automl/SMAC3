@@ -52,29 +52,30 @@ Or alternatively, clone the environment from GitHub directly:
     pip install .
 
 
-Optional Dependencies
-~~~~~~~~~~~~~~~~~~~~~
+.. warning::
 
-SMAC comes with a set of optional dependencies that can be installed using `setuptools
-extras <https://setuptools.pypa.io/en/latest/setuptools.html#declaring-extras-optional-features-with-their-own-dependencies>`_:
+    Please note that calling SMAC via :term:`CLI` is only available when installing from GitHub. We
+    refer to :ref:`Branin` for more details.
 
-- `lhd`: Latin Hypercube Design
-- `gp`: Gaussian Process Models
 
-These can be installed from PyPI or manually:
 
-.. code-block::
+Conda-forge
+~~~~~~~~~~~
 
-    pip install smac[gp,lhd]
+Installing SMAC from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
-.. code-block::
+.. code:: bash
 
-    pip install .[gp,lhd]
+    conda config --add channels conda-forge
+    conda config --set channel_priority strict
 
-For convenience, there is also an all meta-dependency that installs ``all`` optional dependencies:
 
-.. code-block::
+You must have `conda >= 4.9` installed. To update conda or check your current conda version, please follow the instructions from `the official anaconda documentation <https://docs.anaconda.com/anaconda/install/update-version/>`_ . Once the `conda-forge` channel has been enabled, SMAC can be installed with:
 
-    pip install smac[all]
+.. code:: bash
 
+    conda install smac
+    
+
+Read `SMAC feedstock <https://github.com/conda-forge/smac-feedstock>`_ for more details.
     

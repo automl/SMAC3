@@ -32,8 +32,8 @@ class ExactGPModel(ExactGP):
     Exact GP model serves as a backbone of the class GaussianProcessGPyTorch
     """
     def __init__(self,
-                 train_X: torch.tensor,
-                 train_y: torch.tensor,
+                 train_X: torch.Tensor,
+                 train_y: torch.Tensor,
                  base_covar_kernel: Kernel,
                  likelihood: GaussianLikelihood):
         """
@@ -54,7 +54,7 @@ class ExactGPModel(ExactGP):
         self.mean_module = ZeroMean()
         self.covar_module = base_covar_kernel
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> MultivariateNormal:
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x)
         return MultivariateNormal(mean_x, covar_x)
@@ -129,11 +129,8 @@ class GaussianProcessGPyTorch(BaseModel):
         self.n_opt_restarts = n_opt_restarts
 
         self.hypers = np.empty((0,))
-        self.property_dict = OrderedDict()
+        self.property_dict = OrderedDict()  # type: OrderedDict
         self.is_trained = False
-        self._n_ll_evals = 0
-
-        self.num_points = 0
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcessGPyTorch':
         """
@@ -245,9 +242,9 @@ class GaussianProcessGPyTorch(BaseModel):
                     x_out.append(param.detach().view(-1).cpu().double().clone().numpy())
                 sample = np.concatenate(x_out)
                 p0.append(sample.astype(np.float64))
-            except RuntimeError as e:
+            except Exception as e:
                 if i == n_tries - 1:
-                    self.logger.debug(f'Falls to sample new hyperparameters because of {e}')
+                    self.logger.debug(f'Fails to sample new hyperparameters because of {e}')
                     raise e
                 continue
             if len(p0) == self.n_opt_restarts:

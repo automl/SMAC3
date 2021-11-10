@@ -15,8 +15,8 @@ from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import check_points_in_ss
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
-from smac.optimizer.acquisition import TS
+from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.optimizer.acquisition import EI
 
 
 class AbstractSubspace(ABC):
@@ -26,9 +26,11 @@ class AbstractSubspace(ABC):
                  hps_types: typing.List[int],
                  bounds_ss_cont: typing.Optional[np.ndarray] = None,
                  bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-                 model_local: AbstractEPM = PartialSparseGaussianProcess,
+                 model_local: typing.Union[typing.Union[AbstractEPM],
+                                           typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
                  model_local_kwargs: typing.Optional[typing.Dict] = None,
-                 acq_func_local: AbstractAcquisitionFunction = TS,
+                 acq_func_local: typing.Union[AbstractAcquisitionFunction,
+                                              typing.Type[AbstractAcquisitionFunction]] = EI,
                  acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
                  rng: typing.Optional[np.random.RandomState] = None,
                  initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
@@ -105,7 +107,7 @@ class AbstractSubspace(ABC):
             self.cs_local = config_space
             self.new_config_space = False
             self.bounds_ss_cont = np.tile([0., 1.], [len(self.activate_dims_cont), 1])
-            self.bounds_ss_cat = []
+            self.bounds_ss_cat = []  # type: typing.Optional[typing.List[typing.Tuple]]
             self.lbs = lbs
             self.scales = scales
             self.new_config = False
@@ -151,18 +153,18 @@ class AbstractSubspace(ABC):
                     else:
                         can_be_inactive = True
                     if bounds_ss_cont is None:
-                        n_cats = len(param.sequence)
+                        n_seqs = len(param.sequence)
                     else:
-                        n_cats = bounds_ss_cont[i][1] - bounds_ss_cont[i][0] + 1
+                        n_seqs = bounds_ss_cont[i][1] - bounds_ss_cont[i][0] + 1
                     if can_be_inactive:
-                        model_bounds[cont_idx] = (0, int(n_cats))
+                        model_bounds[cont_idx] = (0, int(n_seqs))
                     else:
-                        model_bounds[cont_idx] = (0, int(n_cats) - 1)
+                        model_bounds[cont_idx] = (0, int(n_seqs) - 1)
                     if bounds_ss_cont is None:
-                        lbs[cont_idx] = 0  # in subapce, it should start from 0
-                        ord_hps[param.name] = (0, int(n_cats))
+                        lbs[cont_idx] = 0  # in subspace, it should start from 0
+                        ord_hps[param.name] = (0, int(n_seqs))
                     else:
-                        lbs[cont_idx] = bounds_ss_cont[i][0]  # in subapce, it should start from 0
+                        lbs[cont_idx] = bounds_ss_cont[i][0]  # in subspace, it should start from 0
                         ord_hps[param.name] = bounds_ss_cont[i]
                     dims_cont_ord.append(cont_idx)
                     idx_cont_ord.append(i)
@@ -208,7 +210,7 @@ class AbstractSubspace(ABC):
                     param_seq = ord_hps.get(param.name)
                     raw_seq = param.sequence
                     ord_indices = np.arange(*param_seq)
-                    new_seq = [raw_seq[idx] for idx in ord_indices]
+                    new_seq = [raw_seq[int(round(idx))] for idx in ord_indices]
                     hp_new = OrdinalHyperparameter(param.name, sequence=new_seq)
                     idx_cont += 1
 
@@ -253,6 +255,15 @@ class AbstractSubspace(ABC):
                                     math.ceil(np.exp((upper_log - lower_log) * bounds_ss_cont[idx_cont][1] + lower_log)
                                               )
                                 )
+
+                                hp_new_lower_log = np.log(hp_new_lower)
+                                hp_new_upper_log = np.log(hp_new_upper)
+                                new_scale = (upper_log - lower_log) / (hp_new_upper_log - hp_new_lower_log)
+                                new_lb = (hp_new_lower_log - lower_log) / (hp_new_upper_log - hp_new_lower_log)
+
+                                self.scales[idx] = new_scale
+                                self.lbs[idx] = new_lb
+
                                 hp_new = UniformIntegerHyperparameter(name=param.name,
                                                                       lower=max(hp_new_lower, lower),
                                                                       upper=min(hp_new_upper, upper),
@@ -260,17 +271,24 @@ class AbstractSubspace(ABC):
                             else:
                                 hp_new_lower = int(math.floor((upper - lower) * bounds_ss_cont[idx_cont][0])) + lower
                                 hp_new_upper = int(math.ceil((upper - lower) * bounds_ss_cont[idx_cont][1])) + lower
+
+                                new_scale = (upper - lower) / (hp_new_upper - hp_new_lower)
+                                new_lb = (hp_new_lower - lower) / (hp_new_upper - hp_new_lower)
+                                self.scales[idx] = new_scale
+                                self.lbs[idx] = new_lb
+
                                 hp_new = UniformIntegerHyperparameter(name=param.name,
                                                                       lower=max(hp_new_lower, lower),
                                                                       upper=min(hp_new_upper, upper),
                                                                       log=False)
+
                             idx_cont += 1
                 else:
                     raise ValueError(f"Unsupported type of Hyperparameter: {type(param)}")
                 hp_list.append(hp_new)
 
             # TODO Consider how to deal with subspace with reduced dimensions here, e.g. some of the conditions
-            #  and forbidden clauses might become invalid
+            #  and forbidden clauses might become invalid. Currently we only support plain hyperparameter subspace
             self.cs_local.add_hyperparameters(hp_list)
             self.cs_local.add_conditions(config_space.get_conditions())
             self.cs_local.add_forbidden_clauses(config_space.get_forbiddens())
@@ -285,17 +303,24 @@ class AbstractSubspace(ABC):
         if inspect.isclass(model_local):
             if model_local_kwargs is not None:
                 model_kwargs.update(copy.deepcopy(model_local_kwargs))
-            self.model = model_local(**model_kwargs)
+            if model_local.__name__ not in ('GaussianProcessGPyTorch', 'GloballyAugmentedLocalGP'):  # type: ignore
+                del model_kwargs['bounds_cont']
+                del model_kwargs['bounds_cat']
+            model = model_local(**model_kwargs)  # type: ignore
         else:
-            self.model = model_local
+            model = model_local
+
+        self.model = model
 
         if inspect.isclass(acq_func_local):
             acq_func_kwargs = {"model": self.model}
             if acq_func_local_kwargs is not None:
                 acq_func_kwargs.update(acq_func_local_kwargs)
-            self.acquisition_function = acq_func_local(**acq_func_kwargs)
+            acquisition_function = acq_func_local(**acq_func_kwargs)  # type: ignore
         else:
-            self.acquisition_function = acq_func_local
+            acquisition_function = acq_func_local
+
+        self.acquisition_function = acquisition_function
 
         self.incumbent_array = incumbent_array
 
@@ -313,7 +338,7 @@ class AbstractSubspace(ABC):
 
         self.config_origin = "subspace"
 
-    def update_model(self, predict_x_best: bool = True, update_incumbent_array: bool = False):
+    def update_model(self, predict_x_best: bool = True, update_incumbent_array: bool = False) -> None:
         """
         update the model and acquisition function parameters
         Parameters
@@ -362,8 +387,8 @@ class AbstractSubspace(ABC):
         """
         if len(X.shape) == 1:
             X = X[np.newaxis, :]
-        if len(X.shape) == 1:
-            y = y[np.newaxis, :]
+        if len(y.shape) == 1:
+            y = y[:, np.newaxis]
 
         ss_indices = check_points_in_ss(X=X,
                                         cont_dims=self.activate_dims_cont,
@@ -371,7 +396,6 @@ class AbstractSubspace(ABC):
                                         bounds_cont=self.bounds_ss_cont,
                                         bounds_cat=self.bounds_ss_cat,
                                         )
-
         X = self.normalize_input(X=X)
 
         self.model_x = np.vstack([self.model_x, X])
@@ -380,10 +404,17 @@ class AbstractSubspace(ABC):
         self.ss_x = np.vstack([self.ss_x, X[ss_indices]])
         self.ss_y = np.vstack([self.ss_y, y[ss_indices]])
 
-    def update_incumbent_array(self, new_incumbent):
+    def update_incumbent_array(self, new_incumbent: np.ndarray) -> None:
+        """
+        update a new incumbent array, the array is generated from global configuration
+        Parameters
+        ----------
+        new_incumbent: np.ndarray(D)
+            new incumbent, which correspondences to global configuration
+        """
         self.incumbent_array = self.normalize_input(X=new_incumbent)
 
-    def generate_challengers(self, **optimizer_kwargs):
+    def generate_challengers(self, **optimizer_kwargs: typing.Dict) -> 'ChallengerListLocal':
         challengers = self._generate_challengers(**optimizer_kwargs)
         return ChallengerListLocal(cs_local=self.cs_local,
                                    cs_global=self.cs_global,
@@ -392,13 +423,13 @@ class AbstractSubspace(ABC):
                                    incumbent_array=self.incumbent_array)
 
     @abstractmethod
-    def _generate_challengers(self, **optimizer_kwargs) -> typing.List[typing.Tuple[float, Configuration]]:
+    def _generate_challengers(self, **optimizer_kwargs: typing.Dict) -> typing.List[typing.Tuple[float, Configuration]]:
         """
         generate new challengers list for this subspace
         """
         raise NotImplementedError
 
-    def normalize_input(self, X: np.ndarray):
+    def normalize_input(self, X: np.ndarray) -> np.ndarray:
         """
         normalize X to fit the local configuration space
         Parameters
@@ -418,14 +449,15 @@ class AbstractSubspace(ABC):
 
         # normalize X
         X_normalized = (X - self.lbs) * self.scales
-        # normalize categorical function, for instance, if bounds_subspace[i] is a categorical bound contains elements
-        # [1, 3, 5], then we map 1->0, 3->1, 5->2
-        for cat_idx, cat_bound in zip(self.activate_dims_cat, self.bounds_ss_cat):
-            X_i = X_normalized[:, cat_idx]
-            cond_list = [X_i == cat for cat in cat_bound]
-            choice_list = np.arange(len(cat_bound))
-            X_i = np.select(cond_list, choice_list)
-            X_normalized[:, cat_idx] = X_i
+        if self.bounds_ss_cat is not None:
+            # normalize categorical function, for instance, if bounds_subspace[i] is a categorical bound contains
+            # elements [1, 3, 5], then we map 1->0, 3->1, 5->2
+            for cat_idx, cat_bound in zip(self.activate_dims_cat, self.bounds_ss_cat):
+                X_i = X_normalized[:, cat_idx]
+                cond_list = [X_i == cat for cat in cat_bound]
+                choice_list = np.arange(len(cat_bound))
+                X_i = np.select(cond_list, choice_list)
+                X_normalized[:, cat_idx] = X_i
 
         return X_normalized
 
@@ -475,7 +507,7 @@ class ChallengerListLocal(typing.Iterator):
         self._index += 1
         value = challenger.get_dictionary()
         if self.expand_dims:
-            incumbent_array = Configuration(configuration_space=self.cs_local,
+            incumbent_array = Configuration(configuration_space=self.cs_global,
                                             vector=self.incumbent_array).get_dictionary()
             # we replace the cooresponding value in incumbent array with the value suggested by our optimizer
             for k in value.keys():

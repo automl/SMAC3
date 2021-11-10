@@ -10,7 +10,7 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
+from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from smac.epm.base_epm import AbstractEPM
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
@@ -18,6 +18,7 @@ from smac.optimizer.acquisition import TS
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
 import warnings
+
 warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require"
                                           " n to be a power of 2.")
 
@@ -29,16 +30,17 @@ class TuRBOSubSpace(AbstractSubspace):
                  hps_types: typing.List[int],
                  bounds_ss_cont: typing.Optional[np.ndarray] = None,
                  bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-                 model_local: AbstractEPM = PartialSparseGaussianProcess,
+                 model_local: typing.Union[AbstractEPM, typing.Type[AbstractEPM]] = GaussianProcessGPyTorch,
                  model_local_kwargs: typing.Optional[typing.Dict] = None,
-                 acq_func_local: AbstractAcquisitionFunction = TS,
+                 acq_func_local: typing.Union[AbstractAcquisitionFunction,
+                                              typing.Type[AbstractAcquisitionFunction]] = TS,
                  acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
                  rng: typing.Optional[np.random.RandomState] = None,
                  initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
                  activate_dims: typing.Optional[np.ndarray] = None,
                  incumbent_array: typing.Optional[np.ndarray] = None,
                  length_init: float = 0.8,
-                 length_min: float = 0.5 ** 8,
+                 length_min: float = 0.5 ** 7,
                  length_max: float = 1.6,
                  success_tol: int = 3,
                  failure_tol_min: int = 4,
@@ -86,7 +88,7 @@ class TuRBOSubSpace(AbstractSubspace):
             if not isinstance(hp, NumericalHyperparameter):
                 raise ValueError("Current TurBO Optimizer only supports Numerical Hyperparameters")
         if len(config_space.get_conditions()) > 0 or len(config_space.get_forbiddens()) > 0:
-            raise ValueError("Currently TurBO does not support conditional or forbidden hyperparameters")
+            raise ValueError("Currently TurBO does not support Conditional or Forbidden Hyperparameters")
 
         n_hps = len(self.activate_dims)
         self.n_dims = n_hps
@@ -101,13 +103,17 @@ class TuRBOSubSpace(AbstractSubspace):
         self.length_max = length_max
         self._restart_turbo(n_init_points=self.n_init)
 
+        if initial_data is not None:
+            self.add_new_observations(initial_data[0], initial_data[1])
+            self.init_configs = []  # type: typing.List[Configuration]
+
         self.lb = np.zeros(self.n_dims)
         self.ub = np.ones(self.n_dims)
         self.config_origin = "TuRBO"
 
     def _restart_turbo(self,
                        n_init_points: int,
-                       ):
+                       ) -> None:
         """
         restart TurBO with a certain number of initialized points. New points are initialized with latin hypercube
 
@@ -134,7 +140,7 @@ class TuRBOSubSpace(AbstractSubspace):
 
         self.init_configs = [Configuration(self.cs_local, vector=init_vector) for init_vector in init_vectors]
 
-    def adjust_length(self, new_observation: typing.Union[float, np.ndarray]):
+    def adjust_length(self, new_observation: typing.Union[float, np.ndarray]) -> None:
         """
         Adjust the subspace length according to the performance of the latest suggested values
         Parameters
@@ -169,19 +175,22 @@ class TuRBOSubSpace(AbstractSubspace):
             self.failure_count = 0
             self.logger.debug(f"Subspace length shrinks to {self.length}")
 
-    def _generate_challengers(self, _sorted=True):
+    def _generate_challengers(self, _sorted: bool = True  # type: ignore
+                              ) -> typing.List[typing.Tuple[float, Configuration]]:
         """
         generate new challengers list for this subspace
+        Parameters
+        ----------
+        _sorted: bool
+            if the generated challengers are sorted by their acquisition function values
         """
         if len(self.init_configs) > 0:
             config_next = self.init_configs.pop()
-            config_next.origin = "TurBO Init"
             return [(0, config_next)]
 
         if self.length < self.length_min:
             self._restart_turbo(n_init_points=self.n_init)
             config_next = self.init_configs.pop()
-            config_next.origin = "TurBO Init"
             return [(0, config_next)]
 
         self.model.train(self.model_x, self.model_y)
@@ -192,12 +201,12 @@ class TuRBOSubSpace(AbstractSubspace):
 
         # adjust length according to kernel length
         if isinstance(self.model, (GaussianProcess, GaussianProcessMCMC,
-                                   PartialSparseGaussianProcess, GaussianProcessGPyTorch)):
+                                   GloballyAugmentedLocalGP, GaussianProcessGPyTorch)):
             if isinstance(self.model, GaussianProcess):
                 kernel_length = np.exp(self.model.hypers[1:-1])
             elif isinstance(self.model, GaussianProcessMCMC):
                 kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))
-            elif isinstance(self.model, (GaussianProcessGPyTorch, PartialSparseGaussianProcess)):
+            elif isinstance(self.model, (GaussianProcessGPyTorch, GloballyAugmentedLocalGP)):
                 kernel_length = self.model.kernel.base_kernel.lengthscale.cpu().detach().numpy()
 
             # See section 'Trust regions' of section 2
@@ -212,38 +221,57 @@ class TuRBOSubSpace(AbstractSubspace):
             subspace_ub = np.clip(self.incumbent_array + subspace_length * 0.5, 0.0, 1.0)
             sobol_seq = sobol_seq * (subspace_ub - subspace_lb) + subspace_lb
 
-            # See Supplementary D, 'TuRBO details':
-            # In order to not perturb all coordinates at once, we use the value in the Sobol sequence
-            # with probability min{1,20/d}for a given candidate and dimension, and the value of the center otherwise
-            prob_perturb = min(20.0 / self.n_dims, 1.0)
-            mask = np.random.rand(self.n_candidates, self.n_dims) <= prob_perturb
-            ind = np.where(np.sum(mask, axis=1) == 0)[0]
-            mask[ind, np.random.randint(0, self.n_dims - 1, size=len(ind))] = 1
-
-            # Create candidate points
-            design = self.incumbent_array * np.ones((self.n_candidates, self.n_dims))
-            design[mask] = sobol_seq[mask]
-        else:
-            design = sobol_seq
+        prob_perturb = min(20.0 / self.n_dims, 1.0)
+        design = self._perturb_samples(prob_perturb, sobol_seq)
 
         # Only numerical hyperpameters are considered for TuRBO, we don't need to transfer the vectors to fit the
         # requirements of other sorts of hyperparameters
         configs = []
-        if _sorted:
-            origin = "Sobol Sequnce (Sorted)"
-        else:
-            origin = "Sobol Sequence"
         for vector in design:
             conf = deactivate_inactive_hyperparameters(configuration=None,
                                                        configuration_space=self.cs_local,
                                                        vector=vector)
-            conf.origin = origin
             configs.append(conf)
 
         if _sorted:
             return self._sort_configs_by_acq_value(configs)
         else:
             return [(0, configs[i]) for i in range(len(configs))]
+
+    def _perturb_samples(self,
+                         prob_perturb: float,
+                         design: np.ndarray) -> np.ndarray:
+        """
+        See Supplementary D, 'TuRBO details':
+        In order to not perturb all coordinates at once, we use the value in the Sobol sequence
+        with probability min{1,20/d} for a given candidate and dimension, and the value of the center otherwise
+
+        perturb the generated design with the incumbent array accordingly
+
+        Parameters
+        ----------
+        prob_perturb: float
+            probability that a design is perturbed by the incumbent value
+        design: np.ndarray(self.n_candidates, self.n_dims)
+            design array to be perturbed
+        Returns
+        -------
+        design_perturbed: np.ndarray(self.n_candidates, self.n_dims)
+            perturbed design array
+        """
+        mask = self.rng.rand(self.n_candidates, self.n_dims) <= prob_perturb
+
+        ind = np.where(np.sum(mask, axis=1) == 0)[0]
+        if self.n_dims == 1:
+            mask[ind, 0] = 0
+        else:
+            mask[ind, self.rng.randint(0, self.n_dims, size=len(ind))] = 1
+
+        # Create candidate points
+        design_perturbed = self.incumbent_array * np.ones((self.n_candidates, self.n_dims))
+        design_perturbed[mask] = design[mask]
+
+        return design_perturbed
 
     def _sort_configs_by_acq_value(
             self,

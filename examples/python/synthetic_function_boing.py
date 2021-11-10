@@ -12,12 +12,12 @@ import logging
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-from smac.epm.partial_sparse_gaussian_process import PartialSparseGaussianProcess
+from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4LogCostWithRaw
+from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG
 
 # Import SMAC-utilities
@@ -82,10 +82,11 @@ if __name__ == '__main__':
                               ard_num_dims=cont_dims.shape[-1],
                               active_dims=tuple(cont_dims)).double()
 
+    # by setting lower bound of noise_constraint we could make it more stable
     noise_prior = HorseshoePrior(0.1)
     likelihood = GaussianLikelihood(
         noise_prior=noise_prior,
-        noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
+        noise_constraint=Interval(1e-5, np.exp(2), transform=None)
     ).double()
 
     kernel = ScaleKernel(exp_kernel,
@@ -97,11 +98,11 @@ if __name__ == '__main__':
                          ),
                          outputscale_prior=LogNormalPrior(0.0, 1.0))
 
-    epm_chooser_kwargs = {"model_local": PartialSparseGaussianProcess,
+    epm_chooser_kwargs = {"model_local": GloballyAugmentedLocalGP,
                           "model_local_kwargs": dict(kernel=kernel,
                                                      likelihood=likelihood),
-                          'min_configs_local': 30,
-                          "do_switching": False}
+                          'min_configs_local': 10,  # comment this out for BOinG with default setting
+                          "do_switching": True}
     # same as SMAC4BB
     random_configuration_chooser_kwargs = {'prob': 0.08447232371720552}
 
@@ -111,7 +112,7 @@ if __name__ == '__main__':
                                  "epm_chooser_kwargs": epm_chooser_kwargs},
                     tae_runner=rosenbrock_2d,
                     random_configuration_chooser_kwargs=random_configuration_chooser_kwargs,
-                    runhistory2epm=RunHistory2EPM4LogCostWithRaw
+                    runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
                     )
 
     smac.optimize()

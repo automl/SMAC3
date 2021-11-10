@@ -23,33 +23,32 @@ from botorch.optim.utils import _get_extra_mll_args
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
-from smac.epm.partial_sparse_gp_kernels import PartialSparseKernel, PartialSparseMean
+from smac.epm.fitc_kernel import FITCKernel, FITCMean
 from smac.epm.util_funcs import check_points_in_ss
 
 gpytorch.settings.debug.off()
 
 
-class PartailSparseGPModel(ExactGP):
+class AugmentedLocalGP(ExactGP):
     def __init__(self,
-                 X_in: torch.tensor,
-                 y_in: torch.tensor,
-                 X_out: torch.tensor,
-                 y_out: torch.tensor,
+                 X_in: torch.Tensor,
+                 y_in: torch.Tensor,
+                 X_out: torch.Tensor,
+                 y_out: torch.Tensor,
                  likelihood: GaussianLikelihood,
-                 base_covar_kernel: Kernel,
-                 X_inducing: torch.tensor):
+                 base_covar_kernel: Kernel):
         """
-        A Partial Sparse Gaussian Process (PSGP), it is dense inside a given subregion and the impact of all other
+        An Augmented Local GP, it is dense inside a given subregion and the impact of all other
         points are approximated by a sparse GP.
         Parameters:
         ----------
-        X_in: torch.tensor (N_in, D),
+        X_in: torch.Tensor (N_in, D),
             feature vector of the points inside the subregion
-        y_in: torch.tensor (N_in, 1),
+        y_in: torch.Tensor (N_in, 1),
             observation inside the subregion
-        X_out: torch.tensor (N_out, D),
+        X_out: torch.Tensor (N_out, D),
             feature vector  of the points outside the subregion
-        y_out:torch.tensor (N_out, 1),
+        y_out:torch.Tensor (N_out, 1),
             observation inside the subregion
         likelihood: GaussianLikelihood,
             likelihood of the GP (noise)
@@ -60,54 +59,42 @@ class PartailSparseGPModel(ExactGP):
         """
         X_in = X_in.unsqueeze(-1) if X_in.ndimension() == 1 else X_in
         X_out = X_out.unsqueeze(-1) if X_out.ndimension() == 1 else X_out
-        X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
-        assert X_inducing.shape[-1] == X_in.shape[-1] == X_out.shape[-1]
-        super(PartailSparseGPModel, self).__init__(X_in, y_in, likelihood)
+        assert X_in.shape[-1] == X_out.shape[-1]
 
-        self.base_covar = base_covar_kernel
-        self.covar_module = PartialSparseKernel(self.base_covar, X_inducing=X_inducing,
-                                                X_out=X_out, y_out=y_out, likelihood=likelihood)
-        self.mean_module = PartialSparseMean(covar_module=self.covar_module)
+        super(AugmentedLocalGP, self).__init__(X_in, y_in, likelihood)
+
         self._mean_module = ZeroMean()
+        self.base_covar = base_covar_kernel
 
-        self.optimize_kernel_hps = True
+        self.X_out = X_out
+        self.y_out = y_out
+        self.augmented = False
 
-    def deactivate_kernel_grad(self):
+    def set_augment_module(self, X_inducing: torch.Tensor) -> None:
         """
-        We deactive kernel grad to only optimize the position of the inducing points
+        set an augmention module, which will be used later for inference
+        Parameters
+        ----------
+        X_inducing: torch.Tensor(N_inducing, D)
+            inducing points, it has the same number of dimension as X_in
         """
-        self.optimize_kernel_hps = False
-        for p_name, t in self.named_parameters():
-            if p_name == 'covar_module.inducing_points':
-                t.requires_grad = True
-            else:
-                t.requires_grad = False
+        X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
+        assert X_inducing.shape[-1] == self.X_out.shape[-1]
+        self.covar_module = FITCKernel(self.base_covar, X_inducing=X_inducing,
+                                       X_out=self.X_out, y_out=self.y_out, likelihood=self.likelihood)
+        self.mean_module = FITCMean(covar_module=self.covar_module)
+        self.augmented = True
 
-    def deactivate_inducing_points_grad(self):
-        """
-        We deactive inducing points grad to only optimize kernel hyperparameters
-        """
-        if not self.optimize_kernel_hps:
-            raise ValueError("inducing_points will only be inactivate if self.optimize_kernel_hps is set True")
-        for p_name, t in self.named_parameters():
-            if p_name == 'covar_module.inducing_points':
-                t.requires_grad = False
-            else:
-                t.requires_grad = True
-
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> MultivariateNormal:
         """
         compute the prior values, if optimize_kernel_hps is set True in the training phases, this model degenerates to
          a vanilla GP model with ZeroMean and base_covar as covariance matrix, otherwise we apply partial sparse GP
          mean and kernels here.
         """
-        if self.training:
-            if self.optimize_kernel_hps:
-                covar_x = self.base_covar(x)
-                mean_x = self._mean_module(x)
-            else:
-                covar_x = self.covar_module(x)
-                mean_x = self.mean_module(x)
+        if not self.augmented:
+            # we only optimize for kernel hyperparameters
+            covar_x = self.base_covar(x)
+            mean_x = self._mean_module(x)
         else:
             covar_x = self.covar_module(x)
             mean_x = self.mean_module(x)
@@ -118,7 +105,8 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
     """
     A variational GP to compute the position of the inducing points
     """
-    def __init__(self, kernel: Kernel, X_inducing: torch.tensor):
+
+    def __init__(self, kernel: Kernel, X_inducing: torch.Tensor):
         """
         Initialize a Variational GP
         we set the lower bound and upper bounds of indcuing points for numerical hyperparmaters between 0 and 1,
@@ -153,19 +141,19 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
             if p_name != "variational_strategy.inducing_points":
                 t.requires_grad = False
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> MultivariateNormal:
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x)
-        return gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
+        return MultivariateNormal(mean_x, covar_x)
 
 
-class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
+class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
     def __init__(self,
                  configspace: ConfigurationSpace,
                  types: typing.List[int],
                  bounds: typing.List[typing.Tuple[float, float]],
                  bounds_cont: np.ndarray,
-                 bounds_cat: typing.List[typing.List[typing.Tuple]],
+                 bounds_cat: typing.List[typing.Tuple],
                  seed: int,
                  kernel: Kernel,
                  num_inducing_points: int = 2,
@@ -176,7 +164,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                  pca_components: typing.Optional[int] = None,
                  ):
         """
-        Partial Sparse Gaussian process model. It is composed of two models: an Exact GP to descirbe the data
+        Local GP with global augmentation. It is composed of two models: an Exact GP to descirbe the data
         distribution inside a subregion and an Approximate GP to approxiamte the data distribution outside a
         subregion.
 
@@ -192,7 +180,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
         ----------
         bounds_cont: np.ndarray(N_cont, 2),
             bounds of the continuous hyperparameters, store as [[0,1] * N_cont]
-        bounds_cat: typing.List[typing.List[typing.Tuple]],
+        bounds_cat: typing.List[typing.Tuple],
             bounds of categorical hyperparameters
         kernel : gpytorch kernel object
             Specifies the kernel that is used for all Gaussian Process
@@ -203,34 +191,34 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
         normalize_y : bool
             Zero mean unit variance normalization of the output values, when the model is a partial sparse GP model,
         """
-        super(PartialSparseGaussianProcess, self).__init__(configspace=configspace,
-                                                           types=types,
-                                                           bounds=bounds,
-                                                           seed=seed,
-                                                           kernel=kernel,
-                                                           likelihood=likelihood,
-                                                           normalize_y=normalize_y,
-                                                           n_opt_restarts=n_opt_restarts,
-                                                           instance_features=instance_features,
-                                                           pca_components=pca_components,
-                                                           )
+        super(GloballyAugmentedLocalGP, self).__init__(configspace=configspace,
+                                                       types=types,
+                                                       bounds=bounds,
+                                                       seed=seed,
+                                                       kernel=kernel,
+                                                       likelihood=likelihood,
+                                                       normalize_y=normalize_y,
+                                                       n_opt_restarts=n_opt_restarts,
+                                                       instance_features=instance_features,
+                                                       pca_components=pca_components,
+                                                       )
         self.cont_dims = np.where(np.array(types) == 0)[0]
         self.cat_dims = np.where(np.array(types) != 0)[0]
         self.bounds_cont = bounds_cont
         self.bounds_cat = bounds_cat
         self.num_inducing_points = num_inducing_points
 
-    def update_attribute(self, **kwargs: typing.Dict):
+    def update_attribute(self, **kwargs: typing.Dict) -> None:
         """
         we update the class attribute (for instance, number of inducing points)
         """
         for key in kwargs:
             if not hasattr(self, key):
-                raise ValueError(f"{self.__name__} has no attribute named {key}")
+                raise AttributeError(f"{self.__class__.__name__} has no attribute named {key}")
             setattr(self, key, kwargs[key])
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) ->\
-            typing.Union['PartialSparseGaussianProcess', GaussianProcessGPyTorch]:
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> \
+            typing.Union[AugmentedLocalGP, GaussianProcessGPyTorch]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -276,7 +264,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
             self.num_points = np.shape(y_in)[0]
             if self.normalize_y:
                 y_in = self._normalize_y(y_in)
-            y_out = (y_out - self.mean_y_) / self.std_y_
+                y_out = (y_out - self.mean_y_) / self.std_y_
             get_gp_kwargs = {'X_in': X_in, 'y_in': y_in, 'X_out': X_out, 'y_out': y_out}
 
         n_tries = 10
@@ -285,18 +273,16 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
             try:
                 self.gp = self._get_gp(**get_gp_kwargs)
                 break
-            except np.linalg.LinAlgError as e:
+            except Exception as e:
                 if i == n_tries - 1:
                     raise RuntimeError(f"Fails to initialize a GP model, {e}")
 
         if do_optimize:
             self.hypers = self._optimize()
             self.gp = set_params_with_array(self.gp, self.hypers, self.property_dict)
-            if isinstance(self.gp.model, PartailSparseGPModel):
+            if isinstance(self.gp.model, AugmentedLocalGP):
                 # we optimize the position of the inducing points and thus needs to deactivate the gradient of kernel
                 # hyperparameters
-                self.gp.model.deactivate_kernel_grad()
-
                 lhd = LatinHypercube(d=X_out.shape[-1], seed=self.rng.randint(0, 1000000))
 
                 inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points))
@@ -350,11 +336,11 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                 def sci_opi_wrapper(x: np.ndarray,
                                     mll: gpytorch.module,
                                     property_dict: typing.Dict,
-                                    train_inputs: torch.tensor,
-                                    train_targets: torch.tensor):
+                                    train_inputs: torch.Tensor,
+                                    train_targets: torch.Tensor) -> typing.Tuple[float, np.ndarray]:
                     """
-                    A modification of from botorch.optim.utils._scipy_objective_and_grad,
-                    the key difference is that we do an additional nature gradient update here
+                    A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that
+                    we do an additional natural gradient update before computing the gradient values
                     Parameters
                     ----------
                     x: np.ndarray
@@ -363,9 +349,9 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                         a gpytorch module whose hyperparameters are defined by x
                     property_dict: typing.Dict
                         a dict describing how x is mapped to initialize mll
-                    train_inputs: torch.tensor (N_input, D)
+                    train_inputs: torch.Tensor (N_input, D)
                         input points of the GP model
-                    train_targets: torch.tensor (N_input, 1)
+                    train_targets: torch.Tensor (N_input, 1)
                         target value of the GP model
                     Returns
                     ----------
@@ -375,8 +361,9 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                         gradient w.r.t. the inputs
                     ----------
                     """
-                    # A modification of from botorch.optim.utils._scipy_objective_and_grad,
-                    # THe key difference is that we do an additional nature gradient update here
+                    # A modification of from botorch.optim.utils._scipy_objective_and_grad:
+                    # https://botorch.org/api/_modules/botorch/optim/utils.html
+                    # The key difference is that we do an additional natural gradient update here
                     variational_ngd_optimizer.zero_grad()
 
                     mll = set_params_with_array(mll, x, property_dict)
@@ -437,7 +424,7 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
                         ).view(*attrs.shape)
                         break
                 # set inducing points for covariance module here
-                self.gp_model.initialize(**{'covar_module.X_inducing': X_inducing})
+                self.gp_model.set_augment_module(X_inducing)
         else:
             self.hypers, self.property_dict, _ = module_to_array(module=self.gp)
 
@@ -484,32 +471,9 @@ class PartialSparseGaussianProcess(GaussianProcessGPyTorch):
             X_out = torch.from_numpy(X_out)
             y_out = torch.from_numpy(y_out)
 
-            if self.num_inducing_points <= y_in.shape[0]:
-                weights = torch.ones(y_in.shape[0]) / y_in.shape[0]
-                X_inducing = X_in[torch.multinomial(weights, self.num_inducing_points)]
-            else:
-                weights = torch.ones(y_out.shape[0]) / y_out.shape[0]
-                X_inducing = X_out[torch.multinomial(weights, self.num_inducing_points - y_in.shape[0])]
-                X_inducing = torch.cat([X_inducing, X_in])
-            self.gp_model = PartailSparseGPModel(X_in, y_in, X_out, y_out,
-                                                 likelihood=self.likelihood,
-                                                 base_covar_kernel=self.kernel,
-                                                 X_inducing=X_inducing).double()
+            self.gp_model = AugmentedLocalGP(X_in, y_in, X_out, y_out,
+                                             likelihood=self.likelihood,
+                                             base_covar_kernel=self.kernel).double()
         mll = ExactMarginalLogLikelihood(self.likelihood, self.gp_model)
         mll.double()
         return mll
-
-    def _optimize(self) -> np.ndarray:
-        """
-        Optimizes the marginal log likelihood and returns the best found
-        hyperparameter configuration theta.
-        if gp_model is a PartailSparseGPModel, we will first only optimize the kernel hyperparameters and then set
-        the value of inducing points to the GP model
-        Returns
-        -------
-        theta : np.ndarray(H)
-            Kernel hyperparameter vector that maximizes the marginal log likelihood
-        """
-        if isinstance(self.gp_model, PartailSparseGPModel):
-            self.gp_model.deactivate_inducing_points_grad()
-        return super()._optimize()
