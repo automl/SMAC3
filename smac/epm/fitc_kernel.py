@@ -62,15 +62,7 @@ class FITCKernel(Kernel):
         self.y_out = y_out
         self.register_parameter(name="X_inducing", parameter=torch.nn.Parameter(X_inducing))
 
-    def train(self, mode: bool = True) -> None:
-        """
-        turn the model into training mode, needs to clear all the cached value as they are not required when doing
-        training
-        Parameters
-        ----------
-        mode: bool
-        if the model is under training mode
-        """
+    def _clear_cache(self):
         if hasattr(self, "_cached_kernel_mat"):
             del self._cached_kernel_mat
         if hasattr(self, "_cached_inducing_sigma"):
@@ -85,7 +77,6 @@ class FITCKernel(Kernel):
             del self._train_cached_posterior_mean
         if hasattr(self, '_cached_kernel_inv_root'):
             del self._cached_kernel_inv_root
-        return super(FITCKernel, self).train(mode)
 
     @property
     def _inducing_mat(self) -> torch.Tensor:
