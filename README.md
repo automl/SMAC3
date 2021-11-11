@@ -1,4 +1,4 @@
-##This is a temporary repository containing the code that allows you to run BOinG optimizer
+## This is a temporary repository containing the code that allows you to run BOinG optimizer
 
 [BOinG](https://arxiv.org/abs/2111.05834) is a two stage Bayesian  Optimization algorithm.
 
