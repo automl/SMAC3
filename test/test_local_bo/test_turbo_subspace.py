@@ -37,6 +37,8 @@ class TestTurBoSubspace(unittest.TestCase):
         ss = TuRBOSubSpace(**self.ss_kwargs)
         self.assertEqual(len(ss.init_configs), ss.n_init)
         ss_init_configs = copy.deepcopy(ss.init_configs)
+        self.assertEqual(ss.num_valid_observations, 0)
+
         # init configurations are poped
         for i in reversed(range(len(ss_init_configs))):
             eval_next = next(ss.generate_challengers())
@@ -64,6 +66,8 @@ class TestTurBoSubspace(unittest.TestCase):
     def test_adjust_length(self):
         ss = TuRBOSubSpace(**self.ss_kwargs)
         ss.add_new_observations(np.array([0.5]), np.array([0.5]))
+
+        self.assertEqual(ss.num_valid_observations, 1)
 
         success_tol = ss.success_tol
         failure_tol = ss.failure_tol
@@ -104,7 +108,8 @@ class TestTurBoSubspace(unittest.TestCase):
 
         prob = 0.0
         perturb_sample = ss._perturb_samples(prob, np.random.rand(ss.n_candidates, ss.n_dims))
-        self.assertEqual(len(np.where(perturb_sample == 2.0)[0]), 100)
+        # make sure that no new suggestion is replaced by the incumbent
+        self.assertEqual(len(np.where(perturb_sample == 2.0)[0]), 0)
 
         prob = 1.0
         perturb_sample = ss._perturb_samples(prob, np.random.rand(ss.n_candidates, ss.n_dims))
@@ -132,8 +137,13 @@ class TestTurBoSubspace(unittest.TestCase):
         perturb_sample = ss._perturb_samples(prob, np.random.rand(ss.n_candidates, ss.n_dims))
 
         idx_from_incumbent = np.transpose(perturb_sample == 2.0)
-        # only one value should be the corresponding incumbent value
-        self.assertTrue(np.all(np.logical_xor(idx_from_incumbent[0], idx_from_incumbent[1])))
+        self.assertTrue(np.all(np.sum(idx_from_incumbent, axis=1)) < 2)
+
+        prob = 1.0
+        perturb_sample = ss._perturb_samples(prob, np.random.rand(ss.n_candidates, ss.n_dims))
+
+        idx_from_incumbent = np.transpose(perturb_sample == 2.0)
+        self.assertEqual(len(np.where(perturb_sample == 2.0)[0]), 0)
 
     def test_suggestion(self):
         num_init_points = 5
