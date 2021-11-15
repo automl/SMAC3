@@ -130,10 +130,7 @@ class TuRBOSubSpace(AbstractSubspace):
         self.last_incumbent_value = np.inf
         self.length = self.length_init
 
-        self.model_x = np.empty([0, self.n_dims])
-        self.ss_x = np.empty([0, self.n_dims])
-        self.model_y = np.empty([0, 1])
-        self.ss_y = np.empty([0, 1])
+        self.num_valid_observations = 0
 
         init_vectors = LatinHypercube(d=self.n_dims,
                                       seed=np.random.seed(self.rng.randint(1, 2 ** 20))).random(n=n_init_points)
@@ -193,7 +190,7 @@ class TuRBOSubSpace(AbstractSubspace):
             config_next = self.init_configs.pop()
             return [(0, config_next)]
 
-        self.model.train(self.model_x, self.model_y)
+        self.model.train(self.model_x[-self.num_valid_observations:], self.model_y[-self.num_valid_observations:])
         self.update_model(predict_x_best=False, update_incumbent_array=True)
 
         sobol_gen = Sobol(d=self.n_dims, scramble=True, seed=self.rng.randint(low=0, high=10000000))
@@ -259,19 +256,20 @@ class TuRBOSubSpace(AbstractSubspace):
         design_perturbed: np.ndarray(self.n_candidates, self.n_dims)
             perturbed design array
         """
-        mask = self.rng.rand(self.n_candidates, self.n_dims) <= prob_perturb
+        # we will use masked array, thus the indices that will be replaced will be marked with True
+        mask = self.rng.rand(self.n_candidates, self.n_dims) > prob_perturb
 
-        ind = np.where(np.sum(mask, axis=1) == 0)[0]
+        ind = np.where(np.sum(mask, axis=1) == self.n_dims)[0]
         if self.n_dims == 1:
             mask[ind, 0] = 0
         else:
-            mask[ind, self.rng.randint(0, self.n_dims, size=len(ind))] = 1
+            # ensure that no candidate will be completely replaced by the incumbent value
+            mask[ind, self.rng.randint(0, self.n_dims, size=len(ind))] = 0
+        return np.ma.array(design, mask=mask, fill_value=self.incumbent_array).filled()
 
-        # Create candidate points
-        design_perturbed = self.incumbent_array * np.ones((self.n_candidates, self.n_dims))
-        design_perturbed[mask] = design[mask]
-
-        return design_perturbed
+    def add_new_observations(self, X: np.ndarray, y: np.ndarray) -> None:
+        super(TuRBOSubSpace, self).add_new_observations(X, y)
+        self.num_valid_observations += len(y)
 
     def _sort_configs_by_acq_value(
             self,

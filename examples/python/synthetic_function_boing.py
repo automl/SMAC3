@@ -102,7 +102,7 @@ if __name__ == '__main__':
                           "model_local_kwargs": dict(kernel=kernel,
                                                      likelihood=likelihood),
                           'min_configs_local': 10,  # comment this out for BOinG with default setting
-                          "do_switching": False}
+                          "do_switching": True}
     # same as SMAC4BB
     random_configuration_chooser_kwargs = {'prob': 0.08447232371720552}
 
