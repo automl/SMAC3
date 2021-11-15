@@ -62,7 +62,7 @@ class FITCKernel(Kernel):
         self.y_out = y_out
         self.register_parameter(name="X_inducing", parameter=torch.nn.Parameter(X_inducing))
 
-    def _clear_cache(self):
+    def _clear_cache(self) -> None:
         if hasattr(self, "_cached_kernel_mat"):
             del self._cached_kernel_mat
         if hasattr(self, "_cached_inducing_sigma"):
