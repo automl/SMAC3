@@ -55,6 +55,7 @@ class BaseRunner(ABC):
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
+        num_obj: int = 1,
     ):
         """
         Attributes
@@ -100,6 +101,7 @@ class BaseRunner(ABC):
         self.logger = PickableLoggerAdapter(
             self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
+        self.num_obj = num_obj
 
         super().__init__()
 

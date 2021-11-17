@@ -92,6 +92,7 @@ class _Hyperband(_SuccessiveHalving):
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
                  identifier: int = 0,
+                 num_obj: int = 1,
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -110,7 +111,8 @@ class _Hyperband(_SuccessiveHalving):
                          instance_order=instance_order,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
                          min_chall=min_chall,
-                         incumbent_selection=incumbent_selection,)
+                         incumbent_selection=incumbent_selection,
+                         num_obj=num_obj)
 
         self.identifier = identifier
 

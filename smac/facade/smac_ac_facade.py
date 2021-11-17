@@ -101,6 +101,7 @@ class SMAC4AC(object):
                  random_configuration_chooser_kwargs: Optional[Dict] = None,
                  dask_client: Optional[dask.distributed.Client] = None,
                  n_jobs: Optional[int] = 1,
+                 num_obj: Optional[int] = 1,
                  ):
         """
         Constructor
@@ -231,7 +232,7 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"  # type: ignore[attr-defined] # noqa F821
 
         # initialize empty runhistory
-        runhistory_def_kwargs = {}
+        runhistory_def_kwargs = {'num_obj': num_obj}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
@@ -362,6 +363,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
+            'num_obj': num_obj,
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -412,6 +414,10 @@ class SMAC4AC(object):
             raise ValueError("Objective for the target algorithm runner and "
                              "the scenario must be the same, but are '%s' and "
                              "'%s'" % (tae_runner_instance.run_obj, scenario.run_obj))  # type: ignore[union-attr] # noqa F821
+
+        if num_obj > 1:
+            # TODO intialize a multi-objective intensifer here (Or create a new facade)
+            pass
 
         if intensifier is None:
             intensifier = Intensifier

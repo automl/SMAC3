@@ -80,6 +80,7 @@ class _SuccessiveHalving(AbstractRacer):
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
                  identifier: int = 0,
+                 num_obj: int = 1,
                  ) -> None:
         """
         Parameters
@@ -148,7 +149,8 @@ class _SuccessiveHalving(AbstractRacer):
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall)
+                         min_chall=min_chall,
+                         num_obj=num_obj)
 
         self.identifier = identifier
         self.logger = logging.getLogger(

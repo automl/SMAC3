@@ -88,7 +88,8 @@ class AbstractRacer(object):
                  minR: int = 1,
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,):
+                 min_chall: int = 1,
+                 num_obj: int =1 ):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -127,6 +128,10 @@ class AbstractRacer(object):
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
+
+        if num_obj > 1:
+            raise ValueError('Intensifiers only support single objective optimization. For multi-objective problems,'
+                             'please refer to multi-objective intensifiers')
 
     def get_next_run(self,
                      challengers: typing.Optional[typing.List[Configuration]],
@@ -347,8 +352,8 @@ class AbstractRacer(object):
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
-        chal_perf = run_history.average_cost(challenger, to_compare_runs)
-        inc_perf = run_history.average_cost(incumbent, to_compare_runs)
+        chal_perf = float(run_history.average_cost(challenger, to_compare_runs))
+        inc_perf = float(run_history.average_cost(incumbent, to_compare_runs))
 
         # Line 15
         if chal_perf > inc_perf and len(chall_runs) >= self.minR:
@@ -384,7 +389,7 @@ class AbstractRacer(object):
 
             if log_traj:
                 self.stats.inc_changed += 1
-                self.traj_logger.add_entry(train_perf=chal_perf,
+                self.traj_logger.add_entry(train_perf=float(chal_perf),
                                            incumbent_id=self.stats.inc_changed,
                                            incumbent=challenger)
             return challenger

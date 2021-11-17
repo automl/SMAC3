@@ -103,7 +103,8 @@ class Intensifier(AbstractRacer):
                  minR: int = 1,
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 2,):
+                 min_chall: int = 2,
+                 num_obj: int = 1):
         """ Creates an Intensifier object
 
         Parameters
@@ -155,7 +156,8 @@ class Intensifier(AbstractRacer):
                          minR=minR,
                          maxR=maxR,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,)
+                         min_chall=min_chall,
+                         num_obj=num_obj)
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -662,7 +664,7 @@ class Intensifier(AbstractRacer):
             only_max_observed_budget=True
         )
         inc_inst = [s.instance for s in inc_runs]
-        inc_inst = list(Counter(inc_inst).items())
+        inc_inst = list(Counter(inc_inst))
         inc_inst.sort(key=lambda x: x[1], reverse=True)
         try:
             max_runs = inc_inst[0][1]

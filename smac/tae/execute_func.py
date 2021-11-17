@@ -43,12 +43,14 @@ class AbstractTAFunc(SerialRunner):
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
         use_pynisher: bool = True,
+        num_obj:int = 1,
     ):
 
         super().__init__(ta=ta, stats=stats,
                          run_obj=run_obj, par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
                          abort_on_first_run_crash=abort_on_first_run_crash,
+                         num_obj=num_obj
                          )
         """
         Abstract class for having a function as target algorithm
@@ -186,16 +188,22 @@ class AbstractTAFunc(SerialRunner):
             # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
-                cost = self.cost_for_crash
+                cost = [self.cost_for_crash] * self.num_obj
             elif obj.exit_status is pynisher.MemorylimitException:
                 status = StatusType.MEMOUT
-                cost = self.cost_for_crash
+                cost = [self.cost_for_crash] * self.num_obj
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
                 cost = result
+                if np.isscalar(cost):
+                    cost = [cost]
+                if self.num_obj > 1:
+                    if len(cost) != self.num_obj:
+                        raise RuntimeError(f'Number of objective ({self.num_obj}) does not match the number of the '
+                                           f'returned costs: {len(cost)} ')
             else:
                 status = StatusType.CRASHED
-                cost = self.cost_for_crash
+                cost = [self.cost_for_crash] * self.num_obj
 
             runtime = float(obj.wall_clock_time)
         else:
@@ -213,7 +221,9 @@ class AbstractTAFunc(SerialRunner):
                 cost = result
             except Exception as e:
                 self.logger.exception(e)
-                cost, result = self.cost_for_crash, self.cost_for_crash
+                cost = [self.cost_for_crash] * self.num_obj
+
+                result = self.cost_for_crash
                 status = StatusType.CRASHED
                 additional_run_info = {}
 
@@ -222,6 +232,7 @@ class AbstractTAFunc(SerialRunner):
         if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
+        cost = np.asarray(cost)
 
         return status, cost, runtime, additional_run_info
 

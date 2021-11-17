@@ -413,7 +413,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
-        y = np.ones([n_rows, 1])
+        y = np.ones([n_rows, runhistory.num_obj])
 
         # Then populate matrix
         for row, (key, run) in enumerate(run_dict.items()):
@@ -427,6 +427,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
             if return_time_as_y:
+                # TODO how to deal with this situation under multi-objective cirumstance?
                 y[row, 0] = run.time
             else:
                 y[row, 0] = run.cost
@@ -434,8 +435,8 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         if y.size > 0:
             if store_statistics:
                 self.perc = np.percentile(y, self.scale_perc)
-                self.min_y = np.min(y)
-                self.max_y = np.max(y)
+                self.min_y = np.min(y, axis=0)
+                self.max_y = np.max(y, axis=0)
             y = self.transform_response_values(values=y)
 
         return X, y
@@ -456,7 +457,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         """
         return values
 
-
+# TODO rewrite those classes to make them compatible with multi-objective RH
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
     """TODO"""
 

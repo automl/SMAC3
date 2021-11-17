@@ -89,6 +89,7 @@ class ParallelScheduler(AbstractRacer):
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
+                 num_obj: int = 1
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -100,7 +101,8 @@ class ParallelScheduler(AbstractRacer):
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall)
+                         min_chall=min_chall,
+                         num_obj=num_obj)
 
         # We have a pool of instances that yield configurations ot run
         self.intensifier_instances = {}  # type: typing.Dict[int, AbstractRacer]
