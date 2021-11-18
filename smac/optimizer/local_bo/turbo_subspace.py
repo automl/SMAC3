@@ -208,9 +208,9 @@ class TuRBOSubSpace(AbstractSubspace):
 
             # See section 'Trust regions' of section 2
             #  $\len_i = \lambda_i L / (\prod_{j=1}^d \lambda_j)^{1/d}$,
-            kernel_length = kernel_length / kernel_length.mean()  # This will make the next line more stable
-            subspace_scale = kernel_length / np.prod(
-                np.power(kernel_length, 1.0 / self.n_dims))  # We now have weights.prod() = 1
+            # We now have weights.prod() = 1
+            # This makes the result more stable
+            subspace_scale = kernel_length / np.prod(np.power(kernel_length, 1.0 / self.n_dims))
 
             subspace_length = self.length * subspace_scale
 
