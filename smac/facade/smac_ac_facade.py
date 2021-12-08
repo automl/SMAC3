@@ -36,7 +36,8 @@ from smac.intensification.hyperband import Hyperband
 from smac.intensification.abstract_racer import AbstractRacer
 # optimizer
 from smac.optimizer.smbo import SMBO
-from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction
+from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction, \
+    PriorAcquisitionFunction
 from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
@@ -83,6 +84,7 @@ class SMAC4AC(object):
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[Dict] = None,
                  integrate_acquisition_function: bool = False,
+                 optimize_with_priors: bool = False,
                  acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: Optional[Dict] = None,
                  model: Optional[Type[AbstractEPM]] = None,
@@ -138,6 +140,8 @@ class SMAC4AC(object):
         integrate_acquisition_function : bool, default=False
             Whether to integrate the acquisition function. Works only with models which can sample their
             hyperparameters (i.e. GaussianProcessMCMC).
+        optimize_with_priors : bool, default=False
+            Whether to make use of user priors in the optimization procedure, using PriorAcquisitionFunction.
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
@@ -326,6 +330,17 @@ class SMAC4AC(object):
                 **acq_def_kwargs
             )
 
+        if optimize_with_priors:
+            # TODO - could also consider checking for parameter types - If any of the 
+            # prior parameters are in the configspace, we optimize with priors
+
+            # a solid default value for decay_beta - empirically founded
+            default_beta = scenario.ta_run_limit / 10
+            decay_beta = acq_def_kwargs.get('decay_beta', default_beta)            
+            acquisition_function_instance = PriorAcquisitionFunction(
+                acquisition_function=acquisition_function_instance, decay_beta=decay_beta,
+                **acq_def_kwargs
+            )
         # initialize optimizer on acquisition function
         acq_func_opt_kwargs = {
             'acquisition_function': acquisition_function_instance,

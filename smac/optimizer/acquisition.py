@@ -178,6 +178,104 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         return np.array([func._compute(X) for func in self._functions]).mean(axis=0)
 
 
+class PriorAcquisitionFunction(AbstractAcquisitionFunction):
+    r"""Weight the acquisition function with a user-defined prior over the optimum.
+
+    See "PiBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
+    Hvarfner et al. (###nolinkyet###) for further details.
+    """
+    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction,\
+         decay_beta: float, prior_floor: float = 1e-12, **kwargs: Any):
+        """Constructor
+
+        Parameters
+        ----------
+        model : AbstractEPM
+            Models the objective function.
+        decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
+            otherwise.
+        prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
+            in the search space.
+        kwargs
+            Additional keyword arguments
+        """
+        super().__init__(model)
+        self.long_name = 'Prior Acquisition Function (%s)' % acquisition_function.__class__.__name__
+        self.acq = acquisition_function
+        self._functions = []  # type: List[AbstractAcquisitionFunction]
+        self.eta = None
+        self.hyperparameters = self.model.get_configspace().get_hyperparameters()
+        self.decay_beta = decay_beta
+        self.prior_floor = prior_floor
+        self.iteration_number = 0
+
+    def update(self, **kwargs: Any) -> None:
+        """Update the acquisition function attributes required for calculation.
+
+        Updates the model, the accompanying acquisition function and tracks the iteration number.
+
+        Parameters
+        ----------
+        kwargs
+            Additional keyword arguments
+        """
+        # TODO - could renormalize the data here if we want it to work with TS and UCB
+        self.iteration_number += 1
+        self.acq.update(**kwargs)
+
+    def _compute_prior(self, X: np.ndarray, discretize=False) -> np.ndarray:
+        """Computes the prior-weighted acquisition function values, where the prior on each
+        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
+        the iteration number. Multivariate priors are not supported, for now.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+        discretize: bool, Whether or not to discretize (bin) the prior values. for Random 
+        Forest models and continous priors, we must use binning on the prior values in order
+        to avoid a pathological case, where the same point is evaluated over and over.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            The user prior over the optimum for values of X
+        """
+        prior_values = np.ones((len(X), 1))
+
+        # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
+        # in the same order
+        for parameter, X_col in zip(self.hyperparameters, X.T):
+            prior_values *= parameter.pdf(X_col[:, np.newaxis])
+        
+        return prior_values
+
+    def _compute(self, X: np.ndarray) -> np.ndarray:
+        """Computes the prior-weighted acquisition function values, where the prior on each
+        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
+        the iteration number. Multivariate priors are not supported, for now.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+
+        Returns
+        -------
+        np.ndarray(N,1)
+            Prior-weighted acquisition function values of X
+        """
+        acq_values = self.acq._compute(X)
+        prior_values = self._compute_prior(X) + self.prior_floor
+        decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
+        
+        return acq_values * decayed_prior_values
+
+
 class EI(AbstractAcquisitionFunction):
 
     r"""Computes for a given x the expected improvement as

@@ -5,7 +5,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
     UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
-    OrdinalHyperparameter
+    OrdinalHyperparameter, NormalFloatHyperparameter, NormalIntegerHyperparameter
 from smac.utils.constants import MAXINT
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -68,7 +68,9 @@ def get_types(
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter,
                                     OrdinalHyperparameter,
-                                    CategoricalHyperparameter)):
+                                    CategoricalHyperparameter,
+                                    NormalFloatHyperparameter,
+                                    NormalIntegerHyperparameter)):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
