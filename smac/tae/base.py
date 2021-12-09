@@ -51,11 +51,11 @@ class BaseRunner(ABC):
         self,
         ta: typing.Union[typing.List[str], typing.Callable],
         stats: Stats,
+        multi_objectives: typing.List[str],
         run_obj: str = "runtime",
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
-        abort_on_first_run_crash: bool = True,
-        num_obj: int = 1,
+        abort_on_first_run_crash: bool = True
     ):
         """
         Attributes
@@ -94,6 +94,7 @@ class BaseRunner(ABC):
         # implements a ta
         self.ta = ta
         self.stats = stats
+        self.multi_objectives = multi_objectives
         self.run_obj = run_obj
         self.par_factor = par_factor
         self.cost_for_crash = cost_for_crash
@@ -101,7 +102,6 @@ class BaseRunner(ABC):
         self.logger = PickableLoggerAdapter(
             self.__module__ + '.' + self.__class__.__name__)
         self._supports_memory_limit = False
-        self.num_obj = num_obj
 
         super().__init__()
 

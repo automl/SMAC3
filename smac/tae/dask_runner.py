@@ -51,10 +51,10 @@ class DaskParallelRunner(BaseRunner):
         self,
         single_worker: BaseRunner,
         n_workers: int,
+        multi_objectives: typing.List[str],
         patience: int = 5,
         output_directory: typing.Optional[str] = None,
         dask_client: typing.Optional[dask.distributed.Client] = None,
-        num_obj: int = 1,
     ):
         """
         Attributes
@@ -88,11 +88,11 @@ class DaskParallelRunner(BaseRunner):
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
             stats=single_worker.stats,
+            multi_objectives=single_worker.multi_objectives,
             run_obj=single_worker.run_obj,
             par_factor=single_worker.par_factor,
             cost_for_crash=single_worker.cost_for_crash,
             abort_on_first_run_crash=single_worker.abort_on_first_run_crash,
-            num_obj=num_obj,
         )
 
         # The single worker, which is replicated on a need

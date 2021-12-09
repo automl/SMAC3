@@ -37,22 +37,22 @@ class AbstractTAFunc(SerialRunner):
         self,
         ta: typing.Callable,
         stats: Stats,
+        multi_objectives: typing.List[str],
         run_obj: str = "quality",
         memory_limit: typing.Optional[int] = None,
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
-        use_pynisher: bool = True,
-        num_obj: int = 1,
+        use_pynisher: bool = True
     ):
 
         super().__init__(ta=ta,
                          stats=stats,
+                         multi_objectives=multi_objectives,
                          run_obj=run_obj,
                          par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
-                         abort_on_first_run_crash=abort_on_first_run_crash,
-                         num_obj=num_obj)
+                         abort_on_first_run_crash=abort_on_first_run_crash)
         """
         Abstract class for having a function as target algorithm
 
@@ -80,6 +80,7 @@ class AbstractTAFunc(SerialRunner):
         """
         self.ta = ta
         self.stats = stats
+        self.multi_objectives = multi_objectives
         self.run_obj = run_obj
 
         self.par_factor = par_factor
@@ -189,22 +190,22 @@ class AbstractTAFunc(SerialRunner):
             # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
-                cost = [self.cost_for_crash] * self.num_obj
+                cost = [self.cost_for_crash] * len(self.multi_objectives)
             elif obj.exit_status is pynisher.MemorylimitException:
                 status = StatusType.MEMOUT
-                cost = [self.cost_for_crash] * self.num_obj
+                cost = [self.cost_for_crash] * len(self.multi_objectives)
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
                 cost = result
                 if np.isscalar(cost):
                     cost = [cost]
-                if self.num_obj > 1:
-                    if len(cost) != self.num_obj:
-                        raise RuntimeError(f'Number of objective ({self.num_obj}) does not match the number of the '
+                if len(self.multi_objectives) > 1:
+                    if len(cost) != len(self.multi_objectives):
+                        raise RuntimeError(f'Number of objective ({len(self.multi_objectives)}) does not match the number of the '
                                            f'returned costs: {len(cost)} ')
             else:
                 status = StatusType.CRASHED
-                cost = [self.cost_for_crash] * self.num_obj
+                cost = [self.cost_for_crash] * len(self.multi_objectives)
 
             runtime = float(obj.wall_clock_time)
         else:
@@ -218,21 +219,45 @@ class AbstractTAFunc(SerialRunner):
                 else:
                     result = rval
                     additional_run_info = {}
+
                 status = StatusType.SUCCESS
                 cost = result
             except Exception as e:
                 self.logger.exception(e)
-                cost = [self.cost_for_crash] * self.num_obj
 
                 result = self.cost_for_crash
                 status = StatusType.CRASHED
+                cost = [self.cost_for_crash] * len(self.multi_objectives)
                 additional_run_info = {}
 
             runtime = time.time() - start_time
 
+        # Do some sanity checking (for multi objective)
+        if len(self.multi_objectives) > 1:
+            error = f"Returned costs {cost} does not match the number of objectives {len(self.multi_objectives)}."
+
+            # If dict convert to array
+            # Make sure the ordering is correct
+            if isinstance(cost, dict):
+                ordered_cost = []
+                for name in self.multi_objectives:
+                    if name not in cost:
+                        raise RuntimeError(f'Objective {name} was not found in the returned costs.')
+
+                    ordered_cost.append(cost[name])
+                cost = ordered_cost
+
+            if isinstance(cost, list):
+                if len(cost) != len(self.multi_objectives):
+                    raise RuntimeError(error)
+
+            if isinstance(cost, float):
+                raise RuntimeError(error)
+
         if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
+
         cost = np.asarray(cost)
 
         return status, cost, runtime, additional_run_info

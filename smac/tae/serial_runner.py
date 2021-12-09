@@ -53,18 +53,20 @@ class SerialRunner(BaseRunner):
         self,
         ta: typing.Union[typing.List[str], typing.Callable],
         stats: Stats,
+        multi_objectives: typing.List[str],
         run_obj: str = "runtime",
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True,
-        num_obj: int = 1,
     ):
         super(SerialRunner, self).__init__(
-            ta=ta, stats=stats, run_obj=run_obj,
+            ta=ta,
+            stats=stats,
+            multi_objectives=multi_objectives,
+            run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
-            num_obj=num_obj,
         )
 
     def submit_run(self, run_info: RunInfo) -> None:
@@ -127,14 +129,12 @@ class SerialRunner(BaseRunner):
         # No pending runs in a serial run. Execution is blocking
         return False
 
-    def run(
-        self, config: Configuration,
-        instance: str,
-        cutoff: typing.Optional[float] = None,
-        seed: int = 12345,
-        budget: typing.Optional[float] = None,
-        instance_specific: str = "0",
-    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+    def run(self, config: Configuration,
+            instance: str,
+            cutoff: typing.Optional[float] = None,
+            seed: int = 12345,
+            budget: typing.Optional[float] = None,
+            instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
