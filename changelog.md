@@ -1,3 +1,14 @@
+# 1.1.2
+
+## Major Changes
+* Results are instantly saved by default now.
+* Determinstic behaviour is default now.
+* Renamed scenario object `save_results_instantly` to `save_instantly`.
+
+## Minor Changes
+* Specified scenario docs that also SMAC options can be used.
+
+
 # 1.1.1
 
 ## Minor Changes
