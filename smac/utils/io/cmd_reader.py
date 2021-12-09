@@ -49,15 +49,6 @@ def truthy(x: typing.Any) -> bool:
         return False
 
 
-def string_to_list(s: typing.Any) -> typing.List[str]:
-    """Convert a (comma-separated) string into list of strings."""
-    if isinstance(s, str):
-        s = s.replace(", ", ",")
-        return s.split(",")
-    else:
-        raise RuntimeError("Expected string, got %s" % type(s))
-
-
 class CheckScenarioFileAction(Action):
     """Check scenario file given by user"""
 
@@ -680,8 +671,8 @@ class CMDReader(object):
                                     "required as well.")
         scen_opts.add_argument("--multi-objectives", "--multi_objectives",
                                dest='multi_objectives',
-                               default="cost", type=string_to_list,
-                               help="Comma-separated list of objectives to optimize.")
+                               default="cost", type=str,
+                               help="Comma-separated strings of objectives to optimize.")
         self.overall_obj_arg = \
             scen_opts.add_argument("--overall-obj", "--overall_obj", dest="overall_obj",
                                    type=str, action=ParseOverallObjectiveAction, default='par10',
@@ -749,7 +740,7 @@ class CMDReader(object):
                                type=str, action=ReadPCSFileAction,
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
-        scen_opts.add_argument("--save-results-instantly", "--save-instantly",
+        scen_opts.add_argument("--save-instantly", "--save-results-instantly",
                                dest='save_instantly',
                                default=True, type=truthy,
                                help="If true, runhistory and stats are saved immediately on changes. "
@@ -898,10 +889,12 @@ class CMDReader(object):
         -------
             smac_args_, scen_args_: smac and scenario options parsed with corresponding ArgumentParser
         """
+
         smac_args_, misc_dict, misc_cmd = self.parse_smac_command(smac_dict=dict_cmd)
         scen_args_ = self.parse_scenario_command(scenario_file=scenario_file,
                                                  scenario_dict=misc_dict,
                                                  scenario_cmd_opts=misc_cmd)
+
         return smac_args_, scen_args_
 
     def read_cmd(

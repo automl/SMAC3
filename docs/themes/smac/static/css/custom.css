@@ -118,3 +118,7 @@ p.sphx-glr-signature, p.sphx-glr-timing, .sphx-glr-download, .sphx-glr-download-
 .sphx-glr-thumbcontainer[tooltip]:hover::before, .sphx-glr-thumbcontainer[tooltip]:hover::after {
     display: none;
 }
+
+dt:target, span.highlighted {
+    background-color: #ffff0020;
+}
