@@ -56,14 +56,16 @@ class MultiObjectiveTest(unittest.TestCase):
             "run_obj": "quality",  # we optimize quality (alternatively runtime)
             "runcount-limit": 50,  # max. number of function evaluations
             "cs": cs,  # configuration space
-            "deterministic": "true"})
+            "deterministic": "true",
+            "multi_objectives": ["metric1", "metric2"],
+        })
 
         smac = SMAC4HPO(scenario=scenario,
                         rng=np.random.RandomState(42),
                         tae_runner=tae,
                         multi_objective_kwargs={
-                            'rho': 0.05,
-                            'algorithm': 'par_ego'  # str or cls or callable
+                            'rho': 0.05
+                             # str or cls or callable
                         })
 
         incumbent = smac.optimize()

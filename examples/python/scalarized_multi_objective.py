@@ -30,26 +30,12 @@ __license__ = "3-clause BSD"
 iris = datasets.load_iris()
 
 
-def time_multi_obj(func):
-    """This decorator is a convenient way to track some other information of the TAE."""
-
-    def wrapper(*args, **kwargs):
-        # Track the training time.
-        t0 = time.time()
-        cost_value = func(*args, **kwargs)
-        t1 = time.time()
-        print('{} required {} seconds'.format(func.__name__, (t1 - t0)))
-
-        # Return a dictionary with all of the objectives.
-        return {'cost': cost_value, 'time': t1 - t0}
-
-    return wrapper
-
-
-@time_multi_obj
 def svm_from_cfg(cfg):
-    """ Creates a SVM based on a configuration and evaluates it on the
+    """Creates a SVM based on a configuration and evaluates it on the
     iris-dataset using cross-validation. Note here random seed is fixed.
+
+    It is a multi-objective tae, because we wish to trade-off the time to train
+    and the algorithm's final performance.
 
     Parameters:
     -----------
@@ -59,7 +45,8 @@ def svm_from_cfg(cfg):
 
     Returns:
     --------
-    A crossvalidated mean score for the svm on the loaded data-set.
+    Dict: A crossvalidated mean score (cost) for the svm on the loaded data-set and the
+    second objective; runtime
     """
     # For deactivated parameters, the configuration stores None-values.
     # This is not accepted by the SVM, so we remove them.
@@ -69,10 +56,15 @@ def svm_from_cfg(cfg):
         cfg["gamma"] = cfg["gamma_value"] if cfg["gamma"] == "value" else "auto"
         cfg.pop("gamma_value", None)  # Remove "gamma_value"
 
+    t0 = time.time()
     clf = svm.SVC(**cfg, random_state=42)
+    t1 = time.time()
 
     scores = cross_val_score(clf, iris.data, iris.target, cv=5)
-    return 1 - np.mean(scores)  # Minimize!
+    cost_value = 1 - np.mean(scores)  # Minimize!
+
+    # Return a dictionary with all of the objectives.
+    return {'cost': cost_value, 'time': t1 - t0}
 
 
 if __name__ == '__main__':
@@ -143,6 +135,7 @@ if __name__ == '__main__':
                     })
 
     incumbent = smac.optimize()
+
 
     # Plot the Pareto Front in our 2d example.
     def is_pareto_efficient_simple(costs):
