@@ -1,5 +1,7 @@
 """
-Scalarized multi objective using ParEGO.
+Scalarized Multi-Objective Using ParEGO
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 This example builds on svm_cv.py
 
 Optimize both the final performance & the time used for training are objectives.
