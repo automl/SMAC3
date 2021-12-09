@@ -14,7 +14,6 @@ from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
-from smac.utils.io.cmd_reader import string_to_list as _string_to_list
 from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
@@ -60,6 +59,7 @@ class ScenarioTest(unittest.TestCase):
                                    'deterministic': 0,
                                    'run_obj': 'runtime',
                                    'overall_obj': 'mean10',
+                                   'multi_objectives': 'accuracy, mse',
                                    'cutoff_time': 5,
                                    'wallclock-limit': 18000,
                                    'instance_file':
@@ -239,6 +239,7 @@ class ScenarioTest(unittest.TestCase):
         scenario.write()
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
+
         check_scen_eq(scenario, scenario_reloaded)
         # Test whether json is the default pcs_fn
         self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
@@ -314,9 +315,28 @@ class ScenarioTest(unittest.TestCase):
                          ['feature1', 'feature2', 'feature3'])
 
     def test_multi_objectives(self):
-        assert _string_to_list("test") == ["test"]
-        assert _string_to_list("test, test2") == ["test", "test2"]
-        assert _string_to_list("test,test2") == ["test", "test2"]
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1, test2"})
+
+        assert scenario.multi_objectives == ["test1", "test2"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1,test2"})
+
+        assert scenario.multi_objectives == ["test1", "test2"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1"})
+
+        assert scenario.multi_objectives == ["test1"]
+
+        scenario = Scenario({
+            "run_obj": "quality"})
+
+        assert scenario.multi_objectives == ["cost"]
 
 
 if __name__ == "__main__":
