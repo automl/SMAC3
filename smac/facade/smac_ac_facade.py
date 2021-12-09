@@ -553,7 +553,7 @@ class SMAC4AC(object):
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
             'scale_perc': 5,
-            'multi_objective_algorithm_instance': multi_objective_algorithm_instance
+            'multi_objective_algorithm': multi_objective_algorithm_instance
         }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
