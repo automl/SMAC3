@@ -36,8 +36,9 @@ class MultiObjectiveTest(unittest.TestCase):
 
         # x should be evaluated in the inteval [-2, 2]
         A = 2
-        n = 100
+        n = 1000
         X = np.linspace(-A, A, n)
+        true_pareto_front = schaffer_pareto(X)
 
         cs = ConfigurationSpace()
         UniformFloatHyperparameter('x', lower=-A, upper=A)
