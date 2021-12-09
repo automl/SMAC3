@@ -530,12 +530,6 @@ class CMDReader(object):
                                help="If true, *SMAC* will use pynisher to limit time and memory for "
                                     "the target algorithm. Allows SMAC to use all resources available. "
                                     "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)")
-
-        smac_opts.add_argument("--multi-objectives", "--multi_objectives",
-                               dest='multi_objectives',
-                               default="cost", type=string_to_list,
-                               help="Comma separated list of objectives to optimize.")
-
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
                                help="[dev] Minimum number of calls per configuration.")
@@ -684,6 +678,10 @@ class CMDReader(object):
                                help="[dev] Defines what metric to optimize. When "
                                     "optimizing runtime, *cutoff_time* is "
                                     "required as well.")
+        scen_opts.add_argument("--multi-objectives", "--multi_objectives",
+                               dest='multi_objectives',
+                               default="cost", type=string_to_list,
+                               help="Comma separated list of objectives to optimize.")
         self.overall_obj_arg = \
             scen_opts.add_argument("--overall-obj", "--overall_obj", dest="overall_obj",
                                    type=str, action=ParseOverallObjectiveAction, default='par10',
