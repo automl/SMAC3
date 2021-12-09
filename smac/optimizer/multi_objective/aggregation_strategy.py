@@ -1,22 +1,15 @@
 import typing
 import numpy as np
 from abc import abstractmethod
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
 
 
-class AggregationStrategy:
+class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
     """
     An abstract class to aggregate multi-objective losses to a single objective losses, which can then be utilized
     by the single-objective optimizer
 
     """
-    def __init__(self,
-                 num_obj: int,
-                 rng: typing.Optional[np.random.RandomState] = None):
-        if rng is not None:
-            rng = np.random.RandomState(0)
-        self.num_obj = num_obj
-        self.rng = rng
-
     @abstractmethod
     def __call__(self, values: np.ndarray):
         raise NotImplementedError
