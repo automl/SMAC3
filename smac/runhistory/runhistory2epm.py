@@ -52,6 +52,7 @@ class AbstractRunHistory2EPM(object):
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
+        multi_objective_algorithm: typing.Optional["MultiObjectiveAlgorithm"] = None  # TODO import class
     ) -> None:
         """Constructor
 
@@ -81,6 +82,9 @@ class AbstractRunHistory2EPM(object):
         rng : numpy.random.RandomState
             Only used for reshuffling data after imputation.
             If None, use np.random.RandomState(seed=1).
+        multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
+            Instance performing multi objective optimization. Receives an objective cost vector as input
+            and returns a scalar. Is executed before transforming runhistory values.
         """
 
         self.logger = logging.getLogger(
@@ -96,6 +100,7 @@ class AbstractRunHistory2EPM(object):
         self.impute_censored_data = impute_censored_data
         self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
         self.imputor = imputor
+        self.multi_objective_algorithm = multi_objective_algorithm
 
         # Fill with some default values
         if rng is None:
