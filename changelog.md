@@ -1,12 +1,18 @@
 # 1.1.2
 
+## Features
+* Added multi objective via Par-EGO.
+
 ## Major Changes
 * Results are instantly saved by default now.
 * Determinstic behaviour is default now.
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
+* Added `multi_objectives` as scenario argument.
 
 ## Minor Changes
 * Specified scenario docs that also SMAC options can be used.
+* Docs display init methods.
+* Parameters in the docs are shown first.
 
 
 # 1.1.1

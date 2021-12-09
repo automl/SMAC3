@@ -398,8 +398,6 @@ class SMAC4AC(object):
                             "call string in the scenario file."
                             % type(tae_runner))
 
-
-
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
         if n_jobs is None or n_jobs == 1:
