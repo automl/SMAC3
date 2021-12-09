@@ -11,6 +11,7 @@ This chapter gives more details of single components of SMAC.
     target_algorithm_evaluator
     scenario
     arguments
+    multiobjective
     instances
     validation
     parallelism

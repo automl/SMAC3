@@ -456,7 +456,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             if self.num_obj >1 and self.multi_objective_algorithm is not None:
                 y = self.multi_objective_algorithm(y)
 
-        return X, y.squeeze(-1)
+        return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
