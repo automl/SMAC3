@@ -45,8 +45,37 @@ class DaskParallelRunner(BaseRunner):
 
     Dask works with Future object which are managed via the DaskParallelRunner.client.
 
-    """
 
+    Parameters
+    ---------
+    single_worker: BaseRunner
+        A runner to run in a distributed fashion
+    n_workers: int
+        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
+    patience: int
+        How much to wait for workers to be available if one fails
+    output_directory: str, optional
+        If given, this will be used for the dask worker directory and for storing server information.
+        If a dask client is passed, it will only be used for storing server information as the
+        worker directory must be set by the program/user starting the workers.
+    dask_client: dask.distributed.Client
+        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+
+
+    Attributes
+    ----------
+    results
+    ta
+    stats
+    run_obj
+    par_factor
+    cost_for_crash
+    abort_i_first_run_crash
+    n_workers
+    futures
+    client
+
+    """
     def __init__(
         self,
         single_worker: BaseRunner,
@@ -56,35 +85,6 @@ class DaskParallelRunner(BaseRunner):
         output_directory: typing.Optional[str] = None,
         dask_client: typing.Optional[dask.distributed.Client] = None,
     ):
-        """
-        Attributes
-        ----------
-        results
-        ta
-        stats
-        run_obj
-        par_factor
-        cost_for_crash
-        abort_i_first_run_crash
-        n_workers
-        futures
-        client
-
-        Parameters
-        ---------
-        single_worker: BaseRunner
-            A runner to run in a distributed fashion
-        n_workers: int
-            Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
-        patience: int
-            How much to wait for workers to be available if one fails
-        output_directory: str, optional
-            If given, this will be used for the dask worker directory and for storing server information.
-            If a dask client is passed, it will only be used for storing server information as the
-            worker directory must be set by the program/user starting the workers.
-        dask_client: dask.distributed.Client
-            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-        """
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
             stats=single_worker.stats,

@@ -24,6 +24,20 @@ class Scenario(object):
 
     All arguments set in the Scenario are set as attributes.
 
+    Creates a scenario-object. The output_dir will be
+    "output_dir/run_id/" and if that exists already, the old folder and its
+    content will be moved (without any checks on whether it's still used by
+    another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
+    will be appended until possible.
+
+    Parameters
+    ----------
+    scenario : str or dict or None
+        If str, it will be interpreted as to a path a scenario file
+        If dict, it will be directly to get all scenario related information
+        If None, only cmd_options will be used
+    cmd_options : dict
+        Options from parsed command line arguments
     """
     use_ta_time = True
     feature_dict = {}  # type: typing.Dict[str, np.ndarray]
@@ -34,21 +48,6 @@ class Scenario(object):
         scenario: typing.Union[str, typing.Dict, None] = None,
         cmd_options: typing.Optional[typing.Dict] = None,
     ):
-        """ Creates a scenario-object. The output_dir will be
-        "output_dir/run_id/" and if that exists already, the old folder and its
-        content will be moved (without any checks on whether it's still used by
-        another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
-        will be appended until possible.
-
-        Parameters
-        ----------
-        scenario : str or dict or None
-            If str, it will be interpreted as to a path a scenario file
-            If dict, it will be directly to get all scenario related information
-            If None, only cmd_options will be used
-        cmd_options : dict
-            Options from parsed command line arguments
-        """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7

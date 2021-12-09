@@ -15,7 +15,6 @@ __license__ = "3-clause BSD"
 
 
 class ParallelScheduler(AbstractRacer):
-
     """Common Racer class for Intensifiers that will schedule configurations on
     a parallel fashion.
 
@@ -69,7 +68,6 @@ class ParallelScheduler(AbstractRacer):
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,

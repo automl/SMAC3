@@ -86,8 +86,44 @@ class Intensifier(AbstractRacer):
     17        else N ← 2 · N
     18    if time spent in this call to this procedure exceeds t_intensify and i ≥ 2 then break
     19 return [R, θ_inc]
-    """
 
+    Parameters
+    ----------
+    stats: Stats
+        stats object
+    traj_logger: TrajLogger
+        TrajLogger object to log all new incumbents
+    rng : np.random.RandomState
+    instances : typing.List[str]
+        list of all instance ids
+    instance_specifics : typing.Mapping[str,np.ndarray]
+        mapping from instance name to instance specific string
+    cutoff : int
+        runtime cutoff of TA runs
+    deterministic: bool
+        whether the TA is deterministic or not
+    run_obj_time: bool
+        whether the run objective is runtime or not (if true, apply adaptive capping)
+    always_race_against: Configuration
+        if incumbent changes race this configuration always against new incumbent;
+        can sometimes prevent over-tuning
+    use_ta_time_bound: bool,
+        if true, trust time reported by the target algorithms instead of
+        measuring the wallclock time for limiting the time of intensification
+    run_limit : int
+        Maximum number of target algorithm runs per call to intensify.
+    maxR : int
+        Maximum number of runs per config (summed over all calls to
+        intensifiy).
+    minR : int
+        Minimum number of run per config (summed over all calls to
+        intensify).
+    adaptive_capping_slackfactor: float
+        slack factor of adpative capping (factor * adpative cutoff)
+    min_chall: int
+        minimal number of challengers to be considered
+        (even if time_bound is exhausted earlier)
+    """
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
@@ -105,46 +141,6 @@ class Intensifier(AbstractRacer):
                  adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int = 2,
                  num_obj: int = 1):
-        """ Creates an Intensifier object
-
-        Parameters
-        ----------
-        stats: Stats
-            stats object
-        traj_logger: TrajLogger
-            TrajLogger object to log all new incumbents
-        rng : np.random.RandomState
-        instances : typing.List[str]
-            list of all instance ids
-        instance_specifics : typing.Mapping[str,np.ndarray]
-            mapping from instance name to instance specific string
-        cutoff : int
-            runtime cutoff of TA runs
-        deterministic: bool
-            whether the TA is deterministic or not
-        run_obj_time: bool
-            whether the run objective is runtime or not (if true, apply adaptive capping)
-        always_race_against: Configuration
-            if incumbent changes race this configuration always against new incumbent;
-            can sometimes prevent over-tuning
-        use_ta_time_bound: bool,
-            if true, trust time reported by the target algorithms instead of
-            measuring the wallclock time for limiting the time of intensification
-        run_limit : int
-            Maximum number of target algorithm runs per call to intensify.
-        maxR : int
-            Maximum number of runs per config (summed over all calls to
-            intensifiy).
-        minR : int
-            Minimum number of run per config (summed over all calls to
-            intensify).
-        adaptive_capping_slackfactor: float
-            slack factor of adpative capping (factor * adpative cutoff)
-        min_chall: int
-            minimal number of challengers to be considered
-            (even if time_bound is exhausted earlier)
-        """
-
         super().__init__(stats=stats,
                          traj_logger=traj_logger,
                          rng=rng,

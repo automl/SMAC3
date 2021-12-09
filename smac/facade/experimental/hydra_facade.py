@@ -36,6 +36,29 @@ class Hydra(object):
     """
     Facade to use Hydra default mode
 
+    Parameters
+    ----------
+    scenario : ~smac.scenario.scenario.Scenario
+        Scenario object
+    n_iterations: int,
+        number of Hydra iterations
+    val_set: str
+        Set to validate incumbent(s) on. [train, valX].
+        train => whole training set,
+        valX => train_set * 100/X where X in (0, 100)
+    incs_per_round: int
+        Number of incumbents to keep per round
+    n_optimizers: int
+        Number of optimizers to run in parallel per round
+    rng: int/np.random.RandomState
+        The randomState/seed to pass to each smac run
+    run_id: int
+        run_id for this hydra run
+    tae: BaseRunner
+        Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
+    tae_kwargs: Optional[dict]
+        arguments passed to constructor of '~tae'
+
     Attributes
     ----------
     logger
@@ -61,33 +84,6 @@ class Hydra(object):
                  tae: typing.Type[BaseRunner] = ExecuteTARunOld,
                  tae_kwargs: typing.Union[dict, None] = None,
                  **kwargs):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        scenario : ~smac.scenario.scenario.Scenario
-            Scenario object
-        n_iterations: int,
-            number of Hydra iterations
-        val_set: str
-            Set to validate incumbent(s) on. [train, valX].
-            train => whole training set,
-            valX => train_set * 100/X where X in (0, 100)
-        incs_per_round: int
-            Number of incumbents to keep per round
-        n_optimizers: int
-            Number of optimizers to run in parallel per round
-        rng: int/np.random.RandomState
-            The randomState/seed to pass to each smac run
-        run_id: int
-            run_id for this hydra run
-        tae: BaseRunner
-            Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
-        tae_kwargs: Optional[dict]
-            arguments passed to constructor of '~tae'
-
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

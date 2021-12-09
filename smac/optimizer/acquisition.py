@@ -19,6 +19,11 @@ __license__ = "3-clause BSD"
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     """Abstract base class for acquisition function
 
+    Parameters
+    ----------
+    model : AbstractEPM
+        Models the objective function.
+
     Attributes
     ----------
     model
@@ -26,13 +31,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     """
 
     def __init__(self, model: AbstractEPM):
-        """Constructor
-
-        Parameters
-        ----------
-        model : AbstractEPM
-            Models the objective function.
-        """
         self.model = model
         self._required_updates = ('model', )  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
