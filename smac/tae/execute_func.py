@@ -196,10 +196,6 @@ class AbstractTAFunc(SerialRunner):
                 cost = result
                 if np.isscalar(cost):
                     cost = [cost]
-                if len(self.multi_objectives) > 1:
-                    if len(cost) != len(self.multi_objectives):
-                        raise RuntimeError(f'Number of objective ({len(self.multi_objectives)}) does not match the number of the '
-                                           f'returned costs: {len(cost)} ')
             else:
                 status = StatusType.CRASHED
                 cost = [self.cost_for_crash] * len(self.multi_objectives)
@@ -250,8 +246,11 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-
-        if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+        if len(self.multi_objectives) == 1:
+            if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+                status = StatusType.CRASHED
+                cost = self.cost_for_crash
+        elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
 

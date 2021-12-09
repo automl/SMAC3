@@ -126,23 +126,19 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        if len(scenario.multi_objectives) == 1:
-            # initialize the chooser to get configurations from the EPM
-            self.epm_chooser = EPMChooser(scenario=scenario,
-                                          stats=stats,
-                                          runhistory=runhistory,
-                                          runhistory2epm=runhistory2epm,
-                                          model=model,
-                                          acq_optimizer=acq_optimizer,
-                                          acquisition_func=acquisition_func,
-                                          rng=rng,
-                                          restore_incumbent=restore_incumbent,
-                                          random_configuration_chooser=random_configuration_chooser,
-                                          predict_x_best=predict_x_best,
-                                          min_samples_model=min_samples_model)
-        else:
-            # TODO initialize self.epm_chooser with multi-objective optimizer!
-            pass
+        # TODO consider if we need an additional EPMChooser for multi-objective optimization
+        self.epm_chooser = EPMChooser(scenario=scenario,
+                                      stats=stats,
+                                      runhistory=runhistory,
+                                      runhistory2epm=runhistory2epm,
+                                      model=model,
+                                      acq_optimizer=acq_optimizer,
+                                      acquisition_func=acquisition_func,
+                                      rng=rng,
+                                      restore_incumbent=restore_incumbent,
+                                      random_configuration_chooser=random_configuration_chooser,
+                                      predict_x_best=predict_x_best,
+                                      min_samples_model=min_samples_model)
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False
@@ -443,10 +439,9 @@ class SMBO(object):
         self.stats.finished_ta_runs += 1
 
         self.logger.debug(
-            "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
-                result.status, result.cost, result.time, str(result.additional_info)
+            f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
+            f"additional: {result.additional_info}"
             )
-        )
 
         self.runhistory.add(
             config=run_info.config,
