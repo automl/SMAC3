@@ -136,7 +136,7 @@ if __name__ == '__main__':
     smac = SMAC4HPO(scenario=scenario,
                     rng=np.random.RandomState(42),
                     tae_runner=svm_from_cfg,
-                    multi_obj_kwargs={
+                    multi_objective_kwargs={
                         'rho': 0.05,
                         'algorithm': 'par_ego'  # str or cls or callable
                     })
