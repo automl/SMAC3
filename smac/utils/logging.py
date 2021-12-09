@@ -1,6 +1,8 @@
 import logging
 import typing
 
+import numpy as np
+
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
@@ -54,3 +56,19 @@ class PickableLoggerAdapter(object):
 
     def isEnabledFor(self, level):  # type: ignore[no-untyped-def] # noqa F821
         return self.logger.isEnabledFor(level)
+
+
+def format_array(input_array: typing.Union[np.ndarray, list]):
+    """
+    Transform a np array to a list of format so that it can be printed by logger
+    """
+    if np.size(input_array) == 1:
+        return f"{input_array.item():4f}"
+    format_list = []
+    if isinstance(input_array, np.ndarray):
+        input_array = input_array.tolist()
+    for item in input_array:
+        # https://stackoverflow.com/a/33482726
+        format_list.append(f"{item:4f}")
+    return format_list
+

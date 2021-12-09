@@ -12,6 +12,7 @@ from smac.stats.stats import Stats
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.logging import format_array
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 
@@ -351,30 +352,37 @@ class AbstractRacer(object):
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
-        # performance on challenger runs
-        chal_perf = float(run_history.average_cost(challenger, to_compare_runs).item())
-        inc_perf = float(run_history.average_cost(incumbent, to_compare_runs).item())
+        # performance on challenger runs, the challenger only becomes incumbent if it dominates the incumbent
+        # TODO consider incumbents as Pareto Front (maybe a new multi-objective intensifier?)
+        chal_perf = run_history.average_cost(challenger, to_compare_runs)
+        inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 
         # Line 15
-        if chal_perf > inc_perf and len(chall_runs) >= self.minR:
+        if np.any(chal_perf) > np.any(inc_perf) and chall_runs >= self.minR:
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            self.logger.debug("Incumbent (%.4f) is better than challenger "
-                              "(%.4f) on %d runs." %
-                              (inc_perf, chal_perf, len(chall_runs)))
+            self.logger.debug(f"Incumbent ({inc_perf_format}) is better than challenger "
+                              f"({chal_perf_format}) on {len(chall_runs)} runs.")
             return incumbent
 
         # Line 16
         if not set(inc_runs) - set(chall_runs):
-
             # no plateau walks
-            if chal_perf >= inc_perf:
-                self.logger.debug("Incumbent (%.4f) is at least as good as the "
-                                  "challenger (%.4f) on %d runs." %
-                                  (inc_perf, chal_perf, len(chall_runs)))
+            if np.any(chal_perf) >= np.any(inc_perf):
+                chal_perf_format = format_array(chal_perf)
+                inc_perf_format = format_array(inc_perf)
+
+                self.logger.debug(f"Incumbent ({inc_perf_format}) is at least as good as the "
+                                  f"challenger ({chal_perf_format}) on {len(chall_runs)} runs." )
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(train_perf=inc_perf,
+                    if np.size(chal_perf) == 1:
+                        chal_perf = float(chal_perf)
+                    else:
+                        chal_perf = chal_perf.tolist()
+                    self.traj_logger.add_entry(train_perf=chal_perf,
                                                incumbent_id=self.stats.inc_changed,
                                                incumbent=incumbent)
                 return incumbent
@@ -389,7 +397,11 @@ class AbstractRacer(object):
 
             if log_traj:
                 self.stats.inc_changed += 1
-                self.traj_logger.add_entry(train_perf=float(chal_perf),
+                if np.size(chal_perf) == 1:
+                    chal_perf = float(chal_perf)
+                else:
+                    chal_perf = chal_perf.tolist()
+                self.traj_logger.add_entry(train_perf=chal_perf,
                                            incumbent_id=self.stats.inc_changed,
                                            incumbent=challenger)
             return challenger
@@ -409,3 +421,4 @@ class AbstractRacer(object):
                 self.logger.info("  %s : %r -> %r" % param)
             else:
                 self.logger.debug("  %s remains unchanged: %r", param[0], param[1])
+

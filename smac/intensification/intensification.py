@@ -16,6 +16,7 @@ from smac.runhistory.runhistory import (
     StatusType
 )
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.logging import format_array
 from smac.intensification.abstract_racer import (
     AbstractRacer,
     RunInfoIntent,
@@ -699,17 +700,8 @@ class Intensifier(AbstractRacer):
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
         inc_perf = run_history.get_cost(incumbent)
-        if np.size(inc_perf) > 1:
-            format_list = []
-            inc_perf = inc_perf.tolist()
-            for item in inc_perf:
-                # https://stackoverflow.com/a/33482726
-                format_list.append(f"{item:4f}")
-            self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)}"
-                             f" runs: {format_list}")
-        else:
-            self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)}"
-                             f" runs: {inc_perf.item(): .4f}")
+        format_value = format_array(inc_perf)
+        self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}")
 
         # if running first configuration, go to next stage after 1st run
         if self.stage in [IntensifierStage.RUN_FIRST_CONFIG,
