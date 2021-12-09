@@ -2,11 +2,11 @@ Arguments
 =========
 
 If you are using Python, have a look :ref:`here<smac.facade package>` for a detailed API reference. When
-using the comamndline, view the basic command options via 
+using the commandline, view the basic command options via 
 
 .. code-block::
 
-    python smac.py --help
+    python scripts/smac.py --help
 
 or view all other options in the following:
 

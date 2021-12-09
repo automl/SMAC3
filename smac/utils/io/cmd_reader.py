@@ -49,6 +49,14 @@ def truthy(x: typing.Any) -> bool:
         return False
 
 
+def string_to_list(s: typing.Any) -> typing.List[str]:
+    if isinstance(s, str):
+        s = s.replace(", ", ",")
+        return s.split(",")
+    else:
+        return ""
+
+
 class CheckScenarioFileAction(Action):
     """Check scenario file given by user"""
 
@@ -522,6 +530,11 @@ class CMDReader(object):
                                     "the target algorithm. Allows SMAC to use all resources available. "
                                     "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)")
 
+        smac_opts.add_argument("--multi-objectives", "--multi_objectives",
+                               dest='multi_objectives',
+                               default="cost", type=string_to_list,
+                               help="Comma separated list of objectives to optimize.")
+
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
                                help="[dev] Minimum number of calls per configuration.")
@@ -660,7 +673,7 @@ class CMDReader(object):
                                default='.', type=str,
                                help="[dev] Specifies the path to the execution-directory.")
         scen_opts.add_argument("--deterministic", dest="deterministic",
-                               default=False, type=truthy,
+                               default=True, type=truthy,
                                help="[dev] If true, SMAC assumes that the target function or algorithm is deterministic"
                                     " (the same static seed of 0 is always passed to the function/algorithm)."
                                     " If false, different random seeds are passed to the target function/algorithm.")
@@ -738,9 +751,9 @@ class CMDReader(object):
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
         scen_opts.add_argument("--save-results-instantly", "--save-instantly",
-                               dest='save_results_instantly',
-                               default=False, type=truthy,
-                               help="[dev] If true, runhistory and stats are saved immediately on changes. "
+                               dest='save_instantly',
+                               default=True, type=truthy,
+                               help="If true, runhistory and stats are saved immediately on changes. "
                                     "Otherwise, runhistory and states are only saved once after the optimization "
                                     "process has finished.")
         scen_opts.add_argument('--cs',
