@@ -44,6 +44,7 @@ docs/pages/examples
 
 # Generated from running Sphinx-Gallery
 *smac3-output_*
+_autosummary
 
 # Dask created work space
 dask-worker-space
