@@ -642,10 +642,15 @@ class RunHistory(object):
         if instance_seed_budget_keys is None:
             instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
 
+        # TODO:
+        if self.num_obj > 1:
+            raise NotImplementedError()
+
         costs = []
         for i, r, b in instance_seed_budget_keys:
             k = RunKey(id_, i, r, b)
             costs.append(self.data[k].cost)
+
         return costs
 
     def average_cost(
