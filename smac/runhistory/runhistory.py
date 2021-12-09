@@ -146,7 +146,6 @@ class RunHistory(object):
     def __init__(
             self,
             overwrite_existing_runs: bool = False,
-            num_obj: int = 1,
     ) -> None:
         self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
@@ -179,13 +178,12 @@ class RunHistory(object):
         self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-
-        self.num_obj = num_obj
+        self.num_obj = None
 
     def add(
             self,
             config: Configuration,
-            cost: typing.Union[np.ndarray, float],
+            cost: typing.Union[np.ndarray, float, list],
             time: float,
             status: StatusType,
             instance_id: typing.Optional[str] = None,
@@ -205,7 +203,7 @@ class RunHistory(object):
         ----------
             config : dict (or other type -- depending on config space module)
                 Parameter configuration
-            cost: typing.Union[np.ndarray, float]
+            cost: typing.Union[np.ndarray, float, list]
                 Cost of TA run (will be minimized)
             time: float
                 Runtime of TA run
@@ -247,18 +245,14 @@ class RunHistory(object):
         else:
             config_id = typing.cast(int, config_id_tmp)
 
-        cost = np.asarray(cost)
-        if np.size(cost) == 1:
-            if cost.item() == float(MAXINT):
-                # compatible with the first add
-                cost = np.repeat(cost, self.num_obj)
+        if self.num_obj is None:
+            if isinstance(cost, float):
+                self.num_obj = 1
             else:
-                if self.num_obj > 1:
-                    raise RuntimeError(f'Trying to add multiple losses to a single objective RunHistory!')
+                self.num_obj = len(cost)
         else:
             if len(cost) != self.num_obj:
-                raise RuntimeError(f'Number of objective ({self.num_obj}) does not match the number of '
-                                   f'returned costs: {len(cost)} ')
+                raise ValueError('Cost is not of the same length as the number of objectives')
 
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
@@ -269,7 +263,7 @@ class RunHistory(object):
                 ('instance_id', instance_id),
                 ('seed', seed),
                 ('budget', budget),
-                ('cost', cost.tolist()),
+                ('cost', cost),
                 ('time', time),
                 ('status', status),
                 ('starttime', starttime),
@@ -308,10 +302,8 @@ class RunHistory(object):
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType,
              origin: DataOrigin) -> None:
-        """Actual function to add new entry to data structures
-
-        TODO
-
+        """
+        Actual function to add new entry to data structures.
         """
         self.data[k] = v
         self.external[k] = origin
