@@ -50,11 +50,12 @@ def truthy(x: typing.Any) -> bool:
 
 
 def string_to_list(s: typing.Any) -> typing.List[str]:
+    """Convert a (comma-separated) string into list of strings."""
     if isinstance(s, str):
         s = s.replace(", ", ",")
         return s.split(",")
     else:
-        return ""
+        return ["cost"]
 
 
 class CheckScenarioFileAction(Action):
