@@ -468,7 +468,7 @@ class SMAC4AC(object):
         # initialize multi objective
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None
-        if scenario.multi_objective_names is not None and len(scenario.multi_objective_names) > 1:  # TODO check correct name of scenario entry
+        if scenario.run_obj is not None and len(scenario.run_obj) > 1:
             _multi_objective_kwargs = {}  # define any defaults here
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
