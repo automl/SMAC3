@@ -11,26 +11,25 @@ __license__ = "3-clause BSD"
 
 
 class Prior(object):
+    """
+    Abstract base class to define the interface for priors
+    of GP hyperparameter.
 
+    This class is adapted from RoBO:
+
+    Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+    RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+    In: NIPS 2017 Bayesian Optimization Workshop
+
+    [16.04.2019]: Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*
+
+    Parameters
+    ----------
+    rng: np.random.RandomState
+        Random number generator
+
+    """
     def __init__(self, rng: np.random.RandomState):
-        """
-        Abstract base class to define the interface for priors
-        of GP hyperparameter.
-
-        This class is adapted from RoBO:
-
-        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
-        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
-        In: NIPS 2017 Bayesian Optimization Workshop
-
-        [16.04.2019]: Whenever lnprob or the gradient is computed for a scalar input, we use math.* rather than np.*
-
-        Parameters
-        ----------
-        rng: np.random.RandomState
-            Random number generator
-
-        """
         if rng is None:
             raise ValueError('Argument rng must not be `None`.')
         self.rng = rng

@@ -20,8 +20,15 @@ TrajEntry = collections.namedtuple(
 
 
 class TrajLogger(object):
+    """
+    Writes trajectory logs files and creates output directory if not exists already
 
-    """Writes trajectory logs files and creates output directory if not exists already
+    Parameters
+    ----------
+    output_dir: str
+    directory for logging (or None to disable logging)
+    stats: Stats()
+    Stats object
 
     Attributes
     ----------
@@ -32,17 +39,7 @@ class TrajLogger(object):
     old_traj_fn
     trajectory
     """
-
     def __init__(self, output_dir: typing.Optional[str], stats: Stats) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        output_dir: str
-            directory for logging (or None to disable logging)
-        stats: Stats()
-            Stats object
-        """
         self.stats = stats
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 

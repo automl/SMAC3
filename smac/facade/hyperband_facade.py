@@ -13,8 +13,11 @@ class HB4AC(ROAR):
     """
     Facade to use model-free Hyperband for algorithm configuration
 
-    see smac.facade.smac_Facade for API
-    This facade overwrites options available via the SMAC facade
+    This facade overwrites options available via the SMAC facade.
+
+    See Also
+    --------
+    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
 
     Attributes
     ----------
@@ -29,11 +32,6 @@ class HB4AC(ROAR):
     """
 
     def __init__(self, **kwargs: typing.Any):
-        """
-        Constructor
-        see ~smac.facade.smac_facade for documentation
-        """
-
         kwargs['initial_design'] = kwargs.get('initial_design', RandomConfigurations)
 
         # Intensification parameters

@@ -58,7 +58,20 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
 
 class ChooserLinearCoolDown(RandomConfigurationChooser):
+    """
+    Interleave a random configuration, decreasing the fraction of random configurations over time.
 
+    Parameters
+    ----------
+    start_modulus : float
+       Initially, every modulus-th configuration will be at random
+    modulus_increment : float
+       Increase modulus by this amount in every iteration
+    end_modulus : float
+       Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
+       further increased. If it is not reached before the optimization is over, there will be no adjustment to make
+       sure that the ``end_modulus`` is reached.
+    """
     def __init__(
         self,
         rng: np.random.RandomState,
@@ -66,19 +79,6 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
         modulus_increment: float = 0.3,
         end_modulus: float = np.inf,
     ):
-        """Interleave a random configuration, decreasing the fraction of random configurations over time.
-
-        Parameters
-        ----------
-        start_modulus : float
-            Initially, every modulus-th configuration will be at random
-        modulus_increment : float
-            Increase modulus by this amount in every iteration
-        end_modulus : float
-            Highest modulus used in the chooser. If the value is reached before the optimization is over, it is not
-            further increased. If it is not reached before the optimization is over, there will be no adjustment to make
-            sure that the ``end_modulus`` is reached.
-        """
         super().__init__(rng)
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -103,17 +103,17 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
 
 
 class ChooserProb(RandomConfigurationChooser):
+    """
+    Interleave a random configuration according to a given probability.
 
+    Parameters
+    ----------
+    prob : float
+        Probility of a random configuration
+    rng : np.random.RandomState
+        Random state
+    """
     def __init__(self, rng: np.random.RandomState, prob: float):
-        """Interleave a random configuration according to a given probability.
-
-        Parameters
-        ----------
-        prob : float
-            Probility of a random configuration
-        rng : np.random.RandomState
-            Random state
-        """
         super().__init__(rng)
         self.prob = prob
 
@@ -128,19 +128,19 @@ class ChooserProb(RandomConfigurationChooser):
 
 
 class ChooserProbCoolDown(RandomConfigurationChooser):
+    """
+    Interleave a random configuration according to a given probability which is decreased over time.
 
+    Parameters
+    ----------
+    prob : float
+        Probility of a random configuration
+    cool_down_fac : float
+        Multiply the ``prob`` by ``cool_down_fac`` in each iteration
+    rng : np.random.RandomState
+        Random state
+    """
     def __init__(self, rng: np.random.RandomState, prob: float, cool_down_fac: float):
-        """Interleave a random configuration according to a given probability which is decreased over time.
-
-        Parameters
-        ----------
-        prob : float
-            Probility of a random configuration
-        cool_down_fac : float
-            Multiply the ``prob`` by ``cool_down_fac`` in each iteration
-        rng : np.random.RandomState
-            Random state
-        """
         super().__init__(rng)
         self.prob = prob
         self.cool_down_fac = cool_down_fac
@@ -156,7 +156,8 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
 
 
 class ChooserCosineAnnealing(RandomConfigurationChooser):
-    """Interleave a random configuration according to a given probability which is decreased according to a cosine
+    """
+    Interleave a random configuration according to a given probability which is decreased according to a cosine
     annealing schedule.
 
     Parameters
@@ -170,7 +171,6 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
     rng : np.random.RandomState
         Random state
     """
-
     def __init__(
         self,
         rng: np.random.RandomState,

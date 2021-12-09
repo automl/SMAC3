@@ -20,6 +20,37 @@ __license__ = "3-clause BSD"
 
 
 class EPMChooser(object):
+    """
+    Interface to train the EPM and generate next configurations
+
+    Parameters
+    ----------
+
+    scenario: smac.scenario.scenario.Scenario
+        Scenario object
+    stats: smac.stats.stats.Stats
+        statistics object with configuration budgets
+    runhistory: smac.runhistory.runhistory.RunHistory
+        runhistory with all runs so far
+    model: smac.epm.rf_with_instances.RandomForestWithInstances
+        empirical performance model (right now, we support only
+        RandomForestWithInstances)
+    acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
+        Optimizer of acquisition function.
+    restore_incumbent: Configuration
+        incumbent to be used from the start. ONLY used to restore states.
+    rng: np.random.RandomState
+        Random number generator
+    random_configuration_chooser:
+        Chooser for random configuration -- one of
+
+        * ChooserNoCoolDown(modulus)
+        * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
+    predict_x_best: bool
+        Choose x_best for computing the acquisition function via the model instead of via the observations.
+    min_samples_model: int
+        Minimum number of samples to build a model
+    """
     def __init__(self,
                  scenario: Scenario,
                  stats: Stats,
@@ -34,38 +65,6 @@ class EPMChooser(object):
                  predict_x_best: bool = True,
                  min_samples_model: int = 1
                  ):
-        """
-        Interface to train the EPM and generate next configurations
-
-        Parameters
-        ----------
-
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        stats: smac.stats.stats.Stats
-            statistics object with configuration budgets
-        runhistory: smac.runhistory.runhistory.RunHistory
-            runhistory with all runs so far
-        model: smac.epm.rf_with_instances.RandomForestWithInstances
-            empirical performance model (right now, we support only
-            RandomForestWithInstances)
-        acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-            Optimizer of acquisition function.
-        restore_incumbent: Configuration
-            incumbent to be used from the start. ONLY used to restore states.
-        rng: np.random.RandomState
-            Random number generator
-        random_configuration_chooser:
-            Chooser for random configuration -- one of
-
-            * ChooserNoCoolDown(modulus)
-            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-        predict_x_best: bool
-            Choose x_best for computing the acquisition function via the model instead of via the observations.
-        min_samples_model: int
-            Minimum number of samples to build a model
-        """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent

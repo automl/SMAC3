@@ -23,22 +23,19 @@ class Stats(object):
 
     Parameters
     ----------
+    scenario : Scenario
+
+    Attributes
+    ----------
     submitted_ta_runs
     finished_ta_runs
+    n_configs
     wallclock_time_used
     ta_time_used
     inc_changed
     """
 
     def __init__(self, scenario: Scenario):
-        """Constructor
-
-        Parameters
-        ----------
-        scenario : Scenario
-
-        output_dir : str
-        """
         self.__scenario = scenario
 
         self.submitted_ta_runs = 0

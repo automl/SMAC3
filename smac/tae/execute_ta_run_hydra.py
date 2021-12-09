@@ -14,8 +14,15 @@ __maintainer__ = "Marius Lindauer"
 
 
 class ExecuteTARunHydra(SerialRunner):
+    """
+    Returns min(cost, cost_portfolio)
 
-    """Returns min(cost, cost_portfolio)
+    Parameters
+    ---------
+    cost_oracle: typing.Mapping[str,float]
+        cost of oracle per instance
+    tae: typing.Type[SerialRunner]
+        target algorithm evaluator
     """
 
     def __init__(
@@ -24,15 +31,6 @@ class ExecuteTARunHydra(SerialRunner):
         tae: typing.Type[SerialRunner] = ExecuteTARunOld,
         **kwargs: typing.Any
     ) -> None:
-        '''
-            Constructor
-
-            Arguments
-            ---------
-            cost_oracle: typing.Mapping[str,float]
-                cost of oracle per instance
-        '''
-
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
         if tae is ExecuteTARunAClib:

@@ -45,6 +45,33 @@ class BaseRunner(ABC):
        example, the intensifier might not be able to select the next challenger
        until more results are available.
 
+    Parameters
+    ----------
+    ta : typing.Union[typing.List[str], typing.Callable]
+        target algorithm
+    stats: Stats
+         stats object to collect statistics about runtime/additional info
+    run_obj: str
+        run objective of SMAC
+    par_factor: int
+        penalization factor
+    cost_for_crash : float
+        cost that is used in case of crashed runs (including runs
+        that returned NaN or inf)
+    abort_on_first_run_crash: bool
+        if true and first run crashes, raise FirstRunCrashedException
+
+
+    Attributes
+    ----------
+    results
+    ta
+    stats
+    run_obj
+    par_factor
+    cost_for_crash
+    abort_on_first_run_crash
+
     """
 
     def __init__(
@@ -57,34 +84,6 @@ class BaseRunner(ABC):
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = True
     ):
-        """
-        Attributes
-        ----------
-        results
-        ta
-        stats
-        run_obj
-        par_factor
-        cost_for_crash
-        abort_first_run_crash
-
-        Parameters
-        ----------
-        ta : typing.Union[typing.List[str], typing.Callable]
-            target algorithm
-        stats: Stats
-             stats object to collect statistics about runtime/additional info
-        run_obj: str
-            run objective of SMAC
-        par_factor: int
-            penalization factor
-        cost_for_crash : float
-            cost that is used in case of crashed runs (including runs
-            that returned NaN or inf)
-        abort_on_first_run_crash: bool
-            if true and first run crashes, raise FirstRunCrashedException
-        """
-
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
         # put in this list and collected via process_finished_runs

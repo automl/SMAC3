@@ -28,7 +28,55 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcessMCMC(BaseModel):
+    """
+    Gaussian process model.
 
+    The GP hyperparameters are integrated out by MCMC. If you use this class
+    make sure that you also use an integrated acquisition function to
+    integrate over the GP's hyperparameter as proposed by Snoek et al.
+
+    This code is based on the implementation of RoBO:
+
+    Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
+    RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
+    In: NIPS 2017 Bayesian Optimization Workshop
+
+    Parameters
+    ----------
+    types : List[int]
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass [3, 0]. Note that we count starting from 0.
+    bounds : List[Tuple[float, float]]
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+    seed : int
+        Model seed.
+    kernel : george kernel object
+        Specifies the kernel that is used for all Gaussian Process
+    n_mcmc_walkers : int
+        The number of hyperparameter samples. This also determines the
+        number of walker for MCMC sampling as each walker will
+        return one hyperparameter sample.
+    chain_length : int
+        The length of the MCMC chain. We start n_mcmc_walkers walker for
+        chain_length steps and we use the last sample
+        in the chain as a hyperparameter sample.
+    burnin_steps : int
+        The number of burnin steps before the actual MCMC sampling starts.
+    normalize_y : bool
+        Zero mean unit variance normalization of the output values
+    mcmc_sampler : str
+        Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.
+    instance_features : np.ndarray (I, K)
+        Contains the K dimensional instance features
+        of the I different instances
+    pca_components : float
+        Number of components to keep when using PCA to reduce
+        dimensionality of instance features. Requires to
+        set n_feats (> pca_dims).
+    """
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -45,55 +93,6 @@ class GaussianProcessMCMC(BaseModel):
         instance_features: typing.Optional[np.ndarray] = None,
         pca_components: typing.Optional[int] = None,
     ):
-        """
-        Gaussian process model.
-
-        The GP hyperparameters are integrated out by MCMC. If you use this class
-        make sure that you also use an integrated acquisition function to
-        integrate over the GP's hyperparameter as proposed by Snoek et al.
-
-        This code is based on the implementation of RoBO:
-
-        Klein, A. and Falkner, S. and Mansur, N. and Hutter, F.
-        RoBO: A Flexible and Robust Bayesian Optimization Framework in Python
-        In: NIPS 2017 Bayesian Optimization Workshop
-
-        Parameters
-        ----------
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        seed : int
-            Model seed.
-        kernel : george kernel object
-            Specifies the kernel that is used for all Gaussian Process
-        n_mcmc_walkers : int
-            The number of hyperparameter samples. This also determines the
-            number of walker for MCMC sampling as each walker will
-            return one hyperparameter sample.
-        chain_length : int
-            The length of the MCMC chain. We start n_mcmc_walkers walker for
-            chain_length steps and we use the last sample
-            in the chain as a hyperparameter sample.
-        burnin_steps : int
-            The number of burnin steps before the actual MCMC sampling starts.
-        normalize_y : bool
-            Zero mean unit variance normalization of the output values
-        mcmc_sampler : str
-            Choose a self-tuning MCMC sampler. Can be either ``emcee`` or ``nuts``.
-        instance_features : np.ndarray (I, K)
-            Contains the K dimensional instance features
-            of the I different instances
-        pca_components : float
-            Number of components to keep when using PCA to reduce
-            dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
         super().__init__(
             configspace=configspace,
             types=types,

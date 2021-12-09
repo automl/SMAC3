@@ -75,25 +75,23 @@ _Run = namedtuple('Run', 'config inst seed inst_specs')
 class Validator(object):
     """
     Validator for the output of SMAC-scenarios.
+
     Evaluates specified configurations on specified instances.
+
+    Parameters
+    ----------
+    scenario: Scenario
+        scenario object for cutoff, instances, features and specifics
+    trajectory: trajectory-list
+        trajectory to take incumbent(s) from
+    rng: np.random.RandomState or int
+        Random number generator or seed
     """
 
     def __init__(self,
                  scenario: Scenario,
                  trajectory: typing.Optional[typing.List],
                  rng: Union[np.random.RandomState, int, None] = None) -> None:
-        """
-        Construct Validator for given scenario and trajectory.
-
-        Parameters
-        ----------
-        scenario: Scenario
-            scenario object for cutoff, instances, features and specifics
-        trajectory: trajectory-list
-            trajectory to take incumbent(s) from
-        rng: np.random.RandomState or int
-            Random number generator or seed
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
