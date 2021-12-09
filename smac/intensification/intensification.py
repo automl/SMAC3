@@ -244,8 +244,8 @@ class Intensifier(AbstractRacer):
         if num_workers > 1:
             raise ValueError("Intensifier does not support more than 1 worker, yet "
                              "the argument num_workers to get_next_run is {}".format(
-                                 num_workers
-                             ))
+                num_workers
+            ))
 
         # If this function is called, it means the iteration is
         # not complete (we can be starting a new iteration, or re-running a
@@ -561,9 +561,9 @@ class Intensifier(AbstractRacer):
         # this is different to regular SMAC as it requires at least successful challenger run,
         # which is necessary to work on a fixed grid of configurations.
         if (
-            self.stage == IntensifierStage.RUN_INCUMBENT
-            and self._chall_indx >= self.min_chall
-            and self.num_chall_run > 0
+                self.stage == IntensifierStage.RUN_INCUMBENT
+                and self._chall_indx >= self.min_chall
+                and self.num_chall_run > 0
         ):
             if self.num_run > self.run_limit:
                 self.logger.debug("Maximum #runs for intensification reached")
@@ -636,10 +636,10 @@ class Intensifier(AbstractRacer):
         return next_instance, next_seed, self.cutoff
 
     def _get_inc_available_inst(
-        self,
-        incumbent: Configuration,
-        run_history: RunHistory,
-        log_traj: bool = True,
+            self,
+            incumbent: Configuration,
+            run_history: RunHistory,
+            log_traj: bool = True,
     ) -> typing.List[str]:
         """
         Implementation of line 4 of Intensification
@@ -664,7 +664,8 @@ class Intensifier(AbstractRacer):
             only_max_observed_budget=True
         )
         inc_inst = [s.instance for s in inc_runs]
-        inc_inst = list(Counter(inc_inst))
+        inc_inst = list(Counter(inc_inst).items())
+
         inc_inst.sort(key=lambda x: x[1], reverse=True)
         try:
             max_runs = inc_inst[0][1]
@@ -702,8 +703,17 @@ class Intensifier(AbstractRacer):
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
         inc_perf = run_history.get_cost(incumbent)
-        self.logger.info("Updated estimated cost of incumbent on %d runs: %.4f"
-                         % (len(inc_runs), inc_perf))
+        if np.size(inc_perf) > 1:
+            format_list = []
+            inc_perf = inc_perf.tolist()
+            for item in inc_perf:
+                # https://stackoverflow.com/a/33482726
+                format_list.append(f"{item:4f}")
+            self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)}"
+                             f" runs: {format_list}")
+        else:
+            self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)}"
+                             f" runs: {inc_perf.item(): .4f}")
 
         # if running first configuration, go to next stage after 1st run
         if self.stage in [IntensifierStage.RUN_FIRST_CONFIG,
@@ -726,11 +736,11 @@ class Intensifier(AbstractRacer):
         )
 
     def _get_next_racer(
-        self,
-        challenger: Configuration,
-        incumbent: Configuration,
-        run_history: RunHistory,
-        log_traj: bool = True,
+            self,
+            challenger: Configuration,
+            incumbent: Configuration,
+            run_history: RunHistory,
+            log_traj: bool = True,
     ) -> typing.Tuple[Configuration, str, int, typing.Optional[float]]:
         """Method to return the next config setting to
         aggressively race challenger against incumbent.
@@ -761,7 +771,6 @@ class Intensifier(AbstractRacer):
         # By the time this function is called, the run history might
         # have shifted. Re-populate the list if necessary
         if not self.to_run:
-
             # Lines 10/11
             self.to_run, self.inc_sum_cost = self._get_instances_to_run(
                 incumbent=incumbent,
@@ -787,9 +796,9 @@ class Intensifier(AbstractRacer):
         return incumbent, instance, seed, cutoff
 
     def _is_there_time_due_to_adaptive_cap(
-        self,
-        challenger: Configuration,
-        run_history: RunHistory,
+            self,
+            challenger: Configuration,
+            run_history: RunHistory,
     ) -> bool:
         """ A check to see if there is no more time for a challenger
         given the fact, that we are optimizing time and the

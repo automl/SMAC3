@@ -249,8 +249,11 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-
-        if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+        if len(self.multi_objectives) == 1:
+            if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+                status = StatusType.CRASHED
+                cost = self.cost_for_crash
+        elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
 

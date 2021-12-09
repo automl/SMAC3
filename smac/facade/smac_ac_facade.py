@@ -105,7 +105,6 @@ class SMAC4AC(object):
                  random_configuration_chooser_kwargs: Optional[Dict] = None,
                  dask_client: Optional[dask.distributed.Client] = None,
                  n_jobs: Optional[int] = 1,
-                 num_obj: Optional[int] = 1,
                  ):
         """
         Constructor
@@ -243,6 +242,7 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"  # type: ignore[attr-defined] # noqa F821
 
         # initialize empty runhistory
+        num_obj = len(scenario.multi_objectives)
         runhistory_def_kwargs = {'num_obj': num_obj}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
@@ -469,9 +469,9 @@ class SMAC4AC(object):
         # initialize multi objective
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None
-        if scenario.multi_objectives is not None and len(scenario.multi_objectives) > 1:
+        if scenario.multi_objectives is not None and num_obj > 1:
             _multi_objective_kwargs = {"rng": rng,
-                                       "num_obj": len(scenario.multi_objectives)}   # define any defaults here
+                                       "num_obj": num_obj}   # define any defaults here
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
             if multi_objective_algorithm is None:

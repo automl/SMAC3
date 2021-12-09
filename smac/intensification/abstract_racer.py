@@ -352,8 +352,8 @@ class AbstractRacer(object):
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs
-        chal_perf = float(run_history.average_cost(challenger, to_compare_runs))
-        inc_perf = float(run_history.average_cost(incumbent, to_compare_runs))
+        chal_perf = float(run_history.average_cost(challenger, to_compare_runs).item())
+        inc_perf = float(run_history.average_cost(incumbent, to_compare_runs).item())
 
         # Line 15
         if chal_perf > inc_perf and len(chall_runs) >= self.minR:

@@ -443,10 +443,9 @@ class SMBO(object):
         self.stats.finished_ta_runs += 1
 
         self.logger.debug(
-            "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
-                result.status, result.cost, result.time, str(result.additional_info)
+            f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
+            f"additional: {result.additional_info}"
             )
-        )
 
         self.runhistory.add(
             config=run_info.config,

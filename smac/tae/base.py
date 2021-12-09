@@ -247,7 +247,7 @@ class BaseRunner(ABC):
         # Catch NaN or inf.
         if (
             self.run_obj == 'runtime' and not np.isfinite(runtime)
-            or self.run_obj == 'quality' and not np.isfinite(cost)
+            or self.run_obj == 'quality' and not np.all(np.isfinite(cost))
         ):
             if self.logger:
                 self.logger.warning("Target Algorithm returned NaN or inf as {}. "
