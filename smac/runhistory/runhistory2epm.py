@@ -282,7 +282,7 @@ class AbstractRunHistory2EPM(object):
         # Get real TIMEOUT runs
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if np.isnan(self.min_y) else False
+        store_statistics = True if np.any(np.isnan(self.min_y)) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     store_statistics=store_statistics)
 
@@ -441,17 +441,16 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 # TODO how to deal with this situation under multi-objective cirumstance?
                 y[row, 0] = run.time
             else:
-                y[row, 0] = run.cost
+                y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:
                 self.perc = np.percentile(y, self.scale_perc)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
-            for obj_idx in range(self.num_obj):
-                y[:, obj_idx] = self.transform_response_values(values=y[:, obj_idx])
-            if self.num_obj >1 and self.multi_objective_algorithm is not None:
-                y = self.multi_objective_algorithm(y)
+        y = self.transform_response_values(values=y)
+        if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            y = self.multi_objective_algorithm(y)
 
         return X, y
 
@@ -615,13 +614,12 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
         values = (values - min_y) / (self.max_y - min_y)
         values = np.log(values)
         return values
