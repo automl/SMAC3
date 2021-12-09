@@ -2,9 +2,9 @@
 Scalarized Multi-Objective Using ParEGO
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This example builds on svm_cv.py
+This example builds on :ref:`SVM with Cross-Validation`.
 
-Optimize both the final performance & the time used for training are objectives.
+Optimize both the final performance and the time used for training.
 """
 
 import logging
@@ -31,7 +31,7 @@ iris = datasets.load_iris()
 
 
 def time_multi_obj(func):
-    """This decorator is a convenient way to track some other information on the TAE."""
+    """This decorator is a convenient way to track some other information of the TAE."""
 
     def wrapper(*args, **kwargs):
         # Track the training time.
@@ -49,7 +49,7 @@ def time_multi_obj(func):
 @time_multi_obj
 def svm_from_cfg(cfg):
     """ Creates a SVM based on a configuration and evaluates it on the
-    iris-dataset using cross-validation. Note here random seed is fixed
+    iris-dataset using cross-validation. Note here random seed is fixed.
 
     Parameters:
     -----------
@@ -84,9 +84,10 @@ if __name__ == '__main__':
 
     # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
     kernel = CategoricalHyperparameter(
-        "kernel",
-        ["linear", "rbf", "poly", "sigmoid"],
-        default_value="poly")
+        name="kernel",
+        choices=["linear", "rbf", "poly", "sigmoid"],
+        default_value="poly"
+    )
     cs.add_hyperparameter(kernel)
 
     # There are some hyperparameters shared by all kernels
@@ -141,7 +142,6 @@ if __name__ == '__main__':
                     })
 
     incumbent = smac.optimize()
-
 
     # Plot the Pareto Front in our 2d example.
     def is_pareto_efficient_simple(costs):
