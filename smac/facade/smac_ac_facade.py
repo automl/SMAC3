@@ -40,6 +40,7 @@ from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, I
 from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy, ParEGO
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -469,16 +470,16 @@ class SMAC4AC(object):
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None
         if scenario.run_obj is not None and len(scenario.run_obj) > 1:
-            _multi_objective_kwargs = {}  # define any defaults here
+            _multi_objective_kwargs = {"rng": rng}  # define any defaults here
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
             if multi_objective_algorithm is None:
                 for key, value in {
-                }.items():  # ParEgo default arguments  # TODO add hyperparameter
+                }.items():  # ParEGO default arguments  # TODO add hyperparameter
                     if key not in model_def_kwargs:
                         _multi_objective_kwargs[key] = value
                 multi_objective_algorithm_instance = (
-                    ParEgo(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
+                    ParEGO(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
                 )  # type: MultiObjectiveAlgorithm
             elif inspect.isclass(multi_objective_algorithm):
                 multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
@@ -553,8 +554,11 @@ class SMAC4AC(object):
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
             'scale_perc': 5,
-            'multi_objective_algorithm': multi_objective_algorithm_instance
         }
+        if isinstance(multi_objective_algorithm_instance, AggregationStrategy):
+            #TODO consider other sorts of multi-objective algorithms
+            r2e_def_kwargs.update({'multi_objective_algorithm': multi_objective_algorithm_instance})
+
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
