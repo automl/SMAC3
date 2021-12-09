@@ -10,6 +10,7 @@ from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.utils import constants
 from smac.scenario.scenario import Scenario
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -52,7 +53,7 @@ class AbstractRunHistory2EPM(object):
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
-        multi_objective_algorithm: typing.Optional["MultiObjectiveAlgorithm"] = None  # TODO import class
+        multi_objective_algorithm: typing.Optional[AggregationStrategy] = None
     ) -> None:
         """Constructor
 
@@ -96,11 +97,17 @@ class AbstractRunHistory2EPM(object):
         self.num_params = num_params
         self.scale_perc = scale_perc
 
+        if scenario.run_obj is None:
+            self.num_obj = 1
+        else:
+            self.num_obj = len(scenario.run_obj)
+
         # Configuration
         self.impute_censored_data = impute_censored_data
         self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
         self.imputor = imputor
-        self.multi_objective_algorithm = multi_objective_algorithm
+        if self.num_obj > 1:
+            self.multi_objective_algorithm = multi_objective_algorithm
 
         # Fill with some default values
         if rng is None:
@@ -151,9 +158,9 @@ class AbstractRunHistory2EPM(object):
                              type(self.imputor))
 
         # Learned statistics
-        self.min_y = np.NaN
-        self.max_y = np.NaN
-        self.perc = np.NaN
+        self.min_y = np.array([np.NaN] * self.num_obj)
+        self.max_y = np.array([np.NaN] * self.num_obj)
+        self.perc = np.array([np.NaN] * self.num_obj)
 
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
@@ -442,9 +449,12 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 self.perc = np.percentile(y, self.scale_perc)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
-            y = self.transform_response_values(values=y)
+            for obj_idx in range(self.num_obj):
+                y[obj_idx] = self.transform_response_values(values=y[obj_idx])
+            if self.multi_objective_algorithm is not None:
+                y = self.multi_objective_algorithm(y)
 
-        return X, y
+        return X, y.squeeze(-1)
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
@@ -462,7 +472,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         """
         return values
 
-# TODO rewrite those classes to make them compatible with multi-objective RH
+
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
     """TODO"""
 
