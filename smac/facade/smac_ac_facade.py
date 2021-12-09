@@ -48,6 +48,7 @@ from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import get_types, get_rng
 # utils
+from smac.utils.logging import format_array
 from smac.utils.io.traj_logging import TrajLogger, TrajEntry
 from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
@@ -642,8 +643,8 @@ class SMAC4AC(object):
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
-                self.logger.info("Estimated cost of incumbent: %f",
-                                 self.solver.runhistory.get_cost(self.solver.incumbent))
+                self.logger.info(f"Estimated cost of incumbent: "
+                                 f"{format_array(self.solver.runhistory.get_cost(self.solver.incumbent))}")
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 

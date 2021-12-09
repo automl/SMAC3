@@ -340,6 +340,8 @@ class AbstractRunHistory2EPM(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
+        if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            Y = self.multi_objective_algorithm(Y)
         self.logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
 
@@ -449,8 +451,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
         y = self.transform_response_values(values=y)
-        if self.num_obj > 1 and self.multi_objective_algorithm is not None:
-            y = self.multi_objective_algorithm(y)
 
         return X, y
 
