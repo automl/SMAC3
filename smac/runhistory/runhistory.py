@@ -8,6 +8,8 @@ import numpy as np
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.constants import MAXINT
+
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -121,6 +123,13 @@ class RunHistory(object):
     ----
     Guaranteed to be picklable.
 
+    Parameters
+    ----------
+    overwrite_existing_runs : bool (default=True)
+        If set to ``True`` and a run of a configuration on an instance-budget-seed-pair already exists,
+        it is overwritten. Allows to overwrites old results if pairs of algorithm-instance-seed were measured
+        multiple times
+
     Attributes
     ----------
     data : collections.OrderedDict()
@@ -132,11 +141,6 @@ class RunHistory(object):
     num_runs_per_config : dict
         Maps config_id -> number of runs
 
-    Parameters
-    ----------
-    overwrite_existing_runs : bool (default=True)
-        If set to ``True`` and a run of a configuration on an instance-budget-seed-pair already exists,
-        it is overwritten.
     """
 
     def __init__(
@@ -144,15 +148,6 @@ class RunHistory(object):
             overwrite_existing_runs: bool = False,
             num_obj: int = 1,
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        overwrite_existing_runs: bool
-            allows to overwrites old results if pairs of
-            algorithm-instance-seed were measured
-            multiple times
-        """
         self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
         )
@@ -254,8 +249,12 @@ class RunHistory(object):
 
         cost = np.asarray(cost)
         if np.size(cost) == 1:
-            if self.num_obj > 1:
-                raise RuntimeError(f'Trying to add multiple losses to a single objective RunHistory!')
+            if cost.item() == float(MAXINT):
+                # compatible with the first add
+                cost = np.repeat(cost, self.num_obj)
+            else:
+                if self.num_obj > 1:
+                    raise RuntimeError(f'Trying to add multiple losses to a single objective RunHistory!')
         else:
             if len(cost) != self.num_obj:
                 raise RuntimeError(f'Number of objective ({self.num_obj}) does not match the number of '

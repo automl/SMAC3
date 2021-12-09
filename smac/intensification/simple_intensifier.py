@@ -15,7 +15,6 @@ __license__ = "3-clause BSD"
 
 
 class SimpleIntensifier(AbstractRacer):
-
     """ Performs the traditional Bayesian Optimization loop, without
         instance/seed intensification
 
@@ -37,7 +36,6 @@ class SimpleIntensifier(AbstractRacer):
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
     """
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,

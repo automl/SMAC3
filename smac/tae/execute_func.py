@@ -27,6 +27,28 @@ class AbstractTAFunc(SerialRunner):
 
     **Note:*** Do not use directly
 
+    Parameters
+    ----------
+    ta : callable
+        Function (target algorithm) to be optimized.
+    stats: Stats()
+         stats object to collect statistics about runtime and so on
+    run_obj: str
+        run objective of SMAC
+    memory_limit : int, optional
+        Memory limit (in MB) that will be applied to the target algorithm.
+    par_factor: int
+        penalization factor
+    cost_for_crash : float
+        cost that is used in case of crashed runs (including runs
+        that returned NaN or inf)
+    use_pynisher: bool
+        use pynisher to limit resources;
+        if disabled
+          * TA func can use as many resources
+          as it wants (time and memory) --- use with caution
+          * all runs will be returned as SUCCESS if returned value is not None
+
     Attributes
     ----------
     memory_limit
@@ -53,31 +75,6 @@ class AbstractTAFunc(SerialRunner):
                          par_factor=par_factor,
                          cost_for_crash=cost_for_crash,
                          abort_on_first_run_crash=abort_on_first_run_crash)
-        """
-        Abstract class for having a function as target algorithm
-
-        Parameters
-        ----------
-        ta : callable
-            Function (target algorithm) to be optimized.
-        stats: Stats()
-             stats object to collect statistics about runtime and so on
-        run_obj: str
-            run objective of SMAC
-        memory_limit : int, optional
-            Memory limit (in MB) that will be applied to the target algorithm.
-        par_factor: int
-            penalization factor
-        cost_for_crash : float
-            cost that is used in case of crashed runs (including runs
-            that returned NaN or inf)
-        use_pynisher: bool
-            use pynisher to limit resources;
-            if disabled
-              * TA func can use as many resources
-              as it wants (time and memory) --- use with caution
-              * all runs will be returned as SUCCESS if returned value is not None
-        """
         self.ta = ta
         self.stats = stats
         self.multi_objectives = multi_objectives
@@ -199,10 +196,6 @@ class AbstractTAFunc(SerialRunner):
                 cost = result
                 if np.isscalar(cost):
                     cost = [cost]
-                if len(self.multi_objectives) > 1:
-                    if len(cost) != len(self.multi_objectives):
-                        raise RuntimeError(f'Number of objective ({len(self.multi_objectives)}) does not match the number of the '
-                                           f'returned costs: {len(cost)} ')
             else:
                 status = StatusType.CRASHED
                 cost = [self.cost_for_crash] * len(self.multi_objectives)
@@ -253,8 +246,11 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-
-        if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+        if len(self.multi_objectives) == 1:
+            if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+                status = StatusType.CRASHED
+                cost = self.cost_for_crash
+        elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
 

@@ -123,7 +123,9 @@ if __name__ == '__main__':
         "run_obj": "quality",  # we optimize quality (alternatively runtime)
         "runcount-limit": 50,  # max. number of function evaluations
         "cs": cs,  # configuration space
-        "deterministic": "true"})
+        "deterministic": "true",
+        "multi_objectives": ["cost", "time"],
+    })
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -136,9 +138,8 @@ if __name__ == '__main__':
     smac = SMAC4HPO(scenario=scenario,
                     rng=np.random.RandomState(42),
                     tae_runner=svm_from_cfg,
-                    multi_obj_kwargs={
+                    multi_objective_kwargs={
                         'rho': 0.05,
-                        'algorithm': 'par_ego'  # str or cls or callable
                     })
 
     incumbent = smac.optimize()

@@ -29,11 +29,9 @@ __version__ = "0.0.1"
 
 
 class SMACCLI(object):
-
     """Main class of SMAC"""
 
     def __init__(self) -> None:
-        """Constructor"""
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

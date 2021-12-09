@@ -20,8 +20,15 @@ TrajEntry = collections.namedtuple(
 
 
 class TrajLogger(object):
+    """
+    Writes trajectory logs files and creates output directory if not exists already
 
-    """Writes trajectory logs files and creates output directory if not exists already
+    Parameters
+    ----------
+    output_dir: str
+    directory for logging (or None to disable logging)
+    stats: Stats()
+    Stats object
 
     Attributes
     ----------
@@ -32,17 +39,7 @@ class TrajLogger(object):
     old_traj_fn
     trajectory
     """
-
     def __init__(self, output_dir: typing.Optional[str], stats: Stats) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        output_dir: str
-            directory for logging (or None to disable logging)
-        stats: Stats()
-            Stats object
-        """
         self.stats = stats
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -75,7 +72,7 @@ class TrajLogger(object):
 
         self.trajectory = []  # type: typing.List[TrajEntry]
 
-    def add_entry(self, train_perf: float,
+    def add_entry(self, train_perf: typing.Union[float, typing.List[float]],
                   incumbent_id: int,
                   incumbent: Configuration,
                   budget: float = 0) -> None:
@@ -132,14 +129,10 @@ class TrajLogger(object):
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
         with open(self.old_traj_fn, "a") as fp:
-            fp.write("%f, %f, %f, %d, %f, %s\n" % (
-                ta_time_used,
-                train_perf,
-                wallclock_time,
-                incumbent_id,
-                wallclock_time - ta_time_used,
-                ", ".join(conf)
-            ))
+            # TODO check if it is compatible with the older trajectory files!
+            fp.write(f"{ta_time_used}, {train_perf}, {wallclock_time}, {incumbent_id}, "
+                     f"{wallclock_time - ta_time_used}, {','.join(conf)}\n"
+            )
 
     def _add_in_aclib_format(self, train_perf: float, incumbent_id: int,
                              incumbent: Configuration,

@@ -24,6 +24,36 @@ class AbstractRunHistory2EPM(object):
     __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
+    
+    Parameters
+    ----------
+    scenario: Scenario Object
+        Algorithm Configuration Scenario
+    num_params : int
+        number of parameters in config space
+    success_states: list, optional
+        List of states considered as successful (such as StatusType.SUCCESS).
+        If None, raise TypeError.
+    impute_censored_data: bool, optional
+        Should we impute data?
+    consider_for_higher_budgets_state: list, optional
+        Additionally consider all runs with these states for budget < current budget
+    imputor: epm.base_imputor Instance
+        Object to impute censored data
+    impute_state: list, optional
+        List of states that mark censored data (such as StatusType.TIMEOUT)
+        in combination with runtime < cutoff_time
+        If None, set to empty list [].
+        If None and impute_censored_data is True, raise TypeError.
+    scale_perc: int
+        scaled y-transformation use a percentile to estimate distance to optimum;
+        only used by some subclasses of AbstractRunHistory2EPM
+    rng : numpy.random.RandomState
+        Only used for reshuffling data after imputation.
+        If None, use np.random.RandomState(seed=1).
+    multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
+        Instance performing multi objective optimization. Receives an objective cost vector as input
+        and returns a scalar. Is executed before transforming runhistory values.
 
     Attributes
     ----------
@@ -55,39 +85,6 @@ class AbstractRunHistory2EPM(object):
         rng: typing.Optional[np.random.RandomState] = None,
         multi_objective_algorithm: typing.Optional[AggregationStrategy] = None
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        scenario: Scenario Object
-            Algorithm Configuration Scenario
-        num_params : int
-            number of parameters in config space
-        success_states: list, optional
-            List of states considered as successful (such as StatusType.SUCCESS).
-            If None, raise TypeError.
-        impute_censored_data: bool, optional
-            Should we impute data?
-        consider_for_higher_budgets_state: list, optional
-            Additionally consider all runs with these states for budget < current budget
-        imputor: epm.base_imputor Instance
-            Object to impute censored data
-        impute_state: list, optional
-            List of states that mark censored data (such as StatusType.TIMEOUT)
-            in combination with runtime < cutoff_time
-            If None, set to empty list [].
-            If None and impute_censored_data is True, raise TypeError.
-        scale_perc: int
-            scaled y-transformation use a percentile to estimate distance to optimum;
-            only used by some subclasses of AbstractRunHistory2EPM
-        rng : numpy.random.RandomState
-            Only used for reshuffling data after imputation.
-            If None, use np.random.RandomState(seed=1).
-        multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
-            Instance performing multi objective optimization. Receives an objective cost vector as input
-            and returns a scalar. Is executed before transforming runhistory values.
-        """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

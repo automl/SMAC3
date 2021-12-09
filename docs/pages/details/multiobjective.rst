@@ -13,8 +13,8 @@ The basic recipe is as follows:
 
 #. Make sure that your target algorithm returns a cost *dictionary* containing the objective names as keys
    and the objective values as values, e.g.: ``{'myobj1': 0.3, 'myobj2': 200}``.
-#. When instantiating SMAC pass the names of your objectives to the scenario object via the ``run_obj``
-   argument, e.g. ``run_obj = ['myobj1', 'myobj2']``.
+#. When instantiating SMAC pass the names of your objectives to the scenario object via the ``multi_objectives``
+   argument, e.g. ``multi_objectives = ['myobj1', 'myobj2']``. Please set ``run_obj = 'quality'`.
 #. Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
    facade (via ``multi_objective_algorithm`` and/or ``multi_objective_kwargs``).
    Per default, ParEgo is used as the multi-objective algorithm.
