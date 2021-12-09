@@ -55,7 +55,7 @@ def string_to_list(s: typing.Any) -> typing.List[str]:
         s = s.replace(", ", ",")
         return s.split(",")
     else:
-        return ["cost"]
+        raise RuntimeError("Expected string, got %s" % type(s))
 
 
 class CheckScenarioFileAction(Action):

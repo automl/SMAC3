@@ -14,6 +14,7 @@ from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.utils.merge_foreign_data import merge_foreign_data
 from smac.utils.io.cmd_reader import truthy as _is_truthy
+from smac.utils.io.cmd_reader import string_to_list as _string_to_list
 from smac.utils.io.input_reader import InputReader
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
@@ -311,6 +312,11 @@ class ScenarioTest(unittest.TestCase):
                             cmd_options=cmd_options)
         self.assertEqual(scenario.feature_names,
                          ['feature1', 'feature2', 'feature3'])
+
+    def test_multi_objectives(self):
+        assert _string_to_list("test") == ["test"]
+        assert _string_to_list("test, test2") == ["test", "test2"]
+        assert _string_to_list("test,test2") == ["test", "test2"]
 
 
 if __name__ == "__main__":
