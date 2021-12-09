@@ -97,10 +97,10 @@ class AbstractRunHistory2EPM(object):
         self.num_params = num_params
         self.scale_perc = scale_perc
 
-        if scenario.run_obj is None:
+        if scenario.multi_objectives is None:
             self.num_obj = 1
         else:
-            self.num_obj = len(scenario.run_obj)
+            self.num_obj = len(scenario.multi_objectives)
 
         # Configuration
         self.impute_censored_data = impute_censored_data
@@ -108,6 +108,8 @@ class AbstractRunHistory2EPM(object):
         self.imputor = imputor
         if self.num_obj > 1:
             self.multi_objective_algorithm = multi_objective_algorithm
+        else:
+            self.multi_objective_algorithm = None
 
         # Fill with some default values
         if rng is None:
@@ -450,11 +452,11 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
             for obj_idx in range(self.num_obj):
-                y[obj_idx] = self.transform_response_values(values=y[obj_idx])
-            if self.multi_objective_algorithm is not None:
+                y[:, obj_idx] = self.transform_response_values(values=y[:, obj_idx])
+            if self.num_obj >1 and self.multi_objective_algorithm is not None:
                 y = self.multi_objective_algorithm(y)
 
-        return X, y.squeeze(-1)
+        return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
