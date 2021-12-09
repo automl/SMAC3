@@ -445,7 +445,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_perc)
+                self.perc = np.percentile(y, self.scale_perc, axis=0)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
         y = self.transform_response_values(values=y)
@@ -620,7 +620,9 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         # prevent diving by zero
 
         min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
+
         values = np.log(values)
         return values
 
