@@ -97,7 +97,10 @@ class AbstractRunHistory2EPM(object):
         self.num_params = num_params
         self.scale_perc = scale_perc
 
-        self.num_obj = len(scenario.run_obj)
+        if scenario.run_obj is None:
+            self.num_obj = 1
+        else:
+            self.num_obj = len(scenario.run_obj)
 
         # Configuration
         self.impute_censored_data = impute_censored_data

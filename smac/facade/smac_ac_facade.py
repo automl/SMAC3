@@ -470,7 +470,8 @@ class SMAC4AC(object):
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None
         if scenario.run_obj is not None and len(scenario.run_obj) > 1:
-            _multi_objective_kwargs = {"rng": rng}  # define any defaults here
+            _multi_objective_kwargs = {"rng": rng,
+                                       "mum_obj": len(scenario.run_obj)},   # define any defaults here
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
             if multi_objective_algorithm is None:

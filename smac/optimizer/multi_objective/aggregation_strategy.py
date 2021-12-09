@@ -4,9 +4,17 @@ from abc import abstractmethod
 
 
 class AggregationStrategy:
-    def __init__(self, rng: typing.Optional[np.random.RandomState] = None):
+    """
+    An abstract class to aggregate multi-objective losses to a single objective losses, which can then be utilized
+    by the single-objective optimizer
+
+    """
+    def __init__(self,
+                 num_obj: int,
+                 rng: typing.Optional[np.random.RandomState] = None):
         if rng is not None:
             rng = np.random.RandomState(0)
+        self.num_obj = num_obj
         self.rng = rng
 
     @abstractmethod
