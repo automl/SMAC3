@@ -10,6 +10,7 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
     by the single-objective optimizer
 
     """
+
     @abstractmethod
     def __call__(self, values: np.ndarray):
         raise NotImplementedError
@@ -17,9 +18,10 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
 
 class ParEGO(AggregationStrategy):
     def __init__(self,
-                 rho: float = 0.05,
-                 rng: typing.Optional[np.random.RandomState] = None):
-        super(ParEGO).__init__(rng=rng)
+                 num_obj: int,
+                 rng: typing.Optional[np.random.RandomState] = None,
+                 rho: float = 0.05):
+        super(ParEGO, self).__init__(num_obj=num_obj, rng=rng)
         self.rho = rho
 
     def __call__(self, values: np.ndarray):

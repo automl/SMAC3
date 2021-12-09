@@ -374,7 +374,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
-            'num_obj': num_obj,
+            'multi_objectives': scenario.multi_objectives,
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -471,7 +471,7 @@ class SMAC4AC(object):
         multi_objective_algorithm_instance = None
         if scenario.multi_objectives is not None and len(scenario.multi_objectives) > 1:
             _multi_objective_kwargs = {"rng": rng,
-                                       "num_obj": len(scenario.multi_objectives)},   # define any defaults here
+                                       "num_obj": len(scenario.multi_objectives)}   # define any defaults here
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
             if multi_objective_algorithm is None:
