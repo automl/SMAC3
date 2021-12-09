@@ -89,6 +89,8 @@ class SMAC4AC(object):
                  model_kwargs: Optional[Dict] = None,
                  runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
                  runhistory2epm_kwargs: Optional[Dict] = None,
+                 multi_objective_algorithm: Optional[Type["MultiObjectiveAlgorithm"]] = None,  # TODO import class
+                 multi_objective_kwargs: Optional[Dict] = None,
                  initial_design: Optional[Type[InitialDesign]] = None,
                  initial_design_kwargs: Optional[Dict] = None,
                  initial_configurations: Optional[List[Configuration]] = None,
@@ -157,6 +159,12 @@ class SMAC4AC(object):
             if objective is runtime.
         runhistory2epm_kwargs: Optional[dict]
             Arguments passed to the constructor of `~runhistory2epm`
+        multi_objective_algorithm: Optional[Type["MultiObjectiveAlgorithm"]]
+            Class that implements multi objective logic. If None, will use :class:`~smac.TODO`.
+            Multi objective only becomes active if the objective
+            specified in `~scenario.run_obj` is a List[str] with at least two entries.
+        multi_objective_kwargs: Optional[Dict]
+            Arguments passed to `~multi_objective_algorithm`.
         initial_design : InitialDesign
             initial sampling design
         initial_design_kwargs: Optional[dict]
@@ -390,6 +398,8 @@ class SMAC4AC(object):
                             "call string in the scenario file."
                             % type(tae_runner))
 
+
+
         # In case of a parallel run, wrap the single worker in a parallel
         # runner
         if n_jobs is None or n_jobs == 1:
@@ -454,6 +464,27 @@ class SMAC4AC(object):
                 "Argument intensifier must be None or an object implementing the AbstractRacer, but is '%s'" %
                 type(intensifier)
             )
+
+        # initialize multi objective
+        # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
+        multi_objective_algorithm_instance = None
+        if scenario.multi_objective_names is not None and len(scenario.multi_objective_names) > 1:  # TODO check correct name of scenario entry
+            _multi_objective_kwargs = {}  # define any defaults here
+            if multi_objective_kwargs is not None:
+                _multi_objective_kwargs.update(multi_objective_kwargs)
+            if multi_objective_algorithm is None:
+                for key, value in {
+                }.items():  # ParEgo default arguments  # TODO add hyperparameter
+                    if key not in model_def_kwargs:
+                        _multi_objective_kwargs[key] = value
+                multi_objective_algorithm_instance = (
+                    ParEgo(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
+                )  # type: MultiObjectiveAlgorithm
+            elif inspect.isclass(multi_objective_algorithm):
+                multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
+            else:
+                raise TypeError(
+                    "Multi objective algorithm not recognized: %s" % (type(multi_objective_algorithm)))
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -521,7 +552,8 @@ class SMAC4AC(object):
             'impute_censored_data': True,
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
-            'scale_perc': 5
+            'scale_perc': 5,
+            'multi_objective_algorithm_instance': multi_objective_algorithm_instance
         }
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
