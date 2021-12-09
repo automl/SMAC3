@@ -89,7 +89,7 @@ class AbstractRacer(object):
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
                  min_chall: int = 1,
-                 num_obj: int =1 ):
+                 num_obj: int = 1):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)

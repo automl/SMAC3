@@ -67,10 +67,9 @@ class SMBO(object):
                  rng: np.random.RandomState,
                  tae_runner: BaseRunner,
                  restore_incumbent: Configuration = None,
-                 random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+                 random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
-                 min_samples_model: int = 1,
-                 num_obj: int = 1,):
+                 min_samples_model: int = 1):
         """
         Interface that contains the main Bayesian optimization loop
 
@@ -131,7 +130,7 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        if num_obj == 1:
+        if len(scenario.multi_objectives) == 1:
             # initialize the chooser to get configurations from the EPM
             self.epm_chooser = EPMChooser(scenario=scenario,
                                           stats=stats,
@@ -501,7 +500,7 @@ class SMBO(object):
                 self.logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
                 self._stop = True
 
-        if self.scenario.save_results_instantly:  # type: ignore[attr-defined] # noqa F821
+        if self.scenario.save_instantly:  # type: ignore[attr-defined] # noqa F821
             self.save()
 
         return

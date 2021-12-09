@@ -681,7 +681,7 @@ class CMDReader(object):
         scen_opts.add_argument("--multi-objectives", "--multi_objectives",
                                dest='multi_objectives',
                                default="cost", type=string_to_list,
-                               help="Comma separated list of objectives to optimize.")
+                               help="Comma-separated list of objectives to optimize.")
         self.overall_obj_arg = \
             scen_opts.add_argument("--overall-obj", "--overall_obj", dest="overall_obj",
                                    type=str, action=ParseOverallObjectiveAction, default='par10',
