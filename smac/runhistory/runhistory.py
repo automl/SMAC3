@@ -680,7 +680,7 @@ class RunHistory(object):
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            return np.mean(costs, axis=0)
+            return np.mean(costs, axis=0).squeeze()
 
         return np.full(self.num_obj, np.nan).squeeze()
 
@@ -706,7 +706,7 @@ class RunHistory(object):
         sum_cost: float
             Sum of costs of config
         """
-        return np.sum(self._cost(config, instance_seed_budget_keys), axis=0)
+        return np.sum(self._cost(config, instance_seed_budget_keys), axis=0).squeeze()
 
     def min_cost(
             self,
@@ -732,7 +732,7 @@ class RunHistory(object):
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            return np.min(costs, axis=0)
+            return np.min(costs, axis=0).squeeze()
 
         return np.full(self.num_obj, np.nan).squeeze()
 
