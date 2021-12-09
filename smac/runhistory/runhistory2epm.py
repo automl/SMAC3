@@ -445,7 +445,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_perc)
+                self.perc = np.percentile(y, self.scale_perc, axis=0)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
         y = self.transform_response_values(values=y)
@@ -519,10 +519,11 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         """
 
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if self.min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -101
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -101
         values = (values - min_y) / (self.max_y - min_y)
         return values
 
@@ -554,9 +555,10 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = 1 - 1 / values
         return values
@@ -585,12 +587,13 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = np.sqrt(values)
         return values
@@ -620,7 +623,9 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         # prevent diving by zero
 
         min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
+
         values = np.log(values)
         return values
 
