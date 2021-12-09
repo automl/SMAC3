@@ -140,6 +140,8 @@ class Scenario(object):
                 self.algo_runs_timelimit = self.wallclock_limit  # type: float
             self.wallclock_limit = np.inf  # type: float
 
+        self.multi_objectives = self._string_to_list(self.multi_objectives)
+
     def __getstate__(self) -> typing.Dict[str, typing.Any]:
         d = dict(self.__dict__)
         del d['logger']
@@ -162,6 +164,14 @@ class Scenario(object):
         if warn_:
             self.logger.warning("All instances were casted to str.")
         return list_
+
+    def _string_to_list(self, s: typing.Any) -> typing.List[str]:
+        """Convert a (comma-separated) string into list of strings."""
+        if isinstance(s, str):
+            s = s.replace(", ", ",")
+            return s.split(",")
+        else:
+            raise RuntimeError("Expected string, got %s" % type(s))
 
     def write(self) -> None:
         """ Write scenario to self.output_dir/scenario.txt. """

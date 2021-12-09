@@ -1,7 +1,7 @@
 Arguments
 =========
 
-If you are using Python, have a look :ref:`here<smac.facade package>` for a detailed API reference. When
+If you are using Python, have a look :ref:`here<smac.facade>` for a detailed API reference. When
 using the commandline, view the basic command options via 
 
 .. code-block::

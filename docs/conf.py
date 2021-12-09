@@ -43,16 +43,19 @@ sys.path.append(os.path.abspath("./themes/smac"))
 # ones.
 extensions = [
     'sphinx.ext.autosectionlabel',
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
+    # 'sphinx.ext.doctest',
     # 'sphinx.ext.coverage',
     # 'sphinx.ext.mathjax',
     # 'sphinx.ext.viewcode',
-    # 'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',  # Enables to understand NumPy docstring
+    'sphinx.ext.autodoc',
+    # 'sphinx.ext.autosummary',
     'sphinx_gallery.gen_gallery',
     'smac_theme',
 ]
+
+# Autosummary does not work atm
+# autosummary_generate = True
 
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
@@ -114,7 +117,7 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# exclude_patterns = ['_static']
+exclude_patterns = ['static', 'templates']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
