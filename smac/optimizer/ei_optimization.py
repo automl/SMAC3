@@ -675,6 +675,111 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
         return next_configs_by_acq_value
 
 
+class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
+    """Implements SMAC's default acquisition function optimization.
+
+    This optimizer performs local search from the previous best points
+    according, to the acquisition function, uses the acquisition function to
+    sort randomly sampled configurations. Random configurations are
+    interleaved by the main SMAC code.
+
+    Parameters
+    ----------
+    acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
+
+    config_space : ~smac.configspace.ConfigurationSpace
+
+    rng : np.random.RandomState or int, optional
+
+    max_steps: int
+        [LocalSearch] Maximum number of steps that the local search will perform
+
+    n_steps_plateau_walk: int
+        [LocalSearch] number of steps during a plateau walk before local search terminates
+
+    n_sls_iterations: int
+        [Local Search] number of local search iterations
+    """
+
+    def __init__(
+        self,
+        acquisition_function: AbstractAcquisitionFunction,
+        config_space: ConfigurationSpace,
+        uniform_config_space: ConfigurationSpace,
+        rng: Union[bool, np.random.RandomState] = None,
+        max_steps: Optional[int] = None,
+        n_steps_plateau_walk: int = 10,
+        n_sls_iterations: int = 10,
+        prior_sampling_fraction = 0.5
+    ):
+        super().__init__(acquisition_function, config_space, rng)
+        self.prior_random_search = RandomSearch(
+            acquisition_function=acquisition_function,
+            config_space=config_space,
+            rng=rng
+        )
+        self.uniform_random_search = RandomSearch(
+            acquisition_function=acquisition_function,
+            config_space=uniform_config_space,
+            rng=rng
+        )
+        self.local_search = LocalSearch(
+            acquisition_function=acquisition_function,
+            config_space=config_space,
+            rng=rng,
+            max_steps=max_steps,
+            n_steps_plateau_walk=n_steps_plateau_walk
+        )
+        self.n_sls_iterations = n_sls_iterations
+        self.prior_sampling_fraction = prior_sampling_fraction
+        
+    def _maximize(
+        self,
+        runhistory: RunHistory,
+        stats: Stats,
+        num_points: int,
+    ) -> List[Tuple[float, Configuration]]:
+
+        # Get configurations sorted by EI
+        next_configs_by_prior_random_search_sorted = self.prior_random_search._maximize(
+            runhistory,
+            stats,
+            round(num_points * self.prior_sampling_fraction),
+            _sorted=True,
+        )
+
+        # Get configurations sorted by EI
+        next_configs_by_uniform_random_search_sorted = self.uniform_random_search._maximize(
+            runhistory,
+            stats,
+            round(num_points * (1 - self.prior_sampling_fraction)),
+            _sorted=True,
+        )
+        next_configs_by_random_search_sorted = []
+        next_configs_by_random_search_sorted.extend(next_configs_by_prior_random_search_sorted)
+        next_configs_by_random_search_sorted.extend(next_configs_by_uniform_random_search_sorted)
+
+        next_configs_by_local_search = self.local_search._maximize(
+            runhistory, stats, self.n_sls_iterations, additional_start_points=next_configs_by_random_search_sorted,
+        )
+
+        # Having the configurations from random search, sorted by their
+        # acquisition function value is important for the first few iterations
+        # of SMAC. As long as the random forest predicts constant value, we
+        # want to use only random configurations. Having them at the begging of
+        # the list ensures this (even after adding the configurations by local
+        # search, and then sorting them)
+        next_configs_by_acq_value = (
+            next_configs_by_random_search_sorted + next_configs_by_local_search
+        )
+        next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
+        self.logger.debug(
+            "First 5 acq func (origin) values of selected configurations: %s",
+            str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]])
+        )
+        return next_configs_by_acq_value
+
+
 class ChallengerList(Iterator):
     """Helper class to interleave random configurations in a list of challengers.
 
