@@ -248,8 +248,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
         # in the same order
         for parameter, X_col in zip(self.hyperparameters, X.T):
-            prior_values *= parameter.pdf(X_col[:, np.newaxis])
-        
+            prior_values *= parameter._pdf(X_col[:, np.newaxis])
         return prior_values
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
