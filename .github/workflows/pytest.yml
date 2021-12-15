@@ -116,8 +116,8 @@ jobs:
           PYTHON=$CONDA/envs/testenv/bin/python3
           echo $PYTHON
           echo "here"
-        else:
-          PYTHON=$(which python)
+        else
+          PYTHON=$(which python3)
           echo $PYTHON
           echo "there"
         fi
