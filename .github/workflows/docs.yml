@@ -1,11 +1,30 @@
 name: Docs
-on: [pull_request, push]
+
+on:
+  # Manual trigger option in github
+  # This won't push to github pages where docs are hosted due
+  # to the gaurded if statement in those steps
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - master
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - master
+      - development
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Setup Python
       uses: actions/setup-python@v2

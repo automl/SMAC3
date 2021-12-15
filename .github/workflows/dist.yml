@@ -1,12 +1,30 @@
 name: dist-check
 
-on: [push, pull_request]
+on:
+  # Manual trigger option in github
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - master
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - master
+      - development
+
+
 
 jobs:
   dist:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Setup Python
       uses: actions/setup-python@v2
@@ -28,7 +46,7 @@ jobs:
       run: |
         last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
         pip install $last_dist
-        
+
     - name: PEP 561 Compliance
       run: |
         pip install mypy

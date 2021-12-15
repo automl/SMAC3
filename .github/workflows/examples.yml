@@ -1,22 +1,38 @@
+# NOTE: This workflow seems to do nothing but install the library through conda
 name: Examples
 
-on: [push, pull_request]
+on:
+  # Manual trigger option in github
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - master
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - master
+      - development
 
 jobs:
-  ubuntu:
 
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        python-version: [3.9]
-      fail-fast:  false
+  ubuntu:
+    if: false  # This workflow aciton does nothing at the moment
+
+    runs-on: ubuntu-lateset
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Setup Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: '3.9'
+
     - name: Conda Install test dependencies
       run: |
         # Miniconda is available in $CONDA env var
