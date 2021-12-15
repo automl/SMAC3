@@ -83,7 +83,7 @@ jobs:
 
     - name: Conda install
       if: matrix.install-from == 'conda'
-      run:
+      run: |
         # Miniconda is available in $CONDA env var
         $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
         $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
