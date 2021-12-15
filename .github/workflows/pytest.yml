@@ -47,12 +47,12 @@ jobs:
       fail-fast:  false
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10']
-        kind: ['conda', 'source', 'dist']
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+        kind: ["conda", "source", "dist"]
 
         exclude:
           # Exclude all configurations *-*-dist, include one later
-          - kind: 'dist'
+          - kind: "dist"
 
           # Exclude windows as bash commands wont work in windows runner
           - os: windows-latest
@@ -64,13 +64,13 @@ jobs:
           # Add the tag code-cov to ubuntu-3.7-source
           - os: ubuntu-latest
             python-version: 3.7
-            kind: 'source'
+            kind: "source"
             code-cov: true
 
           # Include one config with dist, ubunut-3.7-dist
           - os: ubuntu-latest
             python-version: 3.7
-            kind: 'dist'
+            kind: "dist"
 
     steps:
 
@@ -112,10 +112,14 @@ jobs:
     - name: Tests
       timeout-minutes: 45
       run: |
-        if [[ ${{ matrix.kind }} == 'conda' ]]; then
+        if [[ ${{ matrix.kind }} == "conda" ]]; then
           PYTHON=$CONDA/envs/testenv/bin/python3
+          echo $PYTHON
+          echo "here"
         else:
           PYTHON=$(which python3)
+          echo $PYTHON
+          echo "there"
         fi
 
         if [ ${{ matrix.code-cov }} ]; then
