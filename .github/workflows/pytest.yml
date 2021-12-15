@@ -23,7 +23,7 @@ on:
 env:
 
   # Arguments used for pytest
-  pytest-args: >
+  pytest-args: >-
     --forked
     --durations=20
     --timeout=300
@@ -33,7 +33,7 @@ env:
     -v
 
   # Arguments used for code-cov which is later used to annotate PR's on github
-  code-cov-args: >
+  code-cov-args: >-
     --cov=smac
     --cov-report=xml'
 
