@@ -114,12 +114,8 @@ jobs:
       run: |
         if [[ ${{ matrix.kind }} == "conda" ]]; then
           PYTHON=$CONDA/envs/testenv/bin/python3
-          echo $PYTHON
-          echo "here"
         else
           PYTHON=$(which python3)
-          echo $PYTHON
-          echo "there"
         fi
 
         if [ ${{ matrix.code-cov }} ]; then
