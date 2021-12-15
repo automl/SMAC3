@@ -113,15 +113,13 @@ jobs:
       timeout-minutes: 45
       run: |
         if [[ ${{ matrix.kind }} == "conda" ]]; then
-          PYTHON=$CONDA/envs/testenv/bin/python3
-        else
-          PYTHON=$(which python3)
+          export PATH="$CONDA/envs/testenv/bin:$PATH"
         fi
 
         if [ ${{ matrix.code-cov }} ]; then
-          $PYTHON -m pytest ${{ env.pytest-args }} ${{ env.code-cov-args }} test
+          pytest ${{ env.pytest-args }} ${{ env.code-cov-args }} test
         else
-          $PYTHON -m pytest ${{ env.pytest-args }} test
+          pytest ${{ env.pytest-args }} test
         fi
 
     - name: Check for files left behind by test
