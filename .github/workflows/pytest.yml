@@ -117,7 +117,7 @@ jobs:
           echo $PYTHON
           echo "here"
         else:
-          PYTHON=$(which python3)
+          PYTHON=$(which python)
           echo $PYTHON
           echo "there"
         fi
