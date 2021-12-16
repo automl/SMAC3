@@ -183,7 +183,7 @@ class RunHistory(object):
     def add(
             self,
             config: Configuration,
-            cost: typing.Union[np.ndarray, float, list],
+            cost: typing.Union[np.ndarray, list, float, int],
             time: float,
             status: StatusType,
             instance_id: typing.Optional[str] = None,
@@ -246,12 +246,12 @@ class RunHistory(object):
             config_id = typing.cast(int, config_id_tmp)
 
         if self.num_obj is None:
-            if isinstance(cost, float):
+            if isinstance(cost, float) or isinstance(cost, int):
                 self.num_obj = 1
             else:
                 self.num_obj = len(cost)
         else:
-            if isinstance(cost, float):
+            if isinstance(cost, float) or isinstance(cost, int):
                 assert self.num_obj == 1
             else:
                 assert self.num_obj == len(cost)
@@ -555,10 +555,9 @@ class RunHistory(object):
 
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
-
             # Set num_obj first
             if self.num_obj is None:
-                if isinstance(v[0], float):
+                if isinstance(v[0], float) or isinstance(v[0], int):
                     self.num_obj = 1
                 else:
                     self.num_obj = len(np.asarray(list(map(float, v[0]))))
