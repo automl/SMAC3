@@ -50,5 +50,9 @@ jobs:
     - name: PEP 561 Compliance
       run: |
         pip install mypy
+
         cd ..  # required to use the installed version of smac
+
+        # Note that doesn't do a mypy check, only that the package exports type
+        # information
         if ! mypy -c "import smac"; then exit 1; fi
