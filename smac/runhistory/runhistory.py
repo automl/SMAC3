@@ -256,6 +256,11 @@ class RunHistory(object):
             else:
                 assert self.num_obj == len(cost)
 
+        if self.num_obj == 1:
+            # Always return a float if no multi-objective was used
+            if isinstance(cost, np.ndarray) or isinstance(cost, list):
+                cost = float(cost[0])
+
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
         # Construct keys and values for the data dictionary
@@ -358,7 +363,7 @@ class RunHistory(object):
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
-    def incremental_update_cost(self, config: Configuration, cost: np.ndarray) -> None:
+    def incremental_update_cost(self, config: Configuration, cost: typing.Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a
         moving average;
 
@@ -373,7 +378,11 @@ class RunHistory(object):
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
         old_cost = self._cost_per_config.get(config_id, np.zeros(self.num_obj).squeeze())
-        self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+
+        if self.num_obj == 1:
+            self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+        else:
+            raise NotImplementedError()
         self.num_runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config: Configuration) -> float:
