@@ -679,6 +679,13 @@ class CMDReader(object):
                                    help="[dev] PARX, where X is an integer defining the "
                                         "penalty imposed on timeouts (i.e. runtimes that "
                                         "exceed the *cutoff-time*).")
+
+        scen_opts.add_argument("--save-instantly", "--save_instantly", "--save-results-instantly",
+                               dest='save_instantly',
+                               default=True, type=truthy,
+                               help="If true, runhistory and stats are saved immediately on changes. "
+                                    "Otherwise, runhistory and states are only saved once after the optimization "
+                                    "process has finished.")
         scen_opts.add_argument("--par-factor", "--par_factor", dest="par_factor",
                                type=float, default=10.0,
                                help=SUPPRESS)  # added after parsing --overall-obj
@@ -740,12 +747,6 @@ class CMDReader(object):
                                type=str, action=ReadPCSFileAction,
                                help="[dev] Specifies the path to the "
                                     "PCS-file.")
-        scen_opts.add_argument("--save-instantly", "--save-results-instantly",
-                               dest='save_instantly',
-                               default=True, type=truthy,
-                               help="If true, runhistory and stats are saved immediately on changes. "
-                                    "Otherwise, runhistory and states are only saved once after the optimization "
-                                    "process has finished.")
         scen_opts.add_argument('--cs',
                                default=None,  # ConfigSpace object, overridden by --paramfile
                                help=SUPPRESS)
@@ -833,6 +834,7 @@ class CMDReader(object):
         scen_dict = scenario_file_dict
         scen_cmd = []
         misc_dict = {}
+
         self.parsed_scen_args.clear()
         for k, v in scen_dict.items():
             if k in self.scen_cmd_translations:

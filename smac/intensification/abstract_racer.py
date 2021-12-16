@@ -358,7 +358,7 @@ class AbstractRacer(object):
         inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 
         # Line 15
-        if np.any(chal_perf) > np.any(inc_perf) and chall_runs >= self.minR:
+        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
@@ -369,7 +369,7 @@ class AbstractRacer(object):
         # Line 16
         if not set(inc_runs) - set(chall_runs):
             # no plateau walks
-            if np.any(chal_perf) >= np.any(inc_perf):
+            if np.any(chal_perf >= inc_perf):
                 chal_perf_format = format_array(chal_perf)
                 inc_perf_format = format_array(inc_perf)
 
