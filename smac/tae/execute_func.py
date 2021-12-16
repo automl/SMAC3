@@ -350,5 +350,5 @@ class ExecuteTAFuncArray(AbstractTAFunc):
     ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
 
         x = np.array([val for _, val in sorted(config.get_dictionary().items())],
-                     dtype=np.float)
+                     dtype=float)
         return obj(x, **obj_kwargs)

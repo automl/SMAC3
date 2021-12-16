@@ -238,7 +238,7 @@ class Hydra(object):
 
         return self.portfolio
 
-    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[np.float, float]:
+    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[float, float]:
         """
         Validates all configurations (in incs) and determines which ones to add to the portfolio
 
@@ -249,7 +249,7 @@ class Hydra(object):
 
         Returns
         -------
-        cur_cost: typing.Union[np.float, float]
+        cur_cost: typing.Union[float, float]
             The current cost of the portfolio
 
         """
@@ -266,7 +266,7 @@ class Hydra(object):
                                 self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
                     else:
                         self.cost_per_inst = cost_per_inst
-            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: float
         else:  # No validated data. Set the mean to the approximated mean
             means = []  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
             for kept in incs:
