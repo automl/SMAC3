@@ -555,8 +555,21 @@ class RunHistory(object):
 
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
+
+            # Set num_obj first
+            if self.num_obj is None:
+                if isinstance(v[0], float):
+                    self.num_obj = 1
+                else:
+                    self.num_obj = len(np.asarray(list(map(float, v[0]))))
+
+            if self.num_obj == 1:
+                cost = float(v[0])
+            else:
+                cost = np.asarray(list(map(float, v[0])))
+
             self.add(config=self.ids_config[int(k[0])],
-                     cost=np.asarray(list(map(float, v[0]))) if self.num_obj > 1 else np.asarray(float(v[0])),
+                     cost=cost,
                      time=float(v[1]),
                      status=StatusType(v[2]),
                      instance_id=k[1],
