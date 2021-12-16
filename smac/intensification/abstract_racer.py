@@ -391,8 +391,11 @@ class AbstractRacer(object):
             # and has at least the same runs as inc
             # -> change incumbent
             n_samples = len(chall_runs)
-            self.logger.info("Challenger (%.4f) is better than incumbent (%.4f)"
-                             " on %d runs." % (chal_perf, inc_perf, n_samples))
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
+
+            self.logger.info(f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format})"
+                             f" on {n_samples} runs.")
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
