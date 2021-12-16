@@ -23,6 +23,7 @@ def schaffer_n1(x):
 
 
 def schaffer_pareto(x):
+    """return estimate & true pareto front"""
     f1 = schaffer_func1(x)
     pareto = lambda x: np.square(np.sqrt(x) - 2)  # substituted x in f2 with x=np.sqrt(f1)
     return f1, pareto(f1)
@@ -30,8 +31,7 @@ def schaffer_pareto(x):
 
 class MultiObjectiveTest(unittest.TestCase):
     def test_Schaffer_no1(self):
-        """Testing whether multi-objective function Schaffer is optimized properly using
-        ParEGO"""
+        """Testing whether multi-objective function Schaffer is optimized properly using ParEGO"""
         def tae(cfg):
             """x is a single continuous hyperparameter.
             :param cfg: ConfigSpace object"""
@@ -57,7 +57,7 @@ class MultiObjectiveTest(unittest.TestCase):
             "runcount-limit": 50,  # max. number of function evaluations
             "cs": cs,  # configuration space
             "deterministic": "true",
-            "multi_objectives": ["metric1", "metric2"],
+            "multi_objectives": "metric1, metric2",
         })
 
         smac = SMAC4HPO(scenario=scenario,
