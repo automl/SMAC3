@@ -251,8 +251,10 @@ class RunHistory(object):
             else:
                 self.num_obj = len(cost)
         else:
-            if len(cost) != self.num_obj:
-                raise ValueError('Cost is not of the same length as the number of objectives')
+            if isinstance(cost, float):
+                assert self.num_obj == 1
+            else:
+                assert self.num_obj == len(cost)
 
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
@@ -494,11 +496,12 @@ class RunHistory(object):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
+
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed),
                   float(k.budget) if k[3] is not None else 0],
-                 [v.cost.tolist(), v.time, v.status, v.starttime, v.endtime, v.additional_info])
+                 [v.cost, v.time, v.status, v.starttime, v.endtime, v.additional_info])
                 for k, v in self.data.items()
                 if save_external or self.external[k] == DataOrigin.INTERNAL]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
