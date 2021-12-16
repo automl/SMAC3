@@ -146,7 +146,6 @@ class RunHistory(object):
     def __init__(
             self,
             overwrite_existing_runs: bool = False,
-            num_obj: typing.Optional[int] = None,
     ) -> None:
         self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
@@ -179,7 +178,7 @@ class RunHistory(object):
         self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = num_obj
+        self.num_obj = None
 
     def add(
             self,
@@ -251,15 +250,9 @@ class RunHistory(object):
         if self.num_obj is None:
             self.num_obj = np.size(cost)
         else:
-            if np.size(cost) == 1:
-                if cost.item() == float(MAXINT):
-                    # compatible with the add before the submission
-                    if self.num_obj > 1:
-                        cost = np.repeat(cost, self.num_obj)
-            else:
-                if len(cost) != self.num_obj:
-                    raise ValueError(f'Cost is not of the same length ({len(cost)}) as the number '
-                                     f'of objectives ({self.num_obj})')
+            if np.size(cost) != self.num_obj:
+                raise ValueError(f'Cost is not of the same length ({len(cost)}) as the number '
+                                 f'of objectives ({self.num_obj})')
 
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)

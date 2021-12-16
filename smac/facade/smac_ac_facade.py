@@ -241,7 +241,7 @@ class SMAC4AC(object):
 
         # initialize empty runhistory
         num_obj = len(scenario.multi_objectives)
-        runhistory_def_kwargs = {"num_obj": num_obj}
+        runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
         if runhistory is None:
