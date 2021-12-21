@@ -731,7 +731,7 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
             n_steps_plateau_walk=n_steps_plateau_walk
         )
         self.n_sls_iterations = n_sls_iterations
-        self.prior_sampling_fraction = prior_sampling_fraction
+        self.prior_sampling_fraction = prior_sampling_fraction  
         
     def _maximize(
         self,
@@ -758,7 +758,7 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
         next_configs_by_random_search_sorted = []
         next_configs_by_random_search_sorted.extend(next_configs_by_prior_random_search_sorted)
         next_configs_by_random_search_sorted.extend(next_configs_by_uniform_random_search_sorted)
-
+    
         next_configs_by_local_search = self.local_search._maximize(
             runhistory, stats, self.n_sls_iterations, additional_start_points=next_configs_by_random_search_sorted,
         )

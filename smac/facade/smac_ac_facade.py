@@ -39,7 +39,7 @@ from smac.optimizer.smbo import SMBO
 from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, IntegratedAcquisitionFunction, \
     PriorAcquisitionFunction
 from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
-    AcquisitionFunctionMaximizer
+    AcquisitionFunctionMaximizer, LocalAndSortedPriorRandomSearch
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -341,12 +341,19 @@ class SMAC4AC(object):
                 acquisition_function=acquisition_function_instance, decay_beta=decay_beta,
                 **acq_def_kwargs
             )
+            uniform_config_space = scenario.cs
+            acquisition_function_optimizer = LocalAndSortedPriorRandomSearch
+
+            
         # initialize optimizer on acquisition function
         acq_func_opt_kwargs = {
             'acquisition_function': acquisition_function_instance,
             'config_space': scenario.cs,  # type: ignore[attr-defined] # noqa F821
             'rng': rng,
         }
+        if optimize_with_priors:
+            acq_func_opt_kwargs['uniform_config_space'] = scenario.cs.to_uniform()
+
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:
