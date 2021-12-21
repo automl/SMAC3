@@ -66,6 +66,26 @@ def get_types(
                 bounds[i] = (-1.0, 1.0)
             else:
                 bounds[i] = (0, 1.0)
+        elif isinstance(param, NormalFloatHyperparameter):
+            if can_be_inactive:
+                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+            else:
+                bounds[i] = (param._lower, param._upper)
+        elif isinstance(param, NormalIntegerHyperparameter):
+            if can_be_inactive:
+                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+            else:
+                bounds[i] = (param._lower, param._upper)
+        elif isinstance(param, BetaFloatHyperparameter):
+            if can_be_inactive:
+                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+            else:
+                bounds[i] = (param._lower, param._upper)
+        elif isinstance(param, BetaIntegerHyperparameter):
+            if can_be_inactive:
+                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+            else:
+                bounds[i] = (param._lower, param._upper)
         elif not isinstance(param, (UniformFloatHyperparameter,
                                     UniformIntegerHyperparameter,
                                     OrdinalHyperparameter,
