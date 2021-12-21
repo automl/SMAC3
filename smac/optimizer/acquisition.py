@@ -1,12 +1,13 @@
 # encoding=utf8
 import abc
 import copy
-from typing import List, Any, Tuple
+from typing import List, Any, Tuple, Dict
 
 import numpy as np
 from scipy.stats import norm
 
 from smac.configspace import Configuration
+from ConfigSpace.hyperparameters import FloatHyperparameter
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.logging import PickableLoggerAdapter
@@ -185,7 +186,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     Hvarfner et al. (###nolinkyet###) for further details.
     """
     def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction,\
-         decay_beta: float, prior_floor: float = 1e-12, **kwargs: Any):
+         decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, **kwargs: Any):
         """Constructor
 
         Parameters
@@ -195,7 +196,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
             otherwise.
         prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
-            in the search space.
+            in the search space. 
+        discretize : Whether to discretize (bin) the densities for continous parameters. Triggered
+            for Random Forest models to avoid a pathological case where all Random Forest randomness 
+            is removed (RF surrogates require piecewise constant acquisition functions to be 
+            well-behaved).
         kwargs
             Additional keyword arguments
         """
@@ -204,9 +209,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
-        self.hyperparameters = self.model.get_configspace().get_hyperparameters()
+        self.hyperparameters = self.model.get_configspace().get_hyperparameters_dict()
         self.decay_beta = decay_beta
         self.prior_floor = prior_floor
+        self.discretize = discretize
+        if self.discretize:
+            self.continous_pdf_bounds = self._get_pdf_bounds()
         self.iteration_number = 0
 
     def update(self, **kwargs: Any) -> None:
@@ -222,8 +230,33 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # TODO - could renormalize the data here if we want it to work with TS and UCB
         self.iteration_number += 1
         self.acq.update(**kwargs)
+        self.debug(self.model.configspace)
 
-    def _compute_prior(self, X: np.ndarray, discretize=False) -> np.ndarray:
+    def _get_pdf_bounds(self, approximation_points: int = 101) -> Dict[str, np.ndarray]:
+        """Retrieves an approximate minimum and maximum for each continous parameter, which
+        is later used to discretize the prior.
+        
+        Parameters
+        ----------
+        approximation_points: 
+            The number of points sampled uniformly over the parameter range to approximate the
+            minimum and maximum
+        
+        Returns
+        -------
+        A dict of parameter name - [min(pdf), max(pdf)] for each continous parameter
+        """    
+        continous_pdf_bounds = {}
+        for name, parameter in self.hyperparameters.items():
+            if isinstance(parameter, FloatHyperparameter):
+                # TODO - check if this is inappropriate coding
+                sample_points = np.linspace(parameter._lower, parameter._upper, approximation_points)
+                densities = parameter._pdf(sample_points)
+                continous_pdf_bounds[parameter] = np.array([densities.min(), densities.max()])  
+        print(continous_pdf_bounds)
+        return continous_pdf_bounds
+
+    def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each
         parameter is multiplied by a decay factor controlled by the parameter decay_beta and
         the iteration number. Multivariate priors are not supported, for now.
@@ -234,9 +267,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
-        discretize: bool, Whether or not to discretize (bin) the prior values. for Random 
-        Forest models and continous priors, we must use binning on the prior values in order
-        to avoid a pathological case, where the same point is evaluated over and over.
 
         Returns
         -------
@@ -247,7 +277,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
         # in the same order
-        for parameter, X_col in zip(self.hyperparameters, X.T):
+        for parameter, X_col in zip(self.hyperparameters.values(), X.T):
             prior_values *= parameter._pdf(X_col[:, np.newaxis])
         return prior_values
 
@@ -273,6 +303,25 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
         
         return acq_values * decayed_prior_values
+
+    def debug(self, configspace, point=None):
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(3, figsize=(12, 8))
+        for parameter in configspace.get_hyperparameters():
+            lower = parameter._lower
+            upper = parameter._upper
+            break
+        X = np.linspace(lower, upper, 501)[:, np.newaxis]
+        acquisition_function = self.acq._compute(X)
+        prior = self._compute_prior(X)
+        pibo = self._compute(X)
+        ax[0].plot(X, prior)
+        ax[0].set_title('Prior')
+        ax[1].plot(X, acquisition_function)
+        ax[1].set_title('Acq.Func')
+        ax[2].plot(X, pibo)
+        ax[2].set_title('PiBO')
+        plt.show()
 
 
 class EI(AbstractAcquisitionFunction):

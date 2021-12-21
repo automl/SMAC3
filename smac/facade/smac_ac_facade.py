@@ -336,9 +336,12 @@ class SMAC4AC(object):
 
             # a solid default value for decay_beta - empirically founded
             default_beta = scenario.ta_run_limit / 10
-            decay_beta = acq_def_kwargs.get('decay_beta', default_beta)            
+            decay_beta = acq_def_kwargs.get('decay_beta', default_beta)          
+            discretize = isinstance(model_instance, RandomForestWithInstances) or isinstance(model_instance, RFRImputator)  
             acquisition_function_instance = PriorAcquisitionFunction(
-                acquisition_function=acquisition_function_instance, decay_beta=decay_beta,
+                acquisition_function=acquisition_function_instance, 
+                decay_beta=decay_beta,
+                discretize=discretize,
                 **acq_def_kwargs
             )
             uniform_config_space = scenario.cs

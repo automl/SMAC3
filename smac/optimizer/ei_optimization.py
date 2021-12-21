@@ -758,7 +758,7 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
         next_configs_by_random_search_sorted = []
         next_configs_by_random_search_sorted.extend(next_configs_by_prior_random_search_sorted)
         next_configs_by_random_search_sorted.extend(next_configs_by_uniform_random_search_sorted)
-    
+
         next_configs_by_local_search = self.local_search._maximize(
             runhistory, stats, self.n_sls_iterations, additional_start_points=next_configs_by_random_search_sorted,
         )
