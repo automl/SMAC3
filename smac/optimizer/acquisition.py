@@ -186,7 +186,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     Hvarfner et al. (###nolinkyet###) for further details.
     """
     def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction,\
-         decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, **kwargs: Any):
+         decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, \
+        discrete_bins_factor: float = 10.0, **kwargs: Any):
         """Constructor
 
         Parameters
@@ -200,7 +201,10 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         discretize : Whether to discretize (bin) the densities for continous parameters. Triggered
             for Random Forest models to avoid a pathological case where all Random Forest randomness 
             is removed (RF surrogates require piecewise constant acquisition functions to be 
-            well-behaved).
+            well-behaved)
+        discrete_bins_factor : If discretizing, the multiple on the number of allowed bins for 
+            each parameter
+
         kwargs
             Additional keyword arguments
         """
@@ -214,7 +218,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.prior_floor = prior_floor
         self.discretize = discretize
         if self.discretize:
+            self.discrete_bins_factor = discrete_bins_factor
             self.continous_pdf_bounds = self._get_pdf_bounds()
+
         self.iteration_number = 0
 
     def update(self, **kwargs: Any) -> None:
@@ -252,8 +258,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
                 # TODO - check if this is inappropriate coding
                 sample_points = np.linspace(parameter._lower, parameter._upper, approximation_points)
                 densities = parameter._pdf(sample_points)
-                continous_pdf_bounds[parameter] = np.array([densities.min(), densities.max()])  
-        print(continous_pdf_bounds)
+                continous_pdf_bounds[name] = np.array([densities.min(), densities.max()])  
         return continous_pdf_bounds
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
@@ -274,11 +279,45 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             The user prior over the optimum for values of X
         """
         prior_values = np.ones((len(X), 1))
-
         # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
         # in the same order
         for parameter, X_col in zip(self.hyperparameters.values(), X.T):
             prior_values *= parameter._pdf(X_col[:, np.newaxis])
+        return prior_values
+
+    def _compute_discretized_prior(self, X: np.ndarray, number_of_bins: int) -> np.ndarray:
+        """Computes the prior-weighted acquisition function values, where the prior on each
+        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
+        the iteration number. The discretized version bins prior values on continous parameters
+        to an increasingly coarse discretization determined by the prior decay parameter.
+
+        Parameters
+        ----------
+        X: np.ndarray(N, D), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, D), with N as
+            the number of points to evaluate at and D is the number of
+            dimensions of one X.
+        number_of_bins: The number of unique values allowed on the
+            discretized version of the pdf.
+        
+        Returns
+        -------
+        np.ndarray(N,1)
+            Prior-weighted acquisition function values of X
+        """
+        prior_values = np.ones((len(X), 1))
+        # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
+        # in the same order
+        for (name, parameter), X_col in zip(self.hyperparameters.items(), X.T):
+            if name in self.continous_pdf_bounds:
+                # retrieves the approximate smallest largest value of the pdf in the domain 
+                pdf_values = parameter._pdf(X_col[:, np.newaxis])
+                lower, upper = self.continous_pdf_bounds[name]
+                bin_values = np.linspace(lower, upper, number_of_bins)
+                bin_indices = np.clip(np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins-1).astype(int)
+                prior_values *= bin_values[bin_indices]
+            else:
+                prior_values *= parameter._pdf(X_col[:, np.newaxis])
         return prior_values
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
@@ -299,7 +338,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             Prior-weighted acquisition function values of X
         """
         acq_values = self.acq._compute(X)
-        prior_values = self._compute_prior(X) + self.prior_floor
+        if self.discretize:
+            number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
+            prior_values = self._compute_discretized_prior(X, number_of_bins) + self.prior_floor
+        else:
+            prior_values = self._compute_prior(X) + self.floor
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
         
         return acq_values * decayed_prior_values
@@ -311,9 +354,13 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             lower = parameter._lower
             upper = parameter._upper
             break
-        X = np.linspace(lower, upper, 501)[:, np.newaxis]
+        X = np.linspace(lower, upper, 1001)[:, np.newaxis]
         acquisition_function = self.acq._compute(X)
-        prior = self._compute_prior(X)
+        if self.discretize:
+            number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
+            prior = self._compute_discretized_prior(X, number_of_bins)
+        else:
+            prior = self._compute_prior(X)
         pibo = self._compute(X)
         ax[0].plot(X, prior)
         ax[0].set_title('Prior')
