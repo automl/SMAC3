@@ -158,7 +158,6 @@ class DaskParallelRunner(BaseRunner):
                                  "or no workers were properly configured."
                                  )
 
-
         # At this point we can submit the job
         # For `pure=False`, see
         #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
