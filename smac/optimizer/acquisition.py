@@ -236,7 +236,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # TODO - could renormalize the data here if we want it to work with TS and UCB
         self.iteration_number += 1
         self.acq.update(**kwargs)
-        self.debug(self.model.configspace)
+        self.debug_discrete(self.model.configspace)
+        #self.debug(self.model.configspace)
 
     def _get_pdf_bounds(self, approximation_points: int = 101) -> Dict[str, np.ndarray]:
         """Retrieves an approximate minimum and maximum for each continous parameter, which
@@ -346,29 +347,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
         
         return acq_values * decayed_prior_values
-
-    def debug(self, configspace, point=None):
-        import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(3, figsize=(12, 8))
-        for parameter in configspace.get_hyperparameters():
-            lower = parameter._lower
-            upper = parameter._upper
-            break
-        X = np.linspace(lower, upper, 1001)[:, np.newaxis]
-        acquisition_function = self.acq._compute(X)
-        if self.discretize:
-            number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
-            prior = self._compute_discretized_prior(X, number_of_bins)
-        else:
-            prior = self._compute_prior(X)
-        pibo = self._compute(X)
-        ax[0].plot(X, prior)
-        ax[0].set_title('Prior')
-        ax[1].plot(X, acquisition_function)
-        ax[1].set_title('Acq.Func')
-        ax[2].plot(X, pibo)
-        ax[2].set_title('PiBO')
-        plt.show()
 
 
 class EI(AbstractAcquisitionFunction):
