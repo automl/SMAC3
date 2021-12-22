@@ -236,10 +236,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # TODO - could renormalize the data here if we want it to work with TS and UCB
         self.iteration_number += 1
         self.acq.update(**kwargs)
-        self.debug_discrete(self.model.configspace)
-        #self.debug(self.model.configspace)
-
-    def _get_pdf_bounds(self, approximation_points: int = 101) -> Dict[str, np.ndarray]:
+        
+    def _get_pdf_bounds(self, approximation_points: int = 10001) -> Dict[str, np.ndarray]:
         """Retrieves an approximate minimum and maximum for each continous parameter, which
         is later used to discretize the prior.
         
