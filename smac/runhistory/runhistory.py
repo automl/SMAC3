@@ -183,7 +183,7 @@ class RunHistory(object):
     def add(
             self,
             config: Configuration,
-            cost: typing.Union[np.ndarray, float, list],
+            cost: typing.Union[np.ndarray, list, float, int],
             time: float,
             status: StatusType,
             instance_id: typing.Optional[str] = None,
@@ -245,19 +245,18 @@ class RunHistory(object):
         else:
             config_id = typing.cast(int, config_id_tmp)
 
+        cost = np.asarray(cost)
+
         if self.num_obj is None:
-            if isinstance(cost, float):
-                self.num_obj = 1
-            else:
-                self.num_obj = len(cost)
+            self.num_obj = np.size(cost)
         else:
-            if isinstance(cost, float):
-                assert self.num_obj == 1
-            else:
-                assert self.num_obj == len(cost)
+            if np.size(cost) != self.num_obj:
+                raise ValueError(f'Cost is not of the same length ({len(cost)}) as the number '
+                                 f'of objectives ({self.num_obj})')
 
         k = RunKey(config_id, instance_id, seed, budget)
         v = RunValue(cost, time, status, starttime, endtime, additional_info)
+
         # Construct keys and values for the data dictionary
         for key, value in (
                 ('config', config.get_dictionary()),
@@ -265,7 +264,7 @@ class RunHistory(object):
                 ('instance_id', instance_id),
                 ('seed', seed),
                 ('budget', budget),
-                ('cost', cost),
+                ('cost', cost.tolist()),
                 ('time', time),
                 ('status', status),
                 ('starttime', starttime),
@@ -274,6 +273,7 @@ class RunHistory(object):
                 ('origin', config.origin),
         ):
             self._check_json_serializable(key, value, EnumEncoder, k, v)
+
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.
@@ -358,7 +358,7 @@ class RunHistory(object):
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
-    def incremental_update_cost(self, config: Configuration, cost: np.ndarray) -> None:
+    def incremental_update_cost(self, config: Configuration, cost: typing.Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a
         moving average;
 
@@ -373,7 +373,9 @@ class RunHistory(object):
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
         old_cost = self._cost_per_config.get(config_id, np.zeros(self.num_obj).squeeze())
+
         self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+
         self.num_runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config: Configuration) -> float:
@@ -501,7 +503,7 @@ class RunHistory(object):
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed),
                   float(k.budget) if k[3] is not None else 0],
-                 [v.cost, v.time, v.status, v.starttime, v.endtime, v.additional_info])
+                 [v.cost.tolist(), v.time, v.status, v.starttime, v.endtime, v.additional_info])
                 for k, v in self.data.items()
                 if save_external or self.external[k] == DataOrigin.INTERNAL]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
@@ -555,8 +557,20 @@ class RunHistory(object):
 
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
+            # Set num_obj first
+            if self.num_obj is None:
+                if isinstance(v[0], float) or isinstance(v[0], int):
+                    self.num_obj = 1
+                else:
+                    self.num_obj = len(np.asarray(list(map(float, v[0]))))
+
+            if self.num_obj == 1:
+                cost = float(v[0])
+            else:
+                cost = np.asarray(list(map(float, v[0])))
+
             self.add(config=self.ids_config[int(k[0])],
-                     cost=np.asarray(list(map(float, v[0]))) if self.num_obj > 1 else np.asarray(float(v[0])),
+                     cost=cost,
                      time=float(v[1]),
                      status=StatusType(v[2]),
                      instance_id=k[1],
@@ -644,10 +658,6 @@ class RunHistory(object):
 
         if instance_seed_budget_keys is None:
             instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
-
-        # TODO:
-        if self.num_obj > 1:
-            raise NotImplementedError()
 
         costs = []
         for i, r, b in instance_seed_budget_keys:

@@ -193,6 +193,8 @@ class SMBO(object):
         """
         self.start()
 
+        num_obj = len(self.scenario.multi_objectives)
+
         # Main BO loop
         while True:
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
@@ -241,7 +243,7 @@ class SMBO(object):
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT),
+                    cost=float(MAXINT) if num_obj == 1 else np.full(num_obj, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance_id=run_info.instance,
