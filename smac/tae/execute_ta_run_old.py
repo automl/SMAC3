@@ -63,32 +63,56 @@ class ExecuteTARunOld(SerialRunner):
         if instance is None:
             instance = "0"
         if cutoff is None:
-            cutoff = 99999999999999.
+            cutoff = 99999999999999.0
 
-        stdout_, stderr_ = self._call_ta(config=config,
-                                         instance=instance,
-                                         instance_specific=instance_specific,
-                                         cutoff=cutoff, seed=seed)
+        stdout_, stderr_ = self._call_ta(
+            config=config,
+            instance=instance,
+            instance_specific=instance_specific,
+            cutoff=cutoff,
+            seed=seed,
+        )
 
         status_string = "CRASHED"
         quality = 1234567890.0
         runtime = 1234567890.0
         additional_info = {}  # type: typing.Dict[str, str]
         for line in stdout_.split("\n"):
-            if line.startswith("Result of this algorithm run:") or \
-                    line.startswith("Result for ParamILS") or \
-                    line.startswith("Result for SMAC"):
-                fields = line.split(":")[1].split(",")
+            if (
+                line.startswith("Result of this algorithm run:")
+                or line.startswith("Result for ParamILS")
+                or line.startswith("Result for SMAC")
+            ):
+                fields = line.split(":")[1]
+                fields = fields.split(",")
+
+                # If we have more than 6 fields, we combine them all together
+                if len(fields) > 5:
+                    fields[5 : len(fields)] = [
+                        "".join(map(str, fields[5 : len(fields)]))
+                    ]
+                    fields[5] = fields[5].strip("';[]", "")
+
                 fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:
                     status_string, runtime_string, _, quality_string, _ = fields
                     additional_info = {}
                 else:
-                    status_string, runtime_string, _, quality_string, _, additional_info_string = fields
+                    (
+                        status_string,
+                        runtime_string,
+                        _,
+                        quality_string,
+                        _,
+                        additional_info_string,
+                    ) = fields
                     additional_info = {"additional_info": additional_info_string}
 
                 runtime = min(float(runtime_string), cutoff)
                 quality = float(quality_string)
+
+        print("---------")
+        print(status_string, runtime_string, quality_string)
 
         if status_string.upper() in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
@@ -101,14 +125,17 @@ class ExecuteTARunOld(SerialRunner):
         elif status_string.upper() in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
-            self.logger.warning("Could not parse output of target algorithm. Expected format: "
-                                "\"Result of this algorithm run: <status>,<runtime>,<quality>,<seed>\"; "
-                                "Treating as CRASHED run.")
+            self.logger.warning(
+                "Could not parse output of target algorithm. Expected format: "
+                '"Result of this algorithm run: <status>,<runtime>,<quality>,<seed>"; '
+                "Treating as CRASHED run."
+            )
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
             self.logger.warning(
-                "Target algorithm crashed. Last 5 lines of stdout and stderr")
+                "Target algorithm crashed. Last 5 lines of stdout and stderr"
+            )
             self.logger.warning("\n".join(stdout_.split("\n")[-5:]))
             self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
@@ -131,7 +158,9 @@ class ExecuteTARunOld(SerialRunner):
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
         cmd = []  # type: typing.List[str]
         if not isinstance(self.ta, (list, tuple)):
-            raise TypeError('self.ta needs to be of type list or tuple, but is %s' % type(self.ta))
+            raise TypeError(
+                "self.ta needs to be of type list or tuple, but is %s" % type(self.ta)
+            )
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:
@@ -139,8 +168,7 @@ class ExecuteTARunOld(SerialRunner):
                 cmd.extend(["-" + str(p), str(config[p])])
 
         self.logger.debug("Calling: %s" % (" ".join(cmd)))
-        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE,
-                  universal_newlines=True)
+        p = Popen(cmd, shell=False, stdout=PIPE, stderr=PIPE, universal_newlines=True)
         stdout_, stderr_ = p.communicate()
 
         self.logger.debug("Stdout: %s" % stdout_)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-'''
+"""
 spearWrapper -- AClib target algorithm warpper for SAT solver spear
 
 @author:     Marius Lindauer, Chris Fawcett, Alex Fréchette, Frank Hutter
@@ -72,37 +72,46 @@ python -O SATCSSCWrapper.py \
     -sp-max-res-runs 3 \
     -sp-update-dec-queue 1 \
     -sp-use-pure-literal-rule 0
-'''
+"""
 
 import sys
 import re
 import os
-import imp
+import importlib
 from subprocess import Popen, PIPE
 
 from genericWrapper import AbstractWrapper
 
 
 class SatCSSCWrapper(AbstractWrapper):
-    '''
-        Simple wrapper for a SAT solver (Spear)
-    '''
+    """
+    Simple wrapper for a SAT solver (Spear)
+    """
 
     def __init__(self):
-        '''
-            Constructor
-        '''
+        """
+        Constructor
+        """
         AbstractWrapper.__init__(self)
 
-        self.parser.add_argument("--script", dest="cssc_script",
-                                 required=True,
-                                 help="simple cssc script with only \"get_command_line_cmd(runargs, config)\"")
-        self.parser.add_argument("--sol-file", dest="solubility_file",
-                                 default=None,
-                                 help="File with \"<instance> {SATISFIABLE|UNSATISFIABLE|UNKNOWN}\" ")
-        self.parser.add_argument("--sat-checker", dest="sat_checker",
-                                 default="./spear_qcp/target_algorithms/scripts/SAT",
-                                 help="binary of SAT checker")
+        self.parser.add_argument(
+            "--script",
+            dest="cssc_script",
+            required=True,
+            help='simple cssc script with only "get_command_line_cmd(runargs, config)"',
+        )
+        self.parser.add_argument(
+            "--sol-file",
+            dest="solubility_file",
+            default=None,
+            help='File with "<instance> {SATISFIABLE|UNSATISFIABLE|UNKNOWN}" ',
+        )
+        self.parser.add_argument(
+            "--sat-checker",
+            dest="sat_checker",
+            default="./spear_qcp/target_algorithms/scripts/SAT",
+            help="binary of SAT checker",
+        )
 
         self._instance = ""
         self.__cmd = ""
@@ -110,7 +119,7 @@ class SatCSSCWrapper(AbstractWrapper):
         self._FAILED_FILE = "failed_runs.txt"  # in self._tmp_dir
 
     def get_command_line_args(self, runargs, config):
-        '''
+        """
         Returns the command line call string to execute the target algorithm (here: Spear).
         Args:
             runargs: a map of several optional arguments for the execution of the target algorithm.
@@ -124,16 +133,21 @@ class SatCSSCWrapper(AbstractWrapper):
             config: a mapping from parameter name to parameter value
         Returns:
             A command call list to execute the target algorithm.
-        '''
+        """
 
         ext_script = self.args.cssc_script
         if not os.path.isfile(ext_script):
             self._ta_status = "ABORT"
-            self._ta_misc = "cssc script is missing - should have been at %s." % (ext_script)
+            self._ta_misc = "cssc script is missing - should have been at %s." % (
+                ext_script
+            )
             self._exit_code = 1
             sys.exit(1)
 
-        loaded_script = imp.load_source("cssc", ext_script)
+        # loaded_script = importlib.load_source("cssc", ext_script
+        loaded_script = importlib.machinery.SourceFileLoader(
+            "cssc", ext_script
+        ).load_module()
 
         cmd = loaded_script.get_command_line_cmd(runargs, config)
 
@@ -151,7 +165,7 @@ class SatCSSCWrapper(AbstractWrapper):
             fp.flush()
 
     def process_results(self, filepointer, exit_code):
-        '''
+        """
         Parse a results file to extract the run's status (SUCCESS/CRASHED/etc) and other optional results.
 
         Args:
@@ -166,7 +180,7 @@ class SatCSSCWrapper(AbstractWrapper):
                 "misc" : <a (comma-less) string that will be associated with the run [optional]>
             }
             ATTENTION: The return values will overwrite the measured results of the runsolver (if runsolver was used).
-        '''
+        """
         self.print_d("reading solver results from %s" % (filepointer.name))
         data = str(filepointer.read())
         resultMap = {}
@@ -175,82 +189,97 @@ class SatCSSCWrapper(AbstractWrapper):
         try:
             self._set_true_solubility()
         except ValueError:
-            resultMap['status'] = 'ABORT'
-            resultMap['misc'] = f"""SCENARIO BUG: Solubility of instance {self._instance} specified in both,
+            resultMap["status"] = "ABORT"
+            resultMap[
+                "misc"
+            ] = f"""SCENARIO BUG: Solubility of instance {self._instance} specified in both,
                                     instance specifics and true solubility file, but with different values"""
             return resultMap
 
         print("INFO: True solubility look-up yielded '%s'" % self._specifics)
 
         if self._ta_status == "TIMEOUT":
-            resultMap['status'] = 'TIMEOUT'
-            resultMap['misc'] = 'Runsolver returned TIMEOUT; disregard the rest of the output'
+            resultMap["status"] = "TIMEOUT"
+            resultMap[
+                "misc"
+            ] = "Runsolver returned TIMEOUT; disregard the rest of the output"
             return resultMap
 
-        if re.search('s SATISFIABLE', data):
+        if re.search("s SATISFIABLE", data):
             # Solver returned "SATISFIABLE", trying to verify this
-            resultMap['status'] = 'SAT'
+            resultMap["status"] = "SAT"
 
             if not self.args.sat_checker:
-                resultMap['misc'] = "SAT checker was not given; could not verify SAT"
+                resultMap["misc"] = "SAT checker was not given; could not verify SAT"
             elif not os.path.isfile(self.args.sat_checker):
-                resultMap['misc'] = "have not found %s; could not verify SAT" % (self.args.sat_checker)
+                resultMap["misc"] = "have not found %s; could not verify SAT" % (
+                    self.args.sat_checker
+                )
             else:
                 sat_checked = self._verify_SAT(filepointer)
                 if sat_checked:
                     if self._specifics in ("UNSATISFIABLE", "20"):
                         # Solver managed to solve unsatisfiable instance
-                        resultMap['status'] = 'ABORT'
-                        resultMap['misc'] = f"""SCENARIO BUG: True solubility of instance {self._instance} was supposed
+                        resultMap["status"] = "ABORT"
+                        resultMap[
+                            "misc"
+                        ] = f"""SCENARIO BUG: True solubility of instance {self._instance} was supposed
                                                 to be UNSATISFIABLE, but verifiably solved the instance as SATISFIABLE
                                              """
                         self.save_failed_cmd()
                     return resultMap
                 else:
                     # SAT checker returned false
-                    resultMap['status'] = 'CRASHED'
-                    resultMap['misc'] = "SOLVER BUG: solver returned a wrong model"
+                    resultMap["status"] = "CRASHED"
+                    resultMap["misc"] = "SOLVER BUG: solver returned a wrong model"
                     self.save_failed_cmd()
                     return resultMap
 
             # Could not use SAT checker, so we only compare to true solubility.
             if self._specifics in ("UNSATISFIABLE", "20"):
-                resultMap['status'] = 'CRASHED'
-                resultMap['misc'] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
+                resultMap["status"] = "CRASHED"
+                resultMap[
+                    "misc"
+                ] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
                 self.save_failed_cmd()
 
-        elif re.search('s UNSATISFIABLE', data):
+        elif re.search("s UNSATISFIABLE", data):
             # Solver returned 'UNSAT', verify this via true solubility
-            resultMap['status'] = 'UNSAT'
+            resultMap["status"] = "UNSAT"
 
             if self._specifics in ("SATISFIABLE", "10"):
-                resultMap['status'] = 'CRASHED'
-                resultMap['misc'] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
+                resultMap["status"] = "CRASHED"
+                resultMap[
+                    "misc"
+                ] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
                 self.save_failed_cmd()
 
-        elif re.search('s UNKNOWN', data):
-            resultMap['status'] = 'TIMEOUT'
-            resultMap['misc'] = "Found s UNKNOWN line - interpreting as TIMEOUT"
+        elif re.search("s UNKNOWN", data):
+            resultMap["status"] = "TIMEOUT"
+            resultMap["misc"] = "Found s UNKNOWN line - interpreting as TIMEOUT"
             return resultMap
-        elif re.search('INDETERMINATE', data):
-            resultMap['status'] = 'TIMEOUT'
-            resultMap['misc'] = "Found INDETERMINATE line - interpreting as TIMEOUT"
+        elif re.search("INDETERMINATE", data):
+            resultMap["status"] = "TIMEOUT"
+            resultMap["misc"] = "Found INDETERMINATE line - interpreting as TIMEOUT"
             return resultMap
         else:
             print(self._ta_status)
-            resultMap['status'] = 'CRASHED'
-            resultMap['misc'] = "Could not find usual SAT competition-formatted result string in %s" % data
+            resultMap["status"] = "CRASHED"
+            resultMap["misc"] = (
+                "Could not find usual SAT competition-formatted result string in %s"
+                % data
+            )
         return resultMap
 
     def _verify_SAT(self, solver_output):
-        '''
-            verifies the model for self._instance
-            Args:
-                solver_output: filepointer to solver output
-            Returns:
-                True if model was correct
-                False if model was not correct
-        '''
+        """
+        verifies the model for self._instance
+        Args:
+            solver_output: filepointer to solver output
+        Returns:
+            True if model was correct
+            False if model was not correct
+        """
         cmd = [self.args.sat_checker, self._instance, solver_output.name]
         io = Popen(cmd, stdout=PIPE)
         out_, err_ = io.communicate()
@@ -263,9 +292,9 @@ class SatCSSCWrapper(AbstractWrapper):
         raise ValueError("%s did not work" % " ".join(cmd))
 
     def _set_true_solubility(self):
-        '''
-            Gets solubility from <self.args.solubility_file> and from instance specifics.
-        '''
+        """
+        Gets solubility from <self.args.solubility_file> and from instance specifics.
+        """
         sol_status = None
         if self.args.solubility_file and os.path.isfile(self.args.solubility_file):
             with open(self.args.solubility_file) as fp:
@@ -277,27 +306,51 @@ class SatCSSCWrapper(AbstractWrapper):
         if sol_status is None:
             # There is nothing in the solubility file we can confirm/reject
             if self.args.solubility_file is not None:
-                print("INFO: solubility file %s was specified, but does not contain solubility of instance %s"
-                      % (self.args.solubility_file, self._instance))
+                print(
+                    "INFO: solubility file %s was specified, but does not contain solubility of instance %s"
+                    % (self.args.solubility_file, self._instance)
+                )
             return
 
         if sol_status == self._specifics:
             # Solubility file and specifics agree on solubility
             pass
-        elif sol_status in ("20", "UNSATISFIABLE") and self._specifics in ("20", "UNSATISFIABLE"):
+        elif sol_status in ("20", "UNSATISFIABLE") and self._specifics in (
+            "20",
+            "UNSATISFIABLE",
+        ):
             # Solubility file and specifics agree
             self._specifics = "UNSATISFIABLE"
-        elif sol_status in ("10", "SATISFIABLE") and self._specifics in ("10", "SATISFIABLE"):
+        elif sol_status in ("10", "SATISFIABLE") and self._specifics in (
+            "10",
+            "SATISFIABLE",
+        ):
             # Solubility file and specifics agree
             self._specifics = "SATISFIABLE"
-        elif sol_status in ("20", "UNSATISFIABLE") and self._specifics in ("10", "SATISFIABLE"):
+        elif sol_status in ("20", "UNSATISFIABLE") and self._specifics in (
+            "10",
+            "SATISFIABLE",
+        ):
             # Solubility file and specifics don't agree
-            raise ValueError("self.specifics says 'SATISFIABLE', solubility says 'UNSATISFIABLE'")
-        elif sol_status in ("10", "SATISFIABLE") and self._specifics in ("20", "UNSATISFIABLE"):
+            raise ValueError(
+                "self.specifics says 'SATISFIABLE', solubility says 'UNSATISFIABLE'"
+            )
+        elif sol_status in ("10", "SATISFIABLE") and self._specifics in (
+            "20",
+            "UNSATISFIABLE",
+        ):
             # Solubility file and specifics don't agree
-            raise ValueError("self.specifics says 'UNSATISFIABLE', solubility says 'SATISFIABLE'")
+            raise ValueError(
+                "self.specifics says 'UNSATISFIABLE', solubility says 'SATISFIABLE'"
+            )
         elif (
-            self._specifics not in ("20", "UNSATISFIABLE", "10", "SATISFIABLE")
+            self._specifics
+            not in (
+                "20",
+                "UNSATISFIABLE",
+                "10",
+                "SATISFIABLE",
+            )
             and sol_status in ("20", "UNSATISFIABLE", "10", "SATISFIABLE")
         ):
             self._specifics = sol_status
