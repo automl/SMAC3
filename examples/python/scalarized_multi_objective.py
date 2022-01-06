@@ -12,7 +12,9 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
+import matplotlib.pyplot as plt
 import time
+
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.hyperparameters import \
     CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
@@ -28,6 +30,54 @@ __license__ = "3-clause BSD"
 
 # We load the iris-dataset (a widely used benchmark)
 iris = datasets.load_iris()
+
+
+def is_pareto_efficient_simple(costs):
+    """
+    Plot the Pareto Front in our 2d example.
+
+    source from: https://stackoverflow.com/a/40239615
+    Find the pareto-efficient points
+    :param costs: An (n_points, n_costs) array
+    :return: A (n_points, ) boolean array, indicating whether each point is Pareto efficient
+    """
+    is_efficient = np.ones(costs.shape[0], dtype=bool)
+    for i, c in enumerate(costs):
+        if is_efficient[i]:
+            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)  # Keep any point with a lower cost
+            is_efficient[i] = True  # And keep self
+    return is_efficient
+
+
+def plot_pareto_from_runhistory(observations):
+    """
+    This is only an example function for 2d plotting, when both objectives
+    are to be minimized
+    """
+
+    # find the pareto front
+    efficient_mask = is_pareto_efficient_simple(observations)
+    front = observations[efficient_mask]
+    # observations = observations[np.invert(efficient_mask)]
+
+    obs1, obs2 = observations[:, 0], observations[:, 1]
+    front = front[front[:, 0].argsort()]
+
+    # add the bounds
+    x_upper = np.max(obs1)
+    y_upper = np.max(obs2)
+    front = np.vstack([[front[0][0], y_upper], front, [x_upper, np.min(front[:, 1])]])
+
+    x_front, y_front = front[:, 0], front[:, 1]
+
+    plt.scatter(obs1, obs2)
+    plt.step(x_front, y_front, where='post', linestyle=':')
+    plt.title('Pareto: Cost & Time')
+
+    # TODO: add correct order here Time vs Cost
+    plt.xlabel("X axis label")
+    plt.ylabel("Y axis label")
+    plt.show()
 
 
 def svm_from_cfg(cfg):
@@ -68,9 +118,6 @@ def svm_from_cfg(cfg):
 
 
 if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    import numpy as np
-
     # Build Configuration Space which defines all parameters and their ranges
     cs = ConfigurationSpace()
 
@@ -136,66 +183,6 @@ if __name__ == '__main__':
 
     incumbent = smac.optimize()
 
-
-    # Plot the Pareto Front in our 2d example.
-    def is_pareto_efficient_simple(costs):
-        """
-        source from: https://stackoverflow.com/a/40239615
-        Find the pareto-efficient points
-        :param costs: An (n_points, n_costs) array
-        :return: A (n_points, ) boolean array, indicating whether each point is Pareto efficient
-        """
-        is_efficient = np.ones(costs.shape[0], dtype=bool)
-        for i, c in enumerate(costs):
-            if is_efficient[i]:
-                is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)  # Keep any point with a lower cost
-                is_efficient[i] = True  # And keep self
-        return is_efficient
-
-
-    def plot_pareto_from_runhistory(observations):
-        """This is only an example function for 2d plotting, when both objectives
-        are to be minimized"""
-
-        # find the pareto front
-        efficient_mask = is_pareto_efficient_simple(observations)
-        front = observations[efficient_mask]
-        # observations = observations[np.invert(efficient_mask)]
-
-        obs1, obs2 = observations[:, 0], observations[:, 1]
-        front = front[front[:, 0].argsort()]
-
-        # add the bounds
-        x_upper = np.max(obs1)
-        y_upper = np.max(obs2)
-        front = np.vstack([[front[0][0], y_upper], front, [x_upper, np.min(front[:, 1])]])
-
-        x_front, y_front = front[:, 0], front[:, 1]
-
-        plt.scatter(obs1, obs2)
-        plt.step(x_front, y_front, where='post', linestyle=':')
-        plt.title('Pareto: Cost & Time')
-
-        # TODO: add correct order here Time vs Cost
-        plt.xlabel("X axis label")
-        plt.ylabel("Y axis label")
-        plt.show()
-
-
-    # todo remove this example & base it on runhistory
-    n, n_objectives = 100, 2
-    observations = np.random.rand(n, n_objectives)
-    plot_pareto_from_runhistory(observations)
-
-    smac.runhistory.multi_objectives
-
-    # TODO remove this?
-    # inc_value = svm_from_cfg(incumbent)
-    # print("Optimized Value: %.2f" % (inc_value))
-
-    # # We can also validate our results (though this makes a lot more sense with instances)
-    # smac.validate(
-    #     config_mode='inc',  # We can choose which configurations to evaluate
-    #     # instance_mode='train+test',  # Defines what instances to validate
-    #     repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
-    #     n_jobs=1)  # How many cores to use in parallel for optimization
+    # pareto front based on smac.runhistory.data
+    cost = np.vstack([v[0] for v in smac.runhistory.data.values()])
+    plot_pareto_from_runhistory(cost)
