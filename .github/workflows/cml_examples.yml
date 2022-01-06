@@ -31,14 +31,12 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Conda Install test dependencies
       run: |
         # Miniconda is available in $CONDA env var
         $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
         $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
         $CONDA/envs/testenv/bin/pip3 install -e .[all]
-
     - name: Spear-QCP ROAR
       timeout-minutes: 20
       run: |
@@ -46,7 +44,6 @@ jobs:
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         cd examples/spear_qcp
         bash spear_qcp_roar.sh
-
     - name: Spear-QCP SMAC
       timeout-minutes: 20
       run: |
@@ -54,7 +51,6 @@ jobs:
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         cd examples/commandline
         bash spear_qcp_smac.sh
-
     - name:  Branin
       timeout-minutes: 20
       run: |
