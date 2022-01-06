@@ -31,7 +31,9 @@ def schaffer_pareto(x):
 
 class MultiObjectiveTest(unittest.TestCase):
     def test_Schaffer_no1(self):
-        """Testing whether multi-objective function Schaffer is optimized properly using ParEGO"""
+        """Testing whether multi-objective function Schaffer is optimized properly using ParEGO:
+        the observed values are on the pareto front."""
+
         def tae(cfg):
             """x is a single continuous hyperparameter.
             :param cfg: ConfigSpace object"""
@@ -43,6 +45,7 @@ class MultiObjectiveTest(unittest.TestCase):
         n = 1000
         X = np.linspace(-A, A, n)
         true_pareto_front = schaffer_pareto(X)
+        true_pareto_front = np.column_stack(true_pareto_front)
 
         cs = ConfigurationSpace()
         X = UniformFloatHyperparameter('x', lower=-A, upper=A)
@@ -65,16 +68,44 @@ class MultiObjectiveTest(unittest.TestCase):
                         tae_runner=tae,
                         multi_objective_kwargs={
                             'rho': 0.05
-                             # str or cls or callable
+                            # str or cls or callable
                         })
 
         incumbent = smac.optimize()
 
-        # TODO: find out the exact format in which smac returns the multi-objective
-        #  values. - then check reasonable convergence bounds & how to properly set up the test.
-        # TODO add the
-        smac.runhistory.multi_objective
-        self.assertAlmostEqual(None, true_pareto_front(None))
+        # extract the cost values from the runhistory:
+        # queried_x = np.concatenate([x.get_array() for x in smac.runhistory.config_ids.keys()])
+        observed_costs = np.vstack([v[0] for v in smac.runhistory.data.values()])
+
+        # expectation on the true value of the pareto front for queried parameter configurations
+        # fixme: find out why SMAC.runhistory's observed values lie on a paraboloid for observed_costs[:,1] > 4
+        f1 = observed_costs[:, 0][observed_costs[:, 1] < 4]
+        f2 = np.square(np.sqrt(f1) - 2)
+
+        self.assertTrue(np.allclose(observed_costs[:, 1][observed_costs[:, 1] < 4], f2))
+
+        # plotting helper for debugging purposes
+        # import matplotlib.pyplot as plt
+        # from examples.python.scalarized_multi_objective import plot_pareto_from_runhistory
+        #
+        # # sort the results for plotting purposes
+        # order = observed_costs[:, 1].argsort()
+        # observed_costs = observed_costs[order, :]
+        #
+        # order = f2.argsort()
+        # f1 = f1[order]
+        # f2.sort()
+        #
+        # obs_x = observed_costs[:, 0][observed_costs[:, 1] < 4.]
+        # obs_y = observed_costs[:, 1][observed_costs[:, 1] < 4.]
+        #
+        # plt.plot(f1, f2, label='true')
+        # plt.plot(obs_x, obs_y, label='observed')
+        # plt.legend()
+        # plt.show()
+        #
+        # plot_pareto_from_runhistory(observed_costs[observed_costs[:, 1] < 4.])
+        # plot_pareto_from_runhistory(true_pareto_front)
 
 
 if __name__ == '__main__':
