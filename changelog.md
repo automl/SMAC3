@@ -1,3 +1,8 @@
+# 1.1.2
+
+## Minor Changes
+*  Specified that dask shouldn't cache functions/results. (#803) 
+
 # 1.1.1
 
 ## Minor Changes
