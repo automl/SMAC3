@@ -10,15 +10,13 @@ ROAR:
 
 .. code-block:: bash
 
-   $ ls -lsa .
-   $ make file
+   $ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode ROAR
 
 
 SMAC4AC:
 
 .. code-block:: bash
 
-   $ ls -lsa .
-   $ make file
+   $ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode SMAC4AC
    
 """
