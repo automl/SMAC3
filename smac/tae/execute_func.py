@@ -33,6 +33,8 @@ class AbstractTAFunc(SerialRunner):
         Function (target algorithm) to be optimized.
     stats: Stats()
          stats object to collect statistics about runtime and so on
+    multi_objectives: typing.List[str]
+        names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
     memory_limit : int, optional
@@ -59,7 +61,7 @@ class AbstractTAFunc(SerialRunner):
         self,
         ta: typing.Callable,
         stats: Stats,
-        multi_objectives: typing.List[str],
+        multi_objectives: typing.List[str] = ['cost'],
         run_obj: str = "quality",
         memory_limit: typing.Optional[int] = None,
         par_factor: int = 1,
