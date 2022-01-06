@@ -38,6 +38,8 @@ class SerialRunner(BaseRunner):
         target algorithm command line as list of arguments
     stats: Stats()
          stats object to collect statistics about runtime and so on
+    multi_objectives: typing.List[str]
+        names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
     par_factor: int
@@ -53,7 +55,7 @@ class SerialRunner(BaseRunner):
         self,
         ta: typing.Union[typing.List[str], typing.Callable],
         stats: Stats,
-        multi_objectives: typing.List[str],
+        multi_objectives: typing.List[str] = ['cost'],
         run_obj: str = "runtime",
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),

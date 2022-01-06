@@ -80,7 +80,6 @@ class DaskParallelRunner(BaseRunner):
         self,
         single_worker: BaseRunner,
         n_workers: int,
-        multi_objectives: typing.List[str],
         patience: int = 5,
         output_directory: typing.Optional[str] = None,
         dask_client: typing.Optional[dask.distributed.Client] = None,
