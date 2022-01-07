@@ -330,6 +330,6 @@ sphinx_gallery_conf = {
     "gallery_dirs": "pages/examples",
     "show_signature": "False",
     "show_memory": "False",
-    "plot_gallery": "False",
+    "plot_gallery": "True",
     "ignore_pattern": ".*pcs$|.*scenario.txt$|.*spear_qcp$",
 }

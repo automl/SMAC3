@@ -1,4 +1,4 @@
-name: Docs
+name: docs
 
 on:
   # Manual trigger option in github

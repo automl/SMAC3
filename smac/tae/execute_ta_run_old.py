@@ -91,7 +91,10 @@ class ExecuteTARunOld(SerialRunner):
                     fields[5 : len(fields)] = [
                         "".join(map(str, fields[5 : len(fields)]))
                     ]
-                    fields[5] = fields[5].strip("';[]", "")
+
+                    # Make it prettier
+                    for char in [",", ";", "'", "[", "]"]:
+                        fields[5] = fields[5].replace(char, "")
 
                 fields = list(map(lambda x: x.strip(" "), fields))
                 if len(fields) == 5:
@@ -110,9 +113,6 @@ class ExecuteTARunOld(SerialRunner):
 
                 runtime = min(float(runtime_string), cutoff)
                 quality = float(quality_string)
-
-        print("---------")
-        print(status_string, runtime_string, quality_string)
 
         if status_string.upper() in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
