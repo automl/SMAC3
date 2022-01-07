@@ -114,15 +114,20 @@ class ExecuteTARunOld(SerialRunner):
                 runtime = min(float(runtime_string), cutoff)
                 quality = float(quality_string)
 
-        if status_string.upper() in ["SAT", "UNSAT", "SUCCESS"]:
+        if "StatusType." in status_string:
+            status_string = status_string.split(".")[1]
+
+        status_string = status_string.upper()
+
+        if status_string in ["SAT", "UNSAT", "SUCCESS"]:
             status = StatusType.SUCCESS
-        elif status_string.upper() in ["TIMEOUT"]:
+        elif status_string in ["TIMEOUT"]:
             status = StatusType.TIMEOUT
-        elif status_string.upper() in ["CRASHED"]:
+        elif status_string in ["CRASHED"]:
             status = StatusType.CRASHED
-        elif status_string.upper() in ["ABORT"]:
+        elif status_string in ["ABORT"]:
             status = StatusType.ABORT
-        elif status_string.upper() in ["MEMOUT"]:
+        elif status_string in ["MEMOUT"]:
             status = StatusType.MEMOUT
         else:
             self.logger.warning(
