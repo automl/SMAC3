@@ -83,8 +83,7 @@ class ExecuteTARunOld(SerialRunner):
                 or line.startswith("Result for ParamILS")
                 or line.startswith("Result for SMAC")
             ):
-                fields = line.split(":")[1]
-                fields = fields.split(",")
+                fields = line.split(":")[1].split(",")
 
                 # If we have more than 6 fields, we combine them all together
                 if len(fields) > 5:
