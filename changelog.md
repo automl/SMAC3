@@ -2,6 +2,7 @@
 
 ## Examples
 * Integrated spear_qcp example for commandline
+* Python examples are now executed
 
 ## Workflow Clean-up
 * Adds PEP 561 compliance (exports types so other packages can be aware of them)

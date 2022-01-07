@@ -88,8 +88,8 @@ class ExecuteTARunOld(SerialRunner):
 
                 # If we have more than 6 fields, we combine them all together
                 if len(fields) > 5:
-                    fields[5 : len(fields)] = [
-                        "".join(map(str, fields[5 : len(fields)]))
+                    fields[5:len(fields)] = [
+                        "".join(map(str, fields[5:len(fields)]))
                     ]
 
                     # Make it prettier
