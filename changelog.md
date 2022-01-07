@@ -3,7 +3,7 @@
 ## Examples
 * Integrated spear_qcp example for commandline
 
-# Workflow Clean-up
+## Workflow Clean-up
 * Adds PEP 561 compliance (exports types so other packages can be aware of them)
 * Allow manual workflow_dispatch on actions that might require it (can manually trigger them from github UI)
 * Prevent the double trigger of actions by making push and pull_request and more strict.
@@ -16,6 +16,9 @@
   * Scaffold for matrix that includes windows and mac testing (currently excluded, see comments)
   * Includes tests for Python 3.10
   * Changed the boolean flags in the matrix to just be a categorical, easier to read
+
+## Minor Changes
+*  Specified that dask shouldn't cache functions/results. (#803) 
 
 
 # 1.1.1
