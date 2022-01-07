@@ -43,8 +43,8 @@ jobs:
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        $CONDA/bin/conda activate testenv
         export PATH="$CONDA/envs/testenv/bin:$PATH"
+        $CONDA/bin/conda activate testenv
         cd examples/commandline
         bash spear_qcp_roar.sh
 
@@ -52,8 +52,8 @@ jobs:
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        $CONDA/bin/conda activate testenv
         export PATH="$CONDA/envs/testenv/bin:$PATH"
+        $CONDA/bin/conda activate testenv
         cd examples/commandline
         bash spear_qcp_smac.sh
 
@@ -61,7 +61,7 @@ jobs:
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        $CONDA/bin/conda activate testenv
         export PATH="$CONDA/envs/testenv/bin:$PATH"
+        $CONDA/bin/conda activate testenv
         cd examples/commandline
         python ../../scripts/smac.py --scenario branin/scenario.txt
