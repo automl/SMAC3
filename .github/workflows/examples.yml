@@ -45,7 +45,7 @@ jobs:
         # Activate anaconda so default python is from conda
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         # cd scripts
-        python scripts/smac.py
+        $CONDA/envs/testenv/bin/python3 scripts/smac.py
         # cd examples/commandline
         # bash spear_qcp_roar.sh
 
