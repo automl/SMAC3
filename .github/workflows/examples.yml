@@ -38,14 +38,15 @@ jobs:
         $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
         $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
         $CONDA/envs/testenv/bin/pip3 install -e .[all]
+        $CONDA/bin/activate testenv
 
     - name: Spear-QCP ROAR (Commandline)
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        # export PATH="$CONDA/envs/testenv/bin:$PATH"
+        export PATH="$CONDA/envs/testenv/bin:$PATH"
 
-        $CONDA/bin/activate testenv
+        
         cd examples/commandline
         bash spear_qcp_roar.sh
 
@@ -53,9 +54,8 @@ jobs:
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        # export PATH="$CONDA/envs/testenv/bin:$PATH"
+        export PATH="$CONDA/envs/testenv/bin:$PATH"
 
-        $CONDA/bin/activate testenv
         cd examples/commandline
         bash spear_qcp_smac.sh
 
@@ -63,8 +63,7 @@ jobs:
       timeout-minutes: 20
       run: |
         # Activate anaconda so default python is from conda
-        # export PATH="$CONDA/envs/testenv/bin:$PATH"
-        
-        $CONDA/bin/activate testenv
+        export PATH="$CONDA/envs/testenv/bin:$PATH"
+
         cd examples/commandline
         python ../../scripts/smac.py --scenario branin/scenario.txt
