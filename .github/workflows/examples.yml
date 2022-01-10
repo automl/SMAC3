@@ -37,7 +37,7 @@ jobs:
         # Miniconda is available in $CONDA env var
         $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
         $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
-        $CONDA/envs/testenv/bin/pip3 install -e .[all]
+        $CONDA/envs/testenv/bin/pip3 install .[all]
 
     - name: Spear-QCP ROAR (Commandline)
       timeout-minutes: 20
