@@ -45,8 +45,8 @@ jobs:
         # Activate anaconda so default python is from conda
         export PATH="$CONDA/envs/testenv/bin:$PATH"
         cd examples/commandline
-        echo $PATH
-        which python
+        echo "WORKFLOW"
+        python -c "import sys; print(sys.path)"
         bash spear_qcp_roar.sh
 
     - name: Spear-QCP SMAC (Commandline)

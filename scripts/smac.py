@@ -15,6 +15,7 @@ if cmd_folder not in sys.path:
 
 print("+")
 print(sys.path)
+print("----")
 
 from smac.smac_cli import SMACCLI
 
