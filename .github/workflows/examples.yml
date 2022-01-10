@@ -44,11 +44,8 @@ jobs:
       run: |
         # Activate anaconda so default python is from conda
         export PATH="$CONDA/envs/testenv/bin:$PATH"
-        # cd scripts
-        pip list
-        $CONDA/envs/testenv/bin/python3 scripts/smac.py
-        # cd examples/commandline
-        # bash spear_qcp_roar.sh
+        cd examples/commandline
+        bash spear_qcp_roar.sh
 
     - name: Spear-QCP SMAC (Commandline)
       timeout-minutes: 20
