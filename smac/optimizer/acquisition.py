@@ -341,7 +341,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
             prior_values = self._compute_discretized_prior(X, number_of_bins) + self.prior_floor
         else:
-            prior_values = self._compute_prior(X) + self.floor
+            prior_values = self._compute_prior(X) + self.prior_floor
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
         
         return acq_values * decayed_prior_values
