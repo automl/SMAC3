@@ -1,0 +1,658 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>SPEAR-QCP with Multi-Fidelity on Instances &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    
+  <link href="../../../_static/css/theme.css" rel="stylesheet">
+  <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../../../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Synthetic Function with few Hyperparameters" href="plot_synthetic_function.html" />
+    <link rel="prev" title="Restore Branin" href="../commandline/restore_branin.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../../index.html">
+  <img src="../../../_static/SMAC3.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../../../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../getting_started/index.html">
+   Getting Started
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../getting_started/installation.html">
+     Installation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../getting_started/minimal_example.html">
+     Minimal Example
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../getting_started/package_overview.html">
+     Package Overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../getting_started/basic_usage.html">
+     Basic Usage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../index.html">
+   Examples
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../commandline/spear_qcp.html">
+     SPEAR-QCP
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../commandline/branin.html">
+     Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../commandline/restore_branin.html">
+     Restore Branin
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_gb_non_deterministic.html">
+     Non-Deterministic Gradient-Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_svm_cv.html">
+     SVM with Cross-Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_sgd_instances.html">
+     SGD on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_mlp_mf.html">
+     MLP with Multi-Fidelity
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../details/index.html">
+   Details
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/facades.html">
+     Facades
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/target_algorithm_evaluator.html">
+     Target Algorithm Evaluator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/scenario.html">
+     Scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/arguments.html">
+     Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/validation.html">
+     Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/cuda.html">
+     CUDA
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/restoring.html">
+     Restoring
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../api/index.html">
+   API Reference
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.callbacks.html">
+     smac.callbacks module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.epm.html">
+     smac.epm package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.facade.html">
+     smac.facade package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.initial_design.html">
+     smac.initial_design package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.intensification.html">
+     smac.intensification package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.optimizer.html">
+     smac.optimizer package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.runhistory.html">
+     smac.runhistory package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.scenario.html">
+     smac.scenario package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.smac_cli.html">
+     smac.smac_cli module
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.stats.html">
+     smac.stats package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.tae.html">
+     smac.tae package
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.utils.html">
+     smac.utils package
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-pages-examples-python-plot-spear-mf-instances-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="spear-qcp-with-multi-fidelity-on-instances">
+<span id="sphx-glr-pages-examples-python-plot-spear-mf-instances-py"></span><h1>SPEAR-QCP with Multi-Fidelity on Instances<a class="headerlink" href="#spear-qcp-with-multi-fidelity-on-instances" title="Permalink to this headline">¶</a></h1>
+<p>We optimize the SPEAR algorithm on QCP to demonstrate the powerful SMAC4AC facade. Algorithm and
+instance definition is done inside scenario file.</p>
+<p>Moreover, we present you an alternative <a class="reference internal" href="../../glossary.html#term-Intensification"><span class="xref std std-term">intensification</span></a> procedure “Successive Halving”.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.scenario.scenario.Scenario:Reading scenario file: ./spear_qcp/scenario.txt
+INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-12_09:20:28_673740
+WARNING:smac.facade.smac_ac_facade.SMAC4AC:Runtime as objective automatically activates log(y) transformation
+INFO:smac.initial_design.default_configuration_design.DefaultConfiguration:Running initial design for 1 configurations
+INFO:smac.optimizer.smbo.SMBO:Running initial design
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 8.00, eta = 3.00
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (0.7129) is better than incumbent (6.6091) on 8 runs.
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Changes in incumbent:
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 1.0 -&gt; 0.8511579551170143
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.4 -&gt; 1.0188792641376752
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-del-heur : &#39;2&#39; -&gt; &#39;0&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 100 -&gt; 123
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : &#39;0&#39; -&gt; &#39;5&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.3 -&gt; 1.3498523031045262
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.4 -&gt; 0.4031307818082188
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-orig-clause-sort-heur : &#39;0&#39; -&gt; &#39;3&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-phase-dec-heur : &#39;5&#39; -&gt; &#39;2&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-freq : &#39;0.001&#39; -&gt; &#39;0.005&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-scaling : 1.0 -&gt; 0.994047825999824
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-resolution : &#39;1&#39; -&gt; &#39;0&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.5 -&gt; 1.771783095685255
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-update-dec-queue : &#39;1&#39; -&gt; &#39;0&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.0 -&gt; 0.9880539476436718
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : &#39;0&#39; -&gt; &#39;6&#39;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.4 -&gt; 1.3191969278706432
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 3-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
+  warnings.warn(&quot;{} is intended to be used &quot;
+INFO:smac.stats.stats.Stats:##########################################################
+INFO:smac.stats.stats.Stats:Statistics:
+INFO:smac.stats.stats.Stats:#Incumbent changed: 1
+INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 35 / inf
+INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 35 / inf
+INFO:smac.stats.stats.Stats:#Configurations: 9
+INFO:smac.stats.stats.Stats:Used wallclock time: 63.98 / 60.00 sec
+INFO:smac.stats.stats.Stats:Used target algorithm runtime: 18.90 / inf sec
+INFO:smac.stats.stats.Stats:##########################################################
+INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
+  sp-clause-activity-inc, Value: 0.8511579551170143
+  sp-clause-decay, Value: 1.0188792641376752
+  sp-clause-del-heur, Value: &#39;0&#39;
+  sp-first-restart, Value: 123
+  sp-learned-clause-sort-heur, Value: &#39;5&#39;
+  sp-learned-clauses-inc, Value: 1.3498523031045262
+  sp-learned-size-factor, Value: 0.4031307818082188
+  sp-orig-clause-sort-heur, Value: &#39;3&#39;
+  sp-phase-dec-heur, Value: &#39;2&#39;
+  sp-rand-var-dec-freq, Value: &#39;0.005&#39;
+  sp-rand-var-dec-scaling, Value: 0.994047825999824
+  sp-resolution, Value: &#39;0&#39;
+  sp-restart-inc, Value: 1.771783095685255
+  sp-update-dec-queue, Value: &#39;0&#39;
+  sp-use-pure-literal-rule, Value: &#39;1&#39;
+  sp-var-activity-inc, Value: 0.9880539476436718
+  sp-var-dec-heur, Value: &#39;6&#39;
+  sp-variable-decay, Value: 1.3191969278706432
+
+INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 0.712941
+Optimized configuration Configuration:
+  sp-clause-activity-inc, Value: 0.8511579551170143
+  sp-clause-decay, Value: 1.0188792641376752
+  sp-clause-del-heur, Value: &#39;0&#39;
+  sp-first-restart, Value: 123
+  sp-learned-clause-sort-heur, Value: &#39;5&#39;
+  sp-learned-clauses-inc, Value: 1.3498523031045262
+  sp-learned-size-factor, Value: 0.4031307818082188
+  sp-orig-clause-sort-heur, Value: &#39;3&#39;
+  sp-phase-dec-heur, Value: &#39;2&#39;
+  sp-rand-var-dec-freq, Value: &#39;0.005&#39;
+  sp-rand-var-dec-scaling, Value: 0.994047825999824
+  sp-resolution, Value: &#39;0&#39;
+  sp-restart-inc, Value: 1.771783095685255
+  sp-update-dec-queue, Value: &#39;0&#39;
+  sp-use-pure-literal-rule, Value: &#39;1&#39;
+  sp-var-activity-inc, Value: 0.9880539476436718
+  sp-var-dec-heur, Value: &#39;6&#39;
+  sp-variable-decay, Value: 1.3191969278706432
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
+<span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
+
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="s1">&#39;./spear_qcp/scenario.txt&#39;</span><span class="p">)</span>
+
+    <span class="c1"># provide arguments for the intensifier like this</span>
+    <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;n_seeds&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># specify the number of seeds to evaluate for a non-deterministic target algorithm</span>
+        <span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1"># because successive halving cannot handle min_chall &gt; 1</span>
+    <span class="p">}</span>
+
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>  <span class="c1"># scenario object</span>
+        <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>  <span class="c1"># arguments for Successive Halving</span>
+        <span class="c1"># change intensifier to successive halving by passing the class.</span>
+        <span class="c1"># it must implement `AbstractRacer`.</span>
+        <span class="n">intensifier</span><span class="o">=</span><span class="n">SuccessiveHalving</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Start optimization</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized configuration </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">incumbent</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  4.048 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-plot-spear-mf-instances-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/608e20a4945bf1cfab2bb845535d7826/plot_spear_mf_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_spear_mf_instances.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../../_downloads/84b54d90b6d9cfda23d2e1fadfec647c/plot_spear_mf_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_spear_mf_instances.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="../commandline/restore_branin.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Restore Branin</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="plot_synthetic_function.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Synthetic Function with few Hyperparameters</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../../../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2015-2022, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+4.2.0. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

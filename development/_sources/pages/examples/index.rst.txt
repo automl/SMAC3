@@ -24,6 +24,27 @@ Commandline
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="We optimize the SPEAR algorithm on QCP to demonstrate the powerful ROAR and SMAC4AC facade usin...">
+
+.. only:: html
+
+ .. figure:: /pages/examples/commandline/images/thumb/sphx_glr_spear_qcp_thumb.png
+     :alt: SPEAR-QCP
+
+     :ref:`sphx_glr_pages_examples_commandline_spear_qcp.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/commandline/spear_qcp
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This file is a wrapper used by SMAC to optimize parameters on the branin function. To run this ...">
 
 .. only:: html
@@ -81,10 +102,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_spear_mf_instances_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_spear_mf_instances_thumb.png
      :alt: SPEAR-QCP with Multi-Fidelity on Instances
 
-     :ref:`sphx_glr_pages_examples_python_spear_mf_instances.py`
+     :ref:`sphx_glr_pages_examples_python_plot_spear_mf_instances.py`
 
 .. raw:: html
 
@@ -94,7 +115,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/spear_mf_instances
+   /pages/examples/python/plot_spear_mf_instances
 
 .. raw:: html
 
@@ -102,10 +123,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_synthetic_function_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_synthetic_function_thumb.png
      :alt: Synthetic Function with few Hyperparameters
 
-     :ref:`sphx_glr_pages_examples_python_synthetic_function.py`
+     :ref:`sphx_glr_pages_examples_python_plot_synthetic_function.py`
 
 .. raw:: html
 
@@ -115,7 +136,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/synthetic_function
+   /pages/examples/python/plot_synthetic_function
 
 .. raw:: html
 
@@ -123,10 +144,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_gb_non_deterministic_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_gb_non_deterministic_thumb.png
      :alt: Non-Deterministic Gradient-Boosting
 
-     :ref:`sphx_glr_pages_examples_python_gb_non_deterministic.py`
+     :ref:`sphx_glr_pages_examples_python_plot_gb_non_deterministic.py`
 
 .. raw:: html
 
@@ -136,7 +157,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/gb_non_deterministic
+   /pages/examples/python/plot_gb_non_deterministic
 
 .. raw:: html
 
@@ -144,10 +165,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_svm_cv_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_svm_cv_thumb.png
      :alt: SVM with Cross-Validation
 
-     :ref:`sphx_glr_pages_examples_python_svm_cv.py`
+     :ref:`sphx_glr_pages_examples_python_plot_svm_cv.py`
 
 .. raw:: html
 
@@ -157,7 +178,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/svm_cv
+   /pages/examples/python/plot_svm_cv
 
 .. raw:: html
 
@@ -165,10 +186,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_sgd_instances_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_sgd_instances_thumb.png
      :alt: SGD on Instances
 
-     :ref:`sphx_glr_pages_examples_python_sgd_instances.py`
+     :ref:`sphx_glr_pages_examples_python_plot_sgd_instances.py`
 
 .. raw:: html
 
@@ -178,7 +199,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/sgd_instances
+   /pages/examples/python/plot_sgd_instances
 
 .. raw:: html
 
@@ -186,10 +207,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_mlp_mf_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_mlp_mf_thumb.png
      :alt: MLP with Multi-Fidelity
 
-     :ref:`sphx_glr_pages_examples_python_mlp_mf.py`
+     :ref:`sphx_glr_pages_examples_python_plot_mlp_mf.py`
 
 .. raw:: html
 
@@ -199,7 +220,7 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/mlp_mf
+   /pages/examples/python/plot_mlp_mf
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

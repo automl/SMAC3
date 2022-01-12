@@ -38,7 +38,7 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Branin" href="commandline/branin.html" />
+    <link rel="next" title="SPEAR-QCP" href="commandline/spear_qcp.html" />
     <link rel="prev" title="Basic Usage" href="../getting_started/basic_usage.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -162,6 +162,11 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="commandline/spear_qcp.html">
+     SPEAR-QCP
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="commandline/branin.html">
      Branin
     </a>
@@ -172,32 +177,32 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/spear_mf_instances.html">
+    <a class="reference internal" href="python/plot_spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/synthetic_function.html">
+    <a class="reference internal" href="python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/gb_non_deterministic.html">
+    <a class="reference internal" href="python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/svm_cv.html">
+    <a class="reference internal" href="python/plot_svm_cv.html">
      SVM with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/sgd_instances.html">
+    <a class="reference internal" href="python/plot_sgd_instances.html">
      SGD on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="python/mlp_mf.html">
+    <a class="reference internal" href="python/plot_mlp_mf.html">
      MLP with Multi-Fidelity
     </a>
    </li>
@@ -408,18 +413,26 @@ style="width: 100%;">
 variety of SMAC.</p>
 <div class="sphx-glr-clear"></div><section id="commandline">
 <span id="sphx-glr-pages-examples-commandline"></span><h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="This file is a wrapper used by SMAC to optimize parameters on the branin function. To run this ..."><figure class="align-default" id="id1">
-<img alt="Branin" src="../../_images/sphx_glr_branin_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="We optimize the SPEAR algorithm on QCP to demonstrate the powerful ROAR and SMAC4AC facade usin..."><figure class="align-default" id="id1">
+<img alt="SPEAR-QCP" src="../../_images/sphx_glr_spear_qcp_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="commandline/branin.html#sphx-glr-pages-examples-commandline-branin-py"><span class="std std-ref">Branin</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="commandline/spear_qcp.html#sphx-glr-pages-examples-commandline-spear-qcp-py"><span class="std std-ref">SPEAR-QCP</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Restore Branin"><figure class="align-default" id="id2">
+<div class="sphx-glr-thumbcontainer" tooltip="This file is a wrapper used by SMAC to optimize parameters on the branin function. To run this ..."><figure class="align-default" id="id2">
+<img alt="Branin" src="../../_images/sphx_glr_branin_thumb.png" />
+<figcaption>
+<p><span class="caption-text"><a class="reference internal" href="commandline/branin.html#sphx-glr-pages-examples-commandline-branin-py"><span class="std std-ref">Branin</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Restore Branin"><figure class="align-default" id="id3">
 <img alt="Restore Branin" src="../../_images/sphx_glr_restore_branin_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="commandline/restore_branin.html#sphx-glr-pages-examples-commandline-restore-branin-py"><span class="std std-ref">Restore Branin</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="commandline/restore_branin.html#sphx-glr-pages-examples-commandline-restore-branin-py"><span class="std std-ref">Restore Branin</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
@@ -427,50 +440,50 @@ variety of SMAC.</p>
 <div class="sphx-glr-clear"></div></section>
 <section id="python">
 <span id="sphx-glr-pages-examples-python"></span><h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="We optimize the SPEAR algorithm on QCP to demonstrate the powerful SMAC4AC facade. Algorithm an..."><figure class="align-default" id="id3">
-<img alt="SPEAR-QCP with Multi-Fidelity on Instances" src="../../_images/sphx_glr_spear_mf_instances_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="We optimize the SPEAR algorithm on QCP to demonstrate the powerful SMAC4AC facade. Algorithm an..."><figure class="align-default" id="id4">
+<img alt="SPEAR-QCP with Multi-Fidelity on Instances" src="../../_images/sphx_glr_plot_spear_mf_instances_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/spear_mf_instances.html#sphx-glr-pages-examples-python-spear-mf-instances-py"><span class="std std-ref">SPEAR-QCP with Multi-Fidelity on Instances</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_spear_mf_instances.html#sphx-glr-pages-examples-python-plot-spear-mf-instances-py"><span class="std std-ref">SPEAR-QCP with Multi-Fidelity on Instances</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function)."><figure class="align-default" id="id4">
-<img alt="Synthetic Function with few Hyperparameters" src="../../_images/sphx_glr_synthetic_function_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function)."><figure class="align-default" id="id5">
+<img alt="Synthetic Function with few Hyperparameters" src="../../_images/sphx_glr_plot_synthetic_function_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/synthetic_function.html#sphx-glr-pages-examples-python-synthetic-function-py"><span class="std std-ref">Synthetic Function with few Hyperparameters</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_synthetic_function.html#sphx-glr-pages-examples-python-plot-synthetic-function-py"><span class="std std-ref">Synthetic Function with few Hyperparameters</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="We optimize a GradientBoosting on an artificially created binary classification dataset. The re..."><figure class="align-default" id="id5">
-<img alt="Non-Deterministic Gradient-Boosting" src="../../_images/sphx_glr_gb_non_deterministic_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="We optimize a GradientBoosting on an artificially created binary classification dataset. The re..."><figure class="align-default" id="id6">
+<img alt="Non-Deterministic Gradient-Boosting" src="../../_images/sphx_glr_plot_gb_non_deterministic_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/gb_non_deterministic.html#sphx-glr-pages-examples-python-gb-non-deterministic-py"><span class="std std-ref">Non-Deterministic Gradient-Boosting</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_gb_non_deterministic.html#sphx-glr-pages-examples-python-plot-gb-non-deterministic-py"><span class="std std-ref">Non-Deterministic Gradient-Boosting</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed for hyperparame..."><figure class="align-default" id="id6">
-<img alt="SVM with Cross-Validation" src="../../_images/sphx_glr_svm_cv_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed for hyperparame..."><figure class="align-default" id="id7">
+<img alt="SVM with Cross-Validation" src="../../_images/sphx_glr_plot_svm_cv_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/svm_cv.html#sphx-glr-pages-examples-python-svm-cv-py"><span class="std std-ref">SVM with Cross-Validation</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_svm_cv.html#sphx-glr-pages-examples-python-plot-svm-cv-py"><span class="std std-ref">SVM with Cross-Validation</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple instances."><figure class="align-default" id="id7">
-<img alt="SGD on Instances" src="../../_images/sphx_glr_sgd_instances_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple instances."><figure class="align-default" id="id8">
+<img alt="SGD on Instances" src="../../_images/sphx_glr_plot_sgd_instances_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/sgd_instances.html#sphx-glr-pages-examples-python-sgd-instances-py"><span class="std std-ref">SGD on Instances</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_sgd_instances.html#sphx-glr-pages-examples-python-plot-sgd-instances-py"><span class="std std-ref">SGD on Instances</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
 </div>
-<div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ..."><figure class="align-default" id="id8">
-<img alt="MLP with Multi-Fidelity" src="../../_images/sphx_glr_mlp_mf_thumb.png" />
+<div class="sphx-glr-thumbcontainer" tooltip="Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets. Since we want to ..."><figure class="align-default" id="id9">
+<img alt="MLP with Multi-Fidelity" src="../../_images/sphx_glr_plot_mlp_mf_thumb.png" />
 <figcaption>
-<p><span class="caption-text"><a class="reference internal" href="python/mlp_mf.html#sphx-glr-pages-examples-python-mlp-mf-py"><span class="std std-ref">MLP with Multi-Fidelity</span></a></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text"><a class="reference internal" href="python/plot_mlp_mf.html#sphx-glr-pages-examples-python-plot-mlp-mf-py"><span class="std std-ref">MLP with Multi-Fidelity</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </div><div class="toctree-wrapper compound">
@@ -500,10 +513,10 @@ variety of SMAC.</p>
             <p class="prev-next-title">Basic Usage</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="commandline/branin.html" title="next page">
+    <a class='right-next' id="next-link" href="commandline/spear_qcp.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Branin</p>
+        <p class="prev-next-title">SPEAR-QCP</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
