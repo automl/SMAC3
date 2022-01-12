@@ -1,0 +1,5 @@
+algo = python branin.py
+paramfile = branin/configspace.pcs
+run_obj = quality
+runcount_limit = 10
+deterministic = 1

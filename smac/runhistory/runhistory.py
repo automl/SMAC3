@@ -128,7 +128,7 @@ class RunHistory(object):
     Attributes
     ----------
     data : collections.OrderedDict()
-        TODO
+        Internal data representation
     config_ids : dict
         Maps config -> id
     ids_config : dict

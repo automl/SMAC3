@@ -471,7 +471,6 @@ class LCB(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
                  par: float = 1.0):
-
         r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
@@ -523,7 +522,6 @@ class TS(AbstractAcquisitionFunction):
     def __init__(self,
                  model: AbstractEPM,
                  par: float = 0.0):
-
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
 
