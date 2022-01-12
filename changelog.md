@@ -19,7 +19,8 @@
   * Changed the boolean flags in the matrix to just be a categorical, easier to read
 
 ## Minor Changes
-*  Specified that dask shouldn't cache functions/results. (#803) 
+* Specified that dask shouldn't cache functions/results (#803) 
+* Handles invalid configuration vectors gracefully (#776)
 
 
 # 1.1.1
