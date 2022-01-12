@@ -159,10 +159,13 @@ class DaskParallelRunner(BaseRunner):
                                  )
 
         # At this point we can submit the job
+        # For `pure=False`, see
+        #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
         self.futures.append(
             self.client.submit(
                 self.single_worker.run_wrapper,
-                run_info
+                run_info,
+                pure=False
             )
         )
 

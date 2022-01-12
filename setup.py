@@ -36,7 +36,7 @@ setup(
     python_requires=">=3.7",
     install_requires=requirements,
     extras_require=extras_require,
-    package_data={'smac': ['requirements.txt', 'extras_require.json']},
+    package_data={'smac': ['requirements.txt', 'extras_require.json', 'py.typed']},
     author=get_author(),
     version=get_version(),
     test_suite="nose.collector",
