@@ -1,4 +1,5 @@
-# 1.1.2
+# 1.2
+
 
 ## Features
 * Added multi objective via Par-EGO.
@@ -9,10 +10,33 @@
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
 
+## Examples
+* Integrated spear_qcp example for commandline
+* Python examples are now executed
+* Added multi objective example
+* Added output of python examples again
+
+## Workflow Clean-up
+* Adds PEP 561 compliance (exports types so other packages can be aware of them)
+* Allow manual workflow_dispatch on actions that might require it (can manually trigger them from github UI)
+* Prevent the double trigger of actions by making push and pull_request and more strict.
+* A push to a pull request should no longer cause double the amount of tests to run (along with the other workflows that had on: [push, pull_request]
+* Some general cleanup, giving names to some actions, adding some linebreaks to break up things, ...
+* Command-line examples are tested again
+* pytest.yaml:
+  * Now scheduled to auto run everyday instead of every week
+  * Clean up the body of the steps and move some things to env var
+  * Scaffold for matrix that includes windows and mac testing (currently excluded, see comments)
+  * Includes tests for Python 3.10
+  * Changed the boolean flags in the matrix to just be a categorical, easier to read
+
 ## Minor Changes
-* Specified scenario docs that also SMAC options can be used.
-* Docs display init methods.
-* Parameters in the docs are shown first.
+* Specified that dask should not cache functions/results (#803) 
+* Handles invalid configuration vectors gracefully (#776)
+* Specified scenario docs that also SMAC options can be used
+* Docs display init methods now
+* Parameters in the docs are shown first now
+
 
 
 # 1.1.1
