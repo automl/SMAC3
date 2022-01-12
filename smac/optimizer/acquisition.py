@@ -231,33 +231,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.rescale_acq = isinstance(acquisition_type, LCB) or isinstance(acquisition_type, TS)
         self.iteration_number = 0
 
-
-    def debug(self, point=None):
-        import matplotlib.pyplot as plt
-        fig, ax = plt.subplots(4, figsize=(12, 8))
-        for name, parameter in self.hyperparameters.items():
-            lower = parameter._lower
-            upper = parameter._upper
-            break
-        
-        X = np.linspace(lower, upper, 1001)[:, np.newaxis]
-        
-        acquisition_function = self.acq._compute(X)
-        prior = self._compute_prior(X)
-        pibo = self._compute(X)
-        prior_values = prior + self.prior_floor
-        decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
-        ax[0].plot(X, prior)
-        ax[0].set_title('Prior')
-        ax[1].plot(X, decayed_prior_values)
-        ax[1].set_title('Decaying Prior')
-        ax[2].plot(X, acquisition_function)
-        ax[2].set_title('Acq.Func')
-        ax[3].plot(X, pibo)
-        ax[3].set_title('PiBO')
-        plt.show()
-
-
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
 
@@ -272,7 +245,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.iteration_number += 1
         self.acq.update(**kwargs)
         self.eta = kwargs.get('eta')
-        self.debug()
 
         
     def _get_pdf_bounds(self, approximation_points: int = 10001) -> Dict[str, np.ndarray]:
