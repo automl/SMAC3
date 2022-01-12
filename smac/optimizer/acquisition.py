@@ -199,9 +199,9 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
             in the search space. 
         discretize : Whether to discretize (bin) the densities for continous parameters. Triggered
-            for Random Forest models to avoid a pathological case where all Random Forest randomness 
-            is removed (RF surrogates require piecewise constant acquisition functions to be 
-            well-behaved)
+            for Random Forest models and continous hyperparameters to avoid a pathological case
+            where all Random Forest randomness is removed (RF surrogates require piecewise constant
+            acquisition functions to be well-behaved)
         discrete_bins_factor : If discretizing, the multiple on the number of allowed bins for 
             each parameter
 
@@ -221,7 +221,42 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             self.discrete_bins_factor = discrete_bins_factor
             self.continous_pdf_bounds = self._get_pdf_bounds()
 
+        # check if the acquisition function is LCB or TS - then the acquisition function values
+        # need to be rescaled to assure positiveness & correct magnitude
+        if isinstance(self.acq, IntegratedAcquisitionFunction):
+            acquisition_type = self.acq.acq
+        else:
+            acquisition_type = self.acq
+
+        self.rescale_acq = isinstance(acquisition_type, LCB) or isinstance(acquisition_type, TS)
         self.iteration_number = 0
+
+
+    def debug(self, point=None):
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots(4, figsize=(12, 8))
+        for name, parameter in self.hyperparameters.items():
+            lower = parameter._lower
+            upper = parameter._upper
+            break
+        
+        X = np.linspace(lower, upper, 1001)[:, np.newaxis]
+        
+        acquisition_function = self.acq._compute(X)
+        prior = self._compute_prior(X)
+        pibo = self._compute(X)
+        prior_values = prior + self.prior_floor
+        decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
+        ax[0].plot(X, prior)
+        ax[0].set_title('Prior')
+        ax[1].plot(X, decayed_prior_values)
+        ax[1].set_title('Decaying Prior')
+        ax[2].plot(X, acquisition_function)
+        ax[2].set_title('Acq.Func')
+        ax[3].plot(X, pibo)
+        ax[3].set_title('PiBO')
+        plt.show()
+
 
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
@@ -236,10 +271,14 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # TODO - could renormalize the data here if we want it to work with TS and UCB
         self.iteration_number += 1
         self.acq.update(**kwargs)
+        self.eta = kwargs.get('eta')
+        self.debug()
+
         
     def _get_pdf_bounds(self, approximation_points: int = 10001) -> Dict[str, np.ndarray]:
         """Retrieves an approximate minimum and maximum for each continous parameter, which
-        is later used to discretize the prior.
+        is later used to discretize the prior, which in turn is relevant for continous 
+        hyperparameters using a Random Forest model.
         
         Parameters
         ----------
@@ -267,7 +306,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        X: np.ndarray(N, D), The input points where the acquisition function
+        X: np.ndarray(N, D), The input points where the user-specified prior
             should be evaluated. The dimensionality of X is (N, D), with N as
             the number of points to evaluate at and D is the number of
             dimensions of one X.
@@ -281,42 +320,43 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
         # in the same order
         for parameter, X_col in zip(self.hyperparameters.values(), X.T):
-            prior_values *= parameter._pdf(X_col[:, np.newaxis])
+            if self.discretize and isinstance(parameter, FloatHyperparameter):
+                number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
+                prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins) + self.prior_floor
+            else:
+                prior_values *= parameter._pdf(X_col[:, np.newaxis])
+        
         return prior_values
 
-    def _compute_discretized_prior(self, X: np.ndarray, number_of_bins: int) -> np.ndarray:
-        """Computes the prior-weighted acquisition function values, where the prior on each
-        parameter is multiplied by a decay factor controlled by the parameter decay_beta and
-        the iteration number. The discretized version bins prior values on continous parameters
+    def _compute_discretized_pdf(self, parameter: FloatHyperparameter, X_col: np.ndarray, number_of_bins: int) -> np.ndarray:
+        """Discretizes (bins) prior values on continous a specific continous parameter
         to an increasingly coarse discretization determined by the prior decay parameter.
 
         Parameters
         ----------
-        X: np.ndarray(N, D), The input points where the acquisition function
-            should be evaluated. The dimensionality of X is (N, D), with N as
-            the number of points to evaluate at and D is the number of
-            dimensions of one X.
+        parameter: a FloatHyperparameter that, due to using a random forest
+            surrogate, must have its prior discretized
+        X_col: np.ndarray(N, ), The input points where the acquisition function
+            should be evaluated. The dimensionality of X is (N, ), with N as
+            the number of points to evaluate for the specific hyperparameter
         number_of_bins: The number of unique values allowed on the
             discretized version of the pdf.
         
         Returns
         -------
         np.ndarray(N,1)
-            Prior-weighted acquisition function values of X
+            The user prior over the optimum for the parameter at hand.
         """
-        prior_values = np.ones((len(X), 1))
-        # iterate over the hyperparmeters (alphabetically sorted) and the columns, which come
-        # in the same order
-        for (name, parameter), X_col in zip(self.hyperparameters.items(), X.T):
-            if name in self.continous_pdf_bounds:
-                # retrieves the approximate smallest largest value of the pdf in the domain 
-                pdf_values = parameter._pdf(X_col[:, np.newaxis])
-                lower, upper = self.continous_pdf_bounds[name]
-                bin_values = np.linspace(lower, upper, number_of_bins)
-                bin_indices = np.clip(np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins-1).astype(int)
-                prior_values *= bin_values[bin_indices]
-            else:
-                prior_values *= parameter._pdf(X_col[:, np.newaxis])
+        # evaluates the actual pdf on all the relevant points
+        pdf_values = parameter._pdf(X_col[:, np.newaxis])
+        # retrieves the approximate smallest largest value of the pdf in the domain 
+        lower, upper = self.continous_pdf_bounds[parameter.name]
+        # creates the bins (the possible discrete options of the pdf)
+        bin_values = np.linspace(lower, upper, number_of_bins)
+        # generates an index (bin) for each evaluated point
+        bin_indices = np.clip(np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins-1).astype(int)
+        #gets the actual value for each point
+        prior_values = bin_values[bin_indices]
         return prior_values
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
@@ -336,12 +376,14 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             Prior-weighted acquisition function values of X
         """
-        acq_values = self.acq._compute(X)
-        if self.discretize:
-            number_of_bins = int(np.ceil(self.discrete_bins_factor * self.decay_beta / self.iteration_number))
-            prior_values = self._compute_discretized_prior(X, number_of_bins) + self.prior_floor
+        if self.rescale_acq:
+            # for TS and UCB, we need to scale the function values to not run into issues
+            # of negative values or issues of varying magnitudes (here, they are both)
+            # negative by design and just flipping the sign leads to picking the worst point)
+            acq_values = np.clip(self.acq._compute(X) + self.eta, 0, np.inf)
         else:
-            prior_values = self._compute_prior(X) + self.prior_floor
+            acq_values = self.acq._compute(X)
+        prior_values = self._compute_prior(X) + self.prior_floor
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
         
         return acq_values * decayed_prior_values
