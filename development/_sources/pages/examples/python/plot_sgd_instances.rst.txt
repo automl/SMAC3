@@ -121,7 +121,9 @@ budget is no longer required by the target function.
       warnings.warn("{} is intended to be used "
     /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
       warnings.warn("{} is intended to be used "
-    Optimized Value: 0.0040
+    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
+      warnings.warn("{} is intended to be used "
+    Optimized Value: 0.0038
 
 
 
@@ -291,7 +293,7 @@ budget is no longer required by the target function.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  48.914 seconds)
+   **Total running time of the script:** ( 1 minutes  49.414 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_sgd_instances.py:

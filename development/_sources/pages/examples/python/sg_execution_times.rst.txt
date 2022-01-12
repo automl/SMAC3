@@ -5,18 +5,18 @@
 
 Computation times
 =================
-**08:18.047** total execution time for **pages_examples_python** files:
+**08:27.919** total execution time for **pages_examples_python** files:
 
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_gb_non_deterministic.py` (``plot_gb_non_deterministic.py``) | 02:58.627 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_gb_non_deterministic.py` (``plot_gb_non_deterministic.py``) | 03:00.716 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_mlp_mf.py` (``plot_mlp_mf.py``)                             | 02:00.115 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_mlp_mf.py` (``plot_mlp_mf.py``)                             | 02:00.084 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_sgd_instances.py` (``plot_sgd_instances.py``)               | 01:48.914 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_sgd_instances.py` (``plot_sgd_instances.py``)               | 01:49.414 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_spear_mf_instances.py` (``plot_spear_mf_instances.py``)     | 01:04.048 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_spear_mf_instances.py` (``plot_spear_mf_instances.py``)     | 01:08.857 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_svm_cv.py` (``plot_svm_cv.py``)                             | 00:22.207 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_svm_cv.py` (``plot_svm_cv.py``)                             | 00:24.355 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_pages_examples_python_plot_synthetic_function.py` (``plot_synthetic_function.py``)     | 00:04.135 | 0.0 MB |
+| :ref:`sphx_glr_pages_examples_python_plot_synthetic_function.py` (``plot_synthetic_function.py``)     | 00:04.493 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------+-----------+--------+
