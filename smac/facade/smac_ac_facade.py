@@ -85,6 +85,7 @@ class SMAC4AC(object):
                  acquisition_function_kwargs: Optional[Dict] = None,
                  integrate_acquisition_function: bool = False,
                  optimize_with_priors: bool = False,
+                 prior_optimization_kwargs: Optional[Dict] = None, 
                  acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: Optional[Dict] = None,
                  model: Optional[Type[AbstractEPM]] = None,
@@ -142,6 +143,9 @@ class SMAC4AC(object):
             hyperparameters (i.e. GaussianProcessMCMC).
         optimize_with_priors : bool, default=False
             Whether to make use of user priors in the optimization procedure, using PriorAcquisitionFunction.
+        prior_optimization_kwargs: Optional[Dict]
+            dictionary to pass specific arguments to optimization with prior, e.g. prior confidence parameter, 
+            and the floor value for the prior (lowest possible value the prior can take)
         acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
             Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
             Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
@@ -340,8 +344,7 @@ class SMAC4AC(object):
             discretize = isinstance(model_instance, RandomForestWithInstances) or isinstance(model_instance, RFRImputator)  
             acquisition_function_instance = PriorAcquisitionFunction(
                 acquisition_function=acquisition_function_instance, 
-                decay_beta=decay_beta,
-                discretize=discretize,
+                **prior_optimization_kwargs,
                 **acq_def_kwargs
             )
             uniform_config_space = scenario.cs
