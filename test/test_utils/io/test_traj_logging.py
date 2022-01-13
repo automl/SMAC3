@@ -172,8 +172,8 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEqual(header[-1], '"Configuration..."')
 
         data = list(map(lambda x: x.split(', '), data[1:]))
-        data[0][1] = ', '.join(data[0][1:1+num_obj])
-        del data[0][1+1:1+num_obj]
+        data[0][1] = ', '.join(data[0][1: 1 + num_obj])
+        del data[0][1 + 1: 1 + num_obj]
         frmt_str = '%1.6f'
 
         self.assertEqual(frmt_str % 0.5, data[0][0])

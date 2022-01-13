@@ -71,4 +71,3 @@ def format_array(input_array: typing.Union[np.ndarray, list]):
         # https://stackoverflow.com/a/33482726
         format_list.append(f"{item:4f}")
     return format_list
-

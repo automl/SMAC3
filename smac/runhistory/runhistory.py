@@ -8,7 +8,6 @@ import numpy as np
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
-from smac.utils.constants import MAXINT
 
 
 __author__ = "Marius Lindauer"
@@ -273,7 +272,6 @@ class RunHistory(object):
                 ('origin', config.origin),
         ):
             self._check_json_serializable(key, value, EnumEncoder, k, v)
-
 
         # Each runkey is supposed to be used only once. Repeated tries to add
         # the same runkey will be ignored silently if not capped.

@@ -443,7 +443,7 @@ class SMBO(object):
         self.logger.debug(
             f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
             f"additional: {result.additional_info}"
-            )
+        )
 
         self.runhistory.add(
             config=run_info.config,

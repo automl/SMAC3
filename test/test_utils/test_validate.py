@@ -186,7 +186,7 @@ class ValidationTest(unittest.TestCase):
                         cmd_options={'run_obj': 'quality',
                                      'train_insts': self.train_insts,
                                      'test_insts': self.test_insts,
-                                     'deterministic': False,})
+                                     'deterministic': False, })
         scen.instance_specific = self.inst_specs
 
         validator = Validator(scen, self.trajectory, self.rng)

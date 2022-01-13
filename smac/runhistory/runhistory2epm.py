@@ -24,7 +24,7 @@ class AbstractRunHistory2EPM(object):
     __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
-    
+
     Parameters
     ----------
     scenario: Scenario Object
