@@ -219,7 +219,7 @@ class TestSMBO(unittest.TestCase):
 
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                          'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
-                        'save-instantly': False,
+                         'save-instantly': False,
                          'deterministic': False},
                         )
         self.output_dirs.append(scen.output_dir)

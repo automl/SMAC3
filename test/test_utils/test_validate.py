@@ -185,7 +185,8 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn,
                         cmd_options={'run_obj': 'quality',
                                      'train_insts': self.train_insts,
-                                     'test_insts': self.test_insts})
+                                     'test_insts': self.test_insts,
+                                     'deterministic': False,})
         scen.instance_specific = self.inst_specs
 
         validator = Validator(scen, self.trajectory, self.rng)
@@ -236,7 +237,9 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn,
                         cmd_options={'run_obj': 'quality',
                                      'train_insts': self.train_insts,
-                                     'test_insts': self.test_insts})
+                                     'test_insts': self.test_insts,
+                                     'deterministic': False,
+                                     })
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Test basic usage
@@ -263,7 +266,10 @@ class ValidationTest(unittest.TestCase):
     def test_validate_no_insts(self):
         ''' no instances '''
         scen = Scenario(self.scen_fn,
-                        cmd_options={'run_obj': 'quality'})
+                        cmd_options={'run_obj': 'quality',
+                                     'save-instantly': False,
+                                     'deterministic': False,
+                                     })
         validator = Validator(scen, self.trajectory, self.rng)
         rh = validator.validate(config_mode='def+inc', instance_mode='train',
                                 repetitions=3, output_fn=self.output_rh)
@@ -297,7 +303,9 @@ class ValidationTest(unittest.TestCase):
         scen = Scenario(self.scen_fn,
                         cmd_options={'run_obj': 'quality',
                                      'train_insts': self.train_insts,
-                                     'test_insts': self.test_insts})
+                                     'test_insts': self.test_insts,
+                                     'deterministic': False,
+                                     })
         scen.instance_specific = self.inst_specs
         validator = Validator(scen, self.trajectory, self.rng)
         # Add a few runs and check, if they are correctly processed
