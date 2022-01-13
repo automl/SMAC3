@@ -13,7 +13,6 @@ __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
-
 TrajEntry = collections.namedtuple(
     'TrajEntry', ['train_perf', 'incumbent_id', 'incumbent',
                   'ta_runs', 'ta_time_used', 'wallclock_time', 'budget'])
@@ -39,6 +38,7 @@ class TrajLogger(object):
     old_traj_fn
     trajectory
     """
+
     def __init__(self, output_dir: typing.Optional[str], stats: Stats) -> None:
         self.stats = stats
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -94,7 +94,7 @@ class TrajLogger(object):
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
         self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
-                               finished_ta_runs, ta_time_used, wallclock_time, budget))
+                                         finished_ta_runs, ta_time_used, wallclock_time, budget))
         if self.output_dir is not None:
             self._add_in_old_format(train_perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
@@ -103,7 +103,7 @@ class TrajLogger(object):
             self._add_in_alljson_format(train_perf, incumbent_id, incumbent, budget,
                                         ta_time_used, wallclock_time)
 
-    def _add_in_old_format(self, train_perf: float, incumbent_id: int,
+    def _add_in_old_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
                            incumbent: Configuration,
                            ta_time_used: float,
                            wallclock_time: float) -> None:
@@ -127,14 +127,20 @@ class TrajLogger(object):
         for p in incumbent:
             if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
+        if isinstance(train_perf, float):
+            # Make it compatible with old format
+            with open(self.old_traj_fn, "a") as fp:
+                fp.write(f"{ta_time_used:f}, {train_perf:f}, {wallclock_time:f}, {incumbent_id:d}, "
+                         f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
+                         )
+        else:
+            # We recommend to use pandas to read this csv file
+            with open(self.old_traj_fn, "a") as fp:
+                fp.write(f"{ta_time_used:f}, {train_perf}, {wallclock_time:f}, {incumbent_id:d}, "
+                         f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
+                         )
 
-        with open(self.old_traj_fn, "a") as fp:
-            # TODO check if it is compatible with the older trajectory files!
-            fp.write(f"{ta_time_used}, {train_perf}, {wallclock_time}, {incumbent_id}, "
-                     f"{wallclock_time - ta_time_used}, {','.join(conf)}\n"
-            )
-
-    def _add_in_aclib_format(self, train_perf: float, incumbent_id: int,
+    def _add_in_aclib_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
                              incumbent: Configuration,
                              ta_time_used: float,
                              wallclock_time: float) -> None:
@@ -171,7 +177,7 @@ class TrajLogger(object):
             json.dump(traj_entry, fp)
             fp.write("\n")
 
-    def _add_in_alljson_format(self, train_perf: float, incumbent_id: int,
+    def _add_in_alljson_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
                                incumbent: Configuration, budget: float,
                                ta_time_used: float,
                                wallclock_time: float) -> None:
@@ -207,8 +213,8 @@ class TrajLogger(object):
 
     @staticmethod
     def read_traj_alljson_format(
-        fn: str,
-        cs: ConfigurationSpace,
+            fn: str,
+            cs: ConfigurationSpace,
     ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
@@ -244,8 +250,8 @@ class TrajLogger(object):
 
     @staticmethod
     def read_traj_aclib_format(
-        fn: str,
-        cs: ConfigurationSpace,
+            fn: str,
+            cs: ConfigurationSpace,
     ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
