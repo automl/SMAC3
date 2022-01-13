@@ -84,7 +84,7 @@ class SMAC4AC(object):
                  acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
                  acquisition_function_kwargs: Optional[Dict] = None,
                  integrate_acquisition_function: bool = False,
-                 optimize_with_priors: bool = False,
+                 user_priors: bool = False,
                  user_prior_kwargs: Optional[Dict] = None, 
                  acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
                  acquisition_function_optimizer_kwargs: Optional[Dict] = None,
@@ -141,7 +141,7 @@ class SMAC4AC(object):
         integrate_acquisition_function : bool, default=False
             Whether to integrate the acquisition function. Works only with models which can sample their
             hyperparameters (i.e. GaussianProcessMCMC).
-        optimize_with_priors : bool, default=False
+        user_priors : bool, default=False
             Whether to make use of user priors in the optimization procedure, using PriorAcquisitionFunction.
         user_prior_kwargs: Optional[Dict]
             dictionary to pass specific arguments to optimization with prior, e.g. prior confidence parameter, 
@@ -334,10 +334,7 @@ class SMAC4AC(object):
                 **acq_def_kwargs
             )
 
-        if optimize_with_priors:
-            # TODO - could also consider checking for parameter types - If any of the 
-            # prior parameters are in the configspace, we optimize with priors
-
+        if user_priors:
             # a solid default value for decay_beta - empirically founded
             default_beta = scenario.ta_run_limit / 10
             decay_beta = acq_def_kwargs.get('decay_beta', default_beta)          
@@ -357,7 +354,7 @@ class SMAC4AC(object):
             'config_space': scenario.cs,  # type: ignore[attr-defined] # noqa F821
             'rng': rng,
         }
-        if optimize_with_priors:
+        if user_priors:
             acq_func_opt_kwargs['uniform_config_space'] = scenario.cs.to_uniform()
 
         if acquisition_function_optimizer_kwargs is not None:
