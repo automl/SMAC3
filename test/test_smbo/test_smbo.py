@@ -218,7 +218,10 @@ class TestSMBO(unittest.TestCase):
             return 5
 
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification'})
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
+                        'save-instantly': False,
+                         'deterministic': False},
+                        )
         self.output_dirs.append(scen.output_dir)
         solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
