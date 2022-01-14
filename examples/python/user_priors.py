@@ -57,9 +57,9 @@ if __name__ == "__main__":
     # optimization with priors
     cs = ConfigurationSpace()
     # A log-normal prior on the first hyperparameter
-    x0 = NormalFloatHyperparameter("lognormal_param", lower=0.1, upper=10, default_value=2, mu=1, sigma=0.5, log=True)
+    x0 = NormalFloatHyperparameter("x0", lower=0.1, upper=10, default_value=2, mu=1, sigma=0.5, log=True)
     # And a beta prior on the other hyperparameter
-    x1 = BetaFloatHyperparameter("beta_param", lower=-5, upper=10, default_value=2, alpha=3, beta=8, log=False)
+    x1 = BetaFloatHyperparameter("x1", lower=-5, upper=10, default_value=2, alpha=3, beta=8, log=False)
 
     cs.add_hyperparameters([x0, x1])
     

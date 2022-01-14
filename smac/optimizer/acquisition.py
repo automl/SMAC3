@@ -186,7 +186,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     Hvarfner et al. (###nolinkyet###) for further details.
     """
     def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction,\
-         decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, \
+        decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, \
         discrete_bins_factor: float = 10.0, **kwargs: Any):
         """Constructor
 
@@ -241,7 +241,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         kwargs
             Additional keyword arguments
         """
-        # TODO - could renormalize the data here if we want it to work with TS and UCB
         self.iteration_number += 1
         self.acq.update(**kwargs)
         self.eta = kwargs.get('eta')
@@ -265,7 +264,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         continous_pdf_bounds = {}
         for name, parameter in self.hyperparameters.items():
             if isinstance(parameter, FloatHyperparameter):
-                # TODO - check if this is inappropriate coding
                 sample_points = np.linspace(parameter._lower, parameter._upper, approximation_points)
                 densities = parameter._pdf(sample_points)
                 continous_pdf_bounds[name] = np.array([densities.min(), densities.max()])  

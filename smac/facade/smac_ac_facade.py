@@ -344,7 +344,6 @@ class SMAC4AC(object):
                 **user_prior_kwargs,
                 **acq_def_kwargs
             )
-            uniform_config_space = scenario.cs
             acquisition_function_optimizer = LocalAndSortedPriorRandomSearch
 
             
