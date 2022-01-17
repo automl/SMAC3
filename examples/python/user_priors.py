@@ -69,9 +69,7 @@ if __name__ == "__main__":
                          "cs": cs,  # configuration space
                          "deterministic": "true",
                          })
-    
-    # can be any surrogate for user priors
-    model_type = 'gp'
+
     
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
