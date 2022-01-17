@@ -287,7 +287,6 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
 
         self.assertAlmostEqual(acq[0][0], 0.3989422804014327 * prior_0_factor)
 
-
     def test_NxD(self):
         x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
         x1_prior = MockPrior(pdf=lambda x: np.ones_like(x),  max_density=1)
@@ -350,17 +349,40 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         self.assertAlmostEqual(acq[1][0], combined_value_1)
         self.assertAlmostEqual(acq[2][0], combined_value_2)
 
-    def test_discretize_pdf(self):
-        pass
-
-    def test_rescale_acq(self):
-        pass
-
     def test_decay(self):
-        pass
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x),  max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {'x0': x0_prior, 'x1': x1_prior, 'x2': x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
+        configurations = [ConfigurationMock([0.1, 0.1, 0.1])]
+        
+        for i in range(1, 6):
+            paf.update(model=self.model, eta=1.0)
+            prior_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / i)
+            acq = paf(configurations)
+            self.assertAlmostEqual(acq[0][0], 0.90020601136712231 * prior_factor)
 
-    def test_bounds(self):
-        pass
+    def test_discretize_pdf(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        hyperparameter_dict = {'x0': x0_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor, discretize=True)
+        
+        number_of_bins_1 = 13
+        number_of_bins_2 = 27521
+        number_of_points = 1001
+        
+        discrete_values_1 = paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_1)
+        discrete_values_2 = paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_2)
+        number_unique_values_1 = len(np.unique(discrete_values_1))
+        number_unique_values_2 = len(np.unique(discrete_values_2))
+        
+        self.assertEqual(number_unique_values_1, number_of_bins_1)
+        self.assertEqual(number_unique_values_2, number_of_points)
+        with self.assertRaises(ValueError):
+            paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=-1)
 
 
 class TestEI(unittest.TestCase):
