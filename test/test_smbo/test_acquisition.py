@@ -197,7 +197,7 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         hyperparameter_dict = {'x0': x0_prior}
         self.model = PriorMockModel(hyperparameter_dict=hyperparameter_dict)
         self.ei = EI(self.model)
-        self.lcb = LCB(self.model)
+        self.ts = TS(self.model)
         self.beta = 2
         self.prior_floor = 1e-1
 
@@ -205,8 +205,8 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
         self.assertFalse(paf.rescale_acq)
 
-    def test_init_lcb(self):
-        paf = PriorAcquisitionFunction(self.model, self.lcb, self.beta)
+    def test_init_ts(self):
+        paf = PriorAcquisitionFunction(self.model, self.ts, self.beta)
         self.assertTrue(paf.rescale_acq)
         
     def test_update(self):
@@ -312,6 +312,43 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         self.assertAlmostEqual(acq[0][0], 0.0 * prior_0_factor)
         self.assertAlmostEqual(acq[1][0], 0.90020601136712231 * prior_1_factor)
         self.assertAlmostEqual(acq[2][0], 0.3989422804014327 * prior_2_factor)
+
+    def test_NxD_TS(self):
+        # since there is some rescaling that needs to be done for TS and UCB (the same 
+        # scaling for the two of them), it justifies testing as well
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x),  max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {'x0': x0_prior, 'x1': x1_prior, 'x2': x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ts, self.beta, self.prior_floor)
+        eta = 1.0
+        
+        paf.update(model=self.model, eta=eta)
+
+        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        
+        # retrieved from TS example
+        ts_value_0 = -0.00988738
+        ts_value_1 = -0.22654082
+        ts_value_2 = -2.76405235
+        
+        prior_0_factor = np.power(0.0002 * 1 * 1.9998 + paf.prior_floor, self.beta / 1.0)
+        prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / 1.0)
+        prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+        
+        # rescaling to avoid negative values, and keep the TS ranking intact
+        combined_value_0 = np.clip(ts_value_0 + eta, 0, np.inf) * prior_0_factor
+        combined_value_1 = np.clip(ts_value_1 + eta, 0, np.inf) * prior_1_factor
+        combined_value_2 = np.clip(ts_value_2 + eta, 0, np.inf) * prior_2_factor
+        
+        self.assertAlmostEqual(acq[0][0], combined_value_0)
+        self.assertAlmostEqual(acq[1][0], combined_value_1)
+        self.assertAlmostEqual(acq[2][0], combined_value_2)
 
     def test_discretize_pdf(self):
         pass
