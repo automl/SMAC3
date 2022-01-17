@@ -681,13 +681,22 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
     This optimizer performs local search from the previous best points
     according, to the acquisition function, uses the acquisition function to
     sort randomly sampled configurations. Random configurations are
-    interleaved by the main SMAC code.
+    interleaved by the main SMAC code. The random configurations are retrieved
+    from two different ConfigurationSpaces - one which uses priors (e.g. NormalFloatHP)
+    and is defined by the user, and one that is a uniform version of the same
+    space, i.e. with the priors removed.
 
     Parameters
     ----------
     acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
 
-    config_space : ~smac.configspace.ConfigurationSpace
+    config_space : ~smac.configspace.ConfigurationSpace 
+        The original ConfigurationSpace specified by the user
+
+    uniform_config_space : ~smac.configspace.ConfigurationSpace
+        A version of the user-defined ConfigurationSpace where all parameters are
+        uniform (or have their weights removed in the case of a categorical
+        hyperparameter)
 
     rng : np.random.RandomState or int, optional
 
@@ -699,6 +708,10 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
 
     n_sls_iterations: int
         [Local Search] number of local search iterations
+
+    prior_sampling_fraction: float
+        The ratio of random samples that are taken from the user-defined ConfigurationSpace,
+        as opposed to the uniform version.
     """
 
     def __init__(
