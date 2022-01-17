@@ -738,7 +738,7 @@ class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
         )
         self.local_search = LocalSearch(
             acquisition_function=acquisition_function,
-            config_space=config_space,
+            config_space=uniform_config_space,
             rng=rng,
             max_steps=max_steps,
             n_steps_plateau_walk=n_steps_plateau_walk
