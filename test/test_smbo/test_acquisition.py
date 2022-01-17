@@ -28,6 +28,11 @@ class ConfigurationMock(object):
         return self.values
 
 
+class ConfigurationSpaceMock(object):
+
+    def __init__(self, values=None):
+
+
 class MockModel(object):
     def __init__(self, num_targets=1, seed=0):
         self.num_targets = num_targets
@@ -154,6 +159,40 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
             configurations = [ConfigurationMock([1.0, 1.0, 1.0]), ConfigurationMock([1.0, 2.0, 3.0])]
             rval = iaf(configurations)
             self.assertEqual(rval.shape, (2, 1))
+
+
+class TestPriorAcquisitionFunction:
+    def setUp(self):
+        self.model = MockModel()
+        self.ei = EI(self.model)
+        self.hyperparameters
+
+    def test_compute_prior(self):
+        pass
+
+    def test1xD(self):
+        pass
+
+    def testNxD(self):
+        pass
+
+    def test_1x1(self):
+        pass
+
+    def test_Nx1(self):
+        pass
+
+    def test_discretize_pdf(self):
+        pass
+
+    def test_rescale_acq(self):
+        pass
+
+    def test_decay(self):
+        pass
+
+    def test_bounds(self):
+        pass
 
 
 class TestEI(unittest.TestCase):
