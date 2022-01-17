@@ -198,8 +198,9 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         self.model = PriorMockModel(hyperparameter_dict=hyperparameter_dict)
         self.ei = EI(self.model)
         self.lcb = LCB(self.model)
-        self.beta = 10
-        
+        self.beta = 2
+        self.prior_floor = 1e-1
+
     def test_init_ei(self):
         paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
         self.assertFalse(paf.rescale_acq)
@@ -269,11 +270,48 @@ class TestPriorAcquisitionFunction(unittest.TestCase):
         self.assertEqual(prior_values.shape, (1, 1))
         self.assertEqual(prior_values[0][0], 1)
 
-    def test_1x1(self):
-        pass
+    def test_1xD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x),  max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {'x0': x0_prior, 'x1': x1_prior, 'x2': x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
 
-    def test_Nx1(self):
-        pass
+        paf.update(model=self.model, eta=1.0)
+        configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+
+        prior_0_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+
+        self.assertAlmostEqual(acq[0][0], 0.3989422804014327 * prior_0_factor)
+
+
+    def test_NxD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x),  max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {'x0': x0_prior, 'x1': x1_prior, 'x2': x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
+        
+        paf.update(model=self.model, eta=1.0)
+        # These are the exact same numbers as in the EI tests below 
+        configurations = ([ConfigurationMock([0.0, 0.0, 0.0]),
+                           ConfigurationMock([0.1, 0.1, 0.1]),
+                           ConfigurationMock([1.0, 1.0, 1.0])])
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+        
+        prior_0_factor = np.power(0.0 * 1.0 * 2.0 + paf.prior_floor, self.beta / 1.0)
+        prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / 1.0)
+        prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+        
+        # We do only one update, so we are at iteration 1 (beta/iteration_nbr=2)
+        self.assertAlmostEqual(acq[0][0], 0.0 * prior_0_factor)
+        self.assertAlmostEqual(acq[1][0], 0.90020601136712231 * prior_1_factor)
+        self.assertAlmostEqual(acq[2][0], 0.3989422804014327 * prior_2_factor)
 
     def test_discretize_pdf(self):
         pass
