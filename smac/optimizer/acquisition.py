@@ -1,7 +1,7 @@
 # encoding=utf8
 import abc
 import copy
-from typing import List, Any, Tuple, Dict
+from typing import List, Any, Tuple
 
 import numpy as np
 from scipy.stats import norm
