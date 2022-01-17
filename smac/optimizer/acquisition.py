@@ -219,7 +219,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.discretize = discretize
         if self.discretize:
             self.discrete_bins_factor = discrete_bins_factor
-            self.continous_pdf_bounds = self._get_pdf_bounds()
 
         # check if the acquisition function is LCB or TS - then the acquisition function values
         # need to be rescaled to assure positiveness & correct magnitude
@@ -244,30 +243,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         self.iteration_number += 1
         self.acq.update(**kwargs)
         self.eta = kwargs.get('eta')
-
-        
-    def _get_pdf_bounds(self, approximation_points: int = 10001) -> Dict[str, np.ndarray]:
-        """Retrieves an approximate minimum and maximum for each continous parameter, which
-        is later used to discretize the prior, which in turn is relevant for continous 
-        hyperparameters using a Random Forest model.
-        
-        Parameters
-        ----------
-        approximation_points: 
-            The number of points sampled uniformly over the parameter range to approximate the
-            minimum and maximum
-        
-        Returns
-        -------
-        A dict of parameter name - [min(pdf), max(pdf)] for each continous parameter
-        """    
-        continous_pdf_bounds = {}
-        for name, parameter in self.hyperparameters.items():
-            if isinstance(parameter, FloatHyperparameter):
-                sample_points = np.linspace(parameter._lower, parameter._upper, approximation_points)
-                densities = parameter._pdf(sample_points)
-                continous_pdf_bounds[name] = np.array([densities.min(), densities.max()])  
-        return continous_pdf_bounds
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each
@@ -319,8 +294,8 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         """
         # evaluates the actual pdf on all the relevant points
         pdf_values = parameter._pdf(X_col[:, np.newaxis])
-        # retrieves the approximate smallest largest value of the pdf in the domain 
-        lower, upper = self.continous_pdf_bounds[parameter.name]
+        # retrieves the largest value of the pdf in the domain 
+        lower, upper = (0, parameter.get_max_density())
         # creates the bins (the possible discrete options of the pdf)
         bin_values = np.linspace(lower, upper, number_of_bins)
         # generates an index (bin) for each evaluated point
