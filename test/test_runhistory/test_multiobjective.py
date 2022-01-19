@@ -24,11 +24,11 @@ def schaffer_n1(x):
 
 def schaffer_pareto(x):
     """return estimate & true pareto front"""
-    
+
     def pareto(x):
         # substituted x in f2 with x=np.sqrt(f1)
         return np.square(np.sqrt(x) - 2)
-    
+
     f1 = schaffer_func1(x)
     return f1, pareto(f1)
 
@@ -109,7 +109,7 @@ class MultiObjectiveTest(unittest.TestCase):
         # plt.show()
         #
         # plot_pareto_from_runhistory(observed_costs[observed_costs[:, 1] < 4.])
-        ## plot_pareto_from_runhistory(true_pareto_front)
+        # plot_pareto_from_runhistory(true_pareto_front)
 
 
 if __name__ == '__main__':
