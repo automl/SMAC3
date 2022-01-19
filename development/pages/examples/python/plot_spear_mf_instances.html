@@ -400,7 +400,7 @@ instance definition is done inside scenario file.</p>
 <p>Moreover, we present you an alternative <a class="reference internal" href="../../glossary.html#term-Intensification"><span class="xref std std-term">intensification</span></a> procedure “Successive Halving”.</p>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.scenario.scenario.Scenario:Reading scenario file: ./spear_qcp/scenario.txt
-INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-12_09:36:12_376650
+INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-19_13:33:34_800775
 WARNING:smac.facade.smac_ac_facade.SMAC4AC:Runtime as objective automatically activates log(y) transformation
 INFO:smac.initial_design.default_configuration_design.DefaultConfiguration:Running initial design for 1 configurations
 INFO:smac.optimizer.smbo.SMBO:Running initial design
@@ -448,31 +448,14 @@ INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Hal
 INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
 /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
   warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.stats.stats.Stats:Statistics:
 INFO:smac.stats.stats.Stats:#Incumbent changed: 0
-INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 26 / inf
-INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 26 / inf
-INFO:smac.stats.stats.Stats:#Configurations: 7
-INFO:smac.stats.stats.Stats:Used wallclock time: 68.79 / 60.00 sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 12.05 / inf sec
+INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 18 / inf
+INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 18 / inf
+INFO:smac.stats.stats.Stats:#Configurations: 6
+INFO:smac.stats.stats.Stats:Used wallclock time: 60.56 / 60.00 sec
+INFO:smac.stats.stats.Stats:Used target algorithm runtime: 22.12 / inf sec
 INFO:smac.stats.stats.Stats:##########################################################
 INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
   sp-clause-activity-inc, Value: 1.0
@@ -501,7 +484,7 @@ INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
   sp-var-dec-heur, Value: &#39;0&#39;
   sp-variable-decay, Value: 1.4
 
-INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 6.310357
+INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 0.459122
 Optimized configuration Configuration:
   sp-clause-activity-inc, Value: 1.0
   sp-clause-decay, Value: 1.4
@@ -572,7 +555,7 @@ Optimized configuration Configuration:
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized configuration </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">incumbent</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  8.857 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  0.614 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-plot-spear-mf-instances-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/608e20a4945bf1cfab2bb845535d7826/plot_spear_mf_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_spear_mf_instances.py</span></code></a></p>
