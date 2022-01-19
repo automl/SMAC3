@@ -24,8 +24,12 @@ def schaffer_n1(x):
 
 def schaffer_pareto(x):
     """return estimate & true pareto front"""
+    
+    def pareto(x):
+        # substituted x in f2 with x=np.sqrt(f1)
+        return np.square(np.sqrt(x) - 2)
+    
     f1 = schaffer_func1(x)
-    pareto = lambda x: np.square(np.sqrt(x) - 2)  # substituted x in f2 with x=np.sqrt(f1)
     return f1, pareto(f1)
 
 
@@ -71,7 +75,7 @@ class MultiObjectiveTest(unittest.TestCase):
                             # str or cls or callable
                         })
 
-        incumbent = smac.optimize()
+        smac.optimize()
 
         # extract the cost values from the runhistory:
         # queried_x = np.concatenate([x.get_array() for x in smac.runhistory.config_ids.keys()])
