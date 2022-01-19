@@ -92,11 +92,10 @@ class AbstractRunHistory2EPM(object):
         self.scenario = scenario
         self.rng = rng
         self.num_params = num_params
-        self.scale_perc = scale_perc
 
-        if scenario.multi_objectives is None:
-            self.num_obj = 1
-        else:
+        self.scale_perc = scale_perc
+        self.num_obj = 1  # type: int
+        if scenario.multi_objectives is not None:
             self.num_obj = len(scenario.multi_objectives)
 
         # Configuration

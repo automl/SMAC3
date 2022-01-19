@@ -466,10 +466,9 @@ class SMAC4AC(object):
 
         # initialize multi objective
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
-        multi_objective_algorithm_instance = None
         if scenario.multi_objectives is not None and num_obj > 1:
-            _multi_objective_kwargs = {"rng": rng,
-                                       "num_obj": num_obj}   # define any defaults here
+            # define any defaults here
+            _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
             if multi_objective_algorithm is None:
@@ -485,6 +484,8 @@ class SMAC4AC(object):
             else:
                 raise TypeError(
                     "Multi objective algorithm not recognized: %s" % (type(multi_objective_algorithm)))
+        else:
+            multi_objective_algorithm_instance = None
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -500,6 +501,7 @@ class SMAC4AC(object):
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
         }
+
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
@@ -537,6 +539,7 @@ class SMAC4AC(object):
         else:
             cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])  # type: ignore[attr-defined] # noqa F821
             threshold = cutoff * scenario.par_factor  # type: ignore[attr-defined] # noqa F821
+
         num_params = len(scenario.cs.get_hyperparameters())  # type: ignore[attr-defined] # noqa F821
         imputor = RFRImputator(rng=rng,
                                cutoff=cutoff,

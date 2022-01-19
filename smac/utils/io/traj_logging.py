@@ -3,11 +3,13 @@ import logging
 import json
 import typing
 import collections
+import numpy as np
 
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant
 
 from smac.stats.stats import Stats
+from smac.utils.logging import format_array
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -164,6 +166,9 @@ class TrajLogger(object):
         for p in incumbent:
             if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
+                
+        if isinstance(train_perf, np.ndarray):
+            train_perf = format_array(train_perf)
 
         traj_entry = {"cpu_time": ta_time_used,
                       "wallclock_time": wallclock_time,

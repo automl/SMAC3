@@ -58,16 +58,28 @@ class PickableLoggerAdapter(object):
         return self.logger.isEnabledFor(level)
 
 
-def format_array(input_array: typing.Union[np.ndarray, list]):
+def format_array(array: typing.Union[np.ndarray, list]) -> typing.List:
     """
-    Transform a np array to a list of format so that it can be printed by logger
+    Transform a np array to a list of format so that it can be printed by logger.
+
+    Parameters
+    ----------
+        input_array: np.ndarray or list.
+
+    Returns
+    -------
+        formatted_list: list.
     """
-    if np.size(input_array) == 1:
-        return f"{input_array.item():4f}"
-    format_list = []
-    if isinstance(input_array, np.ndarray):
-        input_array = input_array.tolist()
-    for item in input_array:
+
+    if np.size(array) == 1:
+        return f"{array.item():4f}"
+
+    formatted_list = []
+    if isinstance(array, np.ndarray):
+        array = array.tolist()
+
+    for item in array:
         # https://stackoverflow.com/a/33482726
-        format_list.append(f"{item:4f}")
-    return format_list
+        formatted_list.append(f"{item:4f}")
+
+    return formatted_list

@@ -195,9 +195,10 @@ class AbstractTAFunc(SerialRunner):
                 cost = [self.cost_for_crash] * len(self.multi_objectives)
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
-                cost = result
-                if np.isscalar(cost):
-                    cost = [cost]
+                if np.isscalar(result):
+                    cost = [result]
+                else:
+                    cost = result
             else:
                 status = StatusType.CRASHED
                 cost = [self.cost_for_crash] * len(self.multi_objectives)
