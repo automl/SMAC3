@@ -166,7 +166,7 @@ class TrajLogger(object):
         for p in incumbent:
             if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
-                
+
         if isinstance(train_perf, np.ndarray):
             train_perf = format_array(train_perf)
 

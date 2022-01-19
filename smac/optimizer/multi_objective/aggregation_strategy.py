@@ -14,16 +14,16 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
     def __call__(self, values: np.ndarray) -> float:
         """
         Transform a multi-objective loss to a single loss.
-        
+
         Parameters
         ----------
             values: np.ndarray[num_evaluations, num_obj].
-            
+
         Returns
         -------
             cost: float.
         """
-        
+
         raise NotImplementedError
 
 

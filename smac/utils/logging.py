@@ -1,5 +1,5 @@
 import logging
-import typing
+from typing import Union, List, Dict, Any
 
 import numpy as np
 
@@ -12,7 +12,7 @@ class PickableLoggerAdapter(object):
         self.name = name
         self.logger = logging.getLogger(self.name)
 
-    def __getstate__(self) -> typing.Dict[str, str]:
+    def __getstate__(self) -> Dict[str, str]:
         """
         Method is called when pickle dumps an object.
         Returns
@@ -22,7 +22,7 @@ class PickableLoggerAdapter(object):
         """
         return {'name': self.name}
 
-    def __setstate__(self, state: typing.Dict[str, typing.Any]) -> None:
+    def __setstate__(self, state: Dict[str, Any]) -> None:
         """
         Method is called when pickle loads an object. Retrieves the name and
         creates a logger.
@@ -58,9 +58,10 @@ class PickableLoggerAdapter(object):
         return self.logger.isEnabledFor(level)
 
 
-def format_array(array: typing.Union[np.ndarray, list]) -> typing.List:
+def format_array(array: Union[np.ndarray, list]) -> Union[str, List]:
     """
-    Transform a np array to a list of format so that it can be printed by logger.
+    Transform a numpy array to a list of format so that it can be printed by logger.
+    If the list holds one element only, then a string is returned.
 
     Parameters
     ----------
@@ -68,18 +69,18 @@ def format_array(array: typing.Union[np.ndarray, list]) -> typing.List:
 
     Returns
     -------
-        formatted_list: list.
+        result: str or list.
     """
-
-    if np.size(array) == 1:
-        return f"{array.item():4f}"
-
-    formatted_list = []
+    
     if isinstance(array, np.ndarray):
         array = array.tolist()
 
+    formatted_list = []
     for item in array:
         # https://stackoverflow.com/a/33482726
         formatted_list.append(f"{item:4f}")
+        
+    if len(array) == 1:
+        return array[0]
 
     return formatted_list
