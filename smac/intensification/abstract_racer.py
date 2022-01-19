@@ -374,7 +374,7 @@ class AbstractRacer(object):
                 inc_perf_format = format_array(inc_perf)
 
                 self.logger.debug(f"Incumbent ({inc_perf_format}) is at least as good as the "
-                                  f"challenger ({chal_perf_format}) on {len(chall_runs)} runs." )
+                                  f"challenger ({chal_perf_format}) on {len(chall_runs)} runs.")
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
@@ -424,4 +424,3 @@ class AbstractRacer(object):
                 self.logger.info("  %s : %r -> %r" % param)
             else:
                 self.logger.debug("  %s remains unchanged: %r", param[0], param[1])
-

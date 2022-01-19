@@ -1,12 +1,30 @@
 name: dist-check
 
-on: [push, pull_request]
+on:
+  # Manual trigger option in github
+  workflow_dispatch:
+
+  # Trigger on push to these branches
+  push:
+    branches:
+      - master
+      - development
+
+  # Trigger on a open/push to a PR targeting one of these branches
+  pull_request:
+    branches:
+      - master
+      - development
+
+
 
 jobs:
   dist:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Setup Python
       uses: actions/setup-python@v2
@@ -28,9 +46,13 @@ jobs:
       run: |
         last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
         pip install $last_dist
-        
+
     - name: PEP 561 Compliance
       run: |
         pip install mypy
+
         cd ..  # required to use the installed version of smac
-        if ! python -c "import smac"; then exit 1; fi
+
+        # Note that doesn't do a mypy check, only that the package exports type
+        # information
+        if ! mypy -c "import smac"; then exit 1; fi

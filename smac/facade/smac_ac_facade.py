@@ -479,7 +479,7 @@ class SMAC4AC(object):
                         _multi_objective_kwargs[key] = value
                 multi_objective_algorithm_instance = (
                     ParEGO(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
-                )  # type: MultiObjectiveAlgorithm
+                )  # type: AbstractMultiObjectiveAlgorithm
             elif inspect.isclass(multi_objective_algorithm):
                 multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
             else:

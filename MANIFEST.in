@@ -1,2 +1,3 @@
 include requirements.txt
 include extras_require.json
+include smac/py.typed

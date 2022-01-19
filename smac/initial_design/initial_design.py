@@ -5,7 +5,7 @@ from collections import OrderedDict
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import NumericalHyperparameter, \
     Constant, CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
+from ConfigSpace.util import deactivate_inactive_hyperparameters, ForbiddenValueError
 import numpy as np
 
 from smac.utils.io.traj_logging import TrajLogger
@@ -141,9 +141,12 @@ class InitialDesign:
         self.logger.debug("Initial Design")
         configs = []
         for vector in design:
-            conf = deactivate_inactive_hyperparameters(configuration=None,
-                                                       configuration_space=cs,
-                                                       vector=vector)
+            try:
+                conf = deactivate_inactive_hyperparameters(configuration=None,
+                                                           configuration_space=cs,
+                                                           vector=vector)
+            except ForbiddenValueError:
+                continue
             conf.origin = origin
             configs.append(conf)
             self.logger.debug(conf)

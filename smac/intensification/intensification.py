@@ -125,6 +125,7 @@ class Intensifier(AbstractRacer):
         minimal number of challengers to be considered
         (even if time_bound is exhausted earlier)
     """
+
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
@@ -240,9 +241,8 @@ class Intensifier(AbstractRacer):
         """
         if num_workers > 1:
             raise ValueError("Intensifier does not support more than 1 worker, yet "
-                             "the argument num_workers to get_next_run is {}".format(
-                num_workers
-            ))
+                             "the argument num_workers to get_next_run is {}".format(num_workers)
+                             )
 
         # If this function is called, it means the iteration is
         # not complete (we can be starting a new iteration, or re-running a
