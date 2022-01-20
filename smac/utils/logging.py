@@ -2,6 +2,7 @@ import logging
 from typing import Union, List, Dict, Any
 
 import numpy as np
+from collections.abc import Iterable
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -58,14 +59,18 @@ class PickableLoggerAdapter(object):
         return self.logger.isEnabledFor(level)
 
 
-def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, List[str]]:
+def format_array(input: Union[str, int, float, np.ndarray, list],
+                 format: bool = True) -> Union[str, List[str]]:
     """
     Transform a numpy array to a list of format so that it can be printed by logger.
     If the list holds one element only, then a formatted string is returned.
 
     Parameters
     ----------
-        input_array: np.ndarray or list.
+        input: np.ndarray or list.
+            input value, could be anything serializable or a np array
+        format: bool.
+            if the items in list are formatted values
 
     Returns
     -------
@@ -86,7 +91,10 @@ def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, 
 
     formatted_list = []
     for item in input:
-        formatted_list.append(np.round(item, 4))
+        if format:
+            item = np.round(item, 4)
+
+        formatted_list.append(item)
 
     if len(formatted_list) == 1:
         return formatted_list[0]
