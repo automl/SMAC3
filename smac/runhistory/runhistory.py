@@ -234,6 +234,8 @@ class RunHistory(object):
                 'Configuration to add to the runhistory is not of type Configuration, but %s' % type(config)
             )
 
+        cost = np.asarray(cost)
+
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
         if config_id_tmp is None:
@@ -469,7 +471,7 @@ class RunHistory(object):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
-        return self._min_cost_per_config.get(config_id,
+        return self._min_cost_per_config.get(config_id,  # type: ignore[arg-type] # noqa F821
                                              np.full(self.num_obj, np.nan).squeeze())  # type: ignore[arg-type] # noqa F821
 
     def empty(self) -> bool:

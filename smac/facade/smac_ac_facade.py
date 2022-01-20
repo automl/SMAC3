@@ -467,7 +467,7 @@ class SMAC4AC(object):
         # initialize multi objective
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None  # type: Optional[AbstractMultiObjectiveAlgorithm]
-        
+
         if scenario.multi_objectives is not None and num_obj > 1:
             # define any defaults here
             _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
@@ -482,7 +482,7 @@ class SMAC4AC(object):
                     ParEGO(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
                 )
             elif inspect.isclass(multi_objective_algorithm):
-                multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)  
+                multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)
             else:
                 raise TypeError(
                     "Multi objective algorithm not recognized: %s" % (type(multi_objective_algorithm)))
@@ -557,7 +557,7 @@ class SMAC4AC(object):
             'imputor': imputor,
             'scale_perc': 5,
         }
-        
+
         if isinstance(multi_objective_algorithm_instance, AggregationStrategy):
             # TODO: consider other sorts of multi-objective algorithms
             r2e_def_kwargs.update({'multi_objective_algorithm': multi_objective_algorithm_instance})

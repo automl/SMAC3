@@ -177,10 +177,13 @@ if __name__ == "__main__":
         intensifier_kwargs=intensifier_kwargs,
     )
 
+    tae = smac.get_tae_runner()
+
     # Example call of the function with default values
     # It returns: Status, Cost, Runtime, Additional Infos
-    def_value = smac.get_tae_runner().run(
-        config=cs.get_default_configuration(), budget=max_epochs, seed=0
+    def_value = tae.run(
+        config=cs.get_default_configuration(),
+        budget=max_epochs, seed=0
     )[1]
 
     print("Value for default configuration: %.4f" % def_value)
@@ -191,7 +194,7 @@ if __name__ == "__main__":
     finally:
         incumbent = smac.solver.incumbent
 
-    inc_value = smac.get_tae_runner().run(config=incumbent, budget=max_epochs, seed=0)[
+    inc_value = tae.run(config=incumbent, budget=max_epochs, seed=0)[
         1
     ]
 

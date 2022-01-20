@@ -2,7 +2,6 @@ import logging
 from typing import Union, List, Dict, Any
 
 import numpy as np
-from collections.abc import Iterable
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -81,20 +80,18 @@ def format_array(input: Union[str, int, float, np.ndarray, list],
         if isinstance(input, str):
             input = float(input)
 
-        input = [input]
-
     if isinstance(input, np.ndarray):
         input = input.tolist()
 
-        if not isinstance(input, list):
-            input = [input]
+    if not isinstance(input, list):
+        input = [input]
 
     formatted_list = []
     for item in input:
         if format:
             item = np.round(item, 4)
 
-        formatted_list.append(item)
+        formatted_list.append(str(float(item)))
 
     if len(formatted_list) == 1:
         return formatted_list[0]
