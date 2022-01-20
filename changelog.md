@@ -1,6 +1,5 @@
 # 1.2
 
-
 ## Features
 * Added multi objective via Par-EGO.
 
@@ -40,7 +39,6 @@
 * Statistics are better readable now
 
 
-
 # 1.1.1
 
 ## Minor Changes
@@ -67,10 +65,10 @@
 * `minR`, `maxR` and `use_ta_time` can now be initialized by the scenario. (#775)
 * `ConfigSpace.util.get_one_exchange_neighborhood`'s invalid configurations are ignored. (#773)
 
-
 ## Bug Fixes
 * Fixed an incorrect adaptive capping behaviour. (#749)
 * Avoid the potential `ValueError` raised by `LocalSearch._do_search`. (#773)
+
 
 # 1.0.1
 
