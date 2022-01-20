@@ -104,6 +104,7 @@ class ParallelScheduler(AbstractRacer):
 
         # We have a pool of instances that yield configurations ot run
         self.intensifier_instances = {}  # type: typing.Dict[int, AbstractRacer]
+        self.print_worker_warning = True
 
     def get_next_run(self,
                      challengers: typing.Optional[typing.List[Configuration]],
@@ -148,12 +149,11 @@ class ParallelScheduler(AbstractRacer):
             evaluate a configuration
         """
 
-        if num_workers <= 1:
-            warnings.warn("{} is intended to be used "
-                          "with more than 1 worker but num_workers={}".format(
-                              self.__class__.__name__,
-                              num_workers
-                          ))
+        if num_workers <= 1 and self.print_worker_warning:
+            warnings.warn(
+                f"{self.__class__.__name__} is executed with {num_workers} workers only. " \
+                "Consider to use pynisher to use all available workers.")
+            self.print_worker_warning = False
 
         # If repeat_configs is True, that means that not only self can repeat
         # configurations, but also in the context of multiprocessing, N
