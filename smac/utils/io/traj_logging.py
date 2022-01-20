@@ -3,7 +3,6 @@ import logging
 import json
 from typing import Union, List, Dict, Optional
 import collections
-import numpy as np
 
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant

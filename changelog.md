@@ -37,6 +37,7 @@
 * Docs display init methods now
 * Parameters in the docs are shown first now
 * Successive Halving only warns you once if one worker is used only
+* Statistics are better readable now
 
 
 
