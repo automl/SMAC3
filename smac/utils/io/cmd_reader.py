@@ -15,7 +15,7 @@ import re
 import shlex
 import sys
 import time
-import typing
+from typing import Dict, Union, Any, List, Optional, IO, Tuple, Callable, Type, Sequence, Iterable
 
 import numpy as np
 
@@ -28,8 +28,8 @@ __license__ = "3-clause BSD"
 
 
 in_reader = InputReader()
-PARSED_SCENARIO_ARGS_TYPE = typing.Dict[
-    str, typing.Union[str, int, typing.Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, typing.List[str]]
+PARSED_SCENARIO_ARGS_TYPE = Dict[
+    str, Union[str, int, Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, List[str]]
 ]
 parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
 # Placeholder logger that will not be used in practice, but which will be replaced by
@@ -37,7 +37,7 @@ parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
 logger = logging.getLogger(__name__)
 
 
-def truthy(x: typing.Any) -> bool:
+def truthy(x: Any) -> bool:
     """Convert x into its truth value"""
     if isinstance(x, bool):
         return x
@@ -49,6 +49,18 @@ def truthy(x: typing.Any) -> bool:
         return False
 
 
+def multi_objectives(x: Union[str, List]) -> List[str]:
+    """Convert objectives into an array"""
+    if isinstance(x, str):
+        # Convert a (comma-separated) string into list of strings.
+        x = x.replace(", ", ",")
+        return x.split(",")
+    elif isinstance(x, List):
+        return x
+    else:
+        raise RuntimeError("Expected string, got %s" % type(x))
+
+
 class CheckScenarioFileAction(Action):
     """Check scenario file given by user"""
 
@@ -57,7 +69,7 @@ class CheckScenarioFileAction(Action):
         parser: ArgumentParser,
         namespace: Namespace,
         values: str,
-        option_string: typing.Optional[str] = None,
+        option_string: Optional[str] = None,
     ) -> None:
         fn = values
         if fn:
@@ -73,8 +85,8 @@ class ParseRandomConfigurationChooserAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.IO,
-        option_string: typing.Optional[str] = None,
+        values: IO,
+        option_string: Optional[str] = None,
     ) -> None:
         module_file = values
         module_path = module_file.name
@@ -95,7 +107,7 @@ class ProcessRunObjectiveAction(Action):
         parser: ArgumentParser,
         namespace: Namespace,
         values: str,
-        option_string: typing.Optional[str] = None,
+        option_string: Optional[str] = None,
     ) -> None:
         if values == "runtime":
             parsed_scen_args["cutoff_time_required"] = {
@@ -112,7 +124,7 @@ class ParseOverallObjectiveAction(Action):
         parser: ArgumentParser,
         namespace: Namespace,
         values: str,
-        option_string: typing.Optional[str] = None,
+        option_string: Optional[str] = None,
     ) -> None:
         par_str = values
         if par_str[:3] in ["PAR", "par"]:
@@ -135,8 +147,8 @@ class ReadTrainInstFileAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.Optional[str],
-        option_string: typing.Optional[str] = None,
+        values: Optional[str],
+        option_string: Optional[str] = None,
     ) -> None:
         fn = values
         if fn:
@@ -154,8 +166,8 @@ class ReadTestInstFileAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.Optional[str],
-        option_string: typing.Optional[str] = None,
+        values: Optional[str],
+        option_string: Optional[str] = None,
     ) -> None:
         fn = values
         if fn:
@@ -173,8 +185,8 @@ class ReadFeatureFileAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.Optional[str],
-        option_string: typing.Optional[str] = None,
+        values: Optional[str],
+        option_string: Optional[str] = None,
     ) -> None:
         fn = values
         if fn:
@@ -194,8 +206,8 @@ class ReadPCSFileAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.Optional[str],
-        option_string: typing.Optional[str] = None,
+        values: Optional[str],
+        option_string: Optional[str] = None,
     ) -> None:
         fn = values
         if fn:
@@ -215,7 +227,7 @@ class ProcessOutputDirAction(Action):
         self,
         parser: ArgumentParser,
         namespace: Namespace,
-        values: typing.Optional[str],
+        values: Optional[str],
         option_string: str = None,
     ) -> None:
         directory = values
@@ -232,12 +244,12 @@ class ConfigurableHelpFormatter(ArgumentDefaultsHelpFormatter):
     Configurable Help Formatter. Can filter out developer options.
     """
 
-    def __init__(self, *args: typing.Any, help_type: str = 'standard', **kwargs: typing.Any):
+    def __init__(self, *args: Any, help_type: str = 'standard', **kwargs: Any):
         self.help_type = help_type
         super(ConfigurableHelpFormatter, self).__init__(*args, **kwargs)
 
-    def _add_item(self, func: typing.Callable, args: typing.Any) -> None:
-        def filter_actions(actions: typing.List[Action]) -> typing.List[Action]:
+    def _add_item(self, func: Callable, args: Any) -> None:
+        def filter_actions(actions: List[Action]) -> List[Action]:
             filtered_actions = []
             for action in actions:
                 dev = False
@@ -269,8 +281,8 @@ class SMACArgumentParser(ArgumentParser):
     ArgumentParser that can be extended by additional parsers.
     """
 
-    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
-        self.additional_parsers = []  # type: typing.List[ArgumentParser]
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.additional_parsers = []  # type: List[ArgumentParser]
         self.help_type = 'standard'  # standard or dev
         super(SMACArgumentParser, self).__init__(*args, **kwargs)
 
@@ -322,7 +334,7 @@ class SMACArgumentParser(ArgumentParser):
 class StandardHelpAction(Action):
     """Action to only show standard options in help message"""
 
-    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         # https://github.com/python/mypy/issues/6799
         super().__init__(default=SUPPRESS, nargs=0, *args, **kwargs)  # type: ignore
 
@@ -331,7 +343,7 @@ class StandardHelpAction(Action):
         parser: SMACArgumentParser,
         namespace: Namespace,
         values: list,
-        option_string: typing.Optional[str] = None,
+        option_string: Optional[str] = None,
     ) -> None:
         parser.set_help_type('standard')
         parser.print_help()
@@ -341,7 +353,7 @@ class StandardHelpAction(Action):
 class DevHelpAction(Action):
     """Action to show standard and developer options in help message"""
 
-    def __init__(self, *args: typing.Any, **kwargs: typing.Any):
+    def __init__(self, *args: Any, **kwargs: Any):
         # https://github.com/python/mypy/issues/6799
         super().__init__(default=SUPPRESS, nargs=0, *args, **kwargs)  # type: ignore
 
@@ -350,7 +362,7 @@ class DevHelpAction(Action):
         parser: SMACArgumentParser,
         namespace: Namespace,
         values: list,
-        option_string: typing.Optional[str] = None,
+        option_string: Optional[str] = None,
     ) -> None:
         parser.set_help_type('dev')
         parser.print_help()
@@ -372,16 +384,16 @@ class CMDReader(object):
 
         # initialized in _add_main_options
         self.parser = None  # type: SMACArgumentParser # type: ignore[assignment]
-        self.main_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
-        self.main_cmd_translations = {}  # type: typing.Dict[str, str]
+        self.main_cmd_actions = {}  # type: Dict[str, Dict]
+        self.main_cmd_translations = {}  # type: Dict[str, str]
         # initialized in _add_smac_options
         self.smac_parser = None  # type: SMACArgumentParser # type: ignore[assignment]
-        self.smac_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
-        self.smac_cmd_translations = {}  # type: typing.Dict[str, str]
+        self.smac_cmd_actions = {}  # type: Dict[str, Dict]
+        self.smac_cmd_translations = {}  # type: Dict[str, str]
         # initialized in _add_scen_options
         self.scen_parser = None  # type: SMACArgumentParser # type: ignore[assignment]
-        self.scen_cmd_actions = {}  # type: typing.Dict[str, typing.Dict]
-        self.scen_cmd_translations = {}  # type: typing.Dict[str, str]
+        self.scen_cmd_actions = {}  # type: Dict[str, Dict]
+        self.scen_cmd_translations = {}  # type: Dict[str, str]
         # needed for argument interdependencies
         self.parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
         parsed_scen_args = self.parsed_scen_args
@@ -392,7 +404,7 @@ class CMDReader(object):
         self._add_scen_options()
 
     @staticmethod
-    def _extract_action_info(actions: typing.List[Action]) -> typing.Tuple[typing.Dict, typing.Dict]:
+    def _extract_action_info(actions: List[Action]) -> Tuple[Dict, Dict]:
         extracted_info = {}
         translations = {}
         for action in actions:
@@ -404,7 +416,7 @@ class CMDReader(object):
             dest = name
             if hasattr(action, 'dest'):
                 dest = action.dest
-            cmd_action = dict()  # type: typing.Dict[str, typing.Union[str, typing.Callable[[str], typing.Any], typing.IO, None, typing.Type, bool, typing.Sequence[str], typing.Iterable]] # noqa 501
+            cmd_action = dict()  # type: Dict[str, Union[str, Callable[[str], Any], IO, None, Type, bool, Sequence[str], Iterable]] # noqa 501
             cmd_action['dest'] = dest
             for name in action.option_strings:
                 translations[name] = dest
@@ -671,8 +683,8 @@ class CMDReader(object):
                                     "required as well.")
         scen_opts.add_argument("--multi-objectives", "--multi_objectives",
                                dest='multi_objectives',
-                               default="cost", type=str,
-                               help="Comma-separated strings of objectives to optimize.")
+                               default="cost", type=multi_objectives,
+                               help="List of string or comma-separated strings of objectives to optimize.")
         self.overall_obj_arg = \
             scen_opts.add_argument("--overall-obj", "--overall_obj", dest="overall_obj",
                                    type=str, action=ParseOverallObjectiveAction, default='par10',
@@ -754,7 +766,7 @@ class CMDReader(object):
         self.parser.add_parser(self.scen_parser)
         self.scen_cmd_actions, self.scen_cmd_translations = CMDReader._extract_action_info(self.scen_parser._actions)
 
-    def parse_main_command(self, main_cmd_opts: typing.Sequence[str]) -> typing.Tuple[Namespace, typing.List[str]]:
+    def parse_main_command(self, main_cmd_opts: Sequence[str]) -> Tuple[Namespace, List[str]]:
         """Parse main options"""
         args_, misc = self.parser.parse_known_args(main_cmd_opts)
         try:
@@ -766,8 +778,8 @@ class CMDReader(object):
     def parse_smac_command(
         self,
         smac_dict: dict = {},
-        smac_cmd_opts: typing.List[str] = [],
-    ) -> typing.Tuple[Namespace, typing.Dict, typing.List[str]]:
+        smac_cmd_opts: List[str] = [],
+    ) -> Tuple[Namespace, Dict, List[str]]:
         """Parse SMAC options"""
         # transform smac dict to smac_args
         try:
@@ -808,7 +820,7 @@ class CMDReader(object):
     def parse_scenario_command(self,
                                scenario_file: str = None,
                                scenario_dict: dict = {},
-                               scenario_cmd_opts: typing.List[str] = []) -> Namespace:
+                               scenario_cmd_opts: List[str] = []) -> Namespace:
         """
         Parse scenario options
         :param scenario_file: str or None
@@ -821,7 +833,7 @@ class CMDReader(object):
         Parsed scenario arguments
         """
         # read scenario file
-        scenario_file_dict = {}  # type: typing.Dict[str, typing.Any]
+        scenario_file_dict = {}  # type: Dict[str, Any]
         if isinstance(scenario_file, str):
             scenario_file_dict = in_reader.read_scenario_file(scenario_file)
         elif scenario_file is None:
@@ -884,7 +896,7 @@ class CMDReader(object):
         self,
         dict_cmd: dict,
         scenario_file: str = None,
-    ) -> typing.Tuple[Namespace, Namespace]:
+    ) -> Tuple[Namespace, Namespace]:
         """Reads smac and scenario options provided in a dictionary
 
         Returns
@@ -901,8 +913,8 @@ class CMDReader(object):
 
     def read_cmd(
         self,
-        commandline_arguments: typing.Sequence[str] = tuple(sys.argv[1:]),
-    ) -> typing.Tuple[Namespace, Namespace, Namespace]:
+        commandline_arguments: Sequence[str] = tuple(sys.argv[1:]),
+    ) -> Tuple[Namespace, Namespace, Namespace]:
         """Reads command line options (main, smac and scenario options)
 
         Returns
@@ -918,7 +930,7 @@ class CMDReader(object):
         return main_args_, smac_args_, scen_args_
 
     @staticmethod
-    def _write_options_to_doc(_arguments: dict, path: str, exclude: typing.List[str]) -> None:
+    def _write_options_to_doc(_arguments: dict, path: str, exclude: List[str]) -> None:
         with open(path, 'w') as fh:
             for arg in sorted(_arguments.keys()):
                 print_arg = arg.lstrip('-').replace('-', '_')
@@ -944,7 +956,7 @@ class CMDReader(object):
         path: string
             Where to write to (relative to doc-folder since executed in conf.py)
         """
-        exclude = []  # type: typing.List
+        exclude = []  # type: List
         _arguments = self.main_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
@@ -957,7 +969,7 @@ class CMDReader(object):
         path: string
             Where to write to (relative to doc-folder since executed in conf.py)
         """
-        exclude = []  # type: typing.List
+        exclude = []  # type: List
         _arguments = self.smac_cmd_actions
         CMDReader._write_options_to_doc(_arguments, path, exclude)
 
