@@ -1,7 +1,7 @@
 import os
 import logging
 import json
-import typing
+from typing import Union, List, Dict, Optional
 import collections
 import numpy as np
 
@@ -41,7 +41,7 @@ class TrajLogger(object):
     trajectory
     """
 
-    def __init__(self, output_dir: typing.Optional[str], stats: Stats) -> None:
+    def __init__(self, output_dir: Optional[str], stats: Stats) -> None:
         self.stats = stats
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -72,9 +72,9 @@ class TrajLogger(object):
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
             self.alljson_traj_fn = os.path.join(output_dir, "traj.json")
 
-        self.trajectory = []  # type: typing.List[TrajEntry]
+        self.trajectory = []  # type: List[TrajEntry]
 
-    def add_entry(self, train_perf: typing.Union[float, typing.List[float]],
+    def add_entry(self, train_perf: Union[float, List[float]],
                   incumbent_id: int,
                   incumbent: Configuration,
                   budget: float = 0) -> None:
@@ -83,7 +83,7 @@ class TrajLogger(object):
 
         Parameters
         ----------
-        train_perf: float
+        train_perf: float or list of floats
             estimated performance on training (sub)set
         incumbent_id: int
             id of incumbent
@@ -105,7 +105,7 @@ class TrajLogger(object):
             self._add_in_alljson_format(train_perf, incumbent_id, incumbent, budget,
                                         ta_time_used, wallclock_time)
 
-    def _add_in_old_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
+    def _add_in_old_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
                            incumbent: Configuration,
                            ta_time_used: float,
                            wallclock_time: float) -> None:
@@ -113,7 +113,7 @@ class TrajLogger(object):
 
         Parameters
         ----------
-        train_perf: float
+        train_perf: float or list of floats
             Estimated performance on training (sub)set
         incumbent_id: int
             Id of incumbent
@@ -142,7 +142,7 @@ class TrajLogger(object):
                          f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
                          )
 
-    def _add_in_aclib_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
+    def _add_in_aclib_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
                              incumbent: Configuration,
                              ta_time_used: float,
                              wallclock_time: float) -> None:
@@ -150,7 +150,7 @@ class TrajLogger(object):
 
         Parameters
         ----------
-        train_perf: float
+        train_perf: float or list of floats
             Estimated performance on training (sub)set
         incumbent_id: int
             Id of incumbent
@@ -167,13 +167,10 @@ class TrajLogger(object):
             if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
-        if isinstance(train_perf, np.ndarray):
-            train_perf = format_array(train_perf)
-
         traj_entry = {"cpu_time": ta_time_used,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.finished_ta_runs,
-                      "cost": train_perf,
+                      "cost": format_array(train_perf),
                       "incumbent": conf,
                       "origin": incumbent.origin,
                       }
@@ -182,7 +179,7 @@ class TrajLogger(object):
             json.dump(traj_entry, fp)
             fp.write("\n")
 
-    def _add_in_alljson_format(self, train_perf: typing.Union[float, typing.List[float]], incumbent_id: int,
+    def _add_in_alljson_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
                                incumbent: Configuration, budget: float,
                                ta_time_used: float,
                                wallclock_time: float) -> None:
@@ -190,7 +187,7 @@ class TrajLogger(object):
 
         Parameters
         ----------
-        train_perf: float
+        train_perf: float or list of floats
             Estimated performance on training (sub)set
         incumbent_id: int
             Id of incumbent
@@ -220,7 +217,7 @@ class TrajLogger(object):
     def read_traj_alljson_format(
             fn: str,
             cs: ConfigurationSpace,
-    ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
+    ) -> List[Dict[str, Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
         Parameters
@@ -238,7 +235,7 @@ class TrajLogger(object):
             "cpu_time": float,
             "wallclock_time": float,
             "evaluations": int
-            "cost": float,
+            "cost": float or list of floats,
             "budget": budget,
             "incumbent": Configuration
             }
@@ -257,7 +254,7 @@ class TrajLogger(object):
     def read_traj_aclib_format(
             fn: str,
             cs: ConfigurationSpace,
-    ) -> typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]:
+    ) -> List[Dict[str, Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
         Parameters
@@ -275,7 +272,7 @@ class TrajLogger(object):
             "cpu_time": float,
             "wallclock_time": float,
             "evaluations": int
-            "cost": float,
+            "cost": float or list of floats,
             "incumbent": Configuration
             }
         """
@@ -291,19 +288,19 @@ class TrajLogger(object):
         return trajectory
 
     @staticmethod
-    def _convert_dict_to_config(config_list: typing.List[str], cs: ConfigurationSpace) -> Configuration:
+    def _convert_dict_to_config(config_list: List[str], cs: ConfigurationSpace) -> Configuration:
         """Since we save a configurations in a dictionary str->str we have to
         try to figure out the type (int, float, str) of each parameter value
 
         Parameters
         ----------
-        config_list: typing.List[str]
+        config_list: List[str]
             Configuration as a list of "str='str'"
         cs: ConfigurationSpace
             Configuration Space to translate dict object into Confiuration object
         """
         config_dict = {}
-        v = ''  # type: typing.Union[str, float, int, bool]
+        v = ''  # type: Union[str, float, int, bool]
         for param in config_list:
             k, v = param.split("=")
             v = v.strip("'")
@@ -315,7 +312,7 @@ class TrajLogger(object):
             elif isinstance(hp, (CategoricalHyperparameter, Constant)):
                 # Checking for the correct type requires jumping some hoops
                 # First, we gather possible interpretations of our string
-                interpretations = [v]  # type: typing.List[typing.Union[str, bool, int, float]]
+                interpretations = [v]  # type: List[Union[str, bool, int, float]]
                 if v in ["True", "False"]:
                     # Special Case for booleans (assuming we support them)
                     # This is important to avoid false positive warnings triggered by 1 == True or "False" == True

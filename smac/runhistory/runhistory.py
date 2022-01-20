@@ -177,7 +177,7 @@ class RunHistory(object):
         self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = None
+        self.num_obj = None  # type: typing.Optional[int]
 
     def add(
             self,

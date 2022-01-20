@@ -136,7 +136,7 @@ class AbstractTAFunc(SerialRunner):
         -------
             status: enum of StatusType (int)
                 {SUCCESS, TIMEOUT, CRASHED, ABORT}
-            cost: float
+            cost: float or list of costs
                 cost/regret/quality/runtime (float) (None, if not returned by TA)
             runtime: float
                 runtime (None if not returned by TA)
@@ -185,6 +185,9 @@ class AbstractTAFunc(SerialRunner):
             else:
                 result = rval
                 additional_run_info = {}
+                
+            print(result)
+            print(type(result))
 
             # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
@@ -249,6 +252,7 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
+            
         if len(self.multi_objectives) == 1:
             if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
                 status = StatusType.CRASHED
