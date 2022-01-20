@@ -59,14 +59,17 @@ class PickableLoggerAdapter(object):
         return self.logger.isEnabledFor(level)
 
 
-def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, List[str]]:
+def format_array(input: Union[str, int, float, np.ndarray, list],
+                 list_formatting_output: bool = True) -> Union[str, List[str]]:
     """
     Transform a numpy array to a list of format so that it can be printed by logger.
     If the list holds one element only, then a string is returned.
 
     Parameters
     ----------
-        input_array: np.ndarray or list.
+        input: np.ndarray or list.
+            input value, could be anything serializable or a np array
+        list_formatting_output: bool: if the items in list are formatted values
 
     Returns
     -------
@@ -76,13 +79,15 @@ def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, 
         input = input.tolist()
 
     if not isinstance(input, Iterable):
-        return str(input)
+        return input
 
-    formatted_list = []
-
-    for item in input:
-        # https://stackoverflow.com/a/33482726
-        formatted_list.append(f"{item:4f}")
+    if list_formatting_output:
+        formatted_list = []
+        for item in input:
+            # https://stackoverflow.com/a/33482726
+            formatted_list.append(f"{item:4f}")
+    else:
+        formatted_list = input
 
     if len(input) == 1:
         return input[0]

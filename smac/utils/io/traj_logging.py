@@ -169,7 +169,7 @@ class TrajLogger(object):
         traj_entry = {"cpu_time": ta_time_used,
                       "wallclock_time": wallclock_time,
                       "evaluations": self.stats.finished_ta_runs,
-                      "cost": format_array(train_perf),
+                      "cost": format_array(train_perf, False),
                       "incumbent": conf,
                       "origin": incumbent.origin,
                       }
