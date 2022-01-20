@@ -93,9 +93,9 @@ class TrajLogger(object):
         budget: float
             budget used in intensifier to limit TA (default: 0)
         """
-        
+
         perf = format_array(train_perf)
-        
+
         finished_ta_runs = self.stats.finished_ta_runs
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
