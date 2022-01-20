@@ -391,7 +391,7 @@ class RunHistory(object):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
-        return self._cost_per_config.get(config_id,
+        return self._cost_per_config.get(config_id,                                # type: ignore[arg-type] # noqa F821
                                          np.full(self.num_obj, np.nan).squeeze())  # type: ignore[arg-type] # noqa F821
 
     def get_runs_for_config(self,
