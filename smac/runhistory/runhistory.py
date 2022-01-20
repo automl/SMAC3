@@ -182,7 +182,7 @@ class RunHistory(object):
     def add(
             self,
             config: Configuration,
-            cost: typing.Union[np.ndarray, list, float, int],
+            cost: typing.Union[int, float, np.ndarray],
             time: float,
             status: StatusType,
             instance_id: typing.Optional[str] = None,
@@ -202,7 +202,7 @@ class RunHistory(object):
         ----------
             config : dict (or other type -- depending on config space module)
                 Parameter configuration
-            cost: typing.Union[np.ndarray, float, list]
+            cost: typing.Union[int, float, np.ndarray]
                 Cost of TA run (will be minimized)
             time: float
                 Runtime of TA run
@@ -243,8 +243,6 @@ class RunHistory(object):
             self.ids_config[self._n_id] = config
         else:
             config_id = typing.cast(int, config_id_tmp)
-
-        cost = np.asarray(cost)
 
         if self.num_obj is None:
             self.num_obj = np.size(cost)

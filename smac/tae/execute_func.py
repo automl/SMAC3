@@ -2,7 +2,7 @@ import inspect
 import math
 import time
 import traceback
-import typing
+from typing import Dict, List, Optional, Tuple, Union, Callable, cast
 
 import numpy as np
 import pynisher
@@ -33,7 +33,7 @@ class AbstractTAFunc(SerialRunner):
         Function (target algorithm) to be optimized.
     stats: Stats()
          stats object to collect statistics about runtime and so on
-    multi_objectives: typing.List[str]
+    multi_objectives: List[str]
         names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
@@ -59,11 +59,11 @@ class AbstractTAFunc(SerialRunner):
 
     def __init__(
         self,
-        ta: typing.Callable,
+        ta: Callable,
         stats: Stats,
-        multi_objectives: typing.List[str] = ['cost'],
+        multi_objectives: List[str] = ['cost'],
         run_obj: str = "quality",
-        memory_limit: typing.Optional[int] = None,
+        memory_limit: Optional[int] = None,
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
@@ -92,7 +92,7 @@ class AbstractTAFunc(SerialRunner):
         self._accepts_budget = 'budget' in signature.keys()
         if not callable(ta):
             raise TypeError('Argument `ta` must be a callable, but is %s' % type(ta))
-        self._ta = typing.cast(typing.Callable, ta)
+        self._ta = cast(Callable, ta)
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
@@ -104,11 +104,11 @@ class AbstractTAFunc(SerialRunner):
             self.__module__ + '.' + self.__class__.__name__)
 
     def run(self, config: Configuration,
-            instance: typing.Optional[str] = None,
-            cutoff: typing.Optional[float] = None,
+            instance: Optional[str] = None,
+            cutoff: Optional[float] = None,
             seed: int = 12345,
-            budget: typing.Optional[float] = None,
-            instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
+            budget: Optional[float] = None,
+            instance_specific: str = "0") -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self._ta> with configuration <config> for at
         most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
@@ -136,7 +136,7 @@ class AbstractTAFunc(SerialRunner):
         -------
             status: enum of StatusType (int)
                 {SUCCESS, TIMEOUT, CRASHED, ABORT}
-            cost: float or list of costs
+            cost: np.ndarray
                 cost/regret/quality/runtime (float) (None, if not returned by TA)
             runtime: float
                 runtime (None if not returned by TA)
@@ -144,13 +144,15 @@ class AbstractTAFunc(SerialRunner):
                 all further additional run information
         """
 
-        obj_kwargs = {}  # type: typing.Dict[str, typing.Union[int, str, float, None]]
+        obj_kwargs = {}  # type: Dict[str, Union[int, str, float, None]]
         if self._accepts_seed:
             obj_kwargs['seed'] = seed
         if self._accepts_instance:
             obj_kwargs['instance'] = instance
         if self._accepts_budget:
             obj_kwargs['budget'] = budget
+
+        cost = [self.cost_for_crash] * len(self.multi_objectives)  # type: List[float]
 
         if self.use_pynisher:
             # walltime for pynisher has to be a rounded up integer
@@ -177,7 +179,8 @@ class AbstractTAFunc(SerialRunner):
                     'traceback': exception_traceback,
                     'error': error_message
                 }
-                return StatusType.CRASHED, self.cost_for_crash, 0.0, additional_info
+
+                return StatusType.CRASHED, np.asarray(cost), 0.0, additional_info
 
             if isinstance(rval, tuple):
                 result = rval[0]
@@ -185,26 +188,23 @@ class AbstractTAFunc(SerialRunner):
             else:
                 result = rval
                 additional_run_info = {}
-                
-            print(result)
-            print(type(result))
 
             # get status, cost, time
             if obj.exit_status is pynisher.TimeoutException:
                 status = StatusType.TIMEOUT
-                cost = [self.cost_for_crash] * len(self.multi_objectives)
             elif obj.exit_status is pynisher.MemorylimitException:
                 status = StatusType.MEMOUT
-                cost = [self.cost_for_crash] * len(self.multi_objectives)
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
+
+                # Check if result is not a list
                 if np.isscalar(result):
-                    cost = [result]
-                else:
-                    cost = result
+                    result = [result] # type: ignore # noqa 
+
+                # Overwrite crash costs
+                cost = result # type: ignore # noqa 
             else:
                 status = StatusType.CRASHED
-                cost = [self.cost_for_crash] * len(self.multi_objectives)
 
             runtime = float(obj.wall_clock_time)
         else:
@@ -212,6 +212,7 @@ class AbstractTAFunc(SerialRunner):
             # call ta
             try:
                 rval = self._call_ta(self._ta, config, obj_kwargs)
+
                 if isinstance(rval, tuple):
                     result = rval[0]
                     additional_run_info = rval[1]
@@ -219,14 +220,15 @@ class AbstractTAFunc(SerialRunner):
                     result = rval
                     additional_run_info = {}
 
+                # Check if result is not a list
+                if np.isscalar(result):
+                    result = [result] # type: ignore # noqa 
+
                 status = StatusType.SUCCESS
-                cost = result
+                cost = result # type: ignore # noqa 
             except Exception as e:
                 self.logger.exception(e)
-
-                result = self.cost_for_crash
                 status = StatusType.CRASHED
-                cost = [self.cost_for_crash] * len(self.multi_objectives)
                 additional_run_info = {}
 
             runtime = time.time() - start_time
@@ -252,25 +254,23 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-            
-        if len(self.multi_objectives) == 1:
-            if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
-                status = StatusType.CRASHED
-                cost = self.cost_for_crash
-        elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
-            status = StatusType.CRASHED
-            cost = self.cost_for_crash
 
-        cost = np.asarray(cost)
+        # if len(self.multi_objectives) == 1:
+        #     if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
+        #         status = StatusType.CRASHED
+        #         cost = self.cost_for_crash
+        # elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
+        #     status = StatusType.CRASHED
+        #     cost = self.cost_for_crash
 
-        return status, cost, runtime, additional_run_info
+        return status, np.asarray(cost), runtime, additional_run_info
 
     def _call_ta(
         self,
-        obj: typing.Callable,
+        obj: Callable,
         config: Configuration,
-        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
-    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
+        obj_kwargs: Dict[str, Union[int, str, float, None]],
+    ) -> Union[float, Tuple[float, Dict]]:
         raise NotImplementedError()
 
 
@@ -310,10 +310,10 @@ class ExecuteTAFuncDict(AbstractTAFunc):
 
     def _call_ta(
         self,
-        obj: typing.Callable,
+        obj: Callable,
         config: Configuration,
-        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
-    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
+        obj_kwargs: Dict[str, Union[int, str, float, None]],
+    ) -> Union[float, Tuple[float, Dict]]:
 
         return obj(config, **obj_kwargs)
 
@@ -351,10 +351,10 @@ class ExecuteTAFuncArray(AbstractTAFunc):
 
     def _call_ta(
         self,
-        obj: typing.Callable,
+        obj: Callable,
         config: Configuration,
-        obj_kwargs: typing.Dict[str, typing.Union[int, str, float, None]],
-    ) -> typing.Union[float, typing.Tuple[float, typing.Dict]]:
+        obj_kwargs: Dict[str, Union[int, str, float, None]],
+    ) -> Union[float, Tuple[float, Dict]]:
 
         x = np.array([val for _, val in sorted(config.get_dictionary().items())],
                      dtype=float)

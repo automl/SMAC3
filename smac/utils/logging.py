@@ -61,7 +61,7 @@ class PickableLoggerAdapter(object):
 def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, List[str]]:
     """
     Transform a numpy array to a list of format so that it can be printed by logger.
-    If the list holds one element only, then a string is returned.
+    If the list holds one element only, then a formatted string is returned.
 
     Parameters
     ----------
@@ -72,18 +72,23 @@ def format_array(input: Union[str, int, float, np.ndarray, list]) -> Union[str, 
         result: str or list.
     """
 
-    if isinstance(input, str) or isinstance(input, float) or isinstance(input, int):
-        return str(input)
+    if isinstance(input, float) or isinstance(input, int):
+        if isinstance(input, str):
+            input = float(input)
+
+        input = [input]
 
     if isinstance(input, np.ndarray):
         input = input.tolist()
 
+        if not isinstance(input, list):
+            input = [input]
+
     formatted_list = []
     for item in input:
-        # https://stackoverflow.com/a/33482726
-        formatted_list.append(f"{item:4f}")
+        formatted_list.append(np.round(item, 4))
 
-    if len(input) == 1:
-        return input[0]
+    if len(formatted_list) == 1:
+        return formatted_list[0]
 
     return formatted_list

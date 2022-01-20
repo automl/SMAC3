@@ -4,6 +4,8 @@ import json
 from typing import Union, List, Dict, Optional
 import collections
 
+import numpy as np
+
 from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant
 
@@ -73,7 +75,7 @@ class TrajLogger(object):
 
         self.trajectory = []  # type: List[TrajEntry]
 
-    def add_entry(self, train_perf: Union[float, List[float]],
+    def add_entry(self, train_perf: Union[float, np.ndarray],
                   incumbent_id: int,
                   incumbent: Configuration,
                   budget: float = 0) -> None:
@@ -82,7 +84,7 @@ class TrajLogger(object):
 
         Parameters
         ----------
-        train_perf: float or list of floats
+        train_perf: float or np.ndarray
             estimated performance on training (sub)set
         incumbent_id: int
             id of incumbent
@@ -91,20 +93,23 @@ class TrajLogger(object):
         budget: float
             budget used in intensifier to limit TA (default: 0)
         """
+        
+        perf = format_array(train_perf)
+        
         finished_ta_runs = self.stats.finished_ta_runs
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
-        self.trajectory.append(TrajEntry(train_perf, incumbent_id, incumbent,
+        self.trajectory.append(TrajEntry(perf, incumbent_id, incumbent,
                                          finished_ta_runs, ta_time_used, wallclock_time, budget))
         if self.output_dir is not None:
-            self._add_in_old_format(train_perf, incumbent_id, incumbent,
+            self._add_in_old_format(perf, incumbent_id, incumbent,
                                     ta_time_used, wallclock_time)
-            self._add_in_aclib_format(train_perf, incumbent_id, incumbent,
+            self._add_in_aclib_format(perf, incumbent_id, incumbent,
                                       ta_time_used, wallclock_time)
-            self._add_in_alljson_format(train_perf, incumbent_id, incumbent, budget,
+            self._add_in_alljson_format(perf, incumbent_id, incumbent, budget,
                                         ta_time_used, wallclock_time)
 
-    def _add_in_old_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
+    def _add_in_old_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
                            incumbent: Configuration,
                            ta_time_used: float,
                            wallclock_time: float) -> None:
@@ -141,7 +146,7 @@ class TrajLogger(object):
                          f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
                          )
 
-    def _add_in_aclib_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
+    def _add_in_aclib_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
                              incumbent: Configuration,
                              ta_time_used: float,
                              wallclock_time: float) -> None:
@@ -178,7 +183,7 @@ class TrajLogger(object):
             json.dump(traj_entry, fp)
             fp.write("\n")
 
-    def _add_in_alljson_format(self, train_perf: Union[float, List[float]], incumbent_id: int,
+    def _add_in_alljson_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
                                incumbent: Configuration, budget: float,
                                ta_time_used: float,
                                wallclock_time: float) -> None:

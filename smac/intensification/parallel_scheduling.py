@@ -151,7 +151,7 @@ class ParallelScheduler(AbstractRacer):
 
         if num_workers <= 1 and self.print_worker_warning:
             warnings.warn(
-                f"{self.__class__.__name__} is executed with {num_workers} workers only. " \
+                f"{self.__class__.__name__} is executed with {num_workers} workers only. "
                 "Consider to use pynisher to use all available workers.")
             self.print_worker_warning = False
 
