@@ -378,10 +378,6 @@ class AbstractRacer(object):
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    if np.size(chal_perf) == 1:
-                        chal_perf = float(chal_perf)
-                    else:
-                        chal_perf = chal_perf.tolist()
                     self.traj_logger.add_entry(train_perf=chal_perf,
                                                incumbent_id=self.stats.inc_changed,
                                                incumbent=incumbent)
@@ -394,16 +390,12 @@ class AbstractRacer(object):
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
 
-            self.logger.info(f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format})"
-                             f" on {n_samples} runs.")
+            self.logger.info(f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) "
+                             f"on {n_samples} runs.")
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
                 self.stats.inc_changed += 1
-                if np.size(chal_perf) == 1:
-                    chal_perf = float(chal_perf)
-                else:
-                    chal_perf = chal_perf.tolist()
                 self.traj_logger.add_entry(train_perf=chal_perf,
                                            incumbent_id=self.stats.inc_changed,
                                            incumbent=challenger)

@@ -234,7 +234,7 @@ class RunHistory(object):
                 'Configuration to add to the runhistory is not of type Configuration, but %s' % type(config)
             )
 
-        cost = np.asarray(format_array(cost, False))
+        cost = np.asarray(cost)
 
         # Get the config id
         config_id_tmp = self.config_ids.get(config)

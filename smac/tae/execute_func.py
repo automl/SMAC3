@@ -223,14 +223,14 @@ class AbstractTAFunc(SerialRunner):
 
                 # Check if result is not a list
                 if np.isscalar(result):
-                    result = [result] # type: ignore # noqa 
+                    result = [result]  # type: ignore # noqa 
 
                 status = StatusType.SUCCESS
                 cost = result # type: ignore # noqa 
             except Exception as e:
                 self.logger.exception(e)
                 status = StatusType.CRASHED
-                cost, result = cost, cost
+                result = cost  # type: ignore # noqa 
                 additional_run_info = {}
 
             runtime = time.time() - start_time
@@ -263,7 +263,7 @@ class AbstractTAFunc(SerialRunner):
                 pass
             else:
                 status = StatusType.CRASHED
-                cost = [self.cost_for_crash] * len(self.multi_objectives)  # type: List[float]
+                cost = [self.cost_for_crash] * len(self.multi_objectives)  # type: ignore
 
         return status, np.asarray(cost), runtime, additional_run_info
 

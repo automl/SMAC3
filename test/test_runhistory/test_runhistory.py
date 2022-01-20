@@ -167,7 +167,7 @@ class RunhistoryTest(unittest.TestCase):
         updated_cost_config2 = rh.get_cost(config2)
         self.assertNotEqual(cost_config2, updated_cost_config2)
         self.assertEqual(updated_cost_config2, 20)
-        
+
         rh = RunHistory()
         cs = get_config_space()
         config1 = Configuration(cs,
