@@ -209,6 +209,7 @@ class AbstractTAFunc(SerialRunner):
             runtime = float(obj.wall_clock_time)
         else:
             start_time = time.time()
+
             # call ta
             try:
                 rval = self._call_ta(self._ta, config, obj_kwargs)
@@ -254,14 +255,6 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-
-        # if len(self.multi_objectives) == 1:
-        #     if status == StatusType.SUCCESS and not isinstance(result, (int, float)):
-        #         status = StatusType.CRASHED
-        #         cost = self.cost_for_crash
-        # elif status == StatusType.SUCCESS and not isinstance(result, (dict, list, np.ndarray)):
-        #     status = StatusType.CRASHED
-        #     cost = self.cost_for_crash
 
         return status, np.asarray(cost), runtime, additional_run_info
 

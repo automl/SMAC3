@@ -28,10 +28,10 @@ class TestExecuteFunc(unittest.TestCase):
     def test_run(self):
         def target(x):
             return x**2
-        
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2)
-        
+
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
         self.assertEqual(rval[0], StatusType.SUCCESS)
