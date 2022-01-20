@@ -167,6 +167,36 @@ class RunhistoryTest(unittest.TestCase):
         updated_cost_config2 = rh.get_cost(config2)
         self.assertNotEqual(cost_config2, updated_cost_config2)
         self.assertEqual(updated_cost_config2, 20)
+        
+        rh = RunHistory()
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 1, 'b': 3})
+        rh.add(config=config1, cost=[10], time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1)
+
+        rh.add(config=config2, cost=[10], time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1)
+
+        rh.add(config=config2, cost=[20], time=20,
+               status=StatusType.SUCCESS, instance_id=2,
+               seed=2)
+
+        cost_config2 = rh.get_cost(config2)
+
+        rh.compute_all_costs()
+        updated_cost_config2 = rh.get_cost(config2)
+        self.assertEqual(cost_config2, updated_cost_config2)
+
+        rh.compute_all_costs(instances=[2])
+        updated_cost_config2 = rh.get_cost(config2)
+        self.assertNotEqual(cost_config2, updated_cost_config2)
+        self.assertEqual(updated_cost_config2, [20])
+        self.assertEqual(updated_cost_config2, 20)
 
     def test_incremental_update(self):
 

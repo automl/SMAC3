@@ -33,7 +33,7 @@ def schaffer_pareto(x):
     return f1, pareto(f1)
 
 
-class MultiObjectiveTest(unittest.TestCase):
+class SchafferTest(unittest.TestCase):
     def test_Schaffer_no1(self):
         """Testing whether multi-objective function Schaffer is optimized properly using ParEGO:
         the observed values are on the pareto front."""
@@ -54,9 +54,6 @@ class MultiObjectiveTest(unittest.TestCase):
         cs = ConfigurationSpace()
         X = UniformFloatHyperparameter('x', lower=-A, upper=A)
         cs.add_hyperparameters([X])
-
-        # check config space & tae:
-        # tae(cs.get_default_configuration())
 
         # Scenario object
         scenario = Scenario({
@@ -87,29 +84,6 @@ class MultiObjectiveTest(unittest.TestCase):
         f2 = np.square(np.sqrt(f1) - 2)
 
         self.assertTrue(np.allclose(observed_costs[:, 1][observed_costs[:, 1] < 4], f2))
-
-        # plotting helper for debugging purposes
-        # import matplotlib.pyplot as plt
-        # from examples.python.scalarized_multi_objective import plot_pareto_from_runhistory
-        #
-        # # sort the results for plotting purposes
-        # order = observed_costs[:, 1].argsort()
-        # observed_costs = observed_costs[order, :]
-        #
-        # order = f2.argsort()
-        # f1 = f1[order]
-        # f2.sort()
-        #
-        # obs_x = observed_costs[:, 0][observed_costs[:, 1] < 4.]
-        # obs_y = observed_costs[:, 1][observed_costs[:, 1] < 4.]
-        #
-        # plt.plot(f1, f2, label='true')
-        # plt.plot(obs_x, obs_y, label='observed')
-        # plt.legend()
-        # plt.show()
-        #
-        # plot_pareto_from_runhistory(observed_costs[observed_costs[:, 1] < 4.])
-        # plot_pareto_from_runhistory(true_pareto_front)
 
 
 if __name__ == '__main__':
