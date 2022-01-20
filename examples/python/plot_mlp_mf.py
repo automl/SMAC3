@@ -157,7 +157,7 @@ if __name__ == "__main__":
             # Uses pynisher to limit memory and runtime
             # Alternatively, you can also disable this.
             # Then you should handle runtime and memory yourself in the TA
-            "limit_resources": True,
+            "limit_resources": False,
             "cutoff": 30,  # runtime limit for target algorithm
             "memory_limit": 3072,  # adapt this to reasonable value for your hardware
         }
