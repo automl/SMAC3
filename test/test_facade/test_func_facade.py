@@ -9,7 +9,6 @@ __license__ = "3-clause BSD"
 
 
 def rosenbrock_2d(x, seed=1):
-
     return 100. * (x[1] - x[0] ** 2.) ** 2. + (1 - x[0]) ** 2.
 
 
@@ -28,12 +27,12 @@ class TestSMACFacade(unittest.TestCase):
         x0 = [-3, -4]
         bounds = [(-5, 5), (-5, 5)]
 
-        x, f, smac = fmin_smac(func, x0, bounds, maxfun=20)
-        x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=20,
+        x, f, smac = fmin_smac(func, x0, bounds, maxfun=10)
+        x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=10,
                                     approx_grad=True)
 
         self.assertEqual(type(x), type(x_s))
-        self.assertEqual(type(f), type(f_s))
+        self.assertEqual(type(f), type(f_s.tolist()))
         self.output_dirs.append(smac.scenario.output_dir)
 
     def test_parameter_order(self):
@@ -51,3 +50,9 @@ class TestSMACFacade(unittest.TestCase):
                                maxfun=1)
 
         self.output_dirs.append(smac.scenario.output_dir)
+
+
+if __name__ == "__main__":
+    t = TestSMACFacade()
+    t.setUp()
+    t.test_func_smac()
