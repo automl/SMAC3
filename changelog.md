@@ -8,6 +8,7 @@
 * Determinstic behaviour is default now.
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
+* Expanded `cost_for_crash` for multi-objective support.
 
 ## Examples
 * Integrated spear_qcp example for commandline
