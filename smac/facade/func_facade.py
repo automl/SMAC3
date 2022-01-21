@@ -78,7 +78,7 @@ def fmin_smac(func: typing.Callable,
     scenario_dict = {
         "run_obj": "quality",
         "cs": cs,
-        "deterministic": "true",
+        "deterministic": True,
         "initial_incumbent": "DEFAULT",
     }
 
@@ -88,11 +88,6 @@ def fmin_smac(func: typing.Callable,
     if maxfun > 0:
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
-
-    if len(scenario.multi_objectives) == 1:  # type: ignore[attr-defined] # noqa F821
-        multi_objective = False
-    else:
-        multi_objective = True
 
     # Handle optional tae  arguments
     if tae_runner_kwargs is not None:
@@ -116,7 +111,6 @@ def fmin_smac(func: typing.Callable,
     incumbent_performance = smac.solver.runhistory.data[run_key]
     incumbent = np.array([incumbent[tmplt.format(idx + 1)]
                           for idx in range(len(bounds))], dtype=float)
-    if multi_objective:
-        return incumbent, incumbent_performance.cost, smac
-    else:
-        return incumbent, incumbent_performance.cost[0], smac
+    
+    return incumbent, incumbent_performance.cost, smac
+

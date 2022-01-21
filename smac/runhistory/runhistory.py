@@ -252,7 +252,7 @@ class RunHistory(object):
             self.num_obj = np.size(cost)
         else:
             if np.size(cost) != self.num_obj:
-                raise ValueError(f'Cost is not of the same length ({len(cost)}) as the number '
+                raise ValueError(f'Cost is not of the same length ({np.size(cost)}) as the number '
                                  f'of objectives ({self.num_obj})')
 
         k = RunKey(config_id, instance_id, seed, budget)
