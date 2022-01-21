@@ -312,7 +312,7 @@ class TestSMBO(unittest.TestCase):
                     'cs': cs,
                     'runcount_limit': 5,
                     'run_obj': 'quality',
-                    "deterministic": "true",
+                    "deterministic": True,
                     "initial_incumbent": "DEFAULT",
                     'output_dir': 'data-test_smbo'
                 }),
