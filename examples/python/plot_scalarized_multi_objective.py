@@ -24,6 +24,7 @@ from sklearn.model_selection import cross_val_score
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
+from smac.utils.constants import MAXINT
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -41,6 +42,7 @@ def is_pareto_efficient_simple(costs):
     :param costs: An (n_points, n_costs) array
     :return: A (n_points, ) boolean array, indicating whether each point is Pareto efficient
     """
+    
     is_efficient = np.ones(costs.shape[0], dtype=bool)
     for i, c in enumerate(costs):
         if is_efficient[i]:
@@ -72,11 +74,10 @@ def plot_pareto_from_runhistory(observations):
 
     plt.scatter(obs1, obs2)
     plt.step(x_front, y_front, where='post', linestyle=':')
-    plt.title('Pareto: Cost & Time')
+    plt.title('Pareto-Front')
 
-    # TODO: add correct order here Time vs Cost
-    plt.xlabel("X axis label")
-    plt.ylabel("Y axis label")
+    plt.xlabel("Cost")
+    plt.ylabel("Time")
     plt.show()
 
 
@@ -98,6 +99,7 @@ def svm_from_cfg(cfg):
     Dict: A crossvalidated mean score (cost) for the svm on the loaded data-set and the
     second objective; runtime
     """
+
     # For deactivated parameters, the configuration stores None-values.
     # This is not accepted by the SVM, so we remove them.
     cfg = {k: cfg[k] for k in cfg if cfg[k]}
@@ -114,6 +116,8 @@ def svm_from_cfg(cfg):
     cost_value = 1 - np.mean(scores)  # Minimize!
 
     # Return a dictionary with all of the objectives.
+    # Alternatively you can return a list in the same order
+    # as `multi_objectives`.
     return {'cost': cost_value, 'time': t1 - t0}
 
 
@@ -164,6 +168,8 @@ if __name__ == '__main__':
         "cs": cs,  # configuration space
         "deterministic": True,
         "multi_objectives": ["cost", "time"],
+        # You can define individual crash costs for each objective
+        "cost_for_crash": [1, float(MAXINT)]
     })
 
     # Example call of the function
