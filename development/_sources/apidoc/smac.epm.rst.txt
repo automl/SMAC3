@@ -1,5 +1,5 @@
-smac.epm package
-================
+smac.epm
+========
 
 .. automodule:: smac.epm
    :members:

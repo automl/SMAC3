@@ -1,5 +1,5 @@
-smac.epm.gp\_kernels module
-===========================
+smac.epm.gp\_kernels
+====================
 
 .. automodule:: smac.epm.gp_kernels
    :members:

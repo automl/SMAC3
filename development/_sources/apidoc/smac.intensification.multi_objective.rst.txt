@@ -1,0 +1,8 @@
+smac.intensification.multi\_objective
+=====================================
+
+.. automodule:: smac.intensification.multi_objective
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

@@ -1,11 +1,19 @@
-smac.intensification package
-============================
+smac.intensification
+====================
 
 .. automodule:: smac.intensification
    :members:
    :undoc-members:
    :show-inheritance:
    :private-members:
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 1
+
+   smac.intensification.multi_objective
 
 Submodules
 ----------

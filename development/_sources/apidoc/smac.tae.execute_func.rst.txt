@@ -1,5 +1,5 @@
-smac.tae.execute\_func module
-=============================
+smac.tae.execute\_func
+======================
 
 .. automodule:: smac.tae.execute_func
    :members:

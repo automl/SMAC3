@@ -1,5 +1,5 @@
-smac.utils package
-==================
+smac.utils
+==========
 
 .. automodule:: smac.utils
    :members:
@@ -11,7 +11,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
 
    smac.utils.io
 

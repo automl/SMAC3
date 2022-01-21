@@ -1,5 +1,5 @@
-smac.facade.experimental.psmac\_facade module
-=============================================
+smac.facade.experimental.psmac\_facade
+======================================
 
 .. automodule:: smac.facade.experimental.psmac_facade
    :members:

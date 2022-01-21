@@ -1,5 +1,5 @@
-smac.utils.logging module
-=========================
+smac.utils.logging
+==================
 
 .. automodule:: smac.utils.logging
    :members:

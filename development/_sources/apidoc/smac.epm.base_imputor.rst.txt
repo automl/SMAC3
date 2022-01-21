@@ -1,5 +1,5 @@
-smac.epm.base\_imputor module
-=============================
+smac.epm.base\_imputor
+======================
 
 .. automodule:: smac.epm.base_imputor
    :members:

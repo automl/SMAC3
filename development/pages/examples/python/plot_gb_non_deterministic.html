@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Non-Deterministic Gradient-Boosting &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>Non-Deterministic Gradient-Boosting &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -206,6 +206,11 @@ style="width: 100%;">
      MLP with Multi-Fidelity
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -236,6 +241,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/multiobjective.html">
+     Multi-Objective Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -276,63 +286,63 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -546,7 +556,7 @@ Score on test set: 0.06
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Score on test set: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cfg_inc_test_scores</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 3 minutes  15.701 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 2 minutes  48.382 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-plot-gb-non-deterministic-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/229763b578baf0f90caf54403d71863b/plot_gb_non_deterministic.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_gb_non_deterministic.py</span></code></a></p>

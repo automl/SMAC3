@@ -1,5 +1,5 @@
-smac.facade.experimental package
-================================
+smac.facade.experimental
+========================
 
 .. automodule:: smac.facade.experimental
    :members:

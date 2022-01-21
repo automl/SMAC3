@@ -1,5 +1,5 @@
-smac.epm.base\_gp module
-========================
+smac.epm.base\_gp
+=================
 
 .. automodule:: smac.epm.base_gp
    :members:

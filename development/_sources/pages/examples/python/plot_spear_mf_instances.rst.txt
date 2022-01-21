@@ -38,63 +38,29 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
  .. code-block:: none
 
     INFO:smac.scenario.scenario.Scenario:Reading scenario file: ./spear_qcp/scenario.txt
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-19_13:33:34_800775
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-21_14:30:17_624213
     WARNING:smac.facade.smac_ac_facade.SMAC4AC:Runtime as objective automatically activates log(y) transformation
     INFO:smac.initial_design.default_configuration_design.DefaultConfiguration:Running initial design for 1 configurations
     INFO:smac.optimizer.smbo.SMBO:Running initial design
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
+    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:153: UserWarning: SuccessiveHalving is executed with 1 workers only. Consider to use pynisher to use all available workers.
+      warnings.warn(
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 8.00, eta = 3.00
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
-    /home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: SuccessiveHalving is intended to be used with more than 1 worker but num_workers=1
-      warnings.warn("{} is intended to be used "
-    INFO:smac.stats.stats.Stats:##########################################################
-    INFO:smac.stats.stats.Stats:Statistics:
-    INFO:smac.stats.stats.Stats:#Incumbent changed: 0
-    INFO:smac.stats.stats.Stats:#Submitted target algorithm runs: 18 / inf
-    INFO:smac.stats.stats.Stats:#Finished target algorithm runs: 18 / inf
-    INFO:smac.stats.stats.Stats:#Configurations: 6
-    INFO:smac.stats.stats.Stats:Used wallclock time: 60.56 / 60.00 sec 
-    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 22.12 / inf sec
-    INFO:smac.stats.stats.Stats:##########################################################
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 3-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 3-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
+    INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
+    INFO:smac.stats.stats.Stats:Incumbent changed: 0
+    INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 36 / inf
+    INFO:smac.stats.stats.Stats:Finished target algorithm runs: 36 / inf
+    INFO:smac.stats.stats.Stats:Configurations: 9
+    INFO:smac.stats.stats.Stats:Used wallclock time: 63.53 / 60.00 sec 
+    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 34.60 / inf sec
+    INFO:smac.stats.stats.Stats:----------------------------------------------------
     INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
       sp-clause-activity-inc, Value: 1.0
       sp-clause-decay, Value: 1.4
@@ -122,7 +88,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
       sp-var-dec-heur, Value: '0'
       sp-variable-decay, Value: 1.4
 
-    INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 0.459122
+    INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 0.6023
     Optimized configuration Configuration:
       sp-clause-activity-inc, Value: 1.0
       sp-clause-decay, Value: 1.4
@@ -202,7 +168,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  0.614 seconds)
+   **Total running time of the script:** ( 1 minutes  3.575 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_spear_mf_instances.py:

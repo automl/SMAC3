@@ -1,5 +1,5 @@
-smac.utils.constants module
-===========================
+smac.utils.constants
+====================
 
 .. automodule:: smac.utils.constants
    :members:

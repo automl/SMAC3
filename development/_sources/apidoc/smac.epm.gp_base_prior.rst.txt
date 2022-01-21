@@ -1,5 +1,5 @@
-smac.epm.gp\_base\_prior module
-===============================
+smac.epm.gp\_base\_prior
+========================
 
 .. automodule:: smac.epm.gp_base_prior
    :members:

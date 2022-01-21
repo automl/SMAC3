@@ -1,5 +1,5 @@
-smac.facade.func\_facade module
-===============================
+smac.facade.func\_facade
+========================
 
 .. automodule:: smac.facade.func_facade
    :members:

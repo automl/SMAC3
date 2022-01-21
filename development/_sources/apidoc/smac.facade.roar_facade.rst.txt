@@ -1,5 +1,5 @@
-smac.facade.roar\_facade module
-===============================
+smac.facade.roar\_facade
+========================
 
 .. automodule:: smac.facade.roar_facade
    :members:

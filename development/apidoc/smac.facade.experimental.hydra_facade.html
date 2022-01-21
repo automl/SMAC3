@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.facade.experimental.hydra_facade module &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>smac.facade.experimental.hydra_facade &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.facade.experimental.psmac_facade module" href="smac.facade.experimental.psmac_facade.html" />
-    <link rel="prev" title="smac.facade.experimental package" href="smac.facade.experimental.html" />
+    <link rel="next" title="smac.facade.experimental.psmac_facade" href="smac.facade.experimental.psmac_facade.html" />
+    <link rel="prev" title="smac.facade.experimental" href="smac.facade.experimental.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -206,6 +206,11 @@ style="width: 100%;">
      MLP with Multi-Fidelity
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -236,6 +241,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/multiobjective.html">
+     Multi-Objective Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -275,64 +285,64 @@ style="width: 100%;">
    </i>
   </label>
   <ul class="current">
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
    <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -389,12 +399,29 @@ style="width: 100%;">
               <div>
                 
   <section id="module-smac.facade.experimental.hydra_facade">
-<span id="smac-facade-experimental-hydra-facade-module"></span><h1>smac.facade.experimental.hydra_facade module<a class="headerlink" href="#module-smac.facade.experimental.hydra_facade" title="Permalink to this headline">¶</a></h1>
+<span id="smac-facade-experimental-hydra-facade"></span><h1>smac.facade.experimental.hydra_facade<a class="headerlink" href="#module-smac.facade.experimental.hydra_facade" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.facade.experimental.hydra_facade.</span></span><span class="sig-name descname"><span class="pre">Hydra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">scenario:</span> <span class="pre">Type[smac.scenario.scenario.Scenario],</span> <span class="pre">n_iterations:</span> <span class="pre">int,</span> <span class="pre">val_set:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'train',</span> <span class="pre">incs_per_round:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">n_optimizers:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">rng:</span> <span class="pre">Optional[Union[int,</span> <span class="pre">numpy.random.mtrand.RandomState]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">run_id:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">tae:</span> <span class="pre">Type[smac.tae.base.BaseRunner]</span> <span class="pre">=</span> <span class="pre">&lt;class</span> <span class="pre">'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;,</span> <span class="pre">tae_kwargs:</span> <span class="pre">Optional[dict]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Facade to use Hydra default mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</p></li>
+<li><p><strong>n_iterations</strong> (<em>int</em><em>,</em>) – number of Hydra iterations</p></li>
+<li><p><strong>val_set</strong> (<em>str</em>) – Set to validate incumbent(s) on. [train, valX].
+train =&gt; whole training set,
+valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
+<li><p><strong>incs_per_round</strong> (<em>int</em>) – Number of incumbents to keep per round</p></li>
+<li><p><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
+<li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
+<li><p><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</p></li>
+<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
+<li><p><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.facade.experimental.hydra_facade.Hydra.logger">
 <span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.facade.experimental.hydra_facade.Hydra.logger" title="Permalink to this definition">¶</a></dt>
@@ -478,7 +505,7 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
 <dd class="field-even"><p><strong>cur_cost</strong> – The current cost of the portfolio</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>typing.Union[np.float, float]</p>
+<dd class="field-odd"><p>typing.Union[float, float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -511,13 +538,13 @@ valX =&gt; train_set * 100/X where X in (0, 100)</p></li>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.experimental package</p>
+            <p class="prev-next-title">smac.facade.experimental</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.facade.experimental.psmac_facade.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.facade.experimental.psmac_facade module</p>
+        <p class="prev-next-title">smac.facade.experimental.psmac_facade</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

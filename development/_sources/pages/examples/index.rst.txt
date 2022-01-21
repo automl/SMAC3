@@ -221,6 +221,27 @@ Python
    :hidden:
 
    /pages/examples/python/plot_mlp_mf
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example builds on SVM with Cross-Validation.">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_scalarized_multi_objective_thumb.png
+     :alt: Scalarized Multi-Objective Using ParEGO
+
+     :ref:`sphx_glr_pages_examples_python_plot_scalarized_multi_objective.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/plot_scalarized_multi_objective
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

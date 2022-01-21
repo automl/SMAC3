@@ -1,5 +1,5 @@
-smac.tae.execute\_ta\_run\_old module
-=====================================
+smac.tae.execute\_ta\_run\_old
+==============================
 
 .. automodule:: smac.tae.execute_ta_run_old
    :members:

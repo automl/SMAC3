@@ -1,5 +1,5 @@
-smac.utils.io.output\_directory module
-======================================
+smac.utils.io.output\_directory
+===============================
 
 .. automodule:: smac.utils.io.output_directory
    :members:

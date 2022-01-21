@@ -1,5 +1,5 @@
-smac.tae package
-================
+smac.tae
+========
 
 .. automodule:: smac.tae
    :members:

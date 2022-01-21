@@ -1,5 +1,5 @@
-smac.utils.io.traj\_logging module
-==================================
+smac.utils.io.traj\_logging
+===========================
 
 .. automodule:: smac.utils.io.traj_logging
    :members:

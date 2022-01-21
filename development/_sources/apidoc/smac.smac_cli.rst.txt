@@ -1,5 +1,5 @@
-smac.smac\_cli module
-=====================
+smac.smac\_cli
+==============
 
 .. automodule:: smac.smac_cli
    :members:

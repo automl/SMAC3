@@ -1,0 +1,8 @@
+smac.optimizer.multi\_objective.abstract\_multi\_objective\_algorithm
+=====================================================================
+
+.. automodule:: smac.optimizer.multi_objective.abstract_multi_objective_algorithm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

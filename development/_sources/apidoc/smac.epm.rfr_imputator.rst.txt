@@ -1,5 +1,5 @@
-smac.epm.rfr\_imputator module
-==============================
+smac.epm.rfr\_imputator
+=======================
 
 .. automodule:: smac.epm.rfr_imputator
    :members:

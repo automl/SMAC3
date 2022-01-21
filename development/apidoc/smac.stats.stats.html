@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.stats.stats module &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>smac.stats.stats &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.tae package" href="smac.tae.html" />
-    <link rel="prev" title="smac.stats package" href="smac.stats.html" />
+    <link rel="next" title="smac.utils" href="smac.utils.html" />
+    <link rel="prev" title="smac.stats" href="smac.stats.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -206,6 +206,11 @@ style="width: 100%;">
      MLP with Multi-Fidelity
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -236,6 +241,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/multiobjective.html">
+     Multi-Objective Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -276,63 +286,63 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="reference internal" href="smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -389,7 +399,7 @@ style="width: 100%;">
               <div>
                 
   <section id="module-smac.stats.stats">
-<span id="smac-stats-stats-module"></span><h1>smac.stats.stats module<a class="headerlink" href="#module-smac.stats.stats" title="Permalink to this headline">¶</a></h1>
+<span id="smac-stats-stats"></span><h1>smac.stats.stats<a class="headerlink" href="#module-smac.stats.stats" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.stats.stats.Stats">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.stats.stats.</span></span><span class="sig-name descname"><span class="pre">Stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><span class="pre">smac.scenario.scenario.Scenario</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.stats.stats.Stats" title="Permalink to this definition">¶</a></dt>
@@ -398,15 +408,39 @@ style="width: 100%;">
 Written to output-directory to be restored</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>submitted_ta_runs</strong> – </p></li>
-<li><p><strong>finished_ta_runs</strong> – </p></li>
-<li><p><strong>wallclock_time_used</strong> – </p></li>
-<li><p><strong>ta_time_used</strong> – </p></li>
-<li><p><strong>inc_changed</strong> – </p></li>
-</ul>
+<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – </p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.submitted_ta_runs">
+<span class="sig-name descname"><span class="pre">submitted_ta_runs</span></span><a class="headerlink" href="#smac.stats.stats.Stats.submitted_ta_runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.finished_ta_runs">
+<span class="sig-name descname"><span class="pre">finished_ta_runs</span></span><a class="headerlink" href="#smac.stats.stats.Stats.finished_ta_runs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.n_configs">
+<span class="sig-name descname"><span class="pre">n_configs</span></span><a class="headerlink" href="#smac.stats.stats.Stats.n_configs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.wallclock_time_used">
+<span class="sig-name descname"><span class="pre">wallclock_time_used</span></span><a class="headerlink" href="#smac.stats.stats.Stats.wallclock_time_used" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.ta_time_used">
+<span class="sig-name descname"><span class="pre">ta_time_used</span></span><a class="headerlink" href="#smac.stats.stats.Stats.ta_time_used" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.stats.stats.Stats.inc_changed">
+<span class="sig-name descname"><span class="pre">inc_changed</span></span><a class="headerlink" href="#smac.stats.stats.Stats.inc_changed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.stats.stats.Stats.get_remaing_time_budget">
 <span class="sig-name descname"><span class="pre">get_remaing_time_budget</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.stats.stats.Stats.get_remaing_time_budget" title="Permalink to this definition">¶</a></dt>
@@ -518,13 +552,13 @@ intensify</p>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.stats package</p>
+            <p class="prev-next-title">smac.stats</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.tae.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.utils.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.tae package</p>
+        <p class="prev-next-title">smac.utils</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

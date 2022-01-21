@@ -1,5 +1,5 @@
-smac.optimizer.ei\_optimization module
-======================================
+smac.optimizer.ei\_optimization
+===============================
 
 .. automodule:: smac.optimizer.ei_optimization
    :members:

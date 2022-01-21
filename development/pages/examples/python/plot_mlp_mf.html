@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>MLP with Multi-Fidelity &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>MLP with Multi-Fidelity &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,7 +38,7 @@
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Details" href="../../details/index.html" />
+    <link rel="next" title="Scalarized Multi-Objective Using ParEGO" href="plot_scalarized_multi_objective.html" />
     <link rel="prev" title="SGD on Instances" href="plot_sgd_instances.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -206,6 +206,11 @@ style="width: 100%;">
      MLP with Multi-Fidelity
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
+    </a>
+   </li>
   </ul>
  </li>
  <li class="toctree-l1 has-children">
@@ -236,6 +241,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/multiobjective.html">
+     Multi-Objective Optimization
     </a>
    </li>
    <li class="toctree-l2">
@@ -276,63 +286,63 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../../../apidoc/smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../apidoc/smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="../../../apidoc/smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -403,8 +413,28 @@ aggressive racing mechanism and successive halving.</p>
 is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Value for default configuration: 0.1970
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:152: UserWarning: Hyperband is intended to be used with more than 1 worker but num_workers=1
-  warnings.warn(&quot;{} is intended to be used &quot;
+/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:153: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/neural_network/_base.py:66: RuntimeWarning: invalid value encountered in subtract
+  tmp = X - X.max(axis=1)[:, np.newaxis]
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/neural_network/_base.py:66: RuntimeWarning: invalid value encountered in subtract
+  tmp = X - X.max(axis=1)[:, np.newaxis]
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+  ret = a @ b
+/opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: invalid value encountered in matmul
+  ret = a @ b
 Optimized Value: 0.0273
 </pre></div>
 </div>
@@ -557,7 +587,7 @@ Optimized Value: 0.0273
             <span class="c1"># Uses pynisher to limit memory and runtime</span>
             <span class="c1"># Alternatively, you can also disable this.</span>
             <span class="c1"># Then you should handle runtime and memory yourself in the TA</span>
-            <span class="s2">&quot;limit_resources&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;limit_resources&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s2">&quot;cutoff&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>  <span class="c1"># runtime limit for target algorithm</span>
             <span class="s2">&quot;memory_limit&quot;</span><span class="p">:</span> <span class="mi">3072</span><span class="p">,</span>  <span class="c1"># adapt this to reasonable value for your hardware</span>
         <span class="p">}</span>
@@ -577,10 +607,13 @@ Optimized Value: 0.0273
         <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>
     <span class="p">)</span>
 
+    <span class="n">tae</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span>
+
     <span class="c1"># Example call of the function with default values</span>
     <span class="c1"># It returns: Status, Cost, Runtime, Additional Infos</span>
-    <span class="n">def_value</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span> <span class="n">budget</span><span class="o">=</span><span class="n">max_epochs</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">def_value</span> <span class="o">=</span> <span class="n">tae</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">cs</span><span class="o">.</span><span class="n">get_default_configuration</span><span class="p">(),</span>
+        <span class="n">budget</span><span class="o">=</span><span class="n">max_epochs</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
     <span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Value for default configuration: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">def_value</span><span class="p">)</span>
@@ -591,14 +624,14 @@ Optimized Value: 0.0273
     <span class="k">finally</span><span class="p">:</span>
         <span class="n">incumbent</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">incumbent</span>
 
-    <span class="n">inc_value</span> <span class="o">=</span> <span class="n">smac</span><span class="o">.</span><span class="n">get_tae_runner</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">max_epochs</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span>
+    <span class="n">inc_value</span> <span class="o">=</span> <span class="n">tae</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">budget</span><span class="o">=</span><span class="n">max_epochs</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span>
         <span class="mi">1</span>
     <span class="p">]</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">inc_value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  57.255 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  49.609 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-plot-mlp-mf-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../../_downloads/faf20e93dd57f5b77c718ccfcec2bee7/plot_mlp_mf.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mlp_mf.py</span></code></a></p>
@@ -623,10 +656,10 @@ Optimized Value: 0.0273
             <p class="prev-next-title">SGD on Instances</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../../details/index.html" title="next page">
+    <a class='right-next' id="next-link" href="plot_scalarized_multi_objective.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Details</p>
+        <p class="prev-next-title">Scalarized Multi-Objective Using ParEGO</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
