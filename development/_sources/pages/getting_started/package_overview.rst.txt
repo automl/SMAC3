@@ -80,7 +80,7 @@ The following table provides an overview of SMAC's capabilities in comparison wi
     BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
     OpenBox, ✅, ✅, ❌, ❌, ❌, ✅
     HpBandSter, ✅, (✅) †, ✅, ❌, ❌, ✅
-    SMAC, ✅, (✅) †, ✅, ✅, ✅, ✅
+    SMAC, ✅, ✅, ✅, ✅, ✅, ✅
 
 † Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
 
