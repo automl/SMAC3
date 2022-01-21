@@ -111,6 +111,6 @@ def fmin_smac(func: typing.Callable,
     incumbent_performance = smac.solver.runhistory.data[run_key]
     incumbent = np.array([incumbent[tmplt.format(idx + 1)]
                           for idx in range(len(bounds))], dtype=float)
-    
+
     return incumbent, incumbent_performance.cost, smac
 

@@ -162,7 +162,7 @@ if __name__ == '__main__':
         "run_obj": "quality",  # we optimize quality (alternatively runtime)
         "runcount-limit": 50,  # max. number of function evaluations
         "cs": cs,  # configuration space
-        "deterministic": "true",
+        "deterministic": True,
         "multi_objectives": ["cost", "time"],
     })
 

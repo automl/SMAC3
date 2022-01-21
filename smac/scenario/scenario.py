@@ -140,6 +140,10 @@ class Scenario(object):
                 self.algo_runs_timelimit = self.wallclock_limit  # type: float
             self.wallclock_limit = np.inf  # type: float
 
+        # Update cost for crash to support multi-objective
+        if len(self.multi_objectives) > 1 and not isinstance(self.cost_for_crash, list):  # type: ignore
+            self.cost_for_crash = [self.cost_for_crash] * len(self.multi_objectives)  # type: ignore
+
     def __getstate__(self) -> Dict[str, Any]:
         d = dict(self.__dict__)
         del d['logger']

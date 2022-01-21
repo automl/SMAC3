@@ -70,6 +70,7 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/features.txt',
                                    'output_dir':
                                        'test/test_files/scenario_test/tmp_output'}
+        
         self.output_dirs = []
         self.output_files = []
         self.output_dirs.append(self.test_scenario_dict['output_dir'])
@@ -343,6 +344,33 @@ class ScenarioTest(unittest.TestCase):
             "run_obj": "quality"})
 
         assert scenario.multi_objectives == ["cost"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": "1., 500",
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [1., 500.]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": "2.5",
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [2.5, 2.5]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": 500,
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [500., 500.]
 
 
 if __name__ == "__main__":

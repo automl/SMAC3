@@ -28,13 +28,15 @@ class TestSMACFacade(unittest.TestCase):
         x0 = [-3, -4]
         bounds = [(-5, 5), (-5, 5)]
 
-        x, f, smac = fmin_smac(func, x0, bounds, maxfun=10)
-        x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=10,
+        x, f, smac = fmin_smac(func, x0, bounds, maxfun=20)
+        x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=20,
                                     approx_grad=True)
+        
+        print(x, x_s)
+        print(f, f_s)
 
         self.assertEqual(type(x), type(x_s))
         self.assertEqual(type(f), type(f_s))
-
         self.output_dirs.append(smac.scenario.output_dir)
 
     def test_parameter_order(self):

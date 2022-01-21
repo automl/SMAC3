@@ -152,7 +152,7 @@ class AbstractTAFunc(SerialRunner):
         if self._accepts_budget:
             obj_kwargs['budget'] = budget
 
-        cost = [self.cost_for_crash] * len(self.multi_objectives)  # type: List[float]
+        cost = self.cost_for_crash  # type: Union[float, List[float]]
 
         if self.use_pynisher:
             # walltime for pynisher has to be a rounded up integer
@@ -256,14 +256,6 @@ class AbstractTAFunc(SerialRunner):
 
             if isinstance(cost, float):
                 raise RuntimeError(error)
-
-        if status == StatusType.SUCCESS and not isinstance(result, (int, str)):
-            if isinstance(result, list) and None not in result:
-                # a list that does not contain should not be considered as a crashed run
-                pass
-            else:
-                status = StatusType.CRASHED
-                cost = [self.cost_for_crash] * len(self.multi_objectives)  # type: ignore
 
         return status, np.asarray(cost), runtime, additional_run_info
 

@@ -49,7 +49,7 @@ def truthy(x: Any) -> bool:
         return False
 
 
-def multi_objectives(x: Union[str, List]) -> List[str]:
+def multi_objectives(x: Union[str, List[str]]) -> List[str]:
     """Convert objectives into an array"""
     if isinstance(x, str):
         # Convert a (comma-separated) string into list of strings.
@@ -58,7 +58,29 @@ def multi_objectives(x: Union[str, List]) -> List[str]:
     elif isinstance(x, List):
         return x
     else:
-        raise RuntimeError("Expected string, got %s" % type(x))
+        raise RuntimeError("Expected string or list of strings, got %s" % type(x))
+
+
+def cost_for_crash(x: Union[str, List]) -> Union[int, float, List[Union[int, float]]]:
+    """Convert cost for crash into an array"""
+
+    if isinstance(x, List):
+        x = [float(i) for i in x]
+    else:
+        if isinstance(x, str):
+            if x[0] == "[" and x[-1] == "]":
+                x = x[1:-1]
+ 
+            # Convert a (comma-separated) string into list of strings.
+            x = x.replace(", ", ",").split(",")
+
+        x = [float(i) for i in x]
+
+    if len(x) == 1:
+        return x[0]
+
+    return x
+
 
 
 class CheckScenarioFileAction(Action):
@@ -702,9 +724,10 @@ class CMDReader(object):
                                type=float, default=10.0,
                                help=SUPPRESS)  # added after parsing --overall-obj
         scen_opts.add_argument("--cost-for-crash", "--cost_for_crash", dest="cost_for_crash",
-                               default=float(MAXINT), type=float,
+                               default=float(MAXINT), type=cost_for_crash,
                                help="[dev] Defines the cost-value for crashed runs "
-                                    "on scenarios with quality as run-obj.")
+                                    "on scenarios with quality as run-obj. "
+                                    "If multi-objective is used, a list or comma separated string is accepted too.")
         scen_opts.add_argument("--cutoff-time", "--cutoff_time", "--cutoff", dest="cutoff",
                                default=None, type=float,
                                help="[dev] Maximum runtime, after which the "
