@@ -692,9 +692,6 @@ class RunHistory(object):
         else:
             costs = np.full(self.num_obj, np.nan).squeeze()
 
-        if isinstance(costs, Iterable) and self.num_obj == 1:
-            return costs[0]
-
         return costs
 
     def sum_cost(
@@ -720,12 +717,7 @@ class RunHistory(object):
             Sum of costs of config
         """
 
-        costs = np.sum(self._cost(config, instance_seed_budget_keys), axis=0).squeeze()
-
-        if isinstance(costs, Iterable) and self.num_obj == 1:
-            return costs[0]  # type: ignore
-
-        return costs
+        return np.sum(self._cost(config, instance_seed_budget_keys), axis=0).squeeze()
 
     def min_cost(
             self,
@@ -755,9 +747,6 @@ class RunHistory(object):
             costs = np.min(costs, axis=0).squeeze()
         else:
             costs = np.full(self.num_obj, np.nan).squeeze()
-
-        if isinstance(costs, Iterable) and self.num_obj == 1:
-            return costs[0]
 
         return costs
 

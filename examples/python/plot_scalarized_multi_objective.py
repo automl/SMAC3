@@ -163,7 +163,7 @@ if __name__ == '__main__':
         "runcount-limit": 50,  # max. number of function evaluations
         "cs": cs,  # configuration space
         "deterministic": "true",
-        "multi_objectives": "cost, time",
+        "multi_objectives": ["cost", "time"],
     })
 
     # Example call of the function
