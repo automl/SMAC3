@@ -53,7 +53,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x, seed, instance):
             return x ** 2, {'key': seed, 'instance': instance}
-        
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2, instance='test')
         self.assertTrue(taf._accepts_instance)
@@ -115,7 +115,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             raise Exception(x)
-        
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)

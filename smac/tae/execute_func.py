@@ -180,8 +180,8 @@ class AbstractTAFunc(SerialRunner):
                     'traceback': exception_traceback,
                     'error': error_message
                 }
-                
-                return StatusType.CRASHED, cost, 0.0, additional_info
+
+                return StatusType.CRASHED, cost, 0.0, additional_info  # type: ignore
 
             if isinstance(rval, tuple):
                 result = rval[0]
