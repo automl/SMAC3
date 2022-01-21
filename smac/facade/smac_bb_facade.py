@@ -38,6 +38,10 @@ class SMAC4BB(SMAC4AC):
     * The initial design is set to be a Sobol grid
     * The random fraction is set to ``0.08447232371720552``, it was ``0.0`` before.
 
+    See Also
+    --------
+    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
+
     Attributes
     ----------
     logger
@@ -51,11 +55,6 @@ class SMAC4BB(SMAC4AC):
     """
 
     def __init__(self, model_type: str = 'gp_mcmc', **kwargs: typing.Any):
-        """
-        Constructor
-        see ~smac.facade.smac_facade for documentation
-        """
-
         scenario = kwargs['scenario']
 
         if len(scenario.cs.get_hyperparameters()) <= 21201:

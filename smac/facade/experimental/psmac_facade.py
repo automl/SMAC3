@@ -73,6 +73,30 @@ class PSMAC(object):
     """
     Facade to use PSMAC
 
+    Parameters
+    ----------
+    scenario : ~smac.scenario.scenario.Scenario
+        Scenario object
+    n_optimizers: int
+        Number of optimizers to run in parallel per round
+    rng: int/np.random.RandomState
+        The randomState/seed to pass to each smac run
+    run_id: int
+        run_id for this hydra run
+    tae: BaseRunner
+        Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
+    tae_kwargs: Optional[dict]
+        arguments passed to constructor of '~tae'
+    shared_model: bool
+        Flag to indicate whether information is shared between SMAC runs or not
+    validate: bool / None
+        Flag to indicate whether to validate the found configurations or to use the SMAC estimates
+        None => neither and return the full portfolio
+    n_incs: int
+        Number of incumbents to return (n_incs <= 0 ==> all found configurations)
+    val_set: typing.List[str]
+        List of instance-ids to validate on
+
     Attributes
     ----------
     logger
@@ -86,7 +110,6 @@ class PSMAC(object):
         List of all incumbents
 
     """
-
     def __init__(self,
                  scenario: typing.Type[Scenario],
                  rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
@@ -99,34 +122,6 @@ class PSMAC(object):
                  val_set: typing.Union[typing.List[str], None] = None,
                  n_incs: int = 1,
                  **kwargs):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        scenario : ~smac.scenario.scenario.Scenario
-            Scenario object
-        n_optimizers: int
-            Number of optimizers to run in parallel per round
-        rng: int/np.random.RandomState
-            The randomState/seed to pass to each smac run
-        run_id: int
-            run_id for this hydra run
-        tae: BaseRunner
-            Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
-        tae_kwargs: Optional[dict]
-            arguments passed to constructor of '~tae'
-        shared_model: bool
-            Flag to indicate whether information is shared between SMAC runs or not
-        validate: bool / None
-            Flag to indicate whether to validate the found configurations or to use the SMAC estimates
-            None => neither and return the full portfolio
-        n_incs: int
-            Number of incumbents to return (n_incs <= 0 ==> all found configurations)
-        val_set: typing.List[str]
-            List of instance-ids to validate on
-
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 

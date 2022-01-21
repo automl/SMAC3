@@ -24,9 +24,9 @@ clean:
 buildapi:
 	rm -rf apidoc
 
-	sphinx-apidoc -fePTMo apidoc/ ../smac/
+	sphinx-apidoc -fePTMo apidoc/ ../smac/ --templatedir themes/smac/templates/apidoc
 	rm apidoc/smac.rst
-	rm apidoc/smac.configspace.rst
+	rm apidoc/smac.configspace*
 
 html:
 	sphinx-build -b html . html -a

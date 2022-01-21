@@ -27,6 +27,28 @@ class AbstractEPM(object):
     of all predictions (also called ``n_objectives``) depends on the concrete
     implementation of this abstract class.
 
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        Configuration space to tune for.
+    types : List[int]
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass [3, 0]. Note that we count starting from 0.
+    bounds : List[Tuple[float, float]]
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+    seed : int
+        The seed that is passed to the model library.
+    instance_features : np.ndarray (I, K)
+        Contains the K dimensional instance features
+        of the I different instances
+    pca_components : float
+        Number of components to keep when using PCA to reduce
+        dimensionality of instance features. Requires to
+        set n_feats (> pca_dims).
+
     Attributes
     ----------
     instance_features : np.ndarray(I, K)
@@ -58,30 +80,6 @@ class AbstractEPM(object):
                  instance_features: typing.Optional[np.ndarray] = None,
                  pca_components: typing.Optional[int] = 7,
                  ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        configspace : ConfigurationSpace
-            Configuration space to tune for.
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        seed : int
-            The seed that is passed to the model library.
-        instance_features : np.ndarray (I, K)
-            Contains the K dimensional instance features
-            of the I different instances
-        pca_components : float
-            Number of components to keep when using PCA to reduce
-            dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
         self.configspace = configspace
         self.seed = seed
         self.instance_features = instance_features

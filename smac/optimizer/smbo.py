@@ -36,6 +36,45 @@ __license__ = "3-clause BSD"
 class SMBO(object):
     """Interface that contains the main Bayesian optimization loop
 
+    Parameters
+    ----------
+    scenario: smac.scenario.scenario.Scenario
+        Scenario object
+    stats: Stats
+        statistics object with configuration budgets
+    initial_design: InitialDesign
+        initial sampling design
+    runhistory: RunHistory
+        runhistory with all runs so far
+    runhistory2epm : AbstractRunHistory2EPM
+        Object that implements the AbstractRunHistory2EPM to convert runhistory
+        data into EPM data
+    intensifier: Intensifier
+        intensification of new challengers against incumbent configuration
+        (probably with some kind of racing on the instances)
+    num_run: int
+        id of this run (used for pSMAC)
+    model: RandomForestWithInstances
+        empirical performance model (right now, we support only RandomForestWithInstances)
+    acq_optimizer: AcquisitionFunctionMaximizer
+        Optimizer of acquisition function.
+    acquisition_func : AcquisitionFunction
+        Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
+    restore_incumbent: Configuration
+        incumbent to be used from the start. ONLY used to restore states.
+    rng: np.random.RandomState
+        Random number generator
+    tae_runner : smac.tae.base.BaseRunner Object
+        target algorithm run executor
+    random_configuration_chooser
+        Chooser for random configuration -- one of
+        * ChooserNoCoolDown(modulus)
+        * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
+    predict_x_best: bool
+        Choose x_best for computing the acquisition function via the model instead of via the observations.
+    min_samples_model: int
+        Minimum number of samples to build a model.
+
     Attributes
     ----------
     logger
@@ -52,7 +91,6 @@ class SMBO(object):
     epm_chooser
     tae_runner
     """
-
     def __init__(self,
                  scenario: Scenario,
                  stats: Stats,
@@ -67,51 +105,9 @@ class SMBO(object):
                  rng: np.random.RandomState,
                  tae_runner: BaseRunner,
                  restore_incumbent: Configuration = None,
-                 random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+                 random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(2.0),
                  predict_x_best: bool = True,
                  min_samples_model: int = 1):
-        """
-        Interface that contains the main Bayesian optimization loop
-
-        Parameters
-        ----------
-        scenario: smac.scenario.scenario.Scenario
-            Scenario object
-        stats: Stats
-            statistics object with configuration budgets
-        initial_design: InitialDesign
-            initial sampling design
-        runhistory: RunHistory
-            runhistory with all runs so far
-        runhistory2epm : AbstractRunHistory2EPM
-            Object that implements the AbstractRunHistory2EPM to convert runhistory
-            data into EPM data
-        intensifier: Intensifier
-            intensification of new challengers against incumbent configuration
-            (probably with some kind of racing on the instances)
-        num_run: int
-            id of this run (used for pSMAC)
-        model: RandomForestWithInstances
-            empirical performance model (right now, we support only RandomForestWithInstances)
-        acq_optimizer: AcquisitionFunctionMaximizer
-            Optimizer of acquisition function.
-        acquisition_func : AcquisitionFunction
-            Object that implements the AbstractAcquisitionFunction (i.e., infill criterion for acq_optimizer)
-        restore_incumbent: Configuration
-            incumbent to be used from the start. ONLY used to restore states.
-        rng: np.random.RandomState
-            Random number generator
-        tae_runner : smac.tae.base.BaseRunner Object
-            target algorithm run executor
-        random_configuration_chooser
-            Chooser for random configuration -- one of
-            * ChooserNoCoolDown(modulus)
-            * ChooserLinearCoolDown(start_modulus, modulus_increment, end_modulus)
-        predict_x_best: bool
-            Choose x_best for computing the acquisition function via the model instead of via the observations.
-        min_samples_model: int
-            Minimum number of samples to build a model.
-        """
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -130,7 +126,7 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        # initialize the chooser to get configurations from the EPM
+        # TODO consider if we need an additional EPMChooser for multi-objective optimization
         self.epm_chooser = EPMChooser(scenario=scenario,
                                       stats=stats,
                                       runhistory=runhistory,
@@ -197,6 +193,8 @@ class SMBO(object):
         """
         self.start()
 
+        num_obj = len(self.scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
+
         # Main BO loop
         while True:
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
@@ -245,7 +243,7 @@ class SMBO(object):
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT),
+                    cost=float(MAXINT) if num_obj == 1 else np.full(num_obj, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance_id=run_info.instance,
@@ -443,9 +441,8 @@ class SMBO(object):
         self.stats.finished_ta_runs += 1
 
         self.logger.debug(
-            "Return: Status: %r, cost: %f, time: %f, additional: %s" % (
-                result.status, result.cost, result.time, str(result.additional_info)
-            )
+            f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
+            f"additional: {result.additional_info}"
         )
 
         self.runhistory.add(
@@ -496,7 +493,7 @@ class SMBO(object):
                 self.logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
                 self._stop = True
 
-        if self.scenario.save_results_instantly:  # type: ignore[attr-defined] # noqa F821
+        if self.scenario.save_instantly:  # type: ignore[attr-defined] # noqa F821
             self.save()
 
         return

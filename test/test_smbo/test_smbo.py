@@ -51,7 +51,8 @@ class TestSMBO(unittest.TestCase):
         self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
                                   'run_obj': 'quality',
                                   'output_dir': 'data-test_smbo',
-                                  "runcount-limit": 5})
+                                  "runcount-limit": 5,
+                                  'deterministic': False})
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
 
@@ -185,7 +186,8 @@ class TestSMBO(unittest.TestCase):
             """ Return SMBO with intensification_percentage. """
             scen = Scenario({'cs': test_helpers.get_branin_config_space(),
                              'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
-                             'intensification_percentage': intensification_perc})
+                             'intensification_percentage': intensification_perc,
+                             'deterministic': False})
             self.output_dirs.append(scen.output_dir)
             return SMAC4AC(scen, tae_runner=target, rng=1).solver
         # Test for valid values
@@ -216,7 +218,10 @@ class TestSMBO(unittest.TestCase):
             return 5
 
         scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification'})
+                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
+                         'save-instantly': False,
+                         'deterministic': False},
+                        )
         self.output_dirs.append(scen.output_dir)
         solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
@@ -307,7 +312,7 @@ class TestSMBO(unittest.TestCase):
                     'cs': cs,
                     'runcount_limit': 5,
                     'run_obj': 'quality',
-                    "deterministic": "true",
+                    "deterministic": True,
                     "initial_incumbent": "DEFAULT",
                     'output_dir': 'data-test_smbo'
                 }),

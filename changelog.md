@@ -1,8 +1,20 @@
-# 1.1.2
+# 1.2
+
+## Features
+* Added multi objective via Par-EGO.
+
+## Major Changes
+* Results are instantly saved by default now.
+* Determinstic behaviour is default now.
+* Renamed scenario object `save_results_instantly` to `save_instantly`.
+* Added `multi_objectives` as scenario argument.
+* Expanded `cost_for_crash` for multi-objective support.
 
 ## Examples
 * Integrated spear_qcp example for commandline
 * Python examples are now executed
+* Added multi objective example
+* Added output of python examples again
 
 ## Workflow Clean-up
 * Adds PEP 561 compliance (exports types so other packages can be aware of them)
@@ -19,8 +31,13 @@
   * Changed the boolean flags in the matrix to just be a categorical, easier to read
 
 ## Minor Changes
-* Specified that dask shouldn't cache functions/results (#803) 
+* Specified that dask should not cache functions/results (#803) 
 * Handles invalid configuration vectors gracefully (#776)
+* Specified scenario docs that also SMAC options can be used
+* Docs display init methods now
+* Parameters in the docs are shown first now
+* Successive Halving only warns you once if one worker is used only
+* Statistics are better readable now
 
 
 # 1.1.1
@@ -49,10 +66,10 @@
 * `minR`, `maxR` and `use_ta_time` can now be initialized by the scenario. (#775)
 * `ConfigSpace.util.get_one_exchange_neighborhood`'s invalid configurations are ignored. (#773)
 
-
 ## Bug Fixes
 * Fixed an incorrect adaptive capping behaviour. (#749)
 * Avoid the potential `ValueError` raised by `LocalSearch._do_search`. (#773)
+
 
 # 1.0.1
 

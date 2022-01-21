@@ -18,6 +18,10 @@ class SMAC4HPO(SMAC4AC):
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
 
+    See Also
+    --------
+    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
+
     Attributes
     ----------
     logger
@@ -31,11 +35,6 @@ class SMAC4HPO(SMAC4AC):
     """
 
     def __init__(self, **kwargs: typing.Any):
-        """
-        Constructor
-        see ~smac.facade.smac_facade for docu
-        """
-
         scenario = kwargs['scenario']
 
         kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)

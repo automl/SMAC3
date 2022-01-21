@@ -41,7 +41,6 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
 
     rng : np.random.RandomState or int, optional
     """
-
     def __init__(
             self,
             acquisition_function: AbstractAcquisitionFunction,

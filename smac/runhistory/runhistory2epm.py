@@ -10,6 +10,7 @@ from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.utils import constants
 from smac.scenario.scenario import Scenario
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -23,6 +24,36 @@ class AbstractRunHistory2EPM(object):
     __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
+
+    Parameters
+    ----------
+    scenario: Scenario Object
+        Algorithm Configuration Scenario
+    num_params : int
+        number of parameters in config space
+    success_states: list, optional
+        List of states considered as successful (such as StatusType.SUCCESS).
+        If None, raise TypeError.
+    impute_censored_data: bool, optional
+        Should we impute data?
+    consider_for_higher_budgets_state: list, optional
+        Additionally consider all runs with these states for budget < current budget
+    imputor: epm.base_imputor Instance
+        Object to impute censored data
+    impute_state: list, optional
+        List of states that mark censored data (such as StatusType.TIMEOUT)
+        in combination with runtime < cutoff_time
+        If None, set to empty list [].
+        If None and impute_censored_data is True, raise TypeError.
+    scale_perc: int
+        scaled y-transformation use a percentile to estimate distance to optimum;
+        only used by some subclasses of AbstractRunHistory2EPM
+    rng : numpy.random.RandomState
+        Only used for reshuffling data after imputation.
+        If None, use np.random.RandomState(seed=1).
+    multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
+        Instance performing multi objective optimization. Receives an objective cost vector as input
+        and returns a scalar. Is executed before transforming runhistory values.
 
     Attributes
     ----------
@@ -52,37 +83,8 @@ class AbstractRunHistory2EPM(object):
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
+        multi_objective_algorithm: typing.Optional[AggregationStrategy] = None
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        scenario: Scenario Object
-            Algorithm Configuration Scenario
-        num_params : int
-            number of parameters in config space
-        success_states: list, optional
-            List of states considered as successful (such as StatusType.SUCCESS).
-            If None, raise TypeError.
-        impute_censored_data: bool, optional
-            Should we impute data?
-        consider_for_higher_budgets_state: list, optional
-            Additionally consider all runs with these states for budget < current budget
-        imputor: epm.base_imputor Instance
-            Object to impute censored data
-        impute_state: list, optional
-            List of states that mark censored data (such as StatusType.TIMEOUT)
-            in combination with runtime < cutoff_time
-            If None, set to empty list [].
-            If None and impute_censored_data is True, raise TypeError.
-        scale_perc: int
-            scaled y-transformation use a percentile to estimate distance to optimum;
-            only used by some subclasses of AbstractRunHistory2EPM
-        rng : numpy.random.RandomState
-            Only used for reshuffling data after imputation.
-            If None, use np.random.RandomState(seed=1).
-        """
-
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -90,12 +92,20 @@ class AbstractRunHistory2EPM(object):
         self.scenario = scenario
         self.rng = rng
         self.num_params = num_params
+
         self.scale_perc = scale_perc
+        self.num_obj = 1  # type: int
+        if scenario.multi_objectives is not None:  # type: ignore[attr-defined] # noqa F821
+            self.num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
 
         # Configuration
         self.impute_censored_data = impute_censored_data
         self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
         self.imputor = imputor
+        if self.num_obj > 1:
+            self.multi_objective_algorithm = multi_objective_algorithm
+        else:
+            self.multi_objective_algorithm = None
 
         # Fill with some default values
         if rng is None:
@@ -146,9 +156,9 @@ class AbstractRunHistory2EPM(object):
                              type(self.imputor))
 
         # Learned statistics
-        self.min_y = np.NaN
-        self.max_y = np.NaN
-        self.perc = np.NaN
+        self.min_y = np.array([np.NaN] * self.num_obj)
+        self.max_y = np.array([np.NaN] * self.num_obj)
+        self.perc = np.array([np.NaN] * self.num_obj)
 
     @abc.abstractmethod
     def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
@@ -271,7 +281,7 @@ class AbstractRunHistory2EPM(object):
         # Get real TIMEOUT runs
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if np.isnan(self.min_y) else False
+        store_statistics = True if np.any(np.isnan(self.min_y)) else False
         tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
                                     store_statistics=store_statistics)
 
@@ -329,6 +339,8 @@ class AbstractRunHistory2EPM(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
+        if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            Y = self.multi_objective_algorithm(Y)
         self.logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
 
@@ -413,7 +425,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
-        y = np.ones([n_rows, 1])
+        y = np.ones([n_rows, runhistory.num_obj])
 
         # Then populate matrix
         for row, (key, run) in enumerate(run_dict.items()):
@@ -427,16 +439,17 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
             if return_time_as_y:
+                # TODO how to deal with this situation under multi-objective cirumstance?
                 y[row, 0] = run.time
             else:
-                y[row, 0] = run.cost
+                y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_perc)
-                self.min_y = np.min(y)
-                self.max_y = np.max(y)
-            y = self.transform_response_values(values=y)
+                self.perc = np.percentile(y, self.scale_perc, axis=0)
+                self.min_y = np.min(y, axis=0)
+                self.max_y = np.max(y, axis=0)
+        y = self.transform_response_values(values=y)
 
         return X, y
 
@@ -505,10 +518,11 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         """
 
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if self.min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -101
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -101
         values = (values - min_y) / (self.max_y - min_y)
         return values
 
@@ -540,9 +554,10 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = 1 - 1 / values
         return values
@@ -571,12 +586,13 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = np.sqrt(values)
         return values
@@ -600,14 +616,15 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10 ** -10
+
         values = (values - min_y) / (self.max_y - min_y)
+
         values = np.log(values)
         return values
 

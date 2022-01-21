@@ -43,3 +43,7 @@ Following options can be defined within the scenario object:
 
 .. include:: ../../scenario_options.rst
 
+Additionally, you can also specify SMAC options with the scenario object:
+
+.. include:: ../../smac_options.rst
+

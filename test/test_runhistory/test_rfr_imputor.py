@@ -120,6 +120,8 @@ class ImputorTest(unittest.TestCase):
         scen = Scen()
         scen.run_obj = "runtime"
         scen.overall_obj = "par10"
+        # we only test single objective here
+        scen.multi_objectives = None
         scen.cutoff = 40
         if instance_features:
             scen.feature_dict = instance_features

@@ -56,7 +56,7 @@ if __name__ == "__main__":
     scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
                          "runcount-limit": 10,  # max. number of function evaluations
                          "cs": cs,  # configuration space
-                         "deterministic": "true"
+                         "deterministic": True
                          })
 
     # Use 'gp' or 'gp_mcmc' here

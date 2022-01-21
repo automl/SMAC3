@@ -23,7 +23,7 @@ def fmin_smac(func: typing.Callable,
               rng: typing.Union[np.random.RandomState, int] = None,
               scenario_args: typing.Mapping[str, typing.Any] = None,
               tae_runner_kwargs: typing.Optional[typing.Dict[str, typing.Any]] = None,
-              **kwargs: typing.Any) -> typing.Tuple[Configuration, float, SMAC4HPO]:
+              **kwargs: typing.Any) -> typing.Tuple[Configuration, typing.Union[np.ndarray, float], SMAC4HPO]:
     """
     Minimize a function func using the SMAC4HPO facade
     (i.e., a modified version of SMAC).
@@ -53,8 +53,9 @@ def fmin_smac(func: typing.Callable,
     -------
     x : list
         Estimated position of the minimum.
-    f : float
-        Value of `func` at the minimum.
+    f : typing.Union[np.ndarray, float]
+        Value of `func` at the minimum. Depending on the scenario_args, it could be a scalar value (for single objective
+        problems) or a np.array(for multi objective problems)
     s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
@@ -77,7 +78,7 @@ def fmin_smac(func: typing.Callable,
     scenario_dict = {
         "run_obj": "quality",
         "cs": cs,
-        "deterministic": "true",
+        "deterministic": True,
         "initial_incumbent": "DEFAULT",
     }
 
@@ -109,5 +110,6 @@ def fmin_smac(func: typing.Callable,
     run_key = RunKey(config_id, None, 0)
     incumbent_performance = smac.solver.runhistory.data[run_key]
     incumbent = np.array([incumbent[tmplt.format(idx + 1)]
-                          for idx in range(len(bounds))], dtype=np.float)
+                          for idx in range(len(bounds))], dtype=float)
+
     return incumbent, incumbent_performance.cost, smac

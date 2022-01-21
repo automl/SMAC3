@@ -16,7 +16,6 @@ __license__ = "3-clause BSD"
 
 
 class BaseModel(AbstractEPM):
-
     def __init__(
         self,
         configspace: ConfigurationSpace,

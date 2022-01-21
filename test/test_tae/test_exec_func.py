@@ -28,8 +28,10 @@ class TestExecuteFunc(unittest.TestCase):
     def test_run(self):
         def target(x):
             return x**2
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2)
+
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
         self.assertEqual(rval[0], StatusType.SUCCESS)
@@ -39,6 +41,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x, seed):
             return x ** 2, {'key': seed}
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2, instance='test')
         self.assertFalse(taf._accepts_instance)
@@ -50,6 +53,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x, seed, instance):
             return x ** 2, {'key': seed, 'instance': instance}
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2, instance='test')
         self.assertTrue(taf._accepts_instance)
@@ -61,6 +65,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             raise Exception(x)
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
@@ -73,6 +78,7 @@ class TestExecuteFunc(unittest.TestCase):
     def test_run_wo_pynisher(self):
         def target(x):
             return x**2
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
@@ -84,6 +90,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x, seed, instance):
             return x ** 2, {'key': seed, 'instance': instance}
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2, instance='test')
         self.assertTrue(taf._accepts_instance)
@@ -95,8 +102,10 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             return None
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
+
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
         self.assertEqual(rval[0], StatusType.CRASHED)
@@ -106,6 +115,7 @@ class TestExecuteFunc(unittest.TestCase):
 
         def target(x):
             raise Exception(x)
+
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
@@ -119,6 +129,7 @@ class TestExecuteFunc(unittest.TestCase):
     def test_run_execute_func_for_fmin(self, mock):
         def target(x):
             return x[0] ** 2 + x[1]
+
         mock.return_value = {'x1': 2, 'x2': 1}
         c = Configuration(configuration_space=self.cs, values={})
         taf = ExecuteTAFuncArray(target, stats=self.stats)
@@ -190,3 +201,9 @@ class TestExecuteFunc(unittest.TestCase):
             return x**2
         taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
         self.assertRaises(ValueError, taf.run, config=2, cutoff=65536)
+
+
+if __name__ == "__main__":
+    t = TestExecuteFunc()
+    t.setUp()
+    t.test_run()

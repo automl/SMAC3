@@ -40,12 +40,15 @@ from smac.optimizer.acquisition import EI, LogEI, AbstractAcquisitionFunction, I
 from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy, ParEGO
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import get_types, get_rng
 # utils
+from smac.utils.logging import format_array
 from smac.utils.io.traj_logging import TrajLogger, TrajEntry
 from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
@@ -59,6 +62,94 @@ __license__ = "3-clause BSD"
 class SMAC4AC(object):
     """
     Facade to use SMAC default mode for Algorithm configuration
+
+    Parameters
+    ----------
+    scenario : ~smac.scenario.scenario.Scenario
+        Scenario object
+    tae_runner : ~smac.tae.base.BaseRunner or callable
+        Callable or implementation of
+        :class:`~smac.tae.base.BaseRunner`. In case a
+        callable is passed it will be wrapped by
+        :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
+        If not set, it will be initialized with the
+        :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
+    tae_runner_kwargs: Optional[Dict]
+        arguments passed to constructor of '~tae_runner'
+    runhistory : RunHistory
+        runhistory to store all algorithm runs
+    runhistory_kwargs : Optional[Dict]
+        arguments passed to constructor of runhistory.
+        We strongly advise against changing the aggregation function,
+        since it will break some code assumptions
+    intensifier : AbstractRacer
+        intensification object or class to issue a racing to decide the current
+        incumbent. Default: class `Intensifier`
+    intensifier_kwargs: Optional[Dict]
+        arguments passed to the constructor of '~intensifier'
+    acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
+        Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
+        Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
+        `~acquisition_function_kwargs` is passed to the class constructor.
+    acquisition_function_kwargs : Optional[Dict]
+        dictionary to pass specific arguments to ~acquisition_function
+    integrate_acquisition_function : bool, default=False
+        Whether to integrate the acquisition function. Works only with models which can sample their
+        hyperparameters (i.e. GaussianProcessMCMC).
+    acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
+        Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
+        Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
+    acquisition_function_optimizer_kwargs: Optional[dict]
+        Arguments passed to constructor of `~acquisition_function_optimizer`
+    model : AbstractEPM
+        Model that implements train() and predict(). Will use a
+        :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
+    model_kwargs : Optional[dict]
+        Arguments passed to constructor of `~model`
+    runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
+        Object that implements the AbstractRunHistory2EPM. If None,
+        will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
+        if objective is cost or
+        :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
+        if objective is runtime.
+    runhistory2epm_kwargs: Optional[dict]
+        Arguments passed to the constructor of `~runhistory2epm`
+    multi_objective_algorithm: Optional[Type["AbstractMultiObjectiveAlgorithm"]]
+        Class that implements multi objective logic. If None, will use :
+        smac.optimizer.multi_objective.aggregation_strategy.ParEGO
+        Multi objective only becomes active if the objective
+        specified in `~scenario.run_obj` is a List[str] with at least two entries.
+    multi_objective_kwargs: Optional[Dict]
+        Arguments passed to `~multi_objective_algorithm`.
+    initial_design : InitialDesign
+        initial sampling design
+    initial_design_kwargs: Optional[dict]
+        arguments passed to constructor of `~initial_design`
+    initial_configurations : List[Configuration]
+        list of initial configurations for initial design --
+        cannot be used together with initial_design
+    stats : Stats
+        optional stats object
+    rng : np.random.RandomState
+        Random number generator
+    restore_incumbent : Configuration
+        incumbent used if restoring to previous state
+    smbo_class : ~smac.optimizer.smbo.SMBO
+        Class implementing the SMBO interface which will be used to
+        instantiate the optimizer class.
+    run_id : int (optional)
+        Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be
+        chosen.
+    random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
+        How often to choose a random configuration during the intensification procedure.
+    random_configuration_chooser_kwargs : Optional[dict]
+        arguments of constructor for `~random_configuration_chooser`
+    dask_client : dask.distributed.Client
+        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+    n_jobs : int, optional
+        Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
+        be ignored if ``dask_client`` is not ``None``.
+        If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
 
     Attributes
     ----------
@@ -89,6 +180,8 @@ class SMAC4AC(object):
                  model_kwargs: Optional[Dict] = None,
                  runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
                  runhistory2epm_kwargs: Optional[Dict] = None,
+                 multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
+                 multi_objective_kwargs: Optional[Dict] = None,
                  initial_design: Optional[Type[InitialDesign]] = None,
                  initial_design_kwargs: Optional[Dict] = None,
                  initial_configurations: Optional[List[Configuration]] = None,
@@ -102,90 +195,6 @@ class SMAC4AC(object):
                  dask_client: Optional[dask.distributed.Client] = None,
                  n_jobs: Optional[int] = 1,
                  ):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        scenario : ~smac.scenario.scenario.Scenario
-            Scenario object
-        tae_runner : ~smac.tae.base.BaseRunner or callable
-            Callable or implementation of
-            :class:`~smac.tae.base.BaseRunner`. In case a
-            callable is passed it will be wrapped by
-            :class:`~smac.tae.execute_func.ExecuteTAFuncDict`.
-            If not set, it will be initialized with the
-            :class:`~smac.tae.execute_ta_run_old.ExecuteTARunOld`.
-        tae_runner_kwargs: Optional[Dict]
-            arguments passed to constructor of '~tae_runner'
-        runhistory : RunHistory
-            runhistory to store all algorithm runs
-        runhistory_kwargs : Optional[Dict]
-            arguments passed to constructor of runhistory.
-            We strongly advise against changing the aggregation function,
-            since it will break some code assumptions
-        intensifier : AbstractRacer
-            intensification object or class to issue a racing to decide the current
-            incumbent. Default: class `Intensifier`
-        intensifier_kwargs: Optional[Dict]
-            arguments passed to the constructor of '~intensifier'
-        acquisition_function : `~smac.optimizer.acquisition.AbstractAcquisitionFunction`
-            Class or object that implements the :class:`~smac.optimizer.acquisition.AbstractAcquisitionFunction`.
-            Will use :class:`~smac.optimizer.acquisition.EI` or :class:`~smac.optimizer.acquisition.LogEI` if not set.
-            `~acquisition_function_kwargs` is passed to the class constructor.
-        acquisition_function_kwargs : Optional[Dict]
-            dictionary to pass specific arguments to ~acquisition_function
-        integrate_acquisition_function : bool, default=False
-            Whether to integrate the acquisition function. Works only with models which can sample their
-            hyperparameters (i.e. GaussianProcessMCMC).
-        acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
-            Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
-            Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
-        acquisition_function_optimizer_kwargs: Optional[dict]
-            Arguments passed to constructor of `~acquisition_function_optimizer`
-        model : AbstractEPM
-            Model that implements train() and predict(). Will use a
-            :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
-        model_kwargs : Optional[dict]
-            Arguments passed to constructor of `~model`
-        runhistory2epm : ~smac.runhistory.runhistory2epm.RunHistory2EMP
-            Object that implements the AbstractRunHistory2EPM. If None,
-            will use :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4Cost`
-            if objective is cost or
-            :class:`~smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost`
-            if objective is runtime.
-        runhistory2epm_kwargs: Optional[dict]
-            Arguments passed to the constructor of `~runhistory2epm`
-        initial_design : InitialDesign
-            initial sampling design
-        initial_design_kwargs: Optional[dict]
-            arguments passed to constructor of `~initial_design`
-        initial_configurations : List[Configuration]
-            list of initial configurations for initial design --
-            cannot be used together with initial_design
-        stats : Stats
-            optional stats object
-        rng : np.random.RandomState
-            Random number generator
-        restore_incumbent : Configuration
-            incumbent used if restoring to previous state
-        smbo_class : ~smac.optimizer.smbo.SMBO
-            Class implementing the SMBO interface which will be used to
-            instantiate the optimizer class.
-        run_id : int (optional)
-            Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be
-            chosen.
-        random_configuration_chooser : ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser
-            How often to choose a random configuration during the intensification procedure.
-        random_configuration_chooser_kwargs : Optional[dict]
-            arguments of constructor for `~random_configuration_chooser`
-        dask_client : dask.distributed.Client
-            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-        n_jobs : int, optional
-            Number of jobs. If > 1 or -1, this creates a dask client if ``dask_client`` is ``None``. Will
-            be ignored if ``dask_client`` is not ``None``.
-            If ``None``, this value will be set to 1, if ``-1``, this will be set to the number of cpu cores.
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -231,6 +240,7 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"  # type: ignore[attr-defined] # noqa F821
 
         # initialize empty runhistory
+        num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
         runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
@@ -362,6 +372,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
+            'multi_objectives': scenario.multi_objectives,  # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -413,6 +424,10 @@ class SMAC4AC(object):
                              "the scenario must be the same, but are '%s' and "
                              "'%s'" % (tae_runner_instance.run_obj, scenario.run_obj))  # type: ignore[union-attr] # noqa F821
 
+        if num_obj > 1:
+            # TODO intialize a multi-objective intensifer here (Or create a new facade)
+            pass
+
         if intensifier is None:
             intensifier = Intensifier
 
@@ -449,6 +464,29 @@ class SMAC4AC(object):
                 type(intensifier)
             )
 
+        # initialize multi objective
+        # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
+        multi_objective_algorithm_instance = None  # type: Optional[AbstractMultiObjectiveAlgorithm]
+
+        if scenario.multi_objectives is not None and num_obj > 1:  # type: ignore[attr-defined] # noqa F821
+            # define any defaults here
+            _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
+            if multi_objective_kwargs is not None:
+                _multi_objective_kwargs.update(multi_objective_kwargs)
+            if multi_objective_algorithm is None:
+                for key, value in {
+                }.items():  # ParEGO default arguments  # TODO add hyperparameter
+                    if key not in model_def_kwargs:
+                        _multi_objective_kwargs[key] = value
+                multi_objective_algorithm_instance = (
+                    ParEGO(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
+                )
+            elif inspect.isclass(multi_objective_algorithm):
+                multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)
+            else:
+                raise TypeError(
+                    "Multi objective algorithm not recognized: %s" % (type(multi_objective_algorithm)))
+
         # initial design
         if initial_design is not None and initial_configurations is not None:
             raise ValueError(
@@ -463,6 +501,7 @@ class SMAC4AC(object):
             'n_configs_x_params': 0,
             'max_config_fracs': 0.0
         }
+
         if initial_design_kwargs is not None:
             init_design_def_kwargs.update(initial_design_kwargs)
         if initial_configurations is not None:
@@ -500,6 +539,7 @@ class SMAC4AC(object):
         else:
             cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])  # type: ignore[attr-defined] # noqa F821
             threshold = cutoff * scenario.par_factor  # type: ignore[attr-defined] # noqa F821
+
         num_params = len(scenario.cs.get_hyperparameters())  # type: ignore[attr-defined] # noqa F821
         imputor = RFRImputator(rng=rng,
                                cutoff=cutoff,
@@ -515,8 +555,13 @@ class SMAC4AC(object):
             'impute_censored_data': True,
             'impute_state': [StatusType.CAPPED, ],
             'imputor': imputor,
-            'scale_perc': 5
+            'scale_perc': 5,
         }
+
+        if isinstance(multi_objective_algorithm_instance, AggregationStrategy):
+            # TODO: consider other sorts of multi-objective algorithms
+            r2e_def_kwargs.update({'multi_objective_algorithm': multi_objective_algorithm_instance})
+
         if scenario.run_obj == 'quality':
             r2e_def_kwargs.update({
                 'success_states': [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
@@ -602,8 +647,8 @@ class SMAC4AC(object):
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
             if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
-                self.logger.info("Estimated cost of incumbent: %f",
-                                 self.solver.runhistory.get_cost(self.solver.incumbent))
+                self.logger.info(f"Estimated cost of incumbent: "
+                                 f"{format_array(self.solver.runhistory.get_cost(self.solver.incumbent))}")
             self.runhistory = self.solver.runhistory
             self.trajectory = self.solver.intensifier.traj_logger.trajectory
 

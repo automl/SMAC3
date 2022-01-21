@@ -1,13 +1,14 @@
 import collections
 from enum import Enum
 import json
-import typing
+from typing import List, Dict, Union, Optional, Any, Type, Iterable, cast
 
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
+
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -22,12 +23,12 @@ class RunKey(collections.namedtuple('RunKey', ['config_id', 'instance_id', 'seed
     __slots__ = ()
 
     def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-              # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config_id: int,
-        instance_id: typing.Optional[str],
-        seed: typing.Optional[int],
-        budget: float = 0.0,
+            cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
+            # see https://docs.python.org/3/reference/datamodel.html#object.__new__
+            config_id: int,
+            instance_id: Optional[str],
+            seed: Optional[int],
+            budget: float = 0.0,
     ) -> 'RunKey':
         return super().__new__(cls, config_id, instance_id, seed, budget)
 
@@ -42,19 +43,19 @@ class RunInfo(
     __slots__ = ()
 
     def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-              # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config: Configuration,
-        instance: typing.Optional[str],
-        instance_specific: str,
-        seed: int,
-        cutoff: typing.Optional[float],
-        capped: bool,
-        budget: float = 0.0,
-        # In the context of parallel runs, one will have multiple suppliers of
-        # configurations. source_id is a new mechanism to track what entity launched
-        # this configuration
-        source_id: int = 0,
+            cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
+            # see https://docs.python.org/3/reference/datamodel.html#object.__new__
+            config: Configuration,
+            instance: Optional[str],
+            instance_specific: str,
+            seed: int,
+            cutoff: Optional[float],
+            capped: bool,
+            budget: float = 0.0,
+            # In the context of parallel runs, one will have multiple suppliers of
+            # configurations. source_id is a new mechanism to track what entity launched
+            # this configuration
+            source_id: int = 0,
     ) -> 'RunInfo':
         return super().__new__(cls, config, instance, instance_specific, seed,
                                cutoff, capped, budget, source_id)
@@ -63,10 +64,8 @@ class RunInfo(
 InstSeedKey = collections.namedtuple(
     'InstSeedKey', ['instance', 'seed'])
 
-
 InstSeedBudgetKey = collections.namedtuple(
     'InstSeedBudgetKey', ['instance', 'seed', 'budget'])
-
 
 RunValue = collections.namedtuple(
     'RunValue', ['cost', 'time', 'status', 'starttime', 'endtime', 'additional_info'])
@@ -79,14 +78,13 @@ class EnumEncoder(json.JSONEncoder):
     to deserialize from json.
     """
 
-    def default(self, obj: object) -> typing.Any:
+    def default(self, obj: object) -> Any:
         if isinstance(obj, StatusType):
             return {"__enum__": str(obj)}
         return json.JSONEncoder.default(self, obj)
 
 
 class DataOrigin(Enum):
-
     """
     Definition of how data in the runhistory is used.
 
@@ -108,7 +106,6 @@ class DataOrigin(Enum):
 
 
 class RunHistory(object):
-
     """Container for target algorithm run information.
 
     Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
@@ -125,6 +122,13 @@ class RunHistory(object):
     ----
     Guaranteed to be picklable.
 
+    Parameters
+    ----------
+    overwrite_existing_runs : bool (default=True)
+        If set to ``True`` and a run of a configuration on an instance-budget-seed-pair already exists,
+        it is overwritten. Allows to overwrites old results if pairs of algorithm-instance-seed were measured
+        multiple times
+
     Attributes
     ----------
     data : collections.OrderedDict()
@@ -136,26 +140,12 @@ class RunHistory(object):
     num_runs_per_config : dict
         Maps config_id -> number of runs
 
-    Parameters
-    ----------
-    overwrite_existing_runs : bool (default=True)
-        If set to ``True`` and a run of a configuration on an instance-budget-seed-pair already exists,
-        it is overwritten.
     """
 
     def __init__(
-        self,
-        overwrite_existing_runs: bool = False
+            self,
+            overwrite_existing_runs: bool = False,
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        overwrite_existing_runs: bool
-            allows to overwrites old results if pairs of
-            algorithm-instance-seed were measured
-            multiple times
-        """
         self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
         )
@@ -163,45 +153,46 @@ class RunHistory(object):
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
-        self.data = collections.OrderedDict()  # type: typing.Dict[RunKey, RunValue]
+        self.data = collections.OrderedDict()  # type: Dict[RunKey, RunValue]
 
         # for fast access, we have also an unordered data structure
         # to get all instance seed pairs of a configuration.
         # This does not include capped runs.
-        self._configid_to_inst_seed_budget = {}  # type: typing.Dict[int, typing.Dict[InstSeedKey, typing.List[float]]]
+        self._configid_to_inst_seed_budget = {}  # type: Dict[int, Dict[InstSeedKey, List[float]]]
 
-        self.config_ids = {}  # type: typing.Dict[Configuration, int]
-        self.ids_config = {}  # type: typing.Dict[int, Configuration]
+        self.config_ids = {}  # type: Dict[Configuration, int]
+        self.ids_config = {}  # type: Dict[int, Configuration]
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self._cost_per_config = {}  # type: typing.Dict[int, float]
+        self._cost_per_config = {}  # type: Dict[int, np.ndarray]
         # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config = {}  # type: typing.Dict[int, float]
+        self._min_cost_per_config = {}  # type: Dict[int, np.ndarray]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
-        self.num_runs_per_config = {}  # type: typing.Dict[int, int]
+        self.num_runs_per_config = {}  # type: Dict[int, int]
 
         # Store whether a datapoint is "external", which means it was read from
         # a JSON file. Can be chosen to not be written to disk
-        self.external = {}  # type: typing.Dict[RunKey, DataOrigin]
+        self.external = {}  # type: Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
+        self.num_obj = None  # type: Optional[int]
 
     def add(
-        self,
-        config: Configuration,
-        cost: float,
-        time: float,
-        status: StatusType,
-        instance_id: typing.Optional[str] = None,
-        seed: typing.Optional[int] = None,
-        budget: float = 0.0,
-        starttime: float = 0.0,
-        endtime: float = 0.0,
-        additional_info: typing.Optional[typing.Dict] = None,
-        origin: DataOrigin = DataOrigin.INTERNAL,
-        force_update: bool = False,
+            self,
+            config: Configuration,
+            cost: Union[int, float, list, np.ndarray],
+            time: float,
+            status: StatusType,
+            instance_id: Optional[str] = None,
+            seed: Optional[int] = None,
+            budget: float = 0.0,
+            starttime: float = 0.0,
+            endtime: float = 0.0,
+            additional_info: Optional[Dict] = None,
+            origin: DataOrigin = DataOrigin.INTERNAL,
+            force_update: bool = False,
     ) -> None:
         """Adds a data of a new target algorithm (TA) run;
         it will update data if the same key values are used
@@ -211,7 +202,7 @@ class RunHistory(object):
         ----------
             config : dict (or other type -- depending on config space module)
                 Parameter configuration
-            cost: float
+            cost: Union[int, float, list, np.ndarray]
                 Cost of TA run (will be minimized)
             time: float
                 Runtime of TA run
@@ -243,32 +234,44 @@ class RunHistory(object):
                 'Configuration to add to the runhistory is not of type Configuration, but %s' % type(config)
             )
 
+        # Squeeze is important to reduce arrays with one element
+        # to scalars.
+        cost = np.asarray(cost).squeeze()
+
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
         if config_id_tmp is None:
             self._n_id += 1
             self.config_ids[config] = self._n_id
-            config_id = typing.cast(int, self.config_ids.get(config))
+            config_id = cast(int, self.config_ids.get(config))
             self.ids_config[self._n_id] = config
         else:
-            config_id = typing.cast(int, config_id_tmp)
+            config_id = cast(int, config_id_tmp)
+
+        if self.num_obj is None:
+            self.num_obj = np.size(cost)
+        else:
+            if np.size(cost) != self.num_obj:
+                raise ValueError(f'Cost is not of the same length ({np.size(cost)}) as the number '
+                                 f'of objectives ({self.num_obj})')
 
         k = RunKey(config_id, instance_id, seed, budget)
-        v = RunValue(cost, time, status, starttime, endtime, additional_info)
+        v = RunValue(cost.tolist(), time, status, starttime, endtime, additional_info)
+
         # Construct keys and values for the data dictionary
         for key, value in (
-            ('config', config.get_dictionary()),
-            ('config_id', config_id),
-            ('instance_id', instance_id),
-            ('seed', seed),
-            ('budget', budget),
-            ('cost', cost),
-            ('time', time),
-            ('status', status),
-            ('starttime', starttime),
-            ('endtime', endtime),
-            ('additional_info', additional_info),
-            ('origin', config.origin),
+                ('config', config.get_dictionary()),
+                ('config_id', config_id),
+                ('instance_id', instance_id),
+                ('seed', seed),
+                ('budget', budget),
+                ('cost', cost.tolist()),
+                ('time', time),
+                ('status', status),
+                ('starttime', starttime),
+                ('endtime', endtime),
+                ('additional_info', additional_info),
+                ('origin', config.origin),
         ):
             self._check_json_serializable(key, value, EnumEncoder, k, v)
 
@@ -284,12 +287,12 @@ class RunHistory(object):
             self._add(k, v, status, origin)
 
     def _check_json_serializable(
-        self,
-        key: str,
-        obj: typing.Any,
-        encoder: typing.Type[json.JSONEncoder],
-        runkey: RunKey,
-        runvalue: RunValue
+            self,
+            key: str,
+            obj: Any,
+            encoder: Type[json.JSONEncoder],
+            runkey: RunKey,
+            runvalue: RunValue
     ) -> None:
         try:
             json.dumps(obj, cls=encoder)
@@ -301,10 +304,8 @@ class RunHistory(object):
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType,
              origin: DataOrigin) -> None:
-        """Actual function to add new entry to data structures
-
-        TODO
-
+        """
+        Actual function to add new entry to data structures.
         """
         self.data[k] = v
         self.external[k] = origin
@@ -357,7 +358,7 @@ class RunHistory(object):
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
-    def incremental_update_cost(self, config: Configuration, cost: float) -> None:
+    def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a
         moving average;
 
@@ -371,8 +372,10 @@ class RunHistory(object):
 
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
-        old_cost = self._cost_per_config.get(config_id, 0.)
+        old_cost = self._cost_per_config.get(config_id, np.zeros(self.num_obj).squeeze())
+
         self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+
         self.num_runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config: Configuration) -> float:
@@ -390,10 +393,11 @@ class RunHistory(object):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
-        return self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
+        return self._cost_per_config.get(config_id,                                # type: ignore[arg-type] # noqa F821
+                                         np.full(self.num_obj, np.nan).squeeze())  # type: ignore[arg-type] # noqa F821
 
     def get_runs_for_config(self,
-                            config: Configuration, only_max_observed_budget: bool) -> typing.List[InstSeedBudgetKey]:
+                            config: Configuration, only_max_observed_budget: bool) -> List[InstSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
 
         Note
@@ -422,7 +426,7 @@ class RunHistory(object):
         rval = [InstSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
         return rval
 
-    def get_all_configs(self) -> typing.List[Configuration]:
+    def get_all_configs(self) -> List[Configuration]:
         """Return all configurations in this RunHistory object
 
         Returns
@@ -432,9 +436,9 @@ class RunHistory(object):
         return list(self.config_ids.keys())
 
     def get_all_configs_per_budget(
-        self,
-        budget_subset: typing.Optional[typing.List] = None,
-    ) -> typing.List[Configuration]:
+            self,
+            budget_subset: Optional[List] = None,
+    ) -> List[Configuration]:
         """
         Return all configs in this RunHistory object that have been run on one of these budgets
 
@@ -469,7 +473,8 @@ class RunHistory(object):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
-        return self._min_cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
+        return self._min_cost_per_config.get(config_id,  # type: ignore[arg-type] # noqa F821
+                                             np.full(self.num_obj, np.nan).squeeze())  # type: ignore[arg-type] # noqa F821
 
     def empty(self) -> bool:
         """Check whether or not the RunHistory is empty.
@@ -493,10 +498,12 @@ class RunHistory(object):
         save_external : bool
             Whether to save external data in the runhistory file.
         """
+
         data = [([int(k.config_id),
                   str(k.instance_id) if k.instance_id is not None else None,
                   int(k.seed),
-                  float(k.budget) if k[3] is not None else 0], list(v))
+                  float(k.budget) if k[3] is not None else 0],
+                 [v.cost, v.time, v.status, v.starttime, v.endtime, v.additional_info])
                 for k, v in self.data.items()
                 if save_external or self.external[k] == DataOrigin.INTERNAL]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
@@ -550,8 +557,20 @@ class RunHistory(object):
 
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
+            # Set num_obj first
+            if self.num_obj is None:
+                if isinstance(v[0], float) or isinstance(v[0], int):
+                    self.num_obj = 1
+                else:
+                    self.num_obj = len(np.asarray(list(map(float, v[0]))))
+
+            if self.num_obj == 1:
+                cost = float(v[0])
+            else:
+                cost = np.asarray(list(map(float, v[0])))
+
             self.add(config=self.ids_config[int(k[0])],
-                     cost=float(v[0]),
+                     cost=cost,
                      time=float(v[1]),
                      status=StatusType(v[2]),
                      instance_id=k[1],
@@ -562,10 +581,10 @@ class RunHistory(object):
                      additional_info=v[5])
 
     def update_from_json(
-        self,
-        fn: str,
-        cs: ConfigurationSpace,
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
+            self,
+            fn: str,
+            cs: ConfigurationSpace,
+            origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Update the current runhistory by adding new runs from a json file.
 
@@ -583,9 +602,9 @@ class RunHistory(object):
         self.update(runhistory=new_runhistory, origin=origin)
 
     def update(
-        self,
-        runhistory: 'RunHistory',
-        origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
+            self,
+            runhistory: 'RunHistory',
+            origin: DataOrigin = DataOrigin.EXTERNAL_SAME_INSTANCES,
     ) -> None:
         """Update the current runhistory by adding new runs from a RunHistory.
 
@@ -613,10 +632,10 @@ class RunHistory(object):
                      origin=origin)
 
     def _cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
-    ) -> typing.List[float]:
+            self,
+            config: Configuration,
+            instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+    ) -> List[np.ndarray]:
         """Return array of all costs for the given config for further calculations.
 
         Parameters
@@ -644,13 +663,14 @@ class RunHistory(object):
         for i, r, b in instance_seed_budget_keys:
             k = RunKey(id_, i, r, b)
             costs.append(self.data[k].cost)
+
         return costs
 
     def average_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
+            self,
+            config: Configuration,
+            instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+    ) -> Union[float, np.ndarray]:
         """Return the average cost of a configuration.
 
         This is the mean of costs of all instance-seed pairs.
@@ -665,20 +685,22 @@ class RunHistory(object):
 
         Returns
         ----------
-        Cost: float
+        Cost: float or np.ndarray
             Average cost
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            return float(np.mean(costs))
+            costs = np.mean(costs, axis=0).squeeze()
+        else:
+            costs = np.full(self.num_obj, np.nan).squeeze()
 
-        return np.nan
+        return costs
 
     def sum_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
+            self,
+            config: Configuration,
+            instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+    ) -> Union[float, np.ndarray]:
         """Return the sum of costs of a configuration.
 
         This is the sum of costs of all instance-seed pairs.
@@ -693,19 +715,21 @@ class RunHistory(object):
 
         Returns
         ----------
-        sum_cost: float
+        sum_cost: float or np.ndarray
             Sum of costs of config
         """
-        return float(np.sum(self._cost(config, instance_seed_budget_keys)))
+
+        return np.sum(self._cost(config, instance_seed_budget_keys), axis=0).squeeze()
 
     def min_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: typing.Optional[typing.Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
+            self,
+            config: Configuration,
+            instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+    ) -> Union[float, np.ndarray]:
         """Return the minimum cost of a configuration
 
         This is the minimum cost of all instance-seed pairs.
+        Warning: In the case of multi-fidelity, the minimum cost per objectives is returned.
 
         Parameters
         ----------
@@ -717,16 +741,18 @@ class RunHistory(object):
 
         Returns
         ----------
-        min_cost: float
+        min_cost: float or np.ndarray
             minimum cost of config
         """
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
-            return float(np.min(costs))
+            costs = np.min(costs, axis=0).squeeze()
+        else:
+            costs = np.full(self.num_obj, np.nan).squeeze()
 
-        return np.nan
+        return costs
 
-    def compute_all_costs(self, instances: typing.Optional[typing.List[str]] = None) -> None:
+    def compute_all_costs(self, instances: Optional[List[str]] = None) -> None:
         """Computes the cost of all configurations from scratch and overwrites
         self.cost_perf_config and self.runs_per_config accordingly;
 
@@ -736,7 +762,7 @@ class RunHistory(object):
 
         Parameters
         ----------
-        instances: typing.List[str]
+        instances: List[str]
             list of instances; if given, cost is only computed wrt to this instance set
         """
         self._cost_per_config = {}
@@ -747,7 +773,7 @@ class RunHistory(object):
             if instances is not None:
                 inst_seed_budgets = list(
                     filter(
-                        lambda x: x.instance in typing.cast(typing.List, instances), inst_seed_budgets
+                        lambda x: x.instance in cast(List, instances), inst_seed_budgets
                     )
                 )
 
@@ -756,7 +782,7 @@ class RunHistory(object):
                 self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
                 self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
-    def get_instance_costs_for_config(self, config: Configuration) -> typing.Dict[str, typing.List[float]]:
+    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, List[float]]:
         """ Returns the average cost per instance (across seeds) for a configuration
 
         If the runhistory contains budgets, only the highest budget for a configuration is returned.
@@ -775,7 +801,7 @@ class RunHistory(object):
         cost_per_inst: dict<instance name<str>, cost<float>>
         """
         runs_ = self.get_runs_for_config(config, only_max_observed_budget=True)
-        cost_per_inst = {}  # type: typing.Dict[str, typing.List[float]]
+        cost_per_inst = {}  # type: Dict[str, List[float]]
         for inst, seed, budget in runs_:
             cost_per_inst[inst] = cost_per_inst.get(inst, [])
             rkey = RunKey(self.config_ids[config], inst, seed, budget)

@@ -12,6 +12,7 @@ from smac.stats.stats import Stats
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.logging import format_array
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 
@@ -88,7 +89,8 @@ class AbstractRacer(object):
                  minR: int = 1,
                  maxR: int = 2000,
                  adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,):
+                 min_chall: int = 1,
+                 num_obj: int = 1):
 
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
@@ -127,6 +129,10 @@ class AbstractRacer(object):
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
+
+        if num_obj > 1:
+            raise ValueError('Intensifiers only support single objective optimization. For multi-objective problems,'
+                             'please refer to multi-objective intensifiers')
 
     def get_next_run(self,
                      challengers: typing.Optional[typing.List[Configuration]],
@@ -346,30 +352,33 @@ class AbstractRacer(object):
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
-        # performance on challenger runs
+        # performance on challenger runs, the challenger only becomes incumbent if it dominates the incumbent
+        # TODO consider incumbents as Pareto Front (maybe a new multi-objective intensifier?)
         chal_perf = run_history.average_cost(challenger, to_compare_runs)
         inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 
         # Line 15
-        if chal_perf > inc_perf and len(chall_runs) >= self.minR:
+        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            self.logger.debug("Incumbent (%.4f) is better than challenger "
-                              "(%.4f) on %d runs." %
-                              (inc_perf, chal_perf, len(chall_runs)))
+            self.logger.debug(f"Incumbent ({inc_perf_format}) is better than challenger "
+                              f"({chal_perf_format}) on {len(chall_runs)} runs.")
             return incumbent
 
         # Line 16
         if not set(inc_runs) - set(chall_runs):
-
             # no plateau walks
-            if chal_perf >= inc_perf:
-                self.logger.debug("Incumbent (%.4f) is at least as good as the "
-                                  "challenger (%.4f) on %d runs." %
-                                  (inc_perf, chal_perf, len(chall_runs)))
+            if np.any(chal_perf >= inc_perf):
+                chal_perf_format = format_array(chal_perf)
+                inc_perf_format = format_array(inc_perf)
+
+                self.logger.debug(f"Incumbent ({inc_perf_format}) is at least as good as the "
+                                  f"challenger ({chal_perf_format}) on {len(chall_runs)} runs.")
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(train_perf=inc_perf,
+                    self.traj_logger.add_entry(train_perf=chal_perf,
                                                incumbent_id=self.stats.inc_changed,
                                                incumbent=incumbent)
                 return incumbent
@@ -378,8 +387,11 @@ class AbstractRacer(object):
             # and has at least the same runs as inc
             # -> change incumbent
             n_samples = len(chall_runs)
-            self.logger.info("Challenger (%.4f) is better than incumbent (%.4f)"
-                             " on %d runs." % (chal_perf, inc_perf, n_samples))
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
+
+            self.logger.info(f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) "
+                             f"on {n_samples} runs.")
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:

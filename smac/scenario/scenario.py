@@ -1,6 +1,6 @@
 import logging
 import copy
-import typing
+from typing import List, Optional, Union, Dict, Any, Sequence
 
 import numpy as np
 
@@ -24,31 +24,30 @@ class Scenario(object):
 
     All arguments set in the Scenario are set as attributes.
 
+    Creates a scenario-object. The output_dir will be
+    "output_dir/run_id/" and if that exists already, the old folder and its
+    content will be moved (without any checks on whether it's still used by
+    another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
+    will be appended until possible.
+
+    Parameters
+    ----------
+    scenario : str or dict or None
+        If str, it will be interpreted as to a path a scenario file
+        If dict, it will be directly to get all scenario related information
+        If None, only cmd_options will be used
+    cmd_options : dict
+        Options from parsed command line arguments
     """
     use_ta_time = True
-    feature_dict = {}  # type: typing.Dict[str, np.ndarray]
+    feature_dict = {}  # type: Dict[str, np.ndarray]
     run_obj = 'None'
 
     def __init__(
         self,
-        scenario: typing.Union[str, typing.Dict, None] = None,
-        cmd_options: typing.Optional[typing.Dict] = None,
+        scenario: Union[str, Dict, None] = None,
+        cmd_options: Optional[Dict] = None,
     ):
-        """ Creates a scenario-object. The output_dir will be
-        "output_dir/run_id/" and if that exists already, the old folder and its
-        content will be moved (without any checks on whether it's still used by
-        another process) to "output_dir/run_id.OLD". If that exists, ".OLD"s
-        will be appended until possible.
-
-        Parameters
-        ----------
-        scenario : str or dict or None
-            If str, it will be interpreted as to a path a scenario file
-            If dict, it will be directly to get all scenario related information
-            If None, only cmd_options will be used
-        cmd_options : dict
-            Options from parsed command line arguments
-        """
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
         self.PCA_DIM = 7
@@ -56,9 +55,9 @@ class Scenario(object):
         self.in_reader = InputReader()
         self.out_writer = OutputWriter()
 
-        self.output_dir_for_this_run = None  # type: typing.Optional[str]
+        self.output_dir_for_this_run = None  # type: Optional[str]
 
-        self._arguments = {}  # type: typing.Dict[str, typing.Any]
+        self._arguments = {}  # type: Dict[str, Any]
         self._arguments.update(CMDReader().scen_cmd_actions)
 
         if scenario is None:
@@ -104,7 +103,7 @@ class Scenario(object):
         self.n_features = len(self.feature_dict)
         self.feature_array = None
 
-        self.instance_specific = {}  # type: typing.Dict[str, str]
+        self.instance_specific = {}  # type: Dict[str, str]
 
         if self.run_obj == "runtime":
             self.logy = True
@@ -113,8 +112,8 @@ class Scenario(object):
             raise ValueError('Internal error - this must never happen!')
 
         def extract_instance_specific(
-            instance_list: typing.Sequence[typing.Union[str, typing.List[str]]],
-        ) -> typing.List[str]:
+            instance_list: Sequence[Union[str, List[str]]],
+        ) -> List[str]:
             insts = []
             for inst in instance_list:
                 if len(inst) > 1:
@@ -122,9 +121,9 @@ class Scenario(object):
                 insts.append(inst[0])
             return insts
 
-        self.train_insts = extract_instance_specific(self.train_insts)  # type: typing.List[str]
+        self.train_insts = extract_instance_specific(self.train_insts)  # type: List[str]
         if self.test_insts:
-            self.test_insts = extract_instance_specific(self.test_insts)  # type: typing.List[str]
+            self.test_insts = extract_instance_specific(self.test_insts)  # type: List[str]
 
         self.train_insts = self._to_str_and_warn(list_=self.train_insts)
         self.test_insts = self._to_str_and_warn(list_=self.test_insts)
@@ -141,17 +140,21 @@ class Scenario(object):
                 self.algo_runs_timelimit = self.wallclock_limit  # type: float
             self.wallclock_limit = np.inf  # type: float
 
-    def __getstate__(self) -> typing.Dict[str, typing.Any]:
+        # Update cost for crash to support multi-objective
+        if len(self.multi_objectives) > 1 and not isinstance(self.cost_for_crash, list):  # type: ignore
+            self.cost_for_crash = [self.cost_for_crash] * len(self.multi_objectives)  # type: ignore
+
+    def __getstate__(self) -> Dict[str, Any]:
         d = dict(self.__dict__)
         del d['logger']
         return d
 
-    def __setstate__(self, d: typing.Dict[str, typing.Any]) -> None:
+    def __setstate__(self, d: Dict[str, Any]) -> None:
         self.__dict__.update(d)
         self.logger = logging.getLogger(
             self.__module__ + '.' + self.__class__.__name__)
 
-    def _to_str_and_warn(self, list_: typing.List[typing.Any]) -> typing.List[typing.Any]:
+    def _to_str_and_warn(self, list_: List[Any]) -> List[Any]:
         warn_ = False
         for i, e in enumerate(list_):
             if e is not None and not isinstance(e, str):

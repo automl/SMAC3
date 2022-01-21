@@ -5,8 +5,6 @@ import unittest
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-import numpy as np
-import pynisher
 
 from smac.tae import StatusType
 from smac.runhistory.runhistory import RunHistory
@@ -170,6 +168,36 @@ class RunhistoryTest(unittest.TestCase):
         self.assertNotEqual(cost_config2, updated_cost_config2)
         self.assertEqual(updated_cost_config2, 20)
 
+        rh = RunHistory()
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 1, 'b': 3})
+        rh.add(config=config1, cost=[10], time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1)
+
+        rh.add(config=config2, cost=[10], time=20,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1)
+
+        rh.add(config=config2, cost=[20], time=20,
+               status=StatusType.SUCCESS, instance_id=2,
+               seed=2)
+
+        cost_config2 = rh.get_cost(config2)
+
+        rh.compute_all_costs()
+        updated_cost_config2 = rh.get_cost(config2)
+        self.assertEqual(cost_config2, updated_cost_config2)
+
+        rh.compute_all_costs(instances=[2])
+        updated_cost_config2 = rh.get_cost(config2)
+        self.assertNotEqual(cost_config2, updated_cost_config2)
+        self.assertEqual(updated_cost_config2, [20])
+        self.assertEqual(updated_cost_config2, 20)
+
     def test_incremental_update(self):
 
         rh = RunHistory()
@@ -255,29 +283,6 @@ class RunhistoryTest(unittest.TestCase):
             self.assertEqual(rh.get_all_configs()[0].origin, origin)
 
             os.remove(path)
-
-    def test_add_json_serializable(self):
-        """Test if entries added to the runhistory are correctly checked for serializability."""
-        rh = RunHistory()
-        cs = get_config_space()
-        config = cs.sample_configuration()
-
-        rh.add(config, 0.0, 0.0, StatusType.SUCCESS, None, None, 0.0, 0.0, 0.0, None)
-        rh.add(config, 0.0, 0.0, StatusType.SUCCESS, None, None, 0.0, 0.0, 0.0, {})
-
-        with self.assertRaisesRegex(
-            ValueError,
-            r"Cannot add cost: 0\.0 of type <class 'numpy\.float32'> to runhistory because "
-            r"it raises an error during JSON encoding"
-        ):
-            rh.add(config, np.float32(0.0), 0.0, StatusType.SUCCESS, None, None, 0.0, 0.0, 0.0, None)
-        with self.assertRaisesRegex(
-            ValueError,
-            r"Cannot add additional_info: \{'error': <class 'pynisher\.limit_function_call\.AnythingException'>\} "
-            r"of type <class 'dict'> to runhistory because it raises an error during JSON encoding",
-        ):
-            rh.add(config, 0.0, 0.0, StatusType.SUCCESS, None, None, 0.0, 0.0, 0.0,
-                   {'error': pynisher.AnythingException})
 
 
 if __name__ == "__main__":

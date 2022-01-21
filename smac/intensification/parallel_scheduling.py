@@ -15,7 +15,6 @@ __license__ = "3-clause BSD"
 
 
 class ParallelScheduler(AbstractRacer):
-
     """Common Racer class for Intensifiers that will schedule configurations on
     a parallel fashion.
 
@@ -69,7 +68,6 @@ class ParallelScheduler(AbstractRacer):
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
@@ -89,6 +87,7 @@ class ParallelScheduler(AbstractRacer):
                  inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
                  min_chall: int = 1,
                  incumbent_selection: str = 'highest_executed_budget',
+                 num_obj: int = 1
                  ) -> None:
 
         super().__init__(stats=stats,
@@ -100,10 +99,12 @@ class ParallelScheduler(AbstractRacer):
                          deterministic=deterministic,
                          run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall)
+                         min_chall=min_chall,
+                         num_obj=num_obj)
 
         # We have a pool of instances that yield configurations ot run
         self.intensifier_instances = {}  # type: typing.Dict[int, AbstractRacer]
+        self.print_worker_warning = True
 
     def get_next_run(self,
                      challengers: typing.Optional[typing.List[Configuration]],
@@ -148,12 +149,11 @@ class ParallelScheduler(AbstractRacer):
             evaluate a configuration
         """
 
-        if num_workers <= 1:
-            warnings.warn("{} is intended to be used "
-                          "with more than 1 worker but num_workers={}".format(
-                              self.__class__.__name__,
-                              num_workers
-                          ))
+        if num_workers <= 1 and self.print_worker_warning:
+            warnings.warn(
+                f"{self.__class__.__name__} is executed with {num_workers} workers only. "
+                "Consider to use pynisher to use all available workers.")
+            self.print_worker_warning = False
 
         # If repeat_configs is True, that means that not only self can repeat
         # configurations, but also in the context of multiprocessing, N
