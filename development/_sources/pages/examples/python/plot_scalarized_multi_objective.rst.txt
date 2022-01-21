@@ -41,7 +41,7 @@ Optimize both the final performance and the time used for training.
 
  .. code-block:: none
 
-    Default config's cost: 0.033333, training time: 0.000038 seconds
+    Default config's cost: 0.033333, training time: 0.000031 seconds
     Optimizing! Depending on your machine, this might take a few minutes.
     /opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
       warnings.warn("The balance properties of Sobol' points require"
@@ -245,7 +245,7 @@ Optimize both the final performance and the time used for training.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  21.710 seconds)
+   **Total running time of the script:** ( 0 minutes  21.274 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_scalarized_multi_objective.py:
