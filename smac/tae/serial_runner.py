@@ -1,4 +1,4 @@
-import typing
+from typing import List, Union, Callable, Tuple, Optional, Dict
 
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
@@ -38,7 +38,7 @@ class SerialRunner(BaseRunner):
         target algorithm command line as list of arguments
     stats: Stats()
          stats object to collect statistics about runtime and so on
-    multi_objectives: typing.List[str]
+    multi_objectives: List[str]
         names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
@@ -53,12 +53,12 @@ class SerialRunner(BaseRunner):
 
     def __init__(
         self,
-        ta: typing.Union[typing.List[str], typing.Callable],
+        ta: Union[List[str], Callable],
         stats: Stats,
-        multi_objectives: typing.List[str] = ['cost'],
+        multi_objectives: List[str] = ['cost'],
         run_obj: str = "runtime",
         par_factor: int = 1,
-        cost_for_crash: float = float(MAXINT),
+        cost_for_crash: Union[float, List[float]] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
         super(SerialRunner, self).__init__(
@@ -92,7 +92,7 @@ class SerialRunner(BaseRunner):
             self.run_wrapper(run_info)
         )
 
-    def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
+    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with
         the results of exercising the configurations. This class keeps populating results
         to self.results until a call to get_finished runs is done. In this case, the
@@ -133,10 +133,10 @@ class SerialRunner(BaseRunner):
 
     def run(self, config: Configuration,
             instance: str,
-            cutoff: typing.Optional[float] = None,
+            cutoff: Optional[float] = None,
             seed: int = 12345,
-            budget: typing.Optional[float] = None,
-            instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
+            budget: Optional[float] = None,
+            instance_specific: str = "0") -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>

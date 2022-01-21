@@ -113,4 +113,3 @@ def fmin_smac(func: typing.Callable,
                           for idx in range(len(bounds))], dtype=float)
 
     return incumbent, incumbent_performance.cost, smac
-

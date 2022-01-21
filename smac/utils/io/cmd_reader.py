@@ -70,7 +70,7 @@ def cost_for_crash(x: Union[str, List]) -> Union[int, float, List[Union[int, flo
         if isinstance(x, str):
             if x[0] == "[" and x[-1] == "]":
                 x = x[1:-1]
- 
+
             # Convert a (comma-separated) string into list of strings.
             x = x.replace(", ", ",").split(",")
 
@@ -80,7 +80,6 @@ def cost_for_crash(x: Union[str, List]) -> Union[int, float, List[Union[int, flo
         return x[0]
 
     return x
-
 
 
 class CheckScenarioFileAction(Action):

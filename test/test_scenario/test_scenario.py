@@ -70,7 +70,6 @@ class ScenarioTest(unittest.TestCase):
                                        'test/test_files/scenario_test/features.txt',
                                    'output_dir':
                                        'test/test_files/scenario_test/tmp_output'}
-        
         self.output_dirs = []
         self.output_files = []
         self.output_dirs.append(self.test_scenario_dict['output_dir'])
