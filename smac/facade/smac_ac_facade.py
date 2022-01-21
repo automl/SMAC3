@@ -240,7 +240,7 @@ class SMAC4AC(object):
             self.scenario.transform_y = "LOG"  # type: ignore[attr-defined] # noqa F821
 
         # initialize empty runhistory
-        num_obj = len(scenario.multi_objectives)
+        num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
         runhistory_def_kwargs = {}
         if runhistory_kwargs is not None:
             runhistory_def_kwargs.update(runhistory_kwargs)
@@ -372,7 +372,7 @@ class SMAC4AC(object):
             'par_factor': scenario.par_factor,  # type: ignore[attr-defined] # noqa F821
             'cost_for_crash': scenario.cost_for_crash,  # type: ignore[attr-defined] # noqa F821
             'abort_on_first_run_crash': scenario.abort_on_first_run_crash,  # type: ignore[attr-defined] # noqa F821
-            'multi_objectives': scenario.multi_objectives,
+            'multi_objectives': scenario.multi_objectives,  # type: ignore[attr-defined] # noqa F821
         }
         if tae_runner_kwargs is not None:
             tae_def_kwargs.update(tae_runner_kwargs)
@@ -468,7 +468,7 @@ class SMAC4AC(object):
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
         multi_objective_algorithm_instance = None  # type: Optional[AbstractMultiObjectiveAlgorithm]
 
-        if scenario.multi_objectives is not None and num_obj > 1:
+        if scenario.multi_objectives is not None and num_obj > 1:  # type: ignore[attr-defined] # noqa F821
             # define any defaults here
             _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
             if multi_objective_kwargs is not None:

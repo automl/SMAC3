@@ -95,8 +95,8 @@ class AbstractRunHistory2EPM(object):
 
         self.scale_perc = scale_perc
         self.num_obj = 1  # type: int
-        if scenario.multi_objectives is not None:
-            self.num_obj = len(scenario.multi_objectives)
+        if scenario.multi_objectives is not None:  # type: ignore[attr-defined] # noqa F821
+            self.num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
 
         # Configuration
         self.impute_censored_data = impute_censored_data

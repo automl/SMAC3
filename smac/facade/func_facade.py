@@ -89,7 +89,7 @@ def fmin_smac(func: typing.Callable,
         scenario_dict["runcount_limit"] = maxfun
     scenario = Scenario(scenario_dict)
 
-    if len(scenario.multi_objectives) == 1:
+    if len(scenario.multi_objectives) == 1:  # type: ignore[attr-defined] # noqa F821
         multi_objective = False
     else:
         multi_objective = True

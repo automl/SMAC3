@@ -326,7 +326,7 @@ class ScenarioTest(unittest.TestCase):
             "multi_objectives": "test1,test2"})
 
         assert scenario.multi_objectives == ["test1", "test2"]
-        
+
         scenario = Scenario({
             "run_obj": "quality",
             "multi_objectives": ["test1", "test2"]})

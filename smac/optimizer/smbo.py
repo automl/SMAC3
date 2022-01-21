@@ -193,7 +193,7 @@ class SMBO(object):
         """
         self.start()
 
-        num_obj = len(self.scenario.multi_objectives)
+        num_obj = len(self.scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
 
         # Main BO loop
         while True:
