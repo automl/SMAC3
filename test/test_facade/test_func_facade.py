@@ -31,9 +31,6 @@ class TestSMACFacade(unittest.TestCase):
         x, f, smac = fmin_smac(func, x0, bounds, maxfun=20)
         x_s, f_s, _ = fmin_l_bfgs_b(func, x0, bounds, maxfun=20,
                                     approx_grad=True)
-        
-        print(x, x_s)
-        print(f, f_s)
 
         self.assertEqual(type(x), type(x_s))
         self.assertEqual(type(f), type(f_s))

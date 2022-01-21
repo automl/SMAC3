@@ -173,14 +173,15 @@ class AbstractTAFunc(SerialRunner):
                 obj = pynisher.enforce_limits(**arguments)(self._ta)
                 rval = self._call_ta(obj, config, obj_kwargs)
             except Exception as e:
+                cost = np.asarray(cost).squeeze()
                 exception_traceback = traceback.format_exc()
                 error_message = repr(e)
                 additional_info = {
                     'traceback': exception_traceback,
                     'error': error_message
                 }
-
-                return StatusType.CRASHED, np.asarray(cost), 0.0, additional_info
+                
+                return StatusType.CRASHED, cost, 0.0, additional_info
 
             if isinstance(rval, tuple):
                 result = rval[0]
@@ -196,13 +197,7 @@ class AbstractTAFunc(SerialRunner):
                 status = StatusType.MEMOUT
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
-
-                # Check if result is not a list
-                if np.isscalar(result):
-                    result = [result] # type: ignore # noqa
-
-                # Overwrite crash costs
-                cost = result # type: ignore # noqa 
+                cost = result  # type: ignore # noqa 
             else:
                 status = StatusType.CRASHED
 
@@ -221,16 +216,11 @@ class AbstractTAFunc(SerialRunner):
                     result = rval
                     additional_run_info = {}
 
-                # Check if result is not a list
-                if np.isscalar(result):
-                    result = [result]  # type: ignore # noqa 
-
                 status = StatusType.SUCCESS
-                cost = result # type: ignore # noqa 
+                cost = result  # type: ignore
             except Exception as e:
                 self.logger.exception(e)
                 status = StatusType.CRASHED
-                result = cost  # type: ignore # noqa 
                 additional_run_info = {}
 
             runtime = time.time() - start_time
@@ -257,7 +247,13 @@ class AbstractTAFunc(SerialRunner):
             if isinstance(cost, float):
                 raise RuntimeError(error)
 
-        return status, np.asarray(cost), runtime, additional_run_info
+        if cost is None or status == StatusType.CRASHED:
+            status = StatusType.CRASHED
+            cost = self.cost_for_crash
+
+        cost = np.asarray(cost).squeeze()
+
+        return status, cost, runtime, additional_run_info  # type: ignore
 
     def _call_ta(
         self,
