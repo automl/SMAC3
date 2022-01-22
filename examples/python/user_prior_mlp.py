@@ -1,12 +1,13 @@
 """
-Accelerated HPO using User Priors over the Optimum
+HPO with User Priors over the Optimum
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the hyperparameters.
-These priors are derived from user knowledge - from previous runs on similar tasks, or common knowledge or
+These priors are derived from user knowledge - from previous runs on similar tasks, common knowledge or
 intuition gained from manual tuning. To create the priors, we make use of the Normal and Beta Hyperparameters,
-as well as the "weights" property of the Categorical Hyperparameter. This can be integrated into the optimiztion
-for any SMAC facade, but we stick with SMAC4HPO here.
+as well as the "weights" property of the CategoricalHyperparameter. This can be integrated into the optimiztion
+for any SMAC facade, but we stick with SMAC4HPO here. To incorporate user priors into the optimization, 
+πBO (nolinkexistsyet) is used to bias the point selection strategy.
 
 
 An MLP is a deep neural network, The digits dataset
@@ -61,19 +62,13 @@ def mlp_from_cfg(cfg, seed, budget):
     -------
     float
     """
-
-    # For deactivated parameters, the configuration stores None-values.
-    # This is not accepted by the MLP, so we replace them with placeholder values.
-    lr = cfg['learning_rate'] if cfg['learning_rate'] else 'constant'
-    lr_init = cfg['learning_rate_init'] if cfg['learning_rate_init'] else 0.001
-    batch_size = cfg['batch_size'] if cfg['batch_size'] else 200
-
+    
     with warnings.catch_warnings():
         warnings.filterwarnings('ignore', category=ConvergenceWarning)
-
+        
         mlp = MLPClassifier(
             hidden_layer_sizes=[cfg['n_neurons']] * cfg['n_layer'],
-            solver=cfg['solver'],
+            solver=cfg['optimizer'],
             batch_size=batch_size,
             activation=cfg['activation'],
             learning_rate=lr,
@@ -83,7 +78,7 @@ def mlp_from_cfg(cfg, seed, budget):
         # returns the cross validation accuracy
         cv = StratifiedKFold(n_splits=5, random_state=seed, shuffle=True)  # to make CV splits consistent
         score = cross_val_score(mlp, digits.data, digits.target, cv=cv, error_score='raise')
-
+    
     return 1 - np.mean(score)
 
 
@@ -95,22 +90,27 @@ if __name__ == '__main__':
 
     # We do not have an educated belief on the number of layers beforehand
     # As such, the prior on the HP is uniform
-    n_layer = NormalIntegerHyperparameter(
-        'n_layer', lower=1, upper=5, mu=0, sigma=1, default_value=1, log=True)
+    n_layer = UniformIntegerHyperparameter(
+        'n_layer', lower=1, upper=5)
+    
     # We believe the optimal network is likely going to be relatively wide,
     # And place a Beta Prior skewed towards wider networks in log space
     n_neurons = BetaIntegerHyperparameter(
         'n_neurons', lower=8, upper=1024, alpha=4, beta=2, log=True)
+    
     # We believe that ReLU is likely going to be the optimal activation function about
     # 60% of the time, and thus place weight on that accordingly 
     activation = CategoricalHyperparameter(
-        'activation', ['logistic', 'tanh', 'relu'])#, weights=[1, 1, 3])
+        'activation', ['logistic', 'tanh', 'relu'], weights=[1, 1, 3], default_value='relu') 
+    
     # Moreover, we believe ADAM is the most likely optimizer
     optimizer = CategoricalHyperparameter(
-        'optimizer', ['sgd', 'adam'])#, weights=[1, 2])
+        'optimizer', ['sgd', 'adam'], weights=[1, 2], default_value='adam')
+    
     # We do not have an educated opinion on the batch size, and thus leave it as-is
     batch_size = UniformIntegerHyperparameter(
         'batch_size', 16, 512, default_value=128)
+    
     # We place a log-normal prior on the learning rate, so that it is centered on 10^-3,
     # with one unit of standard deviation per multiple of 10 (in log space)
     learning_rate_init = NormalFloatHyperparameter(
@@ -118,37 +118,17 @@ if __name__ == '__main__':
     
     # Add all hyperparameters at once:
     cs.add_hyperparameters([n_layer, n_neurons, activation, optimizer, batch_size, learning_rate_init])
-    
-    '''import matplotlib.pyplot as plt
-    N = 10000
-    obs = np.zeros(N)
-    for i in range(N):        
-        obs[i] = n_neurons.sample(i)
-        
-    bins=np.logspace(np.log10(8),np.log10(1024), 50)
-    print(obs[i])
-    print('Larger than 0.1', np.sum(obs > 0.1))
 
-    plt.hist(obs, bins=bins)
-    plt.gca().set_xscale("log")
-    plt.show()
-    #raise SystemError
-    '''
-        
     # SMAC scenario object
     scenario = Scenario({
         'run_obj': 'quality',  # we optimize quality (alternative to runtime)
-        'runcount-limit': 20,  # max duration to run the optimization (in seconds)
         'cs': cs,  # configuration space
         'deterministic': 'true',
-        'limit_resources': True,  # Uses pynisher to limit memory and runtime
-                                  # Alternatively, you can also disable this.
-                                  # Then you should handle runtime and memory yourself in the TA
-        'cutoff': 30,  # runtime limit for target algorithm
-        'memory_limit': 3072,  # adapt this to reasonable value for your hardware
     })
 
-    user_prior_kwargs = {'decay_beta': 1.5} # The rate at which SMAC forgets the prior. Defaults to # n_iterations / 10
+    # The rate at which SMAC forgets the prior. The higher the value, the more the prior is considered.
+    # Defaults to # n_iterations / 10
+    user_prior_kwargs = {'decay_beta': 1.5} 
     
     # To optimize, we pass the function to the SMAC-object
     smac = SMAC4HPO(
@@ -176,7 +156,6 @@ if __name__ == '__main__':
 
     inc_value = smac.get_tae_runner().run(
         config=incumbent,
-        budget=max_epochs,
         seed=0)[1]
 
     print('Optimized Value: %.4f' % inc_value)
