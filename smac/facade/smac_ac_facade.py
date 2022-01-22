@@ -354,7 +354,7 @@ class SMAC4AC(object):
             'rng': rng,
         }
         if user_priors:
-            acq_func_opt_kwargs['uniform_config_space'] = scenario.cs.remove_parameter_priors()
+            acq_func_opt_kwargs['uniform_config_space'] = scenario.cs.remove_hyperparameter_priors()
 
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
