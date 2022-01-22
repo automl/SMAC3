@@ -45,7 +45,7 @@ digits = load_digits()
 
 
 # Target Algorithm
-def mlp_from_cfg(cfg, seed, budget):
+def mlp_from_cfg(cfg, seed):
     """
     Creates a MLP classifier from sklearn and fits the given data on it.
 
@@ -69,10 +69,9 @@ def mlp_from_cfg(cfg, seed, budget):
         mlp = MLPClassifier(
             hidden_layer_sizes=[cfg['n_neurons']] * cfg['n_layer'],
             solver=cfg['optimizer'],
-            batch_size=batch_size,
+            batch_size=cfg['batch_size'],
             activation=cfg['activation'],
-            learning_rate=lr,
-            learning_rate_init=lr_init,
+            learning_rate_init=cfg['learning_rate_init'],
             random_state=seed)
 
         # returns the cross validation accuracy
@@ -122,8 +121,14 @@ if __name__ == '__main__':
     # SMAC scenario object
     scenario = Scenario({
         'run_obj': 'quality',  # we optimize quality (alternative to runtime)
+        'runcount-limit': 20,  # max duration to run the optimization (in seconds)
         'cs': cs,  # configuration space
         'deterministic': 'true',
+        'limit_resources': True,  # Uses pynisher to limit memory and runtime
+                                  # Alternatively, you can also disable this.
+                                  # Then you should handle runtime and memory yourself in the TA
+        'cutoff': 30,  # runtime limit for target algorithm
+        'memory_limit': 3072,  # adapt this to reasonable value for your hardware
     })
 
     # The rate at which SMAC forgets the prior. The higher the value, the more the prior is considered.
