@@ -42,7 +42,7 @@ Additional to the configuration, the function should make use of the seed parame
 
     Default cross validation score: 0.06
     Default test score: 0.06
-    /opt/hostedtoolcache/Python/3.9.9/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
+    /opt/hostedtoolcache/Python/3.9.10/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
       warnings.warn("The balance properties of Sobol' points require"
     Default cross validation score: 0.06
     Default test score: 0.06
@@ -192,7 +192,7 @@ Additional to the configuration, the function should make use of the seed parame
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  54.784 seconds)
+   **Total running time of the script:** ( 3 minutes  5.782 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_gb_non_deterministic.py:

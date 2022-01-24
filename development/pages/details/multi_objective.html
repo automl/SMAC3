@@ -409,9 +409,11 @@ you can recover the Pareto front later on.</p>
 <p>The basic recipe is as follows:</p>
 <ol class="arabic simple">
 <li><p>Make sure that your target algorithm returns a cost <em>dictionary</em> containing the objective names as keys
-and the objective values as values, e.g.: <code class="docutils literal notranslate"><span class="pre">{'myobj1':</span> <span class="pre">0.3,</span> <span class="pre">'myobj2':</span> <span class="pre">200}</span></code>.</p></li>
+and the objective values as values, e.g. <code class="docutils literal notranslate"><span class="pre">{'myobj1':</span> <span class="pre">0.3,</span> <span class="pre">'myobj2':</span> <span class="pre">200}</span></code>. Alternatively, you can simply
+return a list, e.g <code class="docutils literal notranslate"><span class="pre">[0.3,</span> <span class="pre">200]</span></code>.</p></li>
 <li><p>When instantiating SMAC pass the names of your objectives to the scenario object via the <code class="docutils literal notranslate"><span class="pre">multi_objectives</span></code>
-argument, e.g. <code class="docutils literal notranslate"><span class="pre">multi_objectives</span> <span class="pre">=</span> <span class="pre">&quot;myobj1,myobj2&quot;</span></code>. Please set <code class="docutils literal notranslate"><span class="pre">run_obj</span> <span class="pre">=</span> <span class="pre">'quality'</span></code>.</p></li>
+argument, e.g. <code class="docutils literal notranslate"><span class="pre">multi_objectives</span> <span class="pre">=</span> <span class="pre">&quot;myobj1,</span> <span class="pre">myobj2&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">multi_objectives</span> <span class="pre">=</span> <span class="pre">[&quot;myobj1&quot;,</span> <span class="pre">&quot;myobj2&quot;]</span></code>.
+Please set <code class="docutils literal notranslate"><span class="pre">run_obj</span> <span class="pre">=</span> <span class="pre">'quality'</span></code>.</p></li>
 <li><p>Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
 facade (via <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">multi_objective_kwargs</span></code>).
 Per default, ParEgo is used as the multi-objective algorithm.</p></li>
