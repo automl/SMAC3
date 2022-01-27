@@ -69,3 +69,6 @@ I want my algorithm to be optimized across different datasets. How should I real
   will lead to a speed-up.
 
 
+Why does SMAC not run on Colab/Mac and crashes with the error "Child process not yet created"?
+  SMAC uses pynisher to enforce time and memory limits on the target algorithm runner. However, pynisher may not always
+  work on specific setups. To overcome this error, it is recommended to set `limit_resources` to false to make SMAC run.
