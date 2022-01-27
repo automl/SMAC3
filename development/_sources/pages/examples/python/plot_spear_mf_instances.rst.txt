@@ -38,7 +38,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
  .. code-block:: none
 
     INFO:smac.scenario.scenario.Scenario:Reading scenario file: ./spear_qcp/scenario.txt
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-24_09:32:09_302373
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-01-27_08:54:59_332846
     WARNING:smac.facade.smac_ac_facade.SMAC4AC:Runtime as objective automatically activates log(y) transformation
     INFO:smac.initial_design.default_configuration_design.DefaultConfiguration:Running initial design for 1 configurations
     INFO:smac.optimizer.smbo.SMBO:Running initial design
@@ -47,75 +47,95 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 8.00, eta = 3.00
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (0.0069) is better than incumbent (0.0104) on 2 runs.
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (0.0142) is better than incumbent (0.0209) on 2 runs.
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Changes in incumbent:
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 1.0 -> 0.5090906177184362
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.4 -> 1.2757526561618295
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 100 -> 2362
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : '0' -> '17'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.3 -> 1.3011601245008457
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.4 -> 0.10960342939491614
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-orig-clause-sort-heur : '0' -> '11'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-phase-dec-heur : '5' -> '2'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 1.0 -> 0.8098137563093039
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.4 -> 1.5832728802171163
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-del-heur : '2' -> '0'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 100 -> 628
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : '0' -> '15'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.3 -> 1.1781345945107526
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.4 -> 0.7613992060030992
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-orig-clause-sort-heur : '0' -> '12'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-phase-dec-heur : '5' -> '3'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-phase-dec-freq : '0.001' -> '0'
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-freq : '0.001' -> '0'
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-resolution : '1' -> '0'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.5 -> 1.1827695916503278
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.5 -> 1.340649798394958
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-update-dec-queue : '1' -> '0'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-use-pure-literal-rule : '1' -> '0'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.0 -> 1.3888979588895203
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : '0' -> '15'
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.4 -> 1.5188604201129
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.0 -> 1.3224612521835606
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : '0' -> '2'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.4 -> 1.4262491103316568
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (6.2897) is better than incumbent (12.5097) on 8 runs.
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Changes in incumbent:
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 0.8098137563093039 -> 0.6504406742787981
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.5832728802171163 -> 1.6137297889309288
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 628 -> 64
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : '15' -> '5'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.1781345945107526 -> 1.3393247552380672
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.7613992060030992 -> 0.9627170980543011
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-orig-clause-sort-heur : '12' -> '11'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-phase-dec-heur : '3' -> '2'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-freq : '0' -> '0.001'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-scaling : None -> 0.6579483820009846
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.340649798394958 -> 1.7230747145045096
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-update-dec-queue : '0' -> '1'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-use-pure-literal-rule : '1' -> '0'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.3224612521835606 -> 0.5512644862887812
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : '2' -> '0'
+    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.4262491103316568 -> 1.5000164321985894
     INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
-    INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 3-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
     INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-    INFO:smac.stats.stats.Stats:Incumbent changed: 1
-    INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 32 / inf
-    INFO:smac.stats.stats.Stats:Finished target algorithm runs: 32 / inf
-    INFO:smac.stats.stats.Stats:Configurations: 9
-    INFO:smac.stats.stats.Stats:Used wallclock time: 65.67 / 60.00 sec 
-    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 25.35 / inf sec
+    INFO:smac.stats.stats.Stats:Incumbent changed: 2
+    INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 24 / inf
+    INFO:smac.stats.stats.Stats:Finished target algorithm runs: 24 / inf
+    INFO:smac.stats.stats.Stats:Configurations: 6
+    INFO:smac.stats.stats.Stats:Used wallclock time: 60.36 / 60.00 sec 
+    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 15.57 / inf sec
     INFO:smac.stats.stats.Stats:----------------------------------------------------
     INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
-      sp-clause-activity-inc, Value: 0.5090906177184362
-      sp-clause-decay, Value: 1.2757526561618295
-      sp-clause-del-heur, Value: '2'
-      sp-first-restart, Value: 2362
-      sp-learned-clause-sort-heur, Value: '17'
-      sp-learned-clauses-inc, Value: 1.3011601245008457
-      sp-learned-size-factor, Value: 0.10960342939491614
+      sp-clause-activity-inc, Value: 0.6504406742787981
+      sp-clause-decay, Value: 1.6137297889309288
+      sp-clause-del-heur, Value: '0'
+      sp-first-restart, Value: 64
+      sp-learned-clause-sort-heur, Value: '5'
+      sp-learned-clauses-inc, Value: 1.3393247552380672
+      sp-learned-size-factor, Value: 0.9627170980543011
       sp-orig-clause-sort-heur, Value: '11'
       sp-phase-dec-heur, Value: '2'
-      sp-rand-var-dec-freq, Value: '0'
+      sp-rand-var-dec-freq, Value: '0.001'
+      sp-rand-var-dec-scaling, Value: 0.6579483820009846
       sp-resolution, Value: '0'
-      sp-restart-inc, Value: 1.1827695916503278
-      sp-update-dec-queue, Value: '0'
+      sp-restart-inc, Value: 1.7230747145045096
+      sp-update-dec-queue, Value: '1'
       sp-use-pure-literal-rule, Value: '0'
-      sp-var-activity-inc, Value: 1.3888979588895203
-      sp-var-dec-heur, Value: '15'
-      sp-variable-decay, Value: 1.5188604201129
+      sp-var-activity-inc, Value: 0.5512644862887812
+      sp-var-dec-heur, Value: '0'
+      sp-variable-decay, Value: 1.5000164321985894
 
-    INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 12.5096
+    INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 6.2897
     Optimized configuration Configuration:
-      sp-clause-activity-inc, Value: 0.5090906177184362
-      sp-clause-decay, Value: 1.2757526561618295
-      sp-clause-del-heur, Value: '2'
-      sp-first-restart, Value: 2362
-      sp-learned-clause-sort-heur, Value: '17'
-      sp-learned-clauses-inc, Value: 1.3011601245008457
-      sp-learned-size-factor, Value: 0.10960342939491614
+      sp-clause-activity-inc, Value: 0.6504406742787981
+      sp-clause-decay, Value: 1.6137297889309288
+      sp-clause-del-heur, Value: '0'
+      sp-first-restart, Value: 64
+      sp-learned-clause-sort-heur, Value: '5'
+      sp-learned-clauses-inc, Value: 1.3393247552380672
+      sp-learned-size-factor, Value: 0.9627170980543011
       sp-orig-clause-sort-heur, Value: '11'
       sp-phase-dec-heur, Value: '2'
-      sp-rand-var-dec-freq, Value: '0'
+      sp-rand-var-dec-freq, Value: '0.001'
+      sp-rand-var-dec-scaling, Value: 0.6579483820009846
       sp-resolution, Value: '0'
-      sp-restart-inc, Value: 1.1827695916503278
-      sp-update-dec-queue, Value: '0'
+      sp-restart-inc, Value: 1.7230747145045096
+      sp-update-dec-queue, Value: '1'
       sp-use-pure-literal-rule, Value: '0'
-      sp-var-activity-inc, Value: 1.3888979588895203
-      sp-var-dec-heur, Value: '15'
-      sp-variable-decay, Value: 1.5188604201129
+      sp-var-activity-inc, Value: 0.5512644862887812
+      sp-var-dec-heur, Value: '0'
+      sp-variable-decay, Value: 1.5000164321985894
 
 
 
@@ -169,7 +189,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  5.729 seconds)
+   **Total running time of the script:** ( 1 minutes  0.419 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_spear_mf_instances.py:

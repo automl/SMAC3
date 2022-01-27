@@ -7,14 +7,6 @@ smac.intensification
    :show-inheritance:
    :private-members:
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 1
-
-   smac.intensification.multi_objective
-
 Submodules
 ----------
 

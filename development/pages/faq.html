@@ -450,6 +450,9 @@ The significant advantage of instances is that not all datasets necessarily have
 If the first instances already perform worse, the configuration might be discarded early. This
 will lead to a speed-up.</p>
 </dd>
+<dt>Why does SMAC not run on Colab/Mac and crashes with the error “Child process not yet created”?</dt><dd><p>SMAC uses pynisher to enforce time and memory limits on the target algorithm runner. However, pynisher may not always
+work on specific setups. To overcome this error, it is recommended to set <cite>limit_resources</cite> to false to make SMAC run.</p>
+</dd>
 </dl>
 </section>
 
