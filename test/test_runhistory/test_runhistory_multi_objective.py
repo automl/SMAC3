@@ -71,11 +71,6 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
 
         self.assertTrue(rh.empty())
 
-        rh.add(config=config, cost=[10, 20], time=20,
-               status=StatusType.SUCCESS, instance_id=None,
-               seed=None, starttime=100, endtime=120,
-               additional_info=None)
-
         with pytest.raises(ValueError):
             rh.add(config=config, cost=[4.5, 5.5, 6.5], time=20,
                    status=StatusType.SUCCESS, instance_id=1,
@@ -222,6 +217,57 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
 
             os.remove(path)
 
+    def test_objective_bounds(self):
+        rh = RunHistory()
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 2, 'b': 3})
+        config3 = Configuration(cs,
+                                values={'a': 3, 'b': 4})
+
+        rh.add(config=config1, cost=[10, 50], time=5,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        rh.add(config=config2, cost=[5, 100], time=10,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        rh.add(config=config3, cost=[7.5, 150], time=15,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+
+        self.assertEqual(rh.objective_bounds[0], (5, 10))
+        self.assertEqual(rh.objective_bounds[1], (50, 150))
+
+
+        rh = RunHistory()
+        cs = get_config_space()
+        config1 = Configuration(cs,
+                                values={'a': 1, 'b': 2})
+        config2 = Configuration(cs,
+                                values={'a': 2, 'b': 3})
+        config3 = Configuration(cs,
+                                values={'a': 3, 'b': 4})
+
+        rh.add(config=config1, cost=10, time=5,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+        
+        rh.add(config=config2, cost=5, time=10,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+        
+        rh.add(config=config3, cost=7.5, time=15,
+               status=StatusType.SUCCESS, instance_id=1,
+               seed=1, budget=1)
+        
+        self.assertEqual(rh.objective_bounds[0], (5, 10))
+
 
 if __name__ == "__main__":
-    unittest.main()
+    t = RunhistoryMultiObjectiveTest()
+    t.test_objective_bounds()
+    
