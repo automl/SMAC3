@@ -37,6 +37,7 @@
 * Parameters in the docs are shown first now.
 * Successive Halving only warns you once if one worker is used only.
 * Statistics are better readable now.
+* HPO Facade uses sobol sequence with 9 configurations as default now. No warnings are shown anymore.
 
 
 # 1.1.1
