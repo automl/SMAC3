@@ -11,6 +11,7 @@ from smac.epm.base_imputor import BaseImputor
 from smac.utils import constants
 from smac.scenario.scenario import Scenario
 from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -52,7 +53,7 @@ class AbstractRunHistory2EPM(object):
         Only used for reshuffling data after imputation.
         If None, use np.random.RandomState(seed=1).
     multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
-        Instance performing multi objective optimization. Receives an objective cost vector as input
+        Instance performing multi-objective optimization. Receives an objective cost vector as input
         and returns a scalar. Is executed before transforming runhistory values.
 
     Attributes
@@ -340,7 +341,11 @@ class AbstractRunHistory2EPM(object):
             Y = np.concatenate((Y, tY))
 
         if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            # Let's normalize Y here
+            # We use the objective_bounds calculated by the runhistor
+            Y = normalize_costs(Y, runhistory.objective_bounds)
             Y = self.multi_objective_algorithm(Y)
+
         self.logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
 
@@ -392,6 +397,7 @@ class AbstractRunHistory2EPM(object):
             X.append(x)
             y.append(v.cost)
             cen.append(v.status != StatusType.SUCCESS)
+
         return np.array(X), np.array(y), np.array(cen)
 
 

@@ -67,7 +67,7 @@ class SMAC4BB(SMAC4AC):
         kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
 
         init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
-        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 8)
+        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 9)
         init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
         kwargs['initial_design_kwargs'] = init_kwargs
 

@@ -1,13 +1,14 @@
 import collections
 from enum import Enum
 import json
-from typing import List, Dict, Union, Optional, Any, Type, Iterable, cast
+from typing import List, Dict, Union, Optional, Any, Type, Iterable, cast, Tuple
 
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.multi_objective import normalize_costs
 
 
 __author__ = "Marius Lindauer"
@@ -178,6 +179,7 @@ class RunHistory(object):
 
         self.overwrite_existing_runs = overwrite_existing_runs
         self.num_obj = None  # type: Optional[int]
+        self.objective_bounds = []  # type: List[Tuple[float, float]]
 
     def add(
             self,
@@ -301,6 +303,28 @@ class RunHistory(object):
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "
                 "please see the error above.\nRunKey: %s\nRunValue %s" % (key, str(obj), type(obj), runkey, runvalue)
             ) from e
+            
+    def _update_objective_bounds(self):
+        """Update the objective bounds based on the data in the runhistory."""
+        all_costs = []
+        for (costs, _, status, _, _, _) in self.data.values():
+            if status == StatusType.SUCCESS:
+                if not isinstance(costs, Iterable):
+                    costs = [costs]
+                    
+                all_costs.append(costs)
+        
+        all_costs = np.array(all_costs)
+        self.objective_bounds = [(np.inf, -np.inf)] * self.num_obj
+        
+        if len(all_costs) == 0:
+            return
+
+        min_values = np.min(all_costs, axis=0)
+        max_values = np.max(all_costs, axis=0)
+        
+        for i, (min_v, max_v) in enumerate(zip(min_values, max_values)):
+            self.objective_bounds[i] = (min_v, max_v)
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType,
              origin: DataOrigin) -> None:
@@ -335,6 +359,9 @@ class RunHistory(object):
                 if k.budget > 0:
                     if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
                         raise ValueError('This should not happen!')
+        
+        # Update objective bounds
+        self._update_objective_bounds()
 
     def update_cost(self, config: Configuration) -> None:
         """Store the performance of a configuration across the instances in
@@ -552,7 +579,6 @@ class RunHistory(object):
         }
 
         self.config_ids = {config: id_ for id_, config in self.ids_config.items()}
-
         self._n_id = len(self.config_ids)
 
         # important to use add method to use all data structure correctly
@@ -688,11 +714,18 @@ class RunHistory(object):
         Cost: float or np.ndarray
             Average cost
         """
+        
         costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            costs = np.mean(costs, axis=0).squeeze()
+        if self.num_obj > 1:
+            # Normalize costs
+            costs = normalize_costs(costs, self.objective_bounds)
+            costs = np.mean(costs, axis=1).squeeze()
         else:
-            costs = np.full(self.num_obj, np.nan).squeeze()
+            costs = np.mean(costs, axis=0).squeeze()
+        
+        # TODO: Still needed?
+        # if not costs:
+        #    costs = np.full(self.num_obj, np.nan).squeeze()
 
         return costs
 
@@ -718,8 +751,15 @@ class RunHistory(object):
         sum_cost: float or np.ndarray
             Sum of costs of config
         """
+        
+        costs = self._cost(config, instance_seed_budget_keys)
+        if self.num_obj > 1:
+            costs = normalize_costs(costs, self.objective_bounds)
+            costs = np.sum(costs, axis=1).squeeze()
+        else:
+            costs = np.sum(costs, axis=0).squeeze()
 
-        return np.sum(self._cost(config, instance_seed_budget_keys), axis=0).squeeze()
+        return costs
 
     def min_cost(
             self,
@@ -745,10 +785,11 @@ class RunHistory(object):
             minimum cost of config
         """
         costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            costs = np.min(costs, axis=0).squeeze()
+        if self.num_obj > 1:
+            costs = normalize_costs(costs, self.objective_bounds)
+            costs = np.min(costs, axis=1).squeeze()
         else:
-            costs = np.full(self.num_obj, np.nan).squeeze()
+            costs = np.min(costs, axis=0).squeeze()
 
         return costs
 
