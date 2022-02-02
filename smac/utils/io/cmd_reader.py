@@ -550,10 +550,10 @@ class CMDReader(object):
                                     "the target algorithm crashes.")
         smac_opts.add_argument("--limit-resources", "--limit_resources",
                                dest='limit_resources',
-                               default=True, type=truthy,
+                               default=False, type=truthy,
                                help="If true, *SMAC* will use pynisher to limit time and memory for "
                                     "the target algorithm. Allows SMAC to use all resources available. "
-                                    "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)")
+                                    "Applicable only to func TAEs. Set to 'False' by default. (Use with caution!)")
         smac_opts.add_argument("--minr", "--minR", dest='minR',
                                default=1, type=int,
                                help="[dev] Minimum number of calls per configuration.")

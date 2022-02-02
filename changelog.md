@@ -6,6 +6,7 @@
 ## Major Changes
 * Results are instantly saved by default now.
 * Determinstic behaviour is default now.
+* Limit resources behaviour is by default false now.
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
 * Expanded `cost_for_crash` for multi-objective support.
