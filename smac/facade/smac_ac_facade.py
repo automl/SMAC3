@@ -41,8 +41,7 @@ from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch, \
     AcquisitionFunctionMaximizer
 from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserProb
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
-from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
-from smac.optimizer.multi_objective.parego import ParEGO
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy, MeanAggregationStrategy
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.rfr_imputator import RFRImputator
@@ -117,7 +116,7 @@ class SMAC4AC(object):
         Arguments passed to the constructor of `~runhistory2epm`
     multi_objective_algorithm: Optional[Type["AbstractMultiObjectiveAlgorithm"]]
         Class that implements multi objective logic. If None, will use:
-        smac.optimizer.multi_objective.parego.ParEGO
+        smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy
         Multi objective only becomes active if the objective
         specified in `~scenario.run_obj` is a List[str] with at least two entries.
     multi_objective_kwargs: Optional[Dict]
@@ -474,7 +473,7 @@ class SMAC4AC(object):
                 
             if multi_objective_algorithm is None:
                 multi_objective_algorithm_instance = (
-                    ParEGO(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
+                    MeanAggregationStrategy(**_multi_objective_kwargs)  # type: ignore[arg-type] # noqa F821
                 )
             elif inspect.isclass(multi_objective_algorithm):
                 multi_objective_algorithm_instance = multi_objective_algorithm(

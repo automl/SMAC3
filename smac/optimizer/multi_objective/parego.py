@@ -4,10 +4,12 @@ from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrat
 
 
 class ParEGO(AggregationStrategy):
-    def __init__(self,
-                 num_obj: int,
-                 rng: Optional[np.random.RandomState] = None,
-                 rho: float = 0.05):
+    def __init__(
+        self,
+        num_obj: int,
+        rng: Optional[np.random.RandomState] = None,
+        rho: float = 0.05,
+    ):
         super(ParEGO, self).__init__(num_obj=num_obj, rng=rng)
         self.rho = rho
 
@@ -33,6 +35,4 @@ class ParEGO(AggregationStrategy):
         # Weight the values
         theta_f = theta * values
 
-        # Instead of np.max we use np.min
-        # return np.min(theta_f, axis=1) + self.rho * np.sum(theta_f, axis=1)
-        return np.mean(values, axis=1)
+        return np.max(theta_f, axis=1) + self.rho * np.sum(theta_f, axis=1)
