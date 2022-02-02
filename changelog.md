@@ -15,6 +15,9 @@
 * Python examples are now executed so that the output is shown.
 * Added multi objective example.
 
+## Documentation
+* Added runhistory page.
+
 ## Workflow Clean-up
 * Adds PEP 561 compliance (exports types so other packages can be aware of them).
 * Allow manual workflow_dispatch on actions that might require it (can manually trigger them from github UI).
@@ -37,7 +40,7 @@
 * Parameters in the docs are shown first now.
 * Successive Halving only warns you once if one worker is used only.
 * Statistics are better readable now.
-* HPO Facade uses sobol sequence with 9 configurations as default now. No warnings are shown anymore.
+* HPO/AC Facade uses sobol sequence with |hyperparameters|^2 as default now. No warnings are shown anymore.
 
 
 # 1.1.1
