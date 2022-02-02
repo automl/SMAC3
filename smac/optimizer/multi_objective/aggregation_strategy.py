@@ -35,7 +35,6 @@ class MeanAggregationStrategy(AggregationStrategy):
     by the single-objective optimizer.
     """
 
-    @abstractmethod
     def __call__(self, values: np.ndarray) -> float:
         """
         Transform a multi-objective loss to a single loss.
@@ -49,4 +48,4 @@ class MeanAggregationStrategy(AggregationStrategy):
             cost (float): Combined cost.
         """
 
-        raise np.mean(values, axis=1)
+        return np.mean(values, axis=1)
