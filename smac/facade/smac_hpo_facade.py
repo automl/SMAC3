@@ -49,9 +49,7 @@ class SMAC4HPO(SMAC4AC):
             )
 
         init_kwargs = kwargs.get("initial_design_kwargs", dict())
-        init_kwargs["n_configs_x_params"] = init_kwargs.get(
-            "n_configs_x_params", np.square(len(scenario.cs.get_hyperparameters()))
-        )
+        init_kwargs["n_configs_x_params"] = init_kwargs.get("n_configs_x_params", 10)
         init_kwargs["max_config_fracs"] = init_kwargs.get("max_config_fracs", 0.25)
         kwargs["initial_design_kwargs"] = init_kwargs
 
