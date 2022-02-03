@@ -292,10 +292,12 @@ class SMAC4AC(object):
             if "prob" not in rand_conf_chooser_kwargs:
                 rand_conf_chooser_kwargs["prob"] = scenario.rand_prob  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser_instance = ChooserProb(
-                **rand_conf_chooser_kwargs
-            )  # type: ignore[arg-type] # noqa F821  # type: RandomConfigurationChooser
+                **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821  # type: RandomConfigurationChooser
+            )
         elif inspect.isclass(random_configuration_chooser):
-            random_configuration_chooser_instance = random_configuration_chooser(**rand_conf_chooser_kwargs)  # type: ignore[arg-type] # noqa F821
+            random_configuration_chooser_instance = random_configuration_chooser(
+                **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821
+            )
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
             raise ValueError(
                 "random_configuration_chooser has to be"
@@ -334,8 +336,8 @@ class SMAC4AC(object):
                     model_def_kwargs[key] = value
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
             model_instance = RandomForestWithInstances(
-                **model_def_kwargs
-            )  # type: ignore[arg-type] # noqa F821  # type: AbstractEPM
+                **model_def_kwargs  # type: ignore[arg-type] # noqa F821  # type: AbstractEPM
+            )
         elif inspect.isclass(model):
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
             model_instance = model(**model_def_kwargs)  # type: ignore[arg-type] # noqa F821
@@ -346,13 +348,19 @@ class SMAC4AC(object):
         acq_def_kwargs = {"model": model_instance}
         if acquisition_function_kwargs is not None:
             acq_def_kwargs.update(acquisition_function_kwargs)
+
+        acquisition_function_instance = (
+            None
+        )  # type: Optional[AbstractAcquisitionFunction]
         if acquisition_function is None:
             if scenario.transform_y in ["LOG", "LOGS"]:  # type: ignore[attr-defined] # noqa F821
                 acquisition_function_instance = LogEI(
-                    **acq_def_kwargs
-                )  # type: ignore[arg-type] # noqa F821  # type: AbstractAcquisitionFunction
+                    **acq_def_kwargs  # type: ignore[arg-type] # noqa F821
+                )
             else:
-                acquisition_function_instance = EI(**acq_def_kwargs)  # type: ignore[arg-type] # noqa F821
+                acquisition_function_instance = EI(
+                    **acq_def_kwargs  # type: ignore[arg-type] # noqa F821
+                )
         elif inspect.isclass(acquisition_function):
             acquisition_function_instance = acquisition_function(**acq_def_kwargs)
         else:
@@ -362,7 +370,8 @@ class SMAC4AC(object):
             )
         if integrate_acquisition_function:
             acquisition_function_instance = IntegratedAcquisitionFunction(
-                acquisition_function=acquisition_function_instance, **acq_def_kwargs
+                acquisition_function=acquisition_function_instance,  # type: ignore
+                **acq_def_kwargs,
             )
 
         # initialize optimizer on acquisition function
@@ -381,8 +390,8 @@ class SMAC4AC(object):
                 if key not in acq_func_opt_kwargs:
                     acq_func_opt_kwargs[key] = value
             acquisition_function_optimizer_instance = LocalAndSortedRandomSearch(
-                **acq_func_opt_kwargs
-            )  # type: ignore[arg-type] # noqa F821  # type: AcquisitionFunctionMaximizer
+                **acq_func_opt_kwargs  # type: ignore
+            )
         elif inspect.isclass(acquisition_function_optimizer):
             acquisition_function_optimizer_instance = acquisition_function_optimizer(**acq_func_opt_kwargs)  # type: ignore[arg-type] # noqa F821
         else:
@@ -414,12 +423,12 @@ class SMAC4AC(object):
                 **tae_def_kwargs
             )  # type: ignore[arg-type] # noqa F821  # type: BaseRunner
         elif inspect.isclass(tae_runner):
-            tae_runner_instance = cast(BaseRunner, tae_runner(**tae_def_kwargs))  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = cast(BaseRunner, tae_runner(**tae_def_kwargs))  # type: ignore
         elif callable(tae_runner):
             tae_def_kwargs["ta"] = tae_runner
             tae_def_kwargs["use_pynisher"] = scenario.limit_resources  # type: ignore[attr-defined] # noqa F821
             tae_def_kwargs["memory_limit"] = scenario.memory_limit  # type: ignore[attr-defined] # noqa F821
-            tae_runner_instance = ExecuteTAFuncDict(**tae_def_kwargs)  # type: ignore[arg-type] # noqa F821
+            tae_runner_instance = ExecuteTAFuncDict(**tae_def_kwargs)  # type: ignore
         else:
             raise TypeError(
                 "Argument 'tae_runner' is %s, but must be "
@@ -442,7 +451,7 @@ class SMAC4AC(object):
                 "Number of tasks must be positive, None or -1, but is %s" % str(n_jobs)
             )
         if _n_jobs > 1 or dask_client is not None:
-            tae_runner_instance = DaskParallelRunner(
+            tae_runner_instance = DaskParallelRunner(  # type: ignore
                 tae_runner_instance,
                 n_workers=_n_jobs,
                 output_directory=self.output_dir,
@@ -559,7 +568,7 @@ class SMAC4AC(object):
             else:
                 raise ValueError(
                     "Don't know what kind of initial_incumbent "
-                    "'%s' is" % scenario.initial_incumbent
+                    "'%s' is" % scenario.initial_incumbent  # type: ignore
                 )  # type: ignore[attr-defined] # noqa F821
         elif inspect.isclass(initial_design):
             initial_design_instance = initial_design(**init_design_def_kwargs)
@@ -648,17 +657,17 @@ class SMAC4AC(object):
         if runhistory2epm is None:
             if scenario.run_obj == "runtime":
                 rh2epm = RunHistory2EPM4LogCost(
-                    **r2e_def_kwargs
+                    **r2e_def_kwargs  # type: ignore
                 )  # type: ignore[arg-type] # noqa F821  # type: AbstractRunHistory2EPM
             elif scenario.run_obj == "quality":
                 if scenario.transform_y == "NONE":  # type: ignore[attr-defined] # noqa F821
-                    rh2epm = RunHistory2EPM4Cost(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
+                    rh2epm = RunHistory2EPM4Cost(**r2e_def_kwargs)  # type: ignore # noqa F821
                 elif scenario.transform_y == "LOG":  # type: ignore[attr-defined] # noqa F821
-                    rh2epm = RunHistory2EPM4LogCost(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
+                    rh2epm = RunHistory2EPM4LogCost(**r2e_def_kwargs)  # type: ignore # noqa F821
                 elif scenario.transform_y == "LOGS":  # type: ignore[attr-defined] # noqa F821
-                    rh2epm = RunHistory2EPM4LogScaledCost(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
+                    rh2epm = RunHistory2EPM4LogScaledCost(**r2e_def_kwargs)  # type: ignore # noqa F821
                 elif scenario.transform_y == "INVS":  # type: ignore[attr-defined] # noqa F821
-                    rh2epm = RunHistory2EPM4InvScaledCost(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
+                    rh2epm = RunHistory2EPM4InvScaledCost(**r2e_def_kwargs)  # type: ignore # noqa F821
             else:
                 raise ValueError(
                     "Unknown run objective: %s. Should be either "

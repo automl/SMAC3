@@ -9,7 +9,6 @@ from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.facade.smac_mf_facade import SMAC4MF
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.multi_objective.parego import ParEGO
 from smac.scenario.scenario import Scenario
