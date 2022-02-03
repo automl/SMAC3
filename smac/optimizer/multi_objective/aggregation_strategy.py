@@ -1,4 +1,3 @@
-import typing
 import numpy as np
 from abc import abstractmethod
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
