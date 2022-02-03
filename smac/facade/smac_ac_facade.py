@@ -676,7 +676,7 @@ class SMAC4AC(object):
                     "quality or runtime." % self.scenario.run_obj  # type: ignore # noqa F821
                 )
         elif inspect.isclass(runhistory2epm):
-            rh2epm = runhistory2epm(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
+            rh2epm = runhistory2epm(**r2e_def_kwargs)  # type: ignore # noqa F821
         else:
             raise TypeError(
                 "Argument runhistory2epm must be None or an object implementing the RunHistory2EPM, but is '%s'"
