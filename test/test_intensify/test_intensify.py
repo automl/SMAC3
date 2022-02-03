@@ -91,6 +91,7 @@ class TestIntensify(unittest.TestCase):
         inc, instance, seed, cutoff = intensifier._get_next_racer(
             challenger=self.config2, incumbent=self.config1, run_history=self.rh
         )
+
         run_info = RunInfo(
             config=self.config2,
             instance=instance,
@@ -100,7 +101,9 @@ class TestIntensify(unittest.TestCase):
             capped=False,
             budget=0.0,
         )
+
         result = eval_challenger(run_info, taf, self.stats, self.rh)
+
         inc, perf = intensifier.process_results(
             run_info=run_info,
             incumbent=self.config1,
@@ -157,6 +160,7 @@ class TestIntensify(unittest.TestCase):
             capped=True,
             budget=0.0,
         )
+        print(type(run_info.cutoff))
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, perf = intensifier.process_results(
             run_info=run_info,
@@ -719,6 +723,8 @@ class TestIntensify(unittest.TestCase):
         test eval_challenger() - a complete intensification run with a `always_race_against` configuration
         """
 
+        print(self.rh)
+
         def target(x):
             if x["a"] == 100:
                 time.sleep(1)
@@ -1246,3 +1252,11 @@ class TestIntensify(unittest.TestCase):
         # of get next challenger
         self.assertEqual(intensifier.n_iters, 3)
         self.assertEqual(intensifier.num_chall_run, 1)
+    
+    '''
+
+
+if __name__ == "__main__":
+    t = TestIntensify()
+    t.setUp()
+    t.test_eval_challenger_1()

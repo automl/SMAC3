@@ -215,7 +215,10 @@ class BaseRunner(ABC):
             )
         cutoff = None
         if run_info.cutoff is not None:
-            cutoff = int(math.ceil(run_info.cutoff))
+            if run_info.cutoff == float("inf"):
+                cutoff = np.iinfo(np.int32).max
+            else:
+                cutoff = int(math.ceil(run_info.cutoff))
 
         try:
             status, cost, runtime, additional_info = self.run(
