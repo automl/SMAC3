@@ -52,14 +52,7 @@ def plot(all_x):
 def plot_from_smac(smac):
     rh = smac.get_runhistory()
     all_x = []
-    for (config_id, instance_id, seed, budget), (
-        cost,
-        time,
-        status,
-        starttime,
-        endtime,
-        additional_info,
-    ) in rh.data.items():
+    for (config_id, _, _, _) in rh.data.keys():
         config = rh.ids_config[config_id]
         all_x.append(config["x"])
 
@@ -82,7 +75,7 @@ class SchafferTest(unittest.TestCase):
         self.scenario = Scenario(
             {
                 "run_obj": "quality",  # we optimize quality (alternatively runtime)
-                "runcount-limit": 100,  # max. number of function evaluations
+                "runcount-limit": 50,  # max. number of function evaluations
                 "cs": self.cs,  # configuration space
                 "deterministic": True,
                 "multi_objectives": "metric1, metric2",
@@ -106,7 +99,7 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [SMAC4BB, SMAC4MF, SMAC4HPO, SMAC4AC]:
+        for facade in [SMAC4BB, SMAC4HPO, SMAC4AC]:
             smac = facade(**self.facade_kwargs)
             incumbent = smac.optimize()
 
@@ -118,25 +111,10 @@ class SchafferTest(unittest.TestCase):
 
         return results
 
-    def test_parego(self):
-        smac = SMAC4BB(**self.parego_facade_kwargs)
-        incumbent = smac.optimize()
-
-        f1_inc, f2_inc = schaffer(incumbent["x"])
-        f1_opt, f2_opt = get_optimum()
-
-        self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
-
-        return smac
-
 
 if __name__ == "__main__":
     t = SchafferTest()
     t.setUp()
-
-    smac = t.test_parego()
-    plot_from_smac(smac)
-    exit()
 
     for smac in t.test_facades():
         plot_from_smac(smac)

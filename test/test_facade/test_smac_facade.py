@@ -170,12 +170,12 @@ class TestSMACFacade(unittest.TestCase):
 
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
+        self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(
-            self.scenario, runhistory_kwargs={"overwrite_existing_runs": False}
+            self.scenario, runhistory_kwargs={"overwrite_existing_runs": True}
         )
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
-        self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
+        self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
 

@@ -647,7 +647,8 @@ class CMDReader(object):
             type=truthy,
             help="If true, *SMAC* will use pynisher to limit time and memory for "
             "the target algorithm. Allows SMAC to use all resources available. "
-            "Applicable only to func TAEs. Set to 'False' by default. (Warning: This only works on Linux. Use with caution!)",
+            "Applicable only to func TAEs. Set to 'False' by default. "
+            "(Warning: This only works on Linux. Use with caution!)",
         )
         smac_opts.add_argument(
             "--minr",
