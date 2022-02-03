@@ -147,7 +147,7 @@ class RunHistory(object):
 
     Parameters
     ----------
-    overwrite_existing_runs : bool (default=True)
+    overwrite_existing_runs : bool (default=False)
         If set to ``True`` and a run of a configuration on an instance-budget-seed-pair already exists,
         it is overwritten. Allows to overwrites old results if pairs of algorithm-instance-seed were measured
         multiple times
@@ -167,7 +167,7 @@ class RunHistory(object):
 
     def __init__(
         self,
-        overwrite_existing_runs: bool = True,
+        overwrite_existing_runs: bool = False,
     ) -> None:
         self.logger = PickableLoggerAdapter(
             self.__module__ + "." + self.__class__.__name__
@@ -202,7 +202,7 @@ class RunHistory(object):
         self.external = {}  # type: Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = None  # type: Optional[int]
+        self.num_obj = -1  # type: int
         self.objective_bounds = []  # type: List[Tuple[float, float]]
 
     def add(
@@ -275,7 +275,7 @@ class RunHistory(object):
         else:
             config_id = cast(int, config_id_tmp)
 
-        if self.num_obj is None:
+        if self.num_obj == -1:
             self.num_obj = np.size(cost)
         else:
             if np.size(cost) != self.num_obj:
@@ -336,7 +336,7 @@ class RunHistory(object):
                 % (key, str(obj), type(obj), runkey, runvalue)
             ) from e
 
-    def _update_objective_bounds(self):
+    def _update_objective_bounds(self) -> None:
         """Update the objective bounds based on the data in the runhistory."""
         all_costs = []
         for (costs, _, status, _, _, _) in self.data.values():
@@ -451,6 +451,10 @@ class RunHistory(object):
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
         old_cost = self._cost_per_config.get(config_id, 0.0)
+
+        if self.num_obj > 1:
+            cost = self.average_cost(config)
+
         self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
         self.num_runs_per_config[config_id] = n_runs + 1
 
@@ -652,7 +656,7 @@ class RunHistory(object):
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
             # Set num_obj first
-            if self.num_obj is None:
+            if self.num_obj == -1:
                 if isinstance(v[0], float) or isinstance(v[0], int):
                     self.num_obj = 1
                 else:
