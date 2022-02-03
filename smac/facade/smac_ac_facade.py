@@ -295,7 +295,7 @@ class SMAC4AC(object):
                 **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821  # type: RandomConfigurationChooser
             )
         elif inspect.isclass(random_configuration_chooser):
-            random_configuration_chooser_instance = random_configuration_chooser(
+            random_configuration_chooser_instance = random_configuration_chooser(  # type: ignore # noqa F821
                 **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821
             )
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
@@ -340,7 +340,7 @@ class SMAC4AC(object):
             )
         elif inspect.isclass(model):
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
-            model_instance = model(**model_def_kwargs)  # type: ignore[arg-type] # noqa F821
+            model_instance = model(**model_def_kwargs)  # type: ignore # noqa F821
         else:
             raise TypeError("Model not recognized: %s" % (type(model)))
 
@@ -393,7 +393,9 @@ class SMAC4AC(object):
                 **acq_func_opt_kwargs  # type: ignore
             )
         elif inspect.isclass(acquisition_function_optimizer):
-            acquisition_function_optimizer_instance = acquisition_function_optimizer(**acq_func_opt_kwargs)  # type: ignore[arg-type] # noqa F821
+            acquisition_function_optimizer_instance = acquisition_function_optimizer(  # type: ignore # noqa F821
+                **acq_func_opt_kwargs
+            )  # type: ignore # noqa F821
         else:
             raise TypeError(
                 "Argument acquisition_function_optimizer must be None or an object implementing the "
@@ -671,7 +673,7 @@ class SMAC4AC(object):
             else:
                 raise ValueError(
                     "Unknown run objective: %s. Should be either "
-                    "quality or runtime." % self.scenario.run_obj
+                    "quality or runtime." % self.scenario.run_obj  # type: ignore # noqa F821
                 )
         elif inspect.isclass(runhistory2epm):
             rh2epm = runhistory2epm(**r2e_def_kwargs)  # type: ignore[arg-type] # noqa F821
