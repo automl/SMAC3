@@ -1,5 +1,4 @@
 import typing
-import numpy as np
 
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
