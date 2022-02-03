@@ -1,7 +1,6 @@
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
-from functools import partial
 import unittest
 import numpy as np
 from matplotlib import pyplot as plt
@@ -12,6 +11,7 @@ from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_mf_facade import SMAC4MF
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.optimizer.multi_objective.parego import ParEGO
 from smac.scenario.scenario import Scenario
 
 
@@ -82,7 +82,7 @@ class SchafferTest(unittest.TestCase):
         self.scenario = Scenario(
             {
                 "run_obj": "quality",  # we optimize quality (alternatively runtime)
-                "runcount-limit": 500,  # max. number of function evaluations
+                "runcount-limit": 100,  # max. number of function evaluations
                 "cs": self.cs,  # configuration space
                 "deterministic": True,
                 "multi_objectives": "metric1, metric2",
@@ -94,12 +94,19 @@ class SchafferTest(unittest.TestCase):
             "scenario": self.scenario,
             "rng": np.random.RandomState(5),
             "tae_runner": tae,
+        }
+
+        self.parego_facade_kwargs = {
+            "scenario": self.scenario,
+            "rng": np.random.RandomState(5),
+            "tae_runner": tae,
+            "multi_objective_algorithm": ParEGO,
             "multi_objective_kwargs": {"rho": 0.05},
         }
 
     def test_facades(self):
         results = []
-        for facade in [SMAC4AC]:
+        for facade in [SMAC4BB, SMAC4MF, SMAC4HPO, SMAC4AC]:
             smac = facade(**self.facade_kwargs)
             incumbent = smac.optimize()
 
@@ -111,10 +118,25 @@ class SchafferTest(unittest.TestCase):
 
         return results
 
+    def test_parego(self):
+        smac = SMAC4BB(**self.parego_facade_kwargs)
+        incumbent = smac.optimize()
+
+        f1_inc, f2_inc = schaffer(incumbent["x"])
+        f1_opt, f2_opt = get_optimum()
+
+        self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
+
+        return smac
+
 
 if __name__ == "__main__":
     t = SchafferTest()
     t.setUp()
+
+    smac = t.test_parego()
+    plot_from_smac(smac)
+    exit()
 
     for smac in t.test_facades():
         plot_from_smac(smac)

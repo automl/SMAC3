@@ -133,10 +133,12 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1
         )
         self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
-        self.assertEqual(list(rh.data.values())[0].cost, [5.0, 6.0])
+
+        # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default
+        self.assertEqual(list(rh.data.values())[0].cost, [1.0, 2.0])
 
     def test_full_update(self):
-        rh = RunHistory()
+        rh = RunHistory(overwrite_existing_runs=True)
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
         config2 = Configuration(cs, values={"a": 1, "b": 3})
@@ -214,7 +216,9 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             seed=1,
         )
 
-        self.assertEqual(rh.get_cost(config1), 0.5)
+        # We except 0.75 because of moving average
+        # First we have 1 and then 0.5, the moving average is then 0.75
+        self.assertEqual(rh.get_cost(config1), 0.75)
 
         rh.add(
             config=config1,
@@ -225,7 +229,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             seed=1,
         )
 
-        self.assertAlmostEqual(rh.get_cost(config1), 0.583, places=3)
+        self.assertAlmostEqual(rh.get_cost(config1), 0.694, places=3)
 
     def test_multiple_budgets(self):
 
@@ -529,6 +533,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             budget=15,
         )
 
+        # SMAC does not overwrite by default
         rh.add(
             config=config1,
             cost=[50, 100],
@@ -549,7 +554,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             budget=5,
         )
 
-        self.assertEqual(rh.objective_bounds[0], (0, 50))
+        self.assertEqual(rh.objective_bounds[0], (0, 40))
         self.assertEqual(rh.objective_bounds[1], (50, 150))
 
         # Average cost returns us the cost of the latest budget

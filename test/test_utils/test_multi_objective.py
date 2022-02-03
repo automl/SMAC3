@@ -1,21 +1,7 @@
-import os
 import unittest
-import logging
-import shutil
-
 import numpy as np
 
-from smac.configspace import Configuration
-from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae import StatusType
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.runhistory.runhistory import RunHistory
-from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.multi_objective import normalize_costs
-from smac.utils.validate import Validator, _Run
-
-from unittest import mock
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -1,7 +1,6 @@
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
-from functools import partial
 import unittest
 import numpy as np
 from matplotlib import pyplot as plt
@@ -98,7 +97,6 @@ class SchafferTest(unittest.TestCase):
             "scenario": self.scenario,
             "rng": np.random.RandomState(0),
             "tae_runner": tae,
-            "multi_objective_kwargs": {"rho": 0.05},
         }
 
     def test_AC(self):
