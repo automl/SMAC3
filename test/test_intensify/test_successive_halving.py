@@ -63,7 +63,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 "run_obj": "runtime",
                 "output_dir": "",
                 "deterministic": False,
-                "limit_resources": True,
+                "limit_resources": False,
             }
         )
         self.stats = Stats(scenario=self.scen)
@@ -808,7 +808,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
 
         taf.runhistory = self.rh
 
@@ -1049,7 +1051,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x: Configuration, instance: str, seed: int, budget: float):
             return 0.1 * budget
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1126,7 +1130,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
+        )
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1206,6 +1212,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
             return (x["a"] + 1) / 1000.0
 
         taf = ExecuteTAFuncDict(
+            use_pynisher=False,
             ta=target,
             stats=self.stats,
             run_obj="runtime",
@@ -1301,7 +1308,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 time.sleep(1.5)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
+        )
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1413,7 +1422,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x: Configuration, instance: str):
             return (x["a"] + int(instance)) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1860,7 +1871,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
 
         taf.runhistory = self.rh
         # select best on any budget
@@ -2011,7 +2024,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
 
         taf.runhistory = self.rh
         # select best on any budget
@@ -2115,7 +2130,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
 
         taf.runhistory = self.rh
         # select best on any budget

@@ -66,7 +66,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -126,7 +126,9 @@ class TestIntensify(unittest.TestCase):
             time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -187,7 +189,11 @@ class TestIntensify(unittest.TestCase):
             return (config["a"] + 1) / 1000.0
 
         taf = ExecuteTAFuncDict(
-            ta=target, stats=self.stats, run_obj="runtime", par_factor=1
+            use_pynisher=False,
+            ta=target,
+            stats=self.stats,
+            run_obj="runtime",
+            par_factor=1,
         )
         taf.runhistory = self.rh
 
@@ -323,7 +329,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -401,7 +407,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -481,7 +487,9 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -552,7 +560,9 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality"
+        )
 
         intensifier = Intensifier(
             stats=self.stats,
@@ -730,7 +740,9 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(1)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -918,7 +930,9 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1087,7 +1101,9 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1147,7 +1163,9 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
