@@ -182,7 +182,7 @@ class AbstractTAFunc(SerialRunner):
                 obj = pynisher.enforce_limits(**arguments)(self._ta)
                 rval = self._call_ta(obj, config, obj_kwargs)
             except Exception as e:
-                cost = np.asarray(cost).squeeze()
+                cost = np.asarray(cost).squeeze().tolist()
                 exception_traceback = traceback.format_exc()
                 error_message = repr(e)
                 additional_info = {
@@ -262,7 +262,7 @@ class AbstractTAFunc(SerialRunner):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
 
-        cost = np.asarray(cost).squeeze()
+        cost = np.asarray(cost).squeeze().tolist()
 
         return status, cost, runtime, additional_run_info  # type: ignore
 
