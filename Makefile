@@ -4,7 +4,7 @@ test:
 	pytest -v --cov=smac test --durations=20
 
 .PHONY: docs
-doc:
+docs:
 	make -C docs clean
 	make -C docs buildapi
 	make -C docs html

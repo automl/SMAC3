@@ -1,7 +1,8 @@
-import typing
 import numpy as np
 from abc import abstractmethod
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 
 
 class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
@@ -27,13 +28,11 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
         raise NotImplementedError
 
 
-class ParEGO(AggregationStrategy):
-    def __init__(self,
-                 num_obj: int,
-                 rng: typing.Optional[np.random.RandomState] = None,
-                 rho: float = 0.05):
-        super(ParEGO, self).__init__(num_obj=num_obj, rng=rng)
-        self.rho = rho
+class MeanAggregationStrategy(AggregationStrategy):
+    """
+    An abstract class to aggregate multi-objective losses to a single objective losses, which can then be utilized
+    by the single-objective optimizer.
+    """
 
     def __call__(self, values: np.ndarray) -> float:
         """
@@ -41,15 +40,11 @@ class ParEGO(AggregationStrategy):
 
         Parameters
         ----------
-            values: np.ndarray[num_evaluations, num_obj].
+            values (np.ndarray): Normalized values.
 
         Returns
         -------
-            cost: float.
+            cost (float): Combined cost.
         """
 
-        theta = self.rng.rand(self.num_obj)
-        theta = theta / (np.sum(theta) + 1e-10)
-        theta_f = theta * values
-
-        return np.max(theta_f, axis=1) + np.sum(theta_f, axis=1)
+        return np.mean(values, axis=1)

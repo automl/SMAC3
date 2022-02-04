@@ -27,7 +27,7 @@ If you use SMAC, please cite our paper:
 .. code-block:: text
 
     @inproceedings {lindauer-arxiv21a,
-      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
       title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
       booktitle = {ArXiv: 2109.09831},
       year = {2021},

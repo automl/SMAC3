@@ -143,6 +143,7 @@ class RandomForestWithInstances(BaseModel):
         -------
         self
         """
+
         X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()

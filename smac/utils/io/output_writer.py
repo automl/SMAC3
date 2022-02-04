@@ -199,6 +199,7 @@ class OutputWriter(object):
             'pcs_new': pcs_new.write,
             'json': json.write
         }
+
         writer = writers.get(output_format)
         if writer:
             with open(fn, 'w') as fh:
