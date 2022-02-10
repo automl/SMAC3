@@ -832,7 +832,6 @@ class RunHistory(object):
         sum_cost: float
             Sum of costs of config
         """
-
         costs = self._cost(config, instance_seed_budget_keys)
         if costs:
             if self.num_obj > 1:
@@ -840,9 +839,7 @@ class RunHistory(object):
                 costs = normalize_costs(costs, self.objective_bounds)
                 costs = np.mean(costs, axis=1)
 
-            return float(np.sum(costs))
-
-        return np.nan
+        return float(np.sum(costs))
 
     def min_cost(
         self,
