@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 
 
 def get_conditional_hyperparameters(
-    X: np.ndarray, Y: Optional[np.ndarray]
+    X: np.ndarray, Y: Optional[np.ndarray] = None
 ) -> np.ndarray:
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1

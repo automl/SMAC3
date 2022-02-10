@@ -30,8 +30,8 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
 
 class MeanAggregationStrategy(AggregationStrategy):
     """
-    An abstract class to aggregate multi-objective losses to a single objective losses, which can then be utilized
-    by the single-objective optimizer.
+    A class to mean-aggregate multi-objective losses to a single objective losses,
+    which can then be utilized by the single-objective optimizer.
     """
 
     def __call__(self, values: np.ndarray) -> float:

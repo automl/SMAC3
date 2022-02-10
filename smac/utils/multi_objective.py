@@ -9,6 +9,13 @@ def normalize_costs(
     """Normalizes the costs to be between 0 and 1 if no bounds are given.
     Otherwise, the costs are normalized according to the bounds.
 
+    Example
+    -------
+
+    [0, 10, 5] -> [[0], [1], [0.5]]
+    [[0], [10], [5]] -> [[0], [1], [0.5]]
+    [[0, 0], [10, 50], [5, 200]] -> [[0, 0], [1, 0.25], [0.5, 1]]
+
     Parameters
     ----------
     values : Union[np.ndarray, List, List[List]]
@@ -34,7 +41,9 @@ def normalize_costs(
     for col in range(values.shape[1]):
         data = values[:, col].astype(float)
 
-        if bounds is not None and len(bounds) == values.shape[1]:
+        if bounds is not None:
+            assert len(bounds) == values.shape[1]
+
             min_value = bounds[col][0]
             max_value = bounds[col][1]
         else:
@@ -44,7 +53,7 @@ def normalize_costs(
         denominator = max_value - min_value
 
         # Prevent divide by zero
-        if denominator == 0:
+        if denominator < 1e-10:
             # Return ones
             normalized_values.append(np.ones_like(data))
         else:

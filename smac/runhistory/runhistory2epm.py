@@ -492,7 +492,9 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
 
-            if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
                 y_ = normalize_costs(run.cost, runhistory.objective_bounds)
