@@ -36,6 +36,9 @@ check-isort:
 	$(ISORT) "${SOURCE_DIR}" --check || :
 	$(ISORT) "${TESTS_DIR}" --check || :
 
+check-pydocstyle:
+	$(PYDOCSTYLE) "${SOURCE_DIR}" || :
+
 check-mypy:
 	$(MYPY) "${SOURCE_DIR}" || :
 

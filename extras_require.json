@@ -7,6 +7,7 @@
     "matplotlib==3.5.1"
   ],
   "tests": [
+    "types-setuptools",
     "pytest>=4.6",
     "pytest-cov",
     "pytest-xdist",
