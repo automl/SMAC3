@@ -1,6 +1,5 @@
 {
   "docs": [
-    // "automl_sphinx_theme>=0.1.1"
     "sphinx==4.2.0",
     "sphinx-gallery==0.10.0",
     "bs4==0.0.1",
@@ -9,11 +8,14 @@
   ],
   "tests": [
     "pytest>=4.6",
-    "mypy",
+    "pytest-cov",
+    "pytest-xdist",
     "pytest-timeout",
-    "flaky",
+    "mypy",
+    "isort",
+    "black",
+    "pydocstyle",
     "pre-commit",
-    "pytest-forked",
-    "pytest-cov"
+    "flake8"
   ]
 }

@@ -8,13 +8,11 @@ __license__ = "3-clause BSD"
 
 
 class ConfigSpaceTest(unittest.TestCase):
-
     def test_spear(self):
-        '''
-            simply getting some random configuration from spear pcs
-        '''
-        file_path = os.path.join(os.path.dirname(__file__), '..',
-                                 'test_files', 'spear-params.pcs')
+        """
+        simply getting some random configuration from spear pcs
+        """
+        file_path = os.path.join(os.path.dirname(__file__), "..", "test_files", "spear-params.pcs")
 
         with open(file_path) as fp:
             pcs_str = fp.readlines()

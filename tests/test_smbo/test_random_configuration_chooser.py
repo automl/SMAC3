@@ -2,14 +2,17 @@ import unittest
 
 import numpy as np
 
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb, ChooserLinearCoolDown
+from smac.optimizer.random_configuration_chooser import (
+    ChooserLinearCoolDown,
+    ChooserNoCoolDown,
+    ChooserProb,
+)
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 class TestRandomConfigurationChooser(unittest.TestCase):
-
     def test_no_cool_down(self):
         c = ChooserNoCoolDown(rng=np.random.RandomState(), modulus=3.0)
         self.assertFalse(c.check(1))

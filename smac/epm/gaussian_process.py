@@ -1,16 +1,16 @@
-import logging
 import typing
+
+import logging
 
 import numpy as np
 from scipy import optimize
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gp_base_prior import Prior
 from smac.utils.constants import VERY_SMALL_NUMBER
-
-from sklearn.gaussian_process.kernels import Kernel
-from sklearn.gaussian_process import GaussianProcessRegressor
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -84,13 +84,13 @@ class GaussianProcess(BaseModel):
         self.normalize_y = normalize_y
         self.n_opt_restarts = n_opt_restarts
 
-        self.hypers = np.empty((0, ))
+        self.hypers = np.empty((0,))
         self.is_trained = False
         self._n_ll_evals = 0
 
         self._set_has_conditions()
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcess':
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcess":
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal
@@ -225,7 +225,7 @@ class GaussianProcess(BaseModel):
                             size=(self.n_opt_restarts,),
                         )
                     except OverflowError:
-                        raise ValueError('OverflowError while sampling from (%f, %f)' % (hp_bound[0], hp_bound[1]))
+                        raise ValueError("OverflowError while sampling from (%f, %f)" % (hp_bound[0], hp_bound[1]))
                     dim_samples.append(sample.flatten())
                 else:
                     dim_samples.append(prior.sample_from_prior(self.n_opt_restarts).flatten())
@@ -240,9 +240,9 @@ class GaussianProcess(BaseModel):
                 theta_star = theta
         return theta_star
 
-    def _predict(self, X_test: np.ndarray,
-                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
+    def _predict(
+        self, X_test: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
+    ) -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -264,7 +264,7 @@ class GaussianProcess(BaseModel):
         """
 
         if not self.is_trained:
-            raise Exception('Model has to be trained first!')
+            raise Exception("Model has to be trained first!")
 
         X_test = self._impute_inactive(X_test)
 
@@ -276,14 +276,14 @@ class GaussianProcess(BaseModel):
                 mu = self._untransform_y(mu)
 
         else:
-            predict_kwargs = {'return_cov': False, 'return_std': True}
-            if cov_return_type == 'full_cov':
-                predict_kwargs = {'return_cov': True, 'return_std': False}
+            predict_kwargs = {"return_cov": False, "return_std": True}
+            if cov_return_type == "full_cov":
+                predict_kwargs = {"return_cov": True, "return_std": False}
 
             mu, var = self.gp.predict(X_test, **predict_kwargs)
 
-            if cov_return_type != 'full_cov':
-                var = var ** 2  # since we get standard deviation for faster computation
+            if cov_return_type != "full_cov":
+                var = var**2  # since we get standard deviation for faster computation
 
             # Clip negative variances and set them to the smallest
             # positive float value
@@ -292,7 +292,7 @@ class GaussianProcess(BaseModel):
             if self.normalize_y:
                 mu, var = self._untransform_y(mu, var)
 
-            if cov_return_type == 'diagonal_std':
+            if cov_return_type == "diagonal_std":
                 var = np.sqrt(var)  # converting variance to std deviation if specified
 
         return mu, var
@@ -316,7 +316,7 @@ class GaussianProcess(BaseModel):
         """
 
         if not self.is_trained:
-            raise Exception('Model has to be trained first!')
+            raise Exception("Model has to be trained first!")
 
         X_test = self._impute_inactive(X_test)
         funcs = self.gp.sample_y(X_test, n_samples=n_funcs, random_state=self.rng)

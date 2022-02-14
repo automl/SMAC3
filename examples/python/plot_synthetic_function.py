@@ -12,6 +12,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 """
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
@@ -30,7 +31,7 @@ __license__ = "3-clause BSD"
 
 
 def rosenbrock_2d(x):
-    """ The 2 dimensional Rosenbrock function as a toy model
+    """The 2 dimensional Rosenbrock function as a toy model
     The Rosenbrock function is well know in the optimization community and
     often serves as a toy problem. It can be defined for arbitrary
     dimensions. The minimium is always at x_i = 1 with a function value of
@@ -41,7 +42,7 @@ def rosenbrock_2d(x):
     x1 = x["x0"]
     x2 = x["x1"]
 
-    val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
+    val = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
     return val
 
 
@@ -53,14 +54,17 @@ if __name__ == "__main__":
     cs.add_hyperparameters([x0, x1])
 
     # Scenario object
-    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                         "runcount-limit": 10,  # max. number of function evaluations
-                         "cs": cs,  # configuration space
-                         "deterministic": True
-                         })
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternatively runtime)
+            "runcount-limit": 10,  # max. number of function evaluations
+            "cs": cs,  # configuration space
+            "deterministic": True,
+        }
+    )
 
     # Use 'gp' or 'gp_mcmc' here
-    model_type = 'gp'
+    model_type = "gp"
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -69,10 +73,12 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4BB(scenario=scenario,
-                   model_type=model_type,
-                   rng=np.random.RandomState(42),
-                   acquisition_function=EI,  # or others like PI, LCB as acquisition functions
-                   tae_runner=rosenbrock_2d)
+    smac = SMAC4BB(
+        scenario=scenario,
+        model_type=model_type,
+        rng=np.random.RandomState(42),
+        acquisition_function=EI,  # or others like PI, LCB as acquisition functions
+        tae_runner=rosenbrock_2d,
+    )
 
     smac.optimize()

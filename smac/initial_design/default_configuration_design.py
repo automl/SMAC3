@@ -1,7 +1,6 @@
 from typing import List
 
 from ConfigSpace import Configuration
-
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
@@ -22,5 +21,5 @@ class DefaultConfiguration(InitialDesign):
         """
 
         config = self.cs.get_default_configuration()
-        config.origin = 'Default'
+        config.origin = "Default"
         return [config]

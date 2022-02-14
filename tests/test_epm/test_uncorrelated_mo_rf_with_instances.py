@@ -4,20 +4,20 @@ from unittest import mock
 import numpy as np
 
 import smac.configspace
-from smac.epm.uncorrelated_mo_rf_with_instances import \
-    UncorrelatedMultiObjectiveRandomForestWithInstances
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.uncorrelated_mo_rf_with_instances import (
+    UncorrelatedMultiObjectiveRandomForestWithInstances,
+)
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
-
     def _get_cs(self, n_dimensions):
         configspace = smac.configspace.ConfigurationSpace()
         for i in range(n_dimensions):
-            configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter('x%d' % i, 0, 1))
+            configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter("x%d" % i, 0, 1))
         return configspace
 
     def test_train_and_predict_with_rf(self):
@@ -26,14 +26,22 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         Y = rs.rand(10, 2)
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
             configspace=self._get_cs(10),
-            target_names=['cost', 'ln(runtime)'],
-            types=np.zeros((10, ), dtype=np.uint),
+            target_names=["cost", "ln(runtime)"],
+            types=np.zeros((10,), dtype=np.uint),
             bounds=[
-                (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
-                (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
             ],
             seed=1,
-            rf_kwargs={'seed': 1},
+            rf_kwargs={"seed": 1},
             pca_components=5,
         )
         self.assertEqual(model.estimators[0].seed, 1)
@@ -45,7 +53,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         self.assertEqual(v.shape, (10, 2))
 
     # We need to track how often the base model was called!
-    @mock.patch.object(RandomForestWithInstances, 'predict')
+    @mock.patch.object(RandomForestWithInstances, "predict")
     def test_predict_mocked(self, rf_mock):
         class SideEffect(object):
             def __init__(self):
@@ -63,15 +71,23 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         X = rs.rand(20, 10)
         Y = rs.rand(10, 3)
         model = UncorrelatedMultiObjectiveRandomForestWithInstances(
-            target_names=['cost', 'ln(runtime)', 'foo'],
+            target_names=["cost", "ln(runtime)", "foo"],
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),
             bounds=[
-                (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan),
-                (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan), (0, np.nan)
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
+                (0, np.nan),
             ],
             seed=1,
-            rf_kwargs={'seed': 1},
+            rf_kwargs={"seed": 1},
         )
 
         model.train(X[:10], Y[:10])

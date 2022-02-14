@@ -1,11 +1,10 @@
 import typing
 
 from smac.configspace import Configuration
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.tae import StatusType
+from smac.tae.execute_func import ExecuteTAFuncArray, ExecuteTAFuncDict
+from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.serial_runner import SerialRunner
 
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -29,7 +28,7 @@ class ExecuteTARunHydra(SerialRunner):
         self,
         cost_oracle: typing.Mapping[str, float],
         tae: typing.Type[SerialRunner] = ExecuteTARunOld,
-        **kwargs: typing.Any
+        **kwargs: typing.Any,
     ) -> None:
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
@@ -42,19 +41,21 @@ class ExecuteTARunHydra(SerialRunner):
         elif tae is ExecuteTAFuncArray:
             self.runner = ExecuteTAFuncArray(**kwargs)
         else:
-            raise Exception('TAE not supported')
+            raise Exception("TAE not supported")
 
-    def run(self, config: Configuration,
-            instance: str,
-            cutoff: typing.Optional[float] = None,
-            seed: int = 12345,
-            budget: typing.Optional[float] = None,
-            instance_specific: str = "0") -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """ see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring
-        """
+    def run(
+        self,
+        config: Configuration,
+        instance: str,
+        cutoff: typing.Optional[float] = None,
+        seed: int = 12345,
+        budget: typing.Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+        """see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring"""
 
         if cutoff is None:
-            raise ValueError('Cutoff of type None is not supported')
+            raise ValueError("Cutoff of type None is not supported")
 
         status, cost, runtime, additional_info = self.runner.run(
             config=config,

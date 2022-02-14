@@ -1,14 +1,13 @@
 from typing import List, Optional, Tuple, Union
 
-from smac.configspace import ConfigurationSpace
 import numpy as np
-
-from smac.epm.base_epm import AbstractEPM
-import smac.epm.gp_base_prior
-
 import sklearn.gaussian_process
-from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel, KernelOperator
+
+import smac.epm.gp_base_prior
+from smac.configspace import ConfigurationSpace
+from smac.epm.base_epm import AbstractEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -84,7 +83,7 @@ class BaseModel(AbstractEPM):
         """
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
-            var = var * self.std_y_ ** 2
+            var = var * self.std_y_**2
             return y, var
         return y
 
@@ -119,13 +118,20 @@ class BaseModel(AbstractEPM):
                         if add_soft_bounds:
                             priors_for_hp.append(
                                 smac.epm.gp_base_prior.SoftTopHatPrior(
-                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng, exponent=2,
-                                ))
+                                    lower_bound=bounds[i][0],
+                                    upper_bound=bounds[i][1],
+                                    rng=self.rng,
+                                    exponent=2,
+                                )
+                            )
                         else:
                             priors_for_hp.append(
                                 smac.epm.gp_base_prior.TophatPrior(
-                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
-                                ))
+                                    lower_bound=bounds[i][0],
+                                    upper_bound=bounds[i][1],
+                                    rng=self.rng,
+                                )
+                            )
                     all_priors.append(priors_for_hp)
         return all_priors
 

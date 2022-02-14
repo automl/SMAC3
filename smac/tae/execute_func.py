@@ -1,8 +1,9 @@
+from typing import Callable, Dict, List, Optional, Tuple, Union, cast
+
 import inspect
 import math
 import time
 import traceback
-from typing import Dict, List, Optional, Tuple, Union, Callable, cast
 
 import numpy as np
 import pynisher
@@ -10,8 +11,8 @@ import pynisher
 from smac.configspace import Configuration
 from smac.stats.stats import Stats
 from smac.tae import StatusType
-from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.tae.serial_runner import SerialRunner
+from smac.utils.constants import MAX_CUTOFF, MAXINT
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -61,22 +62,24 @@ class AbstractTAFunc(SerialRunner):
         self,
         ta: Callable,
         stats: Stats,
-        multi_objectives: List[str] = ['cost'],
+        multi_objectives: List[str] = ["cost"],
         run_obj: str = "quality",
         memory_limit: Optional[int] = None,
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
-        use_pynisher: bool = True
+        use_pynisher: bool = True,
     ):
 
-        super().__init__(ta=ta,
-                         stats=stats,
-                         multi_objectives=multi_objectives,
-                         run_obj=run_obj,
-                         par_factor=par_factor,
-                         cost_for_crash=cost_for_crash,
-                         abort_on_first_run_crash=abort_on_first_run_crash)
+        super().__init__(
+            ta=ta,
+            stats=stats,
+            multi_objectives=multi_objectives,
+            run_obj=run_obj,
+            par_factor=par_factor,
+            cost_for_crash=cost_for_crash,
+            abort_on_first_run_crash=abort_on_first_run_crash,
+        )
         self.ta = ta
         self.stats = stats
         self.multi_objectives = multi_objectives
@@ -87,11 +90,11 @@ class AbstractTAFunc(SerialRunner):
         self.abort_on_first_run_crash = abort_on_first_run_crash
 
         signature = inspect.signature(ta).parameters
-        self._accepts_seed = 'seed' in signature.keys()
-        self._accepts_instance = 'instance' in signature.keys()
-        self._accepts_budget = 'budget' in signature.keys()
+        self._accepts_seed = "seed" in signature.keys()
+        self._accepts_instance = "instance" in signature.keys()
+        self._accepts_budget = "budget" in signature.keys()
         if not callable(ta):
-            raise TypeError('Argument `ta` must be a callable, but is %s' % type(ta))
+            raise TypeError("Argument `ta` must be a callable, but is %s" % type(ta))
         self._ta = cast(Callable, ta)
 
         if memory_limit is not None:
@@ -100,15 +103,17 @@ class AbstractTAFunc(SerialRunner):
 
         self.use_pynisher = use_pynisher
 
-        self.logger = PickableLoggerAdapter(
-            self.__module__ + '.' + self.__class__.__name__)
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
-    def run(self, config: Configuration,
-            instance: Optional[str] = None,
-            cutoff: Optional[float] = None,
-            seed: int = 12345,
-            budget: Optional[float] = None,
-            instance_specific: str = "0") -> Tuple[StatusType, float, float, Dict]:
+    def run(
+        self,
+        config: Configuration,
+        instance: Optional[str] = None,
+        cutoff: Optional[float] = None,
+        seed: int = 12345,
+        budget: Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self._ta> with configuration <config> for at
         most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
 
@@ -146,11 +151,11 @@ class AbstractTAFunc(SerialRunner):
 
         obj_kwargs = {}  # type: Dict[str, Union[int, str, float, None]]
         if self._accepts_seed:
-            obj_kwargs['seed'] = seed
+            obj_kwargs["seed"] = seed
         if self._accepts_instance:
-            obj_kwargs['instance'] = instance
+            obj_kwargs["instance"] = instance
         if self._accepts_budget:
-            obj_kwargs['budget'] = budget
+            obj_kwargs["budget"] = budget
 
         cost = self.cost_for_crash  # type: Union[float, List[float]]
 
@@ -159,14 +164,12 @@ class AbstractTAFunc(SerialRunner):
             if cutoff is not None:
                 cutoff = int(math.ceil(cutoff))
                 if cutoff > MAX_CUTOFF:
-                    raise ValueError("%d is outside the legal range of [0, 65535] "
-                                     "for cutoff (when using pynisher, due to OS limitations)" % cutoff)
+                    raise ValueError(
+                        "%d is outside the legal range of [0, 65535] "
+                        "for cutoff (when using pynisher, due to OS limitations)" % cutoff
+                    )
 
-            arguments = {
-                'logger': self.logger,
-                'wall_time_in_s': cutoff,
-                'mem_in_mb': self.memory_limit
-            }
+            arguments = {"logger": self.logger, "wall_time_in_s": cutoff, "mem_in_mb": self.memory_limit}
 
             # call ta
             try:
@@ -176,10 +179,7 @@ class AbstractTAFunc(SerialRunner):
                 cost = np.asarray(cost).squeeze()
                 exception_traceback = traceback.format_exc()
                 error_message = repr(e)
-                additional_info = {
-                    'traceback': exception_traceback,
-                    'error': error_message
-                }
+                additional_info = {"traceback": exception_traceback, "error": error_message}
 
                 return StatusType.CRASHED, cost, 0.0, additional_info  # type: ignore
 
@@ -197,7 +197,7 @@ class AbstractTAFunc(SerialRunner):
                 status = StatusType.MEMOUT
             elif obj.exit_status == 0 and result is not None:
                 status = StatusType.SUCCESS
-                cost = result  # type: ignore # noqa 
+                cost = result  # type: ignore # noqa
             else:
                 status = StatusType.CRASHED
 
@@ -235,7 +235,7 @@ class AbstractTAFunc(SerialRunner):
                 ordered_cost = []
                 for name in self.multi_objectives:
                     if name not in cost:
-                        raise RuntimeError(f'Objective {name} was not found in the returned costs.')
+                        raise RuntimeError(f"Objective {name} was not found in the returned costs.")
 
                     ordered_cost.append(cost[name])
                 cost = ordered_cost
@@ -346,6 +346,5 @@ class ExecuteTAFuncArray(AbstractTAFunc):
         obj_kwargs: Dict[str, Union[int, str, float, None]],
     ) -> Union[float, Tuple[float, Dict]]:
 
-        x = np.array([val for _, val in sorted(config.get_dictionary().items())],
-                     dtype=float)
+        x = np.array([val for _, val in sorted(config.get_dictionary().items())], dtype=float)
         return obj(x, **obj_kwargs)

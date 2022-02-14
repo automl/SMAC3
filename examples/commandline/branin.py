@@ -39,18 +39,18 @@ __license__ = "3-clause BSD"
 def branin(x):
     x1 = x[0]
     x2 = x[1]
-    a = 1.
-    b = 5.1 / (4. * np.pi ** 2)
-    c = 5. / np.pi
-    r = 6.
-    s = 10.
-    t = 1. / (8. * np.pi)
-    ret = a * (x2 - b * x1 ** 2 + c * x1 - r) ** 2 + s * (1 - t) * np.cos(x1) + s
+    a = 1.0
+    b = 5.1 / (4.0 * np.pi**2)
+    c = 5.0 / np.pi
+    r = 6.0
+    s = 10.0
+    t = 1.0 / (8.0 * np.pi)
+    ret = a * (x2 - b * x1**2 + c * x1 - r) ** 2 + s * (1 - t) * np.cos(x1) + s
 
     return ret
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Unused in this example:
     # instance, instance_specific, cutoff, runlength = sys.argv[1:5]
     seed = sys.argv[5]
@@ -62,4 +62,4 @@ if __name__ == '__main__':
     result = branin((x, y))
 
     # This line is important so the result can be processed by SMAC:
-    print('Result for SMAC: SUCCESS, -1, -1, %f, %s' % (result, seed))
+    print("Result for SMAC: SUCCESS, -1, -1, %f, %s" % (result, seed))

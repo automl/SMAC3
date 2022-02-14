@@ -1,22 +1,20 @@
+import logging
+import time
 import unittest
 from unittest import mock
 
-import logging
 import numpy as np
-import time
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-
 from smac.intensification.abstract_racer import RunInfoIntent
+from smac.intensification.hyperband import Hyperband, _Hyperband
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.intensification.hyperband import _Hyperband
-from smac.intensification.hyperband import Hyperband
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae import StatusType
+from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.utils.io.traj_logging import TrajLogger
 
 from .test_eval_utils import eval_challenger
@@ -27,12 +25,8 @@ __license__ = "3-clause BSD"
 
 def get_config_space():
     cs = ConfigurationSpace()
-    cs.add_hyperparameter(UniformIntegerHyperparameter(name='a',
-                                                       lower=0,
-                                                       upper=100))
-    cs.add_hyperparameter(UniformIntegerHyperparameter(name='b',
-                                                       lower=0,
-                                                       upper=100))
+    cs.add_hyperparameter(UniformIntegerHyperparameter(name="a", lower=0, upper=100))
+    cs.add_hyperparameter(UniformIntegerHyperparameter(name="b", lower=0, upper=100))
     return cs
 
 
@@ -44,31 +38,23 @@ def target_from_run_info(RunInfo):
         status=StatusType.SUCCESS,
         starttime=time.time(),
         endtime=time.time() + 1,
-        additional_info={}
+        additional_info={},
     )
 
 
 class TestHyperband(unittest.TestCase):
-
     def setUp(self):
         unittest.TestCase.setUp(self)
 
         self.rh = RunHistory()
         self.cs = get_config_space()
-        self.config1 = Configuration(self.cs,
-                                     values={'a': 7, 'b': 11})
-        self.config2 = Configuration(self.cs,
-                                     values={'a': 13, 'b': 17})
-        self.config3 = Configuration(self.cs,
-                                     values={'a': 0, 'b': 7})
-        self.config4 = Configuration(self.cs,
-                                     values={'a': 29, 'b': 31})
-        self.config5 = Configuration(self.cs,
-                                     values={'a': 31, 'b': 33})
+        self.config1 = Configuration(self.cs, values={"a": 7, "b": 11})
+        self.config2 = Configuration(self.cs, values={"a": 13, "b": 17})
+        self.config3 = Configuration(self.cs, values={"a": 0, "b": 7})
+        self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
+        self.config5 = Configuration(self.cs, values={"a": 31, "b": 33})
 
-        self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
-                              "run_obj": 'runtime',
-                              "output_dir": ''})
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -139,30 +125,18 @@ class TestHyperband(unittest.TestCase):
             magic = time.time()
 
             result = RunValue(
-                cost=1,
-                time=0.5,
-                status=StatusType.SUCCESS,
-                starttime=1,
-                endtime=2,
-                additional_info=magic
+                cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info=magic
             )
             self.HB.process_results(
-                run_info=run_info,
-                incumbent=None,
-                run_history=self.rh,
-                time_bound=None,
-                result=result,
-                log_traj=False
+                run_info=run_info, incumbent=None, run_history=self.rh, time_bound=None, result=result, log_traj=False
             )
 
             # Check the call arguments of each sh instance and make sure
             # it is the correct one
 
             # First the expected one
-            self.assertEqual(
-                self.HB.intensifier_instances[i].process_results.call_args[1]['run_info'], run_info)
-            self.assertEqual(
-                self.HB.intensifier_instances[i].process_results.call_args[1]['result'], result)
+            self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["run_info"], run_info)
+            self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["result"], result)
             all_other_run_infos, all_other_results = [], []
             for j in range(len(self.HB.intensifier_instances)):
                 # Skip the expected_HB instance
@@ -172,9 +146,9 @@ class TestHyperband(unittest.TestCase):
                     all_other_run_infos.append(None)
                 else:
                     all_other_run_infos.append(
-                        self.HB.intensifier_instances[j].process_results.call_args[1]['run_info'])
-                    all_other_results.append(
-                        self.HB.intensifier_instances[j].process_results.call_args[1]['result'])
+                        self.HB.intensifier_instances[j].process_results.call_args[1]["run_info"]
+                    )
+                    all_other_results.append(self.HB.intensifier_instances[j].process_results.call_args[1]["result"])
             self.assertNotIn(run_info, all_other_run_infos)
             self.assertNotIn(result, all_other_results)
 
@@ -185,7 +159,9 @@ class TestHyperband(unittest.TestCase):
         for i in range(30):
             intent, run_info = self.HB.get_next_run(
                 challengers=challengers,
-                incumbent=None, chooser=None, run_history=self.rh,
+                incumbent=None,
+                chooser=None,
+                run_history=self.rh,
                 num_workers=1,
             )
 
@@ -241,7 +217,9 @@ class TestHyperband(unittest.TestCase):
         for i in range(30):
             intent, run_info = self.HB.get_next_run(
                 challengers=challengers,
-                incumbent=None, chooser=None, run_history=self.rh,
+                incumbent=None,
+                chooser=None,
+                run_history=self.rh,
                 num_workers=2,
             )
             run_infos.append(run_info)
@@ -294,7 +272,9 @@ class TestHyperband(unittest.TestCase):
         # and n_workers==2
         intent, run_info = self.HB.get_next_run(
             challengers=challengers,
-            incumbent=None, chooser=None, run_history=self.rh,
+            incumbent=None,
+            chooser=None,
+            run_history=self.rh,
             num_workers=2,
         )
         self.assertEqual(intent, RunInfoIntent.WAIT)
@@ -334,7 +314,9 @@ class TestHyperband(unittest.TestCase):
             try:
                 intent, run_info = sh.get_next_run(
                     challengers=challengers,
-                    incumbent=None, chooser=None, run_history=rh,
+                    incumbent=None,
+                    chooser=None,
+                    run_history=rh,
                     num_workers=num_workers,
                 )
             except ValueError as e:
@@ -424,22 +406,16 @@ class TestHyperband(unittest.TestCase):
 
 
 class Test_Hyperband(unittest.TestCase):
-
     def setUp(self):
         unittest.TestCase.setUp(self)
 
         self.rh = RunHistory()
         self.cs = get_config_space()
-        self.config1 = Configuration(self.cs,
-                                     values={'a': 0, 'b': 100})
-        self.config2 = Configuration(self.cs,
-                                     values={'a': 100, 'b': 0})
-        self.config3 = Configuration(self.cs,
-                                     values={'a': 100, 'b': 100})
+        self.config1 = Configuration(self.cs, values={"a": 0, "b": 100})
+        self.config2 = Configuration(self.cs, values={"a": 100, "b": 0})
+        self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
 
-        self.scen = Scenario({"cutoff_time": 2, 'cs': self.cs,
-                              "run_obj": 'runtime',
-                              "output_dir": ''})
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -447,12 +423,19 @@ class Test_Hyperband(unittest.TestCase):
 
     def test_update_stage(self):
         """
-            test initialization of all parameters and tracking variables
+        test initialization of all parameters and tracking variables
         """
         intensifier = _Hyperband(
-            stats=self.stats, traj_logger=None,
-            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[1], initial_budget=0.1, max_budget=1, eta=2)
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            deterministic=True,
+            run_obj_time=False,
+            instances=[1],
+            initial_budget=0.1,
+            max_budget=1,
+            eta=2,
+        )
         intensifier._update_stage()
 
         self.assertEqual(intensifier.s, 3)
@@ -482,8 +465,8 @@ class Test_Hyperband(unittest.TestCase):
 
     def test_eval_challenger(self):
         """
-            since hyperband uses eval_challenger and get_next_run of the internal successive halving,
-            we don't test these method extensively
+        since hyperband uses eval_challenger and get_next_run of the internal successive halving,
+        we don't test these method extensively
         """
 
         def target(x):
@@ -495,17 +478,21 @@ class Test_Hyperband(unittest.TestCase):
         intensifier = _Hyperband(
             stats=self.stats,
             traj_logger=TrajLogger(output_dir=None, stats=self.stats),
-            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=[None], initial_budget=0.5, max_budget=1, eta=2)
+            rng=np.random.RandomState(12345),
+            deterministic=True,
+            run_obj_time=False,
+            instances=[None],
+            initial_budget=0.5,
+            max_budget=1,
+            eta=2,
+        )
 
-        self.assertFalse(hasattr(intensifier, 's'))
+        self.assertFalse(hasattr(intensifier, "s"))
 
         # Testing get_next_run - get next configuration
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config3],
-            chooser=None,
-            incumbent=None,
-            run_history=self.rh)
+            challengers=[self.config2, self.config3], chooser=None, incumbent=None, run_history=self.rh
+        )
         self.assertEqual(intensifier.s, intensifier.s_max)
         self.assertEqual(run_info.config, self.config2)
 
@@ -517,23 +504,18 @@ class Test_Hyperband(unittest.TestCase):
         # We track closely run execution through run_tracker, so this also
         # has to be update -- the fact that the succesive halving inside hyperband
         # processed the given configurations
-        self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS,
-                    seed=0, budget=1)
+        self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=1)
         intensifier.sh_intensifier.run_tracker[(self.config1, None, 0, 1)] = True
-        self.rh.add(config=self.config2, cost=2, time=2, status=StatusType.SUCCESS,
-                    seed=0, budget=0.5)
+        self.rh.add(config=self.config2, cost=2, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
         intensifier.sh_intensifier.run_tracker[(self.config2, None, 0, 0.5)] = True
-        self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS,
-                    seed=0, budget=0.5)
+        self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
         intensifier.sh_intensifier.run_tracker[(self.config3, None, 0, 0.5)] = True
 
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
         intensifier.sh_intensifier._update_stage(self.rh)
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config3],
-            chooser=None,
-            incumbent=None,
-            run_history=self.rh)
+            challengers=[self.config2, self.config3], chooser=None, incumbent=None, run_history=self.rh
+        )
 
         # evaluation should change the incumbent to config2
         self.assertIsNotNone(run_info.config)
@@ -554,15 +536,20 @@ class Test_Hyperband(unittest.TestCase):
 
 
 class Test__Hyperband(unittest.TestCase):
-
     def test_budget_initialization(self):
         """
-            Check computing budgets (only for non-instance cases)
+        Check computing budgets (only for non-instance cases)
         """
         intensifier = _Hyperband(
-            stats=None, traj_logger=None,
-            rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-            instances=None, initial_budget=1, max_budget=81, eta=3
+            stats=None,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            deterministic=True,
+            run_obj_time=False,
+            instances=None,
+            initial_budget=1,
+            max_budget=81,
+            eta=3,
         )
         self.assertListEqual([1, 3, 9, 27, 81], intensifier.all_budgets.tolist())
         self.assertListEqual([81, 27, 9, 3, 1], intensifier.n_configs_in_stage)
@@ -570,29 +557,44 @@ class Test__Hyperband(unittest.TestCase):
         to_check = [
             # minb, maxb, eta, n_configs_in_stage, all_budgets
             [1, 81, 3, [81, 27, 9, 3, 1], [1, 3, 9, 27, 81]],
-            [1, 600, 3, [243, 81, 27, 9, 3, 1],
-             [2.469135, 7.407407, 22.222222, 66.666666, 200, 600]],
+            [1, 600, 3, [243, 81, 27, 9, 3, 1], [2.469135, 7.407407, 22.222222, 66.666666, 200, 600]],
             [1, 100, 10, [100, 10, 1], [1, 10, 100]],
-            [0.001, 1, 3, [729, 243, 81, 27, 9, 3, 1],
-             [0.001371, 0.004115, 0.012345, 0.037037, 0.111111, 0.333333, 1.0]],
-            [1, 1000, 3, [729, 243, 81, 27, 9, 3, 1],
-             [1.371742, 4.115226, 12.345679, 37.037037, 111.111111, 333.333333, 1000.0]],
-            [0.001, 100, 10, [100000, 10000, 1000, 100, 10, 1],
-             [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]],
+            [
+                0.001,
+                1,
+                3,
+                [729, 243, 81, 27, 9, 3, 1],
+                [0.001371, 0.004115, 0.012345, 0.037037, 0.111111, 0.333333, 1.0],
+            ],
+            [
+                1,
+                1000,
+                3,
+                [729, 243, 81, 27, 9, 3, 1],
+                [1.371742, 4.115226, 12.345679, 37.037037, 111.111111, 333.333333, 1000.0],
+            ],
+            [0.001, 100, 10, [100000, 10000, 1000, 100, 10, 1], [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]],
         ]
 
         for minb, maxb, eta, n_configs_in_stage, all_budgets in to_check:
             intensifier = _Hyperband(
-                stats=None, traj_logger=None,
-                rng=np.random.RandomState(12345), deterministic=True, run_obj_time=False,
-                instances=None, initial_budget=minb, max_budget=maxb, eta=eta
+                stats=None,
+                traj_logger=None,
+                rng=np.random.RandomState(12345),
+                deterministic=True,
+                run_obj_time=False,
+                instances=None,
+                initial_budget=minb,
+                max_budget=maxb,
+                eta=eta,
             )
-            intensifier._init_sh_params(initial_budget=minb,
-                                        max_budget=maxb,
-                                        eta=eta,
-                                        _all_budgets=None,
-                                        _n_configs_in_stage=None,
-                                        )
+            intensifier._init_sh_params(
+                initial_budget=minb,
+                max_budget=maxb,
+                eta=eta,
+                _all_budgets=None,
+                _n_configs_in_stage=None,
+            )
             for i in range(len(all_budgets) + 10):
                 intensifier._update_stage()
                 comp_budgets = intensifier.sh_intensifier.all_budgets.tolist()
@@ -603,12 +605,10 @@ class Test__Hyperband(unittest.TestCase):
                     self.assertIsInstance(c, int)
 
                 # all_budgets for SH is always a subset of all_budgets of HB
-                np.testing.assert_array_almost_equal(all_budgets[i % len(all_budgets):],
-                                                     comp_budgets, decimal=5)
+                np.testing.assert_array_almost_equal(all_budgets[i % len(all_budgets) :], comp_budgets, decimal=5)
 
                 # The content of these lists might differ
-                self.assertEqual(len(n_configs_in_stage[i % len(n_configs_in_stage):]),
-                                 len(comp_configs))
+                self.assertEqual(len(n_configs_in_stage[i % len(n_configs_in_stage) :]), len(comp_configs))
 
 
 if __name__ == "__main__":

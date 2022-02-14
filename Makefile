@@ -1,12 +1,12 @@
 NAME := SMAC3
 PACKAGE_NAME := smac
-DIR := "${CURDIR}"
-SOURCE_DIR := "${CURDIR}/${PACKAGE_NAME}"
-DIST := "${DIR}/dist"
-DOCDIR := "${DIR}/docs"
+DIR := ${CURDIR}
+SOURCE_DIR := ${CURDIR}/${PACKAGE_NAME}
+DIST := ${DIR}/dist
+DOCDIR := ${DIR}/docs
 INDEX_HTML := "file://${DOCDIR}/build/html/index.html"
-TESTS_DIR := "${DIR}/tests"
-EXAMPLES_DIR := "${DIR}/examples"
+TESTS_DIR := ${DIR}/tests
+EXAMPLES_DIR := ${DIR}/examples
 
 PYTHON ?= python
 CYTHON ?= cython
@@ -28,20 +28,20 @@ install-dev:
 	pre-commit install
 
 check-black:
-	$(BLACK) ${SOURCE_DIR} --check || :
-	$(BLACK) ${EXAMPLES_DIR} --check || :
-	$(BLACK) ${TESTS_DIR} --check || :
+	$(BLACK) "${SOURCE_DIR}" --check || :
+	$(BLACK) "${EXAMPLES_DIR}" --check || :
+	$(BLACK) "${TESTS_DIR}" --check || :
 
 check-isort:
-	$(ISORT) ${SOURCE_DIR} --check || :
-	$(ISORT) ${TESTS_DIR} --check || :
+	$(ISORT) "${SOURCE_DIR}" --check || :
+	$(ISORT) "${TESTS_DIR}" --check || :
 
 check-mypy:
-	$(MYPY) ${SOURCE_DIR} || :
+	$(MYPY) "${SOURCE_DIR}" || :
 
 check-flake8:
-	$(FLAKE8) ${SOURCE_DIR} || :
-	$(FLAKE8) ${TESTS_DIR} || :
+	$(FLAKE8) "${SOURCE_DIR}" || :
+	$(FLAKE8) "${TESTS_DIR}" || :
 
 check: check-black check-isort check-mypy check-flake8
 
@@ -49,13 +49,13 @@ pre-commit:
 	$(PRECOMMIT) run --all-files
 
 format-black:
-	$(BLACK) ${SOURCE_DIR}
-	$(BLACK) ${TESTS_DIR}
-	$(BLACK) ${EXAMPLES_DIR}
+	$(BLACK) "${SOURCE_DIR}"
+	$(BLACK) "${TESTS_DIR}"
+	$(BLACK) "${EXAMPLES_DIR}"
 
 format-isort:
-	$(ISORT) ${SOURCE_DIR}
-	$(ISORT) ${TESTS_DIR}
+	$(ISORT) "${SOURCE_DIR}"
+	$(ISORT) "${TESTS_DIR}"
 
 format: format-black format-isort
 

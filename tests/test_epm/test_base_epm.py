@@ -3,23 +3,21 @@ import unittest.mock
 
 import numpy as np
 
-from ConfigSpace import UniformFloatHyperparameter
-
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.util_funcs import get_types
 import smac
 import smac.configspace
+from ConfigSpace import UniformFloatHyperparameter
+from smac.epm.base_epm import AbstractEPM
+from smac.epm.util_funcs import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 class TestRFWithInstances(unittest.TestCase):
-
     def _get_cs(self, n_dimensions):
         configspace = smac.configspace.ConfigurationSpace()
         for i in range(n_dimensions):
-            configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+            configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
         return configspace
 
     def test_apply_pca(self):
@@ -35,8 +33,8 @@ class TestRFWithInstances(unittest.TestCase):
             y = np.random.rand(num_samples)
             return X, y
 
-        with unittest.mock.patch.object(AbstractEPM, '_train'):
-            with unittest.mock.patch.object(AbstractEPM, '_predict') as predict_mock:
+        with unittest.mock.patch.object(AbstractEPM, "_train"):
+            with unittest.mock.patch.object(AbstractEPM, "_predict") as predict_mock:
 
                 predict_mock.side_effect = lambda x, _: (x, x)
 

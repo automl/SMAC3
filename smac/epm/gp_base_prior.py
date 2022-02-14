@@ -29,9 +29,10 @@ class Prior(object):
         Random number generator
 
     """
+
     def __init__(self, rng: np.random.RandomState):
         if rng is None:
-            raise ValueError('Argument rng must not be `None`.')
+            raise ValueError("Argument rng must not be `None`.")
         self.rng = rng
 
     def lnprob(self, theta: float) -> float:
@@ -88,14 +89,14 @@ class Prior(object):
         """
 
         if np.ndim(n_samples) != 0:
-            raise ValueError('argument n_samples needs to be a scalar (is %s)' % n_samples)
+            raise ValueError("argument n_samples needs to be a scalar (is %s)" % n_samples)
         if n_samples <= 0:
-            raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
+            raise ValueError("argument n_samples needs to be positive (is %d)" % n_samples)
 
         sample = np.log(self._sample_from_prior(n_samples=n_samples))
 
         if np.any(~np.isfinite(sample)):
-            raise ValueError('Sample %s from prior %s contains infinite values!' % (sample, self))
+            raise ValueError("Sample %s from prior %s contains infinite values!" % (sample, self))
 
         return sample
 
@@ -152,7 +153,6 @@ class Prior(object):
 
 
 class TophatPrior(Prior):
-
     def __init__(self, lower_bound: float, upper_bound: float, rng: np.random.RandomState):
         """
         Tophat prior as it used in the original spearmint code.
@@ -214,11 +214,11 @@ class TophatPrior(Prior):
         """
 
         if np.ndim(n_samples) != 0:
-            raise ValueError('argument n_samples needs to be a scalar (is %s)' % n_samples)
+            raise ValueError("argument n_samples needs to be a scalar (is %s)" % n_samples)
         if n_samples <= 0:
-            raise ValueError('argument n_samples needs to be positive (is %d)' % n_samples)
+            raise ValueError("argument n_samples needs to be positive (is %d)" % n_samples)
 
-        p0 = np.exp(self.rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples, )))
+        p0 = np.exp(self.rng.uniform(low=self._log_min, high=self._log_max, size=(n_samples,)))
         return p0
 
     def gradient(self, theta: float) -> float:
@@ -240,7 +240,6 @@ class TophatPrior(Prior):
 
 
 class HorseshoePrior(Prior):
-
     def __init__(self, scale: float, rng: np.random.RandomState):
         """
         Horseshoe Prior as it is used in spearmint
@@ -260,7 +259,7 @@ class HorseshoePrior(Prior):
         """
         super().__init__(rng)
         self.scale = scale
-        self.scale_square = scale ** 2
+        self.scale_square = scale**2
 
     def _lnprob(self, theta: float) -> float:
         """
@@ -333,8 +332,12 @@ class HorseshoePrior(Prior):
 
 
 class LognormalPrior(Prior):
-
-    def __init__(self, sigma: float, rng: np.random.RandomState, mean: float = 0, ):
+    def __init__(
+        self,
+        sigma: float,
+        rng: np.random.RandomState,
+        mean: float = 0,
+    ):
         """
         Log normal prior
 
@@ -360,7 +363,7 @@ class LognormalPrior(Prior):
             raise NotImplementedError(mean)
 
         self.sigma = sigma
-        self.sigma_square = sigma ** 2
+        self.sigma_square = sigma**2
         self.mean = mean
         self.sqrt_2_pi = np.sqrt(2 * np.pi)
 
@@ -380,9 +383,8 @@ class LognormalPrior(Prior):
         if theta <= self.mean:
             return -1e25
         else:
-            rval = (
-                -(math.log(
-                    theta) - self.mean) ** 2 / (2 * self.sigma_square) - math.log(self.sqrt_2_pi * self.sigma * theta)
+            rval = -((math.log(theta) - self.mean) ** 2) / (2 * self.sigma_square) - math.log(
+                self.sqrt_2_pi * self.sigma * theta
             )
             return rval
 
@@ -430,26 +432,26 @@ class SoftTopHatPrior(Prior):
         super().__init__(rng)
 
         with warnings.catch_warnings():
-            warnings.simplefilter('error')
+            warnings.simplefilter("error")
             self.lower_bound = lower_bound
             try:
                 self._log_lower_bound = np.log(lower_bound)
             except RuntimeWarning as w:
-                if 'invalid value encountered in log' in w.args[0]:
-                    raise ValueError('Invalid lower bound %f (cannot compute log)' % lower_bound)
+                if "invalid value encountered in log" in w.args[0]:
+                    raise ValueError("Invalid lower bound %f (cannot compute log)" % lower_bound)
                 else:
                     raise w
             self.upper_bound = upper_bound
             try:
                 self._log_upper_bound = np.log(upper_bound)
             except RuntimeWarning as w:
-                if 'invalid value encountered in log' in w.args[0]:
-                    raise ValueError('Invalid lower bound %f (cannot compute log)' % lower_bound)
+                if "invalid value encountered in log" in w.args[0]:
+                    raise ValueError("Invalid lower bound %f (cannot compute log)" % lower_bound)
                 else:
                     raise w
 
         if exponent <= 0:
-            raise ValueError('Exponent cannot be less or equal than zero (but is %f)' % exponent)
+            raise ValueError("Exponent cannot be less or equal than zero (but is %f)" % exponent)
         self.exponent = exponent
 
     def lnprob(self, theta: float) -> float:
@@ -457,9 +459,9 @@ class SoftTopHatPrior(Prior):
         # too.
         if np.ndim(theta) == 0:
             if theta < self._log_lower_bound:
-                return - ((theta - self._log_lower_bound) ** self.exponent)
+                return -((theta - self._log_lower_bound) ** self.exponent)
             elif theta > self._log_upper_bound:
-                return - (self._log_upper_bound - theta) ** self.exponent
+                return -((self._log_upper_bound - theta) ** self.exponent)
             else:
                 return 0
         else:
@@ -479,12 +481,12 @@ class SoftTopHatPrior(Prior):
         np.ndarray
         """
 
-        return np.exp(self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples, )))
+        return np.exp(self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
 
     def gradient(self, theta: float) -> float:
         if np.ndim(theta) == 0:
             if theta < self._log_lower_bound:
-                return - self.exponent * (theta - self._log_lower_bound)
+                return -self.exponent * (theta - self._log_lower_bound)
             elif theta > self._log_upper_bound:
                 return self.exponent * (self._log_upper_bound - theta)
             else:
@@ -493,11 +495,10 @@ class SoftTopHatPrior(Prior):
             raise NotImplementedError()
 
     def __repr__(self) -> str:
-        return 'SoftTopHatPrior(lower_bound=%f, upper_bound=%f)' % (self.lower_bound, self.upper_bound)
+        return "SoftTopHatPrior(lower_bound=%f, upper_bound=%f)" % (self.lower_bound, self.upper_bound)
 
 
 class GammaPrior(Prior):
-
     def __init__(self, a: float, scale: float, loc: float, rng: np.random.RandomState):
         """
         Gamma prior

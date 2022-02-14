@@ -1,17 +1,18 @@
 from abc import ABC, abstractmethod
+from typing import Callable, Dict, List, Optional, Tuple, Union
+
 import math
 import time
 import traceback
-from typing import List, Optional, Union, Dict, Callable, Tuple
 
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.utils.constants import MAXINT
-from smac.utils.logging import PickableLoggerAdapter
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.tae import StatusType
+from smac.utils.constants import MAXINT
+from smac.utils.logging import PickableLoggerAdapter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -80,11 +81,11 @@ class BaseRunner(ABC):
         self,
         ta: Union[List[str], Callable],
         stats: Stats,
-        multi_objectives: List[str] = ['cost'],
+        multi_objectives: List[str] = ["cost"],
         run_obj: str = "runtime",
         par_factor: int = 1,
         cost_for_crash: Union[float, List[float]] = float(MAXINT),
-        abort_on_first_run_crash: bool = True
+        abort_on_first_run_crash: bool = True,
     ):
         # The results is a FIFO structure, implemented via a list
         # (because the Queue lock is not pickable). Finished runs are
@@ -100,8 +101,7 @@ class BaseRunner(ABC):
         self.par_factor = par_factor
         self.cost_for_crash = cost_for_crash
         self.abort_on_first_run_crash = abort_on_first_run_crash
-        self.logger = PickableLoggerAdapter(
-            self.__module__ + '.' + self.__class__.__name__)
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
         self._supports_memory_limit = False
 
         super().__init__()
@@ -132,7 +132,8 @@ class BaseRunner(ABC):
 
     @abstractmethod
     def run(
-        self, config: Configuration,
+        self,
+        config: Configuration,
         instance: str,
         cutoff: Optional[float] = None,
         seed: int = 12345,
@@ -222,7 +223,7 @@ class BaseRunner(ABC):
                 cutoff=cutoff,
                 seed=run_info.seed,
                 budget=run_info.budget,
-                instance_specific=run_info.instance_specific
+                instance_specific=run_info.instance_specific,
             )
         except Exception as e:
             status = StatusType.CRASHED
@@ -232,33 +233,28 @@ class BaseRunner(ABC):
             # Add context information to the error message
             exception_traceback = traceback.format_exc()
             error_message = repr(e)
-            additional_info = {
-                'traceback': exception_traceback,
-                'error': error_message
-            }
+            additional_info = {"traceback": exception_traceback, "error": error_message}
 
         end = time.time()
 
         if run_info.budget == 0 and status == StatusType.DONOTADVANCE:
-            raise ValueError(
-                "Cannot handle DONOTADVANCE state when using intensify or SH/HB on "
-                "instances."
-            )
+            raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on " "instances.")
 
         # Catch NaN or inf.
         if (
-            self.run_obj == 'runtime' and not np.isfinite(runtime)
-            or self.run_obj == 'quality' and not np.all(np.isfinite(cost))
+            self.run_obj == "runtime"
+            and not np.isfinite(runtime)
+            or self.run_obj == "quality"
+            and not np.all(np.isfinite(cost))
         ):
             if self.logger:
-                self.logger.warning("Target Algorithm returned NaN or inf as {}. "
-                                    "Algorithm run is treated as CRASHED, cost "
-                                    "is set to {} for quality scenarios. "
-                                    "(Change value through \"cost_for_crash\""
-                                    "-option.)".format(
-                                        self.run_obj,
-                                        self.cost_for_crash)
-                                    )
+                self.logger.warning(
+                    "Target Algorithm returned NaN or inf as {}. "
+                    "Algorithm run is treated as CRASHED, cost "
+                    "is set to {} for quality scenarios. "
+                    '(Change value through "cost_for_crash"'
+                    "-option.)".format(self.run_obj, self.cost_for_crash)
+                )
             status = StatusType.CRASHED
 
         if self.run_obj == "runtime":
@@ -270,7 +266,8 @@ class BaseRunner(ABC):
                 self.logger.warning(
                     "Returned running time is larger "
                     "than {0} times the passed cutoff time. "
-                    "Clamping to {0} x cutoff.".format(self.par_factor))
+                    "Clamping to {0} x cutoff.".format(self.par_factor)
+                )
                 runtime = cutoff * self.par_factor
                 status = StatusType.TIMEOUT
             if status == StatusType.SUCCESS:
@@ -284,12 +281,7 @@ class BaseRunner(ABC):
                 cost = self.cost_for_crash  # type: ignore
 
         return run_info, RunValue(
-            status=status,
-            cost=cost,
-            time=runtime,
-            additional_info=additional_info,
-            starttime=start,
-            endtime=end
+            status=status, cost=cost, time=runtime, additional_info=additional_info, starttime=start, endtime=end
         )
 
     @abstractmethod

@@ -1,26 +1,29 @@
+import typing
+
+import glob
+import logging
+import os
 import re
 import tempfile
-import os
-import typing
-import logging
-import glob
 
-from smac.runhistory.runhistory import RunHistory
 from smac.configspace import ConfigurationSpace
+from smac.runhistory.runhistory import RunHistory
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-RUNHISTORY_FILEPATTERN = 'runhistory.json'
-RUNHISTORY_RE = r'runhistory\.json$'
-VALIDATEDRUNHISTORY_RE = r'validated_runhistory\.json$'
+RUNHISTORY_FILEPATTERN = "runhistory.json"
+RUNHISTORY_RE = r"runhistory\.json$"
+VALIDATEDRUNHISTORY_RE = r"validated_runhistory\.json$"
 
 
-def read(run_history: RunHistory,
-         output_dirs: typing.Union[str, typing.List[str]],
-         configuration_space: ConfigurationSpace,
-         logger: logging.Logger) -> None:
+def read(
+    run_history: RunHistory,
+    output_dirs: typing.Union[str, typing.List[str]],
+    configuration_space: ConfigurationSpace,
+    logger: logging.Logger,
+) -> None:
     """Update runhistory with run results from concurrent runs of pSMAC.
 
     Parameters
@@ -52,18 +55,16 @@ def read(run_history: RunHistory,
             match = re.match(RUNHISTORY_RE, file_in_output_directory)
             valid_match = re.match(VALIDATEDRUNHISTORY_RE, file_in_output_directory)
             if match or valid_match:
-                runhistory_file = os.path.join(output_directory,
-                                               file_in_output_directory)
-                run_history.update_from_json(runhistory_file,
-                                             configuration_space)
+                runhistory_file = os.path.join(output_directory, file_in_output_directory)
+                run_history.update_from_json(runhistory_file, configuration_space)
 
                 new_numruns_in_runhistory = len(run_history.data)
                 difference = new_numruns_in_runhistory - numruns_in_runhistory
-                logger.debug('Shared model mode: Loaded %d new runs from %s' % (difference, runhistory_file))
+                logger.debug("Shared model mode: Loaded %d new runs from %s" % (difference, runhistory_file))
                 numruns_in_runhistory = new_numruns_in_runhistory
 
     difference = numruns_in_runhistory - initial_numruns_in_runhistory
-    logger.info('Shared model mode: Finished loading new runs, found %d new runs.' % difference)
+    logger.info("Shared model mode: Finished loading new runs, found %d new runs." % difference)
 
 
 def write(run_history: RunHistory, output_directory: str, logger: logging.Logger) -> None:
@@ -85,8 +86,7 @@ def write(run_history: RunHistory, output_directory: str, logger: logging.Logger
 
     logger.debug("Saving runhistory to %s" % output_filename)
 
-    with tempfile.NamedTemporaryFile('wb', dir=output_directory,
-                                     delete=False) as fh:
+    with tempfile.NamedTemporaryFile("wb", dir=output_directory, delete=False) as fh:
         temporary_filename = fh.name
 
     run_history.save_json(temporary_filename, save_external=False)

@@ -1,24 +1,30 @@
-import os
-import sys
-import logging
-import numpy as np
 import typing
 
+import logging
+import os
+import sys
+
+import numpy as np
+
 from smac.configspace import Configuration
-from smac.utils.io.cmd_reader import CMDReader
-from smac.scenario.scenario import Scenario
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
+    Hydra,
+)
+from smac.facade.experimental.psmac_facade import (  # type: ignore[attr-defined] # noqa F821
+    PSMAC,
+)
 from smac.facade.roar_facade import ROAR
-from smac.facade.experimental.hydra_facade import Hydra  # type: ignore[attr-defined] # noqa F821
-from smac.facade.experimental.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa F821
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.merge_foreign_data import merge_foreign_data_from_file
-from smac.utils.io.traj_logging import TrajLogger
-from smac.tae import TAEAbortException, FirstRunCrashedException
+from smac.tae import FirstRunCrashedException, TAEAbortException
+from smac.utils.io.cmd_reader import CMDReader
 from smac.utils.io.output_directory import create_output_directory
+from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -32,8 +38,7 @@ class SMACCLI(object):
     """Main class of SMAC"""
 
     def __init__(self) -> None:
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def main_cli(self, commandline_arguments: typing.Optional[typing.List[str]] = None) -> None:
         """Main function of SMAC for CLI interface"""
@@ -42,19 +47,16 @@ class SMACCLI(object):
         cmd_reader = CMDReader()
         kwargs = {}
         if commandline_arguments:
-            kwargs['commandline_arguments'] = commandline_arguments
+            kwargs["commandline_arguments"] = commandline_arguments
         main_args_, smac_args_, scen_args_ = cmd_reader.read_cmd(**kwargs)
 
         root_logger = logging.getLogger()
         root_logger.setLevel(main_args_.verbose_level)
         logger_handler = logging.StreamHandler(stream=sys.stdout)
         if root_logger.level >= logging.INFO:
-            formatter = logging.Formatter(
-                "%(levelname)s:\t%(message)s")
+            formatter = logging.Formatter("%(levelname)s:\t%(message)s")
         else:
-            formatter = logging.Formatter(
-                "%(asctime)s:%(levelname)s:%(name)s:\t%(message)s",
-                "%Y-%m-%d %H:%M:%S")
+            formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:\t%(message)s", "%Y-%m-%d %H:%M:%S")
         logger_handler.setFormatter(formatter)
         root_logger.addHandler(logger_handler)
         # remove default handler
@@ -80,11 +82,12 @@ class SMACCLI(object):
             rh, stats, traj_list_aclib, traj_list_old = self.restore_state(scen, restore_state)
 
             scen.output_dir_for_this_run = create_output_directory(
-                scen, main_args_.seed, root_logger,
+                scen,
+                main_args_.seed,
+                root_logger,
             )
             scen.write()
-            incumbent = self.restore_state_after_output_dir(scen, stats,
-                                                            traj_list_aclib, traj_list_old)
+            incumbent = self.restore_state_after_output_dir(scen, stats, traj_list_aclib, traj_list_old)
 
         if main_args_.warmstart_runhistory:
             rh = RunHistory()
@@ -114,7 +117,8 @@ class SMACCLI(object):
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=main_args_.seed)
+                run_id=main_args_.seed,
+            )
         elif main_args_.mode == "SMAC4HPO":
             optimizer = SMAC4HPO(
                 scenario=scen,
@@ -123,7 +127,8 @@ class SMACCLI(object):
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=main_args_.seed)
+                run_id=main_args_.seed,
+            )
         elif main_args_.mode == "SMAC4BB":
             optimizer = SMAC4BB(
                 scenario=scen,
@@ -132,14 +137,16 @@ class SMACCLI(object):
                 initial_configurations=initial_configs,
                 stats=stats,
                 restore_incumbent=incumbent,
-                run_id=main_args_.seed)
+                run_id=main_args_.seed,
+            )
         elif main_args_.mode == "ROAR":
             optimizer = ROAR(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,
                 initial_configurations=initial_configs,
-                run_id=main_args_.seed)
+                run_id=main_args_.seed,
+            )
         elif main_args_.mode == "Hydra":
             optimizer = Hydra(
                 scenario=scen,
@@ -153,7 +160,8 @@ class SMACCLI(object):
                 n_iterations=main_args_.hydra_iterations,
                 val_set=main_args_.hydra_validation,
                 incs_per_round=main_args_.hydra_incumbents_per_round,
-                n_optimizers=main_args_.hydra_n_optimizers)
+                n_optimizers=main_args_.hydra_n_optimizers,
+            )
         elif main_args_.mode == "PSMAC":
             optimizer = PSMAC(
                 scenario=scen,
@@ -174,8 +182,7 @@ class SMACCLI(object):
         scen: Scenario,
         restore_state: str,
     ) -> typing.Tuple[RunHistory, Stats, typing.List, typing.List]:
-        """Read in files for state-restoration: runhistory, stats, trajectory.
-        """
+        """Read in files for state-restoration: runhistory, stats, trajectory."""
         # Check for folder and files
         rh_path = os.path.join(restore_state, "runhistory.json")
         stats_path = os.path.join(restore_state, "stats.json")
@@ -191,9 +198,9 @@ class SMACCLI(object):
         stats = Stats(scen)
         stats.load(stats_path)
         self.logger.debug("Restored stats from %s", stats_path)
-        with open(traj_path_aclib, 'r') as traj_fn:
+        with open(traj_path_aclib, "r") as traj_fn:
             traj_list_aclib = traj_fn.readlines()
-        with open(traj_path_old, 'r') as traj_fn:
+        with open(traj_path_old, "r") as traj_fn:
             traj_list_old = traj_fn.readlines()
         return rh, stats, traj_list_aclib, traj_list_old
 
@@ -210,16 +217,15 @@ class SMACCLI(object):
         # write trajectory-list
         traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")  # type: ignore[attr-defined] # noqa F821
         traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")  # type: ignore[attr-defined] # noqa F821
-        with open(traj_path_aclib, 'w') as traj_fn:
+        with open(traj_path_aclib, "w") as traj_fn:
             traj_fn.writelines(traj_list_aclib)
-        with open(traj_path_old, 'w') as traj_fn:
+        with open(traj_path_old, "w") as traj_fn:
             traj_fn.writelines(traj_list_old)
         # read trajectory to retrieve incumbent
         # TODO replace this with simple traj_path_aclib?
         trajectory = TrajLogger.read_traj_aclib_format(fn=traj_path_aclib, cs=scen.cs)  # type: ignore[attr-defined] # noqa F821
         incumbent = trajectory[-1]["incumbent"]
-        self.logger.debug("Restored incumbent %s from %s", incumbent,
-                          traj_path_aclib)
+        self.logger.debug("Restored incumbent %s from %s", incumbent, traj_path_aclib)
         return incumbent
 
 

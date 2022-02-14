@@ -1,7 +1,6 @@
 from typing import List
 
 from ConfigSpace import Configuration
-
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Katharina Eggensperger"
@@ -25,5 +24,5 @@ class RandomConfigurations(InitialDesign):
         if self.init_budget == 1:
             configs = [configs]
         for config in configs:
-            config.origin = 'Random initial design.'
+            config.origin = "Random initial design."
         return configs

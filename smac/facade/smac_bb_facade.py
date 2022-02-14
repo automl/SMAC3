@@ -2,12 +2,12 @@ import typing
 
 import numpy as np
 
-from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.base_gp import BaseModel
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gaussian_process_mcmc import GaussianProcess, GaussianProcessMCMC
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
-from smac.epm.util_funcs import get_types, get_rng
+from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.util_funcs import get_rng, get_types
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
@@ -54,30 +54,30 @@ class SMAC4BB(SMAC4AC):
 
     """
 
-    def __init__(self, model_type: str = 'gp_mcmc', **kwargs: typing.Any):
-        scenario = kwargs['scenario']
+    def __init__(self, model_type: str = "gp_mcmc", **kwargs: typing.Any):
+        scenario = kwargs["scenario"]
 
         if len(scenario.cs.get_hyperparameters()) <= 21201:
-            kwargs['initial_design'] = kwargs.get('initial_design', SobolDesign)
+            kwargs["initial_design"] = kwargs.get("initial_design", SobolDesign)
         else:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
             )
-        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4Cost)
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4Cost)
 
-        init_kwargs = kwargs.get('initial_design_kwargs', dict()) or dict()
-        init_kwargs['n_configs_x_params'] = init_kwargs.get('n_configs_x_params', 8)
-        init_kwargs['max_config_fracs'] = init_kwargs.get('max_config_fracs', 0.25)
-        kwargs['initial_design_kwargs'] = init_kwargs
+        init_kwargs = kwargs.get("initial_design_kwargs", dict()) or dict()
+        init_kwargs["n_configs_x_params"] = init_kwargs.get("n_configs_x_params", 8)
+        init_kwargs["max_config_fracs"] = init_kwargs.get("max_config_fracs", 0.25)
+        kwargs["initial_design_kwargs"] = init_kwargs
 
-        if kwargs.get('model') is None:
+        if kwargs.get("model") is None:
 
-            model_kwargs = kwargs.get('model_kwargs', dict()) or dict()
+            model_kwargs = kwargs.get("model_kwargs", dict()) or dict()
 
             _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
 
-            types, bounds = get_types(kwargs['scenario'].cs, instance_features=None)
+            types, bounds = get_types(kwargs["scenario"].cs, instance_features=None)
 
             cov_amp = ConstantKernel(
                 2.0,
@@ -125,49 +125,55 @@ class SMAC4BB(SMAC4AC):
 
             if model_type == "gp":
                 model_class = GaussianProcess  # type: typing.Type[BaseModel]
-                kwargs['model'] = model_class
-                model_kwargs['kernel'] = kernel
-                model_kwargs['normalize_y'] = True
-                model_kwargs['seed'] = rng.randint(0, 2 ** 20)
+                kwargs["model"] = model_class
+                model_kwargs["kernel"] = kernel
+                model_kwargs["normalize_y"] = True
+                model_kwargs["seed"] = rng.randint(0, 2**20)
             elif model_type == "gp_mcmc":
                 model_class = GaussianProcessMCMC
-                kwargs['model'] = model_class
-                kwargs['integrate_acquisition_function'] = True
+                kwargs["model"] = model_class
+                kwargs["integrate_acquisition_function"] = True
 
-                model_kwargs['kernel'] = kernel
+                model_kwargs["kernel"] = kernel
 
                 n_mcmc_walkers = 3 * len(kernel.theta)
                 if n_mcmc_walkers % 2 == 1:
                     n_mcmc_walkers += 1
-                model_kwargs['n_mcmc_walkers'] = n_mcmc_walkers
-                model_kwargs['chain_length'] = 250
-                model_kwargs['burnin_steps'] = 250
-                model_kwargs['normalize_y'] = True
-                model_kwargs['seed'] = rng.randint(0, 2**20)
+                model_kwargs["n_mcmc_walkers"] = n_mcmc_walkers
+                model_kwargs["chain_length"] = 250
+                model_kwargs["burnin_steps"] = 250
+                model_kwargs["normalize_y"] = True
+                model_kwargs["seed"] = rng.randint(0, 2**20)
             else:
-                raise ValueError('Unknown model type %s' % model_type)
-            kwargs['model_kwargs'] = model_kwargs
+                raise ValueError("Unknown model type %s" % model_type)
+            kwargs["model_kwargs"] = model_kwargs
 
-        if kwargs.get('random_configuration_chooser') is None:
-            random_config_chooser_kwargs = kwargs.get(
-                'random_configuration_chooser_kwargs',
-                dict(),
-            ) or dict()
-            random_config_chooser_kwargs['prob'] = random_config_chooser_kwargs.get('prob', 0.08447232371720552)
-            kwargs['random_configuration_chooser_kwargs'] = random_config_chooser_kwargs
+        if kwargs.get("random_configuration_chooser") is None:
+            random_config_chooser_kwargs = (
+                kwargs.get(
+                    "random_configuration_chooser_kwargs",
+                    dict(),
+                )
+                or dict()
+            )
+            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.08447232371720552)
+            kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
 
-        if kwargs.get('acquisition_function_optimizer') is None:
-            acquisition_function_optimizer_kwargs = kwargs.get(
-                'acquisition_function_optimizer_kwargs',
-                dict(),
-            ) or dict()
-            acquisition_function_optimizer_kwargs['n_sls_iterations'] = 10
-            kwargs['acquisition_function_optimizer_kwargs'] = acquisition_function_optimizer_kwargs
+        if kwargs.get("acquisition_function_optimizer") is None:
+            acquisition_function_optimizer_kwargs = (
+                kwargs.get(
+                    "acquisition_function_optimizer_kwargs",
+                    dict(),
+                )
+                or dict()
+            )
+            acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
+            kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
-        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict()) or dict()
-        intensifier_kwargs['min_chall'] = 1
-        kwargs['intensifier_kwargs'] = intensifier_kwargs
+        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict()) or dict()
+        intensifier_kwargs["min_chall"] = 1
+        kwargs["intensifier_kwargs"] = intensifier_kwargs
         scenario.intensification_percentage = 1e-10
 
         super().__init__(**kwargs)
@@ -177,6 +183,6 @@ class SMAC4BB(SMAC4AC):
 
         self.logger.info(self.__class__)
 
-        self.solver.scenario.acq_opt_challengers = 1000    # type: ignore[attr-defined] # noqa F821
+        self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
         # activate predict incumbent
         self.solver.epm_chooser.predict_x_best = True

@@ -1,7 +1,11 @@
 import typing
-import numpy as np
 from abc import abstractmethod
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+
+import numpy as np
+
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 
 
 class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
@@ -28,10 +32,7 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
 
 
 class ParEGO(AggregationStrategy):
-    def __init__(self,
-                 num_obj: int,
-                 rng: typing.Optional[np.random.RandomState] = None,
-                 rho: float = 0.05):
+    def __init__(self, num_obj: int, rng: typing.Optional[np.random.RandomState] = None, rho: float = 0.05):
         super(ParEGO, self).__init__(num_obj=num_obj, rng=rng)
         self.rho = rho
 

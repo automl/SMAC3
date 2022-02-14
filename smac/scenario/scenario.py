@@ -1,12 +1,13 @@
-import logging
+from typing import Any, Dict, List, Optional, Sequence, Union
+
 import copy
-from typing import List, Optional, Union, Dict, Any, Sequence
+import logging
 
 import numpy as np
 
+from smac.utils.io.cmd_reader import CMDReader
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter
-from smac.utils.io.cmd_reader import CMDReader
 
 __author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -39,17 +40,17 @@ class Scenario(object):
     cmd_options : dict
         Options from parsed command line arguments
     """
+
     use_ta_time = True
     feature_dict = {}  # type: Dict[str, np.ndarray]
-    run_obj = 'None'
+    run_obj = "None"
 
     def __init__(
         self,
         scenario: Union[str, Dict, None] = None,
         cmd_options: Optional[Dict] = None,
     ):
-        self.logger = logging.getLogger(
-            self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.PCA_DIM = 7
 
         self.in_reader = InputReader()
@@ -83,8 +84,7 @@ class Scenario(object):
             scenario.update(vars(smac_args_))
             scenario.update(vars(scen_args_))
         else:
-            raise TypeError(
-                "Wrong type of scenario (str or dict are supported)")
+            raise TypeError("Wrong type of scenario (str or dict are supported)")
 
         for arg_name, arg_value in scenario.items():
             setattr(self, arg_name, arg_value)
@@ -108,8 +108,8 @@ class Scenario(object):
         if self.run_obj == "runtime":
             self.logy = True
         # This pleases mypy by defining the variable above. However, we need to assign some value
-        elif self.run_obj == 'None':
-            raise ValueError('Internal error - this must never happen!')
+        elif self.run_obj == "None":
+            raise ValueError("Internal error - this must never happen!")
 
         def extract_instance_specific(
             instance_list: Sequence[Union[str, List[str]]],
@@ -146,13 +146,12 @@ class Scenario(object):
 
     def __getstate__(self) -> Dict[str, Any]:
         d = dict(self.__dict__)
-        del d['logger']
+        del d["logger"]
         return d
 
     def __setstate__(self, d: Dict[str, Any]) -> None:
         self.__dict__.update(d)
-        self.logger = logging.getLogger(
-            self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def _to_str_and_warn(self, list_: List[Any]) -> List[Any]:
         warn_ = False
@@ -168,5 +167,5 @@ class Scenario(object):
         return list_
 
     def write(self) -> None:
-        """ Write scenario to self.output_dir/scenario.txt. """
+        """Write scenario to self.output_dir/scenario.txt."""
         self.out_writer.write_scenario_file(self)

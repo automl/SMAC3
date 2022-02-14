@@ -1,17 +1,18 @@
-import logging
 import typing
+
+import logging
 import warnings
 
 import numpy as np
 
-from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
 from smac.configspace import Configuration
+from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.intensification.parallel_scheduling import ParallelScheduler
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.stats.stats import Stats
 from smac.tae import StatusType
+from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -20,7 +21,7 @@ __license__ = "3-clause BSD"
 
 
 class _SuccessiveHalving(AbstractRacer):
-    """ Races multiple challengers against an incumbent using Successive Halving method
+    """Races multiple challengers against an incumbent using Successive Halving method
 
     This class contains the logic to implement:
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -112,48 +113,51 @@ class _SuccessiveHalving(AbstractRacer):
         Adds a numerical identifier on this SH instance. Used for debug and tagging
         logger messages properly
     """
-    def __init__(self,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 initial_budget: typing.Optional[float] = None,
-                 max_budget: typing.Optional[float] = None,
-                 eta: float = 3,
-                 _all_budgets: typing.Optional[typing.List[float]] = None,
-                 _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
-                 num_initial_challengers: typing.Optional[int] = None,
-                 run_obj_time: bool = True,
-                 n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
-                 min_chall: int = 1,
-                 incumbent_selection: str = 'highest_executed_budget',
-                 identifier: int = 0,
-                 num_obj: int = 1,
-                 ) -> None:
-        super().__init__(stats=stats,
-                         traj_logger=traj_logger,
-                         rng=rng,
-                         instances=instances,
-                         instance_specifics=instance_specifics,
-                         cutoff=cutoff,
-                         deterministic=deterministic,
-                         run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,
-                         num_obj=num_obj)
+
+    def __init__(
+        self,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        initial_budget: typing.Optional[float] = None,
+        max_budget: typing.Optional[float] = None,
+        eta: float = 3,
+        _all_budgets: typing.Optional[typing.List[float]] = None,
+        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
+        num_initial_challengers: typing.Optional[int] = None,
+        run_obj_time: bool = True,
+        n_seeds: typing.Optional[int] = None,
+        instance_order: typing.Optional[str] = "shuffle_once",
+        adaptive_capping_slackfactor: float = 1.2,
+        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        min_chall: int = 1,
+        incumbent_selection: str = "highest_executed_budget",
+        identifier: int = 0,
+        num_obj: int = 1,
+    ) -> None:
+        super().__init__(
+            stats=stats,
+            traj_logger=traj_logger,
+            rng=rng,
+            instances=instances,
+            instance_specifics=instance_specifics,
+            cutoff=cutoff,
+            deterministic=deterministic,
+            run_obj_time=run_obj_time,
+            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+            min_chall=min_chall,
+            num_obj=num_obj,
+        )
 
         self.identifier = identifier
-        self.logger = logging.getLogger(
-            self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
 
         if self.min_chall > 1:
-            raise ValueError('Successive Halving cannot handle argument `min_chall` > 1.')
+            raise ValueError("Successive Halving cannot handle argument `min_chall` > 1.")
         self.first_run = True
 
         # INSTANCES
@@ -162,7 +166,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         # NOTE Remove after solving how to handle multiple seeds and 1 instance
         if len(self.instances) == 1 and self.n_seeds > 1:
-            raise NotImplementedError('This case (multiple seeds and 1 instance) cannot be handled yet!')
+            raise NotImplementedError("This case (multiple seeds and 1 instance) cannot be handled yet!")
 
         # if instances are coming from Hyperband, skip the instance preprocessing section
         # it is already taken care by Hyperband
@@ -175,40 +179,47 @@ class _SuccessiveHalving(AbstractRacer):
             else:
                 seeds = [int(s) for s in self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)]
                 if self.n_seeds == 1:
-                    self.logger.warning('The target algorithm is specified to be non deterministic, '
-                                        'but number of seeds to evaluate are set to 1. '
-                                        'Consider setting `n_seeds` > 1.')
+                    self.logger.warning(
+                        "The target algorithm is specified to be non deterministic, "
+                        "but number of seeds to evaluate are set to 1. "
+                        "Consider setting `n_seeds` > 1."
+                    )
 
             # storing instances & seeds as tuples
             self.inst_seed_pairs = [(i, s) for s in seeds for i in self.instances]
 
             # determine instance-seed pair order
-            if self.instance_order == 'shuffle_once':
+            if self.instance_order == "shuffle_once":
                 # randomize once
                 self.rs.shuffle(self.inst_seed_pairs)
         else:
             self.inst_seed_pairs = inst_seed_pairs
 
         # successive halving parameters
-        self._init_sh_params(initial_budget=initial_budget, max_budget=max_budget, eta=eta,
-                             num_initial_challengers=num_initial_challengers,
-                             _all_budgets=_all_budgets, _n_configs_in_stage=_n_configs_in_stage)
+        self._init_sh_params(
+            initial_budget=initial_budget,
+            max_budget=max_budget,
+            eta=eta,
+            num_initial_challengers=num_initial_challengers,
+            _all_budgets=_all_budgets,
+            _n_configs_in_stage=_n_configs_in_stage,
+        )
 
         # adaptive capping
-        if self.instance_as_budget and self.instance_order != 'shuffle' and self.run_obj_time:
+        if self.instance_as_budget and self.instance_order != "shuffle" and self.run_obj_time:
             self.adaptive_capping = True
         else:
             self.adaptive_capping = False
 
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         # (this does not include having multiple instances)
-        if self.n_seeds > 1 or self.instance_order == 'shuffle':
+        if self.n_seeds > 1 or self.instance_order == "shuffle":
             self.repeat_configs = True
         else:
             self.repeat_configs = False
 
         # incumbent selection design
-        assert incumbent_selection in ['highest_executed_budget', 'highest_budget', 'any_budget']
+        assert incumbent_selection in ["highest_executed_budget", "highest_budget", "any_budget"]
         self.incumbent_selection = incumbent_selection
 
         # Define state variables to please mypy
@@ -237,15 +248,16 @@ class _SuccessiveHalving(AbstractRacer):
         # the ones launched by the current succesive halver using self.run_tracker
         self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
 
-    def _init_sh_params(self,
-                        initial_budget: typing.Optional[float],
-                        max_budget: typing.Optional[float],
-                        eta: float,
-                        num_initial_challengers: typing.Optional[int] = None,
-                        _all_budgets: typing.Optional[typing.List[float]] = None,
-                        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
-                        ) -> None:
-        """ Initialize Successive Halving parameters
+    def _init_sh_params(
+        self,
+        initial_budget: typing.Optional[float],
+        max_budget: typing.Optional[float],
+        eta: float,
+        num_initial_challengers: typing.Optional[int] = None,
+        _all_budgets: typing.Optional[typing.List[float]] = None,
+        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
+    ) -> None:
+        """Initialize Successive Halving parameters
 
         Parameters
         ----------
@@ -264,22 +276,23 @@ class _SuccessiveHalving(AbstractRacer):
         """
 
         if eta <= 1:
-            raise ValueError('eta must be greater than 1')
+            raise ValueError("eta must be greater than 1")
         self.eta = eta
 
         # BUDGETS
 
-        if max_budget is not None and initial_budget is not None \
-                and max_budget < initial_budget:
-            raise ValueError('Max budget has to be larger than min budget')
+        if max_budget is not None and initial_budget is not None and max_budget < initial_budget:
+            raise ValueError("Max budget has to be larger than min budget")
 
         # - if only 1 instance was provided & quality objective, then use cutoff as budget
         # - else, use instances as budget
         if not self.run_obj_time and len(self.inst_seed_pairs) <= 1:
             # budget with cutoff
             if initial_budget is None or max_budget is None:
-                raise ValueError("Successive Halving with real-valued budget (i.e., only 1 instance) "
-                                 "requires parameters initial_budget and max_budget for intensification!")
+                raise ValueError(
+                    "Successive Halving with real-valued budget (i.e., only 1 instance) "
+                    "requires parameters initial_budget and max_budget for intensification!"
+                )
 
             self.initial_budget = initial_budget
             self.max_budget = max_budget
@@ -294,22 +307,26 @@ class _SuccessiveHalving(AbstractRacer):
             self.instance_as_budget = True
 
             if self.max_budget > len(self.inst_seed_pairs):
-                raise ValueError('Max budget cannot be greater than the number of instance-seed pairs')
+                raise ValueError("Max budget cannot be greater than the number of instance-seed pairs")
             if self.max_budget < len(self.inst_seed_pairs):
-                self.logger.warning('Max budget (%d) does not include all instance-seed pairs (%d)' %
-                                    (self.max_budget, len(self.inst_seed_pairs)))
+                self.logger.warning(
+                    "Max budget (%d) does not include all instance-seed pairs (%d)"
+                    % (self.max_budget, len(self.inst_seed_pairs))
+                )
 
-        budget_type = 'INSTANCES' if self.instance_as_budget else 'REAL-VALUED'
-        self.logger.info("Successive Halving configuration: budget type = %s, "
-                         "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f" %
-                         (budget_type, self.initial_budget, self.max_budget, self.eta))
+        budget_type = "INSTANCES" if self.instance_as_budget else "REAL-VALUED"
+        self.logger.info(
+            "Successive Halving configuration: budget type = %s, "
+            "Initial budget = %.2f, Max. budget = %.2f, eta = %.2f"
+            % (budget_type, self.initial_budget, self.max_budget, self.eta)
+        )
 
         # precomputing stuff for SH
         # max. no. of SH iterations possible given the budgets
         max_sh_iter = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
         # initial number of challengers to sample
         if num_initial_challengers is None:
-            num_initial_challengers = int(self.eta ** max_sh_iter)
+            num_initial_challengers = int(self.eta**max_sh_iter)
 
         if _all_budgets is not None and _n_configs_in_stage is not None:
             # Assert we use the given numbers to avoid rounding issues, see #701
@@ -317,22 +334,22 @@ class _SuccessiveHalving(AbstractRacer):
             self.n_configs_in_stage = _n_configs_in_stage
         else:
             # budgets to consider in each stage
-            self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0,
-                                                                                 max_sh_iter + 1))
+            self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0, max_sh_iter + 1))
             # number of challengers to consider in each stage
-            n_configs_in_stage = num_initial_challengers * \
-                np.power(self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1))
+            n_configs_in_stage = num_initial_challengers * np.power(
+                self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1)
+            )
             self.n_configs_in_stage = np.array(np.round(n_configs_in_stage), dtype=int).tolist()
 
-    def process_results(self,
-                        run_info: RunInfo,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float,
-                        result: RunValue,
-                        log_traj: bool = True,
-                        ) -> \
-            typing.Tuple[Configuration, float]:
+    def process_results(
+        self,
+        run_info: RunInfo,
+        incumbent: typing.Optional[Configuration],
+        run_history: RunHistory,
+        time_bound: float,
+        result: RunValue,
+        log_traj: bool = True,
+    ) -> typing.Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.
@@ -368,9 +385,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         # If The incumbent is None and it is the first run, we use the challenger
         if not incumbent and self.first_run:
-            self.logger.info(
-                "First run, no incumbent provided; challenger is assumed to be the incumbent"
-            )
+            self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = run_info.config
             self.first_run = False
 
@@ -438,15 +453,21 @@ class _SuccessiveHalving(AbstractRacer):
 
         # get incumbent if all instances have been evaluated
         if is_stage_done or update_incumbent:
-            incumbent = self._compare_configs(challenger=run_info.config,
-                                              incumbent=incumbent,
-                                              run_history=run_history,
-                                              log_traj=log_traj)
+            incumbent = self._compare_configs(
+                challenger=run_info.config, incumbent=incumbent, run_history=run_history, log_traj=log_traj
+            )
         if is_stage_done:
-            self.logger.info('Successive Halving iteration-step: %d-%d with '
-                             'budget [%.2f / %d] - evaluated %d challenger(s)' %
-                             (self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage], self.max_budget,
-                              self.n_configs_in_stage[self.stage]))
+            self.logger.info(
+                "Successive Halving iteration-step: %d-%d with "
+                "budget [%.2f / %d] - evaluated %d challenger(s)"
+                % (
+                    self.sh_iters + 1,
+                    self.stage + 1,
+                    self.all_budgets[self.stage],
+                    self.max_budget,
+                    self.n_configs_in_stage[self.stage],
+                )
+            )
 
             self._update_stage(run_history=run_history)
 
@@ -455,14 +476,15 @@ class _SuccessiveHalving(AbstractRacer):
 
         return incumbent, inc_perf
 
-    def get_next_run(self,
-                     challengers: typing.Optional[typing.List[Configuration]],
-                     incumbent: Configuration,
-                     chooser: typing.Optional[EPMChooser],
-                     run_history: RunHistory,
-                     repeat_configs: bool = True,
-                     num_workers: int = 1,
-                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    def get_next_run(
+        self,
+        challengers: typing.Optional[typing.List[Configuration]],
+        incumbent: Configuration,
+        chooser: typing.Optional[EPMChooser],
+        run_history: RunHistory,
+        repeat_configs: bool = True,
+        num_workers: int = 1,
+    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -491,14 +513,15 @@ class _SuccessiveHalving(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
-         """
+        """
         if num_workers > 1:
-            warnings.warn("Consider using ParallelSuccesiveHalving instead of "
-                          "SuccesiveHalving. The later will halt on each stage "
-                          "transition until all configs for the current stage are completed."
-                          )
+            warnings.warn(
+                "Consider using ParallelSuccesiveHalving instead of "
+                "SuccesiveHalving. The later will halt on each stage "
+                "transition until all configs for the current stage are completed."
+            )
         # if this is the first run, then initialize tracking variables
-        if not hasattr(self, 'stage'):
+        if not hasattr(self, "stage"):
             self._update_stage(run_history=run_history)
 
         # In the case of multiprocessing, we have runs in Running stage, which have not
@@ -526,7 +549,7 @@ class _SuccessiveHalving(AbstractRacer):
         # if all instances have been executed, then reset and move on to next config
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            n_insts = (int(curr_budget) - prev_budget)
+            n_insts = int(curr_budget) - prev_budget
         else:
             n_insts = len(self.inst_seed_pairs)
 
@@ -544,10 +567,9 @@ class _SuccessiveHalving(AbstractRacer):
             # select next configuration
             if self.stage == 0:
                 # first stage, so sample from configurations/chooser provided
-                challenger = self._next_challenger(challengers=challengers,
-                                                   chooser=chooser,
-                                                   run_history=run_history,
-                                                   repeat_configs=repeat_configs)
+                challenger = self._next_challenger(
+                    challengers=challengers, chooser=chooser, run_history=run_history, repeat_configs=repeat_configs
+                )
                 if challenger is None:
                     # If no challenger was sampled from the EPM or
                     # initial challengers, it might mean that the EPM
@@ -612,7 +634,7 @@ class _SuccessiveHalving(AbstractRacer):
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
+            curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
 
@@ -624,15 +646,13 @@ class _SuccessiveHalving(AbstractRacer):
         # selecting cutoff if running adaptive capping
         cutoff = self.cutoff
         if self.run_obj_time:
-            cutoff = self._adapt_cutoff(challenger=challenger,
-                                        run_history=run_history,
-                                        inc_sum_cost=inc_sum_cost)
+            cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=inc_sum_cost)
             if cutoff is not None and cutoff <= 0:
                 # ran out of time to validate challenger
                 self.logger.debug("Stop challenger intensification due to adaptive capping.")
                 self.curr_inst_idx[challenger] = np.inf
 
-        self.logger.debug('Cutoff for challenger: %s' % str(cutoff))
+        self.logger.debug("Cutoff for challenger: %s" % str(cutoff))
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
@@ -675,7 +695,7 @@ class _SuccessiveHalving(AbstractRacer):
             stores all runs we ran so far
         """
 
-        if not hasattr(self, 'stage'):
+        if not hasattr(self, "stage"):
             # initialize all relevant variables for first run
             # (this initialization is not a part of init because hyperband uses the same init method and has a )
             # to track iteration and stage
@@ -704,12 +724,9 @@ class _SuccessiveHalving(AbstractRacer):
                 # determine 'k' for the next iteration - at least 1
                 next_n_chal = int(max(1, self.n_configs_in_stage[self.stage]))
                 # selecting the top 'k' challengers for the next iteration
-                configs_to_run = self._top_k(configs=valid_challengers,
-                                             run_history=run_history,
-                                             k=next_n_chal)
+                configs_to_run = self._top_k(configs=valid_challengers, run_history=run_history, k=next_n_chal)
                 self.configs_to_run = [
-                    config for config in configs_to_run
-                    if config not in self.do_not_advance_challengers
+                    config for config in configs_to_run if config not in self.do_not_advance_challengers
                 ]
                 # if some runs were capped, top_k returns less than the required configurations
                 # to handle that, we keep track of how many configurations are missing
@@ -721,11 +738,16 @@ class _SuccessiveHalving(AbstractRacer):
                     self.fail_chal_offset = 0
                 if next_n_chal == missing_challengers:
                     next_stage = True
-                    self.logger.info('Successive Halving iteration-step: %d-%d with '
-                                     'budget [%.2f / %d] - expected %d new challenger(s), but '
-                                     'no configurations propagated to the next budget.',
-                                     self.sh_iters + 1, self.stage + 1, self.all_budgets[self.stage],
-                                     self.max_budget, self.n_configs_in_stage[self.stage])
+                    self.logger.info(
+                        "Successive Halving iteration-step: %d-%d with "
+                        "budget [%.2f / %d] - expected %d new challenger(s), but "
+                        "no configurations propagated to the next budget.",
+                        self.sh_iters + 1,
+                        self.stage + 1,
+                        self.all_budgets[self.stage],
+                        self.max_budget,
+                        self.n_configs_in_stage[self.stage],
+                    )
                 else:
                     next_stage = False
             else:
@@ -748,7 +770,7 @@ class _SuccessiveHalving(AbstractRacer):
                 self.fail_chal_offset = 0
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
-                if self.instance_order == 'shuffle':
+                if self.instance_order == "shuffle":
                     self.rs.shuffle(self.inst_seed_pairs)
 
         # to track configurations for the next stage
@@ -758,11 +780,9 @@ class _SuccessiveHalving(AbstractRacer):
         self.curr_inst_idx = {}
         self.running_challenger = None
 
-    def _compare_configs(self,
-                         incumbent: Configuration,
-                         challenger: Configuration,
-                         run_history: RunHistory,
-                         log_traj: bool = True) -> typing.Optional[Configuration]:
+    def _compare_configs(
+        self, incumbent: Configuration, challenger: Configuration, run_history: RunHistory, log_traj: bool = True
+    ) -> typing.Optional[Configuration]:
         """
         Compares the challenger with current incumbent and returns the best configuration,
         based on the given incumbent selection design.
@@ -794,11 +814,10 @@ class _SuccessiveHalving(AbstractRacer):
         curr_budget = self.all_budgets[self.stage]
 
         # incumbent selection: best on any budget
-        if self.incumbent_selection == 'any_budget':
-            new_incumbent = self._compare_configs_across_budgets(challenger=challenger,
-                                                                 incumbent=incumbent,
-                                                                 run_history=run_history,
-                                                                 log_traj=log_traj)
+        if self.incumbent_selection == "any_budget":
+            new_incumbent = self._compare_configs_across_budgets(
+                challenger=challenger, incumbent=incumbent, run_history=run_history, log_traj=log_traj
+            )
             return new_incumbent
 
         # get runs for both configurations
@@ -806,69 +825,95 @@ class _SuccessiveHalving(AbstractRacer):
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
 
         if len(inc_runs) > 1:
-            raise ValueError('Number of incumbent runs on budget %f must not exceed 1, but is %d',
-                             inc_runs[0].budget, len(inc_runs))
+            raise ValueError(
+                "Number of incumbent runs on budget %f must not exceed 1, but is %d", inc_runs[0].budget, len(inc_runs)
+            )
         if len(chall_runs) > 1:
-            raise ValueError('Number of challenger runs on budget %f must not exceed 1, but is %d',
-                             chall_runs[0].budget, len(chall_runs))
+            raise ValueError(
+                "Number of challenger runs on budget %f must not exceed 1, but is %d",
+                chall_runs[0].budget,
+                len(chall_runs),
+            )
         inc_run = inc_runs[0]
         chall_run = chall_runs[0]
 
         # incumbent selection: highest budget only
-        if self.incumbent_selection == 'highest_budget':
+        if self.incumbent_selection == "highest_budget":
             if chall_run.budget < self.max_budget:
-                self.logger.debug('Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.',
-                                  chall_run.budget, self.max_budget)
+                self.logger.debug(
+                    "Challenger (budget=%.4f) has not been evaluated on the highest budget %.4f yet.",
+                    chall_run.budget,
+                    self.max_budget,
+                )
                 return incumbent
 
         # incumbent selection: highest budget run so far
         if inc_run.budget > chall_run.budget:
-            self.logger.debug('Incumbent evaluated on higher budget than challenger (%.4f > %.4f), '
-                              'not changing the incumbent',
-                              inc_run.budget, chall_run.budget)
+            self.logger.debug(
+                "Incumbent evaluated on higher budget than challenger (%.4f > %.4f), " "not changing the incumbent",
+                inc_run.budget,
+                chall_run.budget,
+            )
             return incumbent
         if inc_run.budget < chall_run.budget:
-            self.logger.debug('Challenger evaluated on higher budget than incumbent (%.4f > %.4f), '
-                              'changing the incumbent',
-                              chall_run.budget, inc_run.budget)
+            self.logger.debug(
+                "Challenger evaluated on higher budget than incumbent (%.4f > %.4f), " "changing the incumbent",
+                chall_run.budget,
+                inc_run.budget,
+            )
             if log_traj:
                 # adding incumbent entry
                 self.stats.inc_changed += 1
                 new_inc_cost = run_history.get_cost(challenger)
-                self.traj_logger.add_entry(train_perf=new_inc_cost, incumbent_id=self.stats.inc_changed,
-                                           incumbent=challenger, budget=curr_budget)
+                self.traj_logger.add_entry(
+                    train_perf=new_inc_cost,
+                    incumbent_id=self.stats.inc_changed,
+                    incumbent=challenger,
+                    budget=curr_budget,
+                )
             return challenger
 
         # incumbent and challenger were both evaluated on the same budget, compare them based on their cost
         chall_cost = run_history.get_cost(challenger)
         inc_cost = run_history.get_cost(incumbent)
         if chall_cost < inc_cost:
-            self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
-                             chall_cost, inc_cost, chall_run.budget)
+            self.logger.info(
+                "Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
+                chall_cost,
+                inc_cost,
+                chall_run.budget,
+            )
             self._log_incumbent_changes(incumbent, challenger)
             new_incumbent = challenger
             if log_traj:
                 # adding incumbent entry
                 self.stats.inc_changed += 1  # first incumbent
-                self.traj_logger.add_entry(train_perf=chall_cost, incumbent_id=self.stats.inc_changed,
-                                           incumbent=new_incumbent, budget=curr_budget)
+                self.traj_logger.add_entry(
+                    train_perf=chall_cost,
+                    incumbent_id=self.stats.inc_changed,
+                    incumbent=new_incumbent,
+                    budget=curr_budget,
+                )
         else:
-            self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
-                              inc_cost, chall_cost, inc_run.budget)
+            self.logger.debug(
+                "Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
+                inc_cost,
+                chall_cost,
+                inc_run.budget,
+            )
             if log_traj and self.stats.inc_changed == 0:
                 # adding incumbent entry
                 self.stats.inc_changed += 1  # first incumbent
-                self.traj_logger.add_entry(train_perf=inc_cost, incumbent_id=self.stats.inc_changed,
-                                           incumbent=incumbent, budget=curr_budget)
+                self.traj_logger.add_entry(
+                    train_perf=inc_cost, incumbent_id=self.stats.inc_changed, incumbent=incumbent, budget=curr_budget
+                )
             new_incumbent = incumbent
 
         return new_incumbent
 
-    def _compare_configs_across_budgets(self,
-                                        challenger: Configuration,
-                                        incumbent: Configuration,
-                                        run_history: RunHistory,
-                                        log_traj: bool = True) -> typing.Optional[Configuration]:
+    def _compare_configs_across_budgets(
+        self, challenger: Configuration, incumbent: Configuration, run_history: RunHistory, log_traj: bool = True
+    ) -> typing.Optional[Configuration]:
         """
         compares challenger with current incumbent on any budget
 
@@ -895,34 +940,45 @@ class _SuccessiveHalving(AbstractRacer):
         inc_cost = run_history.get_min_cost(incumbent)
         if np.isfinite(chall_cost) and np.isfinite(inc_cost):
             if chall_cost < inc_cost:
-                self.logger.info("Challenger (%.4f) is better than incumbent (%.4f) for any budget.",
-                                 chall_cost, inc_cost)
+                self.logger.info(
+                    "Challenger (%.4f) is better than incumbent (%.4f) for any budget.", chall_cost, inc_cost
+                )
                 self._log_incumbent_changes(incumbent, challenger)
                 new_incumbent = challenger
                 if log_traj:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(train_perf=chall_cost, incumbent_id=self.stats.inc_changed,
-                                               incumbent=new_incumbent, budget=curr_budget)
+                    self.traj_logger.add_entry(
+                        train_perf=chall_cost,
+                        incumbent_id=self.stats.inc_changed,
+                        incumbent=new_incumbent,
+                        budget=curr_budget,
+                    )
             else:
-                self.logger.debug("Incumbent (%.4f) is at least as good as the challenger (%.4f) for any budget.",
-                                  inc_cost, chall_cost)
+                self.logger.debug(
+                    "Incumbent (%.4f) is at least as good as the challenger (%.4f) for any budget.",
+                    inc_cost,
+                    chall_cost,
+                )
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(train_perf=inc_cost, incumbent_id=self.stats.inc_changed,
-                                               incumbent=incumbent, budget=curr_budget)
+                    self.traj_logger.add_entry(
+                        train_perf=inc_cost,
+                        incumbent_id=self.stats.inc_changed,
+                        incumbent=incumbent,
+                        budget=curr_budget,
+                    )
                 new_incumbent = incumbent
         else:
-            self.logger.debug('Non-finite costs from run history!')
+            self.logger.debug("Non-finite costs from run history!")
             new_incumbent = incumbent
 
         return new_incumbent
 
-    def _top_k(self,
-               configs: typing.List[Configuration],
-               run_history: RunHistory,
-               k: int) -> typing.List[Configuration]:
+    def _top_k(
+        self, configs: typing.List[Configuration], run_history: RunHistory, k: int
+    ) -> typing.List[Configuration]:
         """
         Selects the top 'k' configurations from the given list based on their performance.
 
@@ -956,7 +1012,7 @@ class _SuccessiveHalving(AbstractRacer):
             # list which wrongly trigger the below if
             if set(cur_run_key) != set(run_key):
                 raise ValueError(
-                    'Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s'
+                    "Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s"
                     % (run_key, cur_run_key)
                 )
             config_costs[c] = run_history.get_cost(c)
@@ -967,7 +1023,8 @@ class _SuccessiveHalving(AbstractRacer):
         return top_configs
 
     def _all_config_inst_seed_pairs_launched(
-        self, run_history: RunHistory,
+        self,
+        run_history: RunHistory,
         activate_configuration_being_intensified: typing.Optional[Configuration],
     ) -> bool:
         """
@@ -1005,13 +1062,21 @@ class _SuccessiveHalving(AbstractRacer):
         # (success + failed + do not advance) + the offset + running but not finished
         # configurations. Also we account for the instances not launched for the
         # currently running configuration
-        total_pending_configurations = max(0, self.n_configs_in_stage[self.stage] - (
-            len(set().union(
-                self.success_challengers,
-                self.fail_challengers,
-                self.do_not_advance_challengers,
-                running_configs
-            )) + self.fail_chal_offset))
+        total_pending_configurations = max(
+            0,
+            self.n_configs_in_stage[self.stage]
+            - (
+                len(
+                    set().union(
+                        self.success_challengers,
+                        self.fail_challengers,
+                        self.do_not_advance_challengers,
+                        running_configs,
+                    )
+                )
+                + self.fail_chal_offset
+            ),
+        )
 
         # 2: Second we have to account for the number of pending instances for the active
         # configuration. We assume for all (M - 1) configurations, all N instances-seeds
@@ -1019,7 +1084,7 @@ class _SuccessiveHalving(AbstractRacer):
         curr_budget = self.all_budgets[self.stage]
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
-            curr_insts = self.inst_seed_pairs[int(prev_budget):int(curr_budget)]
+            curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]
         else:
             curr_insts = self.inst_seed_pairs
 
@@ -1034,7 +1099,8 @@ class _SuccessiveHalving(AbstractRacer):
             # configurations that we have proposed to run in total for the running
             # configuration via get_next_run
             pending_instances_to_launch = max(
-                len(curr_insts) - self.curr_inst_idx[activate_configuration_being_intensified], 0)
+                len(curr_insts) - self.curr_inst_idx[activate_configuration_being_intensified], 0
+            )
 
         # If the there are any pending configuration, or instances/seed pending for the
         # active runner, we return a boolean
@@ -1042,7 +1108,7 @@ class _SuccessiveHalving(AbstractRacer):
 
 
 class SuccessiveHalving(ParallelScheduler):
-    """ Races multiple challengers against an incumbent using Successive Halving method
+    """Races multiple challengers against an incumbent using Successive Halving method
 
     Implementation following the description in
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -1121,40 +1187,42 @@ class SuccessiveHalving(ParallelScheduler):
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
 
-    def __init__(self,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 initial_budget: typing.Optional[float] = None,
-                 max_budget: typing.Optional[float] = None,
-                 eta: float = 3,
-                 num_initial_challengers: typing.Optional[int] = None,
-                 run_obj_time: bool = True,
-                 n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
-                 min_chall: int = 1,
-                 incumbent_selection: str = 'highest_executed_budget',
-                 ) -> None:
+    def __init__(
+        self,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        initial_budget: typing.Optional[float] = None,
+        max_budget: typing.Optional[float] = None,
+        eta: float = 3,
+        num_initial_challengers: typing.Optional[int] = None,
+        run_obj_time: bool = True,
+        n_seeds: typing.Optional[int] = None,
+        instance_order: typing.Optional[str] = "shuffle_once",
+        adaptive_capping_slackfactor: float = 1.2,
+        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        min_chall: int = 1,
+        incumbent_selection: str = "highest_executed_budget",
+    ) -> None:
 
-        super().__init__(stats=stats,
-                         traj_logger=traj_logger,
-                         rng=rng,
-                         instances=instances,
-                         instance_specifics=instance_specifics,
-                         cutoff=cutoff,
-                         deterministic=deterministic,
-                         run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall)
+        super().__init__(
+            stats=stats,
+            traj_logger=traj_logger,
+            rng=rng,
+            instances=instances,
+            instance_specifics=instance_specifics,
+            cutoff=cutoff,
+            deterministic=deterministic,
+            run_obj_time=run_obj_time,
+            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+            min_chall=min_chall,
+        )
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # Successive Halving Hyperparameters
         self.n_seeds = n_seeds
@@ -1168,8 +1236,7 @@ class SuccessiveHalving(ParallelScheduler):
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer
-                                 ) -> typing.Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
         """
         Given a intensifier, returns how advance it is.
         This metric will be used to determine what priority to
@@ -1199,7 +1266,7 @@ class SuccessiveHalving(ParallelScheduler):
         # in case of stage ties among successive halvers. sh.run_tracker is
         # also emptied each iteration
         stage = 0
-        if hasattr(intensifier, 'stage'):
+        if hasattr(intensifier, "stage"):
             # Newly created _SuccessiveHalving objects have no stage
             stage = intensifier.stage
         return stage, len(intensifier.run_tracker)

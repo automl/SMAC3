@@ -16,8 +16,11 @@ import matplotlib.pyplot as plt
 import time
 
 from ConfigSpace.conditions import InCondition
-from ConfigSpace.hyperparameters import \
-    CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+)
 from sklearn import svm, datasets
 from sklearn.model_selection import cross_val_score
 
@@ -73,8 +76,8 @@ def plot_pareto_from_runhistory(observations):
     x_front, y_front = front[:, 0], front[:, 1]
 
     plt.scatter(obs1, obs2)
-    plt.step(x_front, y_front, where='post', linestyle=':')
-    plt.title('Pareto-Front')
+    plt.step(x_front, y_front, where="post", linestyle=":")
+    plt.title("Pareto-Front")
 
     plt.xlabel("Cost")
     plt.ylabel("Time")
@@ -118,18 +121,16 @@ def svm_from_cfg(cfg):
     # Return a dictionary with all of the objectives.
     # Alternatively you can return a list in the same order
     # as `multi_objectives`.
-    return {'cost': cost_value, 'time': t1 - t0}
+    return {"cost": cost_value, "time": t1 - t0}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Build Configuration Space which defines all parameters and their ranges
     cs = ConfigurationSpace()
 
     # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
     kernel = CategoricalHyperparameter(
-        name="kernel",
-        choices=["linear", "rbf", "poly", "sigmoid"],
-        default_value="poly"
+        name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="poly"
     )
     cs.add_hyperparameter(kernel)
 
@@ -139,10 +140,8 @@ if __name__ == '__main__':
     cs.add_hyperparameters([C, shrinking])
 
     # Others are kernel-specific, so we can add conditions to limit the searchspace
-    degree = UniformIntegerHyperparameter(
-        "degree", 1, 5, default_value=3)  # Only used by kernel poly
-    coef0 = UniformFloatHyperparameter(
-        "coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
+    degree = UniformIntegerHyperparameter("degree", 1, 5, default_value=3)  # Only used by kernel poly
+    coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
     cs.add_hyperparameters([degree, coef0])
 
     use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
@@ -152,8 +151,7 @@ if __name__ == '__main__':
     # This also works for parameters that are a mix of categorical and values
     # from a range of numbers
     # For example, gamma can be either "auto" or a fixed float
-    gamma = CategoricalHyperparameter(
-        "gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
+    gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
     gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
     cs.add_hyperparameters([gamma, gamma_value])
     # We only activate gamma_value if gamma is set to "value"
@@ -162,30 +160,34 @@ if __name__ == '__main__':
     cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
 
     # Scenario object
-    scenario = Scenario({
-        "run_obj": "quality",  # we optimize quality (alternatively runtime)
-        "runcount-limit": 50,  # max. number of function evaluations
-        "cs": cs,  # configuration space
-        "deterministic": True,
-        "multi_objectives": ["cost", "time"],
-        # You can define individual crash costs for each objective
-        "cost_for_crash": [1, float(MAXINT)]
-    })
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternatively runtime)
+            "runcount-limit": 50,  # max. number of function evaluations
+            "cs": cs,  # configuration space
+            "deterministic": True,
+            "multi_objectives": ["cost", "time"],
+            # You can define individual crash costs for each objective
+            "cost_for_crash": [1, float(MAXINT)],
+        }
+    )
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
-    print("Default config\'s cost: {cost:2f}, training time: {time:2f} seconds".format(**def_value))
+    print("Default config's cost: {cost:2f}, training time: {time:2f} seconds".format(**def_value))
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     # Pass the multi objective algorithm and its hyperparameters
-    smac = SMAC4HPO(scenario=scenario,
-                    rng=np.random.RandomState(42),
-                    tae_runner=svm_from_cfg,
-                    multi_objective_kwargs={
-                        'rho': 0.05,
-                    })
+    smac = SMAC4HPO(
+        scenario=scenario,
+        rng=np.random.RandomState(42),
+        tae_runner=svm_from_cfg,
+        multi_objective_kwargs={
+            "rho": 0.05,
+        },
+    )
 
     incumbent = smac.optimize()
 

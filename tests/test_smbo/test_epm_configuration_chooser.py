@@ -3,14 +3,14 @@ import unittest
 from unittest import mock
 
 import numpy as np
-from ConfigSpace import Configuration
 
+from ConfigSpace import Configuration
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.utils import test_helpers
 from smac.tae import StatusType
+from smac.utils import test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -25,11 +25,10 @@ class ConfigurationMock(object):
 
 
 class TestEPMChooser(unittest.TestCase):
-
     def setUp(self):
-        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
-                                  'run_obj': 'quality',
-                                  'output_dir': 'data-test_epmchooser'})
+        self.scenario = Scenario(
+            {"cs": test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
+        )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
 
@@ -39,7 +38,7 @@ class TestEPMChooser(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
 
     def branin(self, x):
-        y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
+        y = (x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
         return y[:, np.newaxis]
@@ -59,8 +58,16 @@ class TestEPMChooser(unittest.TestCase):
         seed = 42
         config = self.scenario.cs.sample_configuration()
         rh = RunHistory()
-        rh.add(config=config, cost=10, time=10, instance_id=None,
-               seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
+        rh.add(
+            config=config,
+            cost=10,
+            time=10,
+            instance_id=None,
+            seed=1,
+            budget=1,
+            additional_info=None,
+            status=StatusType.SUCCESS,
+        )
 
         smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
         smbo.epm_chooser.min_samples_model = 2
@@ -74,14 +81,46 @@ class TestEPMChooser(unittest.TestCase):
         seed = 42
         config = self.scenario.cs.sample_configuration
         rh = RunHistory()
-        rh.add(config=config(), cost=1, time=10, instance_id=None,
-               seed=1, budget=1, additional_info=None, status=StatusType.SUCCESS)
-        rh.add(config=config(), cost=2, time=10, instance_id=None,
-               seed=1, budget=2, additional_info=None, status=StatusType.SUCCESS)
-        rh.add(config=config(), cost=3, time=10, instance_id=None,
-               seed=1, budget=2, additional_info=None, status=StatusType.SUCCESS)
-        rh.add(config=config(), cost=4, time=10, instance_id=None,
-               seed=1, budget=3, additional_info=None, status=StatusType.SUCCESS)
+        rh.add(
+            config=config(),
+            cost=1,
+            time=10,
+            instance_id=None,
+            seed=1,
+            budget=1,
+            additional_info=None,
+            status=StatusType.SUCCESS,
+        )
+        rh.add(
+            config=config(),
+            cost=2,
+            time=10,
+            instance_id=None,
+            seed=1,
+            budget=2,
+            additional_info=None,
+            status=StatusType.SUCCESS,
+        )
+        rh.add(
+            config=config(),
+            cost=3,
+            time=10,
+            instance_id=None,
+            seed=1,
+            budget=2,
+            additional_info=None,
+            status=StatusType.SUCCESS,
+        )
+        rh.add(
+            config=config(),
+            cost=4,
+            time=10,
+            instance_id=None,
+            seed=1,
+            budget=3,
+            additional_info=None,
+            status=StatusType.SUCCESS,
+        )
 
         smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
         smbo.epm_chooser.min_samples_model = 2
@@ -102,16 +141,12 @@ class TestEPMChooser(unittest.TestCase):
         self.assertEqual(len(x), 1)
         next_one = next(x)
         self.assertEqual(next_one.get_array().shape, (2,))
-        self.assertEqual(next_one.origin, 'Random Search')
+        self.assertEqual(next_one.origin, "Random Search")
 
     def test_choose_next_empty_X(self):
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
-        epm_chooser.acquisition_func._compute = mock.Mock(
-            spec=RandomForestWithInstances
-        )
-        epm_chooser._random_search.maximize = mock.Mock(
-            spec=epm_chooser._random_search.maximize
-        )
+        epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        epm_chooser._random_search.maximize = mock.Mock(spec=epm_chooser._random_search.maximize)
         epm_chooser._random_search.maximize.return_value = [0, 1, 2]
 
         x = epm_chooser.choose_next()
@@ -163,14 +198,14 @@ class TestEPMChooser(unittest.TestCase):
         num_local_search = 0
         for c in challengers:
             self.assertIsInstance(c, Configuration)
-            if 'Random Search (sorted)' == c.origin:
+            if "Random Search (sorted)" == c.origin:
                 num_random_search_sorted += 1
-            elif 'Random Search' == c.origin:
+            elif "Random Search" == c.origin:
                 num_random_search += 1
-            elif 'Local Search' == c.origin:
+            elif "Local Search" == c.origin:
                 num_local_search += 1
             else:
-                raise ValueError((c.origin, 'Local Search' == c.origin, type('Local Search'), type(c.origin)))
+                raise ValueError((c.origin, "Local Search" == c.origin, type("Local Search"), type(c.origin)))
 
         self.assertEqual(num_local_search, 11)
         self.assertEqual(num_random_search_sorted, 5000)
@@ -211,11 +246,11 @@ class TestEPMChooser(unittest.TestCase):
         num_local_search = 0
         for c in challengers:
             self.assertIsInstance(c, Configuration)
-            if 'Random Search (sorted)' == c.origin:
+            if "Random Search (sorted)" == c.origin:
                 num_random_search_sorted += 1
-            elif 'Random Search' == c.origin:
+            elif "Random Search" == c.origin:
                 num_random_search += 1
-            elif 'Local Search' == c.origin:
+            elif "Local Search" == c.origin:
                 num_local_search += 1
             else:
                 raise ValueError(c.origin)

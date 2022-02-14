@@ -1,15 +1,14 @@
 import os
-import unittest
 import shutil
+import unittest
 
 import numpy as np
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-
 from smac.configspace import ConfigurationSpace
-from smac.smac_cli import SMACCLI
-from smac.scenario.scenario import Scenario
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.scenario.scenario import Scenario
+from smac.smac_cli import SMACCLI
 from smac.stats.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -17,11 +16,9 @@ __license__ = "3-clause BSD"
 
 
 class TestSMACCLI(unittest.TestCase):
-
     def setUp(self):
         base_directory = os.path.split(__file__)[0]
-        base_directory = os.path.abspath(
-            os.path.join(base_directory, '..', '..'))
+        base_directory = os.path.abspath(os.path.join(base_directory, "..", ".."))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
@@ -45,22 +42,35 @@ class TestSMACCLI(unittest.TestCase):
         Testing basic restore functionality.
         """
         # Run for 5 algo-calls
-        testargs = ["python", "scripts/smac.py", "--scenario_file",
-                    self.scenario_one, "--verbose", "DEBUG"]
+        testargs = ["python", "scripts/smac.py", "--scenario_file", self.scenario_one, "--verbose", "DEBUG"]
         self.smaccli.main_cli(testargs[2:])
         # Increase limit and run for 10 (so 5 more) by using restore_state
-        testargs = ["python", "scripts/smac.py", "--restore_state",
-                    self.output_one, "--scenario_file",
-                    self.scenario_two, "--verbose", "DEBUG"]
+        testargs = [
+            "python",
+            "scripts/smac.py",
+            "--restore_state",
+            self.output_one,
+            "--scenario_file",
+            self.scenario_two,
+            "--verbose",
+            "DEBUG",
+        ]
         self.smaccli.main_cli(testargs[2:])
 
     def test_missing_dir(self):
         """
         Testing error if dir is missing.
         """
-        testargs = ["python", "scripts/smac.py", "--restore_state",
-                    "nonsense_test_dir", "--scenario_file",
-                    self.scenario_two, "--verbose", "DEBUG"]
+        testargs = [
+            "python",
+            "scripts/smac.py",
+            "--restore_state",
+            "nonsense_test_dir",
+            "--scenario_file",
+            self.scenario_two,
+            "--verbose",
+            "DEBUG",
+        ]
         self.assertRaises(FileNotFoundError, lambda: self.smaccli.main_cli(testargs[2:]))
 
     def test_illegal_input(self):
@@ -68,8 +78,8 @@ class TestSMACCLI(unittest.TestCase):
         Testing illegal input in smbo
         """
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformFloatHyperparameter('test', 1, 10, 5))
-        scen = Scenario({'run_obj': 'quality', 'cs': cs})
+        cs.add_hyperparameter(UniformFloatHyperparameter("test", 1, 10, 5))
+        scen = Scenario({"run_obj": "quality", "cs": cs})
         stats = Stats(scen)
         # Recorded runs but no incumbent.
         stats.submitted_ta_runs = 10
@@ -86,19 +96,25 @@ class TestSMACCLI(unittest.TestCase):
         Testing possible error using same dir for restore
         """
         # Run for 5 algo-calls
-        testargs = ["python", "scripts/smac.py", "--scenario",
-                    self.scenario_one, "--verbose", "DEBUG"]
+        testargs = ["python", "scripts/smac.py", "--scenario", self.scenario_one, "--verbose", "DEBUG"]
         self.smaccli.main_cli(testargs[2:])
         # Increase limit and run for 10 (so 5 more) by using restore_state
-        testargs = ["python", "scripts/smac.py", "--restore_state",
-                    self.output_one, "--scenario",
-                    self.scenario_two, "--verbose", "DEBUG"]
+        testargs = [
+            "python",
+            "scripts/smac.py",
+            "--restore_state",
+            self.output_one,
+            "--scenario",
+            self.scenario_two,
+            "--verbose",
+            "DEBUG",
+        ]
         # TODO: fix
         try:
             self.smaccli.main_cli(testargs[2:])
         except FileNotFoundError:
             pass
         self.assertTrue(os.path.exists(self.output_one))
-        self.assertFalse(os.path.exists(self.output_one + '.OLD'))
+        self.assertFalse(os.path.exists(self.output_one + ".OLD"))
         self.assertTrue(os.path.exists(self.output_two))
-        self.assertFalse(os.path.exists(self.output_two + '.OLD'))
+        self.assertFalse(os.path.exists(self.output_two + ".OLD"))

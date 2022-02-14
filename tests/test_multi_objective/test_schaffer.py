@@ -2,10 +2,11 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 import unittest
+
 import numpy as np
 
-from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario
 
@@ -41,8 +42,8 @@ class SchafferTest(unittest.TestCase):
         def tae(cfg):
             """x is a single continuous hyperparameter.
             :param cfg: ConfigSpace object"""
-            f1, f2 = schaffer_n1(cfg['x'])
-            return {'metric1': f1, 'metric2': f2}
+            f1, f2 = schaffer_n1(cfg["x"])
+            return {"metric1": f1, "metric2": f2}
 
         # x should be evaluated in the inteval [-2, 2]
         A = 2
@@ -52,25 +53,29 @@ class SchafferTest(unittest.TestCase):
         true_pareto_front = np.column_stack(true_pareto_front)
 
         cs = ConfigurationSpace()
-        X = UniformFloatHyperparameter('x', lower=-A, upper=A)
+        X = UniformFloatHyperparameter("x", lower=-A, upper=A)
         cs.add_hyperparameters([X])
 
         # Scenario object
-        scenario = Scenario({
-            "run_obj": "quality",  # we optimize quality (alternatively runtime)
-            "runcount-limit": 50,  # max. number of function evaluations
-            "cs": cs,  # configuration space
-            "deterministic": "true",
-            "multi_objectives": "metric1, metric2",
-        })
+        scenario = Scenario(
+            {
+                "run_obj": "quality",  # we optimize quality (alternatively runtime)
+                "runcount-limit": 50,  # max. number of function evaluations
+                "cs": cs,  # configuration space
+                "deterministic": "true",
+                "multi_objectives": "metric1, metric2",
+            }
+        )
 
-        smac = SMAC4HPO(scenario=scenario,
-                        rng=np.random.RandomState(42),
-                        tae_runner=tae,
-                        multi_objective_kwargs={
-                            'rho': 0.05
-                            # str or cls or callable
-                        })
+        smac = SMAC4HPO(
+            scenario=scenario,
+            rng=np.random.RandomState(42),
+            tae_runner=tae,
+            multi_objective_kwargs={
+                "rho": 0.05
+                # str or cls or callable
+            },
+        )
 
         smac.optimize()
 
@@ -86,5 +91,5 @@ class SchafferTest(unittest.TestCase):
         self.assertTrue(np.allclose(observed_costs[:, 1][observed_costs[:, 1] < 4], f2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

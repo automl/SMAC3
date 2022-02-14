@@ -1,12 +1,13 @@
-from inspect import signature, Signature
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
 import math
-from typing import Optional, Union, Tuple, List, Callable, Dict, Any
+from inspect import Signature, signature
 
 import numpy as np
-import sklearn.gaussian_process.kernels as kernels
 import scipy.optimize
 import scipy.spatial.distance
 import scipy.special
+import sklearn.gaussian_process.kernels as kernels
 
 from smac.epm.gp_base_prior import Prior
 
@@ -136,8 +137,8 @@ class MagicMixin:
             args = list(tmp.keys())
             # Sum and Product do not clone the 'has_conditions' attribute by default. Instead of changing their
             # get_params() method, we simply add the attribute here!
-            if 'has_conditions' not in args:
-                args.append('has_conditions')
+            if "has_conditions" not in args:
+                args.append("has_conditions")
             self._args_cache = args  # type: List[Union[str, Any]]
 
         for arg in args:
@@ -190,9 +191,9 @@ class MagicMixin:
         """
         if operate_on is not None and type(operate_on) in (list, np.ndarray):
             if not isinstance(operate_on, np.ndarray):
-                raise TypeError('argument operate_on needs to be of type np.ndarray, but is %s' % type(operate_on))
+                raise TypeError("argument operate_on needs to be of type np.ndarray, but is %s" % type(operate_on))
             if operate_on.dtype != np.int:
-                raise ValueError('dtype of argument operate_on needs to be np.int, but is %s' % operate_on.dtype)
+                raise ValueError("dtype of argument operate_on needs to be np.int, but is %s" % operate_on.dtype)
             self.operate_on = operate_on  # type: Optional[np.ndarray]
             self.len_active = len(operate_on)  # type: Optional[int]
         else:
@@ -201,7 +202,6 @@ class MagicMixin:
 
 
 class Sum(MagicMixin, kernels.Sum):
-
     def __init__(
         self,
         k1: kernels.Kernel,
@@ -257,7 +257,6 @@ class Sum(MagicMixin, kernels.Sum):
 
 
 class Product(MagicMixin, kernels.Product):
-
     def __init__(
         self,
         k1: kernels.Kernel,
@@ -307,14 +306,12 @@ class Product(MagicMixin, kernels.Product):
         if eval_gradient:
             K1, K1_gradient = self.k1(X, Y, eval_gradient=True, active=active)
             K2, K2_gradient = self.k2(X, Y, eval_gradient=True, active=active)
-            return K1 * K2, np.dstack((K1_gradient * K2[:, :, np.newaxis],
-                                       K2_gradient * K1[:, :, np.newaxis]))
+            return K1 * K2, np.dstack((K1_gradient * K2[:, :, np.newaxis], K2_gradient * K1[:, :, np.newaxis]))
         else:
             return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
 
 class ConstantKernel(MagicMixin, kernels.ConstantKernel):
-
     def __init__(
         self,
         constant_value: float = 1.0,
@@ -370,13 +367,15 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
         elif eval_gradient:
             raise ValueError("Gradient can only be evaluated when Y is None.")
 
-        K = np.full((X.shape[0], Y.shape[0]), self.constant_value,
-                    dtype=np.array(self.constant_value).dtype)
+        K = np.full((X.shape[0], Y.shape[0]), self.constant_value, dtype=np.array(self.constant_value).dtype)
         if eval_gradient:
             if not self.hyperparameter_constant_value.fixed:
-                return (K, np.full((X.shape[0], X.shape[0], 1),
-                                   self.constant_value,
-                                   dtype=np.array(self.constant_value).dtype))
+                return (
+                    K,
+                    np.full(
+                        (X.shape[0], X.shape[0], 1), self.constant_value, dtype=np.array(self.constant_value).dtype
+                    ),
+                )
             else:
                 return K, np.empty((X.shape[0], X.shape[0], 0))
         else:
@@ -384,7 +383,6 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 
 
 class Matern(MagicMixin, kernels.Matern):
-
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
@@ -407,7 +405,7 @@ class Matern(MagicMixin, kernels.Matern):
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-        """ Return the kernel k(X, Y) and optionally its gradient.
+        """Return the kernel k(X, Y) and optionally its gradient.
 
         Parameters
         ----------
@@ -436,27 +434,26 @@ class Matern(MagicMixin, kernels.Matern):
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
-            dists = scipy.spatial.distance.pdist(X / length_scale, metric='euclidean')
+            dists = scipy.spatial.distance.pdist(X / length_scale, metric="euclidean")
         else:
             if eval_gradient:
-                raise ValueError(
-                    "Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric='euclidean')
+                raise ValueError("Gradient can only be evaluated when Y is None.")
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="euclidean")
 
         if self.nu == 0.5:
             K = np.exp(-dists)
         elif self.nu == 1.5:
             K = dists * math.sqrt(3)
-            K = (1. + K) * np.exp(-K)
+            K = (1.0 + K) * np.exp(-K)
         elif self.nu == 2.5:
             K = dists * math.sqrt(5)
-            K = (1. + K + K ** 2 / 3.0) * np.exp(-K)
+            K = (1.0 + K + K**2 / 3.0) * np.exp(-K)
         else:  # general case; expensive to evaluate
             K = dists
             K[K == 0.0] += np.finfo(float).eps  # strict zeros result in nan
-            tmp = (math.sqrt(2 * self.nu) * K)
-            K.fill((2 ** (1. - self.nu)) / scipy.special.gamma(self.nu))
-            K *= tmp ** self.nu
+            tmp = math.sqrt(2 * self.nu) * K
+            K.fill((2 ** (1.0 - self.nu)) / scipy.special.gamma(self.nu))
+            K *= tmp**self.nu
             K *= scipy.special.kv(self.nu, tmp)
 
         if Y is None:
@@ -475,9 +472,9 @@ class Matern(MagicMixin, kernels.Matern):
 
             # We need to recompute the pairwise dimension-wise distances
             if self.anisotropic:
-                D = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale ** 2)
+                D = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale**2)
             else:
-                D = scipy.spatial.distance.squareform(dists ** 2)[:, :, np.newaxis]
+                D = scipy.spatial.distance.squareform(dists**2)[:, :, np.newaxis]
 
             if self.nu == 0.5:
                 K_gradient = K[..., np.newaxis] * D / np.sqrt(D.sum(2))[:, :, np.newaxis]
@@ -501,7 +498,6 @@ class Matern(MagicMixin, kernels.Matern):
 
 
 class RBF(MagicMixin, kernels.RBF):
-
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
@@ -552,17 +548,16 @@ class RBF(MagicMixin, kernels.RBF):
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
         if Y is None:
-            dists = scipy.spatial.distance.pdist(X / length_scale, metric='sqeuclidean')
-            K = np.exp(-.5 * dists)
+            dists = scipy.spatial.distance.pdist(X / length_scale, metric="sqeuclidean")
+            K = np.exp(-0.5 * dists)
             # convert from upper-triangular matrix to square matrix
             K = scipy.spatial.distance.squareform(K)
             np.fill_diagonal(K, 1)
         else:
             if eval_gradient:
-                raise ValueError(
-                    "Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric='sqeuclidean')
-            K = np.exp(-.5 * dists)
+                raise ValueError("Gradient can only be evaluated when Y is None.")
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="sqeuclidean")
+            K = np.exp(-0.5 * dists)
 
         if active is not None:
             K = K * active
@@ -576,7 +571,7 @@ class RBF(MagicMixin, kernels.RBF):
                 return K, K_gradient
             elif self.anisotropic:
                 # We need to recompute the pairwise dimension-wise distances
-                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale ** 2)
+                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale**2)
                 K_gradient *= K[..., np.newaxis]
                 return K, K_gradient
 
@@ -584,7 +579,6 @@ class RBF(MagicMixin, kernels.RBF):
 
 
 class WhiteKernel(MagicMixin, kernels.WhiteKernel):
-
     def __init__(
         self,
         noise_level: Union[float, Tuple[float, ...]] = 1.0,
@@ -606,7 +600,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-        """ Return the kernel k(X, Y) and optionally its gradient.
+        """Return the kernel k(X, Y) and optionally its gradient.
 
         Parameters
         ----------
@@ -654,7 +648,6 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
 
 
 class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.NormalizedKernelMixin, kernels.Kernel):
-
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
@@ -739,11 +732,11 @@ class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.Normalize
 
             # dK / dL computation
             if np.iterable(length_scale) and length_scale.shape[0] > 1:
-                grad = (np.expand_dims(K, axis=-1) * np.array(indicator, dtype=np.float32))
+                grad = np.expand_dims(K, axis=-1) * np.array(indicator, dtype=np.float32)
             else:
                 grad = np.expand_dims(K * np.sum(indicator, axis=2), axis=-1)
 
-            grad *= (1 / length_scale ** 3)
+            grad *= 1 / length_scale**3
 
             return K, grad
         return K

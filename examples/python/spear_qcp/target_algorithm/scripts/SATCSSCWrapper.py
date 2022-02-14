@@ -74,11 +74,11 @@ python -O SATCSSCWrapper.py \
     -sp-use-pure-literal-rule 0
 """
 
-import sys
-import re
-import os
 import importlib
-from subprocess import Popen, PIPE
+import os
+import re
+import sys
+from subprocess import PIPE, Popen
 
 from genericWrapper import AbstractWrapper
 
@@ -138,16 +138,12 @@ class SatCSSCWrapper(AbstractWrapper):
         ext_script = self.args.cssc_script
         if not os.path.isfile(ext_script):
             self._ta_status = "ABORT"
-            self._ta_misc = "cssc script is missing - should have been at %s." % (
-                ext_script
-            )
+            self._ta_misc = "cssc script is missing - should have been at %s." % (ext_script)
             self._exit_code = 1
             sys.exit(1)
 
         # loaded_script = importlib.load_source("cssc", ext_script
-        loaded_script = importlib.machinery.SourceFileLoader(
-            "cssc", ext_script
-        ).load_module()
+        loaded_script = importlib.machinery.SourceFileLoader("cssc", ext_script).load_module()
 
         cmd = loaded_script.get_command_line_cmd(runargs, config)
 
@@ -200,9 +196,7 @@ class SatCSSCWrapper(AbstractWrapper):
 
         if self._ta_status == "TIMEOUT":
             resultMap["status"] = "TIMEOUT"
-            resultMap[
-                "misc"
-            ] = "Runsolver returned TIMEOUT; disregard the rest of the output"
+            resultMap["misc"] = "Runsolver returned TIMEOUT; disregard the rest of the output"
             return resultMap
 
         if re.search("s SATISFIABLE", data):
@@ -212,9 +206,7 @@ class SatCSSCWrapper(AbstractWrapper):
             if not self.args.sat_checker:
                 resultMap["misc"] = "SAT checker was not given; could not verify SAT"
             elif not os.path.isfile(self.args.sat_checker):
-                resultMap["misc"] = "have not found %s; could not verify SAT" % (
-                    self.args.sat_checker
-                )
+                resultMap["misc"] = "have not found %s; could not verify SAT" % (self.args.sat_checker)
             else:
                 sat_checked = self._verify_SAT(filepointer)
                 if sat_checked:
@@ -238,9 +230,7 @@ class SatCSSCWrapper(AbstractWrapper):
             # Could not use SAT checker, so we only compare to true solubility.
             if self._specifics in ("UNSATISFIABLE", "20"):
                 resultMap["status"] = "CRASHED"
-                resultMap[
-                    "misc"
-                ] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
+                resultMap["misc"] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
                 self.save_failed_cmd()
 
         elif re.search("s UNSATISFIABLE", data):
@@ -249,9 +239,7 @@ class SatCSSCWrapper(AbstractWrapper):
 
             if self._specifics in ("SATISFIABLE", "10"):
                 resultMap["status"] = "CRASHED"
-                resultMap[
-                    "misc"
-                ] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
+                resultMap["misc"] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
                 self.save_failed_cmd()
 
         elif re.search("s UNKNOWN", data):
@@ -265,10 +253,7 @@ class SatCSSCWrapper(AbstractWrapper):
         else:
             print(self._ta_status)
             resultMap["status"] = "CRASHED"
-            resultMap["misc"] = (
-                "Could not find usual SAT competition-formatted result string in %s"
-                % data
-            )
+            resultMap["misc"] = "Could not find usual SAT competition-formatted result string in %s" % data
         return resultMap
 
     def _verify_SAT(self, solver_output):
@@ -332,27 +317,19 @@ class SatCSSCWrapper(AbstractWrapper):
             "SATISFIABLE",
         ):
             # Solubility file and specifics don't agree
-            raise ValueError(
-                "self.specifics says 'SATISFIABLE', solubility says 'UNSATISFIABLE'"
-            )
+            raise ValueError("self.specifics says 'SATISFIABLE', solubility says 'UNSATISFIABLE'")
         elif sol_status in ("10", "SATISFIABLE") and self._specifics in (
             "20",
             "UNSATISFIABLE",
         ):
             # Solubility file and specifics don't agree
-            raise ValueError(
-                "self.specifics says 'UNSATISFIABLE', solubility says 'SATISFIABLE'"
-            )
-        elif (
-            self._specifics
-            not in (
-                "20",
-                "UNSATISFIABLE",
-                "10",
-                "SATISFIABLE",
-            )
-            and sol_status in ("20", "UNSATISFIABLE", "10", "SATISFIABLE")
-        ):
+            raise ValueError("self.specifics says 'UNSATISFIABLE', solubility says 'SATISFIABLE'")
+        elif self._specifics not in (
+            "20",
+            "UNSATISFIABLE",
+            "10",
+            "SATISFIABLE",
+        ) and sol_status in ("20", "UNSATISFIABLE", "10", "SATISFIABLE"):
             self._specifics = sol_status
         elif self._specifics in ("20", "UNSATISFIABLE", "10", "SATISFIABLE"):
             pass

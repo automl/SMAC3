@@ -1,13 +1,18 @@
-import logging
 import typing
+
+import logging
 from collections import OrderedDict
 
-from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
-from ConfigSpace.hyperparameters import NumericalHyperparameter, \
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters, ForbiddenValueError
 import numpy as np
 
+from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    Constant,
+    NumericalHyperparameter,
+    OrdinalHyperparameter,
+)
+from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Marius Lindauer"
@@ -50,16 +55,17 @@ class InitialDesign:
         List of configurations to be evaluated
     """
 
-    def __init__(self,
-                 cs: ConfigurationSpace,
-                 rng: np.random.RandomState,
-                 traj_logger: TrajLogger,
-                 ta_run_limit: int,
-                 configs: typing.Optional[typing.List[Configuration]] = None,
-                 n_configs_x_params: typing.Optional[int] = 10,
-                 max_config_fracs: float = 0.25,
-                 init_budget: typing.Optional[int] = None,
-                 ):
+    def __init__(
+        self,
+        cs: ConfigurationSpace,
+        rng: np.random.RandomState,
+        traj_logger: TrajLogger,
+        ta_run_limit: int,
+        configs: typing.Optional[typing.List[Configuration]] = None,
+        n_configs_x_params: typing.Optional[int] = 10,
+        max_config_fracs: float = 0.25,
+        init_budget: typing.Optional[int] = None,
+    ):
         self.cs = cs
         self.rng = rng
         self.traj_logger = traj_logger
@@ -72,21 +78,21 @@ class InitialDesign:
             self.init_budget = init_budget
             if n_configs_x_params is not None:
                 self.logger.debug(
-                    'Ignoring argument `n_configs_x_params` (value %d).',
+                    "Ignoring argument `n_configs_x_params` (value %d).",
                     n_configs_x_params,
                 )
         elif configs is not None:
             self.init_budget = len(configs)
         elif n_configs_x_params is not None:
-            self.init_budget = int(max(1, min(n_configs_x_params * n_params,
-                                              (max_config_fracs * ta_run_limit))))
+            self.init_budget = int(max(1, min(n_configs_x_params * n_params, (max_config_fracs * ta_run_limit))))
         else:
-            raise ValueError('Need to provide either argument `init_budget`, `configs` or '
-                             '`n_configs_x_params`, but provided none of them.')
+            raise ValueError(
+                "Need to provide either argument `init_budget`, `configs` or "
+                "`n_configs_x_params`, but provided none of them."
+            )
         if self.init_budget > ta_run_limit:
             raise ValueError(
-                'Initial budget %d cannot be higher than the run limit %d.'
-                % (self.init_budget, ta_run_limit)
+                "Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, ta_run_limit)
             )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
@@ -97,12 +103,10 @@ class InitialDesign:
 
         for config in self.configs:
             if config.origin is None:
-                config.origin = 'Initial design'
+                config.origin = "Initial design"
 
         # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2**31,
-                                   incumbent_id=1,
-                                   incumbent=self.configs[0])
+        self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
 
         # removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
@@ -112,10 +116,9 @@ class InitialDesign:
     def _select_configurations(self) -> typing.List[Configuration]:
         raise NotImplementedError
 
-    def _transform_continuous_designs(self,
-                                      design: np.ndarray,
-                                      origin: str,
-                                      cs: ConfigurationSpace) -> typing.List[Configuration]:
+    def _transform_continuous_designs(
+        self, design: np.ndarray, origin: str, cs: ConfigurationSpace
+    ) -> typing.List[Configuration]:
 
         params = cs.get_hyperparameters()
         for idx, param in enumerate(params):
@@ -125,7 +128,7 @@ class InitialDesign:
                 # add a vector with zeros
                 design_ = np.zeros(np.array(design.shape) + np.array((0, 1)))
                 design_[:, :idx] = design[:, :idx]
-                design_[:, idx + 1:] = design[:, idx:]
+                design_[:, idx + 1 :] = design[:, idx:]
                 design = design_
             elif isinstance(param, CategoricalHyperparameter):
                 v_design = design[:, idx]
@@ -142,9 +145,7 @@ class InitialDesign:
         configs = []
         for vector in design:
             try:
-                conf = deactivate_inactive_hyperparameters(configuration=None,
-                                                           configuration_space=cs,
-                                                           vector=vector)
+                conf = deactivate_inactive_hyperparameters(configuration=None, configuration_space=cs, vector=vector)
             except ForbiddenValueError:
                 continue
             conf.origin = origin

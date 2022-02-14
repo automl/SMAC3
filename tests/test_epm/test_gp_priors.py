@@ -3,7 +3,13 @@ import unittest
 import numpy as np
 import scipy.optimize
 
-from smac.epm.gp_base_prior import TophatPrior, HorseshoePrior, LognormalPrior, GammaPrior, SoftTopHatPrior
+from smac.epm.gp_base_prior import (
+    GammaPrior,
+    HorseshoePrior,
+    LognormalPrior,
+    SoftTopHatPrior,
+    TophatPrior,
+)
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -15,7 +21,6 @@ def wrap_ln(theta, prior):
 
 
 class TestTophatPrior(unittest.TestCase):
-
     def test_lnprob_and_grad_scalar(self):
         prior = TophatPrior(
             lower_bound=np.exp(-10),
@@ -68,7 +73,6 @@ class TestTophatPrior(unittest.TestCase):
 
 
 class TestHorseshoePrior(unittest.TestCase):
-
     def test_lnprob_and_grad_scalar(self):
         prior = HorseshoePrior(scale=1, rng=np.random.RandomState(1))
 
@@ -107,7 +111,7 @@ class TestHorseshoePrior(unittest.TestCase):
             prior.sample_from_prior((2,))
 
     def test_gradient(self):
-        for scale in (0.1, 0.5, 1., 2.):
+        for scale in (0.1, 0.5, 1.0, 2.0):
             prior = HorseshoePrior(scale=scale, rng=np.random.RandomState(1))
             # The function appears to be unstable above 15
             for theta in range(-20, 15):
@@ -123,7 +127,6 @@ class TestHorseshoePrior(unittest.TestCase):
 
 
 class TestGammaPrior(unittest.TestCase):
-
     def test_lnprob_and_grad_scalar(self):
         prior = GammaPrior(a=0.5, scale=1 / 2, loc=0, rng=np.random.RandomState(1))
 
@@ -141,7 +144,7 @@ class TestGammaPrior(unittest.TestCase):
             prior.gradient(val)
 
     def test_gradient(self):
-        for scale in (0.5, 1., 2.):
+        for scale in (0.5, 1.0, 2.0):
             prior = GammaPrior(a=2, scale=scale, loc=0, rng=np.random.RandomState(1))
             # The function appears to be unstable above 10
             for theta in np.arange(1e-15, 10, 0.01):
@@ -157,9 +160,8 @@ class TestGammaPrior(unittest.TestCase):
 
 
 class TestLogNormalPrior(unittest.TestCase):
-
     def test_gradient(self):
-        for sigma in (0.5, 1., 2.):
+        for sigma in (0.5, 1.0, 2.0):
             prior = LognormalPrior(mean=0, sigma=sigma, rng=np.random.RandomState(1))
             # The function appears to be unstable above 15
             for theta in range(0, 15):
@@ -175,7 +177,6 @@ class TestLogNormalPrior(unittest.TestCase):
 
 
 class TestSoftTopHatPrior(unittest.TestCase):
-
     def test_lnprob(self):
         prior = SoftTopHatPrior(
             lower_bound=np.exp(-5),

@@ -1,38 +1,40 @@
 # type: ignore
 # mypy: ignore-errors
 
+import typing
+
+import copy
+import datetime
 import logging
 import os
-import datetime
 import time
-import typing
-import copy
 
 import joblib
 import numpy as np
 
 from ConfigSpace.configuration_space import Configuration
-
+from smac.epm.util_funcs import get_rng
+from smac.facade.smac_ac_facade import SMAC4AC
+from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
 from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
-from smac.scenario.scenario import Scenario
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.utils.io.output_directory import create_output_directory
-from smac.runhistory.runhistory import RunHistory
-from smac.epm.util_funcs import get_rng
 from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Andre Biedenkapp"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-def optimize(scenario: typing.Type[Scenario],
-             tae: typing.Type[BaseRunner],
-             tae_kwargs: typing.Dict,
-             rng: typing.Union[np.random.RandomState, int],
-             output_dir: str,
-             **kwargs) -> Configuration:
+def optimize(
+    scenario: typing.Type[Scenario],
+    tae: typing.Type[BaseRunner],
+    tae_kwargs: typing.Dict,
+    rng: typing.Union[np.random.RandomState, int],
+    output_dir: str,
+    **kwargs,
+) -> Configuration:
     """
     Unbound method to be called in a subprocess
 
@@ -63,9 +65,7 @@ def optimize(scenario: typing.Type[Scenario],
     solver.stats.print_stats()
 
     if output_dir is not None:
-        solver.solver.runhistory.save_json(
-            fn=os.path.join(solver.output_dir, "runhistory.json")
-        )
+        solver.solver.runhistory.save_json(fn=os.path.join(solver.output_dir, "runhistory.json"))
     return incumbent
 
 
@@ -110,20 +110,22 @@ class PSMAC(object):
         List of all incumbents
 
     """
-    def __init__(self,
-                 scenario: typing.Type[Scenario],
-                 rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
-                 run_id: int = 1,
-                 tae: typing.Type[BaseRunner] = ExecuteTARunOld,
-                 tae_kwargs: typing.Union[dict, None] = None,
-                 shared_model: bool = True,
-                 validate: bool = True,
-                 n_optimizers: int = 2,
-                 val_set: typing.Union[typing.List[str], None] = None,
-                 n_incs: int = 1,
-                 **kwargs):
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+
+    def __init__(
+        self,
+        scenario: typing.Type[Scenario],
+        rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
+        run_id: int = 1,
+        tae: typing.Type[BaseRunner] = ExecuteTARunOld,
+        tae_kwargs: typing.Union[dict, None] = None,
+        shared_model: bool = True,
+        validate: bool = True,
+        n_optimizers: int = 2,
+        val_set: typing.Union[typing.List[str], None] = None,
+        n_incs: int = 1,
+        **kwargs,
+    ):
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.scenario = scenario
         self.run_id, self.rng = get_rng(rng, run_id, logger=self.logger)
@@ -133,7 +135,7 @@ class PSMAC(object):
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if n_optimizers <= 1:
-            self.logger.warning('Invalid value in %s: %d. Setting to 2', 'n_optimizers', n_optimizers)
+            self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
         self.validate = validate
         self.shared_model = shared_model
@@ -158,12 +160,13 @@ class PSMAC(object):
         # Setup output directory
         if self.output_dir is None:
             self.scenario.output_dir = "psmac3-output_%s" % (
-                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
+                datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")
+            )
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
             if self.shared_model:
                 self.scenario.shared_model = self.shared_model
         if self.scenario.input_psmac_dirs is None:
-            self.scenario.input_psmac_dirs = os.path.sep.join((self.scenario.output_dir, 'run_*'))
+            self.scenario.input_psmac_dirs = os.path.sep.join((self.scenario.output_dir, "run_*"))
 
         scen = copy.deepcopy(self.scenario)
         scen.output_dir_for_this_run = None
@@ -178,8 +181,9 @@ class PSMAC(object):
                 self._tae_kwargs,
                 p,  # seed for the rng/run_id
                 self.output_dir,  # directory to create outputs in
-                **self.kwargs
-            ) for p in range(self.n_optimizers)
+                **self.kwargs,
+            )
+            for p in range(self.n_optimizers)
         )
 
         if self.n_optimizers == self.n_incs:  # no validation necessary just return all incumbents
@@ -209,13 +213,15 @@ class PSMAC(object):
         """
         if self.validate is True:
             mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
-            val_ids = list(map(lambda x: x[0],
-                               sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[:self.n_incs]
+            val_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[
+                : self.n_incs
+            ]
         else:
             cost_per_config_valid = val_ids = None
         mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
-        est_ids = list(map(lambda x: x[0],
-                           sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[:self.n_incs]
+        est_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[
+            : self.n_incs
+        ]
         return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
 
     def _get_mean_costs(self, incs: typing.List[Configuration], new_rh: RunHistory):
@@ -252,11 +258,9 @@ class PSMAC(object):
         Validation
         """
         solver = SMAC4AC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
-        self.logger.info('*' * 120)
-        self.logger.info('Validating')
-        new_rh = solver.validate(config_mode=incs,
-                                 instance_mode=self.val_set,
-                                 repetitions=1,
-                                 use_epm=False,
-                                 n_jobs=self.n_optimizers)
+        self.logger.info("*" * 120)
+        self.logger.info("Validating")
+        new_rh = solver.validate(
+            config_mode=incs, instance_mode=self.val_set, repetitions=1, use_epm=False, n_jobs=self.n_optimizers
+        )
         return self._get_mean_costs(incs, new_rh)

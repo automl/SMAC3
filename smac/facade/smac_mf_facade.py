@@ -1,9 +1,9 @@
 import typing
 
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.intensification.hyperband import Hyperband
+from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -35,24 +35,24 @@ class SMAC4MF(SMAC4HPO):
     """
 
     def __init__(self, **kwargs: typing.Any):
-        scenario = kwargs['scenario']
+        scenario = kwargs["scenario"]
 
-        kwargs['initial_design'] = kwargs.get('initial_design', RandomConfigurations)
-        kwargs['runhistory2epm'] = kwargs.get('runhistory2epm', RunHistory2EPM4LogScaledCost)
+        kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
 
         # Intensification parameters
         # select Hyperband as the intensifier ensure respective parameters are provided
-        if kwargs.get('intensifier') is None:
-            kwargs['intensifier'] = Hyperband
+        if kwargs.get("intensifier") is None:
+            kwargs["intensifier"] = Hyperband
 
         # set Hyperband parameters if not given
-        intensifier_kwargs = kwargs.get('intensifier_kwargs', dict())
-        intensifier_kwargs['min_chall'] = 1
-        if intensifier_kwargs.get('eta') is None:
-            intensifier_kwargs['eta'] = 3
-        if intensifier_kwargs.get('instance_order') is None:
-            intensifier_kwargs['instance_order'] = 'shuffle_once'
-        kwargs['intensifier_kwargs'] = intensifier_kwargs
+        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
+        intensifier_kwargs["min_chall"] = 1
+        if intensifier_kwargs.get("eta") is None:
+            intensifier_kwargs["eta"] = 3
+        if intensifier_kwargs.get("instance_order") is None:
+            intensifier_kwargs["instance_order"] = "shuffle_once"
+        kwargs["intensifier_kwargs"] = intensifier_kwargs
 
         super().__init__(**kwargs)
         self.logger.info(self.__class__)

@@ -1,4 +1,4 @@
-from typing import List, Union, Callable, Tuple, Optional, Dict
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
@@ -55,7 +55,7 @@ class SerialRunner(BaseRunner):
         self,
         ta: Union[List[str], Callable],
         stats: Stats,
-        multi_objectives: List[str] = ['cost'],
+        multi_objectives: List[str] = ["cost"],
         run_obj: str = "runtime",
         par_factor: int = 1,
         cost_for_crash: Union[float, List[float]] = float(MAXINT),
@@ -88,9 +88,7 @@ class SerialRunner(BaseRunner):
             An object containing the configuration and the necessary data to run it
 
         """
-        self.results.append(
-            self.run_wrapper(run_info)
-        )
+        self.results.append(self.run_wrapper(run_info))
 
     def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with
@@ -131,12 +129,15 @@ class SerialRunner(BaseRunner):
         # No pending runs in a serial run. Execution is blocking
         return False
 
-    def run(self, config: Configuration,
-            instance: str,
-            cutoff: Optional[float] = None,
-            seed: int = 12345,
-            budget: Optional[float] = None,
-            instance_specific: str = "0") -> Tuple[StatusType, float, float, Dict]:
+    def run(
+        self,
+        config: Configuration,
+        instance: str,
+        cutoff: Optional[float] = None,
+        seed: int = 12345,
+        budget: Optional[float] = None,
+        instance_specific: str = "0",
+    ) -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on
         instance <instance> with instance specifics <specifics> for at most
         <cutoff> seconds and random seed <seed>
