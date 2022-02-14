@@ -48,7 +48,7 @@ class CMDReaderTest(unittest.TestCase):
             self.cr.read_cmd(targs.cmdline())
 
     def test_check_args(self):  # Tests if no Exception is raised
-        targs = TestArgs("test/test_files/scenario_test/scenario.txt", 1234, 2, "DEBUG")
+        targs = TestArgs("tests/test_files/scenario_test/scenario.txt", 1234, 2, "DEBUG")
         self.cr.read_cmd(targs.cmdline())
 
     def test_doc_files(self):

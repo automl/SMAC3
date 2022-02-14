@@ -49,7 +49,7 @@ class ScenarioTest(unittest.TestCase):
 
         self.test_scenario_dict = {
             "algo": "echo Hello",
-            "paramfile": "test/test_files/scenario_test/param.pcs",
+            "paramfile": "tests/test_files/scenario_test/param.pcs",
             "execdir": ".",
             "deterministic": 0,
             "run_obj": "runtime",
@@ -57,10 +57,10 @@ class ScenarioTest(unittest.TestCase):
             "multi_objectives": "accuracy, mse",
             "cutoff_time": 5,
             "wallclock-limit": 18000,
-            "instance_file": "test/test_files/scenario_test/training.txt",
-            "test_instance_file": "test/test_files/scenario_test/test.txt",
-            "feature_file": "test/test_files/scenario_test/features.txt",
-            "output_dir": "test/test_files/scenario_test/tmp_output",
+            "instance_file": "tests/test_files/scenario_test/training.txt",
+            "test_instance_file": "tests/test_files/scenario_test/test.txt",
+            "feature_file": "tests/test_files/scenario_test/features.txt",
+            "output_dir": "tests/test_files/scenario_test/tmp_output",
         }
         self.output_dirs = []
         self.output_files = []
@@ -83,12 +83,12 @@ class ScenarioTest(unittest.TestCase):
             _ = Scenario(["a", "b"])
 
     def test_string_scenario(self):
-        scenario = Scenario("test/test_files/scenario_test/scenario.txt")
+        scenario = Scenario("tests/test_files/scenario_test/scenario.txt")
 
         self.assertEqual(scenario.ta, ["echo", "Hello"])
         self.assertEqual(scenario.execdir, ".")
         self.assertFalse(scenario.deterministic)
-        self.assertEqual(scenario.pcs_fn, "test/test_files/scenario_test/param.pcs")
+        self.assertEqual(scenario.pcs_fn, "tests/test_files/scenario_test/param.pcs")
         self.assertEqual(scenario.overall_obj, "mean10")
         self.assertEqual(scenario.cutoff, 5.0)
         self.assertEqual(scenario.algo_runs_timelimit, np.inf)
@@ -106,7 +106,7 @@ class ScenarioTest(unittest.TestCase):
         self.assertEqual(scenario.ta, ["echo", "Hello"])
         self.assertEqual(scenario.execdir, ".")
         self.assertFalse(scenario.deterministic)
-        self.assertEqual(scenario.pcs_fn, "test/test_files/scenario_test/param.pcs")
+        self.assertEqual(scenario.pcs_fn, "tests/test_files/scenario_test/param.pcs")
         self.assertEqual(scenario.overall_obj, "mean10")
         self.assertEqual(scenario.cutoff, 5.0)
         self.assertEqual(scenario.algo_runs_timelimit, np.inf)
@@ -230,7 +230,7 @@ class ScenarioTest(unittest.TestCase):
                     self.assertEqual(getattr(scen1, name), getattr(scen2, name))
 
         # First check with file-paths defined
-        feature_filename = "test/test_files/scenario_test/features_multiple.txt"
+        feature_filename = "tests/test_files/scenario_test/features_multiple.txt"
         feature_filename = os.path.abspath(feature_filename)
         self.test_scenario_dict["feature_file"] = feature_filename
         scenario = Scenario(self.test_scenario_dict)
@@ -311,8 +311,8 @@ class ScenarioTest(unittest.TestCase):
 
     def test_features(self):
         cmd_options = {
-            "feature_file": "test/test_files/features_example.csv",
-            "instance_file": "test/test_files/train_insts_example.txt",
+            "feature_file": "tests/test_files/features_example.csv",
+            "instance_file": "tests/test_files/train_insts_example.txt",
         }
         scenario = Scenario(self.test_scenario_dict, cmd_options=cmd_options)
         self.assertEqual(scenario.feature_names, ["feature1", "feature2", "feature3"])

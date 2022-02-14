@@ -435,7 +435,7 @@ class TestSMACFacade(unittest.TestCase):
     def test_output_structure(self):
         """Test whether output-dir is moved correctly."""
         test_scenario_dict = {
-            "output_dir": "test/test_files/scenario_test/tmp_output",
+            "output_dir": "tests/test_files/scenario_test/tmp_output",
             "run_obj": "quality",
             "cs": ConfigurationSpace(),
         }

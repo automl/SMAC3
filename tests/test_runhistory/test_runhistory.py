@@ -239,7 +239,7 @@ class RunhistoryTest(unittest.TestCase):
 
             rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
 
-            path = "test/test_files/test_json_origin.json"
+            path = "tests/test_files/test_json_origin.json"
             rh.save_json(path)
             _ = rh.load_json(path, cs)
 
