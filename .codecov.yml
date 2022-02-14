@@ -1,0 +1,43 @@
+# See https://github.com/codecov/support/wiki/Codecov-Yaml
+codecov:
+  require_ci_to_pass: yes
+
+coverage:
+  # 2 = xx.xx%, 0 = xx%
+  precision: 2
+
+  # https://docs.codecov.com/docs/commit-status
+  status:
+    # We want our total main project to always remain above 80% coverage, a
+    # drop of 0.20% is allowed. It should fail if coverage couldn't be uploaded
+    # of the CI fails otherwise
+    project:
+      default:
+        target: 80%
+        threshold: 0.20%
+        if_not_found: failure
+        if_ci_failed: error
+
+    # The code changed by a PR should have 90% coverage. This is different from the
+    # overall number shown above.
+    # This encourages small PR's as they are easier to test.
+    patch:
+      default:
+        target: 90%
+        if_not_found: failure
+        if_ci_failed: error
+
+# We upload additional information on branching with pytest-cov `--cov-branch`
+# This information can be used by codecov.com to increase analysis of code
+parsers:
+  gcov:
+    branch_detection:
+      conditional: true
+      loop: true
+      method: true
+      macro: false
+
+comment:
+  layout: diff, reach
+  behavior: default
+  require_changes: false

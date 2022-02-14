@@ -1,12 +1,13 @@
 {
-  "documentation": [
+  "docs": [
+    // "automl_sphinx_theme>=0.1.1"
     "sphinx==4.2.0",
     "sphinx-gallery==0.10.0",
     "bs4==0.0.1",
     "image==1.5.33",
     "matplotlib==3.5.1"
   ],
-  "test": [
+  "tests": [
     "pytest>=4.6",
     "mypy",
     "pytest-timeout",

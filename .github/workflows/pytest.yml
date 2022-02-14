@@ -117,12 +117,12 @@ jobs:
         fi
 
         if [ ${{ matrix.code-cov }} ]; then
-          pytest ${{ env.pytest-args }} ${{ env.code-cov-args }} test
+          pytest ${{ env.pytest-args }} ${{ env.code-cov-args }} tests
         else
-          pytest ${{ env.pytest-args }} test
+          pytest ${{ env.pytest-args }} tests
         fi
 
-    - name: Check for files left behind by test
+    - name: Check for files left behind by tests
       if: ${{ always() }}
       run: |
         before="${{ steps.status-before.outputs.BEFORE }}"

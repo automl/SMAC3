@@ -16,8 +16,6 @@ on:
       - master
       - development
 
-
-
 jobs:
   dist:
     runs-on: ubuntu-latest

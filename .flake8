@@ -1,14 +1,18 @@
 [flake8]
-max-line-length = 120
-ignore = W605,E402,W503
 show-source = True
+ignore = W605,E402,W503
+max-line-length = 120
 application-import-names = smac
-exclude =
+extend-exclude =
     venv
+    .venv
     build
     .git
     __pycache__
-    doc
+    docs
     build
     dist
-    examples/spear_qcp/*
+    examples/python/spear_qcp/*
+extend-ignore =
+    E203  # No whitespace before ':' in [x : y]
+    E731  # No lambdas — too strict
