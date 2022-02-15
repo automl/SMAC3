@@ -286,7 +286,7 @@ class TestEPMChooser(unittest.TestCase):
 
         self.assertEqual(num_local_search, 26)
         self.assertEqual(num_random_search_sorted, 5000)
-        self.assertEqual(num_random_search, 4960)
+        self.assertEqual(num_random_search, 4956)
 
 
 if __name__ == "__main__":
