@@ -2,6 +2,7 @@ algo = python -u ./spear_qcp/target_algorithm/scripts/SATCSSCWrapper.py --mem-li
 paramfile = ./spear_qcp/target_algorithm/spear-python/spear-params-mixed.pcs
 execdir = .
 deterministic = 0
+limit_resources = 1
 run_obj = runtime
 overall_obj = PAR10
 cutoff_time = 5
