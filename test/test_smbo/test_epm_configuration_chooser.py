@@ -269,7 +269,7 @@ class TestEPMChooser(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI
-        self.assertEqual(len(challengers), 9986)
+        self.assertEqual(len(challengers), 9982)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
