@@ -202,7 +202,7 @@ class RunHistory(object):
         self.external = {}  # type: Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = None  # type: Optional[int]
+        self.num_obj = -1  # type: int
         self.objective_bounds = []  # type: List[Tuple[float, float]]
 
     def add(
@@ -275,7 +275,7 @@ class RunHistory(object):
         else:
             config_id = cast(int, config_id_tmp)
 
-        if self.num_obj is None:
+        if self.num_obj == -1:
             self.num_obj = np.size(cost)
         else:
             if np.size(cost) != self.num_obj:
@@ -338,26 +338,24 @@ class RunHistory(object):
 
     def _update_objective_bounds(self) -> None:
         """Update the objective bounds based on the data in the runhistory."""
-        all_costs = []
-        for (costs, _, status, _, _, _) in self.data.values():
+
+        if len(self.data) == 0:
+            return
+
+        all_costs = np.empty((len(self.data), self.num_obj))  # type: ignore
+        for i, (costs, _, status, _, _, _) in enumerate(self.data.values()):
             if status == StatusType.SUCCESS:
                 if not isinstance(costs, Iterable):
                     costs = [costs]
 
-                assert len(costs) == self.num_obj
-                all_costs.append(costs)
-
-        all_costs = np.array(all_costs, dtype=float)
-        self.objective_bounds = [(np.inf, -np.inf)] * self.num_obj
-
-        if len(all_costs) == 0:
-            return
+                all_costs[i, :] = np.asarray(costs)
 
         min_values = np.min(all_costs, axis=0)
         max_values = np.max(all_costs, axis=0)
 
-        for i, (min_v, max_v) in enumerate(zip(min_values, max_values)):
-            self.objective_bounds[i] = (min_v, max_v)
+        self.objective_bounds = []
+        for min_v, max_v in zip(min_values, max_values):
+            self.objective_bounds += [(min_v, max_v)]
 
     def _add(
         self, k: RunKey, v: RunValue, status: StatusType, origin: DataOrigin
@@ -657,7 +655,7 @@ class RunHistory(object):
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
             # Set num_obj first
-            if self.num_obj is None:
+            if self.num_obj == -1:
                 if isinstance(v[0], float) or isinstance(v[0], int):
                     self.num_obj = 1
                 else:
