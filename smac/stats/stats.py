@@ -23,22 +23,19 @@ class Stats(object):
 
     Parameters
     ----------
+    scenario : Scenario
+
+    Attributes
+    ----------
     submitted_ta_runs
     finished_ta_runs
+    n_configs
     wallclock_time_used
     ta_time_used
     inc_changed
     """
 
     def __init__(self, scenario: Scenario):
-        """Constructor
-
-        Parameters
-        ----------
-        scenario : Scenario
-
-        output_dir : str
-        """
         self.__scenario = scenario
 
         self.submitted_ta_runs = 0
@@ -192,18 +189,17 @@ class Stats(object):
         if debug_out:
             log_func = self._logger.debug
 
-        log_func("##########################################################")
-        log_func("Statistics:")
-        log_func("#Incumbent changed: %d" % (self.inc_changed - 1))  # first change is default conf
+        log_func("---------------------STATISTICS---------------------")
+        log_func("Incumbent changed: %d" % (self.inc_changed - 1))  # first change is default conf
         log_func(
-            "#Submitted target algorithm runs: %d / %s"
+            "Submitted target algorithm runs: %d / %s"
             % (self.submitted_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
         )
         log_func(
-            "#Finished target algorithm runs: %d / %s"
+            "Finished target algorithm runs: %d / %s"
             % (self.finished_ta_runs, str(self.__scenario.ta_run_limit))  # type: ignore[attr-defined] # noqa F821
         )
-        log_func("#Configurations: %d" % (self.n_configs))
+        log_func("Configurations: %d" % (self.n_configs))
         log_func(
             "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit))
         log_func(
@@ -214,5 +210,4 @@ class Stats(object):
                 self._n_configs_per_intensify / self._n_calls_of_intensify))
             self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" % (
                 self._ema_n_configs_per_intensifiy))
-
-        log_func("##########################################################")
+        log_func("----------------------------------------------------")

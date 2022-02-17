@@ -134,6 +134,66 @@ class TrajLoggerTest(unittest.TestCase):
         self.assertEqual(json_dicts_alljson[2]['budget'], 10)
 
     @patch('smac.stats.stats.Stats')
+    def test_add_entries_multi_objectives(self, mock_stats):
+        # Mock stats
+        mock_stats.ta_time_used = .5
+        mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time
+        mock_stats.finished_ta_runs = 1
+
+        num_obj = 2
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tl = TrajLogger(output_dir=tmpdir, stats=mock_stats)
+
+            # Add some entries
+            tl.add_entry([0.9, 0.8], 1, self.test_config, 0)
+
+            # Test the list that's added to the trajectory class
+            self.assertEqual(tl.trajectory[0], TrajEntry([0.9, 0.8], 1, self.test_config, 1, 0.5, 1, 0))
+            # Test named-tuple-access:
+            self.assertEqual(tl.trajectory[0].train_perf, [0.9, 0.8])
+            self.assertEqual(len(tl.trajectory), 1)
+
+            # Check if the trajectories are generated
+            for fn in ['traj_old.csv', 'traj_aclib2.json', 'traj.json']:
+                self.assertTrue(os.path.exists(os.path.join(tmpdir, fn)))
+
+            # Load trajectories
+            with open(os.path.join(tmpdir, 'traj_old.csv')) as to:
+                data = to.read().split('\n')
+            with open(os.path.join(tmpdir, 'traj_aclib2.json')) as js_aclib:
+                json_dicts_aclib2 = [json.loads(line) for line in js_aclib.read().splitlines()]
+            with open(os.path.join(tmpdir, 'traj.json')) as js:
+                json_dicts_alljson = [json.loads(line) for line in js.read().splitlines()]
+
+        # Check old format
+        header = data[0].split(',')
+        self.assertEqual(header[0], '"CPU Time Used"')
+        self.assertEqual(header[-1], '"Configuration..."')
+
+        data = list(map(lambda x: x.split(', '), data[1:]))
+        data[0][1] = ', '.join(data[0][1: 1 + num_obj])
+        del data[0][1 + 1: 1 + num_obj]
+        frmt_str = '%1.6f'
+
+        self.assertEqual(frmt_str % 0.5, data[0][0])
+        self.assertEqual(f'[{0.9}, {0.8}]', data[0][1])
+        self.assertEqual(frmt_str % 0.5, data[0][4])
+
+        # Check aclib2-format
+        self.assertEqual(json_dicts_aclib2[0]['cpu_time'], .5)
+        self.assertEqual(json_dicts_aclib2[0]['cost'], [0.9, 0.8])
+        self.assertEqual(len(json_dicts_aclib2[0]['incumbent']), 4)
+        self.assertTrue("param_a='0.5'" in json_dicts_aclib2[0]['incumbent'])
+
+        # Check alljson-format
+        self.assertEqual(json_dicts_alljson[0]['cpu_time'], .5)
+        self.assertEqual(json_dicts_alljson[0]['cost'], [0.9, 0.8])
+        self.assertEqual(len(json_dicts_alljson[0]['incumbent']), 4)
+        self.assertTrue(json_dicts_alljson[0]["incumbent"]["param_a"] == 0.5)
+        self.assertEqual(json_dicts_alljson[0]['budget'], 0)
+
+    @patch('smac.stats.stats.Stats')
     def test_ambigious_categoricals(self, mock_stats):
         mock_stats.ta_time_used = 0.5
         mock_stats.get_used_wallclock_time = self.mocked_get_used_wallclock_time

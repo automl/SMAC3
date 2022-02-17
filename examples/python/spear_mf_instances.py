@@ -9,6 +9,7 @@ Moreover, we present you an alternative :term:`intensification<Intensification>`
 """
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 from smac.facade.smac_ac_facade import SMAC4AC
@@ -19,15 +20,15 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-if __name__ == '__main__':
-    scenario = Scenario('./spear_qcp/scenario.txt')
+if __name__ == "__main__":
+    scenario = Scenario("examples/commandline/spear_qcp/scenario.txt")
 
     # provide arguments for the intensifier like this
     intensifier_kwargs = {
-        'n_seeds': 2,  # specify the number of seeds to evaluate for a non-deterministic target algorithm
-        'initial_budget': 1,
-        'eta': 3,
-        'min_chall': 1  # because successive halving cannot handle min_chall > 1
+        "n_seeds": 2,  # specify the number of seeds to evaluate for a non-deterministic target algorithm
+        "initial_budget": 1,
+        "eta": 3,
+        "min_chall": 1,  # because successive halving cannot handle min_chall > 1
     }
 
     smac = SMAC4AC(
@@ -35,7 +36,7 @@ if __name__ == '__main__':
         intensifier_kwargs=intensifier_kwargs,  # arguments for Successive Halving
         # change intensifier to successive halving by passing the class.
         # it must implement `AbstractRacer`.
-        intensifier=SuccessiveHalving
+        intensifier=SuccessiveHalving,
     )
 
     # Start optimization

@@ -34,7 +34,7 @@ def target(x, seed, instance):
     """
     # Return x[i] (with brackets) so we pass the value, not the
     # np array element
-    return x[0] ** 2, {'key': seed, 'instance': instance}
+    return x[0] ** 2, {"key": seed, "instance": instance}
 
 
 class ConfigurationMock(object):
@@ -46,12 +46,17 @@ class ConfigurationMock(object):
 
 
 class TestSMBO(unittest.TestCase):
-
     def setUp(self):
-        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
-                                  'run_obj': 'quality',
-                                  'output_dir': 'data-test_smbo',
-                                  "runcount-limit": 5})
+        self.scenario = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo",
+                "runcount-limit": 5,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
 
@@ -61,13 +66,15 @@ class TestSMBO(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
 
     def branin(self, x):
-        y = (x[:, 1] - (5.1 / (4 * np.pi ** 2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
+        y = (
+            x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6
+        ) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
         return y[:, np.newaxis]
 
     def test_init_only_scenario_runtime(self):
-        self.scenario.run_obj = 'runtime'
+        self.scenario.run_obj = "runtime"
         self.scenario.cutoff = 300
         smbo = SMAC4AC(self.scenario).solver
         self.assertIsInstance(smbo.epm_chooser.model, RandomForestWithInstances)
@@ -98,19 +105,26 @@ class TestSMBO(unittest.TestCase):
             "<class 'str'>.",
             SMAC4AC,
             self.scenario,
-            rng='BLA',
+            rng="BLA",
         )
 
-    @mock.patch('smac.tae.execute_func.ExecuteTAFuncDict._call_ta')
+    @mock.patch("smac.tae.execute_func.ExecuteTAFuncDict._call_ta")
     def test_abort_on_initial_design(self, patch):
         def target(x):
             return 5
 
         # should raise an error if abort_on_first_run_crash is True
         patch.side_effect = FirstRunCrashedException()
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
-                         'abort_on_first_run_crash': True})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-abort",
+                "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
         with self.assertRaisesRegex(FirstRunCrashedException, "in _mock_call"):
@@ -118,9 +132,17 @@ class TestSMBO(unittest.TestCase):
 
         # should not raise an error if abort_on_first_run_crash is False
         patch.side_effect = FirstRunCrashedException()
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
-                         'abort_on_first_run_crash': False, 'wallclock-limit': 1})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-abort",
+                "abort_on_first_run_crash": False,
+                "wallclock-limit": 1,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
@@ -128,27 +150,42 @@ class TestSMBO(unittest.TestCase):
             smbo.start()
             smbo.run()
         except FirstRunCrashedException:
-            self.fail('Raises FirstRunCrashedException unexpectedly!')
+            self.fail("Raises FirstRunCrashedException unexpectedly!")
 
-    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    @mock.patch("smac.tae.execute_func.AbstractTAFunc.run")
     def test_abort_on_runner(self, patch):
         def target(x):
             return 5
 
         # should raise an error if abort_on_first_run_crash is True
         patch.side_effect = FirstRunCrashedException()
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
-                         'abort_on_first_run_crash': True})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-abort",
+                "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
         # should not raise an error if abort_on_first_run_crash is False
         patch.side_effect = FirstRunCrashedException()
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
-                         'abort_on_first_run_crash': False, 'wallclock-limit': 1})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-abort",
+                "abort_on_first_run_crash": False,
+                "wallclock-limit": 1,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
@@ -156,18 +193,25 @@ class TestSMBO(unittest.TestCase):
             smbo.start()
             smbo.run()
         except FirstRunCrashedException:
-            self.fail('Raises FirstRunCrashedException unexpectedly!')
+            self.fail("Raises FirstRunCrashedException unexpectedly!")
 
-    @mock.patch('smac.tae.execute_func.AbstractTAFunc.run')
+    @mock.patch("smac.tae.execute_func.AbstractTAFunc.run")
     def test_stop_smbo(self, patch):
         def target(x):
             return 5
 
         # should raise an error if abort_on_first_run_crash is True
         patch.return_value = StatusType.STOP, 0.5, 0.5, {}
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-abort',
-                         'abort_on_first_run_crash': True})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-abort",
+                "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.output_dirs.append(scen.output_dir)
         smbo = SMAC4AC(scen, tae_runner=target, rng=1)
         self.assertFalse(smbo.solver._stop)
@@ -182,19 +226,33 @@ class TestSMBO(unittest.TestCase):
             return 5
 
         def get_smbo(intensification_perc):
-            """ Return SMBO with intensification_percentage. """
-            scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                             'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification',
-                             'intensification_percentage': intensification_perc})
+            """Return SMBO with intensification_percentage."""
+            scen = Scenario(
+                {
+                    "cs": test_helpers.get_branin_config_space(),
+                    "run_obj": "quality",
+                    "output_dir": "data-test_smbo-intensification",
+                    "intensification_percentage": intensification_perc,
+                    "deterministic": False,
+                    "limit_resources": True,
+                }
+            )
             self.output_dirs.append(scen.output_dir)
             return SMAC4AC(scen, tae_runner=target, rng=1).solver
+
         # Test for valid values
         smbo = get_smbo(0.3)
-        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0, update=False))
+        self.assertAlmostEqual(
+            3.0, smbo._get_timebound_for_intensification(7.0, update=False)
+        )
         smbo = get_smbo(0.5)
-        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03, update=False))
+        self.assertAlmostEqual(
+            0.03, smbo._get_timebound_for_intensification(0.03, update=False)
+        )
         smbo = get_smbo(0.7)
-        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6, update=False))
+        self.assertAlmostEqual(
+            1.4, smbo._get_timebound_for_intensification(0.6, update=False)
+        )
         # Test for invalid <= 0
         smbo = get_smbo(0)
         self.assertRaises(ValueError, smbo.run)
@@ -215,15 +273,27 @@ class TestSMBO(unittest.TestCase):
         def target(x):
             return 5
 
-        scen = Scenario({'cs': test_helpers.get_branin_config_space(),
-                         'run_obj': 'quality', 'output_dir': 'data-test_smbo-intensification'})
+        scen = Scenario(
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_smbo-intensification",
+                "save_instantly": False,
+                "deterministic": False,
+                "limit_resources": True,
+            },
+        )
         self.output_dirs.append(scen.output_dir)
         solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
         solver.stats.is_budget_exhausted = unittest.mock.Mock()
-        solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
+        solver.stats.is_budget_exhausted.side_effect = tuple(
+            ([False] * 10) + [True] * 8
+        )
 
-        solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
+        solver._get_timebound_for_intensification = unittest.mock.Mock(
+            wraps=solver._get_timebound_for_intensification
+        )
 
         class SideEffect:
             def __init__(self, intensifier, get_next_run):
@@ -238,38 +308,66 @@ class TestSMBO(unittest.TestCase):
                 return self.get_next_run(*args, **kwargs)
 
         solver.intensifier.get_next_run = unittest.mock.Mock(
-            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_run))
+            side_effect=SideEffect(solver.intensifier, solver.intensifier.get_next_run)
+        )
 
         solver.run()
 
         get_timebound_mock = solver._get_timebound_for_intensification
         self.assertEqual(get_timebound_mock.call_count, 6)
-        self.assertFalse(get_timebound_mock.call_args_list[0][1]['update'])
-        self.assertFalse(get_timebound_mock.call_args_list[1][1]['update'])
-        self.assertTrue(get_timebound_mock.call_args_list[2][1]['update'])
-        self.assertFalse(get_timebound_mock.call_args_list[3][1]['update'])
-        self.assertTrue(get_timebound_mock.call_args_list[4][1]['update'])
-        self.assertTrue(get_timebound_mock.call_args_list[5][1]['update'])
+        self.assertFalse(get_timebound_mock.call_args_list[0][1]["update"])
+        self.assertFalse(get_timebound_mock.call_args_list[1][1]["update"])
+        self.assertTrue(get_timebound_mock.call_args_list[2][1]["update"])
+        self.assertFalse(get_timebound_mock.call_args_list[3][1]["update"])
+        self.assertTrue(get_timebound_mock.call_args_list[4][1]["update"])
+        self.assertTrue(get_timebound_mock.call_args_list[5][1]["update"])
 
-        self.assertGreater(get_timebound_mock.call_args_list[2][0][0], get_timebound_mock.call_args_list[1][0][0])
-        self.assertLess(get_timebound_mock.call_args_list[3][0][0], get_timebound_mock.call_args_list[2][0][0])
-        self.assertGreater(get_timebound_mock.call_args_list[4][0][0], get_timebound_mock.call_args_list[3][0][0])
-        self.assertGreater(get_timebound_mock.call_args_list[5][0][0], get_timebound_mock.call_args_list[4][0][0])
+        self.assertGreater(
+            get_timebound_mock.call_args_list[2][0][0],
+            get_timebound_mock.call_args_list[1][0][0],
+        )
+        self.assertLess(
+            get_timebound_mock.call_args_list[3][0][0],
+            get_timebound_mock.call_args_list[2][0][0],
+        )
+        self.assertGreater(
+            get_timebound_mock.call_args_list[4][0][0],
+            get_timebound_mock.call_args_list[3][0][0],
+        )
+        self.assertGreater(
+            get_timebound_mock.call_args_list[5][0][0],
+            get_timebound_mock.call_args_list[4][0][0],
+        )
 
     def test_validation(self):
-        with mock.patch.object(TrajLogger, "read_traj_aclib_format",
-                               return_value=None):
+        with mock.patch.object(TrajLogger, "read_traj_aclib_format", return_value=None):
             self.scenario.output_dir = "test"
             smac = SMAC4AC(self.scenario)
             self.output_dirs.append(smac.output_dir)
             smbo = smac.solver
-            with mock.patch.object(Validator, "validate", return_value=None) as validation_mock:
-                smbo.validate(config_mode='inc', instance_mode='train+test',
-                              repetitions=1, use_epm=False, n_jobs=-1, backend='threading')
+            with mock.patch.object(
+                Validator, "validate", return_value=None
+            ) as validation_mock:
+                smbo.validate(
+                    config_mode="inc",
+                    instance_mode="train+test",
+                    repetitions=1,
+                    use_epm=False,
+                    n_jobs=-1,
+                    backend="threading",
+                )
                 self.assertTrue(validation_mock.called)
-            with mock.patch.object(Validator, "validate_epm", return_value=None) as epm_validation_mock:
-                smbo.validate(config_mode='inc', instance_mode='train+test',
-                              repetitions=1, use_epm=True, n_jobs=-1, backend='threading')
+            with mock.patch.object(
+                Validator, "validate_epm", return_value=None
+            ) as epm_validation_mock:
+                smbo.validate(
+                    config_mode="inc",
+                    instance_mode="train+test",
+                    repetitions=1,
+                    use_epm=True,
+                    n_jobs=-1,
+                    backend="threading",
+                )
                 self.assertTrue(epm_validation_mock.called)
 
     def test_no_initial_design(self):
@@ -279,7 +377,9 @@ class TestSMBO(unittest.TestCase):
         smbo = smac.solver
         # SMBO should have the default configuration as the 1st config if no initial design is given
         smbo.start()
-        self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
+        self.assertEqual(
+            smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration()
+        )
 
     def test_ta_integration_to_smbo(self):
         """
@@ -300,19 +400,22 @@ class TestSMBO(unittest.TestCase):
 
             # FIRST: config space
             cs = ConfigurationSpace()
-            cs.add_hyperparameter(UniformFloatHyperparameter('x', -10.0, 10.0))
+            cs.add_hyperparameter(UniformFloatHyperparameter("x", -10.0, 10.0))
             smac = SMAC4HPO(
-                scenario=Scenario({
-                    'n_workers': n_workers,
-                    'cs': cs,
-                    'runcount_limit': 5,
-                    'run_obj': 'quality',
-                    "deterministic": "true",
-                    "initial_incumbent": "DEFAULT",
-                    'output_dir': 'data-test_smbo'
-                }),
+                scenario=Scenario(
+                    {
+                        "n_workers": n_workers,
+                        "cs": cs,
+                        "runcount_limit": 5,
+                        "run_obj": "quality",
+                        "deterministic": True,
+                        "limit_resources": True,
+                        "initial_incumbent": "DEFAULT",
+                        "output_dir": "data-test_smbo",
+                    }
+                ),
                 tae_runner=ExecuteTAFuncArray,
-                tae_runner_kwargs={'ta': target},
+                tae_runner_kwargs={"ta": target},
             )
 
             # Register output dir for deletion
@@ -326,11 +429,19 @@ class TestSMBO(unittest.TestCase):
             def mock_get_next_run(**kwargs):
                 config = cs.sample_configuration()
                 all_configs.append(config)
-                return (RunInfoIntent.RUN, RunInfo(
-                    config=config, instance=time.time() % 10,
-                    instance_specific={}, seed=0,
-                    cutoff=None, capped=False, budget=0.0
-                ))
+                return (
+                    RunInfoIntent.RUN,
+                    RunInfo(
+                        config=config,
+                        instance=time.time() % 10,
+                        instance_specific={},
+                        seed=0,
+                        cutoff=None,
+                        capped=False,
+                        budget=0.0,
+                    ),
+                )
+
             intensifier = unittest.mock.Mock()
             intensifier.num_run = 0
             intensifier.process_results.return_value = (0.0, 0.0)
@@ -359,9 +470,7 @@ class TestSMBO(unittest.TestCase):
                     list(smbo.runhistory.config_ids.values()).index(k.config_id)
                 ]
 
-                self.assertEqual(v.cost,
-                                 config.get('x')**2
-                                 )
+                self.assertEqual(v.cost, config.get("x") ** 2)
 
             # No config is lost in the config history
             self.assertCountEqual(smbo.runhistory.config_ids.keys(), all_configs)
@@ -379,7 +488,9 @@ class TestSMBO(unittest.TestCase):
             X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
             self.assertEqual(X.shape[0], len(all_configs))
 
-    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, 'process_results')
+    @unittest.mock.patch.object(
+        smac.facade.smac_ac_facade.Intensifier, "process_results"
+    )
     def test_incorporate_run_results_callback(self, process_results_mock):
 
         process_results_mock.return_value = None, None
@@ -403,18 +514,31 @@ class TestSMBO(unittest.TestCase):
 
         config = self.scenario.cs.sample_configuration()
 
-        run_info = RunInfo(config=config, instance=None, instance_specific=None, seed=1,
-                           cutoff=None, capped=False, budget=0.0, source_id=0)
-        result = RunValue(1.2345, 2.3456, 'status', 'starttime', 'endtime', 'additional_info')
+        run_info = RunInfo(
+            config=config,
+            instance=None,
+            instance_specific=None,
+            seed=1,
+            cutoff=None,
+            capped=False,
+            budget=0.0,
+            source_id=0,
+        )
+        result = RunValue(
+            1.2345, 2.3456, "status", "starttime", "endtime", "additional_info"
+        )
         time_left = 10
 
-        smbo._incorporate_run_results(run_info=run_info, result=result, time_left=time_left)
+        smbo._incorporate_run_results(
+            run_info=run_info, result=result, time_left=time_left
+        )
         self.assertEqual(callback.num_call, 1)
         self.assertEqual(callback.config, config)
 
-    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, 'process_results')
+    @unittest.mock.patch.object(
+        smac.facade.smac_ac_facade.Intensifier, "process_results"
+    )
     def test_incorporate_run_results_callback_stop_loop(self, process_results_mock):
-
         def target(x):
             return 5
 

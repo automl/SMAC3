@@ -129,7 +129,7 @@ If you use SMAC in one of your research projects, please cite us:
 ```
 @misc{lindauer2021smac3,
       title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
-      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
       year={2021},
       eprint={2109.09831},
       archivePrefix={arXiv},

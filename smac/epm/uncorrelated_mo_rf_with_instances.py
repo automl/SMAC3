@@ -11,13 +11,33 @@ __license__ = "3-clause BSD"
 
 
 class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
-
     """Wrapper for the random forest to predict multiple targets.
 
     Only the a list with the target names and the types array for the
     underlying forest model are mandatory. All other hyperparameters to
     the random forest can be passed via kwargs. Consult the documentation of
     the random forest for the hyperparameters and their meanings.
+
+
+    Parameters
+    ----------
+    target_names : list
+        List of str, each entry is the name of one target dimension. Length
+        of the list will be ``n_objectives``.
+    types : List[int]
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass [3, 0]. Note that we count starting from 0.
+    bounds : List[Tuple[float, float]]
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+    instance_features : np.ndarray (I, K)
+        Contains the K dimensional instance features of the I different instances
+    pca_components : float
+        Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+        set n_feats (> pca_dims).
+
 
     Attributes
     ----------
@@ -37,27 +57,6 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        target_names : list
-            List of str, each entry is the name of one target dimension. Length
-            of the list will be ``n_objectives``.
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        instance_features : np.ndarray (I, K)
-            Contains the K dimensional instance features of the I different instances
-        pca_components : float
-            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
         super().__init__(
             configspace=configspace,
             bounds=bounds,

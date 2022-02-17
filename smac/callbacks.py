@@ -30,7 +30,6 @@ How to add a new callback
 
 
 class IncorporateRunResultCallback:
-
     """Callback to react on a new run result.
 
     Called after the finished run is added to the runhistory.

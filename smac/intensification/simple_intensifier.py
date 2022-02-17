@@ -15,7 +15,6 @@ __license__ = "3-clause BSD"
 
 
 class SimpleIntensifier(AbstractRacer):
-
     """ Performs the traditional Bayesian Optimization loop, without
         instance/seed intensification
 
@@ -37,7 +36,6 @@ class SimpleIntensifier(AbstractRacer):
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
     """
-
     def __init__(self,
                  stats: Stats,
                  traj_logger: TrajLogger,
@@ -47,6 +45,7 @@ class SimpleIntensifier(AbstractRacer):
                  cutoff: typing.Optional[float] = None,
                  deterministic: bool = False,
                  run_obj_time: bool = True,
+                 num_obj: int = 1,
                  **kwargs: typing.Any
                  ) -> None:
 
@@ -60,7 +59,9 @@ class SimpleIntensifier(AbstractRacer):
                          run_obj_time=run_obj_time,
                          adaptive_capping_slackfactor=1.0,
                          min_chall=1,
+                         num_obj=num_obj,
                          )
+        # Simple intensifier does not require comparing run results, thus we could simply ignore num_obj here
 
         # We want to control the number of runs that are sent to
         # the workers. At any time, we want to make sure that if there
