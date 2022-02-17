@@ -10,13 +10,13 @@ ROAR:
 
 .. code-block:: bash
 
-   $ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode ROAR
+   $ python3 ./scripts/smac.py --scenario examples/python/spear_qcp/scenario.txt --verbose DEBUG --mode ROAR
 
 
 SMAC4AC:
 
 .. code-block:: bash
 
-   $ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode SMAC4AC
+   $ python3 ./scripts/smac.py --scenario examples/python/spear_qcp/scenario.txt --verbose DEBUG --mode SMAC4AC
 
 """

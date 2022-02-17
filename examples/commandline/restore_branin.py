@@ -26,8 +26,8 @@ if "__main__" == __name__:
 
     # Initialize scenario, using runcount_limit as budget.
     original_scenario_dict = {
-        "algo": "python branin.py",
-        "paramfile": "branin/configspace.pcs",
+        "algo": "python examples/commandline/branin.py",
+        "paramfile": "examples/commandline/branin/configspace.pcs",
         "run_obj": "quality",
         "runcount_limit": 25,
         "deterministic": True,
