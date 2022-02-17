@@ -202,7 +202,7 @@ class RunHistory(object):
         self.external = {}  # type: Dict[RunKey, DataOrigin]
 
         self.overwrite_existing_runs = overwrite_existing_runs
-        self.num_obj = -1  # type: int
+        self.num_obj = None  # type: Optional[int]
         self.objective_bounds = []  # type: List[Tuple[float, float]]
 
     def add(
@@ -275,7 +275,7 @@ class RunHistory(object):
         else:
             config_id = cast(int, config_id_tmp)
 
-        if self.num_obj == -1:
+        if self.num_obj is None:
             self.num_obj = np.size(cost)
         else:
             if np.size(cost) != self.num_obj:
@@ -344,6 +344,7 @@ class RunHistory(object):
                 if not isinstance(costs, Iterable):
                     costs = [costs]
 
+                assert len(costs) == self.num_obj
                 all_costs.append(costs)
 
         all_costs = np.array(all_costs, dtype=float)
@@ -656,7 +657,7 @@ class RunHistory(object):
         # important to use add method to use all data structure correctly
         for k, v in all_data["data"]:
             # Set num_obj first
-            if self.num_obj == -1:
+            if self.num_obj is None:
                 if isinstance(v[0], float) or isinstance(v[0], int):
                     self.num_obj = 1
                 else:
