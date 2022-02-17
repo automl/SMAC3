@@ -132,7 +132,7 @@ class AbstractWrapper(object):
             self.parser.add_argument(
                 "--runsolver-path",
                 dest="runsolver",
-                default="examples/python/spear_qcp/target_algorithm/runsolver/runsolver",
+                default="examples/commandline/spear_qcp/target_algorithm/runsolver/runsolver",
                 help="path to runsolver binary (if None, the runsolver is deactivated)",
             )
             self.parser.add_argument(

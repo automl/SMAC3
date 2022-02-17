@@ -26,9 +26,7 @@ class MockSMBO(SMBO):
 class TestPSMACFacade(unittest.TestCase):
     def setUp(self):
         self.output_dirs = []
-        fn = os.path.join(
-            os.path.dirname(__file__), "../test_files/spear_hydra_test_scenario.txt"
-        )
+        fn = "test/test_files/spear_hydra_test_scenario.txt"
         self.scenario = Scenario(fn)
         self.scenario.limit_resources = True
 
