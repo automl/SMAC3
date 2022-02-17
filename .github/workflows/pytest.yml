@@ -26,7 +26,7 @@ env:
   pytest-args: >-
     --forked
     --durations=20
-    --timeout=300
+    --timeout=500
     --timeout-method=thread
     --full-trace
     -s
@@ -139,6 +139,6 @@ jobs:
       uses: codecov/codecov-action@v2
       with:
         # token: ${{secrets.CODECOV_TOKEN}}
-        version: "v0.1.15"
+        # version: "v0.1.15"
         fail_ci_if_error: true
         verbose: true
