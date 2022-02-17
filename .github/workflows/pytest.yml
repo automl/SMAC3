@@ -26,7 +26,7 @@ env:
   pytest-args: >-
     --forked
     --durations=20
-    --timeout=500
+    --timeout=300
     --timeout-method=thread
     --full-trace
     -s
