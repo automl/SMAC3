@@ -1,5 +1,5 @@
-smac.optimizer.pSMAC module
-===========================
+smac.optimizer.pSMAC
+====================
 
 .. automodule:: smac.optimizer.pSMAC
    :members:

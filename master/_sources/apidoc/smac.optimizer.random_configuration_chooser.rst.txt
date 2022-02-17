@@ -1,5 +1,5 @@
-smac.optimizer.random\_configuration\_chooser module
-====================================================
+smac.optimizer.random\_configuration\_chooser
+=============================================
 
 .. automodule:: smac.optimizer.random_configuration_chooser
    :members:

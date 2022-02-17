@@ -1,5 +1,5 @@
-smac.initial\_design.factorial\_design module
-=============================================
+smac.initial\_design.factorial\_design
+======================================
 
 .. automodule:: smac.initial_design.factorial_design
    :members:

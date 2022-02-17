@@ -1,5 +1,5 @@
-smac.utils package
-==================
+smac.utils
+==========
 
 .. automodule:: smac.utils
    :members:
@@ -11,7 +11,7 @@ Subpackages
 -----------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
 
    smac.utils.io
 
@@ -25,5 +25,6 @@ Submodules
    smac.utils.dependencies
    smac.utils.logging
    smac.utils.merge_foreign_data
+   smac.utils.multi_objective
    smac.utils.test_helpers
    smac.utils.validate

@@ -1,5 +1,5 @@
-smac.epm.util\_funcs module
-===========================
+smac.epm.util\_funcs
+====================
 
 .. automodule:: smac.epm.util_funcs
    :members:

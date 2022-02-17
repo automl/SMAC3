@@ -1,0 +1,8 @@
+smac.utils.multi\_objective
+===========================
+
+.. automodule:: smac.utils.multi_objective
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

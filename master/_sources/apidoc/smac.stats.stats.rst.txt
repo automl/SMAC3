@@ -1,5 +1,5 @@
-smac.stats.stats module
-=======================
+smac.stats.stats
+================
 
 .. automodule:: smac.stats.stats
    :members:

@@ -1,5 +1,5 @@
-smac.tae.dask\_runner module
-============================
+smac.tae.dask\_runner
+=====================
 
 .. automodule:: smac.tae.dask_runner
    :members:

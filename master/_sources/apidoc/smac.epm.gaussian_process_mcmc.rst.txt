@@ -1,5 +1,5 @@
-smac.epm.gaussian\_process\_mcmc module
-=======================================
+smac.epm.gaussian\_process\_mcmc
+================================
 
 .. automodule:: smac.epm.gaussian_process_mcmc
    :members:

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.scenario.scenario module &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>smac.scenario.scenario &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.smac_cli module" href="smac.smac_cli.html" />
-    <link rel="prev" title="smac.scenario package" href="smac.scenario.html" />
+    <link rel="next" title="smac.tae" href="smac.tae.html" />
+    <link rel="prev" title="smac.scenario" href="smac.scenario.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -162,6 +162,11 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/spear_qcp.html">
+     SPEAR-QCP
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../pages/examples/commandline/branin.html">
      Branin
     </a>
@@ -177,28 +182,38 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/synthetic_function.html">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/gb_non_deterministic.html">
+    <a class="reference internal" href="../pages/examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/svm_cv.html">
+    <a class="reference internal" href="../pages/examples/python/plot_svm_cv.html">
      SVM with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/sgd_instances.html">
+    <a class="reference internal" href="../pages/examples/python/plot_sgd_instances.html">
      SGD on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/mlp_mf.html">
+    <a class="reference internal" href="../pages/examples/python/plot_mlp_mf.html">
      MLP with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
     </a>
    </li>
   </ul>
@@ -231,6 +246,16 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -271,63 +296,63 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2 current active">
     <a class="reference internal" href="smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -384,7 +409,7 @@ style="width: 100%;">
               <div>
                 
   <section id="module-smac.scenario.scenario">
-<span id="smac-scenario-scenario-module"></span><h1>smac.scenario.scenario module<a class="headerlink" href="#module-smac.scenario.scenario" title="Permalink to this headline">¶</a></h1>
+<span id="smac-scenario-scenario"></span><h1>smac.scenario.scenario<a class="headerlink" href="#module-smac.scenario.scenario" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.scenario.scenario.Scenario">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.scenario.scenario.</span></span><span class="sig-name descname"><span class="pre">Scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd_options</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.scenario.scenario.Scenario" title="Permalink to this definition">¶</a></dt>
@@ -392,6 +417,21 @@ style="width: 100%;">
 <p>Scenario contains the configuration of the optimization process and
 constructs a scenario object from a file or dictionary.</p>
 <p>All arguments set in the Scenario are set as attributes.</p>
+<p>Creates a scenario-object. The output_dir will be
+“output_dir/run_id/” and if that exists already, the old folder and its
+content will be moved (without any checks on whether it’s still used by
+another process) to “output_dir/run_id.OLD”. If that exists, “.OLD”s
+will be appended until possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<em>str</em><em> or </em><em>dict</em><em> or </em><em>None</em>) – If str, it will be interpreted as to a path a scenario file
+If dict, it will be directly to get all scenario related information
+If None, only cmd_options will be used</p></li>
+<li><p><strong>cmd_options</strong> (<em>dict</em>) – Options from parsed command line arguments</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.scenario.scenario.Scenario._to_str_and_warn">
 <span class="sig-name descname"><span class="pre">_to_str_and_warn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.scenario.scenario.Scenario._to_str_and_warn" title="Permalink to this definition">¶</a></dt>
@@ -438,13 +478,13 @@ constructs a scenario object from a file or dictionary.</p>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.scenario package</p>
+            <p class="prev-next-title">smac.scenario</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.smac_cli.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.tae.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.smac_cli module</p>
+        <p class="prev-next-title">smac.tae</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -462,7 +502,7 @@ constructs a scenario object from a file or dictionary.</p>
     
     <div class="footer-item">
       <p class="copyright">
-    &copy; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.<br>
+    &copy; Copyright 2015-2022, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
 </p>
     </div>
     

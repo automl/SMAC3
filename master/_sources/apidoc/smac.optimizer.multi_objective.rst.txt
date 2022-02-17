@@ -1,0 +1,18 @@
+smac.optimizer.multi\_objective
+===============================
+
+.. automodule:: smac.optimizer.multi_objective
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   smac.optimizer.multi_objective.abstract_multi_objective_algorithm
+   smac.optimizer.multi_objective.aggregation_strategy
+   smac.optimizer.multi_objective.parego

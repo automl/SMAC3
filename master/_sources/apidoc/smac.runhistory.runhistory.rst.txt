@@ -1,5 +1,5 @@
-smac.runhistory.runhistory module
-=================================
+smac.runhistory.runhistory
+==========================
 
 .. automodule:: smac.runhistory.runhistory
    :members:

@@ -1,5 +1,5 @@
-smac.runhistory.runhistory2epm module
-=====================================
+smac.runhistory.runhistory2epm
+==============================
 
 .. automodule:: smac.runhistory.runhistory2epm
    :members:

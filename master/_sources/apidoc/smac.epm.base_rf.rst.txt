@@ -1,5 +1,5 @@
-smac.epm.base\_rf module
-========================
+smac.epm.base\_rf
+=================
 
 .. automodule:: smac.epm.base_rf
    :members:

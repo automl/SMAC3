@@ -1,5 +1,5 @@
-smac.intensification.hyperband module
-=====================================
+smac.intensification.hyperband
+==============================
 
 .. automodule:: smac.intensification.hyperband
    :members:

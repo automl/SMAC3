@@ -1,5 +1,5 @@
-smac.utils.dependencies module
-==============================
+smac.utils.dependencies
+=======================
 
 .. automodule:: smac.utils.dependencies
    :members:

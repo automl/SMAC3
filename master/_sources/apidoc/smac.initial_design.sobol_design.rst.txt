@@ -1,5 +1,5 @@
-smac.initial\_design.sobol\_design module
-=========================================
+smac.initial\_design.sobol\_design
+==================================
 
 .. automodule:: smac.initial_design.sobol_design
    :members:

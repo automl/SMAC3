@@ -1,5 +1,5 @@
-smac.scenario.scenario module
-=============================
+smac.scenario.scenario
+======================
 
 .. automodule:: smac.scenario.scenario
    :members:

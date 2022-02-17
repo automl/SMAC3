@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.epm.uncorrelated_mo_rf_with_instances module &#8212; SMAC3 Documentation 1.1.1 documentation</title>
+    <title>smac.epm.uncorrelated_mo_rf_with_instances &#8212; SMAC3 Documentation 1.2 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.epm.util_funcs module" href="smac.epm.util_funcs.html" />
-    <link rel="prev" title="smac.epm.rfr_imputator module" href="smac.epm.rfr_imputator.html" />
+    <link rel="next" title="smac.epm.util_funcs" href="smac.epm.util_funcs.html" />
+    <link rel="prev" title="smac.epm.rfr_imputator" href="smac.epm.rfr_imputator.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -116,7 +116,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.1.1</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -162,6 +162,11 @@ style="width: 100%;">
   </label>
   <ul>
    <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/commandline/spear_qcp.html">
+     SPEAR-QCP
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../pages/examples/commandline/branin.html">
      Branin
     </a>
@@ -177,28 +182,38 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/synthetic_function.html">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/gb_non_deterministic.html">
+    <a class="reference internal" href="../pages/examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/svm_cv.html">
+    <a class="reference internal" href="../pages/examples/python/plot_svm_cv.html">
      SVM with Cross-Validation
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/sgd_instances.html">
+    <a class="reference internal" href="../pages/examples/python/plot_sgd_instances.html">
      SGD on Instances
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/mlp_mf.html">
+    <a class="reference internal" href="../pages/examples/python/plot_mlp_mf.html">
      MLP with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
     </a>
    </li>
   </ul>
@@ -231,6 +246,16 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/arguments.html">
      Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -271,63 +296,63 @@ style="width: 100%;">
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="smac.callbacks.html">
-     smac.callbacks module
-    </a>
-   </li>
-   <li class="toctree-l2 current active">
-    <a class="reference internal" href="smac.epm.html">
-     smac.epm package
-    </a>
-   </li>
-   <li class="toctree-l2">
     <a class="reference internal" href="smac.facade.html">
-     smac.facade package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.initial_design.html">
-     smac.initial_design package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.intensification.html">
-     smac.intensification package
+     smac.facade
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.optimizer.html">
-     smac.optimizer package
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.runhistory.html">
-     smac.runhistory package
+     smac.runhistory
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.scenario.html">
-     smac.scenario package
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.smac_cli.html">
-     smac.smac_cli module
-    </a>
-   </li>
-   <li class="toctree-l2">
-    <a class="reference internal" href="smac.stats.html">
-     smac.stats package
+     smac.scenario
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.tae.html">
-     smac.tae package
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="smac.utils.html">
-     smac.utils package
+     smac.utils
     </a>
    </li>
   </ul>
@@ -384,7 +409,7 @@ style="width: 100%;">
               <div>
                 
   <section id="module-smac.epm.uncorrelated_mo_rf_with_instances">
-<span id="smac-epm-uncorrelated-mo-rf-with-instances-module"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances module<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
+<span id="smac-epm-uncorrelated-mo-rf-with-instances"></span><h1>smac.epm.uncorrelated_mo_rf_with_instances<a class="headerlink" href="#module-smac.epm.uncorrelated_mo_rf_with_instances" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.epm.uncorrelated_mo_rf_with_instances.</span></span><span class="sig-name descname"><span class="pre">UncorrelatedMultiObjectiveRandomForestWithInstances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.ConfigurationSpace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf_kwargs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances" title="Permalink to this definition">¶</a></dt>
@@ -394,6 +419,23 @@ style="width: 100%;">
 underlying forest model are mandatory. All other hyperparameters to
 the random forest can be passed via kwargs. Consult the documentation of
 the random forest for the hyperparameters and their meanings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_names</strong> (<em>list</em>) – List of str, each entry is the name of one target dimension. Length
+of the list will be <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>.</p></li>
+<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
+the i-th entry corresponds to the i-th input dimension. Let’s say we
+have 2 dimension where the first dimension consists of 3 different
+categorical choices and the second dimension is continuous than we
+have to pass [3, 0]. Note that we count starting from 0.</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
+<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features of the I different instances</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+set n_feats (&gt; pca_dims).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names">
 <span class="sig-name descname"><span class="pre">target_names</span></span><a class="headerlink" href="#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names" title="Permalink to this definition">¶</a></dt>
@@ -486,13 +528,13 @@ instances for a set of configurations.</p>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.epm.rfr_imputator module</p>
+            <p class="prev-next-title">smac.epm.rfr_imputator</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.epm.util_funcs.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.epm.util_funcs module</p>
+        <p class="prev-next-title">smac.epm.util_funcs</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
@@ -510,7 +552,7 @@ instances for a set of configurations.</p>
     
     <div class="footer-item">
       <p class="copyright">
-    &copy; Copyright 2015-2021, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, René Sass and Frank Hutter.<br>
+    &copy; Copyright 2015-2022, Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter.<br>
 </p>
     </div>
     

@@ -1,5 +1,5 @@
-smac.facade.smac\_hpo\_facade module
-====================================
+smac.facade.smac\_hpo\_facade
+=============================
 
 .. automodule:: smac.facade.smac_hpo_facade
    :members:

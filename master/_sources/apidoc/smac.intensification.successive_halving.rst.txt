@@ -1,5 +1,5 @@
-smac.intensification.successive\_halving module
-===============================================
+smac.intensification.successive\_halving
+========================================
 
 .. automodule:: smac.intensification.successive_halving
    :members:

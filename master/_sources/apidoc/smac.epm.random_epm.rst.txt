@@ -1,5 +1,5 @@
-smac.epm.random\_epm module
-===========================
+smac.epm.random\_epm
+====================
 
 .. automodule:: smac.epm.random_epm
    :members:

@@ -1,5 +1,5 @@
-smac.epm.rf\_with\_instances module
-===================================
+smac.epm.rf\_with\_instances
+============================
 
 .. automodule:: smac.epm.rf_with_instances
    :members:

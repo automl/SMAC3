@@ -1,5 +1,5 @@
-smac.initial\_design package
-============================
+smac.initial\_design
+====================
 
 .. automodule:: smac.initial_design
    :members:

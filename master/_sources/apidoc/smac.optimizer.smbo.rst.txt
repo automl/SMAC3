@@ -1,5 +1,5 @@
-smac.optimizer.smbo module
-==========================
+smac.optimizer.smbo
+===================
 
 .. automodule:: smac.optimizer.smbo
    :members:

@@ -1,5 +1,5 @@
-smac.callbacks module
-=====================
+smac.callbacks
+==============
 
 .. automodule:: smac.callbacks
    :members:

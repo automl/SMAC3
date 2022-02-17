@@ -1,5 +1,5 @@
-smac.intensification.parallel\_scheduling module
-================================================
+smac.intensification.parallel\_scheduling
+=========================================
 
 .. automodule:: smac.intensification.parallel_scheduling
    :members:

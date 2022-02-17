@@ -1,5 +1,5 @@
-smac.epm.base\_epm module
-=========================
+smac.epm.base\_epm
+==================
 
 .. automodule:: smac.epm.base_epm
    :members:

@@ -1,5 +1,5 @@
-smac.utils.test\_helpers module
-===============================
+smac.utils.test\_helpers
+========================
 
 .. automodule:: smac.utils.test_helpers
    :members:

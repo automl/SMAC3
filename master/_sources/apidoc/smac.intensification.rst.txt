@@ -1,5 +1,5 @@
-smac.intensification package
-============================
+smac.intensification
+====================
 
 .. automodule:: smac.intensification
    :members:

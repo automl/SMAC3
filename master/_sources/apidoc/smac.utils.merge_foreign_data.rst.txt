@@ -1,5 +1,5 @@
-smac.utils.merge\_foreign\_data module
-======================================
+smac.utils.merge\_foreign\_data
+===============================
 
 .. automodule:: smac.utils.merge_foreign_data
    :members:

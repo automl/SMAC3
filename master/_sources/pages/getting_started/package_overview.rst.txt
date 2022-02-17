@@ -27,6 +27,9 @@ Flexible hyperparameters
 Any objectives
     Optimization with any :term:`objective<Objective>` (e.g., quality or runtime) is possible.
 
+:ref:`Multi-Objective<Multi-Objective Optimization>`
+    Optimize any number of objectives using scalarized multi-ojective algorithms.
+
 :term:`Multi-Fidelity<MF>` Optimization
     Judge configurations on multiple :term:`budgets<Budget>` to discard unsuitable configurations
     early on. This will result in a massive speed-up, depending on the budgets.
@@ -73,12 +76,8 @@ The following table provides an overview of SMAC's capabilities in comparison wi
 
     HyperMapper, ✅, ✅, ❌, ❌, ❌, ❌
     Optuna, ✅, ✅, ❌, ❌, ✅, ✅
-    Hyperopt, ✅, (✅) †, ❌, ❌, ✅, ✅
+    Hyperopt, ✅, ❌, ❌, ❌, ✅, ✅
     BoTorch, ❌, ✅, ✅, ❌, ❌, ✅
     OpenBox, ✅, ✅, ❌, ❌, ❌, ✅
-    HpBandSter, ✅, (✅) †, ✅, ❌, ❌, ✅
-    SMAC, ✅, (✅) †, ✅, ✅, ✅, ✅
-
-† Indirectly supported. For example, it can be implemented directly inside the :term:`TAE` by weighting costs.
-
-
+    HpBandSter, ✅, ❌, ✅, ❌, ❌, ✅
+    SMAC, ✅, ✅, ✅, ✅, ✅, ✅
