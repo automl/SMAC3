@@ -39,13 +39,21 @@ class MultiObjectiveTest(unittest.TestCase):
 
         # Test one-dimensional list
         v = [500, 150]
-        nv = normalize_costs(v, self.bounds_2d)
-        self.assertEqual(list(nv.flatten()), list(np.array([[500, 2.0]]).flatten()))
+        nv = normalize_costs(v, self.bounds_1d)
+        self.assertEqual(list(nv.flatten()), list(np.array([[500], [150]]).flatten()))
 
         # Test one-dimensional array without bounds
         v = np.array([500, 150])
         nv = normalize_costs(v)
-        self.assertEqual(list(nv.flatten()), list(np.array([[1.0, 1.0]]).flatten()))
+        self.assertEqual(list(nv.flatten()), list(np.array([[1.0], [0.0]]).flatten()))
+
+        # Test one-dimensional array without bounds
+        v = np.array([1000, 200, 400, 800, 600, 0])
+        nv = normalize_costs(v)
+        self.assertEqual(
+            list(nv.flatten()),
+            list(np.array([[1], [0.2], [0.4], [0.8], [0.6], [0.0]]).flatten()),
+        )
 
         # Test one-dimensional array with one objective
         v = np.array([500])

@@ -5,8 +5,8 @@ from abc import ABC
 
 class AbstractMultiObjectiveAlgorithm(ABC):
     """
-    A general interface for mutli-objective optimizer, dependeing on different streagies,
-    it can be applied to rh2epm or epmchooser.
+    A general interface for multi-objective optimizer, depending on different strategies.
+    It can be applied to rh2epm or epmchooser.
     """
 
     def __init__(

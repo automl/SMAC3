@@ -28,14 +28,14 @@ def normalize_costs(
     Returns
     -------
     np.ndarray
-        Normalized costs
+        Normalized costs.
     """
 
     if isinstance(values, list):
         values = np.array(values)
 
     if len(values.shape) == 1:
-        values = np.expand_dims(values, axis=0)
+        values = np.expand_dims(values, axis=-1)
 
     normalized_values = []
     for col in range(values.shape[1]):

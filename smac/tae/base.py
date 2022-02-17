@@ -215,7 +215,6 @@ class BaseRunner(ABC):
             )
         cutoff = None
         if run_info.cutoff is not None:
-            # cutoff = np.iinfo(np.int32).max
             cutoff = int(math.ceil(run_info.cutoff))
 
         try:
