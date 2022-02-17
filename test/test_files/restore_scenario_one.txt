@@ -3,5 +3,4 @@ run_obj = quality
 runcount_limit = 5
 output_dir = test/test_files/test_restore_state
 algo = python examples/commandline/branin.py
-limit_resources = 1
 deterministic = 0
