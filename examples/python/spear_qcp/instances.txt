@@ -1,4 +1,4 @@
-./spear_qcp/instances/qcplin2006.1031.cnf
-./spear_qcp/instances/qcplin2006.10641.cnf
-./spear_qcp/instances/qcplin2006.10218.cnf
-./spear_qcp/instances/qcplin2006.10556.cnf
+examples/python/spear_qcp/instances/qcplin2006.1031.cnf
+examples/python/spear_qcp/instances/qcplin2006.10641.cnf
+examples/python/spear_qcp/instances/qcplin2006.10218.cnf
+examples/python/spear_qcp/instances/qcplin2006.10556.cnf

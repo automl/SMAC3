@@ -1,5 +1,5 @@
-algo = python -u ./spear_qcp/target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script ./spear_qcp/target_algorithm/spear-python/spearCSSCWrapper.py
-paramfile = ./spear_qcp/target_algorithm/spear-python/spear-params-mixed.pcs
+algo = python -u examples/python/spear_qcp/target_algorithm/scripts/SATCSSCWrapper.py --mem-limit 1024 --script examples/python/spear_qcp/target_algorithm/spear-python/spearCSSCWrapper.py
+paramfile = examples/python/target_algorithm/spear-python/spear-params-mixed.pcs
 execdir = .
 deterministic = 0
 limit_resources = 1
@@ -7,5 +7,5 @@ run_obj = runtime
 overall_obj = PAR10
 cutoff_time = 5
 wallclock-limit = 60
-instance_file = ./spear_qcp/instances.txt
-feature_file = ./spear_qcp/features.txt
+instance_file = examples/python/spear_qcp/instances.txt
+feature_file = examples/python/spear_qcp/features.txt

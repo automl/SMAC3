@@ -1139,6 +1139,7 @@ class CMDReader(object):
             pass
         smac_cmd = []
         misc_dict = {}
+
         parsed_smac_args = {}
         for k, v in smac_dict.items():
             if k in self.smac_cmd_translations:
