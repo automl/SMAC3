@@ -1,4 +1,5 @@
 import typing
+import warnings
 
 from scipy.stats.qmc import Sobol
 
@@ -13,7 +14,7 @@ __license__ = "3-clause BSD"
 
 
 class SobolDesign(InitialDesign):
-    """ Sobol sequence design with a scrambled Sobol sequence.
+    """Sobol sequence design with a scrambled Sobol sequence.
 
     See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html for further information
 
@@ -42,9 +43,14 @@ class SobolDesign(InitialDesign):
                 constants += 1
 
         dim = len(params) - constants
-        sobol_gen = Sobol(d=dim, scramble=True, seed=self.rng.randint(low=0, high=10000000))
-        sobol = sobol_gen.random(self.init_budget)
+        sobol_gen = Sobol(
+            d=dim, scramble=True, seed=self.rng.randint(low=0, high=10000000)
+        )
 
-        return self._transform_continuous_designs(design=sobol,
-                                                  origin='Sobol',
-                                                  cs=self.cs)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            sobol = sobol_gen.random(self.init_budget)
+
+        return self._transform_continuous_designs(
+            design=sobol, origin="Sobol", cs=self.cs
+        )

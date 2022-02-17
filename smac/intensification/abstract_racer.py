@@ -352,8 +352,8 @@ class AbstractRacer(object):
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
-        # performance on challenger runs, the challenger only becomes incumbent if it dominates the incumbent
-        # TODO consider incumbents as Pareto Front (maybe a new multi-objective intensifier?)
+        # performance on challenger runs, the challenger only becomes incumbent
+        # if it dominates the incumbent
         chal_perf = run_history.average_cost(challenger, to_compare_runs)
         inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 

@@ -1,19 +1,27 @@
 # 1.2
 
 ## Features
-* Added multi objective via Par-EGO.
+* Added multi-objective optimization via Mean-Aggregation or Par-EGO (#817, #818). Both approaches normalize
+the costs objective-wise based on all data in the history.
 
 ## Major Changes
-* Results are instantly saved by default now.
-* Determinstic behaviour is default now.
+* Results are instantly saved by default now. That means, runhistory.json is saved every time
+a trial is added.
+* Determinstic behaviour (defined in scenario) is default now. Calling a function/TAE with the same
+seed and configuration is expected to be the same.
+* Limit resources behaviour is by default false now. This is particually important because pynisher
+does not work on all machines (e.g. Colab, Mac, Windows, ...) properly. 
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
 * Expanded `cost_for_crash` for multi-objective support.
 
 ## Examples
 * Integrated spear_qcp example for commandline.
-* Python examples are now executed so that the output is shown.
-* Added multi objective example.
+* Python examples are now executed so that the output in the documentation is shown.
+* Added multi-objective example.
+
+## Documentation
+* Added runhistory page.
 
 ## Workflow Clean-up
 * Adds PEP 561 compliance (exports types so other packages can be aware of them).
@@ -37,6 +45,7 @@
 * Parameters in the docs are shown first now.
 * Successive Halving only warns you once if one worker is used only.
 * Statistics are better readable now.
+* Sobol sequence does not print warnings anymore.
 
 
 # 1.1.1

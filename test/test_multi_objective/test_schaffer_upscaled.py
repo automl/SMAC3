@@ -7,20 +7,18 @@ from matplotlib import pyplot as plt
 
 from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_ac_facade import SMAC4AC
-from smac.optimizer.multi_objective.parego import ParEGO
 from smac.scenario.scenario import Scenario
 
 
 MIN_V = -2
 MAX_V = 2
+UPSCALING_FACTOR = 2000
 
 
 def schaffer(x):
     f1 = np.square(x)
-    f2 = np.square(np.sqrt(f1) - 2)
+    f2 = np.square(np.sqrt(f1) - 2) * UPSCALING_FACTOR
 
     return f1, f2
 
@@ -31,6 +29,8 @@ def get_optimum():
 
     for v in np.linspace(MIN_V, MAX_V, 200):
         f1, f2 = schaffer(v)
+
+        f2 = f2 / UPSCALING_FACTOR
 
         if f1 + f2 < optimum_sum:
             optimum_sum = f1 + f2
@@ -51,7 +51,14 @@ def plot(all_x):
 def plot_from_smac(smac):
     rh = smac.get_runhistory()
     all_x = []
-    for (config_id, _, _, _) in rh.data.keys():
+    for (config_id, instance_id, seed, budget), (
+        cost,
+        time,
+        status,
+        starttime,
+        endtime,
+        additional_info,
+    ) in rh.data.items():
         config = rh.ids_config[config_id]
         all_x.append(config["x"])
 
@@ -60,6 +67,7 @@ def plot_from_smac(smac):
 
 def tae(cfg):
     f1, f2 = schaffer(cfg["x"])
+
     return {"metric1": f1, "metric2": f2}
 
 
@@ -84,36 +92,27 @@ class SchafferTest(unittest.TestCase):
 
         self.facade_kwargs = {
             "scenario": self.scenario,
-            "rng": np.random.RandomState(5),
+            "rng": np.random.RandomState(0),
             "tae_runner": tae,
         }
 
-        self.parego_facade_kwargs = {
-            "scenario": self.scenario,
-            "rng": np.random.RandomState(5),
-            "tae_runner": tae,
-            "multi_objective_algorithm": ParEGO,
-            "multi_objective_kwargs": {"rho": 0.05},
-        }
+    def test_AC(self):
+        smac = SMAC4AC(**self.facade_kwargs)
+        incumbent = smac.optimize()
 
-    def test_facades(self):
-        results = []
-        for facade in [SMAC4BB, SMAC4HPO, SMAC4AC]:
-            smac = facade(**self.facade_kwargs)
-            incumbent = smac.optimize()
+        f1_inc, f2_inc = schaffer(incumbent["x"])
+        f1_opt, f2_opt = get_optimum()
 
-            f1_inc, f2_inc = schaffer(incumbent["x"])
-            f1_opt, f2_opt = get_optimum()
+        f2_inc = f2_inc / UPSCALING_FACTOR
 
-            self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
-            results.append(smac)
+        self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
 
-        return results
+        return smac
 
 
 if __name__ == "__main__":
     t = SchafferTest()
     t.setUp()
 
-    for smac in t.test_facades():
-        plot_from_smac(smac)
+    smac = t.test_AC()
+    plot_from_smac(smac)

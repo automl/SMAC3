@@ -9,6 +9,8 @@ Optimize both the final performance and the time used for training.
 
 import logging
 
+from smac.optimizer.multi_objective.parego import ParEGO
+
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
@@ -16,8 +18,11 @@ import matplotlib.pyplot as plt
 import time
 
 from ConfigSpace.conditions import InCondition
-from ConfigSpace.hyperparameters import \
-    CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+)
 from sklearn import svm, datasets
 from sklearn.model_selection import cross_val_score
 
@@ -46,8 +51,11 @@ def is_pareto_efficient_simple(costs):
     is_efficient = np.ones(costs.shape[0], dtype=bool)
     for i, c in enumerate(costs):
         if is_efficient[i]:
-            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)  # Keep any point with a lower cost
-            is_efficient[i] = True  # And keep self
+            # Keep any point with a lower cost
+            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)
+
+            # And keep self
+            is_efficient[i] = True
     return is_efficient
 
 
@@ -73,8 +81,8 @@ def plot_pareto_from_runhistory(observations):
     x_front, y_front = front[:, 0], front[:, 1]
 
     plt.scatter(obs1, obs2)
-    plt.step(x_front, y_front, where='post', linestyle=':')
-    plt.title('Pareto-Front')
+    plt.step(x_front, y_front, where="post", linestyle=":")
+    plt.title("Pareto-Front")
 
     plt.xlabel("Cost")
     plt.ylabel("Time")
@@ -118,10 +126,10 @@ def svm_from_cfg(cfg):
     # Return a dictionary with all of the objectives.
     # Alternatively you can return a list in the same order
     # as `multi_objectives`.
-    return {'cost': cost_value, 'time': t1 - t0}
+    return {"cost": cost_value, "time": t1 - t0}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Build Configuration Space which defines all parameters and their ranges
     cs = ConfigurationSpace()
 
@@ -129,20 +137,24 @@ if __name__ == '__main__':
     kernel = CategoricalHyperparameter(
         name="kernel",
         choices=["linear", "rbf", "poly", "sigmoid"],
-        default_value="poly"
+        default_value="poly",
     )
     cs.add_hyperparameter(kernel)
 
     # There are some hyperparameters shared by all kernels
     C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0, log=True)
-    shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
+    shrinking = CategoricalHyperparameter(
+        "shrinking", [True, False], default_value=True
+    )
     cs.add_hyperparameters([C, shrinking])
 
     # Others are kernel-specific, so we can add conditions to limit the searchspace
     degree = UniformIntegerHyperparameter(
-        "degree", 1, 5, default_value=3)  # Only used by kernel poly
+        "degree", 1, 5, default_value=3
+    )  # Only used by kernel poly
     coef0 = UniformFloatHyperparameter(
-        "coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
+        "coef0", 0.0, 10.0, default_value=0.0
+    )  # poly, sigmoid
     cs.add_hyperparameters([degree, coef0])
 
     use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
@@ -153,39 +165,53 @@ if __name__ == '__main__':
     # from a range of numbers
     # For example, gamma can be either "auto" or a fixed float
     gamma = CategoricalHyperparameter(
-        "gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
-    gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
+        "gamma", ["auto", "value"], default_value="auto"
+    )  # only rbf, poly, sigmoid
+    gamma_value = UniformFloatHyperparameter(
+        "gamma_value", 0.0001, 8, default_value=1, log=True
+    )
     cs.add_hyperparameters([gamma, gamma_value])
     # We only activate gamma_value if gamma is set to "value"
     cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
     # And again we can restrict the use of gamma in general to the choice of the kernel
-    cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
+    cs.add_condition(
+        InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"])
+    )
 
     # Scenario object
-    scenario = Scenario({
-        "run_obj": "quality",  # we optimize quality (alternatively runtime)
-        "runcount-limit": 50,  # max. number of function evaluations
-        "cs": cs,  # configuration space
-        "deterministic": True,
-        "multi_objectives": ["cost", "time"],
-        # You can define individual crash costs for each objective
-        "cost_for_crash": [1, float(MAXINT)]
-    })
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternatively runtime)
+            "runcount-limit": 50,  # max. number of function evaluations
+            "cs": cs,  # configuration space
+            "deterministic": True,
+            "multi_objectives": ["cost", "time"],
+            # You can define individual crash costs for each objective
+            "cost_for_crash": [1, float(MAXINT)],
+        }
+    )
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
-    print("Default config\'s cost: {cost:2f}, training time: {time:2f} seconds".format(**def_value))
+    print(
+        "Default config's cost: {cost:2f}, training time: {time:2f} seconds".format(
+            **def_value
+        )
+    )
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     # Pass the multi objective algorithm and its hyperparameters
-    smac = SMAC4HPO(scenario=scenario,
-                    rng=np.random.RandomState(42),
-                    tae_runner=svm_from_cfg,
-                    multi_objective_kwargs={
-                        'rho': 0.05,
-                    })
+    smac = SMAC4HPO(
+        scenario=scenario,
+        rng=np.random.RandomState(42),
+        tae_runner=svm_from_cfg,
+        multi_objective_algorithm=ParEGO,
+        multi_objective_kwargs={
+            "rho": 0.05,
+        },
+    )
 
     incumbent = smac.optimize()
 

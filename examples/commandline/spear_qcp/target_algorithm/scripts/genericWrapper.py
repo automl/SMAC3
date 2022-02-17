@@ -132,7 +132,7 @@ class AbstractWrapper(object):
             self.parser.add_argument(
                 "--runsolver-path",
                 dest="runsolver",
-                default="./spear_qcp/target_algorithm/runsolver/runsolver",
+                default="examples/commandline/spear_qcp/target_algorithm/runsolver/runsolver",
                 help="path to runsolver binary (if None, the runsolver is deactivated)",
             )
             self.parser.add_argument(
@@ -436,8 +436,7 @@ class AbstractWrapper(object):
                 io.stdout.flush()
         except OSError:
             self._ta_status = "ABORT"
-            # self._ta_misc = "execution failed: %s" % (" ".join(map(str, runsolver_cmd)))
-            self._ta_misc = runsolver_cmd
+            self._ta_misc = "execution failed: %s" % (" ".join(map(str, runsolver_cmd)))
             self._exit_code = 1
             sys.exit(1)
 

@@ -6,12 +6,15 @@ import typing
 
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import Configuration
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.base_epm import AbstractEPM
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, RandomConfigurationChooser
+from smac.optimizer.random_configuration_chooser import (
+    ChooserNoCoolDown,
+    RandomConfigurationChooser,
+)
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
 from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
@@ -54,8 +57,8 @@ class SMBO(object):
         (probably with some kind of racing on the instances)
     num_run: int
         id of this run (used for pSMAC)
-    model: RandomForestWithInstances
-        empirical performance model (right now, we support only RandomForestWithInstances)
+    model: AbstractEPM
+        empirical performance model
     acq_optimizer: AcquisitionFunctionMaximizer
         Optimizer of acquisition function.
     acquisition_func : AcquisitionFunction
@@ -91,26 +94,30 @@ class SMBO(object):
     epm_chooser
     tae_runner
     """
-    def __init__(self,
-                 scenario: Scenario,
-                 stats: Stats,
-                 initial_design: InitialDesign,
-                 runhistory: RunHistory,
-                 runhistory2epm: AbstractRunHistory2EPM,
-                 intensifier: AbstractRacer,
-                 num_run: int,
-                 model: RandomForestWithInstances,
-                 acq_optimizer: AcquisitionFunctionMaximizer,
-                 acquisition_func: AbstractAcquisitionFunction,
-                 rng: np.random.RandomState,
-                 tae_runner: BaseRunner,
-                 restore_incumbent: Configuration = None,
-                 random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(2.0),
-                 predict_x_best: bool = True,
-                 min_samples_model: int = 1):
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+    def __init__(
+        self,
+        scenario: Scenario,
+        stats: Stats,
+        initial_design: InitialDesign,
+        runhistory: RunHistory,
+        runhistory2epm: AbstractRunHistory2EPM,
+        intensifier: AbstractRacer,
+        num_run: int,
+        model: AbstractEPM,
+        acq_optimizer: AcquisitionFunctionMaximizer,
+        acquisition_func: AbstractAcquisitionFunction,
+        rng: np.random.RandomState,
+        tae_runner: BaseRunner,
+        restore_incumbent: Configuration = None,
+        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(
+            2.0
+        ),
+        predict_x_best: bool = True,
+        min_samples_model: int = 1,
+    ):
+
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent
 
         self.scenario = scenario
@@ -121,24 +128,26 @@ class SMBO(object):
         self.intensifier = intensifier
         self.num_run = num_run
         self.rng = rng
-        self._min_time = 10 ** -5
+        self._min_time = 10**-5
         self.tae_runner = tae_runner
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        # TODO consider if we need an additional EPMChooser for multi-objective optimization
-        self.epm_chooser = EPMChooser(scenario=scenario,
-                                      stats=stats,
-                                      runhistory=runhistory,
-                                      runhistory2epm=runhistory2epm,
-                                      model=model,
-                                      acq_optimizer=acq_optimizer,
-                                      acquisition_func=acquisition_func,
-                                      rng=rng,
-                                      restore_incumbent=restore_incumbent,
-                                      random_configuration_chooser=random_configuration_chooser,
-                                      predict_x_best=predict_x_best,
-                                      min_samples_model=min_samples_model)
+        # TODO: consider if we need an additional EPMChooser for multi-objective optimization
+        self.epm_chooser = EPMChooser(
+            scenario=scenario,
+            stats=stats,
+            runhistory=runhistory,
+            runhistory2epm=runhistory2epm,
+            model=model,  # type: ignore
+            acq_optimizer=acq_optimizer,
+            acquisition_func=acquisition_func,
+            rng=rng,
+            restore_incumbent=restore_incumbent,
+            random_configuration_chooser=random_configuration_chooser,
+            predict_x_best=predict_x_best,
+            min_samples_model=min_samples_model,
+        )
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
         self._stop = False
@@ -146,10 +155,10 @@ class SMBO(object):
         # Callbacks. All known callbacks have a key. If something does not have a key here, there is
         # no callback available.
         self._callbacks = {
-            '_incorporate_run_results': list()
+            "_incorporate_run_results": list()
         }  # type: typing.Dict[str, typing.List[typing.Callable]]
         self._callback_to_key = {
-            IncorporateRunResultCallback: '_incorporate_run_results',
+            IncorporateRunResultCallback: "_incorporate_run_results",
         }  # type: typing.Dict[typing.Type, str]
 
     def start(self) -> None:
@@ -160,26 +169,34 @@ class SMBO(object):
 
         # Initialization, depends on input
         if self.stats.submitted_ta_runs == 0 and self.incumbent is None:
-            self.logger.info('Running initial design')
+            self.logger.info("Running initial design")
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
 
             # to be on the safe side, never return an empty list of initial configs
             if not self.initial_design_configs:
-                self.initial_design_configs = [self.config_space.get_default_configuration()]
+                self.initial_design_configs = [
+                    self.config_space.get_default_configuration()
+                ]
 
         elif self.stats.submitted_ta_runs > 0 and self.incumbent is None:
-            raise ValueError("According to stats there have been runs started, "
-                             "but the optimizer cannot detect an incumbent. Did "
-                             "you set the incumbent (e.g. after restoring state)?")
+            raise ValueError(
+                "According to stats there have been runs started, "
+                "but the optimizer cannot detect an incumbent. Did "
+                "you set the incumbent (e.g. after restoring state)?"
+            )
         elif self.stats.submitted_ta_runs == 0 and self.incumbent is not None:
-            raise ValueError("An incumbent is specified, but there are no runs "
-                             "recorded as started in the Stats-object. If you're "
-                             "restoring a state, please provide the Stats-object.")
+            raise ValueError(
+                "An incumbent is specified, but there are no runs "
+                "recorded as started in the Stats-object. If you're "
+                "restoring a state, please provide the Stats-object."
+            )
         else:
             # Restoring state!
-            self.logger.info("State Restored! Starting optimization with "
-                             "incumbent %s", self.incumbent)
+            self.logger.info(
+                "State Restored! Starting optimization with " "incumbent %s",
+                self.incumbent,
+            )
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
 
@@ -198,10 +215,12 @@ class SMBO(object):
         # Main BO loop
         while True:
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
-                pSMAC.read(run_history=self.runhistory,
-                           output_dirs=self.scenario.input_psmac_dirs,  # type: ignore[attr-defined] # noqa F821
-                           configuration_space=self.config_space,
-                           logger=self.logger)
+                pSMAC.read(
+                    run_history=self.runhistory,
+                    output_dirs=self.scenario.input_psmac_dirs,  # type: ignore[attr-defined] # noqa F821
+                    configuration_space=self.config_space,
+                    logger=self.logger,
+                )
 
             start_time = time.time()
 
@@ -217,18 +236,28 @@ class SMBO(object):
             )
 
             # remove config from initial design challengers to not repeat it again
-            self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
+            self.initial_design_configs = [
+                c for c in self.initial_design_configs if c != run_info.config
+            ]
 
             # update timebound only if a 'new' configuration is sampled as the challenger
             if self.intensifier.num_run == 0:
                 time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(time_spent, update=False)
-                self.logger.debug('New intensification time bound: %f', time_left)
+                time_left = self._get_timebound_for_intensification(
+                    time_spent, update=False
+                )
+                self.logger.debug("New intensification time bound: %f", time_left)
             else:
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
-                time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                self.logger.debug('Updated intensification time bound from %f to %f', old_time_left, time_left)
+                time_left = self._get_timebound_for_intensification(
+                    time_spent, update=True
+                )
+                self.logger.debug(
+                    "Updated intensification time bound from %f to %f",
+                    old_time_left,
+                    time_left,
+                )
 
             # Skip starting new runs if the budget is now exhausted
             if self.stats.is_budget_exhausted():
@@ -243,7 +272,9 @@ class SMBO(object):
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT) if num_obj == 1 else np.full(num_obj, float(MAXINT)),
+                    cost=float(MAXINT)
+                    if num_obj == 1
+                    else np.full(num_obj, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance_id=run_info.instance,
@@ -286,20 +317,28 @@ class SMBO(object):
 
             if self.scenario.shared_model:  # type: ignore[attr-defined] # noqa F821
                 assert self.scenario.output_dir_for_this_run is not None  # please mypy
-                pSMAC.write(run_history=self.runhistory,
-                            output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
-                            logger=self.logger)
+                pSMAC.write(
+                    run_history=self.runhistory,
+                    output_directory=self.scenario.output_dir_for_this_run,  # type: ignore[attr-defined] # noqa F821
+                    logger=self.logger,
+                )
 
-            self.logger.debug("Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)" % (
-                self.stats.get_remaing_time_budget(),
-                self.stats.get_remaining_ta_budget(),
-                self.stats.get_remaining_ta_runs()))
+            self.logger.debug(
+                "Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)"
+                % (
+                    self.stats.get_remaing_time_budget(),
+                    self.stats.get_remaining_ta_budget(),
+                    self.stats.get_remaining_ta_runs(),
+                )
+            )
 
             if self.stats.is_budget_exhausted() or self._stop:
                 if self.stats.is_budget_exhausted():
                     self.logger.debug("Exhausted configuration budget")
                 else:
-                    self.logger.debug("Shutting down because a configuration or callback returned status STOP")
+                    self.logger.debug(
+                        "Shutting down because a configuration or callback returned status STOP"
+                    )
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
@@ -323,13 +362,15 @@ class SMBO(object):
 
         return self.incumbent
 
-    def validate(self,
-                 config_mode: typing.Union[str, typing.List[Configuration]] = 'inc',
-                 instance_mode: typing.Union[str, typing.List[str]] = 'train+test',
-                 repetitions: int = 1,
-                 use_epm: bool = False,
-                 n_jobs: int = -1,
-                 backend: str = 'threading') -> RunHistory:
+    def validate(
+        self,
+        config_mode: typing.Union[str, typing.List[Configuration]] = "inc",
+        instance_mode: typing.Union[str, typing.List[str]] = "train+test",
+        repetitions: int = 1,
+        use_epm: bool = False,
+        n_jobs: int = -1,
+        backend: str = "threading",
+    ) -> RunHistory:
         """Create validator-object and run validation, using
         scenario-information, runhistory from smbo and tae_runner from intensify
 
@@ -358,32 +399,46 @@ class SMBO(object):
         """
         if isinstance(config_mode, str):
             assert self.scenario.output_dir_for_this_run is not None  # Please mypy
-            traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
-            trajectory = (
-                TrajLogger.read_traj_aclib_format(fn=traj_fn, cs=self.config_space)
+            traj_fn = os.path.join(
+                self.scenario.output_dir_for_this_run, "traj_aclib2.json"
+            )
+            trajectory = TrajLogger.read_traj_aclib_format(
+                fn=traj_fn, cs=self.config_space
             )  # type: typing.Optional[typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]]
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:
-            new_rh_path = os.path.join(self.scenario.output_dir_for_this_run, "validated_runhistory.json")  # type: typing.Optional[str] # noqa E501
+            new_rh_path = os.path.join(
+                self.scenario.output_dir_for_this_run, "validated_runhistory.json"
+            )  # type: typing.Optional[str] # noqa E501
         else:
             new_rh_path = None
 
         validator = Validator(self.scenario, trajectory, self.rng)
         if use_epm:
-            new_rh = validator.validate_epm(config_mode=config_mode,
-                                            instance_mode=instance_mode,
-                                            repetitions=repetitions,
-                                            runhistory=self.runhistory,
-                                            output_fn=new_rh_path)
+            new_rh = validator.validate_epm(
+                config_mode=config_mode,
+                instance_mode=instance_mode,
+                repetitions=repetitions,
+                runhistory=self.runhistory,
+                output_fn=new_rh_path,
+            )
         else:
-            new_rh = validator.validate(config_mode, instance_mode, repetitions,
-                                        n_jobs, backend, self.runhistory,
-                                        self.tae_runner,
-                                        output_fn=new_rh_path)
+            new_rh = validator.validate(
+                config_mode,
+                instance_mode,
+                repetitions,
+                n_jobs,
+                backend,
+                self.runhistory,
+                self.tae_runner,
+                output_fn=new_rh_path,
+            )
         return new_rh
 
-    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
+    def _get_timebound_for_intensification(
+        self, time_spent: float, update: bool
+    ) -> float:
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
@@ -402,19 +457,23 @@ class SMBO(object):
         """
         frac_intensify = self.scenario.intensification_percentage  # type: ignore[attr-defined] # noqa F821
         if frac_intensify <= 0 or frac_intensify >= 1:
-            raise ValueError("The value for intensification_percentage-"
-                             "option must lie in (0,1), instead: %.2f" %
-                             frac_intensify)
+            raise ValueError(
+                "The value for intensification_percentage-"
+                "option must lie in (0,1), instead: %.2f" % frac_intensify
+            )
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
-        self.logger.debug("Total time: %.4f, time spent on choosing next "
-                          "configurations: %.4f (%.2f), time left for "
-                          "intensification: %.4f (%.2f)" %
-                          (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify))
+        self.logger.debug(
+            "Total time: %.4f, time spent on choosing next "
+            "configurations: %.4f (%.2f), time left for "
+            "intensification: %.4f (%.2f)"
+            % (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify)
+        )
         return time_left
 
-    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue,
-                                 time_left: float) -> None:
+    def _incorporate_run_results(
+        self, run_info: RunInfo, result: RunValue, time_left: float
+    ) -> None:
         """
         The SMBO submits a config-run-request via a RunInfo object.
         When that config run is completed, a RunValue, which contains
@@ -461,9 +520,11 @@ class SMBO(object):
         self.stats.n_configs = len(self.runhistory.config_ids)
 
         if result.status == StatusType.ABORT:
-            raise TAEAbortException("Target algorithm status ABORT - SMAC will "
-                                    "exit. The last incumbent can be found "
-                                    "in the trajectory-file.")
+            raise TAEAbortException(
+                "Target algorithm status ABORT - SMAC will "
+                "exit. The last incumbent can be found "
+                "in the trajectory-file."
+            )
         elif result.status == StatusType.STOP:
             self._stop = True
             return
@@ -473,7 +534,8 @@ class SMBO(object):
                 raise FirstRunCrashedException(
                     "First run crashed, abort. Please check your setup -- we assume that your default "
                     "configuration does not crashes. (To deactivate this exception, use the SMAC scenario option "
-                    "'abort_on_first_run_crash'). Additional run info: %s" % result.additional_info
+                    "'abort_on_first_run_crash'). Additional run info: %s"
+                    % result.additional_info
                 )
 
         # Update the intensifier with the result of the runs
@@ -485,12 +547,16 @@ class SMBO(object):
             result=result,
         )
 
-        for callback in self._callbacks['_incorporate_run_results']:
-            response = callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
+        for callback in self._callbacks["_incorporate_run_results"]:
+            response = callback(
+                smbo=self, run_info=run_info, result=result, time_left=time_left
+            )
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called
             if response is False:
-                self.logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
+                self.logger.debug(
+                    "An IncorporateRunResultCallback returned False, requesting abort."
+                )
                 self._stop = True
 
         if self.scenario.save_instantly:  # type: ignore[attr-defined] # noqa F821
@@ -506,6 +572,4 @@ class SMBO(object):
 
         output_dir = self.scenario.output_dir_for_this_run
         if output_dir is not None:
-            self.runhistory.save_json(
-                fn=os.path.join(output_dir, "runhistory.json")
-            )
+            self.runhistory.save_json(fn=os.path.join(output_dir, "runhistory.json"))
