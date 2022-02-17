@@ -339,16 +339,20 @@ class RunHistory(object):
     def _update_objective_bounds(self) -> None:
         """Update the objective bounds based on the data in the runhistory."""
 
-        if len(self.data) == 0:
-            return
-
-        all_costs = np.empty((len(self.data), self.num_obj))  # type: ignore
-        for i, (costs, _, status, _, _, _) in enumerate(self.data.values()):
+        all_costs = []
+        for (costs, _, status, _, _, _) in self.data.values():
             if status == StatusType.SUCCESS:
                 if not isinstance(costs, Iterable):
                     costs = [costs]
 
-                all_costs[i, :] = np.asarray(costs)
+                assert len(costs) == self.num_obj
+                all_costs.append(costs)
+
+        all_costs = np.array(all_costs, dtype=float)
+
+        if len(all_costs) == 0:
+            self.objective_bounds = [(np.inf, -np.inf)] * self.num_obj
+            return
 
         min_values = np.min(all_costs, axis=0)
         max_values = np.max(all_costs, axis=0)
