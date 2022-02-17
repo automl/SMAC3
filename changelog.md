@@ -1,7 +1,8 @@
 # 1.2
 
 ## Features
-* Added multi objective via Par-EGO.
+* Added multi-objective optimization via Mean-Aggregation or Par-EGO. Both approaches normalize
+the costs objective-wise based on all data in the history.
 
 ## Major Changes
 * Results are instantly saved by default now. That means, runhistory.json is saved every time
