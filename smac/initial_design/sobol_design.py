@@ -1,5 +1,7 @@
 import typing
 
+import warnings
+
 from scipy.stats.qmc import Sobol
 
 from ConfigSpace.configuration_space import Configuration
@@ -42,6 +44,9 @@ class SobolDesign(InitialDesign):
 
         dim = len(params) - constants
         sobol_gen = Sobol(d=dim, scramble=True, seed=self.rng.randint(low=0, high=10000000))
-        sobol = sobol_gen.random(self.init_budget)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            sobol = sobol_gen.random(self.init_budget)
 
         return self._transform_continuous_designs(design=sobol, origin="Sobol", cs=self.cs)

@@ -15,8 +15,12 @@ def get_command_line_cmd(runargs, config):
     Returns:
         A command call list to execute the target algorithm.
     """
-    solver_binary = "./spear_qcp/target_algorithm/spear-python/Spear-32_1.2.1"
-    cmd = "%s --seed %d --model-stdout --dimacs %s" % (solver_binary, runargs["seed"], runargs["instance"])
+    solver_binary = "examples/commandline/spear_qcp/target_algorithm/spear-python/Spear-32_1.2.1"
+    cmd = "%s --seed %d --model-stdout --dimacs %s" % (
+        solver_binary,
+        runargs["seed"],
+        runargs["instance"],
+    )
     for name, value in config.items():
         cmd += " -%s %s" % (name, value)
 

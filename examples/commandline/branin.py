@@ -7,8 +7,7 @@ To run this example in the terminal, execute:
 
 .. code-block:: bash
 
-    cd examples/commandline
-    python ../../scripts/smac.py --scenario branin/scenario.txt
+    python ./scripts/smac.py --scenario examples/commandline/branin/scenario.txt
 
 
 Inside the scenario, this file and also ``configspace.pcs`` is referenced and therefore used

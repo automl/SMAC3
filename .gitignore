@@ -27,6 +27,7 @@ examples/*restore_me
 *~
 .html/
 .mypy_cache/
+.pytest_cache/
 .DS_Store
 docs/html
 

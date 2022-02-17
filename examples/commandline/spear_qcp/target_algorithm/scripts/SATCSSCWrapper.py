@@ -109,7 +109,7 @@ class SatCSSCWrapper(AbstractWrapper):
         self.parser.add_argument(
             "--sat-checker",
             dest="sat_checker",
-            default="./spear_qcp/target_algorithms/scripts/SAT",
+            default="examples/commandline/spear_qcp/target_algorithms/scripts/SAT",
             help="binary of SAT checker",
         )
 

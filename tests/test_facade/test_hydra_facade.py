@@ -48,6 +48,7 @@ class TestHydraFacade(unittest.TestCase):
         self.output_dirs = []
         fn = os.path.join(os.path.dirname(__file__), "../test_files/spear_hydra_test_scenario.txt")
         self.scenario = Scenario(fn)
+        self.scenario.limit_resources = True
 
     @patch("smac.facade.experimental.hydra_facade.PSMAC", new=MockPSMAC)
     def test_hydra(self):

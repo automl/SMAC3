@@ -8,10 +8,7 @@ import numpy as np
 from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
-from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.scenario.scenario import Scenario
-from smac.tae import StatusType
-from smac.utils import constants
+from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -53,7 +50,7 @@ class AbstractRunHistory2EPM(object):
         Only used for reshuffling data after imputation.
         If None, use np.random.RandomState(seed=1).
     multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
-        Instance performing multi objective optimization. Receives an objective cost vector as input
+        Instance performing multi-objective optimization. Receives an objective cost vector as input
         and returns a scalar. Is executed before transforming runhistory values.
 
     Attributes
@@ -293,7 +290,11 @@ class AbstractRunHistory2EPM(object):
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
         store_statistics = True if np.any(np.isnan(self.min_y)) else False
-        tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory, store_statistics=store_statistics)
+        tX, tY = self._build_matrix(
+            run_dict=t_run_dict,
+            runhistory=runhistory,
+            store_statistics=store_statistics,
+        )
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -356,8 +357,6 @@ class AbstractRunHistory2EPM(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
-        if self.num_obj > 1 and self.multi_objective_algorithm is not None:
-            Y = self.multi_objective_algorithm(Y)
         self.logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
 
@@ -412,6 +411,7 @@ class AbstractRunHistory2EPM(object):
             X.append(x)
             y.append(v.cost)
             cen.append(v.status != StatusType.SUCCESS)
+
         return np.array(X), np.array(y), np.array(cen)
 
 
@@ -448,7 +448,10 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
-        y = np.ones([n_rows, runhistory.num_obj])
+
+        # For now we keep it as 1
+        # TODO: Extend for native multi-objective
+        y = np.ones([n_rows, 1])
 
         # Then populate matrix
         for row, (key, run) in enumerate(run_dict.items()):
@@ -461,17 +464,27 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
-            if return_time_as_y:
-                # TODO how to deal with this situation under multi-objective cirumstance?
-                y[row, 0] = run.time
+
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
+                # Let's normalize y here
+                # We use the objective_bounds calculated by the runhistory
+                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = self.multi_objective_algorithm(y_)
+                y[row] = y_
             else:
-                y[row] = run.cost
+                if return_time_as_y:
+                    y[row, 0] = run.time
+                else:
+                    y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:
                 self.perc = np.percentile(y, self.scale_perc, axis=0)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
+
         y = self.transform_response_values(values=y)
 
         return X, y
@@ -663,6 +676,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         store_statistics: bool = False,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
+
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
@@ -685,7 +699,18 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
-            y[row, 0] = run.cost
+
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
+                # Let's normalize y here
+                # We use the objective_bounds calculated by the runhistory
+                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = self.multi_objective_algorithm(y_)
+                y[row, 0] = y_
+            else:
+                y[row, 0] = run.cost
+
             y[row, 1] = 1 + run.time
 
         y = self.transform_response_values(values=y)

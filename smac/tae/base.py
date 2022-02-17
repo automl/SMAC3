@@ -241,11 +241,8 @@ class BaseRunner(ABC):
             raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on " "instances.")
 
         # Catch NaN or inf.
-        if (
-            self.run_obj == "runtime"
-            and not np.isfinite(runtime)
-            or self.run_obj == "quality"
-            and not np.all(np.isfinite(cost))
+        if (self.run_obj == "runtime" and not np.isfinite(runtime)) or (
+            self.run_obj == "quality" and not np.all(np.isfinite(cost))
         ):
             if self.logger:
                 self.logger.warning(
@@ -281,7 +278,12 @@ class BaseRunner(ABC):
                 cost = self.cost_for_crash  # type: ignore
 
         return run_info, RunValue(
-            status=status, cost=cost, time=runtime, additional_info=additional_info, starttime=start, endtime=end
+            status=status,
+            cost=cost,
+            time=runtime,
+            additional_info=additional_info,
+            starttime=start,
+            endtime=end,
         )
 
     @abstractmethod

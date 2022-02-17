@@ -8,7 +8,7 @@ import numpy as np
 
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import Configuration
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.base_epm import AbstractEPM
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
@@ -55,8 +55,8 @@ class SMBO(object):
         (probably with some kind of racing on the instances)
     num_run: int
         id of this run (used for pSMAC)
-    model: RandomForestWithInstances
-        empirical performance model (right now, we support only RandomForestWithInstances)
+    model: AbstractEPM
+        empirical performance model
     acq_optimizer: AcquisitionFunctionMaximizer
         Optimizer of acquisition function.
     acquisition_func : AcquisitionFunction
@@ -102,7 +102,7 @@ class SMBO(object):
         runhistory2epm: AbstractRunHistory2EPM,
         intensifier: AbstractRacer,
         num_run: int,
-        model: RandomForestWithInstances,
+        model: AbstractEPM,
         acq_optimizer: AcquisitionFunctionMaximizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
@@ -129,13 +129,13 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: typing.List[Configuration]
 
-        # TODO consider if we need an additional EPMChooser for multi-objective optimization
+        # TODO: consider if we need an additional EPMChooser for multi-objective optimization
         self.epm_chooser = EPMChooser(
             scenario=scenario,
             stats=stats,
             runhistory=runhistory,
             runhistory2epm=runhistory2epm,
-            model=model,
+            model=model,  # type: ignore
             acq_optimizer=acq_optimizer,
             acquisition_func=acquisition_func,
             rng=rng,
@@ -185,7 +185,10 @@ class SMBO(object):
             )
         else:
             # Restoring state!
-            self.logger.info("State Restored! Starting optimization with " "incumbent %s", self.incumbent)
+            self.logger.info(
+                "State Restored! Starting optimization with " "incumbent %s",
+                self.incumbent,
+            )
             self.logger.info("State restored with following budget:")
             self.stats.print_stats()
 
@@ -236,7 +239,11 @@ class SMBO(object):
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                self.logger.debug("Updated intensification time bound from %f to %f", old_time_left, time_left)
+                self.logger.debug(
+                    "Updated intensification time bound from %f to %f",
+                    old_time_left,
+                    time_left,
+                )
 
             # Skip starting new runs if the budget is now exhausted
             if self.stats.is_budget_exhausted():

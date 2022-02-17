@@ -53,6 +53,7 @@ class TestSMBO(unittest.TestCase):
                 "output_dir": "data-test_smbo",
                 "runcount-limit": 5,
                 "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs = []
@@ -117,6 +118,8 @@ class TestSMBO(unittest.TestCase):
                 "run_obj": "quality",
                 "output_dir": "data-test_smbo-abort",
                 "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs.append(scen.output_dir)
@@ -133,6 +136,8 @@ class TestSMBO(unittest.TestCase):
                 "output_dir": "data-test_smbo-abort",
                 "abort_on_first_run_crash": False,
                 "wallclock-limit": 1,
+                "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs.append(scen.output_dir)
@@ -157,6 +162,8 @@ class TestSMBO(unittest.TestCase):
                 "run_obj": "quality",
                 "output_dir": "data-test_smbo-abort",
                 "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs.append(scen.output_dir)
@@ -172,6 +179,8 @@ class TestSMBO(unittest.TestCase):
                 "output_dir": "data-test_smbo-abort",
                 "abort_on_first_run_crash": False,
                 "wallclock-limit": 1,
+                "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs.append(scen.output_dir)
@@ -196,6 +205,8 @@ class TestSMBO(unittest.TestCase):
                 "run_obj": "quality",
                 "output_dir": "data-test_smbo-abort",
                 "abort_on_first_run_crash": True,
+                "deterministic": False,
+                "limit_resources": True,
             }
         )
         self.output_dirs.append(scen.output_dir)
@@ -220,6 +231,7 @@ class TestSMBO(unittest.TestCase):
                     "output_dir": "data-test_smbo-intensification",
                     "intensification_percentage": intensification_perc,
                     "deterministic": False,
+                    "limit_resources": True,
                 }
             )
             self.output_dirs.append(scen.output_dir)
@@ -257,8 +269,9 @@ class TestSMBO(unittest.TestCase):
                 "cs": test_helpers.get_branin_config_space(),
                 "run_obj": "quality",
                 "output_dir": "data-test_smbo-intensification",
-                "save-instantly": False,
+                "save_instantly": False,
                 "deterministic": False,
+                "limit_resources": True,
             },
         )
         self.output_dirs.append(scen.output_dir)
@@ -296,10 +309,22 @@ class TestSMBO(unittest.TestCase):
         self.assertTrue(get_timebound_mock.call_args_list[4][1]["update"])
         self.assertTrue(get_timebound_mock.call_args_list[5][1]["update"])
 
-        self.assertGreater(get_timebound_mock.call_args_list[2][0][0], get_timebound_mock.call_args_list[1][0][0])
-        self.assertLess(get_timebound_mock.call_args_list[3][0][0], get_timebound_mock.call_args_list[2][0][0])
-        self.assertGreater(get_timebound_mock.call_args_list[4][0][0], get_timebound_mock.call_args_list[3][0][0])
-        self.assertGreater(get_timebound_mock.call_args_list[5][0][0], get_timebound_mock.call_args_list[4][0][0])
+        self.assertGreater(
+            get_timebound_mock.call_args_list[2][0][0],
+            get_timebound_mock.call_args_list[1][0][0],
+        )
+        self.assertLess(
+            get_timebound_mock.call_args_list[3][0][0],
+            get_timebound_mock.call_args_list[2][0][0],
+        )
+        self.assertGreater(
+            get_timebound_mock.call_args_list[4][0][0],
+            get_timebound_mock.call_args_list[3][0][0],
+        )
+        self.assertGreater(
+            get_timebound_mock.call_args_list[5][0][0],
+            get_timebound_mock.call_args_list[4][0][0],
+        )
 
     def test_validation(self):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format", return_value=None):
@@ -365,6 +390,7 @@ class TestSMBO(unittest.TestCase):
                         "runcount_limit": 5,
                         "run_obj": "quality",
                         "deterministic": True,
+                        "limit_resources": True,
                         "initial_incumbent": "DEFAULT",
                         "output_dir": "data-test_smbo",
                     }

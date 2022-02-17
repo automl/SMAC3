@@ -169,17 +169,24 @@ class AbstractTAFunc(SerialRunner):
                         "for cutoff (when using pynisher, due to OS limitations)" % cutoff
                     )
 
-            arguments = {"logger": self.logger, "wall_time_in_s": cutoff, "mem_in_mb": self.memory_limit}
+            arguments = {
+                "logger": self.logger,
+                "wall_time_in_s": cutoff,
+                "mem_in_mb": self.memory_limit,
+            }
 
             # call ta
             try:
                 obj = pynisher.enforce_limits(**arguments)(self._ta)
                 rval = self._call_ta(obj, config, obj_kwargs)
             except Exception as e:
-                cost = np.asarray(cost).squeeze()
+                cost = np.asarray(cost).squeeze().tolist()
                 exception_traceback = traceback.format_exc()
                 error_message = repr(e)
-                additional_info = {"traceback": exception_traceback, "error": error_message}
+                additional_info = {
+                    "traceback": exception_traceback,
+                    "error": error_message,
+                }
 
                 return StatusType.CRASHED, cost, 0.0, additional_info  # type: ignore
 
@@ -251,7 +258,7 @@ class AbstractTAFunc(SerialRunner):
             status = StatusType.CRASHED
             cost = self.cost_for_crash
 
-        cost = np.asarray(cost).squeeze()
+        cost = np.asarray(cost).squeeze().tolist()
 
         return status, cost, runtime, additional_run_info  # type: ignore
 

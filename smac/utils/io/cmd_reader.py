@@ -20,15 +20,6 @@ import re
 import shlex
 import sys
 import time
-from argparse import (
-    SUPPRESS,
-    Action,
-    ArgumentDefaultsHelpFormatter,
-    ArgumentParser,
-    FileType,
-    HelpFormatter,
-    Namespace,
-)
 
 import numpy as np
 
@@ -46,7 +37,8 @@ __license__ = "3-clause BSD"
 
 in_reader = InputReader()
 PARSED_SCENARIO_ARGS_TYPE = Dict[
-    str, Union[str, int, Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, List[str]]
+    str,
+    Union[str, int, Dict, INSTANCE_TYPE, INSTANCE_FEATURES_TYPE, np.ndarray, List[str]],
 ]
 parsed_scen_args = {}  # type: PARSED_SCENARIO_ARGS_TYPE
 # Placeholder logger that will not be used in practice, but which will be replaced by
@@ -231,7 +223,10 @@ class ReadFeatureFileAction(Action):
         if fn:
             if os.path.isfile(fn):
                 instance_features = in_reader.read_instance_features_file(fn)
-                parsed_scen_args["feature_names"], parsed_scen_args["feature_dict"] = instance_features
+                (
+                    parsed_scen_args["feature_names"],
+                    parsed_scen_args["feature_dict"],
+                ) = instance_features
                 parsed_scen_args["features"] = instance_features
             else:
                 parser.exit(1, "Could not find feature file: {}".format(fn))
@@ -507,9 +502,15 @@ class CMDReader(object):
             help="Scenario file in AClib format.",
         )
         opt_opts = self.parser.add_argument_group("Optional Options")
-        opt_opts.add_argument("--help", action=StandardHelpAction, help="Show help messages for standard options.")
         opt_opts.add_argument(
-            "--help-all", action=DevHelpAction, help="Show help messages for both standard and developer options."
+            "--help",
+            action=StandardHelpAction,
+            help="Show help messages for standard options.",
+        )
+        opt_opts.add_argument(
+            "--help-all",
+            action=DevHelpAction,
+            help="Show help messages for both standard and developer options.",
         )
         opt_opts.add_argument("--seed", default=1, type=int, help="Random Seed.")
         opt_opts.add_argument(
@@ -597,10 +598,16 @@ class CMDReader(object):
             dest="hydra_n_optimizers",
         )
         req_opts.add_argument(
-            "--psmac_validate", default=False, type=truthy, help="[dev] Validate all psmac configurations."
+            "--psmac_validate",
+            default=False,
+            type=truthy,
+            help="[dev] Validate all psmac configurations.",
         )
 
-        self.main_cmd_actions, self.main_cmd_translations = CMDReader._extract_action_info(self.parser._actions)
+        (
+            self.main_cmd_actions,
+            self.main_cmd_translations,
+        ) = CMDReader._extract_action_info(self.parser._actions)
 
     def _add_smac_options(self) -> None:
         """Add SMAC Options"""
@@ -618,11 +625,12 @@ class CMDReader(object):
             "--limit-resources",
             "--limit_resources",
             dest="limit_resources",
-            default=True,
+            default=False,
             type=truthy,
             help="If true, *SMAC* will use pynisher to limit time and memory for "
             "the target algorithm. Allows SMAC to use all resources available. "
-            "Applicable only to func TAEs. Set to 'True' by default. (Use with caution!)",
+            "Applicable only to func TAEs. Set to 'False' by default. "
+            "(Warning: This only works on Linux. Use with caution!)",
         )
         smac_opts.add_argument(
             "--minr",
@@ -835,7 +843,10 @@ class CMDReader(object):
             " instead of configuration optimized on the acquisition function",
         )
         self.parser.add_parser(self.smac_parser)
-        self.smac_cmd_actions, self.smac_cmd_translations = CMDReader._extract_action_info(self.smac_parser._actions)
+        (
+            self.smac_cmd_actions,
+            self.smac_cmd_translations,
+        ) = CMDReader._extract_action_info(self.smac_parser._actions)
 
     def _add_scen_options(self) -> None:
         """Add Scenario Options"""
@@ -896,7 +907,6 @@ class CMDReader(object):
             "penalty imposed on timeouts (i.e. runtimes that "
             "exceed the *cutoff-time*).",
         )
-
         scen_opts.add_argument(
             "--save-instantly",
             "--save_instantly",
@@ -909,7 +919,12 @@ class CMDReader(object):
             "process has finished.",
         )
         scen_opts.add_argument(
-            "--par-factor", "--par_factor", dest="par_factor", type=float, default=10.0, help=SUPPRESS
+            "--par-factor",
+            "--par_factor",
+            dest="par_factor",
+            type=float,
+            default=10.0,
+            help=SUPPRESS,
         )  # added after parsing --overall-obj
         scen_opts.add_argument(
             "--cost-for-crash",
@@ -1057,10 +1072,17 @@ class CMDReader(object):
             action=ReadPCSFileAction,
             help="[dev] Specifies the path to the " "PCS-file.",
         )
-        scen_opts.add_argument("--cs", default=None, help=SUPPRESS)  # ConfigSpace object, overridden by --paramfile
+        scen_opts.add_argument(
+            "--cs",
+            default=None,  # ConfigSpace object, overridden by --paramfile
+            help=SUPPRESS,
+        )
 
         self.parser.add_parser(self.scen_parser)
-        self.scen_cmd_actions, self.scen_cmd_translations = CMDReader._extract_action_info(self.scen_parser._actions)
+        (
+            self.scen_cmd_actions,
+            self.scen_cmd_translations,
+        ) = CMDReader._extract_action_info(self.scen_parser._actions)
 
     def parse_main_command(self, main_cmd_opts: Sequence[str]) -> Tuple[Namespace, List[str]]:
         """Parse main options"""
@@ -1084,6 +1106,7 @@ class CMDReader(object):
             pass
         smac_cmd = []
         misc_dict = {}
+
         parsed_smac_args = {}
         for k, v in smac_dict.items():
             if k in self.smac_cmd_translations:
@@ -1122,7 +1145,10 @@ class CMDReader(object):
         return args_, misc_dict, misc_cmd
 
     def parse_scenario_command(
-        self, scenario_file: str = None, scenario_dict: dict = {}, scenario_cmd_opts: List[str] = []
+        self,
+        scenario_file: str = None,
+        scenario_dict: dict = {},
+        scenario_cmd_opts: List[str] = [],
     ) -> Namespace:
         """
         Parse scenario options
@@ -1217,7 +1243,9 @@ class CMDReader(object):
 
         smac_args_, misc_dict, misc_cmd = self.parse_smac_command(smac_dict=dict_cmd)
         scen_args_ = self.parse_scenario_command(
-            scenario_file=scenario_file, scenario_dict=misc_dict, scenario_cmd_opts=misc_cmd
+            scenario_file=scenario_file,
+            scenario_dict=misc_dict,
+            scenario_cmd_opts=misc_cmd,
         )
 
         return smac_args_, scen_args_
@@ -1236,7 +1264,9 @@ class CMDReader(object):
         main_args_, misc = self.parse_main_command(main_cmd_opts=commandline_arguments)
         smac_args_, misc_dict, misc_cmd = self.parse_smac_command(smac_cmd_opts=misc)
         scen_args_ = self.parse_scenario_command(
-            scenario_file=main_args_.scenario_file, scenario_dict=misc_dict, scenario_cmd_opts=misc_cmd
+            scenario_file=main_args_.scenario_file,
+            scenario_dict=misc_dict,
+            scenario_cmd_opts=misc_cmd,
         )
         return main_args_, smac_args_, scen_args_
 

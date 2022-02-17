@@ -75,7 +75,11 @@ class SMAC4BB(SMAC4AC):
 
             model_kwargs = kwargs.get("model_kwargs", dict()) or dict()
 
-            _, rng = get_rng(rng=kwargs.get("rng", None), run_id=kwargs.get("run_id", None), logger=None)
+            _, rng = get_rng(
+                rng=kwargs.get("rng", None),
+                run_id=kwargs.get("run_id", None),
+                logger=None,
+            )
 
             types, bounds = get_types(kwargs["scenario"].cs, instance_features=None)
 

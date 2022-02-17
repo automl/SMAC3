@@ -112,12 +112,7 @@ class GaussianProcess(BaseModel):
         X = self._impute_inactive(X)
         if self.normalize_y:
             y = self._normalize_y(y)
-        if len(y.shape) == 1:
-            self.n_objectives_ = 1
-        else:
-            self.n_objectives_ = y.shape[1]
-        if self.n_objectives_ == 1:
-            y = y.flatten()
+        y = y.flatten()
 
         n_tries = 10
         for i in range(n_tries):

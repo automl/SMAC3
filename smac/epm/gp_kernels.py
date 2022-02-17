@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 # This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
 
 
-def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray]) -> np.ndarray:
+def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray] = None) -> np.ndarray:
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1
     if Y is not None:
@@ -167,7 +167,7 @@ class MagicMixin:
         except AttributeError:
             pass
 
-        self._n_dims_cache = -1  # type: int # I cannot use `varname: type = value` syntax because that's >=Python3.6
+        self._n_dims_cache = -1  # type: int
         self._n_dims_cache = super().n_dims  # type: ignore[misc] # noqa F821
         return self._n_dims_cache
 
@@ -192,8 +192,8 @@ class MagicMixin:
         if operate_on is not None and type(operate_on) in (list, np.ndarray):
             if not isinstance(operate_on, np.ndarray):
                 raise TypeError("argument operate_on needs to be of type np.ndarray, but is %s" % type(operate_on))
-            if operate_on.dtype != np.int:
-                raise ValueError("dtype of argument operate_on needs to be np.int, but is %s" % operate_on.dtype)
+            if operate_on.dtype != int:
+                raise ValueError("dtype of argument operate_on needs to be int, but is %s" % operate_on.dtype)
             self.operate_on = operate_on  # type: Optional[np.ndarray]
             self.len_active = len(operate_on)  # type: Optional[int]
         else:
@@ -367,13 +367,19 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
         elif eval_gradient:
             raise ValueError("Gradient can only be evaluated when Y is None.")
 
-        K = np.full((X.shape[0], Y.shape[0]), self.constant_value, dtype=np.array(self.constant_value).dtype)
+        K = np.full(
+            (X.shape[0], Y.shape[0]),
+            self.constant_value,
+            dtype=np.array(self.constant_value).dtype,
+        )
         if eval_gradient:
             if not self.hyperparameter_constant_value.fixed:
                 return (
                     K,
                     np.full(
-                        (X.shape[0], X.shape[0], 1), self.constant_value, dtype=np.array(self.constant_value).dtype
+                        (X.shape[0], X.shape[0], 1),
+                        self.constant_value,
+                        dtype=np.array(self.constant_value).dtype,
                     ),
                 )
             else:
@@ -386,7 +392,10 @@ class Matern(MagicMixin, kernels.Matern):
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+            1e-5,
+            1e5,
+        ),
         nu: float = 1.5,
         operate_on: Optional[np.ndarray] = None,
         prior: Optional[Prior] = None,
@@ -501,7 +510,10 @@ class RBF(MagicMixin, kernels.RBF):
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+            1e-5,
+            1e5,
+        ),
         operate_on: Optional[np.ndarray] = None,
         prior: Optional[Prior] = None,
         has_conditions: bool = False,
@@ -582,7 +594,10 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
     def __init__(
         self,
         noise_level: Union[float, Tuple[float, ...]] = 1.0,
-        noise_level_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+        noise_level_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+            1e-5,
+            1e5,
+        ),
         operate_on: Optional[np.ndarray] = None,
         prior: Optional[Prior] = None,
         has_conditions: bool = False,
@@ -647,11 +662,19 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
             return np.zeros((X.shape[0], Y.shape[0]))
 
 
-class HammingKernel(MagicMixin, kernels.StationaryKernelMixin, kernels.NormalizedKernelMixin, kernels.Kernel):
+class HammingKernel(
+    MagicMixin,
+    kernels.StationaryKernelMixin,
+    kernels.NormalizedKernelMixin,
+    kernels.Kernel,
+):
     def __init__(
         self,
         length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (1e-5, 1e5),
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+            1e-5,
+            1e5,
+        ),
         operate_on: Optional[np.ndarray] = None,
         prior: Optional[Prior] = None,
         has_conditions: bool = False,

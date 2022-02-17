@@ -196,6 +196,7 @@ class OutputWriter(object):
                 ``json`` and ``pcs_new`` are supported.
         """
         writers = {"pcs_new": pcs_new.write, "json": json.write}
+
         writer = writers.get(output_format)
         if writer:
             with open(fn, "w") as fh:

@@ -2,9 +2,9 @@ import typing
 
 import importlib
 import re
-from distutils.version import LooseVersion
 
 import pkg_resources
+from packaging.version import Version
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -40,18 +40,18 @@ def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
 def _verify_package(name: str, operation: str, version: str) -> None:
     try:
         distribution = pkg_resources.get_distribution(name)
-        installed_version = LooseVersion(distribution.version)
+        installed_version = Version(distribution.version)
     except pkg_resources.DistributionNotFound:
         try:
             module = importlib.import_module(name)
-            installed_version = LooseVersion(module.__version__)  # type: ignore[attr-defined] # noqa F821
+            installed_version = Version(module.__version__)  # type: ignore[attr-defined] # noqa F821
         except ImportError:
             raise MissingPackageError(name)
 
     if not operation:
         return
 
-    required_version = LooseVersion(version)
+    required_version = Version(version)
 
     if operation == "==":
         check = required_version == installed_version
@@ -83,9 +83,9 @@ class IncorrectPackageVersionError(Exception):
     def __init__(
         self,
         package_name: str,
-        installed_version: LooseVersion,
+        installed_version: Version,
         operation: str,
-        required_version: LooseVersion,
+        required_version: Version,
     ) -> None:
         self.package_name = package_name
         self.installed_version = installed_version

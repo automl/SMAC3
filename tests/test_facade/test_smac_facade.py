@@ -45,7 +45,13 @@ __license__ = "3-clause BSD"
 class TestSMACFacade(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.scenario_dict_default = {"cs": self.cs, "run_obj": "quality", "output_dir": ""}
+        self.scenario_dict_default = {
+            "cs": self.cs,
+            "run_obj": "quality",
+            "output_dir": "",
+            "limit_resources": True,
+            "deterministic": False,
+        }
         self.scenario = Scenario(self.scenario_dict_default)
         self.sh_intensifier_kwargs = {
             "n_seeds": 1,
@@ -111,16 +117,32 @@ class TestSMACFacade(unittest.TestCase):
         self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set())
 
         for intensifier in (SuccessiveHalving, Hyperband):
-            smbo = SMAC4AC(self.scenario, intensifier=intensifier, intensifier_kwargs=self.sh_intensifier_kwargs)
+            smbo = SMAC4AC(
+                self.scenario,
+                intensifier=intensifier,
+                intensifier_kwargs=self.sh_intensifier_kwargs,
+            )
             self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
             self.assertSetEqual(
                 set(smbo.solver.epm_chooser.rh2EPM.success_states),
-                {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT, StatusType.DONOTADVANCE},
+                {
+                    StatusType.SUCCESS,
+                    StatusType.CRASHED,
+                    StatusType.MEMOUT,
+                    StatusType.DONOTADVANCE,
+                },
             )
             self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state), set())
             self.assertSetEqual(
                 set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state),
-                set([StatusType.DONOTADVANCE, StatusType.TIMEOUT, StatusType.CRASHED, StatusType.MEMOUT]),
+                set(
+                    [
+                        StatusType.DONOTADVANCE,
+                        StatusType.TIMEOUT,
+                        StatusType.CRASHED,
+                        StatusType.MEMOUT,
+                    ]
+                ),
             )
 
         self.scenario.run_obj = "runtime"
@@ -205,7 +227,11 @@ class TestSMACFacade(unittest.TestCase):
         smbo = SMAC4AC(self.scenario, acquisition_function_kwargs={"par": 17})
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 17)
-        smbo = SMAC4AC(self.scenario, acquisition_function=LCB, acquisition_function_kwargs={"par": 19})
+        smbo = SMAC4AC(
+            self.scenario,
+            acquisition_function=LCB,
+            acquisition_function_kwargs={"par": 19},
+        )
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, LCB)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 19)
         # Check for construction failure on wrong argument
@@ -295,10 +321,14 @@ class TestSMACFacade(unittest.TestCase):
                 acquisition_function=EIPS,
                 runhistory2epm=RunHistory2EPM4EIPS,
             ).solver
-            self.assertIsInstance(smbo.epm_chooser.model, UncorrelatedMultiObjectiveRandomForestWithInstances)
+            self.assertIsInstance(
+                smbo.epm_chooser.model,
+                UncorrelatedMultiObjectiveRandomForestWithInstances,
+            )
             self.assertIsInstance(smbo.epm_chooser.acquisition_func, EIPS)
             self.assertIsInstance(
-                smbo.epm_chooser.acquisition_func.model, UncorrelatedMultiObjectiveRandomForestWithInstances
+                smbo.epm_chooser.acquisition_func.model,
+                UncorrelatedMultiObjectiveRandomForestWithInstances,
             )
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
@@ -399,12 +429,17 @@ class TestSMACFacade(unittest.TestCase):
                     "run_obj": "quality",  # we optimize quality (alternatively runtime)
                     "runcount-limit": 50,  # maximum function evaluations
                     "cs": cs,  # configuration space
-                    "deterministic": "true",
+                    "deterministic": True,
+                    "limit_resources": True,
                     "intensification_percentage": 0.000000001,
                 }
             )
 
-            smac = SMAC4AC(scenario=scenario, rng=np.random.RandomState(42), tae_runner=rosenbrock_2d)
+            smac = SMAC4AC(
+                scenario=scenario,
+                rng=np.random.RandomState(42),
+                tae_runner=rosenbrock_2d,
+            )
             incumbent = smac.optimize()
             return incumbent, smac.scenario.output_dir
 
@@ -435,7 +470,7 @@ class TestSMACFacade(unittest.TestCase):
     def test_output_structure(self):
         """Test whether output-dir is moved correctly."""
         test_scenario_dict = {
-            "output_dir": "tests/test_files/scenario_test/tmp_output",
+            "output_dir": "test/test_files/scenario_test/tmp_output",
             "run_obj": "quality",
             "cs": ConfigurationSpace(),
         }
@@ -467,7 +502,11 @@ class TestSMACFacade(unittest.TestCase):
     def test_no_output(self):
         """Test whether a scenario with "" as output really does not create an
         output."""
-        test_scenario_dict = {"output_dir": "", "run_obj": "quality", "cs": ConfigurationSpace()}
+        test_scenario_dict = {
+            "output_dir": "",
+            "run_obj": "quality",
+            "cs": ConfigurationSpace(),
+        }
         scen1 = Scenario(test_scenario_dict)
         smac = SMAC4AC(scenario=scen1, run_id=1)
         self.assertFalse(os.path.isdir(smac.output_dir))
@@ -495,18 +534,39 @@ class TestSMACFacade(unittest.TestCase):
         def tmp(**kwargs):
             return 1
 
-        scenario = Scenario({"cs": self.cs, "run_obj": "quality", "output_dir": ""})
+        scenario = Scenario(
+            {
+                "cs": self.cs,
+                "run_obj": "quality",
+                "output_dir": "",
+                "limit_resources": True,
+            }
+        )
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertTrue(smac.solver.tae_runner.use_pynisher)
         self.assertIsNone(smac.solver.tae_runner.memory_limit)
 
-        scenario = Scenario({"cs": self.cs, "run_obj": "quality", "output_dir": "", "memory_limit": 333})
+        scenario = Scenario(
+            {
+                "cs": self.cs,
+                "run_obj": "quality",
+                "output_dir": "",
+                "memory_limit": 333,
+                "limit_resources": True,
+            }
+        )
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertTrue(smac.solver.tae_runner.use_pynisher)
         self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
 
         scenario = Scenario(
-            {"cs": self.cs, "run_obj": "quality", "output_dir": "", "memory_limit": 333, "limit_resources": False}
+            {
+                "cs": self.cs,
+                "run_obj": "quality",
+                "output_dir": "",
+                "memory_limit": 333,
+                "limit_resources": False,
+            }
         )
         smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertFalse(smac.solver.tae_runner.use_pynisher)

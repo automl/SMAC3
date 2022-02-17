@@ -17,7 +17,40 @@ from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.utils.io.traj_logging import TrajLogger
 
-from .test_eval_utils import eval_challenger
+
+def eval_challenger(
+    run_info: RunInfo,
+    taf: ExecuteTAFuncDict,
+    stats: Stats,
+    runhistory: RunHistory,
+    force_update=False,
+):
+    """
+    Wrapper over challenger evaluation
+
+    SMBO objects handles run history now, but to keep
+    same testing functionality this function is a small
+    wrapper to launch the taf and add it to the history
+    """
+    # evaluating configuration
+    run_info, result = taf.run_wrapper(
+        run_info=run_info,
+    )
+
+    stats.ta_time_used += float(result.time)
+    runhistory.add(
+        config=run_info.config,
+        cost=result.cost,
+        time=result.time,
+        status=result.status,
+        instance_id=run_info.instance,
+        seed=run_info.seed,
+        budget=run_info.budget,
+        force_update=force_update,
+    )
+    stats.n_configs = len(runhistory.config_ids)
+    return result
+
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -40,7 +73,16 @@ class TestIntensify(unittest.TestCase):
         self.config2 = Configuration(self.cs, values={"a": 100, "b": 0})
         self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
 
-        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
+        self.scen = Scenario(
+            {
+                "cutoff_time": 2,
+                "cs": self.cs,
+                "run_obj": "runtime",
+                "output_dir": "",
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -56,7 +98,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -81,6 +123,7 @@ class TestIntensify(unittest.TestCase):
         inc, instance, seed, cutoff = intensifier._get_next_racer(
             challenger=self.config2, incumbent=self.config1, run_history=self.rh
         )
+
         run_info = RunInfo(
             config=self.config2,
             instance=instance,
@@ -90,7 +133,9 @@ class TestIntensify(unittest.TestCase):
             capped=False,
             budget=0.0,
         )
+
         result = eval_challenger(run_info, taf, self.stats, self.rh)
+
         inc, perf = intensifier.process_results(
             run_info=run_info,
             incumbent=self.config1,
@@ -113,7 +158,7 @@ class TestIntensify(unittest.TestCase):
             time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -147,6 +192,7 @@ class TestIntensify(unittest.TestCase):
             capped=True,
             budget=0.0,
         )
+
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, perf = intensifier.process_results(
             run_info=run_info,
@@ -172,7 +218,13 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(0.6)
             return (config["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime", par_factor=1)
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False,
+            ta=target,
+            stats=self.stats,
+            run_obj="runtime",
+            par_factor=1,
+        )
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -301,7 +353,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -377,7 +429,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats)
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -455,7 +507,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -522,7 +574,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
 
         intensifier = Intensifier(
             stats=self.stats,
@@ -642,7 +694,11 @@ class TestIntensify(unittest.TestCase):
         """
         # test get generator from a list of challengers
         intensifier = Intensifier(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1], deterministic=True
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1],
+            deterministic=True,
         )
 
         gen = intensifier._generate_challengers(challengers=[self.config1, self.config2], chooser=None)
@@ -653,7 +709,11 @@ class TestIntensify(unittest.TestCase):
 
         # test get generator from a chooser - would return only 1 configuration
         intensifier = Intensifier(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1], deterministic=True
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1],
+            deterministic=True,
         )
         chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
 
@@ -676,7 +736,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(1)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -697,7 +757,10 @@ class TestIntensify(unittest.TestCase):
         # intensification iteration #1
         # run first config as incumbent if incumbent is None
         intent, run_info = intensifier.get_next_run(
-            incumbent=None, run_history=self.rh, challengers=[self.config2], chooser=None
+            incumbent=None,
+            run_history=self.rh,
+            challengers=[self.config2],
+            chooser=None,
         )
         self.assertEqual(run_info.config, self.config2)
         self.assertEqual(intensifier.stage, IntensifierStage.PROCESS_FIRST_CONFIG_RUN)
@@ -830,9 +893,18 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(inc, self.config1)
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 3)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 0)  # capped
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            3,
+        )
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            2,
+        )
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            0,
+        )  # capped
 
     def test_eval_challenger_2(self):
         """
@@ -842,7 +914,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -862,7 +934,10 @@ class TestIntensify(unittest.TestCase):
         # intensification iteration #1
         # run first config as incumbent if incumbent is None
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config3], incumbent=None, run_history=self.rh, chooser=None
+            challengers=[self.config3],
+            incumbent=None,
+            run_history=self.rh,
+            chooser=None,
         )
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.PROCESS_FIRST_CONFIG_RUN)
@@ -885,7 +960,10 @@ class TestIntensify(unittest.TestCase):
         # But no more instances are available. So to prevent cicles
         # where No iteration happens, provide the challengers
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config2, self.config1],  # since incumbent is run, no configs required
+            challengers=[
+                self.config2,
+                self.config1,
+            ],  # since incumbent is run, no configs required
             incumbent=inc,
             run_history=self.rh,
             chooser=None,
@@ -894,7 +972,10 @@ class TestIntensify(unittest.TestCase):
         # no new TA runs as there are no more instances to run
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            1,
+        )
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
         # run challenger now that the incumbent has been executed
@@ -969,9 +1050,18 @@ class TestIntensify(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(intensifier.configs_to_run)
 
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)), 1)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            1,
+        )
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            1,
+        )
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
+            1,
+        )
 
     def test_eval_challenger_3(self):
         """
@@ -981,7 +1071,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1011,7 +1101,10 @@ class TestIntensify(unittest.TestCase):
 
         # intensification - incumbent will be run, but not as RUN_FIRST_CONFIG stage
         intent_, run_info = intensifier.get_next_run(
-            challengers=[self.config2], incumbent=self.config1, run_history=self.rh, chooser=None
+            challengers=[self.config2],
+            incumbent=self.config1,
+            run_history=self.rh,
+            chooser=None,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, perf = intensifier.process_results(
@@ -1023,7 +1116,10 @@ class TestIntensify(unittest.TestCase):
         )
 
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            2,
+        )
 
     def test_no_new_intensification_wo_challenger_run(self):
         """
@@ -1033,7 +1129,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1052,7 +1148,10 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_FIRST_CONFIG)
 
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config3], incumbent=None, run_history=self.rh, chooser=None
+            challengers=[self.config3],
+            incumbent=None,
+            run_history=self.rh,
+            chooser=None,
         )
         self.assertEqual(run_info.config, self.config3)
         self.assertEqual(intensifier.stage, IntensifierStage.PROCESS_FIRST_CONFIG_RUN)
@@ -1094,7 +1193,13 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.n_iters, 2)
 
         self.rh.add(
-            config=self.config1, cost=1, time=1, status=StatusType.SUCCESS, instance_id=1, seed=0, additional_info=None
+            config=self.config1,
+            cost=1,
+            time=1,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=0,
+            additional_info=None,
         )
         intensifier.stage = IntensifierStage.RUN_CHALLENGER
 
@@ -1129,3 +1234,9 @@ class TestIntensify(unittest.TestCase):
         # of get next challenger
         self.assertEqual(intensifier.n_iters, 3)
         self.assertEqual(intensifier.num_chall_run, 1)
+
+
+if __name__ == "__main__":
+    t = TestIntensify()
+    t.setUp()
+    t.test_eval_challenger_1()

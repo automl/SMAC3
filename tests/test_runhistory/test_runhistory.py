@@ -91,6 +91,7 @@ class RunhistoryTest(unittest.TestCase):
                 instance_id=None,
                 seed=12345,
                 additional_info=None,
+                budget=0,
             )
 
         self.assertEqual(len(rh.data), 1)
@@ -107,12 +108,44 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
         config2 = Configuration(cs, values={"a": 1, "b": 3})
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=2)
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=2,
+        )
         with self.assertRaisesRegex(ValueError, "This should not happen!"):
-            rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=2, seed=2, budget=1)
+            rh.add(
+                config=config1,
+                cost=10,
+                time=20,
+                status=StatusType.SUCCESS,
+                instance_id=2,
+                seed=2,
+                budget=1,
+            )
 
-        rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
+        rh.add(
+            config=config2,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
 
         ist = rh.get_runs_for_config(config=config1, only_max_observed_budget=True)
 
@@ -127,11 +160,43 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
         config2 = Configuration(cs, values={"a": 1, "b": 3})
-        rh.add(config=config1, cost=5, time=10, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=2)
+        rh.add(
+            config=config1,
+            cost=5,
+            time=10,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=2,
+        )
 
-        rh.add(config=config2, cost=5, time=10, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
-        rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=2)
+        rh.add(
+            config=config2,
+            cost=5,
+            time=10,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
+        rh.add(
+            config=config2,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=2,
+        )
 
         ist = rh.get_runs_for_config(config=config1, only_max_observed_budget=False)
 
@@ -145,11 +210,32 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
         config2 = Configuration(cs, values={"a": 1, "b": 3})
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+        )
 
-        rh.add(config=config2, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+        rh.add(
+            config=config2,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+        )
 
-        rh.add(config=config2, cost=20, time=20, status=StatusType.SUCCESS, instance_id=2, seed=2)
+        rh.add(
+            config=config2,
+            cost=20,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=2,
+            seed=2,
+        )
 
         cost_config2 = rh.get_cost(config2)
 
@@ -166,11 +252,32 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
         config2 = Configuration(cs, values={"a": 1, "b": 3})
-        rh.add(config=config1, cost=[10], time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+        rh.add(
+            config=config1,
+            cost=[10],
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+        )
 
-        rh.add(config=config2, cost=[10], time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+        rh.add(
+            config=config2,
+            cost=[10],
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+        )
 
-        rh.add(config=config2, cost=[20], time=20, status=StatusType.SUCCESS, instance_id=2, seed=2)
+        rh.add(
+            config=config2,
+            cost=[20],
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=2,
+            seed=2,
+        )
 
         cost_config2 = rh.get_cost(config2)
 
@@ -181,7 +288,6 @@ class RunhistoryTest(unittest.TestCase):
         rh.compute_all_costs(instances=[2])
         updated_cost_config2 = rh.get_cost(config2)
         self.assertNotEqual(cost_config2, updated_cost_config2)
-        self.assertEqual(updated_cost_config2, [20])
         self.assertEqual(updated_cost_config2, 20)
 
     def test_incremental_update(self):
@@ -190,11 +296,25 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
 
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+        )
 
         self.assertEqual(rh.get_cost(config1), 10)
 
-        rh.add(config=config1, cost=20, time=20, status=StatusType.SUCCESS, instance_id=2, seed=1)
+        rh.add(
+            config=config1,
+            cost=20,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=2,
+            seed=1,
+        )
 
         self.assertEqual(rh.get_cost(config1), 15)
 
@@ -204,12 +324,28 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
         config1 = Configuration(cs, values={"a": 1, "b": 2})
 
-        rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
+        rh.add(
+            config=config1,
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
 
         self.assertEqual(rh.get_cost(config1), 10)
 
         # only the higher budget gets included in the config cost
-        rh.add(config=config1, cost=20, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=2)
+        rh.add(
+            config=config1,
+            cost=20,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=2,
+        )
 
         self.assertEqual(rh.get_cost(config1), 20)
         self.assertEqual(rh.get_min_cost(config1), 10)
@@ -220,13 +356,37 @@ class RunhistoryTest(unittest.TestCase):
         cs = get_config_space()
 
         config1 = Configuration(cs, values={"a": 1, "b": 1})
-        rh.add(config=config1, cost=10, time=10, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
+        rh.add(
+            config=config1,
+            cost=10,
+            time=10,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
 
         config2 = Configuration(cs, values={"a": 2, "b": 2})
-        rh.add(config=config2, cost=20, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=1)
+        rh.add(
+            config=config2,
+            cost=20,
+            time=20,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=1,
+        )
 
         config3 = Configuration(cs, values={"a": 3, "b": 3})
-        rh.add(config=config3, cost=30, time=30, status=StatusType.SUCCESS, instance_id=1, seed=1, budget=3)
+        rh.add(
+            config=config3,
+            cost=30,
+            time=30,
+            status=StatusType.SUCCESS,
+            instance_id=1,
+            seed=1,
+            budget=3,
+        )
 
         self.assertListEqual(rh.get_all_configs_per_budget([1]), [config1, config2])
 
@@ -237,9 +397,16 @@ class RunhistoryTest(unittest.TestCase):
             cs = get_config_space()
             config1 = Configuration(cs, values={"a": 1, "b": 2}, origin=origin)
 
-            rh.add(config=config1, cost=10, time=20, status=StatusType.SUCCESS, instance_id=1, seed=1)
+            rh.add(
+                config=config1,
+                cost=10,
+                time=20,
+                status=StatusType.SUCCESS,
+                instance_id=1,
+                seed=1,
+            )
 
-            path = "tests/test_files/test_json_origin.json"
+            path = "test/test_files/test_json_origin.json"
             rh.save_json(path)
             _ = rh.load_json(path, cs)
 

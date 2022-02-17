@@ -43,7 +43,6 @@ class SMAC4HPO(SMAC4AC):
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
             )
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
 
         init_kwargs = kwargs.get("initial_design_kwargs", dict())
         init_kwargs["n_configs_x_params"] = init_kwargs.get("n_configs_x_params", 10)
@@ -72,7 +71,6 @@ class SMAC4HPO(SMAC4AC):
 
         # == Acquisition function
         kwargs["acquisition_function"] = kwargs.get("acquisition_function", LogEI)
-
         kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
 
         # assumes random chooser for random configs

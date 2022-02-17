@@ -9,6 +9,8 @@ Optimize both the final performance and the time used for training.
 
 import logging
 
+from smac.optimizer.multi_objective.parego import ParEGO
+
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
@@ -49,8 +51,11 @@ def is_pareto_efficient_simple(costs):
     is_efficient = np.ones(costs.shape[0], dtype=bool)
     for i, c in enumerate(costs):
         if is_efficient[i]:
-            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)  # Keep any point with a lower cost
-            is_efficient[i] = True  # And keep self
+            # Keep any point with a lower cost
+            is_efficient[is_efficient] = np.any(costs[is_efficient] < c, axis=1)
+
+            # And keep self
+            is_efficient[i] = True
     return is_efficient
 
 
@@ -130,7 +135,9 @@ if __name__ == "__main__":
 
     # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
     kernel = CategoricalHyperparameter(
-        name="kernel", choices=["linear", "rbf", "poly", "sigmoid"], default_value="poly"
+        name="kernel",
+        choices=["linear", "rbf", "poly", "sigmoid"],
+        default_value="poly",
     )
     cs.add_hyperparameter(kernel)
 
@@ -184,6 +191,7 @@ if __name__ == "__main__":
         scenario=scenario,
         rng=np.random.RandomState(42),
         tae_runner=svm_from_cfg,
+        multi_objective_algorithm=ParEGO,
         multi_objective_kwargs={
             "rho": 0.05,
         },

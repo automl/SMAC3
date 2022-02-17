@@ -55,7 +55,16 @@ class TestSuccessiveHalving(unittest.TestCase):
         self.config3 = Configuration(self.cs, values={"a": 0, "b": 7})
         self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
 
-        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
+        self.scen = Scenario(
+            {
+                "cutoff_time": 2,
+                "cs": self.cs,
+                "run_obj": "runtime",
+                "output_dir": "",
+                "deterministic": False,
+                "limit_resources": False,
+            }
+        )
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -113,18 +122,34 @@ class TestSuccessiveHalving(unittest.TestCase):
             magic = time.time()
 
             result = RunValue(
-                cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info=magic
+                cost=1,
+                time=0.5,
+                status=StatusType.SUCCESS,
+                starttime=1,
+                endtime=2,
+                additional_info=magic,
             )
             self.SH.process_results(
-                run_info=run_info, incumbent=None, run_history=self.rh, time_bound=None, result=result, log_traj=False
+                run_info=run_info,
+                incumbent=None,
+                run_history=self.rh,
+                time_bound=None,
+                result=result,
+                log_traj=False,
             )
 
             # Check the call arguments of each sh instance and make sure
             # it is the correct one
 
             # First the expected one
-            self.assertEqual(self.SH.intensifier_instances[i].process_results.call_args[1]["run_info"], run_info)
-            self.assertEqual(self.SH.intensifier_instances[i].process_results.call_args[1]["result"], result)
+            self.assertEqual(
+                self.SH.intensifier_instances[i].process_results.call_args[1]["run_info"],
+                run_info,
+            )
+            self.assertEqual(
+                self.SH.intensifier_instances[i].process_results.call_args[1]["result"],
+                result,
+            )
             all_other_run_infos, all_other_results = [], []
             for j in range(len(self.SH.intensifier_instances)):
                 # Skip the expected _SH
@@ -373,7 +398,16 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
         self.config4 = Configuration(self.cs, values={"a": 0, "b": 0})
 
-        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
+        self.scen = Scenario(
+            {
+                "cutoff_time": 2,
+                "cs": self.cs,
+                "run_obj": "runtime",
+                "output_dir": "",
+                "deterministic": False,
+                "limit_resources": True,
+            }
+        )
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -459,7 +493,8 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # runtime as budget (no param provided)
         with self.assertRaisesRegex(
-            ValueError, "requires parameters initial_budget and max_budget for intensification!"
+            ValueError,
+            "requires parameters initial_budget and max_budget for intensification!",
         ):
             _SuccessiveHalving(
                 stats=self.stats,
@@ -485,7 +520,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
             )
 
         # max budget > instance-seed pairs
-        with self.assertRaisesRegex(ValueError, "Max budget cannot be greater than the number of instance-seed pairs"):
+        with self.assertRaisesRegex(
+            ValueError,
+            "Max budget cannot be greater than the number of instance-seed pairs",
+        ):
             _SuccessiveHalving(
                 stats=self.stats,
                 traj_logger=TrajLogger(output_dir=None, stats=self.stats),
@@ -504,7 +542,11 @@ class Test_SuccessiveHalving(unittest.TestCase):
         test _top_k() for configs with same instance-seed-budget keys
         """
         intensifier = _SuccessiveHalving(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1, 2], initial_budget=1
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1, 2],
+            initial_budget=1,
         )
         self.rh.add(
             config=self.config1,
@@ -579,7 +621,9 @@ class Test_SuccessiveHalving(unittest.TestCase):
             additional_info=None,
         )
         conf = intensifier._top_k(
-            configs=[self.config1, self.config2, self.config3, self.config4], k=2, run_history=self.rh
+            configs=[self.config1, self.config2, self.config3, self.config4],
+            k=2,
+            run_history=self.rh,
         )
 
         # Check that config4 is also before config1 (as it has the lower cost)
@@ -590,7 +634,11 @@ class Test_SuccessiveHalving(unittest.TestCase):
         test _top_k() for configs with different instance-seed-budget keys
         """
         intensifier = _SuccessiveHalving(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1, 2], initial_budget=1
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1, 2],
+            initial_budget=1,
         )
         self.rh.add(
             config=self.config1,
@@ -612,14 +660,22 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
 
         with self.assertRaisesRegex(ValueError, "Cannot compare configs"):
-            intensifier._top_k(configs=[self.config2, self.config1, self.config3], k=1, run_history=self.rh)
+            intensifier._top_k(
+                configs=[self.config2, self.config1, self.config3],
+                k=1,
+                run_history=self.rh,
+            )
 
     def test_top_k_3(self):
         """
         test _top_k() for not enough configs to generate for the next budget
         """
         intensifier = _SuccessiveHalving(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1], initial_budget=1
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1],
+            initial_budget=1,
         )
         self.rh.add(
             config=self.config1,
@@ -731,7 +787,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
 
         taf.runhistory = self.rh
 
@@ -972,7 +1028,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x: Configuration, instance: str, seed: int, budget: float):
             return 0.1 * budget
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -989,15 +1045,39 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
         intensifier._update_stage(run_history=None)
 
-        self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=0.5)
-        self.rh.add(config=self.config2, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=0.25)
-        self.rh.add(config=self.config3, cost=2, time=1, status=StatusType.SUCCESS, seed=0, budget=0.25)
+        self.rh.add(
+            config=self.config1,
+            cost=1,
+            time=1,
+            status=StatusType.SUCCESS,
+            seed=0,
+            budget=0.5,
+        )
+        self.rh.add(
+            config=self.config2,
+            cost=1,
+            time=1,
+            status=StatusType.SUCCESS,
+            seed=0,
+            budget=0.25,
+        )
+        self.rh.add(
+            config=self.config3,
+            cost=2,
+            time=1,
+            status=StatusType.SUCCESS,
+            seed=0,
+            budget=0.25,
+        )
 
         intensifier.success_challengers = {self.config2, self.config3}
         intensifier._update_stage(run_history=self.rh)
 
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config1], chooser=None, incumbent=self.config1, run_history=self.rh
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
@@ -1023,7 +1103,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1041,7 +1121,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # config1 should be executed successfully and selected as incumbent
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config1], chooser=None, incumbent=None, run_history=self.rh
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
@@ -1097,7 +1180,13 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 raise ValueError("You shall not pass")
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime", abort_on_first_run_crash=False)
+        taf = ExecuteTAFuncDict(
+            use_pynisher=False,
+            ta=target,
+            stats=self.stats,
+            run_obj="runtime",
+            abort_on_first_run_crash=False,
+        )
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1126,7 +1215,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # provide configurations
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config2], chooser=None, incumbent=self.config1, run_history=self.rh
+            challengers=[self.config2],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
@@ -1142,7 +1234,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # provide configurations
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config3], chooser=None, incumbent=self.config1, run_history=self.rh
+            challengers=[self.config3],
+            chooser=None,
+            incumbent=self.config1,
+            run_history=self.rh,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
@@ -1166,7 +1261,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
         # should raise an error as this is a new iteration but no configs were provided
         with self.assertRaisesRegex(ValueError, "No configurations/chooser provided."):
             intent, run_info = intensifier.get_next_run(
-                challengers=None, chooser=None, incumbent=self.config1, run_history=self.rh
+                challengers=None,
+                chooser=None,
+                incumbent=self.config1,
+                run_history=self.rh,
             )
 
     def test_eval_challenger_capping_2(self):
@@ -1179,7 +1277,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
                 time.sleep(1.5)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="runtime")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1198,7 +1296,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # first configuration run
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config4], chooser=None, incumbent=None, run_history=self.rh
+            challengers=[self.config4],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh,
         )
         result = eval_challenger(run_info, taf, self.stats, self.rh)
         inc, inc_value = intensifier.process_results(
@@ -1262,7 +1363,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
             )
 
         self.assertEqual(inc, self.config4)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config4, only_max_observed_budget=True)), 4)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config4, only_max_observed_budget=True)),
+            4,
+        )
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(intensifier.stage, 0)
 
@@ -1277,7 +1381,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x: Configuration, instance: str):
             return (x["a"] + int(instance)) / 1000.0
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = _SuccessiveHalving(
@@ -1297,7 +1401,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
         self.assertEqual(intensifier.inst_seed_pairs, [(0, 0), (1, 0)])
 
         intent, run_info = intensifier.get_next_run(
-            challengers=[self.config1], chooser=None, incumbent=None, run_history=self.rh
+            challengers=[self.config1],
+            chooser=None,
+            incumbent=None,
+            run_history=self.rh,
         )
 
         # Mark the configuration as launched
@@ -1321,7 +1428,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
 
         self.assertEqual(inc, self.config1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 1)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            1,
+        )
         self.assertEqual(intensifier.configs_to_run, [])
         self.assertEqual(intensifier.stage, 0)
 
@@ -1348,7 +1458,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
 
         self.assertEqual(inc, self.config1)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 1)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            1,
+        )
         self.assertEqual(intensifier.configs_to_run, [self.config1])  # Incumbent is promoted to the next stage
         self.assertEqual(intensifier.stage, 1)
 
@@ -1376,7 +1489,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         self.assertEqual(inc, self.config1)
 
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)), 2)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
+            2,
+        )
         self.assertEqual(intensifier.sh_iters, 1)
         self.assertEqual(self.stats.inc_changed, 1)
 
@@ -1408,7 +1524,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
         )
 
         self.assertEqual(run_info.config, self.config2)
-        self.assertEqual(len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)), 2)
+        self.assertEqual(
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
+            2,
+        )
 
     def test_incumbent_selection_default(self):
         """
@@ -1438,7 +1557,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
             budget=1,
         )
         inc = intensifier._compare_configs(
-            challenger=self.config1, incumbent=self.config1, run_history=self.rh, log_traj=False
+            challenger=self.config1,
+            incumbent=self.config1,
+            run_history=self.rh,
+            log_traj=False,
         )
         self.assertEqual(inc, self.config1)
         self.rh.add(
@@ -1508,7 +1630,11 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # Test that the state is only based on the runhistory
         intensifier = _SuccessiveHalving(
-            stats=self.stats, traj_logger=None, rng=np.random.RandomState(12345), instances=[1], initial_budget=1
+            stats=self.stats,
+            traj_logger=None,
+            rng=np.random.RandomState(12345),
+            instances=[1],
+            initial_budget=1,
         )
         intensifier.stage = 0
 
@@ -1590,12 +1716,18 @@ class Test_SuccessiveHalving(unittest.TestCase):
 
         # incumbent should be config1, since it has the best performance in one of the budgets
         inc = intensifier._compare_configs(
-            incumbent=self.config2, challenger=self.config1, run_history=self.rh, log_traj=False
+            incumbent=self.config2,
+            challenger=self.config1,
+            run_history=self.rh,
+            log_traj=False,
         )
         self.assertEqual(self.config1, inc)
         # if config1 is incumbent already, it shouldn't change
         inc = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh, log_traj=False
+            incumbent=self.config1,
+            challenger=self.config2,
+            run_history=self.rh,
+            log_traj=False,
         )
         self.assertEqual(self.config1, inc)
 
@@ -1636,7 +1768,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
             additional_info=None,
         )
         inc = intensifier._compare_configs(
-            incumbent=self.config4, challenger=self.config3, run_history=self.rh, log_traj=False
+            incumbent=self.config4,
+            challenger=self.config3,
+            run_history=self.rh,
+            log_traj=False,
         )
         self.assertEqual(self.config4, inc)
         self.assertEqual(self.stats.inc_changed, 0)
@@ -1653,7 +1788,10 @@ class Test_SuccessiveHalving(unittest.TestCase):
             additional_info=None,
         )
         inc = intensifier._compare_configs(
-            incumbent=self.config4, challenger=self.config3, run_history=self.rh, log_traj=False
+            incumbent=self.config4,
+            challenger=self.config3,
+            run_history=self.rh,
+            log_traj=False,
         )
         self.assertEqual(self.config3, inc)
 
@@ -1666,7 +1804,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
 
         taf.runhistory = self.rh
         # select best on any budget
@@ -1813,7 +1951,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
 
         taf.runhistory = self.rh
         # select best on any budget
@@ -1909,7 +2047,7 @@ class Test_SuccessiveHalving(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(ta=target, stats=self.stats, run_obj="quality")
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
 
         taf.runhistory = self.rh
         # select best on any budget
@@ -2003,7 +2141,13 @@ class Test__SuccessiveHalving(unittest.TestCase):
         to_check = [
             # minb, maxb, eta, n_configs_in_stage, all_budgets
             [1, 81, 3, [81, 27, 9, 3, 1], [1, 3, 9, 27, 81]],
-            [1, 600, 3, [243, 81, 27, 9, 3, 1], [2.469135, 7.407407, 22.222222, 66.666666, 200, 600]],
+            [
+                1,
+                600,
+                3,
+                [243, 81, 27, 9, 3, 1],
+                [2.469135, 7.407407, 22.222222, 66.666666, 200, 600],
+            ],
             [1, 100, 10, [100, 10, 1], [1, 10, 100]],
             [
                 0.001,
@@ -2017,9 +2161,23 @@ class Test__SuccessiveHalving(unittest.TestCase):
                 1000,
                 3,
                 [729, 243, 81, 27, 9, 3, 1],
-                [1.371742, 4.115226, 12.345679, 37.037037, 111.111111, 333.333333, 1000.0],
+                [
+                    1.371742,
+                    4.115226,
+                    12.345679,
+                    37.037037,
+                    111.111111,
+                    333.333333,
+                    1000.0,
+                ],
             ],
-            [0.001, 100, 10, [100000, 10000, 1000, 100, 10, 1], [0.001, 0.01, 0.1, 1.0, 10.0, 100.0]],
+            [
+                0.001,
+                100,
+                10,
+                [100000, 10000, 1000, 100, 10, 1],
+                [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
+            ],
         ]
 
         for minb, maxb, eta, n_configs_in_stage, all_budgets in to_check:

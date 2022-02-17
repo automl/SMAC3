@@ -27,7 +27,13 @@ class ConfigurationMock(object):
 class TestEPMChooser(unittest.TestCase):
     def setUp(self):
         self.scenario = Scenario(
-            {"cs": test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
+            {
+                "cs": test_helpers.get_branin_config_space(),
+                "run_obj": "quality",
+                "output_dir": "data-test_epmchooser",
+                "deterministic": False,
+                "limit_resources": True,
+            }
         )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
@@ -205,7 +211,14 @@ class TestEPMChooser(unittest.TestCase):
             elif "Local Search" == c.origin:
                 num_local_search += 1
             else:
-                raise ValueError((c.origin, "Local Search" == c.origin, type("Local Search"), type(c.origin)))
+                raise ValueError(
+                    (
+                        c.origin,
+                        "Local Search" == c.origin,
+                        type("Local Search"),
+                        type(c.origin),
+                    )
+                )
 
         self.assertEqual(num_local_search, 11)
         self.assertEqual(num_random_search_sorted, 5000)
@@ -240,7 +253,7 @@ class TestEPMChooser(unittest.TestCase):
         # For each configuration it is randomly sampled whether to take it from the list of challengers or to sample it
         # completely at random. Therefore, it is not guaranteed to obtain twice the number of configurations selected
         # by EI
-        self.assertEqual(len(challengers), 9986)
+        self.assertEqual(len(challengers), 9982)
         num_random_search_sorted = 0
         num_random_search = 0
         num_local_search = 0
@@ -257,7 +270,7 @@ class TestEPMChooser(unittest.TestCase):
 
         self.assertEqual(num_local_search, 26)
         self.assertEqual(num_random_search_sorted, 5000)
-        self.assertEqual(num_random_search, 4960)
+        self.assertEqual(num_random_search, 4956)
 
 
 if __name__ == "__main__":
