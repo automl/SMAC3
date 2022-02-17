@@ -1,7 +1,7 @@
 # 1.2
 
 ## Features
-* Added multi-objective optimization via Mean-Aggregation or Par-EGO. Both approaches normalize
+* Added multi-objective optimization via Mean-Aggregation or Par-EGO (#817, #818). Both approaches normalize
 the costs objective-wise based on all data in the history.
 
 ## Major Changes
