@@ -1,6 +1,5 @@
 from contextlib import suppress
 import shutil
-import os
 import glob
 import joblib
 import unittest
