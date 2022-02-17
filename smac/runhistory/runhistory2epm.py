@@ -725,6 +725,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         store_statistics: bool = False,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
+
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
@@ -748,10 +749,12 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf_vector
 
-            if self.num_obj > 1 and self.multi_objective_algorithm is not None:
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
+                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
                 y_ = self.multi_objective_algorithm(y_)
                 y[row, 0] = y_
             else:
