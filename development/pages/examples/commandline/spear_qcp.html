@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -408,11 +418,11 @@ to download the full example code</p>
 <p>We optimize the SPEAR algorithm on QCP to demonstrate the powerful ROAR and SMAC4AC facade using
 commandline. Algorithm and instance definition is done inside scenario file.</p>
 <p>ROAR:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode ROAR
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 ./scripts/smac.py --scenario examples/commandline/spear_qcp/scenario.txt --verbose DEBUG --mode ROAR
 </pre></div>
 </div>
 <p>SMAC4AC:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 ../../scripts/smac.py --scenario spear_qcp/scenario.txt --verbose DEBUG --mode SMAC4AC
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ python3 ./scripts/smac.py --scenario examples/commandline/spear_qcp/scenario.txt --verbose DEBUG --mode SMAC4AC
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>

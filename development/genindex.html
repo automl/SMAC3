@@ -174,8 +174,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="pages/examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="pages/examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -243,6 +248,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="pages/details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -416,7 +426,9 @@ style="width: 100%;">
       <ul>
         <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy.__call__">(smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy method)</a>
 </li>
-        <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.ParEGO.__call__">(smac.optimizer.multi_objective.aggregation_strategy.ParEGO method)</a>
+        <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy.__call__">(smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy method)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.multi_objective.parego.html#smac.optimizer.multi_objective.parego.ParEGO.__call__">(smac.optimizer.multi_objective.parego.ParEGO method)</a>
 </li>
       </ul></li>
       <li><a href="apidoc/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.__del__">__del__() (smac.tae.dask_runner.DaskParallelRunner method)</a>
@@ -476,7 +488,9 @@ style="width: 100%;">
 </li>
         <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy._abc_impl">(smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy attribute)</a>
 </li>
-        <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.ParEGO._abc_impl">(smac.optimizer.multi_objective.aggregation_strategy.ParEGO attribute)</a>
+        <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy._abc_impl">(smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy attribute)</a>
+</li>
+        <li><a href="apidoc/smac.optimizer.multi_objective.parego.html#smac.optimizer.multi_objective.parego.ParEGO._abc_impl">(smac.optimizer.multi_objective.parego.ParEGO attribute)</a>
 </li>
         <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing._abc_impl">(smac.optimizer.random_configuration_chooser.ChooserCosineAnnealing attribute)</a>
 </li>
@@ -653,6 +667,8 @@ style="width: 100%;">
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.SMACArgumentParser._get_formatter">_get_formatter() (smac.utils.io.cmd_reader.SMACArgumentParser method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._get_gp">_get_gp() (smac.epm.base_gp.BaseModel method)</a>
 
       <ul>
@@ -661,8 +677,6 @@ style="width: 100%;">
         <li><a href="apidoc/smac.epm.gaussian_process_mcmc.html#smac.epm.gaussian_process_mcmc.GaussianProcessMCMC._get_gp">(smac.epm.gaussian_process_mcmc.GaussianProcessMCMC method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier._get_inc_available_inst">_get_inc_available_inst() (smac.intensification.intensification.Intensifier method)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.LocalSearch._get_initial_points">_get_initial_points() (smac.optimizer.ei_optimization.LocalSearch method)</a>
@@ -890,6 +904,8 @@ style="width: 100%;">
       <li><a href="apidoc/smac.utils.validate.html#smac.utils.validate._unbound_tae_starter">_unbound_tae_starter() (in module smac.utils.validate)</a>
 </li>
       <li><a href="apidoc/smac.epm.base_gp.html#smac.epm.base_gp.BaseModel._untransform_y">_untransform_y() (smac.epm.base_gp.BaseModel method)</a>
+</li>
+      <li><a href="apidoc/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory._update_objective_bounds">_update_objective_bounds() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="apidoc/smac.facade.experimental.hydra_facade.html#smac.facade.experimental.hydra_facade.Hydra._update_portfolio">_update_portfolio() (smac.facade.experimental.hydra_facade.Hydra method)</a>
 </li>
@@ -1449,6 +1465,8 @@ style="width: 100%;">
 </li>
       <li><a href="apidoc/smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer.maximize">maximize() (smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer method)</a>
 </li>
+      <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy">MeanAggregationStrategy (class in smac.optimizer.multi_objective.aggregation_strategy)</a>
+</li>
       <li><a href="apidoc/smac.tae.execute_func.html#smac.tae.execute_func.AbstractTAFunc.memory_limit">memory_limit (smac.tae.execute_func.AbstractTAFunc attribute)</a>
 </li>
       <li><a href="apidoc/smac.tae.html#smac.tae.StatusType.MEMOUT">MEMOUT (smac.tae.StatusType attribute)</a>
@@ -1567,6 +1585,8 @@ style="width: 100%;">
 </li>
         <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#module-smac.optimizer.multi_objective.aggregation_strategy">smac.optimizer.multi_objective.aggregation_strategy</a>
 </li>
+        <li><a href="apidoc/smac.optimizer.multi_objective.parego.html#module-smac.optimizer.multi_objective.parego">smac.optimizer.multi_objective.parego</a>
+</li>
         <li><a href="apidoc/smac.optimizer.pSMAC.html#module-smac.optimizer.pSMAC">smac.optimizer.pSMAC</a>
 </li>
         <li><a href="apidoc/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser">smac.optimizer.random_configuration_chooser</a>
@@ -1627,6 +1647,8 @@ style="width: 100%;">
 </li>
         <li><a href="apidoc/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data">smac.utils.merge_foreign_data</a>
 </li>
+        <li><a href="apidoc/smac.utils.multi_objective.html#module-smac.utils.multi_objective">smac.utils.multi_objective</a>
+</li>
         <li><a href="apidoc/smac.utils.test_helpers.html#module-smac.utils.test_helpers">smac.utils.test_helpers</a>
 </li>
         <li><a href="apidoc/smac.utils.validate.html#module-smac.utils.validate">smac.utils.validate</a>
@@ -1671,6 +1693,8 @@ style="width: 100%;">
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="apidoc/smac.intensification.intensification.html#smac.intensification.intensification.NoMoreChallengers">NoMoreChallengers</a>
+</li>
+      <li><a href="apidoc/smac.utils.multi_objective.html#smac.utils.multi_objective.normalize_costs">normalize_costs() (in module smac.utils.multi_objective)</a>
 </li>
       <li><a href="apidoc/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.num_run">num_run (smac.optimizer.smbo.SMBO attribute)</a>
 </li>
@@ -1728,7 +1752,7 @@ style="width: 100%;">
       </ul></li>
       <li><a href="apidoc/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler">ParallelScheduler (class in smac.intensification.parallel_scheduling)</a>
 </li>
-      <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#smac.optimizer.multi_objective.aggregation_strategy.ParEGO">ParEGO (class in smac.optimizer.multi_objective.aggregation_strategy)</a>
+      <li><a href="apidoc/smac.optimizer.multi_objective.parego.html#smac.optimizer.multi_objective.parego.ParEGO">ParEGO (class in smac.optimizer.multi_objective.parego)</a>
 </li>
       <li><a href="apidoc/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.parse_main_command">parse_main_command() (smac.utils.io.cmd_reader.CMDReader method)</a>
 </li>
@@ -2358,13 +2382,20 @@ style="width: 100%;">
         <li><a href="apidoc/smac.optimizer.multi_objective.abstract_multi_objective_algorithm.html#module-smac.optimizer.multi_objective.abstract_multi_objective_algorithm">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.multi_objective.aggregation_strategy
 
       <ul>
         <li><a href="apidoc/smac.optimizer.multi_objective.aggregation_strategy.html#module-smac.optimizer.multi_objective.aggregation_strategy">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    smac.optimizer.multi_objective.parego
+
+      <ul>
+        <li><a href="apidoc/smac.optimizer.multi_objective.parego.html#module-smac.optimizer.multi_objective.parego">module</a>
 </li>
       </ul></li>
       <li>
@@ -2575,6 +2606,13 @@ style="width: 100%;">
 
       <ul>
         <li><a href="apidoc/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.utils.multi_objective
+
+      <ul>
+        <li><a href="apidoc/smac.utils.multi_objective.html#module-smac.utils.multi_objective">module</a>
 </li>
       </ul></li>
       <li>

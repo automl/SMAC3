@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -441,8 +451,8 @@ if objective is cost or
 <a class="reference internal" href="smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost" title="smac.runhistory.runhistory2epm.RunHistory2EPM4LogCost"><code class="xref py py-class docutils literal notranslate"><span class="pre">RunHistory2EPM4LogCost</span></code></a>
 if objective is runtime.</p></li>
 <li><p><strong>runhistory2epm_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to the constructor of <cite>~runhistory2epm</cite></p></li>
-<li><p><strong>multi_objective_algorithm</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>&quot;AbstractMultiObjectiveAlgorithm&quot;</em><em>]</em><em>]</em>) – Class that implements multi objective logic. If None, will use :
-smac.optimizer.multi_objective.aggregation_strategy.ParEGO
+<li><p><strong>multi_objective_algorithm</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>&quot;AbstractMultiObjectiveAlgorithm&quot;</em><em>]</em><em>]</em>) – Class that implements multi objective logic. If None, will use:
+smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy
 Multi objective only becomes active if the objective
 specified in <cite>~scenario.run_obj</cite> is a List[str] with at least two entries.</p></li>
 <li><p><strong>multi_objective_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – Arguments passed to <cite>~multi_objective_algorithm</cite>.</p></li>

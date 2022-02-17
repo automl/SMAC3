@@ -38,7 +38,7 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Instances and Features" href="instances.html" />
+    <link rel="next" title="Run-History" href="run_history.html" />
     <link rel="prev" title="Arguments" href="arguments.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -418,6 +428,10 @@ Please set <code class="docutils literal notranslate"><span class="pre">run_obj<
 facade (via <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">multi_objective_kwargs</span></code>).
 Per default, ParEgo is used as the multi-objective algorithm.</p></li>
 </ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Multi-Objective Optimization does currently <em>not</em> support Intensifications like Hyperband or Successive Halving.</p>
+</div>
 <p>We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
 <a class="reference internal" href="../examples/python/plot_scalarized_multi_objective.html#scalarized-multi-objective-using-parego"><span class="std std-ref">Scalarized Multi-Objective Using ParEGO</span></a>.</p>
 </section>
@@ -435,10 +449,10 @@ Per default, ParEgo is used as the multi-objective algorithm.</p></li>
             <p class="prev-next-title">Arguments</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="instances.html" title="next page">
+    <a class='right-next' id="next-link" href="run_history.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Instances and Features</p>
+        <p class="prev-next-title">Run-History</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -38,7 +38,7 @@
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Synthetic Function with few Hyperparameters" href="plot_synthetic_function.html" />
+    <link rel="next" title="Simple Multi-Objective" href="plot_simple_multi_objective.html" />
     <link rel="prev" title="Restore Branin" href="../commandline/restore_branin.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -182,6 +182,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_simple_multi_objective.html">
+     Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -400,133 +410,16 @@ style="width: 100%;">
                 
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-pages-examples-python-plot-spear-mf-instances-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-pages-examples-python-spear-mf-instances-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="spear-qcp-with-multi-fidelity-on-instances">
-<span id="sphx-glr-pages-examples-python-plot-spear-mf-instances-py"></span><h1>SPEAR-QCP with Multi-Fidelity on Instances<a class="headerlink" href="#spear-qcp-with-multi-fidelity-on-instances" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-pages-examples-python-spear-mf-instances-py"></span><h1>SPEAR-QCP with Multi-Fidelity on Instances<a class="headerlink" href="#spear-qcp-with-multi-fidelity-on-instances" title="Permalink to this headline">¶</a></h1>
 <p>We optimize the SPEAR algorithm on QCP to demonstrate the powerful SMAC4AC facade. Algorithm and
 instance definition is done inside scenario file.</p>
 <p>Moreover, we present you an alternative <a class="reference internal" href="../../glossary.html#term-Intensification"><span class="xref std std-term">intensification</span></a> procedure “Successive Halving”.</p>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.scenario.scenario.Scenario:Reading scenario file: ./spear_qcp/scenario.txt
-INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-02-01_15:31:27_126810
-WARNING:smac.facade.smac_ac_facade.SMAC4AC:Runtime as objective automatically activates log(y) transformation
-INFO:smac.initial_design.default_configuration_design.DefaultConfiguration:Running initial design for 1 configurations
-INFO:smac.optimizer.smbo.SMBO:Running initial design
-/home/runner/work/SMAC3/SMAC3/docs/../smac/intensification/parallel_scheduling.py:153: UserWarning: SuccessiveHalving is executed with 1 workers only. Consider to use pynisher to use all available workers.
-  warnings.warn(
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving configuration: budget type = INSTANCES, Initial budget = 1.00, Max. budget = 8.00, eta = 3.00
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (25.0036) is better than incumbent (25.006) on 2 runs.
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Changes in incumbent:
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 1.0 -&gt; 1.3608901397905036
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.4 -&gt; 1.651331440199509
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-del-heur : &#39;2&#39; -&gt; &#39;1&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 100 -&gt; 565
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : &#39;0&#39; -&gt; &#39;2&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.3 -&gt; 1.3688923002756863
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.4 -&gt; 0.28760654250874096
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-orig-clause-sort-heur : &#39;0&#39; -&gt; &#39;19&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-phase-dec-freq : &#39;0.001&#39; -&gt; &#39;0&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-freq : &#39;0.001&#39; -&gt; &#39;0&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-resolution : &#39;1&#39; -&gt; &#39;0&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.5 -&gt; 1.6122856707264317
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.0 -&gt; 1.0120969978687528
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : &#39;0&#39; -&gt; &#39;18&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.4 -&gt; 1.233600969127587
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Challenger (0.8414) is better than incumbent (25.0036) on 2 runs.
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Changes in incumbent:
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-activity-inc : 1.3608901397905036 -&gt; 0.7772959540011218
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-decay : 1.651331440199509 -&gt; 1.4606657946801596
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-clause-del-heur : &#39;1&#39; -&gt; &#39;0&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-first-restart : 565 -&gt; 73
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clause-sort-heur : &#39;2&#39; -&gt; &#39;15&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-clauses-inc : 1.3688923002756863 -&gt; 1.1851246522358834
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-learned-size-factor : 0.28760654250874096 -&gt; 0.3186768477925264
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-max-res-lit-inc : None -&gt; 1.7097883959964029
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-max-res-runs : None -&gt; 2
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-freq : &#39;0&#39; -&gt; &#39;0.0001&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-rand-var-dec-scaling : None -&gt; 0.7799197000983679
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-res-cutoff-cls : None -&gt; 17
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-res-cutoff-lits : None -&gt; 982
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-res-order-heur : None -&gt; &#39;5&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-resolution : &#39;0&#39; -&gt; &#39;2&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-restart-inc : 1.6122856707264317 -&gt; 1.2735102380737016
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-activity-inc : 1.0120969978687528 -&gt; 0.9551224835914144
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-var-dec-heur : &#39;18&#39; -&gt; &#39;3&#39;
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:  sp-variable-decay : 1.233600969127587 -&gt; 1.0008897652131796
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 1-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-1 with budget [2.67 / 8] - evaluated 3 challenger(s)
-INFO:smac.intensification.successive_halving.0._SuccessiveHalving:Successive Halving iteration-step: 2-2 with budget [8.00 / 8] - evaluated 1 challenger(s)
-INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-INFO:smac.stats.stats.Stats:Incumbent changed: 2
-INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 21 / inf
-INFO:smac.stats.stats.Stats:Finished target algorithm runs: 21 / inf
-INFO:smac.stats.stats.Stats:Configurations: 6
-INFO:smac.stats.stats.Stats:Used wallclock time: 62.79 / 60.00 sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 26.20 / inf sec
-INFO:smac.stats.stats.Stats:----------------------------------------------------
-INFO:smac.facade.smac_ac_facade.SMAC4AC:Final Incumbent: Configuration:
-  sp-clause-activity-inc, Value: 0.7772959540011218
-  sp-clause-decay, Value: 1.4606657946801596
-  sp-clause-del-heur, Value: &#39;0&#39;
-  sp-first-restart, Value: 73
-  sp-learned-clause-sort-heur, Value: &#39;15&#39;
-  sp-learned-clauses-inc, Value: 1.1851246522358834
-  sp-learned-size-factor, Value: 0.3186768477925264
-  sp-max-res-lit-inc, Value: 1.7097883959964029
-  sp-max-res-runs, Value: 2
-  sp-orig-clause-sort-heur, Value: &#39;19&#39;
-  sp-phase-dec-heur, Value: &#39;5&#39;
-  sp-rand-phase-dec-freq, Value: &#39;0&#39;
-  sp-rand-var-dec-freq, Value: &#39;0.0001&#39;
-  sp-rand-var-dec-scaling, Value: 0.7799197000983679
-  sp-res-cutoff-cls, Value: 17
-  sp-res-cutoff-lits, Value: 982
-  sp-res-order-heur, Value: &#39;5&#39;
-  sp-resolution, Value: &#39;2&#39;
-  sp-restart-inc, Value: 1.2735102380737016
-  sp-update-dec-queue, Value: &#39;1&#39;
-  sp-use-pure-literal-rule, Value: &#39;1&#39;
-  sp-var-activity-inc, Value: 0.9551224835914144
-  sp-var-dec-heur, Value: &#39;3&#39;
-  sp-variable-decay, Value: 1.0008897652131796
-
-INFO:smac.facade.smac_ac_facade.SMAC4AC:Estimated cost of incumbent: 0.4287
-Optimized configuration Configuration:
-  sp-clause-activity-inc, Value: 0.7772959540011218
-  sp-clause-decay, Value: 1.4606657946801596
-  sp-clause-del-heur, Value: &#39;0&#39;
-  sp-first-restart, Value: 73
-  sp-learned-clause-sort-heur, Value: &#39;15&#39;
-  sp-learned-clauses-inc, Value: 1.1851246522358834
-  sp-learned-size-factor, Value: 0.3186768477925264
-  sp-max-res-lit-inc, Value: 1.7097883959964029
-  sp-max-res-runs, Value: 2
-  sp-orig-clause-sort-heur, Value: &#39;19&#39;
-  sp-phase-dec-heur, Value: &#39;5&#39;
-  sp-rand-phase-dec-freq, Value: &#39;0&#39;
-  sp-rand-var-dec-freq, Value: &#39;0.0001&#39;
-  sp-rand-var-dec-scaling, Value: 0.7799197000983679
-  sp-res-cutoff-cls, Value: 17
-  sp-res-cutoff-lits, Value: 982
-  sp-res-order-heur, Value: &#39;5&#39;
-  sp-resolution, Value: &#39;2&#39;
-  sp-restart-inc, Value: 1.2735102380737016
-  sp-update-dec-queue, Value: &#39;1&#39;
-  sp-use-pure-literal-rule, Value: &#39;1&#39;
-  sp-var-activity-inc, Value: 0.9551224835914144
-  sp-var-dec-heur, Value: &#39;3&#39;
-  sp-variable-decay, Value: 1.0008897652131796
-</pre></div>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
@@ -537,15 +430,15 @@ Optimized configuration Configuration:
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;3-clause BSD&quot;</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="s1">&#39;./spear_qcp/scenario.txt&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="s2">&quot;examples/commandline/spear_qcp/scenario.txt&quot;</span><span class="p">)</span>
 
     <span class="c1"># provide arguments for the intensifier like this</span>
     <span class="n">intensifier_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;n_seeds&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># specify the number of seeds to evaluate for a non-deterministic target algorithm</span>
-        <span class="s1">&#39;initial_budget&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;eta&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="s1">&#39;min_chall&#39;</span><span class="p">:</span> <span class="mi">1</span>  <span class="c1"># because successive halving cannot handle min_chall &gt; 1</span>
+        <span class="s2">&quot;n_seeds&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>  <span class="c1"># specify the number of seeds to evaluate for a non-deterministic target algorithm</span>
+        <span class="s2">&quot;initial_budget&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;eta&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;min_chall&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># because successive halving cannot handle min_chall &gt; 1</span>
     <span class="p">}</span>
 
     <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span>
@@ -553,7 +446,7 @@ Optimized configuration Configuration:
         <span class="n">intensifier_kwargs</span><span class="o">=</span><span class="n">intensifier_kwargs</span><span class="p">,</span>  <span class="c1"># arguments for Successive Halving</span>
         <span class="c1"># change intensifier to successive halving by passing the class.</span>
         <span class="c1"># it must implement `AbstractRacer`.</span>
-        <span class="n">intensifier</span><span class="o">=</span><span class="n">SuccessiveHalving</span>
+        <span class="n">intensifier</span><span class="o">=</span><span class="n">SuccessiveHalving</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Start optimization</span>
@@ -565,13 +458,13 @@ Optimized configuration Configuration:
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized configuration </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">incumbent</span><span class="p">))</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  2.844 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-plot-spear-mf-instances-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-pages-examples-python-spear-mf-instances-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../../_downloads/608e20a4945bf1cfab2bb845535d7826/plot_spear_mf_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_spear_mf_instances.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../../_downloads/6e29200d5d43ae11beaea9ec4af5414b/spear_mf_instances.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">spear_mf_instances.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../../_downloads/84b54d90b6d9cfda23d2e1fadfec647c/plot_spear_mf_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_spear_mf_instances.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../../_downloads/6d837ffad5410309d09486423e2e0d81/spear_mf_instances.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">spear_mf_instances.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -590,10 +483,10 @@ Optimized configuration Configuration:
             <p class="prev-next-title">Restore Branin</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="plot_synthetic_function.html" title="next page">
+    <a class='right-next' id="next-link" href="plot_simple_multi_objective.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Synthetic Function with few Hyperparameters</p>
+        <p class="prev-next-title">Simple Multi-Objective</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

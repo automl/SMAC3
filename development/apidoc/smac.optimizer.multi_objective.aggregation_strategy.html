@@ -38,7 +38,7 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.optimizer.acquisition" href="smac.optimizer.acquisition.html" />
+    <link rel="next" title="smac.optimizer.multi_objective.parego" href="smac.optimizer.multi_objective.parego.html" />
     <link rel="prev" title="smac.optimizer.multi_objective.abstract_multi_objective_algorithm" href="smac.optimizer.multi_objective.abstract_multi_objective_algorithm.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -431,29 +441,31 @@ by the single-objective optimizer.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.ParEGO">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.multi_objective.aggregation_strategy.</span></span><span class="sig-name descname"><span class="pre">ParEGO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.ParEGO" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.multi_objective.aggregation_strategy.</span></span><span class="sig-name descname"><span class="pre">MeanAggregationStrategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_obj</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.random.mtrand.RandomState</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy" title="smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.multi_objective.aggregation_strategy.AggregationStrategy</span></code></a></p>
+<p>A class to mean-aggregate multi-objective losses to a single objective losses,
+which can then be utilized by the single-objective optimizer.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.ParEGO.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.ParEGO.__call__" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a multi-objective loss to a single loss.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>values</strong> (<em>np.ndarray</em><em>[</em><em>num_evaluations</em><em>, </em><em>num_obj</em><em>]</em><em></em>) – </p>
+<dd class="field-odd"><p><strong>(</strong><strong>np.ndarray</strong><strong>)</strong> (<em>values</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>cost</strong></p>
+<dd class="field-even"><p><strong>cost (float)</strong></p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float.</p>
+<dd class="field-odd"><p>Combined cost.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.ParEGO._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.ParEGO._abc_impl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy._abc_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -473,10 +485,10 @@ by the single-objective optimizer.</p>
             <p class="prev-next-title">smac.optimizer.multi_objective.abstract_multi_objective_algorithm</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.optimizer.acquisition.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.optimizer.multi_objective.parego.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.optimizer.acquisition</p>
+        <p class="prev-next-title">smac.optimizer.multi_objective.parego</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -409,13 +419,13 @@ This function is a convenience wrapper for the SMAC4HPO class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>typing.Callable</em>) – Function to minimize.</p></li>
-<li><p><strong>x0</strong> (<em>typing.List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</p></li>
-<li><p><strong>bounds</strong> (<em>typing.List</em><em>[</em><em>typing.List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the bound on
+<li><p><strong>func</strong> (<em>Callable</em>) – Function to minimize.</p></li>
+<li><p><strong>x0</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Initial guess/default configuration.</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>) – <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code> pairs for each element in <code class="docutils literal notranslate"><span class="pre">x</span></code>, defining the bound on
 that parameters.</p></li>
 <li><p><strong>maxfun</strong> (<em>int</em><em>, </em><em>optional</em>) – Maximum number of function evaluations.</p></li>
 <li><p><strong>rng</strong> (<em>np.random.RandomState</em><em>, </em><em>optional</em>) – Random number generator used by SMAC.</p></li>
-<li><p><strong>scenario_args</strong> (<em>typing.Mapping</em><em>[</em><em>str</em><em>,</em><em>typing.Any</em><em>]</em>) – Arguments passed to the scenario
+<li><p><strong>scenario_args</strong> (<em>Mapping</em><em>[</em><em>str</em><em>,</em><em>Any</em><em>]</em>) – Arguments passed to the scenario
 See smac.scenario.scenario.Scenario</p></li>
 <li><p><strong>**kwargs</strong> – Arguments passed to the optimizer class
 See ~smac.facade.smac_facade.SMAC</p></li>
@@ -424,8 +434,8 @@ See ~smac.facade.smac_facade.SMAC</p></li>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>x</strong> (<em>list</em>) – Estimated position of the minimum.</p></li>
-<li><p><strong>f</strong> (<em>typing.Union[np.ndarray, float]</em>) – Value of <cite>func</cite> at the minimum. Depending on the scenario_args, it could be a scalar value (for single objective
-problems) or a np.array(for multi objective problems)</p></li>
+<li><p><strong>f</strong> (<em>Union[np.ndarray, float]</em>) – Value of <cite>func</cite> at the minimum. Depending on the scenario_args, it could be a scalar value
+(for single objective problems) or a np.ndarray (for multi objective problems).</p></li>
 <li><p><strong>s</strong> (<a class="reference internal" href="smac.facade.smac_hpo_facade.html#smac.facade.smac_hpo_facade.SMAC4HPO" title="smac.facade.smac_hpo_facade.SMAC4HPO"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.facade.smac_hpo_facade.SMAC4HPO</span></code></a>) – SMAC objects which enables the user to get
 e.g., the trajectory and runhistory.</p></li>
 </ul>

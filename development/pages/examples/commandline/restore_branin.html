@@ -38,7 +38,7 @@
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="SPEAR-QCP with Multi-Fidelity on Instances" href="../python/plot_spear_mf_instances.html" />
+    <link rel="next" title="SPEAR-QCP with Multi-Fidelity on Instances" href="../python/spear_mf_instances.html" />
     <link rel="prev" title="Branin" href="branin.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -408,8 +418,6 @@ to download the full example code</p>
 <p>This file runs SMAC and then restores the branin run with an extended computation
 budget. This will also work for SMAC runs that have crashed and are continued.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
@@ -417,6 +425,8 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.stats.stats</span> <span class="kn">import</span> <span class="n">Stats</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.traj_logging</span> <span class="kn">import</span> <span class="n">TrajLogger</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2021, AutoML.org Freiburg-Hannover&quot;</span>
@@ -426,14 +436,15 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
 <span class="k">if</span> <span class="s2">&quot;__main__&quot;</span> <span class="o">==</span> <span class="vm">__name__</span><span class="p">:</span>
 
     <span class="c1"># Initialize scenario, using runcount_limit as budget.</span>
-    <span class="n">origiginal_scenario_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;algo&#39;</span><span class="p">:</span> <span class="s1">&#39;python branin.py&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;paramfile&#39;</span><span class="p">:</span> <span class="s1">&#39;branin/configspace.pcs&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;run_obj&#39;</span><span class="p">:</span> <span class="s1">&#39;quality&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;runcount_limit&#39;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
-        <span class="s1">&#39;deterministic&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;restore_me&#39;</span><span class="p">}</span>
-    <span class="n">original_scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">origiginal_scenario_dict</span><span class="p">)</span>
+    <span class="n">original_scenario_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;algo&quot;</span><span class="p">:</span> <span class="s2">&quot;python examples/commandline/branin.py&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;paramfile&quot;</span><span class="p">:</span> <span class="s2">&quot;examples/commandline/branin/configspace.pcs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;run_obj&quot;</span><span class="p">:</span> <span class="s2">&quot;quality&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;runcount_limit&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="s2">&quot;deterministic&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;restore_me&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">original_scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="n">original_scenario_dict</span><span class="p">)</span>
 
     <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">original_scenario</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
@@ -442,7 +453,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
 
     <span class="c1"># Now the output is in the folder &#39;restore_me/run_1&#39; (or whatever run_id has</span>
     <span class="c1"># been passed to the SMAC-object above)</span>
-    <span class="n">old_output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">original_scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s1">&#39;run_1&#39;</span><span class="p">)</span>
+    <span class="n">old_output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">original_scenario</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;run_1&quot;</span><span class="p">)</span>
 
     <span class="c1"># We could simply modify the scenario-object, stored in</span>
     <span class="c1"># &#39;smac.solver.scenario&#39; and start optimization again:</span>
@@ -453,9 +464,12 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
     <span class="c1"># Or, to show the whole process of recovering a SMAC-run from the output</span>
     <span class="c1"># directory, create a new scenario with an extended budget:</span>
     <span class="n">new_scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span>
-        <span class="n">origiginal_scenario_dict</span><span class="p">,</span>
-        <span class="n">cmd_options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;runcount_limit&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>  <span class="c1"># overwrite these args</span>
-                     <span class="s1">&#39;output_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;restored&#39;</span><span class="p">})</span>
+        <span class="n">original_scenario_dict</span><span class="p">,</span>
+        <span class="n">cmd_options</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;runcount_limit&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>  <span class="c1"># overwrite these args</span>
+            <span class="s2">&quot;output_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;restored&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
 
     <span class="c1"># We load the runhistory</span>
     <span class="n">rh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">old_output_dir</span><span class="p">,</span> <span class="s2">&quot;runhistory.json&quot;</span><span class="p">)</span>
@@ -469,19 +483,19 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
 
     <span class="c1"># And the trajectory</span>
     <span class="n">traj_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">old_output_dir</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
-    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span>
-        <span class="n">fn</span><span class="o">=</span><span class="n">traj_path</span><span class="p">,</span>
-        <span class="n">cs</span><span class="o">=</span><span class="n">new_scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
+    <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span><span class="n">fn</span><span class="o">=</span><span class="n">traj_path</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="n">new_scenario</span><span class="o">.</span><span class="n">cs</span><span class="p">)</span>
     <span class="n">incumbent</span> <span class="o">=</span> <span class="n">trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;incumbent&quot;</span><span class="p">]</span>
 
     <span class="c1"># Now we can initialize SMAC with the recovered objects and restore the</span>
     <span class="c1"># state where we left off. By providing stats and a restore_incumbent, SMAC</span>
     <span class="c1"># automatically detects the intention of restoring a state.</span>
-    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">new_scenario</span><span class="p">,</span>
-                   <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
-                   <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
-                   <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-                   <span class="n">run_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="o">=</span><span class="n">new_scenario</span><span class="p">,</span>
+        <span class="n">runhistory</span><span class="o">=</span><span class="n">runhistory</span><span class="p">,</span>
+        <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
+        <span class="n">restore_incumbent</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># Because we changed the output_dir, we might want to copy the old</span>
     <span class="c1"># trajectory-file (runhistory and stats will be complete, but trajectory is</span>
@@ -517,7 +531,7 @@ budget. This will also work for SMAC runs that have crashed and are continued.</
             <p class="prev-next-title">Branin</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="../python/plot_spear_mf_instances.html" title="next page">
+    <a class='right-next' id="next-link" href="../python/spear_mf_instances.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">SPEAR-QCP with Multi-Fidelity on Instances</p>

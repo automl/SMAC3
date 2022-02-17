@@ -42,8 +42,6 @@ processed by the :term:`TAE`.
 
     Default Value: 0.03
     Optimizing! Depending on your machine, this might take a few minutes.
-    /opt/hostedtoolcache/Python/3.9.10/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1078: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
     Optimized Value: 0.01
 
 
@@ -178,7 +176,7 @@ processed by the :term:`TAE`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.512 seconds)
+   **Total running time of the script:** ( 0 minutes  18.980 seconds)
 
 
 .. _sphx_glr_download_pages_examples_python_plot_svm_cv.py:

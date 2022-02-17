@@ -23,6 +23,11 @@ The basic recipe is as follows:
    Per default, ParEgo is used as the multi-objective algorithm.
 
 
+.. warning::
+
+   Multi-Objective Optimization does currently *not* support Intensifications like Hyperband or Successive Halving.
+
+
 We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
 :ref:`Scalarized Multi-Objective Using ParEGO`.
 

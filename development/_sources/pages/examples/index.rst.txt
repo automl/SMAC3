@@ -102,10 +102,10 @@ Python
 
 .. only:: html
 
- .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_spear_mf_instances_thumb.png
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_spear_mf_instances_thumb.png
      :alt: SPEAR-QCP with Multi-Fidelity on Instances
 
-     :ref:`sphx_glr_pages_examples_python_plot_spear_mf_instances.py`
+     :ref:`sphx_glr_pages_examples_python_spear_mf_instances.py`
 
 .. raw:: html
 
@@ -115,7 +115,28 @@ Python
 .. toctree::
    :hidden:
 
-   /pages/examples/python/plot_spear_mf_instances
+   /pages/examples/python/spear_mf_instances
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Simple Multi-Objective">
+
+.. only:: html
+
+ .. figure:: /pages/examples/python/images/thumb/sphx_glr_plot_simple_multi_objective_thumb.png
+     :alt: Simple Multi-Objective
+
+     :ref:`sphx_glr_pages_examples_python_plot_simple_multi_objective.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /pages/examples/python/plot_simple_multi_objective
 
 .. raw:: html
 

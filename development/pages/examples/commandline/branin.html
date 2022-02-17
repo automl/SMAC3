@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../../details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -407,8 +417,7 @@ to download the full example code</p>
 <span id="sphx-glr-pages-examples-commandline-branin-py"></span><h1>Branin<a class="headerlink" href="#branin" title="Permalink to this headline">¶</a></h1>
 <p>This file is a wrapper used by SMAC to optimize parameters on the branin function.
 To run this example in the terminal, execute:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> examples/commandline
-python ../../scripts/smac.py --scenario branin/scenario.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python ./scripts/smac.py --scenario examples/commandline/branin/scenario.txt
 </pre></div>
 </div>
 <p>Inside the scenario, this file and also <code class="docutils literal notranslate"><span class="pre">configspace.pcs</span></code> is referenced and therefore used
@@ -432,18 +441,18 @@ crucial. The format of the results must be the following to ensure correct usage
 <span class="k">def</span> <span class="nf">branin</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">x1</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mf">1.</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="mf">5.1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="mf">5.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="mf">6.</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="mf">10.</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="p">(</span><span class="mf">8.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-    <span class="n">ret</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="n">s</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mf">5.1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="mf">6.0</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mf">10.0</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">8.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">x1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="o">+</span> <span class="n">s</span>
 
     <span class="k">return</span> <span class="n">ret</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c1"># Unused in this example:</span>
     <span class="c1"># instance, instance_specific, cutoff, runlength = sys.argv[1:5]</span>
     <span class="n">seed</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
@@ -455,7 +464,7 @@ crucial. The format of the results must be the following to ensure correct usage
     <span class="n">result</span> <span class="o">=</span> <span class="n">branin</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 
     <span class="c1"># This line is important so the result can be processed by SMAC:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Result for SMAC: SUCCESS, -1, -1, </span><span class="si">%f</span><span class="s1">, </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">seed</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Result for SMAC: SUCCESS, -1, -1, </span><span class="si">%f</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">seed</span><span class="p">))</span>
 </pre></div>
 </div>
 <p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>

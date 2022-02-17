@@ -177,8 +177,13 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../pages/examples/python/plot_spear_mf_instances.html">
+    <a class="reference internal" href="../pages/examples/python/spear_mf_instances.html">
      SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
     </a>
    </li>
    <li class="toctree-l2">
@@ -246,6 +251,11 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../pages/details/multi_objective.html">
      Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../pages/details/run_history.html">
+     Run-History
     </a>
    </li>
    <li class="toctree-l2">
@@ -591,7 +601,7 @@ neither used nor tested.</p></li>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em><em> (</em><em>default=True</em><em>)</em>) – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code> and a run of a configuration on an instance-budget-seed-pair already exists,
+<dd class="field-odd"><p><strong>overwrite_existing_runs</strong> (<em>bool</em><em> (</em><em>default=False</em><em>)</em>) – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code> and a run of a configuration on an instance-budget-seed-pair already exists,
 it is overwritten. Allows to overwrites old results if pairs of algorithm-instance-seed were measured
 multiple times</p>
 </dd>
@@ -673,6 +683,12 @@ queried for all runs of the given configuration.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory._update_objective_bounds">
+<span class="sig-name descname"><span class="pre">_update_objective_bounds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory._update_objective_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the objective bounds based on the data in the runhistory.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="smac.tae.html#smac.tae.StatusType" title="smac.tae.StatusType"><span class="pre">smac.tae.StatusType</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">budget</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endtime</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#smac.runhistory.runhistory.DataOrigin" title="smac.runhistory.runhistory.DataOrigin"><span class="pre">smac.runhistory.runhistory.DataOrigin</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">DataOrigin.INTERNAL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_update</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a data of a new target algorithm (TA) run;
@@ -701,7 +717,7 @@ information from TA or fields such as start time and host_id)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.average_cost">
-<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration.</p>
 <p>This is the mean of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -716,7 +732,7 @@ queried for all runs of the given configuration.</p></li>
 <dd class="field-even"><p><strong>Cost</strong> – Average cost</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float or np.ndarray</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -897,7 +913,7 @@ moving average;</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.min_cost">
-<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the minimum cost of a configuration</p>
 <p>This is the minimum cost of all instance-seed pairs.
 Warning: In the case of multi-fidelity, the minimum cost per objectives is returned.</p>
@@ -913,7 +929,7 @@ queried for all runs of the given configuration.</p></li>
 <dd class="field-even"><p><strong>min_cost</strong> – minimum cost of config</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float or np.ndarray</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -934,7 +950,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.sum_cost">
-<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">ConfigSpace.configuration_space.Configuration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#smac.runhistory.runhistory.InstSeedBudgetKey" title="smac.runhistory.runhistory.InstSeedBudgetKey"><span class="pre">smac.runhistory.runhistory.InstSeedBudgetKey</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration.</p>
 <p>This is the sum of costs of all instance-seed pairs.</p>
 <dl class="field-list simple">
@@ -949,7 +965,7 @@ queried for all runs of the given configuration.</p></li>
 <dd class="field-even"><p><strong>sum_cost</strong> – Sum of costs of config</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float or np.ndarray</p>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>

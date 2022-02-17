@@ -15,3 +15,4 @@ Submodules
 
    smac.optimizer.multi_objective.abstract_multi_objective_algorithm
    smac.optimizer.multi_objective.aggregation_strategy
+   smac.optimizer.multi_objective.parego
