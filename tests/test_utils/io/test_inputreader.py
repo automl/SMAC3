@@ -25,8 +25,8 @@ class InputReaderTest(unittest.TestCase):
         os.chdir(base_directory)
 
         # Files that will be created:
-        self.pcs_fn = "test/test_files/configspace.pcs"
-        self.json_fn = "test/test_files/configspace.json"
+        self.pcs_fn = "tests/test_files/configspace.pcs"
+        self.json_fn = "tests/test_files/configspace.json"
 
         self.output_files = [self.pcs_fn, self.json_fn]
 
@@ -41,7 +41,7 @@ class InputReaderTest(unittest.TestCase):
         os.chdir(self.current_dir)
 
     def test_feature_input(self):
-        feature_fn = "test/test_files/features_example.csv"
+        feature_fn = "tests/test_files/features_example.csv"
         in_reader = InputReader()
         feats = in_reader.read_instance_features_file(fn=feature_fn)
         self.assertEqual(feats[0], ["feature1", "feature2", "feature3"])

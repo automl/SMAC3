@@ -21,10 +21,10 @@ class TestDeterministicSMAC(unittest.TestCase):
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
-        self.output_dir_1 = "test/test_files/out_test_deterministic_1"
-        self.output_dir_2 = "test/test_files/out_test_deterministic_2"
-        self.output_dir_3 = "test/test_files/out_test_deterministic_3"
-        self.scenario_file = "test/test_files/test_deterministic_scenario.txt"
+        self.output_dir_1 = "tests/test_files/out_test_deterministic_1"
+        self.output_dir_2 = "tests/test_files/out_test_deterministic_2"
+        self.output_dir_3 = "tests/test_files/out_test_deterministic_3"
+        self.scenario_file = "tests/test_files/test_deterministic_scenario.txt"
         self.output_dirs = [self.output_dir_1, self.output_dir_2, self.output_dir_3]
 
         self.maxDiff = None

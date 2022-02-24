@@ -33,7 +33,7 @@ class ValidationTest(unittest.TestCase):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
         self.rng = np.random.RandomState(seed=42)
-        self.scen_fn = 'test/test_files/validation/scenario.txt'
+        self.scen_fn = 'tests/test_files/validation/scenario.txt'
         self.train_insts = ['0', '1', '2']
         self.test_insts = ['3', '4', '5']
         self.inst_specs = {'0': 'null', '1': 'one', '2': 'two',
@@ -44,11 +44,11 @@ class ValidationTest(unittest.TestCase):
                              '3': np.array((1, 2, 3)),
                              '4': np.array((1, 2, 3)),
                              '5': np.array((1, 2, 3))}
-        self.output_rh = 'test/test_files/validation/'
+        self.output_rh = 'tests/test_files/validation/'
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         self.stats = Stats(scen)
         self.trajectory = TrajLogger.read_traj_aclib_format(
-            fn='test/test_files/validation/test_validation_traj.json', cs=scen.cs)
+            fn='tests/test_files/validation/test_validation_traj.json', cs=scen.cs)
         self.output_dirs = [self.output_rh + 'test']
         self.output_files = [self.output_rh + 'validated_runhistory_EPM.json',
                              self.output_rh + 'validated_runhistory.json']
@@ -79,7 +79,7 @@ class ValidationTest(unittest.TestCase):
     def test_nonexisting_output(self):
         scen = Scenario(self.scen_fn, cmd_options={'run_obj': 'quality'})
         validator = Validator(scen, self.trajectory)
-        path = "test/test_files/validation/test/nonexisting/output"
+        path = "tests/test_files/validation/test/nonexisting/output"
         validator.validate(output_fn=path)
         self.assertTrue(os.path.exists(path))
 
@@ -121,7 +121,7 @@ class ValidationTest(unittest.TestCase):
         self.assertTrue(isinstance(validator.validate_epm(runhistory=old_rh),
                                    RunHistory))
         self.assertTrue(isinstance(validator.validate_epm(
-            output_fn="test/test_files/validation/"),
+            output_fn="tests/test_files/validation/"),
             RunHistory))
         self.assertRaises(ValueError, validator.validate_epm, reuse_epm=False)
 

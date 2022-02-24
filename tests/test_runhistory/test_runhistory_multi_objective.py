@@ -318,7 +318,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
                 seed=1,
             )
 
-            path = "test/test_files/test_json_origin.json"
+            path = "tests/test_files/test_json_origin.json"
             rh.save_json(path)
             _ = rh.load_json(path, cs)
 

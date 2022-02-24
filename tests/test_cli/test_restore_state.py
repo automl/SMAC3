@@ -25,13 +25,13 @@ class TestSMACCLI(unittest.TestCase):
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
-        output_one_dir = "test/test_files/test_restore_state"  # From scenario_one.txt
+        output_one_dir = "tests/test_files/test_restore_state"  # From scenario_one.txt
         self.output_one = output_one_dir + "/run_1"
-        output_two_dir = "test/test_files/test_restored_state"  # From scenario_two.txt
+        output_two_dir = "tests/test_files/test_restored_state"  # From scenario_two.txt
         self.output_two = output_two_dir + "/run_1"
         self.smaccli = SMACCLI()
-        self.scenario_one = "test/test_files/restore_scenario_one.txt"
-        self.scenario_two = "test/test_files/restore_scenario_two.txt"
+        self.scenario_one = "tests/test_files/restore_scenario_one.txt"
+        self.scenario_two = "tests/test_files/restore_scenario_two.txt"
         self.output_dirs = [output_one_dir, output_two_dir]
 
     def tearDown(self):
