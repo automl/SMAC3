@@ -25,7 +25,7 @@ class TaeTest(unittest.TestCase):
     def setUp(self):
         self.current_dir = os.getcwd()
         base_dir = os.path.split(__file__)[0]
-        base_dir = os.path.join(base_dir, '..', '..')
+        base_dir = os.path.join(base_dir, '../../test', '..')
         os.chdir(base_dir)
 
     def tearDown(self):

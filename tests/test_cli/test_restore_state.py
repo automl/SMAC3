@@ -21,7 +21,7 @@ class TestSMACCLI(unittest.TestCase):
     def setUp(self):
         base_directory = os.path.split(__file__)[0]
         base_directory = os.path.abspath(
-            os.path.join(base_directory, '..', '..'))
+            os.path.join(base_directory, '../../test', '..'))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
