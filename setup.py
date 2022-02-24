@@ -60,7 +60,7 @@ setuptools.setup(
     description=description,
     long_description=read_file(os.path.join(HERE, "README.md")),
     long_description_content_type="text/markdown",
-    license="Apache-2.0",
+    license="BSD 3-Clause License",
     url=url,
     project_urls=project_urls,
     version=version,
