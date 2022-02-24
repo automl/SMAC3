@@ -1,0 +1,12 @@
+algo = echo Hello
+paramfile = test/test_files/scenario_test/param.pcs
+execdir = .
+deterministic = 0
+run_obj = runtime
+overall_obj = mean10
+cutoff_time = 5
+wallclock-limit = 18000
+instance_file = test/test_files/scenario_test/training.txt
+test_instance_file = test/test_files/scenario_test/test.txt
+feature_file = test/test_files/scenario_test/features.txt
+output_dir = 

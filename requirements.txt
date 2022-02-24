@@ -1,0 +1,11 @@
+numpy>=1.7.1
+scipy>=1.7.0
+psutil
+pynisher>=0.4.1
+ConfigSpace>=0.4.14,<0.5
+joblib
+scikit-learn>=0.22.0
+pyrfr>=0.8.0
+dask
+distributed
+emcee>=3.0.0
