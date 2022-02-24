@@ -1,0 +1,15 @@
+ta = python examples/commandline/branin.py
+execdir = .
+deterministic = False
+run_obj = quality
+multi_objectives = cost
+overall_obj = par10
+save_results_instantly = True
+par_factor = 10
+cost_for_crash = 2147483647.0
+algo_runs_timelimit = inf
+wallclock_limit = inf
+always_race_default = False
+ta_run_limit = 5.0
+initial_incumbent = DEFAULT
+pcs_fn = tests/test_files/test_restore_state/run_1/configspace.json

@@ -108,7 +108,7 @@ class TestEIMaximization(unittest.TestCase):
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.dirname(__file__)
-        self.test_files_dir = os.path.join(current_dir, '../../test', 'test_files')
+        self.test_files_dir = os.path.join(current_dir, '../../tests', 'test_files')
         seed = np.random.randint(1, 100000)
         self.cs = ConfigurationSpace(seed=seed)
         x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=5)

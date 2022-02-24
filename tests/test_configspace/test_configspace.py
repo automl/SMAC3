@@ -13,7 +13,7 @@ class ConfigSpaceTest(unittest.TestCase):
         '''
             simply getting some random configuration from spear pcs
         '''
-        file_path = os.path.join(os.path.dirname(__file__), '../../test',
+        file_path = os.path.join(os.path.dirname(__file__), '../../tests',
                                  'test_files', 'spear-params.pcs')
 
         with open(file_path) as fp:

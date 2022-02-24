@@ -17,7 +17,7 @@ class TestDeterministicSMAC(unittest.TestCase):
     def setUp(self):
         base_directory = os.path.split(__file__)[0]
         base_directory = os.path.abspath(
-            os.path.join(base_directory, '../../test', '..'))
+            os.path.join(base_directory, '../../tests', '..'))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
@@ -58,21 +58,21 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
-                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--random_configuration_chooser", "tests/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_1]
         SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "1",
-                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--random_configuration_chooser", "tests/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_2]
         SMACCLI().main_cli(testargs[1:])
         testargs = ["scripts/smac",
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "2",
-                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--random_configuration_chooser", "tests/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3]
         SMACCLI().main_cli(testargs[1:])
         # compare trajectories in output_dir_{1,2,3}
@@ -92,7 +92,7 @@ class TestDeterministicSMAC(unittest.TestCase):
                     "--scenario", self.scenario_file,
                     "--verbose_level", "DEBUG",
                     "--seed", "2",
-                    "--random_configuration_chooser", "test/test_cli/random_configuration_chooser_impl.py",
+                    "--random_configuration_chooser", "tests/test_cli/random_configuration_chooser_impl.py",
                     "--output_dir", self.output_dir_3,
                     "--mode", 'SMAC4AC']
         cli = SMACCLI()
