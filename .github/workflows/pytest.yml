@@ -1,0 +1,158 @@
+name: Tests
+
+on:
+  # Allow to manually trigger through github API
+  workflow_dispatch:
+
+  # Triggers with push to main
+  push:
+    branches:
+      - main
+
+  # Triggers with push to a pr aimed at main
+  pull_request:
+    branches:
+      - main
+
+  schedule:
+    # Every day at 7AM UTC
+    - cron: '0 07 * * *'
+
+env:
+
+  package-name: smac
+  test-dir: tests
+  extra-requires: "[dev]"  # "" for no extra_requires
+
+  # Arguments used for pytest
+  pytest-args: >-
+    --durations=20
+    -v
+
+jobs:
+
+  # General unit tests
+  source-test:
+    name: ${{ matrix.python-version }}-${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash # Default to using bash on all
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install ${{ env.package-name }}
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install wheel
+        python -m pip install -e ".${{ env.extra-requires }}"
+
+    - name: Store git status
+      id: status-before
+      shell: bash
+      run: |
+        echo "::set-output name=BEFORE::$(git status --porcelain -b)"
+
+    - name: Tests
+      run: |
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+
+    - name: Check for files left behind by test
+      run: |
+        before="${{ steps.status-before.outputs.BEFORE }}"
+        after="$(git status --porcelain -b)"
+        if [[ "$before" != "$after" ]]; then
+            echo "git status from before: $before"
+            echo "git status from after: $after"
+            echo "Not all generated files have been deleted!"
+            exit 1
+        fi
+
+# Testing with conda
+  conda-tests:
+    name: conda-${{ matrix.python-version }}-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}  # Default to using bash on all and load (-l) .bashrc which miniconda uses
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Conda install
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install ${{ env.package-name }}
+      run: |
+        python -V
+        python -m pip install --upgrade pip
+        python -m pip install wheel
+        python -m pip install -e ".${{ env.extra-requires }}"
+
+    - name: Tests
+      run: |
+          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+
+  # Testing a dist install
+  dist-test:
+    name: dist-${{ matrix.python-version }}-${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Create sdist
+      id: sdist
+      run: |
+        python -m pip install --upgrade pip
+        python setup.py sdist
+        echo "${{env.package-name}}"
+        echo "sdist_name=$(ls -t dist/${{ env.package-name }}-*.tar.gz | head -n 1)" >> $GITHUB_ENV
+
+    - name: Install ${{ env.package-name }}
+      run: |
+        python -m pip install ${{ env.sdist_name }}${{ env.extra-requires }}
+
+    - name: Tests
+      run: |
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}

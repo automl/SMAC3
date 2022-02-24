@@ -1,0 +1,66 @@
+name: docs
+
+on:
+  # Trigger manually
+  workflow_dispatch:
+
+  # Trigger on any push to the main
+  push:
+    branches:
+      - main
+
+  # Trigger on any push to a PR that targets main
+  pull_request:
+    branches:
+      - main
+
+env:
+  name: SMAC3
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+
+    - name: Install dependencies
+      run: |
+        pip install ".[dev]"
+
+    - name: Make docs
+      run: |
+        make clean
+        make docs
+
+    - name: Pull latest gh-pages
+      if: (contains(github.ref, 'main'))
+      run: |
+        cd ..
+        git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
+
+    - name: Copy new docs into gh-pages
+      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      run: |
+        branch_name=${GITHUB_REF##*/}
+        cd ../gh-pages
+        rm -rf $branch_name
+        cp -r ../${{ env.name }}/docs/build/html $branch_name
+
+    - name: Push to gh-pages
+      if: (contains(github.ref, 'main'))
+      run: |
+        last_commit=$(git log --pretty=format:"%an: %s")
+        cd ../gh-pages
+        branch_name=${GITHUB_REF##*/}
+        git add $branch_name/
+        git config --global user.name 'Github Actions'
+        git config --global user.email 'not@mail.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git commit -am "$last_commit"
+        git push
