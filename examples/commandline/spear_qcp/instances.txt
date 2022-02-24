@@ -1,4 +1,0 @@
-examples/commandline/spear_qcp/instances/qcplin2006.1031.cnf
-examples/commandline/spear_qcp/instances/qcplin2006.10641.cnf
-examples/commandline/spear_qcp/instances/qcplin2006.10218.cnf
-examples/commandline/spear_qcp/instances/qcplin2006.10556.cnf

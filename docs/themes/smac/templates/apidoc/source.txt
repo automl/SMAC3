@@ -1,1 +1,0 @@
-https://github.com/sphinx-doc/sphinx/tree/4.x/sphinx/templates/apidoc
