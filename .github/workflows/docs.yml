@@ -1,18 +1,22 @@
 name: docs
 
 on:
-  # Trigger manually
+  # Manual trigger option in github
+  # This won't push to github pages where docs are hosted due
+  # to the gaurded if statement in those steps
   workflow_dispatch:
 
-  # Trigger on any push to the main
+  # Trigger on push to these branches
   push:
     branches:
-      - main
+      - master
+      - development
 
-  # Trigger on any push to a PR that targets main
+  # Trigger on a open/push to a PR targeting one of these branches
   pull_request:
     branches:
-      - main
+      - master
+      - development
 
 env:
   name: SMAC3
@@ -27,7 +31,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: "3.8"
+        python-version: "3.9"
 
     - name: Install dependencies
       run: |
@@ -39,13 +43,13 @@ jobs:
         make docs
 
     - name: Pull latest gh-pages
-      if: (contains(github.ref, 'main'))
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
       run: |
         cd ..
         git clone https://github.com/${{ github.repository }}.git --branch gh-pages --single-branch gh-pages
 
     - name: Copy new docs into gh-pages
-      if: (contains(github.ref, 'development') || contains(github.ref, 'main'))
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
       run: |
         branch_name=${GITHUB_REF##*/}
         cd ../gh-pages
@@ -53,7 +57,7 @@ jobs:
         cp -r ../${{ env.name }}/docs/build/html $branch_name
 
     - name: Push to gh-pages
-      if: (contains(github.ref, 'main'))
+      if: (contains(github.ref, 'develop') || contains(github.ref, 'master')) && github.event_name == 'push'
       run: |
         last_commit=$(git log --pretty=format:"%an: %s")
         cd ../gh-pages

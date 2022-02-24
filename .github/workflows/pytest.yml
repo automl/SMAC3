@@ -7,12 +7,14 @@ on:
   # Triggers with push to main
   push:
     branches:
-      - main
+      - master
+      - development
 
   # Triggers with push to a pr aimed at main
   pull_request:
     branches:
-      - main
+      - master
+      - development
 
   schedule:
     # Every day at 7AM UTC
