@@ -2,7 +2,7 @@ import typing
 
 import logging
 
-import dask.distributed
+import dask.distributed  # type: ignore
 import numpy as np
 
 from smac.configspace import Configuration

@@ -402,8 +402,8 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 class Matern(MagicMixin, kernels.Matern):
     def __init__(
         self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+        length_scale: Union[float, Tuple[float, ...], np.ndarray] = 1.0,
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]], np.ndarray] = (
             1e-5,
             1e5,
         ),
@@ -691,8 +691,8 @@ class HammingKernel(
 ):
     def __init__(
         self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+        length_scale: Union[float, Tuple[float, ...], np.ndarray] = 1.0,
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]], np.ndarray] = (
             1e-5,
             1e5,
         ),

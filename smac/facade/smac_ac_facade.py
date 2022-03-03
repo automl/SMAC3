@@ -3,8 +3,8 @@ from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
 import inspect
 import logging
 
-import dask.distributed
-import joblib
+import dask.distributed  # type: ignore
+import joblib  # type: ignore
 import numpy as np
 
 from smac.configspace import Configuration
@@ -513,8 +513,8 @@ class SMAC4AC(object):
 
             if multi_objective_algorithm is None:
                 multi_objective_algorithm_instance = MeanAggregationStrategy(
-                    **_multi_objective_kwargs
-                )  # type: ignore[arg-type] # noqa F821
+                    **_multi_objective_kwargs  # type: ignore[arg-type] # noqa F821
+                )
             elif inspect.isclass(multi_objective_algorithm):
                 multi_objective_algorithm_instance = multi_objective_algorithm(
                     **_multi_objective_kwargs
@@ -573,10 +573,10 @@ class SMAC4AC(object):
         # the RFRImputator will already get
         # log transform data from the runhistory
         if scenario.transform_y in ["LOG", "LOGS"]:  # type: ignore[attr-defined] # noqa F821
-            cutoff = np.log(np.nanmin([np.inf, np.float_(scenario.cutoff)]))  # type: ignore[attr-defined] # noqa F821
+            cutoff = np.log(np.nanmin([np.inf, np.float_(scenario.cutoff)]))  # type: ignore[arg-type, attr-defined] # noqa F821
             threshold = cutoff + np.log(scenario.par_factor)  # type: ignore[attr-defined] # noqa F821
         else:
-            cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])  # type: ignore[attr-defined] # noqa F821
+            cutoff = np.nanmin([np.inf, np.float_(scenario.cutoff)])  # type: ignore[arg-type, attr-defined] # noqa F821
             threshold = cutoff * scenario.par_factor  # type: ignore[attr-defined] # noqa F821
 
         num_params = len(scenario.cs.get_hyperparameters())  # type: ignore[attr-defined] # noqa F821

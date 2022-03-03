@@ -352,7 +352,7 @@ class SMBO(object):
 
     def validate(
         self,
-        config_mode: typing.Union[str, typing.List[Configuration]] = "inc",
+        config_mode: typing.Union[str, np.ndarray, typing.List[Configuration]] = "inc",
         instance_mode: typing.Union[str, typing.List[str]] = "train+test",
         repetitions: int = 1,
         use_epm: bool = False,
