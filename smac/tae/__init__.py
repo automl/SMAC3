@@ -1,5 +1,6 @@
-from enum import Enum
 import typing
+
+from enum import Enum
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -12,6 +13,7 @@ __version__ = "0.0.1"
 class StatusType(Enum):
 
     """Class to define numbers for status types"""
+
     SUCCESS = 1
     TIMEOUT = 2
     CRASHED = 3
@@ -45,10 +47,12 @@ class TAEAbortException(Exception):
     """Exception indicating that the target algorithm suggests an ABORT of
     SMAC, usually because it assumes that all further runs will surely fail.
     """
+
     pass
 
 
 class FirstRunCrashedException(TAEAbortException):
     """Exception indicating that the first run crashed (depending on options
-    this could trigger an ABORT of SMAC.) """
+    this could trigger an ABORT of SMAC.)"""
+
     pass

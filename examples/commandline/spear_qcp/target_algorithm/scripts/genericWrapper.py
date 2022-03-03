@@ -213,9 +213,7 @@ class AbstractWrapper(object):
                 and not args.internal
             ):
                 self._ta_status = "ABORT"
-                self._ta_misc = "runsolver is missing - should have been at %s." % (
-                    args.runsolver
-                )
+                self._ta_misc = "runsolver is missing - should have been at %s." % (args.runsolver)
                 self._exit_code = 1
                 sys.exit(1)
             else:
@@ -230,9 +228,8 @@ class AbstractWrapper(object):
 
             if not os.path.isdir(args.tmp_dir):
                 self._ta_status = "ABORT"
-                self._ta_misc = (
-                    "temp directory is missing - should have been at %s."
-                    % (args.tmp_dir)
+                self._ta_misc = "temp directory is missing - should have been at %s." % (
+                    args.tmp_dir
                 )
                 self._exit_code = 1
                 sys.exit(1)
@@ -271,9 +268,7 @@ class AbstractWrapper(object):
                     ext_call=args.ext_callstring,
                 )
             else:
-                target_cmd = self.get_command_line_args(
-                    runargs=runargs, config=self._config_dict
-                )
+                target_cmd = self.get_command_line_args(runargs=runargs, config=self._config_dict)
 
             target_cmd = target_cmd.split(" ")
             target_cmd = filter(lambda x: x != "", target_cmd)
@@ -300,9 +295,7 @@ class AbstractWrapper(object):
                 )
 
             if "status" in resultMap:
-                self._ta_status = self.RESULT_MAPPING.get(
-                    resultMap["status"], resultMap["status"]
-                )
+                self._ta_status = self.RESULT_MAPPING.get(resultMap["status"], resultMap["status"])
             if "runtime" in resultMap:
                 self._ta_runtime = resultMap["runtime"]
             if "quality" in resultMap:
@@ -338,9 +331,7 @@ class AbstractWrapper(object):
         """
         self._instance = arg_list[0]
         self._specifics = arg_list[1]
-        self._cutoff = int(
-            float(arg_list[2]) + 1
-        )  # runsolver only rounds down to integer
+        self._cutoff = int(float(arg_list[2]) + 1)  # runsolver only rounds down to integer
         self._ta_runtime = self._cutoff
         self._runlength = int(arg_list[3])
         self._seed = int(arg_list[4])
@@ -356,9 +347,7 @@ class AbstractWrapper(object):
             self._exit_code = 1
             sys.exit(1)
 
-        return dict(
-            (name, value.strip("'")) for name, value in zip(params[::2], params[1::2])
-        )
+        return dict((name, value.strip("'")) for name, value in zip(params[::2], params[1::2]))
 
     def call_target(self, target_cmd):
         """
@@ -548,9 +537,7 @@ class AbstractWrapper(object):
         if self._ta_status == "ABORT" or self._ta_status == "CRASHED":
             if len(self._ta_misc) == 0:
                 if self._ta_exit_code:
-                    self._ta_misc = "Problem with run. Exit code was %d." % (
-                        self._ta_exit_code
-                    )
+                    self._ta_misc = "Problem with run. Exit code was %d." % (self._ta_exit_code)
                 else:
                     self._ta_misc = "Problem with run. Exit code was N/A."
 
@@ -640,9 +627,8 @@ class AbstractWrapper(object):
             self._exit_code = 2
             sys.exit(2)
         if not out_:
-            self._ta_misc = (
-                "external program for output parsing yielded empty output: %s"
-                % (" ".join(cmd))
+            self._ta_misc = "external program for output parsing yielded empty output: %s" % (
+                " ".join(cmd)
             )
             self._ta_runtime = self._cutoff
             self._exit_code = 2
@@ -742,9 +728,7 @@ class OArgumentParser(object):
         self.required = []
         self.args = Arguments()
 
-    def add_argument(
-        self, parameter_name, dest, default=None, help="", type=str, required=False
-    ):
+    def add_argument(self, parameter_name, dest, default=None, help="", type=str, required=False):
         """
         adds arguments to parse from command line
         Args:
@@ -771,8 +755,7 @@ class OArgumentParser(object):
         print("Help:")
         for name_, dict_ in self.options.items():
             print(
-                "\t %-20s \t %s (default: %s)"
-                % (name_, str(dict_["help"]), str(dict_["default"]))
+                "\t %-20s \t %s (default: %s)" % (name_, str(dict_["help"]), str(dict_["default"]))
             )
         print("")
         sys.exit(0)

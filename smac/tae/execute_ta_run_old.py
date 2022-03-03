@@ -1,5 +1,6 @@
 import typing
-from subprocess import Popen, PIPE
+
+from subprocess import PIPE, Popen
 
 from smac.configspace import Configuration
 from smac.tae import StatusType
@@ -87,9 +88,7 @@ class ExecuteTARunOld(SerialRunner):
 
                 # If we have more than 6 fields, we combine them all together
                 if len(fields) > 5:
-                    fields[5:len(fields)] = [
-                        "".join(map(str, fields[5:len(fields)]))
-                    ]
+                    fields[5 : len(fields)] = ["".join(map(str, fields[5 : len(fields)]))]
 
                     # Make it prettier
                     for char in [",", ";", "'", "[", "]"]:
@@ -137,9 +136,7 @@ class ExecuteTARunOld(SerialRunner):
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
-            self.logger.warning(
-                "Target algorithm crashed. Last 5 lines of stdout and stderr"
-            )
+            self.logger.warning("Target algorithm crashed. Last 5 lines of stdout and stderr")
             self.logger.warning("\n".join(stdout_.split("\n")[-5:]))
             self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
@@ -162,9 +159,7 @@ class ExecuteTARunOld(SerialRunner):
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
         cmd = []  # type: typing.List[str]
         if not isinstance(self.ta, (list, tuple)):
-            raise TypeError(
-                "self.ta needs to be of type list or tuple, but is %s" % type(self.ta)
-            )
+            raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:

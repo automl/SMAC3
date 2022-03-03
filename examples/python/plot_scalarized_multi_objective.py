@@ -143,18 +143,14 @@ if __name__ == "__main__":
 
     # There are some hyperparameters shared by all kernels
     C = UniformFloatHyperparameter("C", 0.001, 1000.0, default_value=1.0, log=True)
-    shrinking = CategoricalHyperparameter(
-        "shrinking", [True, False], default_value=True
-    )
+    shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
     cs.add_hyperparameters([C, shrinking])
 
     # Others are kernel-specific, so we can add conditions to limit the searchspace
     degree = UniformIntegerHyperparameter(
         "degree", 1, 5, default_value=3
     )  # Only used by kernel poly
-    coef0 = UniformFloatHyperparameter(
-        "coef0", 0.0, 10.0, default_value=0.0
-    )  # poly, sigmoid
+    coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
     cs.add_hyperparameters([degree, coef0])
 
     use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
@@ -167,16 +163,12 @@ if __name__ == "__main__":
     gamma = CategoricalHyperparameter(
         "gamma", ["auto", "value"], default_value="auto"
     )  # only rbf, poly, sigmoid
-    gamma_value = UniformFloatHyperparameter(
-        "gamma_value", 0.0001, 8, default_value=1, log=True
-    )
+    gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
     cs.add_hyperparameters([gamma, gamma_value])
     # We only activate gamma_value if gamma is set to "value"
     cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
     # And again we can restrict the use of gamma in general to the choice of the kernel
-    cs.add_condition(
-        InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"])
-    )
+    cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
 
     # Scenario object
     scenario = Scenario(
@@ -194,11 +186,7 @@ if __name__ == "__main__":
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
-    print(
-        "Default config's cost: {cost:2f}, training time: {time:2f} seconds".format(
-            **def_value
-        )
-    )
+    print("Default config's cost: {cost:2f}, training time: {time:2f} seconds".format(**def_value))
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")

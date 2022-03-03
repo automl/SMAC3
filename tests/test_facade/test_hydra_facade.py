@@ -1,15 +1,15 @@
-from contextlib import suppress
-import shutil
-import os
 import glob
+import os
+import shutil
 import unittest
+from contextlib import suppress
 from unittest.mock import patch
 
 import numpy as np
 
-from smac.facade.experimental.hydra_facade import Hydra, PSMAC
-from smac.utils.io.output_writer import OutputWriter
+from smac.facade.experimental.hydra_facade import PSMAC, Hydra
 from smac.scenario.scenario import Scenario
+from smac.utils.io.output_writer import OutputWriter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -46,9 +46,7 @@ class MockPSMAC(PSMAC):
 class TestHydraFacade(unittest.TestCase):
     def setUp(self):
         self.output_dirs = []
-        fn = os.path.join(
-            os.path.dirname(__file__), "../test_files/spear_hydra_test_scenario.txt"
-        )
+        fn = os.path.join(os.path.dirname(__file__), "../test_files/spear_hydra_test_scenario.txt")
         self.scenario = Scenario(fn)
         self.scenario.limit_resources = True
 

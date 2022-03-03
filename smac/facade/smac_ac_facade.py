@@ -1,61 +1,42 @@
+from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
+
 import inspect
 import logging
-from typing import List, Union, Optional, Type, Callable, cast, Dict, Any
 
 import dask.distributed
 import joblib
 import numpy as np
 
-# tae
-from smac.tae.base import BaseRunner
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.tae import StatusType
-from smac.tae.dask_runner import DaskParallelRunner
+from smac.configspace import Configuration
+from smac.epm.base_epm import AbstractEPM
 
-# stats and options
-from smac.stats.stats import Stats
-from smac.scenario.scenario import Scenario
-
-# runhistory
-from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import (
-    AbstractRunHistory2EPM,
-    RunHistory2EPM4LogCost,
-    RunHistory2EPM4Cost,
-    RunHistory2EPM4InvScaledCost,
-    RunHistory2EPM4LogScaledCost,
-)
+# epm
+from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.util_funcs import get_rng, get_types
+from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.initial_design.factorial_design import FactorialInitialDesign
 
 # Initial designs
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.default_configuration_design import DefaultConfiguration
-from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.initial_design.latin_hypercube_design import LHDesign
-from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.initial_design.sobol_design import SobolDesign
+from smac.intensification.abstract_racer import AbstractRacer
+from smac.intensification.hyperband import Hyperband
 
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.intensification.hyperband import Hyperband
-from smac.intensification.abstract_racer import AbstractRacer
-
-# optimizer
-from smac.optimizer.smbo import SMBO
 from smac.optimizer.acquisition import (
     EI,
-    LogEI,
     AbstractAcquisitionFunction,
     IntegratedAcquisitionFunction,
+    LogEI,
 )
 from smac.optimizer.ei_optimization import (
-    LocalAndSortedRandomSearch,
     AcquisitionFunctionMaximizer,
-)
-from smac.optimizer.random_configuration_chooser import (
-    RandomConfigurationChooser,
-    ChooserProb,
+    LocalAndSortedRandomSearch,
 )
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -64,19 +45,40 @@ from smac.optimizer.multi_objective.aggregation_strategy import (
     AggregationStrategy,
     MeanAggregationStrategy,
 )
+from smac.optimizer.random_configuration_chooser import (
+    ChooserProb,
+    RandomConfigurationChooser,
+)
 
-# epm
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.rfr_imputator import RFRImputator
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.util_funcs import get_types, get_rng
+# optimizer
+from smac.optimizer.smbo import SMBO
+
+# runhistory
+from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm import (
+    AbstractRunHistory2EPM,
+    RunHistory2EPM4Cost,
+    RunHistory2EPM4InvScaledCost,
+    RunHistory2EPM4LogCost,
+    RunHistory2EPM4LogScaledCost,
+)
+from smac.scenario.scenario import Scenario
+
+# stats and options
+from smac.stats.stats import Stats
+from smac.tae import StatusType
+
+# tae
+from smac.tae.base import BaseRunner
+from smac.tae.dask_runner import DaskParallelRunner
+from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_ta_run_old import ExecuteTARunOld
+from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
+from smac.utils.io.traj_logging import TrajEntry, TrajLogger
 
 # utils
 from smac.utils.logging import format_array
-from smac.utils.io.traj_logging import TrajLogger, TrajEntry
-from smac.utils.constants import MAXINT
-from smac.utils.io.output_directory import create_output_directory
-from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -199,17 +201,13 @@ class SMAC4AC(object):
         acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
         acquisition_function_kwargs: Optional[Dict] = None,
         integrate_acquisition_function: bool = False,
-        acquisition_function_optimizer: Optional[
-            Type[AcquisitionFunctionMaximizer]
-        ] = None,
+        acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[Dict] = None,
         model: Optional[Type[AbstractEPM]] = None,
         model_kwargs: Optional[Dict] = None,
         runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
         runhistory2epm_kwargs: Optional[Dict] = None,
-        multi_objective_algorithm: Optional[
-            Type[AbstractMultiObjectiveAlgorithm]
-        ] = None,
+        multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
         multi_objective_kwargs: Optional[Dict] = None,
         initial_design: Optional[Type[InitialDesign]] = None,
         initial_design_kwargs: Optional[Dict] = None,
@@ -349,9 +347,7 @@ class SMAC4AC(object):
         if acquisition_function_kwargs is not None:
             acq_def_kwargs.update(acquisition_function_kwargs)
 
-        acquisition_function_instance = (
-            None
-        )  # type: Optional[AbstractAcquisitionFunction]
+        acquisition_function_instance = None  # type: Optional[AbstractAcquisitionFunction]
         if acquisition_function is None:
             if scenario.transform_y in ["LOG", "LOGS"]:  # type: ignore[attr-defined] # noqa F821
                 acquisition_function_instance = LogEI(
@@ -399,8 +395,7 @@ class SMAC4AC(object):
         else:
             raise TypeError(
                 "Argument acquisition_function_optimizer must be None or an object implementing the "
-                "AcquisitionFunctionMaximizer, but is '%s'"
-                % type(acquisition_function_optimizer)
+                "AcquisitionFunctionMaximizer, but is '%s'" % type(acquisition_function_optimizer)
             )
 
         # initialize tae_runner
@@ -507,9 +502,7 @@ class SMAC4AC(object):
 
         # initialize multi objective
         # the multi_objective_algorithm_instance will be passed to the runhistory2epm object
-        multi_objective_algorithm_instance = (
-            None
-        )  # type: Optional[AbstractMultiObjectiveAlgorithm]
+        multi_objective_algorithm_instance = None  # type: Optional[AbstractMultiObjectiveAlgorithm]
 
         if scenario.multi_objectives is not None and num_obj > 1:  # type: ignore[attr-defined] # noqa F821
             # define any defaults here
@@ -534,9 +527,7 @@ class SMAC4AC(object):
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
-            raise ValueError(
-                "Either use initial_design or initial_configurations; but not both"
-            )
+            raise ValueError("Either use initial_design or initial_configurations; but not both")
 
         init_design_def_kwargs = {
             "cs": scenario.cs,  # type: ignore[attr-defined] # noqa F821
@@ -562,9 +553,7 @@ class SMAC4AC(object):
             elif scenario.initial_incumbent == "LHD":  # type: ignore[attr-defined] # noqa F821
                 initial_design_instance = LHDesign(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "FACTORIAL":  # type: ignore[attr-defined] # noqa F821
-                initial_design_instance = FactorialInitialDesign(
-                    **init_design_def_kwargs
-                )
+                initial_design_instance = FactorialInitialDesign(**init_design_def_kwargs)
             elif scenario.initial_incumbent == "SOBOL":  # type: ignore[attr-defined] # noqa F821
                 initial_design_instance = SobolDesign(**init_design_def_kwargs)
             else:
@@ -616,9 +605,7 @@ class SMAC4AC(object):
 
         # TODO: consider other sorts of multi-objective algorithms
         if isinstance(multi_objective_algorithm_instance, AggregationStrategy):
-            r2e_def_kwargs.update(
-                {"multi_objective_algorithm": multi_objective_algorithm_instance}
-            )
+            r2e_def_kwargs.update({"multi_objective_algorithm": multi_objective_algorithm_instance})
 
         if scenario.run_obj == "quality":
             r2e_def_kwargs.update(
@@ -803,8 +790,7 @@ class SMAC4AC(object):
         """
         if not hasattr(self, "runhistory"):
             raise ValueError(
-                "SMAC was not fitted yet. Call optimize() prior "
-                "to accessing the runhistory."
+                "SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory."
             )
         return self.runhistory
 
@@ -820,8 +806,7 @@ class SMAC4AC(object):
         """
         if not hasattr(self, "trajectory"):
             raise ValueError(
-                "SMAC was not fitted yet. Call optimize() prior "
-                "to accessing the runhistory."
+                "SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory."
             )
         return self.trajectory
 

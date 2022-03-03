@@ -14,6 +14,7 @@ budget is no longer required by the target function.
 """
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 import itertools
@@ -29,6 +30,7 @@ from sklearn.model_selection import cross_val_score, StratifiedKFold
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_mf_facade import SMAC4MF
+
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
 
@@ -58,7 +60,7 @@ def generate_instances(a: int, b: int):
 
 # Target Algorithm
 def sgd_from_cfg(cfg, seed, instance):
-    """ Creates a SGD classifier based on a configuration and evaluates it on the
+    """Creates a SGD classifier based on a configuration and evaluates it on the
     digits dataset using cross-validation.
 
     Parameters:
@@ -78,23 +80,27 @@ def sgd_from_cfg(cfg, seed, instance):
     """
 
     with warnings.catch_warnings():
-        warnings.filterwarnings('ignore', category=ConvergenceWarning)
+        warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
         # SGD classifier using given configuration
-        clf = SGDClassifier(loss='log',
-                            penalty='elasticnet',
-                            alpha=cfg['alpha'],
-                            l1_ratio=cfg['l1_ratio'],
-                            learning_rate=cfg['learning_rate'],
-                            eta0=cfg['eta0'],
-                            max_iter=30,
-                            early_stopping=True,
-                            random_state=seed)
+        clf = SGDClassifier(
+            loss="log",
+            penalty="elasticnet",
+            alpha=cfg["alpha"],
+            l1_ratio=cfg["l1_ratio"],
+            learning_rate=cfg["learning_rate"],
+            eta0=cfg["eta0"],
+            max_iter=30,
+            early_stopping=True,
+            random_state=seed,
+        )
 
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
 
-        cv = StratifiedKFold(n_splits=4, random_state=seed, shuffle=True)  # to make CV splits consistent
+        cv = StratifiedKFold(
+            n_splits=4, random_state=seed, shuffle=True
+        )  # to make CV splits consistent
         scores = cross_val_score(clf, data, target, cv=cv)
 
     return 1 - np.mean(scores)
@@ -105,39 +111,39 @@ if __name__ == "__main__":
     cs = ConfigurationSpace()
 
     # We define a few possible parameters for the SGD classifier
-    alpha = UniformFloatHyperparameter(
-        "alpha", 0, 1, default_value=1.0)
-    l1_ratio = UniformFloatHyperparameter(
-        "l1_ratio", 0, 1, default_value=0.5)
+    alpha = UniformFloatHyperparameter("alpha", 0, 1, default_value=1.0)
+    l1_ratio = UniformFloatHyperparameter("l1_ratio", 0, 1, default_value=0.5)
     learning_rate = CategoricalHyperparameter(
-        "learning_rate", choices=['constant', 'invscaling', 'adaptive'], default_value='constant')
-    eta0 = UniformFloatHyperparameter(
-        "eta0", 0.00001, 1, default_value=0.1, log=True)
+        "learning_rate", choices=["constant", "invscaling", "adaptive"], default_value="constant"
+    )
+    eta0 = UniformFloatHyperparameter("eta0", 0.00001, 1, default_value=0.1, log=True)
     # Add the parameters to configuration space
     cs.add_hyperparameters([alpha, l1_ratio, learning_rate, eta0])
 
     # SMAC scenario object
-    scenario = Scenario({
-        "run_obj": "quality",  # we optimize quality (alternative to runtime)
-        "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
-        "cs": cs,  # configuration space
-        "deterministic": True,
-        "limit_resources": True,  # Uses pynisher to limit memory and runtime
-        "memory_limit": 3072,  # adapt this to reasonable value for your hardware
-        "cutoff": 3,  # runtime limit for the target algorithm
-        "instances": instances  # Optimize across all given instances
-    })
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternative to runtime)
+            "wallclock-limit": 100,  # max duration to run the optimization (in seconds)
+            "cs": cs,  # configuration space
+            "deterministic": True,
+            "limit_resources": True,  # Uses pynisher to limit memory and runtime
+            "memory_limit": 3072,  # adapt this to reasonable value for your hardware
+            "cutoff": 3,  # runtime limit for the target algorithm
+            "instances": instances,  # Optimize across all given instances
+        }
+    )
 
     # intensifier parameters
     # if no argument provided for budgets, hyperband decides them based on the number of instances available
     intensifier_kwargs = {
-        'initial_budget': 1,
-        'max_budget': 45,
-        'eta': 3,
+        "initial_budget": 1,
+        "max_budget": 45,
+        "eta": 3,
         # You can also shuffle the order of using instances by this parameter.
         # 'shuffle' will shuffle instances before each SH run and 'shuffle_once'
         # will shuffle instances once before the 1st SH iteration begins
-        'instance_order': None,
+        "instance_order": None,
     }
 
     # To optimize, we pass the function to the SMAC-object
@@ -145,7 +151,7 @@ if __name__ == "__main__":
         scenario=scenario,
         rng=np.random.RandomState(42),
         tae_runner=sgd_from_cfg,
-        intensifier_kwargs=intensifier_kwargs
+        intensifier_kwargs=intensifier_kwargs,
     )
 
     # Example call of the function

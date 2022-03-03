@@ -9,8 +9,8 @@ from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
-from smac.utils import test_helpers
 from smac.tae import StatusType
+from smac.utils import test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -44,9 +44,7 @@ class TestEPMChooser(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
 
     def branin(self, x):
-        y = (
-            x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6
-        ) ** 2
+        y = (x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
         return y[:, np.newaxis]
@@ -153,12 +151,8 @@ class TestEPMChooser(unittest.TestCase):
 
     def test_choose_next_empty_X(self):
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
-        epm_chooser.acquisition_func._compute = mock.Mock(
-            spec=RandomForestWithInstances
-        )
-        epm_chooser._random_search.maximize = mock.Mock(
-            spec=epm_chooser._random_search.maximize
-        )
+        epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
+        epm_chooser._random_search.maximize = mock.Mock(spec=epm_chooser._random_search.maximize)
         epm_chooser._random_search.maximize.return_value = [0, 1, 2]
 
         x = epm_chooser.choose_next()
@@ -190,12 +184,8 @@ class TestEPMChooser(unittest.TestCase):
         epm_chooser = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver.epm_chooser
 
         epm_chooser.model = mock.Mock(spec=RandomForestWithInstances)
-        epm_chooser.model.predict_marginalized_over_instances.side_effect = (
-            side_effect_predict
-        )
-        epm_chooser.acquisition_func._compute = mock.Mock(
-            spec=RandomForestWithInstances
-        )
+        epm_chooser.model.predict_marginalized_over_instances.side_effect = side_effect_predict
+        epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         epm_chooser.acquisition_func._compute.side_effect = side_effect
         epm_chooser.incumbent = incumbent
 
@@ -252,12 +242,8 @@ class TestEPMChooser(unittest.TestCase):
         for i, config in enumerate(previous_configs):
             epm_chooser.runhistory.add(config, i, 10, StatusType.SUCCESS)
         epm_chooser.model = mock.Mock(spec=RandomForestWithInstances)
-        epm_chooser.model.predict_marginalized_over_instances.side_effect = (
-            side_effect_predict
-        )
-        epm_chooser.acquisition_func._compute = mock.Mock(
-            spec=RandomForestWithInstances
-        )
+        epm_chooser.model.predict_marginalized_over_instances.side_effect = side_effect_predict
+        epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         epm_chooser.acquisition_func._compute.side_effect = side_effect
 
         challengers = epm_chooser.choose_next()

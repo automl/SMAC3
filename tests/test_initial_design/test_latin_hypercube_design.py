@@ -2,8 +2,14 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter, ForbiddenEqualsClause
+from ConfigSpace import (
+    CategoricalHyperparameter,
+    ConfigurationSpace,
+    Constant,
+    ForbiddenEqualsClause,
+    OrdinalHyperparameter,
+    UniformFloatHyperparameter,
+)
 
 from smac.initial_design.latin_hypercube_design import LHDesign
 
@@ -17,7 +23,7 @@ class TestLHDesign(unittest.TestCase):
             return UniformFloatHyperparameter(name, 0, 1)
 
         def get_constant_param(name: str):
-            return Constant(name, 0.)
+            return Constant(name, 0.0)
 
         def get_categorical_param(name: str):
             return CategoricalHyperparameter(name, choices=["a", "b", "c"])
@@ -29,7 +35,7 @@ class TestLHDesign(unittest.TestCase):
             get_uniform_param,
             get_constant_param,
             get_categorical_param,
-            get_ordinal_param
+            get_ordinal_param,
         ]
 
         self.cs = ConfigurationSpace()
@@ -42,7 +48,9 @@ class TestLHDesign(unittest.TestCase):
         self.cs.add_forbidden_clause(ForbiddenEqualsClause(param_constrained, "b"))
 
         for i in range(5):
-            self.cs.add_hyperparameter(UniformFloatHyperparameter('x%d' % (i + len(get_params)), 0, 1))
+            self.cs.add_hyperparameter(
+                UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1)
+            )
 
     def test_latin_hypercube_design(self):
         kwargs = dict(
@@ -54,7 +62,4 @@ class TestLHDesign(unittest.TestCase):
             max_config_fracs=0.25,
             init_budget=1000,
         )
-        LHDesign(
-            cs=self.cs,
-            **kwargs
-        ).select_configurations()
+        LHDesign(cs=self.cs, **kwargs).select_configurations()

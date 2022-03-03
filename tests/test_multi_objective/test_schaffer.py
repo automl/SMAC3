@@ -2,17 +2,17 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 import unittest
+
 import numpy as np
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from matplotlib import pyplot as plt
 
 from smac.configspace import ConfigurationSpace
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.optimizer.multi_objective.parego import ParEGO
 from smac.scenario.scenario import Scenario
-
 
 MIN_V = -2
 MAX_V = 2
@@ -66,9 +66,7 @@ def tae(cfg):
 class SchafferTest(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(
-            UniformFloatHyperparameter("x", lower=MIN_V, upper=MAX_V)
-        )
+        self.cs.add_hyperparameter(UniformFloatHyperparameter("x", lower=MIN_V, upper=MAX_V))
 
         # Scenario object
         self.scenario = Scenario(

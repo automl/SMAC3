@@ -1,8 +1,10 @@
-import os
-import logging
-import numpy as np
-import time
 import typing
+
+import logging
+import os
+import time
+
+import numpy as np
 
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import Configuration
@@ -11,23 +13,19 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.optimizer.random_configuration_chooser import (
     ChooserNoCoolDown,
     RandomConfigurationChooser,
 )
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
-from smac.tae import (
-    FirstRunCrashedException,
-    StatusType,
-    TAEAbortException,
-)
+from smac.tae import FirstRunCrashedException, StatusType, TAEAbortException
 from smac.tae.base import BaseRunner
+from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
@@ -110,9 +108,7 @@ class SMBO(object):
         rng: np.random.RandomState,
         tae_runner: BaseRunner,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(
-            2.0
-        ),
+        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
     ):
@@ -175,9 +171,7 @@ class SMBO(object):
 
             # to be on the safe side, never return an empty list of initial configs
             if not self.initial_design_configs:
-                self.initial_design_configs = [
-                    self.config_space.get_default_configuration()
-                ]
+                self.initial_design_configs = [self.config_space.get_default_configuration()]
 
         elif self.stats.submitted_ta_runs > 0 and self.incumbent is None:
             raise ValueError(
@@ -243,16 +237,12 @@ class SMBO(object):
             # update timebound only if a 'new' configuration is sampled as the challenger
             if self.intensifier.num_run == 0:
                 time_spent = time.time() - start_time
-                time_left = self._get_timebound_for_intensification(
-                    time_spent, update=False
-                )
+                time_left = self._get_timebound_for_intensification(time_spent, update=False)
                 self.logger.debug("New intensification time bound: %f", time_left)
             else:
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
-                time_left = self._get_timebound_for_intensification(
-                    time_spent, update=True
-                )
+                time_left = self._get_timebound_for_intensification(time_spent, update=True)
                 self.logger.debug(
                     "Updated intensification time bound from %f to %f",
                     old_time_left,
@@ -272,9 +262,7 @@ class SMBO(object):
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT)
-                    if num_obj == 1
-                    else np.full(num_obj, float(MAXINT)),
+                    cost=float(MAXINT) if num_obj == 1 else np.full(num_obj, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance_id=run_info.instance,
@@ -399,9 +387,7 @@ class SMBO(object):
         """
         if isinstance(config_mode, str):
             assert self.scenario.output_dir_for_this_run is not None  # Please mypy
-            traj_fn = os.path.join(
-                self.scenario.output_dir_for_this_run, "traj_aclib2.json"
-            )
+            traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
             trajectory = TrajLogger.read_traj_aclib_format(
                 fn=traj_fn, cs=self.config_space
             )  # type: typing.Optional[typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]]
@@ -436,9 +422,7 @@ class SMBO(object):
             )
         return new_rh
 
-    def _get_timebound_for_intensification(
-        self, time_spent: float, update: bool
-    ) -> float:
+    def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on
         choosing challengers using the fraction of time intended for
         intensification (which is specified in
@@ -534,8 +518,7 @@ class SMBO(object):
                 raise FirstRunCrashedException(
                     "First run crashed, abort. Please check your setup -- we assume that your default "
                     "configuration does not crashes. (To deactivate this exception, use the SMAC scenario option "
-                    "'abort_on_first_run_crash'). Additional run info: %s"
-                    % result.additional_info
+                    "'abort_on_first_run_crash'). Additional run info: %s" % result.additional_info
                 )
 
         # Update the intensifier with the result of the runs
@@ -548,9 +531,7 @@ class SMBO(object):
         )
 
         for callback in self._callbacks["_incorporate_run_results"]:
-            response = callback(
-                smbo=self, run_info=run_info, result=result, time_left=time_left
-            )
+            response = callback(smbo=self, run_info=run_info, result=result, time_left=time_left)
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called
             if response is False:

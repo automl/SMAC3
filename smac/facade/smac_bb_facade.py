@@ -1,12 +1,13 @@
 import typing
+
 import numpy as np
 
-from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.base_gp import BaseModel
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gaussian_process_mcmc import GaussianProcess, GaussianProcessMCMC
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
-from smac.epm.util_funcs import get_types, get_rng
+from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.util_funcs import get_rng, get_types
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
@@ -112,9 +113,7 @@ class SMAC4BB(SMAC4AC):
                     operate_on=cat_dims,
                 )
 
-            assert (len(cont_dims) + len(cat_dims)) == len(
-                scenario.cs.get_hyperparameters()
-            )
+            assert (len(cont_dims) + len(cat_dims)) == len(scenario.cs.get_hyperparameters())
 
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
@@ -181,9 +180,7 @@ class SMAC4BB(SMAC4AC):
                 or dict()
             )
             acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
-            kwargs[
-                "acquisition_function_optimizer_kwargs"
-            ] = acquisition_function_optimizer_kwargs
+            kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
         intensifier_kwargs = kwargs.get("intensifier_kwargs", dict()) or dict()

@@ -1,22 +1,21 @@
-import sys
-import os
 import logging
-import unittest
+import os
 import pickle
 import shutil
+import sys
+import unittest
 
 import numpy as np
-
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.scenario.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.utils.merge_foreign_data import merge_foreign_data
+from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
+from smac.tae import StatusType
 from smac.utils.io.cmd_reader import truthy as _is_truthy
 from smac.utils.io.input_reader import InputReader
-from smac.runhistory.runhistory import RunHistory
-from smac.tae import StatusType
+from smac.utils.merge_foreign_data import merge_foreign_data
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -31,48 +30,41 @@ else:
 
 
 class InitFreeScenario(Scenario):
-
     def __init__(self):
         pass
 
 
 class ScenarioTest(unittest.TestCase):
-
     def setUp(self):
         logging.basicConfig()
-        self.logger = logging.getLogger(
-            self.__module__ + '.' + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.logger.setLevel(logging.DEBUG)
 
         base_directory = os.path.split(__file__)[0]
-        base_directory = os.path.abspath(
-            os.path.join(base_directory, '../../tests', '..'))
+        base_directory = os.path.abspath(os.path.join(base_directory, "../../tests", ".."))
         self.current_dir = os.getcwd()
         os.chdir(base_directory)
 
         self.cs = ConfigurationSpace()
 
-        self.test_scenario_dict = {'algo': 'echo Hello',
-                                   'paramfile':
-                                       'tests/test_files/scenario_test/param.pcs',
-                                   'execdir': '.',
-                                   'deterministic': 0,
-                                   'run_obj': 'runtime',
-                                   'overall_obj': 'mean10',
-                                   'multi_objectives': 'accuracy, mse',
-                                   'cutoff_time': 5,
-                                   'wallclock-limit': 18000,
-                                   'instance_file':
-                                       'tests/test_files/scenario_test/training.txt',
-                                   'test_instance_file':
-                                       'tests/test_files/scenario_test/test.txt',
-                                   'feature_file':
-                                       'tests/test_files/scenario_test/features.txt',
-                                   'output_dir':
-                                       'tests/test_files/scenario_test/tmp_output'}
+        self.test_scenario_dict = {
+            "algo": "echo Hello",
+            "paramfile": "tests/test_files/scenario_test/param.pcs",
+            "execdir": ".",
+            "deterministic": 0,
+            "run_obj": "runtime",
+            "overall_obj": "mean10",
+            "multi_objectives": "accuracy, mse",
+            "cutoff_time": 5,
+            "wallclock-limit": 18000,
+            "instance_file": "tests/test_files/scenario_test/training.txt",
+            "test_instance_file": "tests/test_files/scenario_test/test.txt",
+            "feature_file": "tests/test_files/scenario_test/features.txt",
+            "output_dir": "tests/test_files/scenario_test/tmp_output",
+        }
         self.output_dirs = []
         self.output_files = []
-        self.output_dirs.append(self.test_scenario_dict['output_dir'])
+        self.output_dirs.append(self.test_scenario_dict["output_dir"])
 
     def tearDown(self):
         for output_dir in self.output_dirs:
@@ -88,56 +80,54 @@ class ScenarioTest(unittest.TestCase):
 
     def test_Exception(self):
         with self.assertRaises(TypeError):
-            _ = Scenario(['a', 'b'])
+            _ = Scenario(["a", "b"])
 
     def test_string_scenario(self):
-        scenario = Scenario('tests/test_files/scenario_test/scenario.txt')
+        scenario = Scenario("tests/test_files/scenario_test/scenario.txt")
 
-        self.assertEqual(scenario.ta, ['echo', 'Hello'])
-        self.assertEqual(scenario.execdir, '.')
+        self.assertEqual(scenario.ta, ["echo", "Hello"])
+        self.assertEqual(scenario.execdir, ".")
         self.assertFalse(scenario.deterministic)
-        self.assertEqual(
-            scenario.pcs_fn, 'tests/test_files/scenario_test/param.pcs')
-        self.assertEqual(scenario.overall_obj, 'mean10')
-        self.assertEqual(scenario.cutoff, 5.)
+        self.assertEqual(scenario.pcs_fn, "tests/test_files/scenario_test/param.pcs")
+        self.assertEqual(scenario.overall_obj, "mean10")
+        self.assertEqual(scenario.cutoff, 5.0)
         self.assertEqual(scenario.algo_runs_timelimit, np.inf)
         self.assertEqual(scenario.wallclock_limit, 18000)
         self.assertEqual(scenario.par_factor, 10)
-        self.assertEqual(scenario.train_insts, ['d', 'e', 'f'])
-        self.assertEqual(scenario.test_insts, ['a', 'b', 'c'])
-        test_dict = {'d': 1, 'e': 2, 'f': 3}
+        self.assertEqual(scenario.train_insts, ["d", "e", "f"])
+        self.assertEqual(scenario.test_insts, ["a", "b", "c"])
+        test_dict = {"d": 1, "e": 2, "f": 3}
         self.assertEqual(scenario.feature_dict, test_dict)
         self.assertEqual(scenario.feature_array[0], 1)
 
     def test_dict_scenario(self):
         scenario = Scenario(self.test_scenario_dict)
 
-        self.assertEqual(scenario.ta, ['echo', 'Hello'])
-        self.assertEqual(scenario.execdir, '.')
+        self.assertEqual(scenario.ta, ["echo", "Hello"])
+        self.assertEqual(scenario.execdir, ".")
         self.assertFalse(scenario.deterministic)
-        self.assertEqual(
-            scenario.pcs_fn, 'tests/test_files/scenario_test/param.pcs')
-        self.assertEqual(scenario.overall_obj, 'mean10')
-        self.assertEqual(scenario.cutoff, 5.)
+        self.assertEqual(scenario.pcs_fn, "tests/test_files/scenario_test/param.pcs")
+        self.assertEqual(scenario.overall_obj, "mean10")
+        self.assertEqual(scenario.cutoff, 5.0)
         self.assertEqual(scenario.algo_runs_timelimit, np.inf)
         self.assertEqual(scenario.wallclock_limit, 18000)
         self.assertEqual(scenario.par_factor, 10)
-        self.assertEqual(scenario.train_insts, ['d', 'e', 'f'])
-        self.assertEqual(scenario.test_insts, ['a', 'b', 'c'])
-        test_dict = {'d': 1, 'e': 2, 'f': 3}
+        self.assertEqual(scenario.train_insts, ["d", "e", "f"])
+        self.assertEqual(scenario.test_insts, ["a", "b", "c"])
+        test_dict = {"d": 1, "e": 2, "f": 3}
         self.assertEqual(scenario.feature_dict, test_dict)
         self.assertEqual(scenario.feature_array[0], 1)
 
     def unknown_parameter_in_scenario(self):
-        self.assertRaisesRegex(ValueError,
-                               'Could not parse the following arguments: '
-                               'duairznbvulncbzpneairzbnuqdae',
-                               Scenario,
-                               {'wallclock-limit': '12345',
-                                'duairznbvulncbzpneairzbnuqdae': 'uqpab'})
+        self.assertRaisesRegex(
+            ValueError,
+            "Could not parse the following arguments: " "duairznbvulncbzpneairzbnuqdae",
+            Scenario,
+            {"wallclock-limit": "12345", "duairznbvulncbzpneairzbnuqdae": "uqpab"},
+        )
 
     def test_merge_foreign_data(self):
-        ''' test smac.utils.merge_foreign_data '''
+        """test smac.utils.merge_foreign_data"""
 
         scenario = Scenario(self.test_scenario_dict)
         scenario_2 = Scenario(self.test_scenario_dict)
@@ -145,32 +135,42 @@ class ScenarioTest(unittest.TestCase):
 
         # init cs
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformIntegerHyperparameter(name='a',
-                                                           lower=0,
-                                                           upper=100))
-        cs.add_hyperparameter(UniformIntegerHyperparameter(name='b',
-                                                           lower=0,
-                                                           upper=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name="a", lower=0, upper=100))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name="b", lower=0, upper=100))
         # build runhistory
         rh_merge = RunHistory()
-        config = Configuration(cs, values={'a': 1, 'b': 2})
+        config = Configuration(cs, values={"a": 1, "b": 2})
 
-        rh_merge.add(config=config, instance_id="inst_new", cost=10, time=20,
-                     status=StatusType.SUCCESS,
-                     seed=None,
-                     additional_info=None)
+        rh_merge.add(
+            config=config,
+            instance_id="inst_new",
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            seed=None,
+            additional_info=None,
+        )
 
         # "d" is an instance in <scenario>
-        rh_merge.add(config=config, instance_id="d", cost=5, time=20,
-                     status=StatusType.SUCCESS,
-                     seed=None,
-                     additional_info=None)
+        rh_merge.add(
+            config=config,
+            instance_id="d",
+            cost=5,
+            time=20,
+            status=StatusType.SUCCESS,
+            seed=None,
+            additional_info=None,
+        )
 
         # build empty rh
         rh_base = RunHistory()
 
-        merge_foreign_data(scenario=scenario, runhistory=rh_base,
-                           in_scenario_list=[scenario_2], in_runhistory_list=[rh_merge])
+        merge_foreign_data(
+            scenario=scenario,
+            runhistory=rh_base,
+            in_scenario_list=[scenario_2],
+            in_runhistory_list=[rh_merge],
+        )
 
         # both runs should be in the runhistory
         # but we should not use the data to update the cost of config
@@ -181,14 +181,26 @@ class ScenarioTest(unittest.TestCase):
         runs = rh_base.get_runs_for_config(config, only_max_observed_budget=True)
         self.assertTrue(len(runs) == 0)
 
-        rh_merge.add(config=config, instance_id="inst_new_2", cost=10, time=20,
-                     status=StatusType.SUCCESS,
-                     seed=None,
-                     additional_info=None)
+        rh_merge.add(
+            config=config,
+            instance_id="inst_new_2",
+            cost=10,
+            time=20,
+            status=StatusType.SUCCESS,
+            seed=None,
+            additional_info=None,
+        )
 
-        self.assertRaises(ValueError, merge_foreign_data, **{
-                          "scenario": scenario, "runhistory": rh_base,
-                          "in_scenario_list": [scenario_2], "in_runhistory_list": [rh_merge]})
+        self.assertRaises(
+            ValueError,
+            merge_foreign_data,
+            **{
+                "scenario": scenario,
+                "runhistory": rh_base,
+                "in_scenario_list": [scenario_2],
+                "in_runhistory_list": [rh_merge],
+            },
+        )
 
     def test_pickle_dump(self):
         scenario = Scenario(self.test_scenario_dict)
@@ -202,68 +214,72 @@ class ScenarioTest(unittest.TestCase):
         self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)
 
     def test_write(self):
-        """ Test whether a reloaded scenario still holds all the necessary
+        """Test whether a reloaded scenario still holds all the necessary
         information. A subset of parameters might change, such as the paths to
-        pcs- or instance-files, so they are checked manually. """
+        pcs- or instance-files, so they are checked manually."""
 
         def check_scen_eq(scen1, scen2):
-            print('check_scen_eq')
+            print("check_scen_eq")
             """ Customized check for scenario-equality, ignoring file-paths """
             for name in scen1._arguments:
-                dest = scen1._arguments[name]['dest']
+                dest = scen1._arguments[name]["dest"]
                 name = dest if dest else name  # if 'dest' is None, use 'name'
-                if name in ["pcs_fn", "train_inst_fn", "test_inst_fn",
-                            "feature_fn", "output_dir"]:
+                if name in ["pcs_fn", "train_inst_fn", "test_inst_fn", "feature_fn", "output_dir"]:
                     continue  # Those values are allowed to change when writing to disk
-                elif name == 'cs':
+                elif name == "cs":
                     # Using repr because of cs-bug
                     # (https://github.com/automl/ConfigSpace/issues/25)
                     self.assertEqual(repr(scen1.cs), repr(scen2.cs))
-                elif name == 'feature_dict':
-                    self.assertEqual(len(scen1.feature_dict),
-                                     len(scen2.feature_dict))
+                elif name == "feature_dict":
+                    self.assertEqual(len(scen1.feature_dict), len(scen2.feature_dict))
                     for key in scen1.feature_dict:
                         self.assertTrue((scen1.feature_dict[key] == scen2.feature_dict[key]).all())
                 else:
                     print(name, getattr(scen1, name), getattr(scen2, name))
-                    self.assertEqual(getattr(scen1, name),
-                                     getattr(scen2, name))
+                    self.assertEqual(getattr(scen1, name), getattr(scen2, name))
 
         # First check with file-paths defined
-        feature_filename = 'tests/test_files/scenario_test/features_multiple.txt'
+        feature_filename = "tests/test_files/scenario_test/features_multiple.txt"
         feature_filename = os.path.abspath(feature_filename)
-        self.test_scenario_dict['feature_file'] = feature_filename
+        self.test_scenario_dict["feature_file"] = feature_filename
         scenario = Scenario(self.test_scenario_dict)
         # This injection would usually happen by the facade object!
         scenario.output_dir_for_this_run = scenario.output_dir
         scenario.write()
-        path = os.path.join(scenario.output_dir, 'scenario.txt')
+        path = os.path.join(scenario.output_dir, "scenario.txt")
         scenario_reloaded = Scenario(path)
 
         check_scen_eq(scenario, scenario_reloaded)
         # Test whether json is the default pcs_fn
-        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
-        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.json')))
-        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, 'param.json'))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, "param.pcs")))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, "param.json")))
+        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, "param.json"))
 
         # Now create new scenario without filepaths
-        self.test_scenario_dict.update({
-            'paramfile': None, 'cs': scenario.cs,
-            'feature_file': None, 'features': scenario.feature_dict,
-            'feature_names': scenario.feature_names,
-            'instance_file': None, 'instances': scenario.train_insts,
-            'test_instance_file': None, 'test_instances': scenario.test_insts})
+        self.test_scenario_dict.update(
+            {
+                "paramfile": None,
+                "cs": scenario.cs,
+                "feature_file": None,
+                "features": scenario.feature_dict,
+                "feature_names": scenario.feature_names,
+                "instance_file": None,
+                "instances": scenario.train_insts,
+                "test_instance_file": None,
+                "test_instances": scenario.test_insts,
+            }
+        )
         logging.debug(scenario_reloaded)
         scenario_no_fn = Scenario(self.test_scenario_dict)
         scenario_reloaded = Scenario(path)
         check_scen_eq(scenario_no_fn, scenario_reloaded)
         # Test whether json is the default pcs_fn
-        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
-        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.json')))
-        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, 'param.json'))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, "param.pcs")))
+        self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, "param.json")))
+        self.assertEqual(scenario_reloaded.pcs_fn, os.path.join(scenario.output_dir, "param.json"))
 
-    @mock.patch.object(os, 'makedirs')
-    @mock.patch.object(os.path, 'isdir')
+    @mock.patch.object(os, "makedirs")
+    @mock.patch.object(os.path, "isdir")
     def test_write_except(self, patch_isdir, patch_mkdirs):
         patch_isdir.return_value = False
         patch_mkdirs.side_effect = OSError()
@@ -274,17 +290,17 @@ class ScenarioTest(unittest.TestCase):
             scenario.write()
 
     def test_no_output_dir(self):
-        self.test_scenario_dict['output_dir'] = ""
+        self.test_scenario_dict["output_dir"] = ""
         scenario = Scenario(self.test_scenario_dict)
         self.assertFalse(scenario.out_writer.write_scenario_file(scenario))
 
     def test_par_factor(self):
         # Test setting the default value of 1 if no factor is given
         scenario_dict = self.test_scenario_dict
-        scenario_dict['overall_obj'] = 'mean'
+        scenario_dict["overall_obj"] = "mean"
         scenario = Scenario(scenario_dict)
         self.assertEqual(scenario.par_factor, 1)
-        scenario_dict['overall_obj'] = 'par'
+        scenario_dict["overall_obj"] = "par"
         scenario = Scenario(scenario_dict)
         self.assertEqual(scenario.par_factor, 1)
 
@@ -298,78 +314,71 @@ class ScenarioTest(unittest.TestCase):
         self.assertRaises(ValueError, _is_truthy, "something")
 
     def test_str_cast_instances(self):
-        self.scen = Scenario({'cs': None,
-                              'instances': [[1], [2]],
-                              'run_obj': 'quality'})
+        self.scen = Scenario({"cs": None, "instances": [[1], [2]], "run_obj": "quality"})
         self.assertIsInstance(self.scen.train_insts[0], str)
         self.assertIsInstance(self.scen.train_insts[1], str)
 
     def test_features(self):
         cmd_options = {
-            'feature_file': 'tests/test_files/features_example.csv',
-            'instance_file': 'tests/test_files/train_insts_example.txt'
+            "feature_file": "tests/test_files/features_example.csv",
+            "instance_file": "tests/test_files/train_insts_example.txt",
         }
-        scenario = Scenario(self.test_scenario_dict,
-                            cmd_options=cmd_options)
-        self.assertEqual(scenario.feature_names,
-                         ['feature1', 'feature2', 'feature3'])
+        scenario = Scenario(self.test_scenario_dict, cmd_options=cmd_options)
+        self.assertEqual(scenario.feature_names, ["feature1", "feature2", "feature3"])
 
     def test_multi_objectives(self):
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "test1, test2"})
+        scenario = Scenario({"run_obj": "quality", "multi_objectives": "test1, test2"})
 
         assert scenario.multi_objectives == ["test1", "test2"]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "test1,test2"})
+        scenario = Scenario({"run_obj": "quality", "multi_objectives": "test1,test2"})
 
         assert scenario.multi_objectives == ["test1", "test2"]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": ["test1", "test2"]})
+        scenario = Scenario({"run_obj": "quality", "multi_objectives": ["test1", "test2"]})
 
         assert scenario.multi_objectives == ["test1", "test2"]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "test1"})
+        scenario = Scenario({"run_obj": "quality", "multi_objectives": "test1"})
 
         assert scenario.multi_objectives == ["test1"]
 
-        scenario = Scenario({
-            "run_obj": "quality"})
+        scenario = Scenario({"run_obj": "quality"})
 
         assert scenario.multi_objectives == ["cost"]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "m1, m2",
-            "cost_for_crash": "1., 500",
-        })
+        scenario = Scenario(
+            {
+                "run_obj": "quality",
+                "multi_objectives": "m1, m2",
+                "cost_for_crash": "1., 500",
+            }
+        )
 
         assert scenario.multi_objectives == ["m1", "m2"]
-        assert scenario.cost_for_crash == [1., 500.]
+        assert scenario.cost_for_crash == [1.0, 500.0]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "m1, m2",
-            "cost_for_crash": "2.5",
-        })
+        scenario = Scenario(
+            {
+                "run_obj": "quality",
+                "multi_objectives": "m1, m2",
+                "cost_for_crash": "2.5",
+            }
+        )
 
         assert scenario.multi_objectives == ["m1", "m2"]
         assert scenario.cost_for_crash == [2.5, 2.5]
 
-        scenario = Scenario({
-            "run_obj": "quality",
-            "multi_objectives": "m1, m2",
-            "cost_for_crash": 500,
-        })
+        scenario = Scenario(
+            {
+                "run_obj": "quality",
+                "multi_objectives": "m1, m2",
+                "cost_for_crash": 500,
+            }
+        )
 
         assert scenario.multi_objectives == ["m1", "m2"]
-        assert scenario.cost_for_crash == [500., 500.]
+        assert scenario.cost_for_crash == [500.0, 500.0]
 
 
 if __name__ == "__main__":

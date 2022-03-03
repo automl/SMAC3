@@ -25,5 +25,5 @@ class RandomConfigurations(InitialDesign):
         if self.init_budget == 1:
             configs = [configs]
         for config in configs:
-            config.origin = 'Random initial design.'
+            config.origin = "Random initial design."
         return configs

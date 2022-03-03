@@ -1,8 +1,9 @@
+import typing
+
 import json
 import logging
 import os
 import time
-import typing
 
 import numpy as np
 
@@ -68,14 +69,12 @@ class Stats(object):
         data = {}
 
         for v in vars(self):
-            if v not in ['_Stats__scenario', '_logger', '_start_time']:
+            if v not in ["_Stats__scenario", "_logger", "_start_time"]:
                 data[v] = getattr(self, v)
 
-        path = os.path.join(
-            self.__scenario.output_dir_for_this_run, "stats.json"
-        )
+        path = os.path.join(self.__scenario.output_dir_for_this_run, "stats.json")
         self._logger.debug("Saving stats to %s", path)
-        with open(path, 'w') as fh:
+        with open(path, "w") as fh:
             json.dump(data, fh)
 
     def load(self, fn: typing.Optional[str] = None) -> None:
@@ -90,10 +89,8 @@ class Stats(object):
         """
         if not fn:
             assert self.__scenario.output_dir_for_this_run is not None  # please mypy
-            fn = os.path.join(
-                self.__scenario.output_dir_for_this_run, "stats.json"
-            )
-        with open(fn, 'r') as fh:
+            fn = os.path.join(self.__scenario.output_dir_for_this_run, "stats.json")
+        with open(fn, "r") as fh:
             data = json.load(fh)
 
         # Set attributes
@@ -145,7 +142,7 @@ class Stats(object):
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
         else:
-            raise ValueError('Scenario is missing')
+            raise ValueError("Scenario is missing")
 
     def is_budget_exhausted(self) -> bool:
         """Check whether the configuration budget for time budget, ta_budget
@@ -156,8 +153,9 @@ class Stats(object):
         exhaustedness: boolean
             true if one of the budgets is exhausted
         """
-        return (self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget() < 0
-                ) or self.get_remaining_ta_runs() <= 0
+        return (
+            self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget() < 0
+        ) or self.get_remaining_ta_runs() <= 0
 
     def update_average_configs_per_intensify(self, n_configs: int) -> None:
         """Updates statistics how many configurations on average per used in
@@ -174,8 +172,9 @@ class Stats(object):
         if self._n_calls_of_intensify == 1:
             self._ema_n_configs_per_intensifiy = float(n_configs)
         else:
-            self._ema_n_configs_per_intensifiy = (1 - self._EMA_ALPHA) * self._ema_n_configs_per_intensifiy \
-                + self._EMA_ALPHA * n_configs
+            self._ema_n_configs_per_intensifiy = (
+                1 - self._EMA_ALPHA
+            ) * self._ema_n_configs_per_intensifiy + self._EMA_ALPHA * n_configs
 
     def print_stats(self, debug_out: bool = False) -> None:
         """Prints all statistics
@@ -201,13 +200,21 @@ class Stats(object):
         )
         log_func("Configurations: %d" % (self.n_configs))
         log_func(
-            "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit))
+            "Used wallclock time: %.2f / %.2f sec "
+            % (time.time() - self._start_time, self.__scenario.wallclock_limit)
+        )
         log_func(
-            "Used target algorithm runtime: %.2f / %.2f sec" % (self.ta_time_used, self.__scenario.algo_runs_timelimit))
+            "Used target algorithm runtime: %.2f / %.2f sec"
+            % (self.ta_time_used, self.__scenario.algo_runs_timelimit)
+        )
         self._logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:
-            self._logger.debug("Average Configurations per Intensify: %.2f" % (
-                self._n_configs_per_intensify / self._n_calls_of_intensify))
-            self._logger.debug("Exponential Moving Average of Configurations per Intensify: %.2f" % (
-                self._ema_n_configs_per_intensifiy))
+            self._logger.debug(
+                "Average Configurations per Intensify: %.2f"
+                % (self._n_configs_per_intensify / self._n_calls_of_intensify)
+            )
+            self._logger.debug(
+                "Exponential Moving Average of Configurations per Intensify: %.2f"
+                % (self._ema_n_configs_per_intensifiy)
+            )
         log_func("----------------------------------------------------")

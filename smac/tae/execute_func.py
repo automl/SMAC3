@@ -1,8 +1,9 @@
+from typing import Callable, Dict, List, Optional, Tuple, Union, cast
+
 import inspect
 import math
 import time
 import traceback
-from typing import Dict, List, Optional, Tuple, Union, Callable, cast
 
 import numpy as np
 import pynisher
@@ -10,8 +11,8 @@ import pynisher
 from smac.configspace import Configuration
 from smac.stats.stats import Stats
 from smac.tae import StatusType
-from smac.utils.constants import MAXINT, MAX_CUTOFF
 from smac.tae.serial_runner import SerialRunner
+from smac.utils.constants import MAX_CUTOFF, MAXINT
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer, Matthias Feurer"
@@ -102,9 +103,7 @@ class AbstractTAFunc(SerialRunner):
 
         self.use_pynisher = use_pynisher
 
-        self.logger = PickableLoggerAdapter(
-            self.__module__ + "." + self.__class__.__name__
-        )
+        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def run(
         self,
@@ -167,8 +166,7 @@ class AbstractTAFunc(SerialRunner):
                 if cutoff > MAX_CUTOFF:
                     raise ValueError(
                         "%d is outside the legal range of [0, 65535] "
-                        "for cutoff (when using pynisher, due to OS limitations)"
-                        % cutoff
+                        "for cutoff (when using pynisher, due to OS limitations)" % cutoff
                     )
 
             arguments = {
@@ -244,9 +242,7 @@ class AbstractTAFunc(SerialRunner):
                 ordered_cost = []
                 for name in self.multi_objectives:
                     if name not in cost:
-                        raise RuntimeError(
-                            f"Objective {name} was not found in the returned costs."
-                        )
+                        raise RuntimeError(f"Objective {name} was not found in the returned costs.")
 
                     ordered_cost.append(cost[name])
                 cost = ordered_cost
@@ -357,7 +353,5 @@ class ExecuteTAFuncArray(AbstractTAFunc):
         obj_kwargs: Dict[str, Union[int, str, float, None]],
     ) -> Union[float, Tuple[float, Dict]]:
 
-        x = np.array(
-            [val for _, val in sorted(config.get_dictionary().items())], dtype=float
-        )
+        x = np.array([val for _, val in sorted(config.get_dictionary().items())], dtype=float)
         return obj(x, **obj_kwargs)

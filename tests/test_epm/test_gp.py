@@ -1,15 +1,15 @@
 import unittest.mock
 
-from ConfigSpace import EqualsCondition
-import scipy.optimize
 import numpy as np
+import scipy.optimize
 import sklearn.datasets
 import sklearn.model_selection
+from ConfigSpace import EqualsCondition
 
 from smac.configspace import (
+    CategoricalHyperparameter,
     ConfigurationSpace,
     UniformFloatHyperparameter,
-    CategoricalHyperparameter,
     convert_configurations_to_array,
 )
 from smac.epm.gaussian_process import GaussianProcess
@@ -39,12 +39,12 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
     )
     kernel = cov_amp * exp_kernel + noise_kernel
 
-    bounds = [(0., 1.) for _ in range(n_dimensions)]
+    bounds = [(0.0, 1.0) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     model = GaussianProcess(
         configspace=configspace,
@@ -76,7 +76,7 @@ def get_cat_data(rs):
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
-    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
+    from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
 
     cat_dims = np.array(cat_dims, dtype=np.int)
     cont_dims = np.array(cont_dims, dtype=np.int)
@@ -109,16 +109,16 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
     bounds = [0] * n_dimensions
     types = np.zeros(n_dimensions)
     for c in cont_dims:
-        bounds[c] = (0., 1.)
+        bounds[c] = (0.0, 1.0)
     for c in cat_dims:
         types[c] = 3
         bounds[c] = (3, np.nan)
 
     cs = ConfigurationSpace()
     for c in cont_dims:
-        cs.add_hyperparameter(UniformFloatHyperparameter('X%d' % c, 0, 1))
+        cs.add_hyperparameter(UniformFloatHyperparameter("X%d" % c, 0, 1))
     for c in cat_dims:
-        cs.add_hyperparameter(CategoricalHyperparameter('X%d' % c, [0, 1, 2, 3]))
+        cs.add_hyperparameter(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
 
     model = GaussianProcess(
         configspace=cs,
@@ -132,7 +132,6 @@ def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
 
 
 class TestGP(unittest.TestCase):
-
     def test_predict_wrong_X_dimensions(self):
         rs = np.random.RandomState(1)
 
@@ -143,16 +142,14 @@ class TestGP(unittest.TestCase):
 
         for model in (get_gp(n_dims, rs), get_mixed_gp(cat_dims, cont_dims, rs)):
             X = rs.rand(10)
-            self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
-                                   model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!", model.predict, X)
             X = rs.rand(10, 10, 10)
-            self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
-                                   model.predict, X)
+            self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!", model.predict, X)
 
             X = rs.rand(10, 5)
-            self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
-                                               "but have 5!",
-                                   model.predict, X)
+            self.assertRaisesRegex(
+                ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X
+            )
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -178,7 +175,7 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=False)
         theta = model.gp.kernel.theta
         theta_ = model.gp.kernel_.theta
-        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+        fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
         np.testing.assert_array_almost_equal(theta, fixture)
         np.testing.assert_array_almost_equal(theta_, fixture)
         np.testing.assert_array_almost_equal(theta, theta_)
@@ -186,12 +183,12 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=True)
         theta = model.gp.kernel.theta
         theta_ = model.gp.kernel_.theta
-        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+        fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
         self.assertFalse(np.any(theta == fixture))
         self.assertFalse(np.any(theta_ == fixture))
         np.testing.assert_array_almost_equal(theta, theta_)
 
-    @unittest.mock.patch('sklearn.gaussian_process.GaussianProcessRegressor.fit')
+    @unittest.mock.patch("sklearn.gaussian_process.GaussianProcessRegressor.fit")
     def test_train_continue_on_linalg_error(self, fit_mock):
         # Check that training does not stop on a linalg error, but that uncertainty is increased!
 
@@ -215,7 +212,9 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=False)
         self.assertAlmostEqual(np.exp(model.gp.kernel.theta[-1]), fixture + 10)
 
-    @unittest.mock.patch('sklearn.gaussian_process.GaussianProcessRegressor.log_marginal_likelihood')
+    @unittest.mock.patch(
+        "sklearn.gaussian_process.GaussianProcessRegressor.log_marginal_likelihood"
+    )
     def test_train_continue_on_linalg_error_2(self, fit_mock):
         # Check that training does not stop on a linalg error during hyperparameter optimization
 
@@ -240,10 +239,10 @@ class TestGP(unittest.TestCase):
         model._train(X[:10], Y[:10], do_optimize=True)
         np.testing.assert_array_almost_equal(
             model.gp.kernel.theta,
-            [0.69314718, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.69314718]
+            [0.69314718, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.69314718],
         )
 
-    @unittest.mock.patch.object(GaussianProcess, 'predict')
+    @unittest.mock.patch.object(GaussianProcess, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
         rs = np.random.RandomState(1)
@@ -259,31 +258,31 @@ class TestGP(unittest.TestCase):
             self.assertEqual(rf_mock.call_count, ct + 1)
 
     def test_predict_with_actual_values(self):
-        X = np.array([
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [0., 1., 1.],
-            [1., 0., 0.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.]], dtype=np.float64)
-        y = np.array([
-            [.1],
-            [.2],
-            [9],
-            [9.2],
-            [100.],
-            [100.2],
-            [109.],
-            [109.2]], dtype=np.float64)
+        X = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 1.0, 1.0],
+                [1.0, 0.0, 0.0],
+                [1.0, 0.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        y = np.array(
+            [[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64
+        )
         rs = np.random.RandomState(1)
         model = get_gp(3, rs)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
         mu_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, mu_hat_i in zip(
-            y.reshape((1, -1)).flatten(), mu_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
+            y.reshape((1, -1)).flatten(),
+            mu_hat.reshape((1, -1)).flatten(),
+            var_hat.reshape((1, -1)).flatten(),
         ):
             self.assertAlmostEqual(y_hat_i, y_i, delta=2)
             self.assertAlmostEqual(mu_hat_i, 0, delta=2)
@@ -295,16 +294,16 @@ class TestGP(unittest.TestCase):
         self.assertLess(abs(var_hat[0][0] - 1121.8409184001594), 2)
 
         # test other covariance results
-        _, var_fc = model.predict(X, cov_return_type='full_cov')
+        _, var_fc = model.predict(X, cov_return_type="full_cov")
         self.assertEqual(var_fc.shape, (8, 8))
-        _, var_sd = model.predict(X, cov_return_type='diagonal_std')
+        _, var_sd = model.predict(X, cov_return_type="diagonal_std")
         self.assertEqual(var_sd.shape, (8, 1))
         _, var_no = model.predict(np.array([[10, 10, 10]]), cov_return_type=None)
         self.assertIsNone(var_no)
         # check values
-        _, var_fc = model.predict(np.array([[10, 10, 10]]), cov_return_type='full_cov')
+        _, var_fc = model.predict(np.array([[10, 10, 10]]), cov_return_type="full_cov")
         self.assertAlmostEqual(var_fc[0][0], var_hat[0][0])
-        _, var_sd = model.predict(np.array([[10, 10, 10]]), cov_return_type='diagonal_std')
+        _, var_sd = model.predict(np.array([[10, 10, 10]]), cov_return_type="diagonal_std")
         self.assertAlmostEqual(var_sd[0][0] ** 2, var_hat[0][0])
 
     def test_gp_on_sklearn_data(self):
@@ -336,7 +335,9 @@ class TestGP(unittest.TestCase):
             theta = np.array(
                 [rs.uniform(1e-10, 10), rs.uniform(-10, 2), rs.uniform(-10, 1)]
             )  # Values from the default prior
-            error = scipy.optimize.check_grad(lambda x: gp._nll(x)[0], lambda x: gp._nll(x)[1], theta, epsilon=1e-5)
+            error = scipy.optimize.check_grad(
+                lambda x: gp._nll(x)[0], lambda x: gp._nll(x)[1], theta, epsilon=1e-5
+            )
             if error > 0.1:
                 n_above_1 += 1
         self.assertLessEqual(n_above_1, 10)
@@ -382,9 +383,9 @@ class TestGP(unittest.TestCase):
 
     def test_impute_inactive_hyperparameters(self):
         cs = ConfigurationSpace()
-        a = cs.add_hyperparameter(CategoricalHyperparameter('a', [0, 1]))
-        b = cs.add_hyperparameter(CategoricalHyperparameter('b', [0, 1]))
-        c = cs.add_hyperparameter(UniformFloatHyperparameter('c', 0, 1))
+        a = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1]))
+        b = cs.add_hyperparameter(CategoricalHyperparameter("b", [0, 1]))
+        c = cs.add_hyperparameter(UniformFloatHyperparameter("c", 0, 1))
         cs.add_condition(EqualsCondition(b, a, 1))
         cs.add_condition(EqualsCondition(c, a, 0))
         cs.seed(1)

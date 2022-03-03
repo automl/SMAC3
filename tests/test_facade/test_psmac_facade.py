@@ -1,8 +1,9 @@
-from contextlib import suppress
-import shutil
 import glob
+import shutil
 import unittest
+from contextlib import suppress
 from unittest.mock import patch
+
 from smac.optimizer.smbo import SMBO
 from smac.scenario.scenario import Scenario
 

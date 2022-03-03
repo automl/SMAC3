@@ -1,12 +1,17 @@
-from argparse import (
-    Action,
-    ArgumentDefaultsHelpFormatter,
-    ArgumentParser,
-    FileType,
-    Namespace,
-    SUPPRESS,
-    HelpFormatter,
+from typing import (
+    IO,
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
 )
+
 import datetime
 import distutils.util
 import logging
@@ -15,27 +20,23 @@ import re
 import shlex
 import sys
 import time
-from typing import (
-    Dict,
-    Union,
-    Any,
-    List,
-    Optional,
-    IO,
-    Tuple,
-    Callable,
-    Type,
-    Sequence,
-    Iterable,
+from argparse import (
+    SUPPRESS,
+    Action,
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    FileType,
+    HelpFormatter,
+    Namespace,
 )
 
 import numpy as np
 
 from smac.utils.constants import MAXINT, N_TREES
 from smac.utils.io.input_reader import (
-    InputReader,
-    INSTANCE_TYPE,
     INSTANCE_FEATURES_TYPE,
+    INSTANCE_TYPE,
+    InputReader,
 )
 
 __author__ = "Marius Lindauer"
@@ -452,9 +453,7 @@ class CMDReader(object):
         extracted_info = {}
         translations = {}
         for action in actions:
-            name_list = list(
-                filter(lambda e: e.startswith("--"), action.option_strings)
-            )
+            name_list = list(filter(lambda e: e.startswith("--"), action.option_strings))
             if name_list:
                 name = name_list[0]
             else:
@@ -636,8 +635,7 @@ class CMDReader(object):
             dest="abort_on_first_run_crash",
             default=True,
             type=truthy,
-            help="If true, *SMAC* will abort if the first run of "
-            "the target algorithm crashes.",
+            help="If true, *SMAC* will abort if the first run of " "the target algorithm crashes.",
         )
         smac_opts.add_argument(
             "--limit-resources",
@@ -673,11 +671,7 @@ class CMDReader(object):
             type=str,
             action=ProcessOutputDirAction,
             default="smac3-output_%s"
-            % (
-                datetime.datetime.fromtimestamp(time.time()).strftime(
-                    "%Y-%m-%d_%H:%M:%S_%f"
-                )
-            ),
+            % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
             help="Specifies the output-directory for all emerging "
             "files, such as logging and results.",
         )
@@ -1115,9 +1109,7 @@ class CMDReader(object):
             self.scen_cmd_translations,
         ) = CMDReader._extract_action_info(self.scen_parser._actions)
 
-    def parse_main_command(
-        self, main_cmd_opts: Sequence[str]
-    ) -> Tuple[Namespace, List[str]]:
+    def parse_main_command(self, main_cmd_opts: Sequence[str]) -> Tuple[Namespace, List[str]]:
         """Parse main options"""
         args_, misc = self.parser.parse_known_args(main_cmd_opts)
         try:
@@ -1231,9 +1223,7 @@ class CMDReader(object):
         scen_cmd.extend(scenario_cmd_opts)
 
         if misc_dict.keys():
-            self.logger.warning(
-                "Adding unsupported scenario options: {}".format(misc_dict)
-            )
+            self.logger.warning("Adding unsupported scenario options: {}".format(misc_dict))
             for k, v in misc_dict.items():
                 self.parsed_scen_args[k] = v
             # Fail in a later version:
@@ -1248,9 +1238,7 @@ class CMDReader(object):
 
         # execute overall_obj action for default value
         if scen_args_.overall_obj == self.overall_obj_arg.default:
-            self.overall_obj_arg(
-                self.scen_parser, scen_args_, self.overall_obj_arg.default
-            )
+            self.overall_obj_arg(self.scen_parser, scen_args_, self.overall_obj_arg.default)
 
         # make checks that argparse can't perform natively
 

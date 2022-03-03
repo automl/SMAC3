@@ -87,7 +87,7 @@ class RandomForestWithInstances(BaseModel):
         num_trees: int = N_TREES,
         do_bootstrapping: bool = True,
         n_points_per_tree: int = -1,
-        ratio_features: float = 5. / 6.,
+        ratio_features: float = 5.0 / 6.0,
         min_samples_split: int = 3,
         min_samples_leaf: int = 3,
         max_depth: int = 2**20,
@@ -111,8 +111,7 @@ class RandomForestWithInstances(BaseModel):
         self.rf_opts = regression.forest_opts()
         self.rf_opts.num_trees = num_trees
         self.rf_opts.do_bootstrapping = do_bootstrapping
-        max_features = 0 if ratio_features > 1.0 else \
-            max(1, int(len(types) * ratio_features))
+        max_features = 0 if ratio_features > 1.0 else max(1, int(len(types) * ratio_features))
         self.rf_opts.tree_opts.max_features = max_features
         self.rf_opts.tree_opts.min_samples_to_split = min_samples_split
         self.rf_opts.tree_opts.min_samples_in_leaf = min_samples_leaf
@@ -125,11 +124,20 @@ class RandomForestWithInstances(BaseModel):
         self.rf = None  # type: regression.binary_rss_forest
 
         # This list well be read out by save_iteration() in the solver
-        self.hypers = [num_trees, max_num_nodes, do_bootstrapping,
-                       n_points_per_tree, ratio_features, min_samples_split,
-                       min_samples_leaf, max_depth, eps_purity, self.seed]
+        self.hypers = [
+            num_trees,
+            max_num_nodes,
+            do_bootstrapping,
+            n_points_per_tree,
+            ratio_features,
+            min_samples_split,
+            min_samples_leaf,
+            max_depth,
+            eps_purity,
+            self.seed,
+        ]
 
-    def _train(self, X: np.ndarray, y: np.ndarray) -> 'RandomForestWithInstances':
+    def _train(self, X: np.ndarray, y: np.ndarray) -> "RandomForestWithInstances":
         """Trains the random forest on X and y.
 
         Parameters
@@ -158,7 +166,9 @@ class RandomForestWithInstances(BaseModel):
         self.rf.fit(data, rng=self.rng)
         return self
 
-    def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:
+    def _init_data_container(
+        self, X: np.ndarray, y: np.ndarray
+    ) -> regression.default_data_container:
         """Fills a pyrfr default data container, s.t. the forest knows
         categoricals and bounds for continous data
 
@@ -187,9 +197,9 @@ class RandomForestWithInstances(BaseModel):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(self, X: np.ndarray,
-                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(
+        self, X: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -207,11 +217,12 @@ class RandomForestWithInstances(BaseModel):
             Predictive variance
         """
         if len(X.shape) != 2:
-            raise ValueError(
-                'Expected 2d array, got %dd array!' % len(X.shape))
+            raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != len(self.types):
-            raise ValueError('Rows in X should have %d entries but have %d!' % (len(self.types), X.shape[1]))
-        if cov_return_type != 'diagonal_cov':
+            raise ValueError(
+                "Rows in X should have %d entries but have %d!" % (len(self.types), X.shape[1])
+            )
+        if cov_return_type != "diagonal_cov":
             raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         X = self._impute_inactive(X)
@@ -228,10 +239,12 @@ class RandomForestWithInstances(BaseModel):
                 third_dimension = max(max_num_leaf_data, third_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            preds_as_array = (
+                np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
+            )
             for i, preds_per_tree in enumerate(all_preds):
                 for j, pred in enumerate(preds_per_tree):
-                    preds_as_array[i, j, :len(pred)] = pred
+                    preds_as_array[i, j, : len(pred)] = pred
 
             # Do all necessary computation with vectorized functions
             preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
@@ -251,7 +264,9 @@ class RandomForestWithInstances(BaseModel):
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(
+        self, X: np.ndarray
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -278,8 +293,7 @@ class RandomForestWithInstances(BaseModel):
             Predictive variance
         """
 
-        if self.instance_features is None or \
-                len(self.instance_features) == 0:
+        if self.instance_features is None or len(self.instance_features) == 0:
             mean_, var = self.predict(X)
             assert var is not None  # please mypy
 
@@ -288,21 +302,24 @@ class RandomForestWithInstances(BaseModel):
             return mean_, var
 
         if len(X.shape) != 2:
-            raise ValueError(
-                'Expected 2d array, got %dd array!' % len(X.shape))
+            raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != len(self.bounds):
-            raise ValueError('Rows in X should have %d entries but have %d!' %
-                             (len(self.bounds),
-                              X.shape[1]))
+            raise ValueError(
+                "Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1])
+            )
 
         X = self._impute_inactive(X)
 
-        dat_ = np.zeros((X.shape[0], self.rf_opts.num_trees))  # marginalized predictions for each tree
+        dat_ = np.zeros(
+            (X.shape[0], self.rf_opts.num_trees)
+        )  # marginalized predictions for each tree
         for i, x in enumerate(X):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: typing.List[typing.List[float]]
+            preds_trees = [
+                [] for i in range(self.rf_opts.num_trees)
+            ]  # type: typing.List[typing.List[float]]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])
@@ -313,8 +330,7 @@ class RandomForestWithInstances(BaseModel):
             # 2. average in each tree
             if self.log_y:
                 for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = \
-                        np.log(np.exp(np.array(preds_trees[tree_id])).mean())
+                    dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
             else:
                 for tree_id in range(self.rf_opts.num_trees):
                     dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()

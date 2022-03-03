@@ -1,6 +1,7 @@
+import typing
+
 import os
 import time
-import typing
 import warnings
 
 import dask
@@ -76,6 +77,7 @@ class DaskParallelRunner(BaseRunner):
     client
 
     """
+
     def __init__(
         self,
         single_worker: BaseRunner,
@@ -106,13 +108,17 @@ class DaskParallelRunner(BaseRunner):
 
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
         # workers to be instantiated as demonic - this cannot be passed via worker_kwargs
-        dask.config.set({'distributed.worker.daemon': False})
+        dask.config.set({"distributed.worker.daemon": False})
         if dask_client is None:
             self.close_client_at_del = True
-            self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1,
-                                 local_directory=output_directory)
+            self.client = Client(
+                n_workers=self.n_workers,
+                processes=True,
+                threads_per_worker=1,
+                local_directory=output_directory,
+            )
             if self.output_directory:
-                self.scheduler_file = os.path.join(self.output_directory, '.dask_scheduler_file')
+                self.scheduler_file = os.path.join(self.output_directory, ".dask_scheduler_file")
                 self.client.write_scheduler_file(scheduler_file=self.scheduler_file)
         else:
             self.close_client_at_del = False
@@ -145,29 +151,28 @@ class DaskParallelRunner(BaseRunner):
         """
         # Check for resources or block till one is available
         if not self._workers_available():
-            wait(self.futures, return_when='FIRST_COMPLETED').done
+            wait(self.futures, return_when="FIRST_COMPLETED").done
             self._extract_completed_runs_from_futures()
 
         # In code check to make sure that there are resources
         if not self._workers_available():
-            warnings.warn("No workers are available. This could mean workers crashed"
-                          "Waiting for new workers...")
+            warnings.warn(
+                "No workers are available. This could mean workers crashed"
+                "Waiting for new workers..."
+            )
             time.sleep(self.patience)
             if not self._workers_available():
-                raise ValueError("Tried to execute a job, but no worker was "
-                                 "available. This likely means that a worker crashed "
-                                 "or no workers were properly configured."
-                                 )
+                raise ValueError(
+                    "Tried to execute a job, but no worker was "
+                    "available. This likely means that a worker crashed "
+                    "or no workers were properly configured."
+                )
 
         # At this point we can submit the job
         # For `pure=False`, see
         #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
         self.futures.append(
-            self.client.submit(
-                self.single_worker.run_wrapper,
-                run_info,
-                pure=False
-            )
+            self.client.submit(self.single_worker.run_wrapper, run_info, pure=False)
         )
 
     def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
@@ -204,11 +209,12 @@ class DaskParallelRunner(BaseRunner):
 
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
-            warnings.warn("More running jobs than resources available "
-                          "Should not have more futures/runs in remote workers "
-                          "than the number of workers. This could mean a worker "
-                          "crashed and was not able to be recovered by dask. "
-                          )
+            warnings.warn(
+                "More running jobs than resources available "
+                "Should not have more futures/runs in remote workers "
+                "than the number of workers. This could mean a worker "
+                "crashed and was not able to be recovered by dask. "
+            )
 
         # A future is removed to the list of futures as an indication
         # that a worker is available to take in an extra job
@@ -222,7 +228,7 @@ class DaskParallelRunner(BaseRunner):
         This class waits until 1 run completes
         """
         if self.futures:
-            wait(self.futures, return_when='FIRST_COMPLETED').done
+            wait(self.futures, return_when="FIRST_COMPLETED").done
 
     def pending_runs(self) -> bool:
         """
@@ -235,7 +241,8 @@ class DaskParallelRunner(BaseRunner):
         return len(self.futures) > 0
 
     def run(
-        self, config: Configuration,
+        self,
+        config: Configuration,
         instance: str,
         cutoff: typing.Optional[float] = None,
         seed: int = 12345,
@@ -289,7 +296,7 @@ class DaskParallelRunner(BaseRunner):
         return sum(self.client.nthreads().values())
 
     def _workers_available(self) -> bool:
-        """"Query if there are workers available, which means
+        """ "Query if there are workers available, which means
         that there are resources to launch a dask job"""
         total_compute_power = sum(self.client.nthreads().values())
         if len(self.futures) < total_compute_power:

@@ -1,8 +1,8 @@
-from contextlib import suppress
 import os
 import shutil
 import unittest
 import unittest.mock
+from contextlib import suppress
 
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
@@ -18,23 +18,23 @@ from smac.epm.uncorrelated_mo_rf_with_instances import (
 from smac.epm.util_funcs import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
-from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.random_configuration_design import RandomConfigurations
-from smac.initial_design.latin_hypercube_design import LHDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
+from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.initial_design.sobol_design import SobolDesign
+from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
-from smac.intensification.hyperband import Hyperband
+from smac.optimizer.acquisition import EI, EIPS, LCB
+from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
-    RunHistory2EPM4EIPS,
     RunHistory2EPM4Cost,
+    RunHistory2EPM4EIPS,
     RunHistory2EPM4LogCost,
 )
 from smac.scenario.scenario import Scenario
-from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
 from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
 
@@ -171,9 +171,7 @@ class TestSMACFacade(unittest.TestCase):
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
         self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
-        smbo = SMAC4AC(
-            self.scenario, runhistory_kwargs={"overwrite_existing_runs": True}
-        )
+        smbo = SMAC4AC(self.scenario, runhistory_kwargs={"overwrite_existing_runs": True})
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
         self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
         smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
@@ -182,24 +180,16 @@ class TestSMACFacade(unittest.TestCase):
     def test_construct_random_configuration_chooser(self):
         rng = np.random.RandomState(42)
         smbo = SMAC4AC(self.scenario)
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIsNot(smbo.solver.epm_chooser.random_configuration_chooser, rng)
         smbo = SMAC4AC(self.scenario, rng=rng)
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
         smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"rng": rng})
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
         smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"prob": 0.1})
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertEqual(smbo.solver.epm_chooser.random_configuration_chooser.prob, 0.1)
         smbo = SMAC4AC(
             self.scenario,
@@ -241,9 +231,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(
             smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances
         )
-        self.assertEqual(
-            smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228
-        )
+        self.assertEqual(smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228)
         smbo = SMAC4AC(self.scenario, acquisition_function_kwargs={"par": 17})
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 17)
@@ -301,9 +289,7 @@ class TestSMACFacade(unittest.TestCase):
             smac = SMAC4AC(scenario=scenario)
             self.assertEqual(scenario.minR, smac.solver.intensifier.minR)
             self.assertEqual(scenario.maxR, smac.solver.intensifier.maxR)
-            self.assertEqual(
-                scenario.use_ta_time, smac.solver.intensifier.use_ta_time_bound
-            )
+            self.assertEqual(scenario.use_ta_time, smac.solver.intensifier.use_ta_time_bound)
 
     def test_construct_initial_design(self):
 
@@ -425,9 +411,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(run_id, 2505)
         self.assertIs(rng_1, rs)
 
-    @unittest.mock.patch(
-        "smac.optimizer.ei_optimization.get_one_exchange_neighbourhood"
-    )
+    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
     def test_check_deterministic_rosenbrock(self, patch):
 
         # Make SMAC a bit faster
@@ -447,12 +431,8 @@ class TestSMACFacade(unittest.TestCase):
         def opt_rosenbrock():
             cs = ConfigurationSpace()
 
-            cs.add_hyperparameter(
-                UniformFloatHyperparameter("x1", -5, 5, default_value=-3)
-            )
-            cs.add_hyperparameter(
-                UniformFloatHyperparameter("x2", -5, 5, default_value=-4)
-            )
+            cs.add_hyperparameter(UniformFloatHyperparameter("x1", -5, 5, default_value=-3))
+            cs.add_hyperparameter(UniformFloatHyperparameter("x2", -5, 5, default_value=-4))
 
             scenario = Scenario(
                 {
@@ -508,9 +488,7 @@ class TestSMACFacade(unittest.TestCase):
         self.output_dirs.append(scen1.output_dir)
         smac = SMAC4AC(scenario=scen1, run_id=1)
 
-        self.assertEqual(
-            smac.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_1")
-        )
+        self.assertEqual(smac.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_1"))
         self.assertTrue(os.path.isdir(smac.output_dir))
 
         smac2 = SMAC4AC(scenario=scen1, run_id=1)
@@ -520,9 +498,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertTrue(os.path.isdir(smac3.output_dir + ".OLD.OLD"))
 
         smac4 = SMAC4AC(scenario=scen1, run_id=2)
-        self.assertEqual(
-            smac4.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_2")
-        )
+        self.assertEqual(smac4.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_2"))
         self.assertTrue(os.path.isdir(smac4.output_dir))
         self.assertFalse(os.path.isdir(smac4.output_dir + ".OLD.OLD.OLD"))
 
@@ -553,9 +529,7 @@ class TestSMACFacade(unittest.TestCase):
         ):
             smac.register_callback(lambda: 1)
 
-        with self.assertRaisesRegex(
-            ValueError, "Cannot register callback of type <class 'type'>"
-        ):
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'type'>"):
             smac.register_callback(IncorporateRunResultCallback)
 
         smac.register_callback(IncorporateRunResultCallback())

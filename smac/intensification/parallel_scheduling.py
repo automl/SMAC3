@@ -1,13 +1,14 @@
 import typing
+
 import warnings
 
 import numpy as np
 
+from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.stats.stats import Stats
-from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -68,52 +69,57 @@ class ParallelScheduler(AbstractRacer):
         * highest_budget - incumbent is selected only based on the highest budget
         * any_budget - incumbent is the best on any budget i.e., best performance regardless of budget
     """
-    def __init__(self,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 initial_budget: typing.Optional[float] = None,
-                 max_budget: typing.Optional[float] = None,
-                 eta: float = 3,
-                 num_initial_challengers: typing.Optional[int] = None,
-                 run_obj_time: bool = True,
-                 n_seeds: typing.Optional[int] = None,
-                 instance_order: typing.Optional[str] = 'shuffle_once',
-                 adaptive_capping_slackfactor: float = 1.2,
-                 inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
-                 min_chall: int = 1,
-                 incumbent_selection: str = 'highest_executed_budget',
-                 num_obj: int = 1
-                 ) -> None:
 
-        super().__init__(stats=stats,
-                         traj_logger=traj_logger,
-                         rng=rng,
-                         instances=instances,
-                         instance_specifics=instance_specifics,
-                         cutoff=cutoff,
-                         deterministic=deterministic,
-                         run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-                         min_chall=min_chall,
-                         num_obj=num_obj)
+    def __init__(
+        self,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        initial_budget: typing.Optional[float] = None,
+        max_budget: typing.Optional[float] = None,
+        eta: float = 3,
+        num_initial_challengers: typing.Optional[int] = None,
+        run_obj_time: bool = True,
+        n_seeds: typing.Optional[int] = None,
+        instance_order: typing.Optional[str] = "shuffle_once",
+        adaptive_capping_slackfactor: float = 1.2,
+        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        min_chall: int = 1,
+        incumbent_selection: str = "highest_executed_budget",
+        num_obj: int = 1,
+    ) -> None:
+
+        super().__init__(
+            stats=stats,
+            traj_logger=traj_logger,
+            rng=rng,
+            instances=instances,
+            instance_specifics=instance_specifics,
+            cutoff=cutoff,
+            deterministic=deterministic,
+            run_obj_time=run_obj_time,
+            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
+            min_chall=min_chall,
+            num_obj=num_obj,
+        )
 
         # We have a pool of instances that yield configurations ot run
         self.intensifier_instances = {}  # type: typing.Dict[int, AbstractRacer]
         self.print_worker_warning = True
 
-    def get_next_run(self,
-                     challengers: typing.Optional[typing.List[Configuration]],
-                     incumbent: Configuration,
-                     chooser: typing.Optional[EPMChooser],
-                     run_history: RunHistory,
-                     repeat_configs: bool = False,
-                     num_workers: int = 1,
-                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    def get_next_run(
+        self,
+        challengers: typing.Optional[typing.List[Configuration]],
+        incumbent: Configuration,
+        chooser: typing.Optional[EPMChooser],
+        run_history: RunHistory,
+        repeat_configs: bool = False,
+        num_workers: int = 1,
+    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         This procedure decides from which instance to pick a config,
         in order to determine the next run.
@@ -152,7 +158,8 @@ class ParallelScheduler(AbstractRacer):
         if num_workers <= 1 and self.print_worker_warning:
             warnings.warn(
                 f"{self.__class__.__name__} is executed with {num_workers} workers only. "
-                "Consider to use pynisher to use all available workers.")
+                "Consider to use pynisher to use all available workers."
+            )
             self.print_worker_warning = False
 
         # If repeat_configs is True, that means that not only self can repeat
@@ -160,8 +167,7 @@ class ParallelScheduler(AbstractRacer):
         # intensifier instances will also share configurations. The later
         # is not supported
         if repeat_configs:
-            raise ValueError(
-                "repeat_configs==True is not supported for parallel execution")
+            raise ValueError("repeat_configs==True is not supported for parallel execution")
 
         # First get a config to run from a SH instance
         for i in self._sort_instances_by_stage(self.intensifier_instances):
@@ -204,15 +210,15 @@ class ParallelScheduler(AbstractRacer):
             budget=0.0,
         )
 
-    def process_results(self,
-                        run_info: RunInfo,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float,
-                        result: RunValue,
-                        log_traj: bool = True,
-                        ) -> \
-            typing.Tuple[Configuration, float]:
+    def process_results(
+        self,
+        run_info: RunInfo,
+        incumbent: typing.Optional[Configuration],
+        run_history: RunHistory,
+        time_bound: float,
+        result: RunValue,
+        log_traj: bool = True,
+    ) -> typing.Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.
@@ -277,8 +283,7 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer
-                                 ) -> typing.Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
         """
         Given a intensifier, returns how advance it is.
         This metric will be used to determine what priority to
@@ -302,8 +307,9 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _sort_instances_by_stage(self, instances: typing.Dict[int, AbstractRacer]
-                                 ) -> typing.List[int]:
+    def _sort_instances_by_stage(
+        self, instances: typing.Dict[int, AbstractRacer]
+    ) -> typing.List[int]:
         """
         This procedure dictates what SH to prioritize in
         launching jobs. It prioritizes resource allocation to

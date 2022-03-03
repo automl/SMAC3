@@ -37,9 +37,10 @@ class IncorporateRunResultCallback:
     """
 
     def __call__(
-            self, smbo: 'SMBO',
-            run_info: RunInfo,
-            result: RunValue,
-            time_left: float,
+        self,
+        smbo: "SMBO",
+        run_info: RunInfo,
+        result: RunValue,
+        time_left: float,
     ) -> Optional[bool]:
         pass

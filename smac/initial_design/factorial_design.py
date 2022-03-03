@@ -1,10 +1,14 @@
 import itertools
 
-from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, \
-    CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
+from ConfigSpace.configuration_space import Configuration
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    Constant,
+    NumericalHyperparameter,
+    OrdinalHyperparameter,
+)
+from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design.initial_design import InitialDesign
 

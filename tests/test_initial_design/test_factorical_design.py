@@ -2,8 +2,13 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter,\
-    Constant, CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace import (
+    CategoricalHyperparameter,
+    ConfigurationSpace,
+    Constant,
+    OrdinalHyperparameter,
+    UniformFloatHyperparameter,
+)
 
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
@@ -17,7 +22,7 @@ class TestFactorial(unittest.TestCase):
             return UniformFloatHyperparameter(name, 0, 1)
 
         def get_constant_param(name: str):
-            return Constant(name, 0.)
+            return Constant(name, 0.0)
 
         def get_categorical_param(name: str):
             return CategoricalHyperparameter(name, choices=["a", "b", "c"])
@@ -29,7 +34,7 @@ class TestFactorial(unittest.TestCase):
             get_uniform_param,
             get_constant_param,
             get_categorical_param,
-            get_ordinal_param
+            get_ordinal_param,
         ]
 
         dims = np.arange(1, 5)
@@ -49,7 +54,4 @@ class TestFactorial(unittest.TestCase):
                 max_config_fracs=0.25,
                 init_budget=1,
             )
-            FactorialInitialDesign(
-                cs=cs,
-                **factorial_kwargs
-            ).select_configurations()
+            FactorialInitialDesign(cs=cs, **factorial_kwargs).select_configurations()

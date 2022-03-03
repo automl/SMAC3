@@ -1,15 +1,15 @@
-from typing import Dict, Optional, Tuple, List
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-from smac.epm.base_epm import AbstractEPM
 from smac.configspace import (
     CategoricalHyperparameter,
+    ConfigurationSpace,
+    Constant,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
-    Constant,
-    ConfigurationSpace,
 )
+from smac.epm.base_epm import AbstractEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

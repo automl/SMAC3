@@ -1,18 +1,20 @@
+import os
 import unittest
 import unittest.mock
-import os
 
 import numpy as np
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+)
 from scipy.spatial.distance import euclidean
 
-from smac.configspace import pcs
+from smac.configspace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
-from smac.configspace import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.utils import test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -33,16 +35,22 @@ def rosenbrock_4d(cfg):
     x3 = cfg["x3"]
     x4 = cfg["x4"]
 
-    val = (100 * (x2 - x1 ** 2) ** 2 + (x1 - 1) ** 2 + 100 * (
-        x3 - x2 ** 2) ** 2 + (x2 - 1) ** 2 + 100 * (x4 - x3 ** 2) ** 2 + (x3 - 1) ** 2)
+    val = (
+        100 * (x2 - x1**2) ** 2
+        + (x1 - 1) ** 2
+        + 100 * (x3 - x2**2) ** 2
+        + (x2 - 1) ** 2
+        + 100 * (x4 - x3**2) ** 2
+        + (x3 - 1) ** 2
+    )
 
-    return(val)
+    return val
 
 
 class TestEIMaximization(unittest.TestCase):
-    @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
-    @unittest.mock.patch.object(EI, '__call__')
-    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
+    @unittest.mock.patch("smac.optimizer.acquisition.convert_configurations_to_array")
+    @unittest.mock.patch.object(EI, "__call__")
+    @unittest.mock.patch.object(ConfigurationSpace, "sample_configuration")
     def test_challenger_list_callback(self, patch_sample, patch_ei, patch_impute):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = ConfigurationMock(1)
@@ -55,7 +63,9 @@ class TestEIMaximization(unittest.TestCase):
         rs._maximize.return_value = [(0, 0)]
 
         rval = rs.maximize(
-            runhistory=None, stats=None, num_points=10,
+            runhistory=None,
+            stats=None,
+            num_points=10,
         )
         self.assertEqual(rs._maximize.call_count, 0)
         next(rval)
@@ -67,7 +77,10 @@ class TestEIMaximization(unittest.TestCase):
         rs._maximize.return_value = [(0, 0), (1, 1)]
 
         rval = rs.maximize(
-            runhistory=None, stats=None, num_points=10, random_configuration_chooser=random_configuration_chooser,
+            runhistory=None,
+            stats=None,
+            num_points=10,
+            random_configuration_chooser=random_configuration_chooser,
         )
         self.assertEqual(rs._maximize.call_count, 0)
         # The first configuration is chosen at random (see the random_configuration_chooser mock)
@@ -86,7 +99,7 @@ class TestEIMaximization(unittest.TestCase):
         with self.assertRaises(StopIteration):
             next(rval)
 
-    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
+    @unittest.mock.patch.object(ConfigurationSpace, "sample_configuration")
     def test_get_next_by_random_search(self, patch):
         def side_effect(size):
             return [ConfigurationMock()] * size
@@ -95,20 +108,18 @@ class TestEIMaximization(unittest.TestCase):
         cs = ConfigurationSpace()
         ei = EI(None)
         rs = RandomSearch(ei, cs)
-        rval = rs._maximize(
-            runhistory=None, stats=None, num_points=10, _sorted=False
-        )
+        rval = rs._maximize(runhistory=None, stats=None, num_points=10, _sorted=False)
         self.assertEqual(len(rval), 10)
         for i in range(10):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].origin, 'Random Search')
+            self.assertEqual(rval[i][1].origin, "Random Search")
             self.assertEqual(rval[i][0], 0)
 
 
 class TestLocalSearch(unittest.TestCase):
     def setUp(self):
         current_dir = os.path.dirname(__file__)
-        self.test_files_dir = os.path.join(current_dir, '../../tests', 'test_files')
+        self.test_files_dir = os.path.join(current_dir, "../../tests", "test_files")
         seed = np.random.randint(1, 100000)
         self.cs = ConfigurationSpace(seed=seed)
         x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=5)
@@ -116,13 +127,13 @@ class TestLocalSearch(unittest.TestCase):
         x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x2)
         x3 = CategoricalHyperparameter(
-            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
+            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5
+        )
         self.cs.add_hyperparameter(x3)
         x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x4)
 
     def test_local_search(self):
-
         def acquisition_function(points):
             rval = []
             for point in points:
@@ -141,10 +152,10 @@ class TestLocalSearch(unittest.TestCase):
         # start point
         self.assertLessEqual(acq_val_start_point, acq_val_incumbent)
 
-    @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
+    @unittest.mock.patch.object(LocalSearch, "_get_initial_points")
     def test_local_search_2(
-            self,
-            _get_initial_points_patch,
+        self,
+        _get_initial_points_patch,
     ):
         pcs_file = os.path.join(self.test_files_dir, "test_local_search.pcs")
         seed = np.random.randint(1, 100000)
@@ -168,20 +179,14 @@ class TestLocalSearch(unittest.TestCase):
         acq_val_incumbent, incumbent = ls._maximize(runhistory, None, 1)[0]
 
         np.testing.assert_allclose(
-            incumbent.get_array(),
-            np.ones(len(config_space.get_hyperparameters()))
+            incumbent.get_array(), np.ones(len(config_space.get_hyperparameters()))
         )
 
-    @unittest.mock.patch.object(LocalSearch, '_do_search')
-    @unittest.mock.patch.object(LocalSearch, '_get_initial_points')
-    def test_get_next_by_local_search(
-            self,
-            _get_initial_points_patch,
-            patch
-    ):
+    @unittest.mock.patch.object(LocalSearch, "_do_search")
+    @unittest.mock.patch.object(LocalSearch, "_get_initial_points")
+    def test_get_next_by_local_search(self, _get_initial_points_patch, patch):
         # Without known incumbent
         class SideEffect(object):
-
             def __call__(self, *args, **kwargs):
                 rval = []
                 for i in range(len(args[0])):
@@ -207,22 +212,21 @@ class TestLocalSearch(unittest.TestCase):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].value, 8 - i)
             self.assertEqual(rval[i][0], 8 - i)
-            self.assertEqual(rval[i][1].origin, 'Local Search')
+            self.assertEqual(rval[i][1].origin, "Local Search")
 
         # Check that the known 'incumbent' is transparently passed through
         patch.side_effect = SideEffect()
-        _get_initial_points_patch.return_value = ['Incumbent'] + rand_confs
+        _get_initial_points_patch.return_value = ["Incumbent"] + rand_confs
         rval = ls._maximize(runhistory, None, 10)
         self.assertEqual(len(rval), 10)
         self.assertEqual(patch.call_count, 2)
         # Only the first local search in each iteration starts from the
         # incumbent
-        self.assertEqual(patch.call_args_list[1][0][0][0], 'Incumbent')
+        self.assertEqual(patch.call_args_list[1][0][0][0], "Incumbent")
         for i in range(10):
-            self.assertEqual(rval[i][1].origin, 'Local Search')
+            self.assertEqual(rval[i][1].origin, "Local Search")
 
     def test_local_search_finds_minimum(self):
-
         class AcquisitionFunction:
 
             model = None
@@ -253,7 +257,6 @@ class TestLocalSearch(unittest.TestCase):
 
     def test_get_initial_points_moo(self):
         class Model:
-
             def predict_marginalized_over_instances(self, X):
                 return X, X
 
@@ -277,18 +280,17 @@ class TestLocalSearch(unittest.TestCase):
         for random_config, cost in zip(random_configs, costs):
             runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
 
-        points = ls._get_initial_points(num_points=5, runhistory=runhistory, additional_start_points=None)
+        points = ls._get_initial_points(
+            num_points=5, runhistory=runhistory, additional_start_points=None
+        )
         self.assertEqual(len(points), 10)
 
 
 class TestRandomSearch(unittest.TestCase):
-    @unittest.mock.patch('smac.optimizer.acquisition.convert_configurations_to_array')
-    @unittest.mock.patch.object(EI, '__call__')
-    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
-    def test_get_next_by_random_search_sorted(self,
-                                              patch_sample,
-                                              patch_ei,
-                                              patch_impute):
+    @unittest.mock.patch("smac.optimizer.acquisition.convert_configurations_to_array")
+    @unittest.mock.patch.object(EI, "__call__")
+    @unittest.mock.patch.object(ConfigurationSpace, "sample_configuration")
+    def test_get_next_by_random_search_sorted(self, patch_sample, patch_ei, patch_impute):
         values = (10, 1, 9, 2, 8, 3, 7, 4, 6, 5)
         patch_sample.return_value = [ConfigurationMock(i) for i in values]
         patch_ei.return_value = np.array([[_] for _ in values], dtype=float)
@@ -296,22 +298,21 @@ class TestRandomSearch(unittest.TestCase):
         cs = ConfigurationSpace()
         ei = EI(None)
         rs = RandomSearch(ei, cs)
-        rval = rs._maximize(
-            runhistory=None, stats=None, num_points=10, _sorted=True
-        )
+        rval = rs._maximize(runhistory=None, stats=None, num_points=10, _sorted=True)
         self.assertEqual(len(rval), 10)
         for i in range(10):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].value, 10 - i)
             self.assertEqual(rval[i][0], 10 - i)
-            self.assertEqual(rval[i][1].origin, 'Random Search (sorted)')
+            self.assertEqual(rval[i][1].origin, "Random Search (sorted)")
 
         # Check that config.get_array works as desired and imputation is used
         #  in between, we therefore have to retrieve the value from the mock!
-        np.testing.assert_allclose([v.value for v in patch_ei.call_args[0][0]],
-                                   np.array(values, dtype=float))
+        np.testing.assert_allclose(
+            [v.value for v in patch_ei.call_args[0][0]], np.array(values, dtype=float)
+        )
 
-    @unittest.mock.patch.object(ConfigurationSpace, 'sample_configuration')
+    @unittest.mock.patch.object(ConfigurationSpace, "sample_configuration")
     def test_get_next_by_random_search(self, patch):
         def side_effect(size):
             return [ConfigurationMock()] * size
@@ -320,13 +321,11 @@ class TestRandomSearch(unittest.TestCase):
         cs = ConfigurationSpace()
         ei = EI(None)
         rs = RandomSearch(ei, cs)
-        rval = rs._maximize(
-            runhistory=None, stats=None, num_points=10, _sorted=False
-        )
+        rval = rs._maximize(runhistory=None, stats=None, num_points=10, _sorted=False)
         self.assertEqual(len(rval), 10)
         for i in range(10):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
-            self.assertEqual(rval[i][1].origin, 'Random Search')
+            self.assertEqual(rval[i][1].origin, "Random Search")
             self.assertEqual(rval[i][0], 0)
 
 

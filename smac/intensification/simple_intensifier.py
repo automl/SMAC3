@@ -15,7 +15,7 @@ __license__ = "3-clause BSD"
 
 
 class SimpleIntensifier(AbstractRacer):
-    """ Performs the traditional Bayesian Optimization loop, without
+    """Performs the traditional Bayesian Optimization loop, without
         instance/seed intensification
 
     Parameters
@@ -36,48 +36,53 @@ class SimpleIntensifier(AbstractRacer):
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
     """
-    def __init__(self,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Mapping[str, np.ndarray] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 run_obj_time: bool = True,
-                 num_obj: int = 1,
-                 **kwargs: typing.Any
-                 ) -> None:
 
-        super().__init__(stats=stats,
-                         traj_logger=traj_logger,
-                         rng=rng,
-                         instances=instances,
-                         instance_specifics=instance_specifics,
-                         cutoff=cutoff,
-                         deterministic=deterministic,
-                         run_obj_time=run_obj_time,
-                         adaptive_capping_slackfactor=1.0,
-                         min_chall=1,
-                         num_obj=num_obj,
-                         )
+    def __init__(
+        self,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        run_obj_time: bool = True,
+        num_obj: int = 1,
+        **kwargs: typing.Any,
+    ) -> None:
+
+        super().__init__(
+            stats=stats,
+            traj_logger=traj_logger,
+            rng=rng,
+            instances=instances,
+            instance_specifics=instance_specifics,
+            cutoff=cutoff,
+            deterministic=deterministic,
+            run_obj_time=run_obj_time,
+            adaptive_capping_slackfactor=1.0,
+            min_chall=1,
+            num_obj=num_obj,
+        )
         # Simple intensifier does not require comparing run results, thus we could simply ignore num_obj here
 
         # We want to control the number of runs that are sent to
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
+        self.run_tracker = (
+            {}
+        )  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
 
-    def process_results(self,
-                        run_info: RunInfo,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float,
-                        result: RunValue,
-                        log_traj: bool = True,
-                        ) -> \
-            typing.Tuple[Configuration, float]:
+    def process_results(
+        self,
+        run_info: RunInfo,
+        incumbent: typing.Optional[Configuration],
+        run_history: RunHistory,
+        time_bound: float,
+        result: RunValue,
+        log_traj: bool = True,
+    ) -> typing.Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.
@@ -108,7 +113,9 @@ class SimpleIntensifier(AbstractRacer):
             empirical performance of incumbent configuration
         """
         # Mark the fact that we processed this configuration
-        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
+        self.run_tracker[
+            (run_info.config, run_info.instance, run_info.seed, run_info.budget)
+        ] = True
 
         # If The incumbent is None we use the challenger
         if not incumbent:
@@ -119,23 +126,26 @@ class SimpleIntensifier(AbstractRacer):
 
         self.num_run += 1
 
-        incumbent = self._compare_configs(challenger=run_info.config,
-                                          incumbent=incumbent,
-                                          run_history=run_history,
-                                          log_traj=log_traj)
+        incumbent = self._compare_configs(
+            challenger=run_info.config,
+            incumbent=incumbent,
+            run_history=run_history,
+            log_traj=log_traj,
+        )
         # get incumbent cost
         inc_perf = run_history.get_cost(incumbent)
 
         return incumbent, inc_perf
 
-    def get_next_run(self,
-                     challengers: typing.Optional[typing.List[Configuration]],
-                     incumbent: Configuration,
-                     chooser: typing.Optional[EPMChooser],
-                     run_history: RunHistory,
-                     repeat_configs: bool = True,
-                     num_workers: int = 1,
-                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    def get_next_run(
+        self,
+        challengers: typing.Optional[typing.List[Configuration]],
+        incumbent: Configuration,
+        chooser: typing.Optional[EPMChooser],
+        run_history: RunHistory,
+        repeat_configs: bool = True,
+        num_workers: int = 1,
+    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to be used. As in a traditional BO loop,
         we sample from the EPM, which is the next configuration based on
@@ -164,12 +174,14 @@ class SimpleIntensifier(AbstractRacer):
         run_info: RunInfo
             An object that encapsulates the minimum information to
             evaluate a configuration
-         """
+        """
         # We always sample from the configs provided or the EPM
-        challenger = self._next_challenger(challengers=challengers,
-                                           chooser=chooser,
-                                           run_history=run_history,
-                                           repeat_configs=repeat_configs)
+        challenger = self._next_challenger(
+            challengers=challengers,
+            chooser=chooser,
+            run_history=run_history,
+            repeat_configs=repeat_configs,
+        )
 
         # Run tracker is a dictionary whose values indicate if a run has been
         # processed. If a value in this dict is false, it means that a worker
@@ -197,5 +209,7 @@ class SimpleIntensifier(AbstractRacer):
             budget=0.0,
         )
 
-        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = False
+        self.run_tracker[
+            (run_info.config, run_info.instance, run_info.seed, run_info.budget)
+        ] = False
         return RunInfoIntent.RUN, run_info

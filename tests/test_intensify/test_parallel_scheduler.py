@@ -17,7 +17,6 @@ def mock_ranker(sh):
 
 
 class TestParallelScheduler(unittest.TestCase):
-
     def test_sort_instances_by_stage(self):
         """Ensures that we prioritize the more advanced stage iteration"""
 
@@ -25,7 +24,8 @@ class TestParallelScheduler(unittest.TestCase):
             stats=None,
             traj_logger=None,
             instances=[1, 2, 3],
-            rng=np.random.RandomState(12345), deterministic=True,
+            rng=np.random.RandomState(12345),
+            deterministic=True,
         )
 
         scheduler._get_intensifier_ranking = mock_ranker
@@ -46,52 +46,31 @@ class TestParallelScheduler(unittest.TestCase):
         # We only have two configurations in the same stage.
         # In this case, we want to prioritize the one with more launched runs
         # that is zero
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [0, 1]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [0, 1])
 
         # One more instance comparison to be supper safe
         instances[2] = add_sh_mock(stage=1, config_inst_pairs=7)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [2, 0, 1]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [2, 0, 1])
 
         # Not let us add a more advanced stage run
         instances[3] = add_sh_mock(stage=2, config_inst_pairs=1)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [3, 2, 0, 1]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [3, 2, 0, 1])
 
         # Make 1 the oldest stage
         instances[1] = add_sh_mock(stage=4, config_inst_pairs=1)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [1, 3, 2, 0]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [1, 3, 2, 0])
 
         # Add a new run that's empty
         instances[4] = add_sh_mock(stage=0, config_inst_pairs=0)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [1, 3, 2, 0, 4]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [1, 3, 2, 0, 4])
 
         # Make 4 stage 4 but with not as many instances as 1
         instances[4] = add_sh_mock(stage=4, config_inst_pairs=0)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [1, 4, 3, 2, 0]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [1, 4, 3, 2, 0])
 
         # And lastly 0 -> stage 4
         instances[0] = add_sh_mock(stage=4, config_inst_pairs=0)
-        self.assertEqual(
-            list(scheduler._sort_instances_by_stage(instances)),
-            [1, 0, 4, 3, 2]
-        )
+        self.assertEqual(list(scheduler._sort_instances_by_stage(instances)), [1, 0, 4, 3, 2])
 
     def test_process_results(self):
         """Ensures that the results are processed by the pertinent intensifer,
@@ -100,7 +79,8 @@ class TestParallelScheduler(unittest.TestCase):
             stats=None,
             traj_logger=None,
             instances=[1, 2, 3],
-            rng=np.random.RandomState(12345), deterministic=True,
+            rng=np.random.RandomState(12345),
+            deterministic=True,
         )
 
         scheduler.intensifier_instances = {
@@ -121,20 +101,17 @@ class TestParallelScheduler(unittest.TestCase):
         )
 
         result = RunValue(
-            cost=1,
-            time=0.5,
-            status=StatusType.SUCCESS,
-            starttime=1,
-            endtime=2,
-            additional_info={}
+            cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={}
         )
 
-        scheduler.process_results(run_info=run_info, result=result, incumbent=None,
-                                  run_history=None, time_bound=None)
+        scheduler.process_results(
+            run_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None
+        )
         self.assertIsNone(scheduler.intensifier_instances[0].process_results.call_args)
         self.assertIsNone(scheduler.intensifier_instances[1].process_results.call_args)
-        self.assertEqual(scheduler.intensifier_instances[2].process_results.call_args[1]['run_info'],
-                         run_info)
+        self.assertEqual(
+            scheduler.intensifier_instances[2].process_results.call_args[1]["run_info"], run_info
+        )
 
     def test_get_next_run_wait(self):
         """Makes sure we wait if all intensifiers are busy, and no new instance got added.
@@ -144,7 +121,8 @@ class TestParallelScheduler(unittest.TestCase):
             stats=None,
             traj_logger=None,
             instances=[1, 2, 3],
-            rng=np.random.RandomState(12345), deterministic=True,
+            rng=np.random.RandomState(12345),
+            deterministic=True,
         )
         scheduler._get_intensifier_ranking = mock_ranker
         scheduler.intensifier_instances = {0: mock.Mock()}
@@ -153,13 +131,16 @@ class TestParallelScheduler(unittest.TestCase):
         scheduler.intensifier_instances[0].run_tracker = ()
 
         with unittest.mock.patch(
-                'smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance'
+            "smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance"
         ) as add_new_instance:
             add_new_instance.return_value = False
             intent, run_info = scheduler.get_next_run(
-                challengers=None, incumbent=None, chooser=None,
-                run_history=None, repeat_configs=False,
-                num_workers=1
+                challengers=None,
+                incumbent=None,
+                chooser=None,
+                run_history=None,
+                repeat_configs=False,
+                num_workers=1,
             )
             self.assertEqual(intent, RunInfoIntent.WAIT)
 
@@ -168,13 +149,14 @@ class TestParallelScheduler(unittest.TestCase):
         This happens when n_workers greater than the number of instances
         """
         with unittest.mock.patch(
-                'smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance'
+            "smac.intensification.parallel_scheduling.ParallelScheduler._add_new_instance"
         ) as add_new_instance:
             scheduler = ParallelScheduler(
                 stats=None,
                 traj_logger=None,
                 instances=[1, 2, 3],
-                rng=np.random.RandomState(12345), deterministic=True,
+                rng=np.random.RandomState(12345),
+                deterministic=True,
             )
 
             def instance_added(args):
@@ -182,21 +164,27 @@ class TestParallelScheduler(unittest.TestCase):
                 scheduler.intensifier_instances[source_id] = mock.Mock()
                 scheduler.intensifier_instances[source_id].get_next_run.return_value = (
                     RunInfoIntent.RUN,
-                    None
+                    None,
                 )
                 return True
 
             add_new_instance.side_effect = instance_added
             scheduler._get_intensifier_ranking = mock_ranker
             scheduler.intensifier_instances = {0: mock.Mock()}
-            scheduler.intensifier_instances[0].get_next_run.return_value = (RunInfoIntent.WAIT, None)
+            scheduler.intensifier_instances[0].get_next_run.return_value = (
+                RunInfoIntent.WAIT,
+                None,
+            )
             scheduler.intensifier_instances[0].stage = 0
             scheduler.intensifier_instances[0].run_tracker = ()
 
             intent, run_info = scheduler.get_next_run(
-                challengers=None, incumbent=None, chooser=None,
-                run_history=None, repeat_configs=False,
-                num_workers=1
+                challengers=None,
+                incumbent=None,
+                chooser=None,
+                run_history=None,
+                repeat_configs=False,
+                num_workers=1,
             )
             self.assertEqual(len(scheduler.intensifier_instances), 2)
             self.assertEqual(intent, RunInfoIntent.RUN)

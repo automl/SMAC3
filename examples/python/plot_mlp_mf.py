@@ -84,9 +84,7 @@ def mlp_from_cfg(cfg, seed, budget):
         cv = StratifiedKFold(
             n_splits=5, random_state=seed, shuffle=True
         )  # to make CV splits consistent
-        score = cross_val_score(
-            mlp, digits.data, digits.target, cv=cv, error_score="raise"
-        )
+        score = cross_val_score(mlp, digits.data, digits.target, cv=cv, error_score="raise")
 
     return 1 - np.mean(score)
 
@@ -98,15 +96,11 @@ if __name__ == "__main__":
     cs = ConfigurationSpace()
 
     n_layer = UniformIntegerHyperparameter("n_layer", 1, 5, default_value=1)
-    n_neurons = UniformIntegerHyperparameter(
-        "n_neurons", 8, 1024, log=True, default_value=10
-    )
+    n_neurons = UniformIntegerHyperparameter("n_neurons", 8, 1024, log=True, default_value=10)
     activation = CategoricalHyperparameter(
         "activation", ["logistic", "tanh", "relu"], default_value="tanh"
     )
-    solver = CategoricalHyperparameter(
-        "solver", ["lbfgs", "sgd", "adam"], default_value="adam"
-    )
+    solver = CategoricalHyperparameter("solver", ["lbfgs", "sgd", "adam"], default_value="adam")
     batch_size = UniformIntegerHyperparameter("batch_size", 30, 300, default_value=200)
     learning_rate = CategoricalHyperparameter(
         "learning_rate",
@@ -132,9 +126,7 @@ if __name__ == "__main__":
 
     # Adding conditions to restrict the hyperparameter space
     # Since learning rate is used when solver is 'sgd'
-    use_lr = CS.conditions.EqualsCondition(
-        child=learning_rate, parent=solver, value="sgd"
-    )
+    use_lr = CS.conditions.EqualsCondition(child=learning_rate, parent=solver, value="sgd")
     # Since learning rate initialization will only be accounted for when using 'sgd' or 'adam'
     use_lr_init = CS.conditions.InCondition(
         child=learning_rate_init, parent=solver, values=["sgd", "adam"]
@@ -181,10 +173,7 @@ if __name__ == "__main__":
 
     # Example call of the function with default values
     # It returns: Status, Cost, Runtime, Additional Infos
-    def_value = tae.run(
-        config=cs.get_default_configuration(),
-        budget=max_epochs, seed=0
-    )[1]
+    def_value = tae.run(config=cs.get_default_configuration(), budget=max_epochs, seed=0)[1]
 
     print("Value for default configuration: %.4f" % def_value)
 
@@ -194,8 +183,6 @@ if __name__ == "__main__":
     finally:
         incumbent = smac.solver.incumbent
 
-    inc_value = tae.run(config=incumbent, budget=max_epochs, seed=0)[
-        1
-    ]
+    inc_value = tae.run(config=incumbent, budget=max_epochs, seed=0)[1]
 
     print("Optimized Value: %.4f" % inc_value)

@@ -1,4 +1,5 @@
 import unittest
+
 import numpy as np
 
 from smac.utils.multi_objective import normalize_costs

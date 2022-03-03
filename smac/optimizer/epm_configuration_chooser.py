@@ -1,5 +1,6 @@
-import logging
 import typing
+
+import logging
 
 import numpy as np
 
@@ -7,9 +8,11 @@ from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, \
-    RandomSearch
-from smac.optimizer.random_configuration_chooser import RandomConfigurationChooser, ChooserNoCoolDown
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
+from smac.optimizer.random_configuration_chooser import (
+    ChooserNoCoolDown,
+    RandomConfigurationChooser,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -51,22 +54,25 @@ class EPMChooser(object):
     min_samples_model: int
         Minimum number of samples to build a model
     """
-    def __init__(self,
-                 scenario: Scenario,
-                 stats: Stats,
-                 runhistory: RunHistory,
-                 runhistory2epm: AbstractRunHistory2EPM,
-                 model: RandomForestWithInstances,
-                 acq_optimizer: AcquisitionFunctionMaximizer,
-                 acquisition_func: AbstractAcquisitionFunction,
-                 rng: np.random.RandomState,
-                 restore_incumbent: Configuration = None,
-                 random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
-                 predict_x_best: bool = True,
-                 min_samples_model: int = 1
-                 ):
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+
+    def __init__(
+        self,
+        scenario: Scenario,
+        stats: Stats,
+        runhistory: RunHistory,
+        runhistory2epm: AbstractRunHistory2EPM,
+        model: RandomForestWithInstances,
+        acq_optimizer: AcquisitionFunctionMaximizer,
+        acquisition_func: AbstractAcquisitionFunction,
+        rng: np.random.RandomState,
+        restore_incumbent: Configuration = None,
+        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(
+            2.0
+        ),
+        predict_x_best: bool = True,
+        min_samples_model: int = 1,
+    ):
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent
 
         self.scenario = scenario
@@ -90,7 +96,9 @@ class EPMChooser(object):
         self.predict_x_best = predict_x_best
 
         self.min_samples_model = min_samples_model
-        self.currently_considered_budgets = [0.0, ]
+        self.currently_considered_budgets = [
+            0.0,
+        ]
 
     def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
@@ -103,17 +111,35 @@ class EPMChooser(object):
 
         # Get #points per budget and if there are enough samples, then build a model
         for b in available_budgets:
-            X, Y = self.rh2EPM.transform(self.runhistory, budget_subset=[b, ])
+            X, Y = self.rh2EPM.transform(
+                self.runhistory,
+                budget_subset=[
+                    b,
+                ],
+            )
             if X.shape[0] >= self.min_samples_model:
-                self.currently_considered_budgets = [b, ]
+                self.currently_considered_budgets = [
+                    b,
+                ]
                 configs_array = self.rh2EPM.get_configurations(
-                    self.runhistory, budget_subset=self.currently_considered_budgets)
+                    self.runhistory, budget_subset=self.currently_considered_budgets
+                )
                 return X, Y, configs_array
 
-        return np.empty(shape=[0, 0]), np.empty(shape=[0, ]), np.empty(shape=[0, 0])
+        return (
+            np.empty(shape=[0, 0]),
+            np.empty(
+                shape=[
+                    0,
+                ]
+            ),
+            np.empty(shape=[0, 0]),
+        )
 
     def _get_evaluated_configs(self) -> typing.List[Configuration]:
-        return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+        return self.runhistory.get_all_configs_per_budget(
+            budget_subset=self.currently_considered_budgets
+        )
 
     def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The
@@ -148,8 +174,9 @@ class EPMChooser(object):
             x_best_array = None  # type: typing.Optional[np.ndarray]
         else:
             if self.runhistory.empty():
-                raise ValueError("Runhistory is empty and the cost value of "
-                                 "the incumbent is unknown.")
+                raise ValueError(
+                    "Runhistory is empty and the cost value of " "the incumbent is unknown."
+                )
             x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
 
         self.acquisition_func.update(
@@ -164,7 +191,7 @@ class EPMChooser(object):
             runhistory=self.runhistory,
             stats=self.stats,
             num_points=self.scenario.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
-            random_configuration_chooser=self.random_configuration_chooser
+            random_configuration_chooser=self.random_configuration_chooser,
         )
         return challengers
 
@@ -187,19 +214,23 @@ class EPMChooser(object):
         Configuration
         """
         if predict:
-            costs = list(map(
-                lambda x: (
-                    self.model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
-                    x,
-                ),
-                X,
-            ))
+            costs = list(
+                map(
+                    lambda x: (
+                        self.model.predict_marginalized_over_instances(x.reshape((1, -1)))[0][0][0],
+                        x,
+                    ),
+                    X,
+                )
+            )
             costs = sorted(costs, key=lambda t: t[0])
             x_best_array = costs[0][1]
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
+            all_configs = self.runhistory.get_all_configs_per_budget(
+                budget_subset=self.currently_considered_budgets
+            )
             x_best = self.incumbent
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self.runhistory.get_cost(x_best)

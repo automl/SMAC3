@@ -1,15 +1,15 @@
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Union
+
 import logging
-from typing import Callable, List, Union, Optional, Mapping, Any, Iterable, Dict, Tuple
 
 import numpy as np
-
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.scenario.scenario import Scenario
-from smac.configspace import ConfigurationSpace, Configuration
-from smac.runhistory.runhistory import RunKey
-from smac.tae.execute_func import ExecuteTAFuncArray
-
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
+from smac.configspace import Configuration, ConfigurationSpace
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.runhistory.runhistory import RunKey
+from smac.scenario.scenario import Scenario
+from smac.tae.execute_func import ExecuteTAFuncArray
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -24,7 +24,7 @@ def fmin_smac(
     rng: Optional[Union[np.random.RandomState, int]] = None,
     scenario_args: Optional[Mapping[str, Any]] = None,
     tae_runner_kwargs: Optional[Dict[str, Any]] = None,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> Tuple[Configuration, Union[np.ndarray, float], SMAC4HPO]:
     """
     Minimize a function func using the SMAC4HPO facade
@@ -105,7 +105,7 @@ def fmin_smac(
         tae_runner=ExecuteTAFuncArray,
         tae_runner_kwargs=tae_runner_kwargs,
         rng=rng,
-        **kwargs
+        **kwargs,
     )
 
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)

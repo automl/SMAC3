@@ -1,18 +1,20 @@
-from smac.runhistory.runhistory import RunHistory, DataOrigin
-from smac.scenario.scenario import Scenario
-from smac.configspace import ConfigurationSpace
-
 import typing
+
+from smac.configspace import ConfigurationSpace
+from smac.runhistory.runhistory import DataOrigin, RunHistory
+from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-def merge_foreign_data_from_file(scenario: Scenario,
-                                 runhistory: RunHistory,
-                                 in_scenario_fn_list: typing.List[str],
-                                 in_runhistory_fn_list: typing.List[str],
-                                 cs: ConfigurationSpace,) -> typing.Tuple[Scenario, RunHistory]:
+def merge_foreign_data_from_file(
+    scenario: Scenario,
+    runhistory: RunHistory,
+    in_scenario_fn_list: typing.List[str],
+    in_runhistory_fn_list: typing.List[str],
+    cs: ConfigurationSpace,
+) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -36,9 +38,14 @@ def merge_foreign_data_from_file(scenario: Scenario,
     """
 
     if not in_scenario_fn_list:
-        raise ValueError("To read warmstart data from previous runhistories,"
-                         " the corresponding scenarios are required. Use option --warmstart_scenario")
-    scens = [Scenario(scenario=scen_fn, cmd_options={"output_dir": ""}) for scen_fn in in_scenario_fn_list]
+        raise ValueError(
+            "To read warmstart data from previous runhistories,"
+            " the corresponding scenarios are required. Use option --warmstart_scenario"
+        )
+    scens = [
+        Scenario(scenario=scen_fn, cmd_options={"output_dir": ""})
+        for scen_fn in in_scenario_fn_list
+    ]
     rhs = []
     for rh_fn in in_runhistory_fn_list:
         rh = RunHistory()
@@ -48,10 +55,12 @@ def merge_foreign_data_from_file(scenario: Scenario,
     return merge_foreign_data(scenario, runhistory, in_scenario_list=scens, in_runhistory_list=rhs)
 
 
-def merge_foreign_data(scenario: Scenario,
-                       runhistory: RunHistory,
-                       in_scenario_list: typing.List[Scenario],
-                       in_runhistory_list: typing.List[RunHistory]) -> typing.Tuple[Scenario, RunHistory]:
+def merge_foreign_data(
+    scenario: Scenario,
+    runhistory: RunHistory,
+    in_scenario_list: typing.List[Scenario],
+    in_runhistory_list: typing.List[RunHistory],
+) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another
     <in_scenario> assuming the same pcs, feature space, but different instances
 
@@ -74,8 +83,10 @@ def merge_foreign_data(scenario: Scenario,
     # add further instance features
     for in_scenario in in_scenario_list:
         if scenario.n_features != in_scenario.n_features:
-            raise ValueError("Feature Space has to be the same for both scenarios (%d vs %d)." % (
-                scenario.n_features, in_scenario.n_features))
+            raise ValueError(
+                "Feature Space has to be the same for both scenarios (%d vs %d)."
+                % (scenario.n_features, in_scenario.n_features)
+            )
 
         if scenario.cs != in_scenario.cs:  # type: ignore[attr-defined] # noqa F821
             raise ValueError("PCS of both scenarios have to be identical.")
@@ -92,7 +103,8 @@ def merge_foreign_data(scenario: Scenario,
     for date in runhistory.data:
         if scenario.feature_dict.get(date.instance_id) is None:
             raise ValueError(
-                "Instance feature for \"%s\" was not found in scenario data." % (date.instance_id))
+                'Instance feature for "%s" was not found in scenario data.' % (date.instance_id)
+            )
 
     runhistory.compute_all_costs(instances=scenario.train_insts)
 

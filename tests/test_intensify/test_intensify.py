@@ -1,21 +1,20 @@
 import collections
+import logging
+import time
 import unittest
 
-import logging
 import numpy as np
-import time
-
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.abstract_racer import RunInfoIntent
+from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.intensification.intensification import Intensifier, IntensifierStage
-from smac.facade.smac_ac_facade import SMAC4AC
 from smac.tae import StatusType
+from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.utils.io.traj_logging import TrajLogger
 
 
@@ -159,9 +158,7 @@ class TestIntensify(unittest.TestCase):
             time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(
-            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
-        )
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -315,9 +312,7 @@ class TestIntensify(unittest.TestCase):
         )
 
         # run on instance 2
-        config, _ = intensifier.get_next_challenger(
-            challengers=[self.config3], chooser=None
-        )
+        config, _ = intensifier.get_next_challenger(challengers=[self.config3], chooser=None)
         self.assertEqual(config, self.config2)
         self.assertTrue(intensifier.continue_challenger)
 
@@ -652,9 +647,7 @@ class TestIntensify(unittest.TestCase):
             result=result,
         )
         self.assertEqual(len(self.rh.data), 2, self.rh.data)
-        runs = self.rh.get_runs_for_config(
-            config=self.config1, only_max_observed_budget=True
-        )
+        runs = self.rh.get_runs_for_config(config=self.config1, only_max_observed_budget=True)
         # exactly one run on each instance
         self.assertIn(1, [runs[0].instance, runs[1].instance])
         self.assertIn(2, [runs[0].instance, runs[1].instance])
@@ -714,9 +707,7 @@ class TestIntensify(unittest.TestCase):
 
         # when already evaluating a challenger, return the same challenger
         intensifier.to_run = [(1, 1, 0)]
-        config, new = intensifier.get_next_challenger(
-            challengers=[self.config2], chooser=None
-        )
+        config, new = intensifier.get_next_challenger(challengers=[self.config2], chooser=None)
         self.assertEqual(config, self.config1, intensifier.current_challenger)
         self.assertEqual(intensifier._chall_indx, 1)
         self.assertFalse(new)
@@ -773,9 +764,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(1)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(
-            use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime"
-        )
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -937,21 +926,15 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
 
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
             3,
         )
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
             2,
         )
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
             0,
         )  # capped
 
@@ -963,9 +946,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(
-            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
-        )
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1024,9 +1005,7 @@ class TestIntensify(unittest.TestCase):
         self.assertEqual(inc, self.config3)
         self.assertEqual(self.stats.inc_changed, 1)
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
@@ -1108,21 +1087,15 @@ class TestIntensify(unittest.TestCase):
             next(intensifier.configs_to_run)
 
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config2, only_max_observed_budget=True)),
             1,
         )
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config3, only_max_observed_budget=True)),
             1,
         )
 
@@ -1134,9 +1107,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return x["a"]
 
-        taf = ExecuteTAFuncDict(
-            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
-        )
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1182,9 +1153,7 @@ class TestIntensify(unittest.TestCase):
 
         self.assertEqual(intensifier.stage, IntensifierStage.RUN_CHALLENGER)
         self.assertEqual(
-            len(
-                self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)
-            ),
+            len(self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)),
             2,
         )
 
@@ -1196,9 +1165,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(
-            use_pynisher=False, ta=target, stats=self.stats, run_obj="quality"
-        )
+        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(

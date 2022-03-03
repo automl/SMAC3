@@ -1,10 +1,10 @@
+from typing import Any, Dict, List, Optional, Tuple
+
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.rf_with_instances import RandomForestWithInstances
-
-from typing import List, Dict, Any, Optional, Tuple
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -71,10 +71,14 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self.target_names = target_names
         self.num_targets = len(self.target_names)
         print(seed, rf_kwargs)
-        self.estimators = [RandomForestWithInstances(configspace, types, bounds, **rf_kwargs)
-                           for _ in range(self.num_targets)]
+        self.estimators = [
+            RandomForestWithInstances(configspace, types, bounds, **rf_kwargs)
+            for _ in range(self.num_targets)
+        ]
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> 'UncorrelatedMultiObjectiveRandomForestWithInstances':
+    def _train(
+        self, X: np.ndarray, Y: np.ndarray
+    ) -> "UncorrelatedMultiObjectiveRandomForestWithInstances":
         """Trains the random forest on X and y.
 
         Parameters
@@ -94,9 +98,9 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
         return self
 
-    def _predict(self, X: np.ndarray,
-                 cov_return_type: Optional[str] = 'diagonal_cov') \
-            -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(
+        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
@@ -113,7 +117,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
-        if cov_return_type != 'diagonal_cov':
+        if cov_return_type != "diagonal_cov":
             raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         mean = np.zeros((X.shape[0], self.num_targets))

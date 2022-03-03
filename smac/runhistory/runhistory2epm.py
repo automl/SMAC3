@@ -1,16 +1,17 @@
 import abc
-import logging
 import typing
+
+import logging
 
 import numpy as np
 
-from smac.tae import StatusType
-from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
 from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
-from smac.utils import constants
-from smac.scenario.scenario import Scenario
 from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
+from smac.scenario.scenario import Scenario
+from smac.tae import StatusType
+from smac.utils import constants
 from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger"
@@ -80,9 +81,7 @@ class AbstractRunHistory2EPM(object):
         success_states: typing.List[StatusType],
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
-        consider_for_higher_budgets_state: typing.Optional[
-            typing.List[StatusType]
-        ] = None,
+        consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
@@ -141,18 +140,13 @@ class AbstractRunHistory2EPM(object):
         # Sanity checks
         if impute_censored_data and scenario.run_obj != "runtime":
             # So far we don't know how to handle censored quality data
-            self.logger.critical(
-                "Cannot impute censored data when not " "optimizing runtime"
-            )
-            raise NotImplementedError(
-                "Cannot impute censored data when not " "optimizing runtime"
-            )
+            self.logger.critical("Cannot impute censored data when not " "optimizing runtime")
+            raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
 
         # Check imputor stuff
         if impute_censored_data and self.imputor is None:
             self.logger.critical(
-                "You want me to impute censored data, but "
-                "I don't know how. Imputor is None"
+                "You want me to impute censored data, but " "I don't know how. Imputor is None"
             )
             raise ValueError("impute_censored data, but no imputor given")
         elif impute_censored_data and not isinstance(self.imputor, BaseImputor):
@@ -299,9 +293,7 @@ class AbstractRunHistory2EPM(object):
         self.logger.debug("Transform runhistory into X,y format")
 
         s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
-        X, Y = self._build_matrix(
-            run_dict=s_run_dict, runhistory=runhistory, store_statistics=True
-        )
+        X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory, store_statistics=True)
 
         # Get real TIMEOUT runs
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
@@ -360,8 +352,7 @@ class AbstractRunHistory2EPM(object):
                     store_statistics=False,
                 )
                 self.logger.debug(
-                    "%d TIMEOUTS, %d CAPPED, %d SUCC"
-                    % (tX.shape[0], cen_X.shape[0], X.shape[0])
+                    "%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0])
                 )
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
@@ -401,9 +392,7 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError
 
-    def get_X_y(
-        self, runhistory: RunHistory
-    ) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Simple interface to obtain all data in runhistory in X, y format
         Note: This function should not be used as it does not consider all available StatusTypes
 
@@ -421,9 +410,7 @@ class AbstractRunHistory2EPM(object):
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
         """
-        self.logger.warning(
-            "This function is not tested and might not work as expected!"
-        )
+        self.logger.warning("This function is not tested and might not work as expected!")
         X = []
         y = []
         cen = []
@@ -557,9 +544,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
                 "Got cost of smaller/equal to 0. Replace by %f since we use"
                 " log cost." % constants.MINIMAL_COST_FOR_LOG
             )
-            values[
-                values < constants.MINIMAL_COST_FOR_LOG
-            ] = constants.MINIMAL_COST_FOR_LOG
+            values[values < constants.MINIMAL_COST_FOR_LOG] = constants.MINIMAL_COST_FOR_LOG
         values = np.log(values)
         return values
 

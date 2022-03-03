@@ -1,5 +1,7 @@
-import numpy as np
 from abc import abstractmethod
+
+import numpy as np
+
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )

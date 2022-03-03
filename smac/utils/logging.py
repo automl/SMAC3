@@ -1,5 +1,6 @@
+from typing import Any, Dict, Iterable, List, Union
+
 import logging
-from typing import Union, List, Dict, Any, Iterable
 
 import numpy as np
 
@@ -20,7 +21,7 @@ class PickableLoggerAdapter(object):
         Dictionary, representing the object state to be pickled. Ignores
         the self.logger field and only returns the logger name.
         """
-        return {'name': self.name}
+        return {"name": self.name}
 
     def __setstate__(self, state: Dict[str, Any]) -> None:
         """
@@ -30,7 +31,7 @@ class PickableLoggerAdapter(object):
         ----------
         state - dictionary, containing the logger name.
         """
-        self.name = state['name']
+        self.name = state["name"]
         self.logger = logging.getLogger(self.name)
 
     def debug(self, msg, *args, **kwargs):  # type: ignore[no-untyped-def] # noqa F821
@@ -58,8 +59,9 @@ class PickableLoggerAdapter(object):
         return self.logger.isEnabledFor(level)
 
 
-def format_array(input: Union[str, int, float, np.ndarray, list],
-                 format: bool = True) -> Union[float, List[float]]:
+def format_array(
+    input: Union[str, int, float, np.ndarray, list], format: bool = True
+) -> Union[float, List[float]]:
     """
     Transform a numpy array to a list of format so that it can be printed by logger.
     If the list holds one element only, then a formatted string is returned.

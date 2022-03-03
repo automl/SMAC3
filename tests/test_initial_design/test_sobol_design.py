@@ -11,10 +11,9 @@ __license__ = "3-clause BSD"
 
 
 class TestSobol(unittest.TestCase):
-
     def test_sobol(self):
         cs = ConfigurationSpace()
-        hyperparameters = [UniformFloatHyperparameter('x%d' % (i + 1), 0, 1) for i in range(21201)]
+        hyperparameters = [UniformFloatHyperparameter("x%d" % (i + 1), 0, 1) for i in range(21201)]
         cs.add_hyperparameters(hyperparameters)
 
         sobol_kwargs = dict(
@@ -26,17 +25,11 @@ class TestSobol(unittest.TestCase):
             max_config_fracs=0.25,
             init_budget=1,
         )
-        SobolDesign(
-            cs=cs,
-            **sobol_kwargs
-        ).select_configurations()
+        SobolDesign(cs=cs, **sobol_kwargs).select_configurations()
 
-        cs.add_hyperparameter(UniformFloatHyperparameter('x21202', 0, 1))
+        cs.add_hyperparameter(UniformFloatHyperparameter("x21202", 0, 1))
         with self.assertRaisesRegex(
-                Exception,
-                "Maximum supported dimensionality is 21201.",
+            Exception,
+            "Maximum supported dimensionality is 21201.",
         ):
-            SobolDesign(
-                cs=cs,
-                **sobol_kwargs
-            ).select_configurations()
+            SobolDesign(cs=cs, **sobol_kwargs).select_configurations()

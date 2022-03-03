@@ -17,8 +17,13 @@ class BaseImputor(object):
         pass
 
     @abstractmethod
-    def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> np.ndarray:
+    def impute(
+        self,
+        censored_X: np.ndarray,
+        censored_y: np.ndarray,
+        uncensored_X: np.ndarray,
+        uncensored_y: np.ndarray,
+    ) -> np.ndarray:
         """
         Imputes censored runs and returns new y values.
 

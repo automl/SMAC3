@@ -22,5 +22,5 @@ class DefaultConfiguration(InitialDesign):
         """
 
         config = self.cs.get_default_configuration()
-        config.origin = 'Default'
+        config.origin = "Default"
         return [config]

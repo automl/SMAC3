@@ -6,7 +6,7 @@ import sklearn.model_selection
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.gp_base_prior import LognormalPrior, HorseshoePrior
+from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -37,12 +37,12 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     if n_mcmc_walkers % 2 == 1:
         n_mcmc_walkers += 1
 
-    bounds = [(0., 1.) for _ in range(n_dimensions)]
+    bounds = [(0.0, 1.0) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     model = GaussianProcessMCMC(
         configspace=configspace,
@@ -54,7 +54,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
         burnin_steps=n_iter,
         normalize_y=normalize_y,
         seed=rs.randint(low=1, high=10000),
-        mcmc_sampler='emcee',
+        mcmc_sampler="emcee",
         average_samples=average_samples,
     )
     return model
@@ -66,23 +66,21 @@ class TestGPMCMC(unittest.TestCase):
         model = get_gp(10, rs)
 
         X = rs.rand(10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!",
-                               model.predict, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 1d array!", model.predict, X)
         X = rs.rand(10, 10, 10)
-        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!",
-                               model.predict, X)
+        self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!", model.predict, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries "
-                                           "but have 5!",
-                               model.predict, X)
+        self.assertRaisesRegex(
+            ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X
+        )
 
     def test_gp_train(self):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
 
-        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+        fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
 
         model = get_gp(10, rs)
         np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
@@ -102,7 +100,7 @@ class TestGPMCMC(unittest.TestCase):
         X = rs.rand(20, 10)
         Y = rs.rand(10, 1)
 
-        fixture = np.array([0.693147, 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., -6.907755])
+        fixture = np.array([0.693147, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -6.907755])
 
         model = get_gp(10, rs, average_samples=True)
         np.testing.assert_array_almost_equal(model.kernel.theta, fixture)
@@ -128,7 +126,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertEqual(m_hat.shape, (10, 1))
         self.assertEqual(v_hat.shape, (10, 1))
 
-    @unittest.mock.patch.object(GaussianProcessMCMC, 'predict')
+    @unittest.mock.patch.object(GaussianProcessMCMC, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
 
@@ -141,31 +139,31 @@ class TestGPMCMC(unittest.TestCase):
         self.assertEqual(rf_mock.call_count, 1)
 
     def test_predict_with_actual_values(self):
-        X = np.array([
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [0., 1., 1.],
-            [1., 0., 0.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.]], dtype=np.float64)
-        y = np.array([
-            [.1],
-            [.2],
-            [9],
-            [9.2],
-            [100.],
-            [100.2],
-            [109.],
-            [109.2]], dtype=np.float64)
+        X = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 1.0, 1.0],
+                [1.0, 0.0, 0.0],
+                [1.0, 0.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 1.0],
+            ],
+            dtype=np.float64,
+        )
+        y = np.array(
+            [[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64
+        )
         rs = np.random.RandomState(1)
         model = get_gp(3, rs, noise=1e-10, n_iter=200)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))
 
         y_hat, var_hat = model.predict(X)
         for y_i, y_hat_i, var_hat_i in zip(
-            y.reshape((1, -1)).flatten(), y_hat.reshape((1, -1)).flatten(), var_hat.reshape((1, -1)).flatten(),
+            y.reshape((1, -1)).flatten(),
+            y_hat.reshape((1, -1)).flatten(),
+            var_hat.reshape((1, -1)).flatten(),
         ):
             # Chain length too short to get excellent predictions, apparently there's a lot of predictive variance
             self.assertAlmostEqual(y_i, y_hat_i, delta=1)
@@ -206,12 +204,12 @@ class TestGPMCMC(unittest.TestCase):
         gp = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=False)
         gp._train(X, y, do_optimize=False)
         self.assertFalse(gp.models[0].normalize_y)
-        self.assertFalse(hasattr(gp.models[0], 'mean_y_'))
+        self.assertFalse(hasattr(gp.models[0], "mean_y_"))
         mu_hat, var_hat = gp.predict(X_test)
         gp_norm = get_gp(n_dimensions=1, rs=rng, noise=1e-10, normalize_y=True)
         gp_norm._train(X, y, do_optimize=False)
         self.assertTrue(gp_norm.models[0].normalize_y)
-        self.assertTrue(hasattr(gp_norm.models[0], 'mean_y_'))
+        self.assertTrue(hasattr(gp_norm.models[0], "mean_y_"))
         mu_hat_prime, var_hat_prime = gp_norm.predict(X_test)
         np.testing.assert_array_almost_equal(mu_hat, mu_hat_prime, decimal=4)
         np.testing.assert_array_almost_equal(var_hat, var_hat_prime, decimal=4)

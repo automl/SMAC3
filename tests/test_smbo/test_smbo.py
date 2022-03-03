@@ -4,19 +4,18 @@ import unittest
 from unittest import mock
 
 import numpy as np
-
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+import smac.facade.smac_ac_facade
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances
-import smac.facade.smac_ac_facade
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.runhistory.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
 from smac.scenario.scenario import Scenario
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray
@@ -66,9 +65,7 @@ class TestSMBO(unittest.TestCase):
                 shutil.rmtree(output_dir, ignore_errors=True)
 
     def branin(self, x):
-        y = (
-            x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6
-        ) ** 2
+        y = (x[:, 1] - (5.1 / (4 * np.pi**2)) * x[:, 0] ** 2 + 5 * x[:, 0] / np.pi - 6) ** 2
         y += 10 * (1 - 1 / (8 * np.pi)) * np.cos(x[:, 0]) + 10
 
         return y[:, np.newaxis]
@@ -242,17 +239,11 @@ class TestSMBO(unittest.TestCase):
 
         # Test for valid values
         smbo = get_smbo(0.3)
-        self.assertAlmostEqual(
-            3.0, smbo._get_timebound_for_intensification(7.0, update=False)
-        )
+        self.assertAlmostEqual(3.0, smbo._get_timebound_for_intensification(7.0, update=False))
         smbo = get_smbo(0.5)
-        self.assertAlmostEqual(
-            0.03, smbo._get_timebound_for_intensification(0.03, update=False)
-        )
+        self.assertAlmostEqual(0.03, smbo._get_timebound_for_intensification(0.03, update=False))
         smbo = get_smbo(0.7)
-        self.assertAlmostEqual(
-            1.4, smbo._get_timebound_for_intensification(0.6, update=False)
-        )
+        self.assertAlmostEqual(1.4, smbo._get_timebound_for_intensification(0.6, update=False))
         # Test for invalid <= 0
         smbo = get_smbo(0)
         self.assertRaises(ValueError, smbo.run)
@@ -287,9 +278,7 @@ class TestSMBO(unittest.TestCase):
         solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
 
         solver.stats.is_budget_exhausted = unittest.mock.Mock()
-        solver.stats.is_budget_exhausted.side_effect = tuple(
-            ([False] * 10) + [True] * 8
-        )
+        solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
 
         solver._get_timebound_for_intensification = unittest.mock.Mock(
             wraps=solver._get_timebound_for_intensification
@@ -345,9 +334,7 @@ class TestSMBO(unittest.TestCase):
             smac = SMAC4AC(self.scenario)
             self.output_dirs.append(smac.output_dir)
             smbo = smac.solver
-            with mock.patch.object(
-                Validator, "validate", return_value=None
-            ) as validation_mock:
+            with mock.patch.object(Validator, "validate", return_value=None) as validation_mock:
                 smbo.validate(
                     config_mode="inc",
                     instance_mode="train+test",
@@ -488,9 +475,7 @@ class TestSMBO(unittest.TestCase):
             X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
             self.assertEqual(X.shape[0], len(all_configs))
 
-    @unittest.mock.patch.object(
-        smac.facade.smac_ac_facade.Intensifier, "process_results"
-    )
+    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, "process_results")
     def test_incorporate_run_results_callback(self, process_results_mock):
 
         process_results_mock.return_value = None, None
@@ -524,20 +509,14 @@ class TestSMBO(unittest.TestCase):
             budget=0.0,
             source_id=0,
         )
-        result = RunValue(
-            1.2345, 2.3456, "status", "starttime", "endtime", "additional_info"
-        )
+        result = RunValue(1.2345, 2.3456, "status", "starttime", "endtime", "additional_info")
         time_left = 10
 
-        smbo._incorporate_run_results(
-            run_info=run_info, result=result, time_left=time_left
-        )
+        smbo._incorporate_run_results(run_info=run_info, result=result, time_left=time_left)
         self.assertEqual(callback.num_call, 1)
         self.assertEqual(callback.config, config)
 
-    @unittest.mock.patch.object(
-        smac.facade.smac_ac_facade.Intensifier, "process_results"
-    )
+    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, "process_results")
     def test_incorporate_run_results_callback_stop_loop(self, process_results_mock):
         def target(x):
             return 5

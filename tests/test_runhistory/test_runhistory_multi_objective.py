@@ -2,13 +2,13 @@ import os
 import pickle
 import tempfile
 import unittest
-import pytest
 
+import pytest
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.tae import StatusType
 from smac.runhistory.runhistory import RunHistory
+from smac.tae import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -129,9 +129,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             )
 
         self.assertEqual(len(rh.data), 1)
-        self.assertEqual(
-            len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1
-        )
+        self.assertEqual(len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1)
         self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
 
         # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default

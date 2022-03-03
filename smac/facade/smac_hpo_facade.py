@@ -1,10 +1,10 @@
 import typing
 
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
-from smac.optimizer.acquisition import LogEI
 from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
+from smac.optimizer.acquisition import LogEI
+from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -65,9 +65,7 @@ class SMAC4HPO(SMAC4AC):
             # == static RF settings
             model_kwargs = kwargs.get("model_kwargs", dict())
             model_kwargs["num_trees"] = model_kwargs.get("num_trees", 10)
-            model_kwargs["do_bootstrapping"] = model_kwargs.get(
-                "do_bootstrapping", True
-            )
+            model_kwargs["do_bootstrapping"] = model_kwargs.get("do_bootstrapping", True)
             model_kwargs["ratio_features"] = model_kwargs.get("ratio_features", 1.0)
             model_kwargs["min_samples_split"] = model_kwargs.get("min_samples_split", 2)
             model_kwargs["min_samples_leaf"] = model_kwargs.get("min_samples_leaf", 1)
@@ -76,17 +74,11 @@ class SMAC4HPO(SMAC4AC):
 
         # == Acquisition function
         kwargs["acquisition_function"] = kwargs.get("acquisition_function", LogEI)
-        kwargs["runhistory2epm"] = kwargs.get(
-            "runhistory2epm", RunHistory2EPM4LogScaledCost
-        )
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
 
         # assumes random chooser for random configs
-        random_config_chooser_kwargs = kwargs.get(
-            "random_configuration_chooser_kwargs", dict()
-        )
-        random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get(
-            "prob", 0.2
-        )
+        random_config_chooser_kwargs = kwargs.get("random_configuration_chooser_kwargs", dict())
+        random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.2)
         kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
 
         # better improve acquisition function optimization
@@ -95,9 +87,7 @@ class SMAC4HPO(SMAC4AC):
             "acquisition_function_optimizer_kwargs", dict()
         )
         acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
-        kwargs[
-            "acquisition_function_optimizer_kwargs"
-        ] = acquisition_function_optimizer_kwargs
+        kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
 
         super().__init__(**kwargs)
         self.logger.info(self.__class__)

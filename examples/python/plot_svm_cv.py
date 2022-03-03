@@ -12,12 +12,16 @@ processed by the :term:`TAE`.
 """
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
 from ConfigSpace.conditions import InCondition
-from ConfigSpace.hyperparameters import \
-    CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+)
 from sklearn import svm, datasets
 from sklearn.model_selection import cross_val_score
 
@@ -34,7 +38,7 @@ iris = datasets.load_iris()
 
 
 def svm_from_cfg(cfg):
-    """ Creates a SVM based on a configuration and evaluates it on the
+    """Creates a SVM based on a configuration and evaluates it on the
     iris-dataset using cross-validation. Note here random seed is fixed
 
     Parameters:
@@ -67,9 +71,8 @@ if __name__ == "__main__":
 
     # We define a few possible types of SVM-kernels and add them as "kernel" to our cs
     kernel = CategoricalHyperparameter(
-        "kernel",
-        ["linear", "rbf", "poly", "sigmoid"],
-        default_value="poly")
+        "kernel", ["linear", "rbf", "poly", "sigmoid"], default_value="poly"
+    )
     cs.add_hyperparameter(kernel)
 
     # There are some hyperparameters shared by all kernels
@@ -79,9 +82,9 @@ if __name__ == "__main__":
 
     # Others are kernel-specific, so we can add conditions to limit the searchspace
     degree = UniformIntegerHyperparameter(
-        "degree", 1, 5, default_value=3)  # Only used by kernel poly
-    coef0 = UniformFloatHyperparameter(
-        "coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
+        "degree", 1, 5, default_value=3
+    )  # Only used by kernel poly
+    coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
     cs.add_hyperparameters([degree, coef0])
 
     use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
@@ -92,7 +95,8 @@ if __name__ == "__main__":
     # from a range of numbers
     # For example, gamma can be either "auto" or a fixed float
     gamma = CategoricalHyperparameter(
-        "gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
+        "gamma", ["auto", "value"], default_value="auto"
+    )  # only rbf, poly, sigmoid
     gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
     cs.add_hyperparameters([gamma, gamma_value])
     # We only activate gamma_value if gamma is set to "value"
@@ -101,11 +105,14 @@ if __name__ == "__main__":
     cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
 
     # Scenario object
-    scenario = Scenario({
-        "run_obj": "quality",  # we optimize quality (alternatively runtime)
-        "runcount-limit": 50,  # max. number of function evaluations
-        "cs": cs,  # configuration space
-        "deterministic": True})
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternatively runtime)
+            "runcount-limit": 50,  # max. number of function evaluations
+            "cs": cs,  # configuration space
+            "deterministic": True,
+        }
+    )
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -114,9 +121,7 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4HPO(scenario=scenario,
-                    rng=np.random.RandomState(42),
-                    tae_runner=svm_from_cfg)
+    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42), tae_runner=svm_from_cfg)
 
     incumbent = smac.optimize()
 
@@ -125,7 +130,8 @@ if __name__ == "__main__":
 
     # We can also validate our results (though this makes a lot more sense with instances)
     smac.validate(
-        config_mode='inc',  # We can choose which configurations to evaluate
+        config_mode="inc",  # We can choose which configurations to evaluate
         # instance_mode='train+test',  # Defines what instances to validate
         repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
-        n_jobs=1)  # How many cores to use in parallel for optimization
+        n_jobs=1,
+    )  # How many cores to use in parallel for optimization

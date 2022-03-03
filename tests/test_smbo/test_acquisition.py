@@ -5,12 +5,12 @@ import numpy as np
 
 from smac.optimizer.acquisition import (
     EI,
-    LogEI,
     EIPS,
-    PI,
     LCB,
+    PI,
     TS,
     IntegratedAcquisitionFunction,
+    LogEI,
 )
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -18,7 +18,6 @@ __license__ = "3-clause BSD"
 
 
 class ConfigurationMock(object):
-
     def __init__(self, values=None):
         self.values = values
         self.configuration_space = unittest.mock.MagicMock()
@@ -34,8 +33,9 @@ class MockModel(object):
         self.seed = seed
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)),\
-            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape(
+            (-1, 1)
+        ), np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1))
 
 
 class MockModelDual(object):
@@ -43,8 +43,9 @@ class MockModelDual(object):
         self.num_targets = num_targets
 
     def predict_marginalized_over_instances(self, X):
-        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), \
-            np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape(
+            (-1, 2)
+        ), np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2))
 
 
 class MockModelRNG(MockModel):
@@ -61,8 +62,8 @@ class MockModelSampler(MockModelRNG):
         self.rng = np.random.RandomState(seed)
 
     def sample_functions(self, X, n_funcs=1):
-        m = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
-        var = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, ))
+        m = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1,))
+        var = np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1,))
         var = np.diag(var)
         return self.rng.multivariate_normal(m, var, n_funcs).T
 
@@ -73,14 +74,14 @@ class TestAcquisitionFunction(unittest.TestCase):
         self.acq = EI(model=self.model)
 
     def test_update_model_and_eta(self):
-        model = 'abc'
+        model = "abc"
         self.assertIsNone(self.acq.eta)
         self.acq.update(model=model, eta=0.1)
         self.assertEqual(self.acq.model, model)
         self.assertEqual(self.acq.eta, 0.1)
 
     def test_update_other(self):
-        self.acq.other = 'other'
+        self.acq.other = "other"
 
         with self.assertRaisesRegex(
             ValueError,
@@ -89,9 +90,9 @@ class TestAcquisitionFunction(unittest.TestCase):
         ):
             self.acq.update(other=None)
 
-        model = 'abc'
+        model = "abc"
         self.acq.update(model=model, eta=0.1, other=None)
-        self.assertEqual(self.acq.other, 'other')
+        self.assertEqual(self.acq.other, "other")
 
 
 class TestIntegratedAcquisitionFunction(unittest.TestCase):
@@ -108,13 +109,13 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
 
         with self.assertRaisesRegex(
             ValueError,
-            'IntegratedAcquisitionFunction requires at least one model to integrate!',
+            "IntegratedAcquisitionFunction requires at least one model to integrate!",
         ):
             iaf.update(model=MockModel())
 
         with self.assertRaisesRegex(
             ValueError,
-            'IntegratedAcquisitionFunction requires at least one model to integrate!',
+            "IntegratedAcquisitionFunction requires at least one model to integrate!",
         ):
             self.model.models = []
             iaf.update(model=self.model)
@@ -122,7 +123,7 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
     def test_compute(self):
         class CountingMock:
             counter = 0
-            long_name = 'CountingMock'
+            long_name = "CountingMock"
 
             def _compute(self, *args, **kwargs):
                 self.counter += 1
@@ -151,7 +152,10 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
             rval = iaf(configurations)
             self.assertEqual(rval.shape, (1, 1))
 
-            configurations = [ConfigurationMock([1.0, 1.0, 1.0]), ConfigurationMock([1.0, 2.0, 3.0])]
+            configurations = [
+                ConfigurationMock([1.0, 1.0, 1.0]),
+                ConfigurationMock([1.0, 2.0, 3.0]),
+            ]
             rval = iaf(configurations)
             self.assertEqual(rval.shape, (2, 1))
 
@@ -170,9 +174,11 @@ class TestEI(unittest.TestCase):
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
-        configurations = ([ConfigurationMock([0.0, 0.0, 0.0]),
-                           ConfigurationMock([0.1, 0.1, 0.1]),
-                           ConfigurationMock([1.0, 1.0, 1.0])])
+        configurations = [
+            ConfigurationMock([0.0, 0.0, 0.0]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 0.0)
@@ -188,9 +194,11 @@ class TestEI(unittest.TestCase):
 
     def test_Nx1(self):
         self.ei.update(model=self.model, eta=1.0)
-        configurations = [ConfigurationMock([0.0001]),
-                          ConfigurationMock([1.0]),
-                          ConfigurationMock([2.0])]
+        configurations = [
+            ConfigurationMock([0.0001]),
+            ConfigurationMock([1.0]),
+            ConfigurationMock([2.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 0.9999)
@@ -236,9 +244,11 @@ class TestLogEI(unittest.TestCase):
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
-        configurations = [ConfigurationMock([0.1, 0.0, 0.0]),
-                          ConfigurationMock([0.1, 0.1, 0.1]),
-                          ConfigurationMock([1.0, 1.0, 1.0])]
+        configurations = [
+            ConfigurationMock([0.1, 0.0, 0.0]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 1.6670107375002425)
@@ -253,7 +263,7 @@ class TestPI(unittest.TestCase):
 
     def test_1xD(self):
         self.ei.update(model=self.model, eta=1.0)
-        configurations = [ConfigurationMock([.5, .5, .5])]
+        configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 0.7602499389065233)
@@ -267,9 +277,11 @@ class TestPI(unittest.TestCase):
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0)
-        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
-                           ConfigurationMock([0.1, 0.1, 0.1]),
-                           ConfigurationMock([1.0, 1.0, 1.0])])
+        configurations = [
+            ConfigurationMock([0.0001, 0.0001, 0.0001]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 1.0)
@@ -284,12 +296,12 @@ class TestLCB(unittest.TestCase):
 
     def test_1xD(self):
         self.ei.update(model=self.model, eta=1.0, par=1, num_data=3)
-        configurations = [ConfigurationMock([.5, .5, .5])]
+        configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 1.315443985917585)
         self.ei.update(model=self.model, eta=1.0, par=1, num_data=100)
-        configurations = [ConfigurationMock([.5, .5, .5])]
+        configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], 2.7107557771721433)
@@ -307,9 +319,11 @@ class TestLCB(unittest.TestCase):
 
     def test_NxD(self):
         self.ei.update(model=self.model, eta=1.0, num_data=100)
-        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
-                           ConfigurationMock([0.1, 0.1, 0.1]),
-                           ConfigurationMock([1.0, 1.0, 1.0])])
+        configurations = [
+            ConfigurationMock([0.0001, 0.0001, 0.0001]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], 0.045306943655446116)
@@ -325,16 +339,18 @@ class TestTS(unittest.TestCase):
 
     def test_1xD(self):
         self.ei.update(model=self.model)
-        configurations = [ConfigurationMock([.5, .5, .5])]
+        configurations = [ConfigurationMock([0.5, 0.5, 0.5])]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (1, 1))
         self.assertAlmostEqual(acq[0][0], -1.74737338)
 
     def test_NxD(self):
         self.ei.update(model=self.model)
-        configurations = ([ConfigurationMock([0.0001, 0.0001, 0.0001]),
-                           ConfigurationMock([0.1, 0.1, 0.1]),
-                           ConfigurationMock([1.0, 1.0, 1.0])])
+        configurations = [
+            ConfigurationMock([0.0001, 0.0001, 0.0001]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
         acq = self.ei(configurations)
         self.assertEqual(acq.shape, (3, 1))
         self.assertAlmostEqual(acq[0][0], -0.00988738)
