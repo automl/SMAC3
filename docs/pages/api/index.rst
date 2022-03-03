@@ -8,15 +8,15 @@ This page gives an overview of all public SMAC objects, functions and methods.
 .. toctree::
     :maxdepth: 1
 
-    ../../apidoc/smac.facade
-    ../../apidoc/smac.optimizer
-    ../../apidoc/smac.initial_design
-    ../../apidoc/smac.intensification
-    ../../apidoc/smac.runhistory
-    ../../apidoc/smac.scenario
-    ../../apidoc/smac.tae
-    ../../apidoc/smac.epm
-    ../../apidoc/smac.smac_cli
-    ../../apidoc/smac.callbacks
-    ../../apidoc/smac.stats
-    ../../apidoc/smac.utils
+    ../../api/smac.facade
+    ../../api/smac.optimizer
+    ../../api/smac.initial_design
+    ../../api/smac.intensification
+    ../../api/smac.runhistory
+    ../../api/smac.scenario
+    ../../api/smac.tae
+    ../../api/smac.epm
+    ../../api/smac.smac_cli
+    ../../api/smac.callbacks
+    ../../api/smac.stats
+    ../../api/smac.utils
