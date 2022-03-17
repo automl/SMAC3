@@ -38,7 +38,7 @@ class TaeHydra(unittest.TestCase):
         eta = ExecuteTARunHydra(
             cost_oracle=self.oracle,
             tae=ExecuteTARunAClib,
-            ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 1"),
+            ta=shlex.split("python tests/test_tae/dummy_ta_wrapper_aclib.py 1"),
             stats=stats,
         )
         status, cost, runtime, ar_info = eta.run(config={}, instance="inst", cutoff=10)
@@ -51,7 +51,7 @@ class TaeHydra(unittest.TestCase):
         eta = ExecuteTARunHydra(
             cost_oracle=self.oracle,
             tae=ExecuteTARunAClib,
-            ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"),
+            ta=shlex.split("python tests/test_tae/dummy_ta_wrapper_aclib.py 2"),
             stats=stats,
         )
         status, cost, runtime, ar_info = eta.run(config={}, instance="inst", cutoff=10)
@@ -64,7 +64,7 @@ class TaeHydra(unittest.TestCase):
         eta = ExecuteTARunHydra(
             cost_oracle=self.oracle,
             tae=ExecuteTARunAClib,
-            ta=shlex.split("python test/test_tae/dummy_ta_wrapper_aclib.py 2"),
+            ta=shlex.split("python tests/test_tae/dummy_ta_wrapper_aclib.py 2"),
             stats=stats,
             run_obj="quality",
         )
