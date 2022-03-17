@@ -59,9 +59,9 @@ class ROAR(SMAC4AC):
         cannot be used together with initial_design
     stats: Stats
         optional stats object
-    rng: np.random.RandomState
+    rng: Optional[int, np.random.RandomState]
         Random number generator
-    run_id: int, (default: 1)
+    run_id: Optional[int]
         Run ID will be used as subfolder for output_dir.
     dask_client : dask.distributed.Client
         User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
@@ -95,8 +95,8 @@ class ROAR(SMAC4AC):
                  initial_design_kwargs: typing.Optional[dict] = None,
                  initial_configurations: typing.List[Configuration] = None,
                  stats: Stats = None,
-                 rng: np.random.RandomState = None,
-                 run_id: int = 1,
+                 rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
+                 run_id: typing.Optional[int] = None,
                  dask_client: typing.Optional[dask.distributed.Client] = None,
                  n_jobs: typing.Optional[int] = 1,
                  ):
