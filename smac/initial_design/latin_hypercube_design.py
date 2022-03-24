@@ -1,9 +1,9 @@
 import typing
 
-from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import LatinHypercube
 
+from ConfigSpace.configuration_space import Configuration
+from ConfigSpace.hyperparameters import Constant
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"

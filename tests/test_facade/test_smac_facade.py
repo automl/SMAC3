@@ -5,9 +5,9 @@ import unittest.mock
 from contextlib import suppress
 
 import numpy as np
+
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
-
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM

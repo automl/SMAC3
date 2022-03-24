@@ -3,13 +3,13 @@ import unittest
 import unittest.mock
 
 import numpy as np
+from scipy.spatial.distance import euclidean
+
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from scipy.spatial.distance import euclidean
-
 from smac.configspace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch

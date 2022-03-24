@@ -12,8 +12,8 @@ import time
 from collections import defaultdict
 
 import numpy as np
-from ConfigSpace.configuration_space import Configuration
 
+from ConfigSpace.configuration_space import Configuration
 from smac.epm.util_funcs import get_rng
 from smac.facade.experimental.psmac_facade import PSMAC
 from smac.facade.smac_ac_facade import SMAC4AC

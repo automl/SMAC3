@@ -2,8 +2,8 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 
+from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.initial_design.sobol_design import SobolDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

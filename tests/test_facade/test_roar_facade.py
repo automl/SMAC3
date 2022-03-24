@@ -3,8 +3,8 @@ import unittest
 from contextlib import suppress
 
 import numpy as np
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.facade.roar_facade import ROAR
 from smac.scenario.scenario import Scenario

@@ -4,9 +4,9 @@ import time
 import unittest
 
 import numpy as np
+
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.intensification import Intensifier, IntensifierStage

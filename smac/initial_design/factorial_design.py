@@ -1,6 +1,7 @@
 import itertools
 
 import numpy as np
+
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
@@ -9,7 +10,6 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import deactivate_inactive_hyperparameters
-
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"

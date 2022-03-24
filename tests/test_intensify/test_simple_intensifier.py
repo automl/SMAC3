@@ -2,9 +2,9 @@ import time
 import unittest
 
 import numpy as np
+
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue

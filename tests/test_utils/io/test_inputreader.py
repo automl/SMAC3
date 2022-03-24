@@ -3,7 +3,6 @@ import os
 import unittest
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-
 from smac.configspace import ConfigurationSpace, pcs
 from smac.utils.io.input_reader import InputReader
 from smac.utils.io.output_writer import OutputWriter

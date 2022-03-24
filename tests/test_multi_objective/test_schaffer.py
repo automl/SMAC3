@@ -4,9 +4,9 @@ __license__ = "3-clause BSD"
 import unittest
 
 import numpy as np
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from matplotlib import pyplot as plt
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_bb_facade import SMAC4BB
