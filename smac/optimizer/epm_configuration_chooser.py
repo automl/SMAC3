@@ -66,9 +66,7 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(
-            2.0
-        ),
+        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
     ):
@@ -137,9 +135,7 @@ class EPMChooser(object):
         )
 
     def _get_evaluated_configs(self) -> typing.List[Configuration]:
-        return self.runhistory.get_all_configs_per_budget(
-            budget_subset=self.currently_considered_budgets
-        )
+        return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
     def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The
@@ -164,9 +160,7 @@ class EPMChooser(object):
         if X.shape[0] == 0:
             # Only return a single point to avoid an overly high number of
             # random search iterations
-            return self._random_search.maximize(
-                runhistory=self.runhistory, stats=self.stats, num_points=1
-            )
+            return self._random_search.maximize(runhistory=self.runhistory, stats=self.stats, num_points=1)
         self.model.train(X, Y)
 
         if incumbent_value is not None:
@@ -174,9 +168,7 @@ class EPMChooser(object):
             x_best_array = None  # type: typing.Optional[np.ndarray]
         else:
             if self.runhistory.empty():
-                raise ValueError(
-                    "Runhistory is empty and the cost value of " "the incumbent is unknown."
-                )
+                raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
             x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
 
         self.acquisition_func.update(
@@ -228,9 +220,7 @@ class EPMChooser(object):
             best_observation = costs[0][0]
             # won't need log(y) if EPM was already trained on log(y)
         else:
-            all_configs = self.runhistory.get_all_configs_per_budget(
-                budget_subset=self.currently_considered_budgets
-            )
+            all_configs = self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
             x_best = self.incumbent
             x_best_array = convert_configurations_to_array(all_configs)
             best_observation = self.runhistory.get_cost(x_best)

@@ -84,9 +84,7 @@ InstSeedKey = collections.namedtuple("InstSeedKey", ["instance", "seed"])
 
 InstSeedBudgetKey = collections.namedtuple("InstSeedBudgetKey", ["instance", "seed", "budget"])
 
-RunValue = collections.namedtuple(
-    "RunValue", ["cost", "time", "status", "starttime", "endtime", "additional_info"]
-)
+RunValue = collections.namedtuple("RunValue", ["cost", "time", "status", "starttime", "endtime", "additional_info"])
 
 
 class EnumEncoder(json.JSONEncoder):
@@ -249,8 +247,7 @@ class RunHistory(object):
             raise TypeError("Configuration to add to the runhistory must not be None")
         elif not isinstance(config, Configuration):
             raise TypeError(
-                "Configuration to add to the runhistory is not of type Configuration, but %s"
-                % type(config)
+                "Configuration to add to the runhistory is not of type Configuration, but %s" % type(config)
             )
 
         # Squeeze is important to reduce arrays with one element
@@ -272,8 +269,7 @@ class RunHistory(object):
         else:
             if np.size(cost) != self.num_obj:
                 raise ValueError(
-                    f"Cost is not of the same length ({np.size(cost)}) as the number "
-                    f"of objectives ({self.num_obj})"
+                    f"Cost is not of the same length ({np.size(cost)}) as the number " f"of objectives ({self.num_obj})"
                 )
 
         k = RunKey(config_id, instance_id, seed, budget)
@@ -303,11 +299,7 @@ class RunHistory(object):
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs
             self._add(k, v, status, origin)
-        elif (
-            status == StatusType.CAPPED
-            and self.data[k].status == StatusType.CAPPED
-            and cost > self.data[k].cost
-        ):
+        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
             # overwrite if censored with a larger cutoff
             self._add(k, v, status, origin)
 
@@ -324,8 +316,7 @@ class RunHistory(object):
         except Exception as e:
             raise ValueError(
                 "Cannot add %s: %s of type %s to runhistory because it raises an error during JSON encoding, "
-                "please see the error above.\nRunKey: %s\nRunValue %s"
-                % (key, str(obj), type(obj), runkey, runvalue)
+                "please see the error above.\nRunKey: %s\nRunValue %s" % (key, str(obj), type(obj), runkey, runvalue)
             ) from e
 
     def _update_objective_bounds(self) -> None:
@@ -371,9 +362,7 @@ class RunHistory(object):
         ) and status not in [StatusType.CAPPED, StatusType.RUNNING]:
             # also add to fast data structure
             is_k = InstSeedKey(k.instance_id, k.seed)
-            self._configid_to_inst_seed_budget[
-                k.config_id
-            ] = self._configid_to_inst_seed_budget.get(k.config_id, {})
+            self._configid_to_inst_seed_budget[k.config_id] = self._configid_to_inst_seed_budget.get(k.config_id, {})
             if is_k not in self._configid_to_inst_seed_budget[k.config_id].keys():
                 # add new inst-seed-key with budget to main dict
                 self._configid_to_inst_seed_budget[k.config_id][is_k] = [k.budget]
@@ -408,20 +397,14 @@ class RunHistory(object):
         """
         config_id = self.config_ids[config]
         # removing duplicates while keeping the order
-        inst_seed_budgets = list(
-            dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True))
-        )
+        inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
         self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
-        all_inst_seed_budgets = list(
-            dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False))
-        )
+        all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
-    def incremental_update_cost(
-        self, config: Configuration, cost: Union[np.ndarray, list, float, int]
-    ) -> None:
+    def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a
         moving average;
 
@@ -460,9 +443,7 @@ class RunHistory(object):
         config_id = self.config_ids.get(config)
         return self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
-    def get_runs_for_config(
-        self, config: Configuration, only_max_observed_budget: bool
-    ) -> List[InstSeedBudgetKey]:
+    def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> List[InstSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
 
         Note
@@ -488,9 +469,7 @@ class RunHistory(object):
                 runs[k] = [max(v)]
 
         # convert to inst-seed-budget key
-        rval = [
-            InstSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v
-        ]
+        rval = [InstSeedBudgetKey(k.instance, k.seed, budget) for k, v in runs.items() for budget in v]
         return rval
 
     def get_all_configs(self) -> List[Configuration]:
@@ -580,9 +559,7 @@ class RunHistory(object):
         ]
         config_ids_to_serialize = set([entry[0][0] for entry in data])
         configs = {
-            id_: conf.get_dictionary()
-            for id_, conf in self.ids_config.items()
-            if id_ in config_ids_to_serialize
+            id_: conf.get_dictionary() for id_, conf in self.ids_config.items() if id_ in config_ids_to_serialize
         }
         config_origins = {
             id_: conf.origin
@@ -615,8 +592,7 @@ class RunHistory(object):
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
         except Exception as e:
             self.logger.warning(
-                "Encountered exception %s while reading runhistory from %s. "
-                "Not adding any runs!",
+                "Encountered exception %s while reading runhistory from %s. " "Not adding any runs!",
                 e,
                 fn,
             )
@@ -745,9 +721,7 @@ class RunHistory(object):
             return []
 
         if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_runs_for_config(
-                config, only_max_observed_budget=True
-            )
+            instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
 
         costs = []
         for i, r, b in instance_seed_budget_keys:
@@ -871,13 +845,9 @@ class RunHistory(object):
         self.num_runs_per_config = {}
         for config, config_id in self.config_ids.items():
             # removing duplicates while keeping the order
-            inst_seed_budgets = list(
-                dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True))
-            )
+            inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
             if instances is not None:
-                inst_seed_budgets = list(
-                    filter(lambda x: x.instance in cast(List, instances), inst_seed_budgets)
-                )
+                inst_seed_budgets = list(filter(lambda x: x.instance in cast(List, instances), inst_seed_budgets))
 
             if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
                 self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)

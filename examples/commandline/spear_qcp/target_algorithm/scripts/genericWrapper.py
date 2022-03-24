@@ -192,9 +192,7 @@ class AbstractWrapper(object):
                                              quality: <integer>
                                              misc: <string>""",
             )
-            self.parser.add_argument(
-                "--help", dest="show_help", default=False, type=bool, help="shows help"
-            )
+            self.parser.add_argument("--help", dest="show_help", default=False, type=bool, help="shows help")
 
             # Process arguments
             self.args, target_args = self.parser.parse_cmd(sys.argv[1:])
@@ -207,11 +205,7 @@ class AbstractWrapper(object):
                 self._exit_code = 1
                 sys.exit(1)
 
-            if (
-                args.runsolver != "None"
-                and not os.path.isfile(args.runsolver)
-                and not args.internal
-            ):
+            if args.runsolver != "None" and not os.path.isfile(args.runsolver) and not args.internal:
                 self._ta_status = "ABORT"
                 self._ta_misc = "runsolver is missing - should have been at %s." % (args.runsolver)
                 self._exit_code = 1
@@ -228,9 +222,7 @@ class AbstractWrapper(object):
 
             if not os.path.isdir(args.tmp_dir):
                 self._ta_status = "ABORT"
-                self._ta_misc = "temp directory is missing - should have been at %s." % (
-                    args.tmp_dir
-                )
+                self._ta_misc = "temp directory is missing - should have been at %s." % (args.tmp_dir)
                 self._exit_code = 1
                 sys.exit(1)
             else:
@@ -290,9 +282,7 @@ class AbstractWrapper(object):
                     ext_call=args.ext_parsing,
                 )
             else:
-                resultMap = self.process_results(
-                    self._solver_file, {"exit_code": self._ta_exit_code}
-                )
+                resultMap = self.process_results(self._solver_file, {"exit_code": self._ta_exit_code})
 
             if "status" in resultMap:
                 self._ta_status = self.RESULT_MAPPING.get(resultMap["status"], resultMap["status"])
@@ -339,10 +329,7 @@ class AbstractWrapper(object):
         params = arg_list[5:]
         if (len(params) / 2) * 2 != len(params):
             self._ta_status = "ABORT"
-            self._ta_misc = (
-                "target algorithm parameter list MUST have even length, found %d arguments."
-                % (len(params))
-            )
+            self._ta_misc = "target algorithm parameter list MUST have even length, found %d arguments." % (len(params))
             self.print_d(" ".join(params))
             self._exit_code = 1
             sys.exit(1)
@@ -447,14 +434,10 @@ class AbstractWrapper(object):
         self.print_d("Reading runsolver output from %s" % (self._watcher_file.name))
         data = str(self._watcher_file.read())
 
-        if re.search("runsolver_max_cpu_time_exceeded", data) or re.search(
-            "Maximum CPU time exceeded", data
-        ):
+        if re.search("runsolver_max_cpu_time_exceeded", data) or re.search("Maximum CPU time exceeded", data):
             self._ta_status = "TIMEOUT"
 
-        if re.search("runsolver_max_memory_limit_exceeded", data) or re.search(
-            "Maximum VSize exceeded", data
-        ):
+        if re.search("runsolver_max_memory_limit_exceeded", data) or re.search("Maximum VSize exceeded", data):
             self._ta_status = "TIMEOUT"
             self._ta_misc = "memory limit was exceeded"
 
@@ -596,9 +579,7 @@ class AbstractWrapper(object):
             A command call list to execute the command producing a single line of output containing the solver command
             string
         """
-        callstring_in = NamedTemporaryFile(
-            suffix=".csv", prefix="callstring", dir=self._tmp_dir, delete=False
-        )
+        callstring_in = NamedTemporaryFile(suffix=".csv", prefix="callstring", dir=self._tmp_dir, delete=False)
         callstring_in.write("%s\n" % (runargs["instance"]))
         callstring_in.write("%d\n" % (runargs["seed"]))
         for name, value in config.items():
@@ -620,16 +601,12 @@ class AbstractWrapper(object):
             out_, _ = io.communicate()
             self._subprocesses.remove(io)
         except OSError:
-            self._ta_misc = "failed to run external program for output parsing : %s" % (
-                " ".join(cmd)
-            )
+            self._ta_misc = "failed to run external program for output parsing : %s" % (" ".join(cmd))
             self._ta_runtime = self._cutoff
             self._exit_code = 2
             sys.exit(2)
         if not out_:
-            self._ta_misc = "external program for output parsing yielded empty output: %s" % (
-                " ".join(cmd)
-            )
+            self._ta_misc = "external program for output parsing yielded empty output: %s" % (" ".join(cmd))
             self._ta_runtime = self._cutoff
             self._exit_code = 2
             sys.exit(2)
@@ -754,9 +731,7 @@ class OArgumentParser(object):
         print("")
         print("Help:")
         for name_, dict_ in self.options.items():
-            print(
-                "\t %-20s \t %s (default: %s)" % (name_, str(dict_["help"]), str(dict_["default"]))
-            )
+            print("\t %-20s \t %s (default: %s)" % (name_, str(dict_["help"]), str(dict_["default"])))
         print("")
         sys.exit(0)
 

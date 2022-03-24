@@ -69,9 +69,7 @@ class RunhistoryTest(unittest.TestCase):
     def test_illegal_input(self):
         rh = RunHistory()
 
-        with self.assertRaisesRegex(
-            TypeError, "Configuration to add to the runhistory must not be None"
-        ):
+        with self.assertRaisesRegex(TypeError, "Configuration to add to the runhistory must not be None"):
             rh.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
 
         with self.assertRaisesRegex(

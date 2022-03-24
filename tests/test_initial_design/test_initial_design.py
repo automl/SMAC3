@@ -20,9 +20,7 @@ __license__ = "3-clause BSD"
 class TestSingleInitialDesign(unittest.TestCase):
     def setUp(self):
         self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(
-            UniformFloatHyperparameter(name="x1", lower=1, upper=10, default_value=1)
-        )
+        self.cs.add_hyperparameter(UniformFloatHyperparameter(name="x1", lower=1, upper=10, default_value=1))
         self.scenario = Scenario(
             {
                 "cs": self.cs,

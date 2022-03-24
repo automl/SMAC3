@@ -98,9 +98,7 @@ def sgd_from_cfg(cfg, seed, instance):
         # get instance
         data, target = generate_instances(int(instance[0]), int(instance[1]))
 
-        cv = StratifiedKFold(
-            n_splits=4, random_state=seed, shuffle=True
-        )  # to make CV splits consistent
+        cv = StratifiedKFold(n_splits=4, random_state=seed, shuffle=True)  # to make CV splits consistent
         scores = cross_val_score(clf, data, target, cv=cv)
 
     return 1 - np.mean(scores)

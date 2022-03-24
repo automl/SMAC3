@@ -93,9 +93,7 @@ class ROAR(SMAC4AC):
         runhistory: RunHistory = None,
         intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
         intensifier_kwargs: typing.Optional[typing.Dict] = None,
-        acquisition_function_optimizer: typing.Optional[
-            typing.Type[AcquisitionFunctionMaximizer]
-        ] = None,
+        acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
         acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
         initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
         initial_design_kwargs: typing.Optional[dict] = None,

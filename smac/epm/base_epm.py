@@ -126,19 +126,12 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != self.n_params + self.n_feats:
-            raise ValueError(
-                "Feature mismatch: X should have %d features, but has %d"
-                % (self.n_params, X.shape[1])
-            )
+            raise ValueError("Feature mismatch: X should have %d features, but has %d" % (self.n_params, X.shape[1]))
         if X.shape[0] != Y.shape[0]:
             raise ValueError("X.shape[0] (%s) != y.shape[0] (%s)" % (X.shape[0], Y.shape[0]))
 
         # reduce dimensionality of features of larger than PCA_DIM
-        if (
-            self.pca_components
-            and X.shape[0] > self.pca.n_components
-            and self.n_feats >= self.pca_components
-        ):
+        if self.pca_components and X.shape[0] > self.pca.n_components and self.n_feats >= self.pca_components:
             X_feats = X[:, -self.n_feats :]
             # scale features
             X_feats = self.scaler.fit_transform(X_feats)
@@ -208,8 +201,7 @@ class AbstractEPM(object):
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != self.n_params + self.n_feats:
             raise ValueError(
-                "Rows in X should have %d entries but have %d!"
-                % (self.n_params + self.n_feats, X.shape[1])
+                "Rows in X should have %d entries but have %d!" % (self.n_params + self.n_feats, X.shape[1])
             )
 
         if self._apply_pca:
@@ -222,14 +214,10 @@ class AbstractEPM(object):
                 pass  # PCA not fitted if only one training sample
 
         if X.shape[1] != len(self.types):
-            raise ValueError(
-                "Rows in X should have %d entries but have %d!" % (len(self.types), X.shape[1])
-            )
+            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.types), X.shape[1]))
 
         with warnings.catch_warnings():
-            warnings.filterwarnings(
-                "ignore", "Predicted variances smaller than 0. Setting those variances to 0."
-            )
+            warnings.filterwarnings("ignore", "Predicted variances smaller than 0. Setting those variances to 0.")
             mean, var = self._predict(X, cov_return_type)
 
         if len(mean.shape) == 1:
@@ -261,9 +249,7 @@ class AbstractEPM(object):
         """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(
-        self, X: np.ndarray
-    ) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -285,9 +271,7 @@ class AbstractEPM(object):
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != len(self.bounds):
-            raise ValueError(
-                "Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1])
-            )
+            raise ValueError("Rows in X should have %d entries but have %d!" % (len(self.bounds), X.shape[1]))
 
         if self.instance_features is None or len(self.instance_features) == 0:
             mean, var = self.predict(X)

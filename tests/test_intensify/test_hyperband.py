@@ -54,9 +54,7 @@ class TestHyperband(unittest.TestCase):
         self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
         self.config5 = Configuration(self.cs, values={"a": 31, "b": 33})
 
-        self.scen = Scenario(
-            {"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""}
-        )
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -147,12 +145,8 @@ class TestHyperband(unittest.TestCase):
             # it is the correct one
 
             # First the expected one
-            self.assertEqual(
-                self.HB.intensifier_instances[i].process_results.call_args[1]["run_info"], run_info
-            )
-            self.assertEqual(
-                self.HB.intensifier_instances[i].process_results.call_args[1]["result"], result
-            )
+            self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["run_info"], run_info)
+            self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["result"], result)
             all_other_run_infos, all_other_results = [], []
             for j in range(len(self.HB.intensifier_instances)):
                 # Skip the expected_HB instance
@@ -164,9 +158,7 @@ class TestHyperband(unittest.TestCase):
                     all_other_run_infos.append(
                         self.HB.intensifier_instances[j].process_results.call_args[1]["run_info"]
                     )
-                    all_other_results.append(
-                        self.HB.intensifier_instances[j].process_results.call_args[1]["result"]
-                    )
+                    all_other_results.append(self.HB.intensifier_instances[j].process_results.call_args[1]["result"])
             self.assertNotIn(run_info, all_other_run_infos)
             self.assertNotIn(result, all_other_results)
 
@@ -433,9 +425,7 @@ class Test_Hyperband(unittest.TestCase):
         self.config2 = Configuration(self.cs, values={"a": 100, "b": 0})
         self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
 
-        self.scen = Scenario(
-            {"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""}
-        )
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -527,17 +517,11 @@ class Test_Hyperband(unittest.TestCase):
         # We track closely run execution through run_tracker, so this also
         # has to be update -- the fact that the succesive halving inside hyperband
         # processed the given configurations
-        self.rh.add(
-            config=self.config1, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=1
-        )
+        self.rh.add(config=self.config1, cost=1, time=1, status=StatusType.SUCCESS, seed=0, budget=1)
         intensifier.sh_intensifier.run_tracker[(self.config1, None, 0, 1)] = True
-        self.rh.add(
-            config=self.config2, cost=2, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5
-        )
+        self.rh.add(config=self.config2, cost=2, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
         intensifier.sh_intensifier.run_tracker[(self.config2, None, 0, 0.5)] = True
-        self.rh.add(
-            config=self.config3, cost=3, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5
-        )
+        self.rh.add(config=self.config3, cost=3, time=2, status=StatusType.SUCCESS, seed=0, budget=0.5)
         intensifier.sh_intensifier.run_tracker[(self.config3, None, 0, 0.5)] = True
 
         intensifier.sh_intensifier.success_challengers = {self.config2, self.config3}
@@ -649,14 +633,10 @@ class Test__Hyperband(unittest.TestCase):
                     self.assertIsInstance(c, int)
 
                 # all_budgets for SH is always a subset of all_budgets of HB
-                np.testing.assert_array_almost_equal(
-                    all_budgets[i % len(all_budgets) :], comp_budgets, decimal=5
-                )
+                np.testing.assert_array_almost_equal(all_budgets[i % len(all_budgets) :], comp_budgets, decimal=5)
 
                 # The content of these lists might differ
-                self.assertEqual(
-                    len(n_configs_in_stage[i % len(n_configs_in_stage) :]), len(comp_configs)
-                )
+                self.assertEqual(len(n_configs_in_stage[i % len(n_configs_in_stage) :]), len(comp_configs))
 
 
 if __name__ == "__main__":

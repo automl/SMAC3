@@ -95,10 +95,7 @@ class SMAC4BB(SMAC4AC):
             if len(cont_dims) > 0:
                 exp_kernel = Matern(
                     np.ones([len(cont_dims)]),
-                    [
-                        (np.exp(-6.754111155189306), np.exp(0.0858637988771976))
-                        for _ in range(len(cont_dims))
-                    ],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
                     nu=2.5,
                     operate_on=cont_dims,
                 )
@@ -106,10 +103,7 @@ class SMAC4BB(SMAC4AC):
             if len(cat_dims) > 0:
                 ham_kernel = HammingKernel(
                     np.ones([len(cat_dims)]),
-                    [
-                        (np.exp(-6.754111155189306), np.exp(0.0858637988771976))
-                        for _ in range(len(cat_dims))
-                    ],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cat_dims))],
                     operate_on=cat_dims,
                 )
 
@@ -166,9 +160,7 @@ class SMAC4BB(SMAC4AC):
                 )
                 or dict()
             )
-            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get(
-                "prob", 0.08447232371720552
-            )
+            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.08447232371720552)
             kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
 
         if kwargs.get("acquisition_function_optimizer") is None:

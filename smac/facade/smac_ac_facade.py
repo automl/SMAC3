@@ -264,9 +264,7 @@ class SMAC4AC(object):
             self.stats = Stats(scenario)
 
         if self.scenario.run_obj == "runtime" and not self.scenario.transform_y == "LOG":  # type: ignore[attr-defined] # noqa F821
-            self.logger.warning(
-                "Runtime as objective automatically activates log(y) transformation"
-            )
+            self.logger.warning("Runtime as objective automatically activates log(y) transformation")
             self.scenario.transform_y = "LOG"  # type: ignore[attr-defined] # noqa F821
 
         # initialize empty runhistory
@@ -298,8 +296,7 @@ class SMAC4AC(object):
             )
         elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
             raise ValueError(
-                "random_configuration_chooser has to be"
-                " a class or object of RandomConfigurationChooser"
+                "random_configuration_chooser has to be" " a class or object of RandomConfigurationChooser"
             )
 
         # reset random number generator in config space to draw different
@@ -350,13 +347,9 @@ class SMAC4AC(object):
         acquisition_function_instance = None  # type: Optional[AbstractAcquisitionFunction]
         if acquisition_function is None:
             if scenario.transform_y in ["LOG", "LOGS"]:  # type: ignore[attr-defined] # noqa F821
-                acquisition_function_instance = LogEI(
-                    **acq_def_kwargs  # type: ignore[arg-type] # noqa F821
-                )
+                acquisition_function_instance = LogEI(**acq_def_kwargs)  # type: ignore[arg-type] # noqa F821
             else:
-                acquisition_function_instance = EI(
-                    **acq_def_kwargs  # type: ignore[arg-type] # noqa F821
-                )
+                acquisition_function_instance = EI(**acq_def_kwargs)  # type: ignore[arg-type] # noqa F821
         elif inspect.isclass(acquisition_function):
             acquisition_function_instance = acquisition_function(**acq_def_kwargs)
         else:
@@ -385,9 +378,7 @@ class SMAC4AC(object):
             }.items():
                 if key not in acq_func_opt_kwargs:
                     acq_func_opt_kwargs[key] = value
-            acquisition_function_optimizer_instance = LocalAndSortedRandomSearch(
-                **acq_func_opt_kwargs  # type: ignore
-            )
+            acquisition_function_optimizer_instance = LocalAndSortedRandomSearch(**acq_func_opt_kwargs)  # type: ignore
         elif inspect.isclass(acquisition_function_optimizer):
             acquisition_function_optimizer_instance = acquisition_function_optimizer(  # type: ignore # noqa F821
                 **acq_func_opt_kwargs
@@ -444,9 +435,7 @@ class SMAC4AC(object):
         elif n_jobs > 0:
             _n_jobs = n_jobs
         else:
-            raise ValueError(
-                "Number of tasks must be positive, None or -1, but is %s" % str(n_jobs)
-            )
+            raise ValueError("Number of tasks must be positive, None or -1, but is %s" % str(n_jobs))
         if _n_jobs > 1 or dask_client is not None:
             tae_runner_instance = DaskParallelRunner(  # type: ignore
                 tae_runner_instance,
@@ -516,14 +505,9 @@ class SMAC4AC(object):
                     **_multi_objective_kwargs  # type: ignore[arg-type] # noqa F821
                 )
             elif inspect.isclass(multi_objective_algorithm):
-                multi_objective_algorithm_instance = multi_objective_algorithm(
-                    **_multi_objective_kwargs
-                )
+                multi_objective_algorithm_instance = multi_objective_algorithm(**_multi_objective_kwargs)
             else:
-                raise TypeError(
-                    "Multi-objective algorithm not recognized: %s"
-                    % (type(multi_objective_algorithm))
-                )
+                raise TypeError("Multi-objective algorithm not recognized: %s" % (type(multi_objective_algorithm)))
 
         # initial design
         if initial_design is not None and initial_configurations is not None:
@@ -558,8 +542,7 @@ class SMAC4AC(object):
                 initial_design_instance = SobolDesign(**init_design_def_kwargs)
             else:
                 raise ValueError(
-                    "Don't know what kind of initial_incumbent "
-                    "'%s' is" % scenario.initial_incumbent  # type: ignore
+                    "Don't know what kind of initial_incumbent " "'%s' is" % scenario.initial_incumbent  # type: ignore
                 )  # type: ignore[attr-defined] # noqa F821
         elif inspect.isclass(initial_design):
             initial_design_instance = initial_design(**init_design_def_kwargs)
@@ -620,10 +603,7 @@ class SMAC4AC(object):
                 }
             )
 
-        if (
-            isinstance(intensifier_instance, (SuccessiveHalving, Hyperband))
-            and scenario.run_obj == "quality"
-        ):
+        if isinstance(intensifier_instance, (SuccessiveHalving, Hyperband)) and scenario.run_obj == "quality":
             r2e_def_kwargs.update(
                 {
                     "success_states": [
@@ -710,10 +690,7 @@ class SMAC4AC(object):
 
             self.solver.stats.print_stats()
             self.logger.info("Final Incumbent: %s", self.solver.incumbent)
-            if (
-                self.solver.incumbent
-                and self.solver.incumbent in self.solver.runhistory.get_all_configs()
-            ):
+            if self.solver.incumbent and self.solver.incumbent in self.solver.runhistory.get_all_configs():
                 self.logger.info(
                     f"Estimated cost of incumbent: "
                     f"{format_array(self.solver.runhistory.get_cost(self.solver.incumbent))}"
@@ -762,9 +739,7 @@ class SMAC4AC(object):
             runhistory containing all specified runs
 
         """
-        return self.solver.validate(
-            config_mode, instance_mode, repetitions, use_epm, n_jobs, backend
-        )
+        return self.solver.validate(config_mode, instance_mode, repetitions, use_epm, n_jobs, backend)
 
     def get_tae_runner(self) -> BaseRunner:
         """
@@ -789,9 +764,7 @@ class SMAC4AC(object):
 
         """
         if not hasattr(self, "runhistory"):
-            raise ValueError(
-                "SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory."
-            )
+            raise ValueError("SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory.")
         return self.runhistory
 
     def get_trajectory(self) -> List[TrajEntry]:
@@ -805,9 +778,7 @@ class SMAC4AC(object):
 
         """
         if not hasattr(self, "trajectory"):
-            raise ValueError(
-                "SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory."
-            )
+            raise ValueError("SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory.")
         return self.trajectory
 
     def register_callback(self, callback: Callable) -> None:

@@ -7,9 +7,7 @@ __license__ = "3-clause BSD"
 if __name__ == "__main__":
 
     if sys.argv[1] == "1":
-        print(
-            """Result of this algorithm run: {"status": "TIMEOUT", "cost": 1.0, "runtime": 2.0}"""
-        )
+        print("""Result of this algorithm run: {"status": "TIMEOUT", "cost": 1.0, "runtime": 2.0}""")
 
     if sys.argv[1] == "2":
         print(

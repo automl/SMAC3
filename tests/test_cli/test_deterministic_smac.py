@@ -35,9 +35,7 @@ class TestDeterministicSMAC(unittest.TestCase):
 
     def ignore_timestamps(self, rh):
         for i, (k, val) in enumerate(rh["data"]):
-            rh["data"][i][1] = [
-                v for j, v in enumerate(val) if j not in [3, 4]
-            ]  # 3, 4 are start and end timestamps
+            rh["data"][i][1] = [v for j, v in enumerate(val) if j not in [3, 4]]  # 3, 4 are start and end timestamps
         return rh
 
     @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")

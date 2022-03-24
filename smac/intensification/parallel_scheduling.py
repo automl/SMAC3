@@ -307,9 +307,7 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _sort_instances_by_stage(
-        self, instances: typing.Dict[int, AbstractRacer]
-    ) -> typing.List[int]:
+    def _sort_instances_by_stage(self, instances: typing.Dict[int, AbstractRacer]) -> typing.List[int]:
         """
         This procedure dictates what SH to prioritize in
         launching jobs. It prioritizes resource allocation to

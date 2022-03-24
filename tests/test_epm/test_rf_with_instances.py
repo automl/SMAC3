@@ -41,9 +41,7 @@ class TestRFWithInstances(unittest.TestCase):
         self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!", model.predict, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegex(
-            ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X
-        )
+        self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X)
 
     def test_predict(self):
         rs = np.random.RandomState(1)
@@ -192,9 +190,7 @@ class TestRFWithInstances(unittest.TestCase):
             ],
             dtype=np.float64,
         )
-        y = np.array(
-            [[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64
-        )
+        y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
         model = RandomForestWithInstances(
             configspace=self._get_cs(3),
             types=np.array([0, 0, 0], dtype=np.uint),
@@ -213,12 +209,8 @@ class TestRFWithInstances(unittest.TestCase):
         cs = smac.configspace.ConfigurationSpace()
         _ = cs.add_hyperparameter(CategoricalHyperparameter("a", [0, 1], default_value=0))
         _ = cs.add_hyperparameter(OrdinalHyperparameter("b", [0, 1], default_value=1))
-        _ = cs.add_hyperparameter(
-            UniformFloatHyperparameter("c", lower=0.0, upper=1.0, default_value=1)
-        )
-        _ = cs.add_hyperparameter(
-            UniformIntegerHyperparameter("d", lower=0, upper=10, default_value=1)
-        )
+        _ = cs.add_hyperparameter(UniformFloatHyperparameter("c", lower=0.0, upper=1.0, default_value=1))
+        _ = cs.add_hyperparameter(UniformIntegerHyperparameter("d", lower=0, upper=10, default_value=1))
         cs.seed(1)
 
         feat_array = np.array([0, 0, 0]).reshape(1, -1)

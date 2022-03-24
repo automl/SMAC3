@@ -126,9 +126,7 @@ class TestLocalSearch(unittest.TestCase):
         self.cs.add_hyperparameter(x1)
         x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x2)
-        x3 = CategoricalHyperparameter(
-            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5
-        )
+        x3 = CategoricalHyperparameter("x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
         self.cs.add_hyperparameter(x3)
         x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
         self.cs.add_hyperparameter(x4)
@@ -178,9 +176,7 @@ class TestLocalSearch(unittest.TestCase):
         ls.runhistory = [None] * 1000
         acq_val_incumbent, incumbent = ls._maximize(runhistory, None, 1)[0]
 
-        np.testing.assert_allclose(
-            incumbent.get_array(), np.ones(len(config_space.get_hyperparameters()))
-        )
+        np.testing.assert_allclose(incumbent.get_array(), np.ones(len(config_space.get_hyperparameters())))
 
     @unittest.mock.patch.object(LocalSearch, "_do_search")
     @unittest.mock.patch.object(LocalSearch, "_get_initial_points")
@@ -280,9 +276,7 @@ class TestLocalSearch(unittest.TestCase):
         for random_config, cost in zip(random_configs, costs):
             runhistory.add(config=random_config, cost=cost, time=0, status=StatusType.SUCCESS)
 
-        points = ls._get_initial_points(
-            num_points=5, runhistory=runhistory, additional_start_points=None
-        )
+        points = ls._get_initial_points(num_points=5, runhistory=runhistory, additional_start_points=None)
         self.assertEqual(len(points), 10)
 
 
@@ -308,9 +302,7 @@ class TestRandomSearch(unittest.TestCase):
 
         # Check that config.get_array works as desired and imputation is used
         #  in between, we therefore have to retrieve the value from the mock!
-        np.testing.assert_allclose(
-            [v.value for v in patch_ei.call_args[0][0]], np.array(values, dtype=float)
-        )
+        np.testing.assert_allclose([v.value for v in patch_ei.call_args[0][0]], np.array(values, dtype=float))
 
     @unittest.mock.patch.object(ConfigurationSpace, "sample_configuration")
     def test_get_next_by_random_search(self, patch):

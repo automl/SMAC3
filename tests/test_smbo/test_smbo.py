@@ -280,9 +280,7 @@ class TestSMBO(unittest.TestCase):
         solver.stats.is_budget_exhausted = unittest.mock.Mock()
         solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
 
-        solver._get_timebound_for_intensification = unittest.mock.Mock(
-            wraps=solver._get_timebound_for_intensification
-        )
+        solver._get_timebound_for_intensification = unittest.mock.Mock(wraps=solver._get_timebound_for_intensification)
 
         class SideEffect:
             def __init__(self, intensifier, get_next_run):
@@ -344,9 +342,7 @@ class TestSMBO(unittest.TestCase):
                     backend="threading",
                 )
                 self.assertTrue(validation_mock.called)
-            with mock.patch.object(
-                Validator, "validate_epm", return_value=None
-            ) as epm_validation_mock:
+            with mock.patch.object(Validator, "validate_epm", return_value=None) as epm_validation_mock:
                 smbo.validate(
                     config_mode="inc",
                     instance_mode="train+test",
@@ -364,9 +360,7 @@ class TestSMBO(unittest.TestCase):
         smbo = smac.solver
         # SMBO should have the default configuration as the 1st config if no initial design is given
         smbo.start()
-        self.assertEqual(
-            smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration()
-        )
+        self.assertEqual(smbo.initial_design_configs[0], smbo.scenario.cs.get_default_configuration())
 
     def test_ta_integration_to_smbo(self):
         """

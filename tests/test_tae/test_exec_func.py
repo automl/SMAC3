@@ -171,9 +171,7 @@ class TestExecuteFunc(unittest.TestCase):
         def run_over_time(*args):
             time.sleep(5)
 
-        taf = ExecuteTAFuncDict(
-            ta=run_over_time, stats=self.stats, run_obj="runtime", par_factor=11
-        )
+        taf = ExecuteTAFuncDict(ta=run_over_time, stats=self.stats, run_obj="runtime", par_factor=11)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.TIMEOUT)
         self.assertGreaterEqual(rval[1], 11)

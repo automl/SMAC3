@@ -95,9 +95,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         def next_configs_by_acq_value() -> List[Configuration]:
             return [t[1] for t in self._maximize(runhistory, stats, num_points)]
 
-        challengers = ChallengerList(
-            next_configs_by_acq_value, self.config_space, random_configuration_chooser
-        )
+        challengers = ChallengerList(next_configs_by_acq_value, self.config_space, random_configuration_chooser)
 
         if random_configuration_chooser is not None:
             random_configuration_chooser.next_smbo_iteration()
@@ -133,9 +131,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         """
         raise NotImplementedError()
 
-    def _sort_configs_by_acq_value(
-        self, configs: List[Configuration]
-    ) -> List[Tuple[float, Configuration]]:
+    def _sort_configs_by_acq_value(self, configs: List[Configuration]) -> List[Tuple[float, Configuration]]:
         """Sort the given configurations by acquisition value
 
         Parameters
@@ -260,16 +256,12 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
             # configurations with the highest previous EI
             configs_previous_runs_sorted = self._sort_configs_by_acq_value(configs_previous_runs)
-            configs_previous_runs_sorted = [
-                conf[1] for conf in configs_previous_runs_sorted[:num_points]
-            ]
+            configs_previous_runs_sorted = [conf[1] for conf in configs_previous_runs_sorted[:num_points]]
 
             # configurations with the lowest predictive cost, check for None to make unit tests work
             if self.acquisition_function.model is not None:
                 conf_array = convert_configurations_to_array(configs_previous_runs)
-                costs = self.acquisition_function.model.predict_marginalized_over_instances(
-                    conf_array
-                )[0]
+                costs = self.acquisition_function.model.predict_marginalized_over_instances(conf_array)[0]
                 assert len(conf_array) == len(costs), (conf_array.shape, costs.shape)
 
                 # In case of the predictive model returning the prediction for more than one objective per configuration
@@ -288,9 +280,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
 
                 # Cannot use zip here because the indices array cannot index the
                 # rand_configs list, because the second is a pure python list
-                configs_previous_runs_sorted_by_cost = [
-                    configs_previous_runs[ind] for ind in indices
-                ][:num_points]
+                configs_previous_runs_sorted_by_cost = [configs_previous_runs[ind] for ind in indices][:num_points]
             else:
                 configs_previous_runs_sorted_by_cost = []
 
@@ -355,9 +345,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             )
             local_search_steps[i] += 1
         # Keeping track of configurations with equal acquisition value for plateau walking
-        neighbors_w_equal_acq = [
-            [] for _ in range(num_candidates)
-        ]  # type: List[List[Configuration]]
+        neighbors_w_equal_acq = [[] for _ in range(num_candidates)]  # type: List[List[Configuration]]
 
         num_iters = 0
         while np.any(active):
@@ -641,9 +629,7 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
         n_sls_iterations: int = 10,
     ):
         super().__init__(acquisition_function, config_space, rng)
-        self.random_search = RandomSearch(
-            acquisition_function=acquisition_function, config_space=config_space, rng=rng
-        )
+        self.random_search = RandomSearch(acquisition_function=acquisition_function, config_space=config_space, rng=rng)
         self.local_search = LocalSearch(
             acquisition_function=acquisition_function,
             config_space=config_space,
@@ -681,9 +667,7 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
         # want to use only random configurations. Having them at the begging of
         # the list ensures this (even after adding the configurations by local
         # search, and then sorting them)
-        next_configs_by_acq_value = (
-            next_configs_by_random_search_sorted + next_configs_by_local_search
-        )
+        next_configs_by_acq_value = next_configs_by_random_search_sorted + next_configs_by_local_search
         next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
         self.logger.debug(
             "First 5 acq func (origin) values of selected configurations: %s",
@@ -771,9 +755,7 @@ class FixedSet(AcquisitionFunctionMaximizer):
 
         rng : np.random.RandomState or int, optional
         """
-        super().__init__(
-            acquisition_function=acquisition_function, config_space=config_space, rng=rng
-        )
+        super().__init__(acquisition_function=acquisition_function, config_space=config_space, rng=rng)
         self.configurations = configurations
 
     def _maximize(

@@ -156,10 +156,7 @@ class DaskParallelRunner(BaseRunner):
 
         # In code check to make sure that there are resources
         if not self._workers_available():
-            warnings.warn(
-                "No workers are available. This could mean workers crashed"
-                "Waiting for new workers..."
-            )
+            warnings.warn("No workers are available. This could mean workers crashed" "Waiting for new workers...")
             time.sleep(self.patience)
             if not self._workers_available():
                 raise ValueError(
@@ -171,9 +168,7 @@ class DaskParallelRunner(BaseRunner):
         # At this point we can submit the job
         # For `pure=False`, see
         #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
-        self.futures.append(
-            self.client.submit(self.single_worker.run_wrapper, run_info, pure=False)
-        )
+        self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
     def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with

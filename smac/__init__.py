@@ -2,10 +2,9 @@ import datetime
 
 name = "SMAC3"
 package_name = "smac"
-author = """
-    Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, Difan Deng, 
-    Carolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter
-"""
+author = "\tMarius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, " \
+         "Difan Deng,\n\tCarolin Benjamins, Tim Ruhkopf, René Sass and Frank Hutter"
+
 author_email = "fh@cs.uni-freiburg.de"
 description = "SMAC3, a Python implementation of 'Sequential Model-based Algorithm Configuration'."
 url = "https://www.automl.org/"

@@ -80,9 +80,7 @@ class RandomEPM(AbstractEPM):
         self.logger.debug("(Pseudo) Fit model to data")
         return self
 
-    def _predict(
-        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
         """
         Predict means and variances for given X.
 

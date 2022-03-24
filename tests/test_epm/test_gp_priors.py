@@ -44,9 +44,7 @@ class TestTophatPrior(unittest.TestCase):
             self.assertEqual(prior.gradient(val), 0)
 
     def test_sample_from_prior(self):
-        prior = TophatPrior(
-            lower_bound=np.exp(-10), upper_bound=np.exp(2), rng=np.random.RandomState(1)
-        )
+        prior = TophatPrior(lower_bound=np.exp(-10), upper_bound=np.exp(2), rng=np.random.RandomState(1))
         samples = prior.sample_from_prior(10)
         np.testing.assert_array_equal(samples >= -10, True)
         np.testing.assert_array_equal(samples <= 2, True)

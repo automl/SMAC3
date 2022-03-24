@@ -47,9 +47,7 @@ class TestSimpleIntensifier(unittest.TestCase):
         self.config3 = Configuration(self.cs, values={"a": 0, "b": 7})
         self.config4 = Configuration(self.cs, values={"a": 29, "b": 31})
 
-        self.scen = Scenario(
-            {"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""}
-        )
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 

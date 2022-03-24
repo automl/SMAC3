@@ -124,8 +124,7 @@ def get_rng(
         )
     if run_id is not None and not isinstance(run_id, int):
         raise TypeError(
-            "Argument run_id accepts only arguments of type None, int, "
-            "you provided %s." % str(type(run_id))
+            "Argument run_id accepts only arguments of type None, int, " "you provided %s." % str(type(run_id))
         )
 
     if rng is None and run_id is None:

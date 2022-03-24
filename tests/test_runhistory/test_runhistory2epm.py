@@ -39,9 +39,7 @@ class RunhistoryTest(unittest.TestCase):
         self.config5 = Configuration(self.cs, values={"a": 5, "b": 10})
         self.scen = Scenario({"run_obj": "runtime", "cutoff_time": 20, "cs": self.cs})
         self.types, self.bounds = get_types(self.cs, None)
-        self.scen = Scenario(
-            {"run_obj": "runtime", "cutoff_time": 20, "cs": self.cs, "output_dir": ""}
-        )
+        self.scen = Scenario({"run_obj": "runtime", "cutoff_time": 20, "cs": self.cs, "output_dir": ""})
 
     def test_log_runtime_with_imputation(self):
         """
@@ -115,9 +113,7 @@ class RunhistoryTest(unittest.TestCase):
         )
 
         X, y = rh2epm.transform(self.rh)
-        np.testing.assert_array_almost_equal(
-            X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), decimal=3
-        )
+        np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), decimal=3)
 
         np.testing.assert_array_almost_equal(y, np.array([[0.0], [2.727], [5.2983]]), decimal=3)
 
@@ -251,9 +247,7 @@ class RunhistoryTest(unittest.TestCase):
         )
 
         X, y = rh2epm.transform(self.rh)
-        np.testing.assert_array_almost_equal(
-            X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), decimal=3
-        )
+        np.testing.assert_array_almost_equal(X, np.array([[0.005, 0.995], [0.995, 0.005], [0.995, 0.995]]), decimal=3)
         np.testing.assert_array_almost_equal(y, np.array([[1.0], [11.0], [200.0]]), decimal=1)
 
     def test_cost_without_imputation(self):
@@ -317,9 +311,7 @@ class RunhistoryTest(unittest.TestCase):
         """
         adding some rundata to RunHistory2EPM4LogCost
         """
-        self.scen = Scenario(
-            {"cutoff_time": 20, "cs": self.cs, "run_obj": "quality", "output_dir": ""}
-        )
+        self.scen = Scenario({"cutoff_time": 20, "cs": self.cs, "run_obj": "quality", "output_dir": ""})
 
         rh2epm = runhistory2epm.RunHistory2EPM4Cost(
             num_params=2,

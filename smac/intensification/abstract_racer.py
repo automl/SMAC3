@@ -276,9 +276,7 @@ class AbstractRacer(object):
         self.logger.debug("No valid challenger was generated!")
         return None
 
-    def _adapt_cutoff(
-        self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float
-    ) -> float:
+    def _adapt_cutoff(self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float) -> float:
         """Adaptive capping:
         Compute cutoff based on time so far used for incumbent
         and reduce cutoff for next run of challenger accordingly
@@ -311,9 +309,7 @@ class AbstractRacer(object):
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
-        chall_inst_seeds = run_history.get_runs_for_config(
-            challenger, only_max_observed_budget=True
-        )
+        chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_sum_cost = run_history.sum_cost(
             config=challenger,
             instance_seed_budget_keys=chall_inst_seeds,
@@ -405,8 +401,7 @@ class AbstractRacer(object):
             inc_perf_format = format_array(inc_perf)
 
             self.logger.info(
-                f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) "
-                f"on {n_samples} runs."
+                f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
             )
             self._log_incumbent_changes(incumbent, challenger)
 
@@ -425,9 +420,7 @@ class AbstractRacer(object):
         incumbent: Configuration,
         challenger: Configuration,
     ) -> None:
-        params = sorted(
-            [(param, incumbent[param], challenger[param]) for param in challenger.keys()]
-        )
+        params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
         self.logger.info("Changes in incumbent:")
         for param in params:
             if param[1] != param[2]:

@@ -33,9 +33,7 @@ class TestAbstractRacer(unittest.TestCase):
         self.config2 = Configuration(self.cs, values={"a": 100, "b": 0})
         self.config3 = Configuration(self.cs, values={"a": 100, "b": 100})
 
-        self.scen = Scenario(
-            {"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""}
-        )
+        self.scen = Scenario({"cutoff_time": 2, "cs": self.cs, "run_obj": "runtime", "output_dir": ""})
         self.stats = Stats(scenario=self.scen)
         self.stats.start_timing()
 
@@ -72,9 +70,7 @@ class TestAbstractRacer(unittest.TestCase):
             )
 
         # The sets for the incumbent are completely disjoint.
-        conf = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh
-        )
+        conf = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2, run_history=self.rh)
         self.assertIsNone(conf)
 
         # The incumbent has still one instance-seed pair left on which the
@@ -88,9 +84,7 @@ class TestAbstractRacer(unittest.TestCase):
             seed=1,
             additional_info=None,
         )
-        conf = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh
-        )
+        conf = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2, run_history=self.rh)
         self.assertIsNone(conf)
 
     def test_compare_configs_chall(self):
@@ -124,9 +118,7 @@ class TestAbstractRacer(unittest.TestCase):
             additional_info=None,
         )
 
-        conf = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh
-        )
+        conf = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2, run_history=self.rh)
 
         # challenger has enough runs and is better
         self.assertEqual(conf, self.config2, "conf: %s" % (conf))
@@ -162,9 +154,7 @@ class TestAbstractRacer(unittest.TestCase):
             additional_info=None,
         )
 
-        conf = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh
-        )
+        conf = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2, run_history=self.rh)
 
         # challenger worse than inc
         self.assertEqual(conf, self.config1, "conf: %s" % (conf))
@@ -211,9 +201,7 @@ class TestAbstractRacer(unittest.TestCase):
             additional_info=None,
         )
 
-        conf = intensifier._compare_configs(
-            incumbent=self.config1, challenger=self.config2, run_history=self.rh
-        )
+        conf = intensifier._compare_configs(incumbent=self.config1, challenger=self.config2, run_history=self.rh)
 
         # challenger worse than inc
         self.assertIsNone(conf, "conf: %s" % (conf))
@@ -253,20 +241,14 @@ class TestAbstractRacer(unittest.TestCase):
 
         inst_seed_pairs = self.rh.get_runs_for_config(self.config1, only_max_observed_budget=True)
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = self.rh.sum_cost(
-            config=self.config1, instance_seed_budget_keys=inst_seed_pairs
-        )
+        inc_sum_cost = self.rh.sum_cost(config=self.config1, instance_seed_budget_keys=inst_seed_pairs)
 
-        cutoff = intensifier._adapt_cutoff(
-            challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost
-        )
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # 15*1.2 - 6
         self.assertEqual(cutoff, 12)
 
         intensifier.cutoff = 5
 
-        cutoff = intensifier._adapt_cutoff(
-            challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost
-        )
+        cutoff = intensifier._adapt_cutoff(challenger=self.config2, run_history=self.rh, inc_sum_cost=inc_sum_cost)
         # scenario cutoff
         self.assertEqual(cutoff, 5)

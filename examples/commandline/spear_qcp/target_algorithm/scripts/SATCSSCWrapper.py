@@ -206,9 +206,7 @@ class SatCSSCWrapper(AbstractWrapper):
             if not self.args.sat_checker:
                 resultMap["misc"] = "SAT checker was not given; could not verify SAT"
             elif not os.path.isfile(self.args.sat_checker):
-                resultMap["misc"] = "have not found %s; could not verify SAT" % (
-                    self.args.sat_checker
-                )
+                resultMap["misc"] = "have not found %s; could not verify SAT" % (self.args.sat_checker)
             else:
                 sat_checked = self._verify_SAT(filepointer)
                 if sat_checked:
@@ -232,9 +230,7 @@ class SatCSSCWrapper(AbstractWrapper):
             # Could not use SAT checker, so we only compare to true solubility.
             if self._specifics in ("UNSATISFIABLE", "20"):
                 resultMap["status"] = "CRASHED"
-                resultMap[
-                    "misc"
-                ] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
+                resultMap["misc"] = "SOLVER BUG: instance is UNSATISFIABLE but solver claimed it is SATISFIABLE"
                 self.save_failed_cmd()
 
         elif re.search("s UNSATISFIABLE", data):
@@ -243,9 +239,7 @@ class SatCSSCWrapper(AbstractWrapper):
 
             if self._specifics in ("SATISFIABLE", "10"):
                 resultMap["status"] = "CRASHED"
-                resultMap[
-                    "misc"
-                ] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
+                resultMap["misc"] += "SOLVER BUG: instance is SATISFIABLE but solver claimed it is UNSATISFIABLE"
                 self.save_failed_cmd()
 
         elif re.search("s UNKNOWN", data):
@@ -259,9 +253,7 @@ class SatCSSCWrapper(AbstractWrapper):
         else:
             print(self._ta_status)
             resultMap["status"] = "CRASHED"
-            resultMap["misc"] = (
-                "Could not find usual SAT competition-formatted result string in %s" % data
-            )
+            resultMap["misc"] = "Could not find usual SAT competition-formatted result string in %s" % data
         return resultMap
 
     def _verify_SAT(self, solver_output):

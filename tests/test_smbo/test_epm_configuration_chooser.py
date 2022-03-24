@@ -235,9 +235,7 @@ class TestEPMChooser(unittest.TestCase):
 
         epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
         epm_chooser.incumbent = self.scenario.cs.sample_configuration()
-        previous_configs = [epm_chooser.incumbent] + [
-            self.scenario.cs.sample_configuration() for _ in range(0, 20)
-        ]
+        previous_configs = [epm_chooser.incumbent] + [self.scenario.cs.sample_configuration() for _ in range(0, 20)]
         epm_chooser.runhistory = RunHistory()
         for i, config in enumerate(previous_configs):
             epm_chooser.runhistory.add(config, i, 10, StatusType.SUCCESS)

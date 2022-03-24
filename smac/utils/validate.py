@@ -139,9 +139,7 @@ class Validator(object):
         # Check if a folder or a file is specified as output
         if not output_fn.endswith(".json"):
             if backup_fn is None:
-                raise ValueError(
-                    "If output_fn does not end with .json the argument backup_fn needs to be given."
-                )
+                raise ValueError("If output_fn does not end with .json the argument backup_fn needs to be given.")
             output_dir = output_fn
             output_fn = os.path.join(output_dir, backup_fn)
             self.logger.debug('Output is "%s", changing to "%s"!', output_dir, output_fn)
@@ -202,8 +200,7 @@ class Validator(object):
             runhistory with validated runs
         """
         self.logger.debug(
-            "Validating configs '%s' on instances '%s', repeating %d times"
-            " with %d parallel runs on backend '%s'.",
+            "Validating configs '%s' on instances '%s', repeating %d times" " with %d parallel runs on backend '%s'.",
             config_mode,
             instance_mode,
             repetitions,
@@ -392,9 +389,7 @@ class Validator(object):
             )
             assert runhistory is not None  # please mypy
             X, y = rh2epm.transform(runhistory)
-            self.logger.debug(
-                "Training model with data of shape X: %s, y:%s", str(X.shape), str(y.shape)
-            )
+            self.logger.debug("Training model with data of shape X: %s, y:%s", str(X.shape), str(y.shape))
             # Train random forest
             epm.train(X, y)
         else:
@@ -418,9 +413,7 @@ class Validator(object):
                 )
             else:
                 X_pred[idx] = convert_configurations_to_array([run.config])[0]
-        self.logger.debug(
-            "Predicting desired %d runs, data has shape %s", len(runs), str(X_pred.shape)
-        )
+        self.logger.debug("Predicting desired %d runs, data has shape %s", len(runs), str(X_pred.shape))
 
         y_pred = epm.predict(X_pred)
         self.epm = epm
@@ -481,9 +474,7 @@ class Validator(object):
         if isinstance(configs, str):
             configs = self._get_configs(configs)
         if isinstance(insts, str):
-            instances = sorted(
-                self._get_instances(insts)
-            )  # type: typing.Sequence[typing.Union[str, None]]
+            instances = sorted(self._get_instances(insts))  # type: typing.Sequence[typing.Union[str, None]]
         elif insts is not None:
             instances = sorted(insts)
         else:
@@ -550,11 +541,7 @@ class Validator(object):
                 # guarantee the same inst-seed-pairs for all configs.
                 for config in [c for c in configs if c not in configs_evaluated]:
                     # Only use specifics if specific exists, else use string "0"
-                    specs = (
-                        self.scen.instance_specific[i]
-                        if i and i in self.scen.instance_specific
-                        else "0"
-                    )
+                    specs = self.scen.instance_specific[i] if i and i in self.scen.instance_specific else "0"
                     runs.append(_Run(config=config, inst=i, seed=seed, inst_specs=specs))
 
         self.logger.info(
@@ -601,9 +588,7 @@ class Validator(object):
         # Like this we can easily retrieve the most used instance-seed pairs to
         # minimize the number of runs to be evaluated
         if runhistory:
-            inst_seed_config = (
-                {}
-            )  # type: typing.Dict[str, typing.Dict[int, typing.List[Configuration]]]
+            inst_seed_config = {}  # type: typing.Dict[str, typing.Dict[int, typing.List[Configuration]]]
             relevant = dict()
             for key in runhistory.data:
                 if runhistory.ids_config[key.config_id] in configs and key.instance_id in insts:
@@ -630,9 +615,7 @@ class Validator(object):
                 for i in inst_seed_config
             }
         else:
-            rval = (
-                {}
-            )  # type: typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]
+            rval = {}  # type: typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]
             return rval
 
     def _get_configs(self, mode: str) -> typing.List[str]:
@@ -721,12 +704,8 @@ class Validator(object):
             instance_mode = "train+test"
 
         instances = []  # type: typing.List[str]
-        if (
-            instance_mode == "train" or instance_mode == "train+test"
-        ) and not self.scen.train_insts == [None]:
+        if (instance_mode == "train" or instance_mode == "train+test") and not self.scen.train_insts == [None]:
             instances.extend(self.scen.train_insts)
-        if (
-            instance_mode == "test" or instance_mode == "train+test"
-        ) and not self.scen.test_insts == [None]:
+        if (instance_mode == "test" or instance_mode == "train+test") and not self.scen.test_insts == [None]:
             instances.extend(self.scen.test_insts)
         return instances

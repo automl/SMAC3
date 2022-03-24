@@ -132,9 +132,7 @@ class ParseRandomConfigurationChooserAction(Action):
         module_file.close()
         import importlib.util
 
-        spec = importlib.util.spec_from_file_location(
-            "smac.custom.random_configuration_chooser", module_path
-        )
+        spec = importlib.util.spec_from_file_location("smac.custom.random_configuration_chooser", module_path)
         assert spec.loader is not None  # please mypy
         rcc_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(rcc_module)  # type: ignore[attr-defined] # noqa F821
@@ -499,9 +497,7 @@ class CMDReader(object):
         prog = sys.argv[0]
         if re.match("^python[0-9._-]*$", sys.argv[0]):
             prog = sys.argv[1]
-        self.parser = SMACArgumentParser(
-            formatter_class=ConfigurableHelpFormatter, add_help=False, prog=prog
-        )
+        self.parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False, prog=prog)
         # let a help message begin with "[dev]" to add a developer option
         req_opts = self.parser.add_argument_group("Required Options")
         req_opts.add_argument(
@@ -594,8 +590,7 @@ class CMDReader(object):
             default="train",
             choices=["train", "val10", "val20", "val30", "val40", "val50", "none"],
             type=str.lower,
-            help="[dev] set to validate incumbents on. valX =>"
-            " validation set of size training_set * 0.X",
+            help="[dev] set to validate incumbents on. valX =>" " validation set of size training_set * 0.X",
         )
         req_opts.add_argument(
             "--incumbents_per_round",
@@ -625,9 +620,7 @@ class CMDReader(object):
 
     def _add_smac_options(self) -> None:
         """Add SMAC Options"""
-        self.smac_parser = SMACArgumentParser(
-            formatter_class=ConfigurableHelpFormatter, add_help=False
-        )
+        self.smac_parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         smac_opts = self.smac_parser.add_argument_group("SMAC Options")
         smac_opts.add_argument(
             "--abort-on-first-run-crash",
@@ -670,10 +663,8 @@ class CMDReader(object):
             dest="output_dir",
             type=str,
             action=ProcessOutputDirAction,
-            default="smac3-output_%s"
-            % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
-            help="Specifies the output-directory for all emerging "
-            "files, such as logging and results.",
+            default="smac3-output_%s" % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
+            help="Specifies the output-directory for all emerging " "files, such as logging and results.",
         )
         smac_opts.add_argument(
             "--input-psmac-dirs",
@@ -781,8 +772,7 @@ class CMDReader(object):
             dest="rf_min_samples_split",
             default=3,
             type=int,
-            help="[dev] Minimum number of samples"
-            " to split for building a tree in the random forest.",
+            help="[dev] Minimum number of samples" " to split for building a tree in the random forest.",
         )
         smac_opts.add_argument(
             "--rf_min_samples_leaf",
@@ -790,8 +780,7 @@ class CMDReader(object):
             dest="rf_min_samples_leaf",
             default=3,
             type=int,
-            help="[dev] Minimum required number of"
-            " samples in each leaf of a tree in the random forest.",
+            help="[dev] Minimum required number of" " samples in each leaf of a tree in the random forest.",
         )
         smac_opts.add_argument(
             "--rf_max_depth",
@@ -808,8 +797,7 @@ class CMDReader(object):
             dest="sls_n_steps_plateau_walk",
             default=10,
             type=int,
-            help="[dev] Maximum number of steps on plateaus during "
-            "the optimization of the acquisition function.",
+            help="[dev] Maximum number of steps on plateaus during " "the optimization of the acquisition function.",
         )
         smac_opts.add_argument(
             "--sls_max_steps",
@@ -871,9 +859,7 @@ class CMDReader(object):
 
     def _add_scen_options(self) -> None:
         """Add Scenario Options"""
-        self.scen_parser = SMACArgumentParser(
-            formatter_class=ConfigurableHelpFormatter, add_help=False
-        )
+        self.scen_parser = SMACArgumentParser(formatter_class=ConfigurableHelpFormatter, add_help=False)
         scen_opts = self.scen_parser.add_argument_group("Scenario Options")
         scen_opts.add_argument(
             "--algo",
@@ -976,8 +962,7 @@ class CMDReader(object):
             "--memory_limit",
             dest="memory_limit",
             type=float,
-            help="[dev] Maximum available memory the target algorithm "
-            "can occupy before being cancelled in MB.",
+            help="[dev] Maximum available memory the target algorithm " "can occupy before being cancelled in MB.",
         )
         scen_opts.add_argument(
             "--tuner-timeout",

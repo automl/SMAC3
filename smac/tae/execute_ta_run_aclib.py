@@ -99,18 +99,14 @@ class ExecuteTARunAClib(SerialRunner):
             self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
         if results.get("runtime") is None:
-            self.logger.warning(
-                "The target algorithm has not returned a" " runtime -- imputed by 0."
-            )
+            self.logger.warning("The target algorithm has not returned a" " runtime -- imputed by 0.")
             # (TODO) Check 0
             results["runtime"] = 0
 
         runtime = float(results["runtime"])
 
         if self.run_obj == "quality" and results.get("cost") is None:
-            self.logger.error(
-                "The target algorithm has not returned a quality/cost value although we optimize cost."
-            )
+            self.logger.error("The target algorithm has not returned a quality/cost value although we optimize cost.")
             # (TODO) Do not return 0
             results["cost"] = 0
 
@@ -146,9 +142,7 @@ class ExecuteTARunAClib(SerialRunner):
         if not isinstance(self.ta, (list, tuple)):
             raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
-        cmd.extend(
-            ["--instance", instance, "--cutoff", str(cutoff), "--seed", str(seed), "--config"]
-        )
+        cmd.extend(["--instance", instance, "--cutoff", str(cutoff), "--seed", str(seed), "--config"])
 
         for p in config:
             if not config.get(p) is None:

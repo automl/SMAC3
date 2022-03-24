@@ -186,9 +186,7 @@ class InputReader(object):
         return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
 
     @staticmethod
-    def read_pcs_file(
-        fn: str, logger: typing.Optional[PickableLoggerAdapter] = None
-    ) -> ConfigurationSpace:
+    def read_pcs_file(fn: str, logger: typing.Optional[PickableLoggerAdapter] = None) -> ConfigurationSpace:
         """Encapsulates generating configuration space object from file.
 
         Automatically detects whether the cs is saved in json, pcs or pcs_new.
@@ -214,8 +212,6 @@ class InputReader(object):
                     cs = pcs.read(pcs_str)
                 except NotImplementedError:
                     if logger:
-                        logger.debug(
-                            "Could not parse pcs file with old format; trying new format ..."
-                        )
+                        logger.debug("Could not parse pcs file with old format; trying new format ...")
                     cs = pcs_new.read(pcs_str)
         return cs
