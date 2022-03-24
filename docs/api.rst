@@ -1,9 +1,10 @@
+API References
+==============
+
 .. autosummary::
-   :toctree: _autosummary
-   :template: custom-module-template.rst
+   :toctree: api
    :recursive:
 
-   smac.callbacks
    smac.epm
    smac.facade
    smac.initial_design
@@ -14,4 +15,5 @@
    smac.smac_cli
    smac.stats
    smac.tae
+   smac.callbacks
    smac.utils

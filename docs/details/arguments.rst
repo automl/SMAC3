@@ -14,9 +14,9 @@ or view all other options in the following:
 Main Options
 ^^^^^^^^^^^^
 
-.. include:: ../../main_options.rst
+.. include:: ../main_options.rst
 
 
 SMAC Options
 ^^^^^^^^^^^^
-.. include:: ../../smac_options.rst
+.. include:: ../smac_options.rst

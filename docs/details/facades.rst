@@ -28,7 +28,7 @@ Inheritance
 Here we show the class inheritance of the different facades.
 Because SMAC4AC is the facade every other facade is inherited from, we recommend using SMAC4AC if a lot of flexibility is needed. 
 
-.. figure:: ../../images/smac_facades_all_classes.png
+.. figure:: ../images/smac_facades_all_classes.png
     :width: 100%
     :align: center
     :alt: Class diagram of the SMAC facades.
