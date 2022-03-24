@@ -12,20 +12,20 @@ INDEX_HTML := "file://${DIR}/docs/build/html/index.html"
 EXAMPLES_DIR := examples
 TESTS_DIR := tests
 
-.PHONY: help install-dev check format pre-commit clean docs clean-doc examples clean-build build publish test
+.PHONY: help install-dev check format pre-commit build tests docs examples clean clean-data clean-docs clean-build publish
 
 help:
 	@echo "Makefile ${NAME}"
 	@echo "* install-dev      to install all dev requirements and install pre-commit"
-	@echo "* clean            to clean any doc or build files"
 	@echo "* check            to check the source code for issues"
 	@echo "* format           to format the code with black and isort"
 	@echo "* pre-commit       to run the pre-commit check"
 	@echo "* build            to build a dist"
+	@echo "* tests            to run the tests"
 	@echo "* docs             to generate and view the html files, checks links"
 	@echo "* examples         to run and generate the examples"
+	@echo "* clean            to clean any doc or build files"
 	@echo "* publish          to help publish the current branch to pypi"
-	@echo "* test             to run the tests"
 
 PYTHON ?= python
 PYTEST ?= python -m pytest
@@ -80,9 +80,6 @@ format: format-black format-isort
 test:
 	$(PYTEST) ${TESTS_DIR}
 
-clean-doc:
-	$(MAKE) -C ${DOCDIR} clean
-
 docs:
 	$(MAKE) -C ${DOCDIR} docs
 	@echo
@@ -95,13 +92,37 @@ examples:
 	@echo "View docs at:"
 	@echo ${INDEX_HTML}
 
+# Build a distribution in ./dist
+build:
+	$(PYTHON) setup.py sdist
+
+clean: clean-build clean-docs clean-data
+
+clean-docs:
+	$(MAKE) -C ${DOCDIR} clean
+
 clean-build:
 	$(PYTHON) setup.py clean
 	rm -rf ${DIST}
 
-# Build a distribution in ./dist
-build:
-	$(PYTHON) setup.py sdist
+clean-data:
+	# remove all files that could have been left by test cases or by manual runs
+	# feel free to add more lines
+	find . -maxdepth 3 -iname 'smac3-output_*-*-*_*' | tac | while read -r TESTDIR ; do rm -Rf "$${TESTDIR}" ; done
+	find . -maxdepth 3 -iname '*.lock' -exec rm {} \;
+	rm -Rf run_*
+	rm -Rf test/test_files/scenario_test/tmp_output_*
+	rm -Rf test/test_files/test_*_run1
+	rm  -f test/test_files/test_scenario_options_to_doc.txt
+	rm  -f test/test_files/validation/test_validation_rh.json
+	rm -Rf test/run_*
+	rm -Rf test/test_smbo/run_*
+	rm -Rf test/test_files/test_restore_state/
+	rm -Rf test/test_files/test_restored_state/
+	rm -Rf test/test_files/validation/test/
+	rm  -f test/test_files/validation/validated_runhistory.json*
+	rm  -f test/test_files/validation/validated_runhistory_EPM.json*
+	rm -Rf test/test_files/out_*/
 
 # Publish to testpypi
 # Will echo the commands to actually publish to be run to publish to actual PyPi
@@ -124,26 +145,3 @@ publish: clean build
 	@echo
 	@echo "Once you have decided it works, publish to actual pypi with"
 	@echo
-
-# Clean up any builds in ./dist as well as doc, if present
-clean: clean-build clean-doc
-
-.PHONY: clean-data
-clean-data:
-	# remove all files that could have been left by test cases or by manual runs
-	# feel free to add more lines
-	find . -maxdepth 3 -iname 'smac3-output_*-*-*_*' | tac | while read -r TESTDIR ; do rm -Rf "$${TESTDIR}" ; done
-	find . -maxdepth 3 -iname '*.lock' -exec rm {} \;
-	rm -Rf run_*
-	rm -Rf test/test_files/scenario_test/tmp_output_*
-	rm -Rf test/test_files/test_*_run1
-	rm  -f test/test_files/test_scenario_options_to_doc.txt
-	rm  -f test/test_files/validation/test_validation_rh.json
-	rm -Rf test/run_*
-	rm -Rf test/test_smbo/run_*
-	rm -Rf test/test_files/test_restore_state/
-	rm -Rf test/test_files/test_restored_state/
-	rm -Rf test/test_files/validation/test/
-	rm  -f test/test_files/validation/validated_runhistory.json*
-	rm  -f test/test_files/validation/validated_runhistory_EPM.json*
-	rm -Rf test/test_files/out_*/
