@@ -210,18 +210,14 @@ class TaeTest(unittest.TestCase):
         test cost on crashed runs
         """
         # Patch run-function for custom-return
-        scen = Scenario(
-            scenario={"cs": ConfigurationSpace(), "run_obj": "quality"}, cmd_options=None
-        )
+        scen = Scenario(scenario={"cs": ConfigurationSpace(), "run_obj": "quality"}, cmd_options=None)
         stats = Stats(scen)
         stats.start_timing()
         stats.submitted_ta_runs += 1
 
         # Check quality
         test_run.return_value = StatusType.CRASHED, np.nan, np.nan, {}
-        eta = SerialRunner(
-            ta=lambda *args: None, stats=stats, run_obj="quality", cost_for_crash=100
-        )
+        eta = SerialRunner(ta=lambda *args: None, stats=stats, run_obj="quality", cost_for_crash=100)
         run_info, result = eta.run_wrapper(
             RunInfo(
                 config={},
@@ -236,9 +232,7 @@ class TaeTest(unittest.TestCase):
         self.assertEqual(100, result.cost)
 
         # Check runtime
-        eta = SerialRunner(
-            ta=lambda *args: None, stats=stats, run_obj="runtime", cost_for_crash=10.7
-        )
+        eta = SerialRunner(ta=lambda *args: None, stats=stats, run_obj="runtime", cost_for_crash=10.7)
         run_info, result = eta.run_wrapper(
             RunInfo(
                 config={},

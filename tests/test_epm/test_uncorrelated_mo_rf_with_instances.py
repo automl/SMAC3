@@ -17,9 +17,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
     def _get_cs(self, n_dimensions):
         configspace = smac.configspace.ConfigurationSpace()
         for i in range(n_dimensions):
-            configspace.add_hyperparameter(
-                smac.configspace.UniformFloatHyperparameter("x%d" % i, 0, 1)
-            )
+            configspace.add_hyperparameter(smac.configspace.UniformFloatHyperparameter("x%d" % i, 0, 1))
         return configspace
 
     def test_train_and_predict_with_rf(self):

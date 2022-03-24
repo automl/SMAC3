@@ -71,9 +71,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertRaisesRegex(ValueError, "Expected 2d array, got 3d array!", model.predict, X)
 
         X = rs.rand(10, 5)
-        self.assertRaisesRegex(
-            ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X
-        )
+        self.assertRaisesRegex(ValueError, "Rows in X should have 10 entries " "but have 5!", model.predict, X)
 
     def test_gp_train(self):
         rs = np.random.RandomState(1)
@@ -152,9 +150,7 @@ class TestGPMCMC(unittest.TestCase):
             ],
             dtype=np.float64,
         )
-        y = np.array(
-            [[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64
-        )
+        y = np.array([[0.1], [0.2], [9], [9.2], [100.0], [100.2], [109.0], [109.2]], dtype=np.float64)
         rs = np.random.RandomState(1)
         model = get_gp(3, rs, noise=1e-10, n_iter=200)
         model.train(np.vstack((X, X, X, X, X, X, X, X)), np.vstack((y, y, y, y, y, y, y, y)))

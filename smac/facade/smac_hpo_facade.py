@@ -38,10 +38,7 @@ class SMAC4HPO(SMAC4AC):
         scenario = kwargs["scenario"]
 
         kwargs["initial_design"] = kwargs.get("initial_design", SobolDesign)
-        if (
-            len(scenario.cs.get_hyperparameters()) > 21201
-            and kwargs["initial_design"] is SobolDesign
-        ):
+        if len(scenario.cs.get_hyperparameters()) > 21201 and kwargs["initial_design"] is SobolDesign:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
@@ -83,9 +80,7 @@ class SMAC4HPO(SMAC4AC):
 
         # better improve acquisition function optimization
         # 1. increase number of sls iterations
-        acquisition_function_optimizer_kwargs = kwargs.get(
-            "acquisition_function_optimizer_kwargs", dict()
-        )
+        acquisition_function_optimizer_kwargs = kwargs.get("acquisition_function_optimizer_kwargs", dict())
         acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
         kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
 

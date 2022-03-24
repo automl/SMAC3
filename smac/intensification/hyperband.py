@@ -124,9 +124,7 @@ class _Hyperband(_SuccessiveHalving):
 
         self.identifier = identifier
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__
-        )
+        self.logger = logging.getLogger(self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
 
         # to track completed hyperband iterations
         self.hb_iters = 0
@@ -269,9 +267,7 @@ class _Hyperband(_SuccessiveHalving):
         """
         if not hasattr(self, "s"):
             # setting initial running budget for future iterations (s & s_max from Algorithm 1)
-            self.s_max = int(
-                np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta))
-            )
+            self.s_max = int(np.floor(np.log(self.max_budget / self.initial_budget) / np.log(self.eta)))
             self.s = self.s_max
         elif self.s == 0:
             # reset if HB iteration is over

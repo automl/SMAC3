@@ -272,9 +272,7 @@ class Intensifier(AbstractRacer):
         # This new challenger is also assumed to be the incumbent
         if self.stage == IntensifierStage.RUN_FIRST_CONFIG:
             if incumbent is None:
-                self.logger.info(
-                    "First run, no incumbent provided;" " challenger is assumed to be the incumbent"
-                )
+                self.logger.info("First run, no incumbent provided;" " challenger is assumed to be the incumbent")
                 challenger, self.new_challenger = self.get_next_challenger(
                     challengers=challengers,
                     chooser=chooser,
@@ -283,9 +281,7 @@ class Intensifier(AbstractRacer):
             else:
                 inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
                 if len(inc_runs) > 0:
-                    self.logger.debug(
-                        "Skipping RUN_FIRST_CONFIG stage since " "incumbent has already been ran"
-                    )
+                    self.logger.debug("Skipping RUN_FIRST_CONFIG stage since " "incumbent has already been ran")
                     self.stage = IntensifierStage.RUN_INCUMBENT
 
         # LINES 3-7
@@ -361,9 +357,7 @@ class Intensifier(AbstractRacer):
         # Skip the iteration if the challenger was previously run
         if challenger == incumbent and self.stage == IntensifierStage.RUN_CHALLENGER:
             self.challenger_same_as_incumbent = True
-            self.logger.debug(
-                "Challenger was the same as the current incumbent; Skipping challenger"
-            )
+            self.logger.debug("Challenger was the same as the current incumbent; Skipping challenger")
             return RunInfoIntent.SKIP, RunInfo(
                 config=None,
                 instance=None,
@@ -509,9 +503,7 @@ class Intensifier(AbstractRacer):
         """
         if self.stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN:
             if incumbent is None:
-                self.logger.info(
-                    "First run, no incumbent provided;" " challenger is assumed to be the incumbent"
-                )
+                self.logger.info("First run, no incumbent provided;" " challenger is assumed to be the incumbent")
                 incumbent = run_info.config
 
         if self.stage in [
@@ -558,8 +550,7 @@ class Intensifier(AbstractRacer):
 
             if not self.use_ta_time_bound and self.elapsed_time - time_bound >= 0:
                 self.logger.debug(
-                    "Wallclock time limit for intensification reached "
-                    "(used: %f sec, available: %f sec)",
+                    "Wallclock time limit for intensification reached " "(used: %f sec, available: %f sec)",
                     self.elapsed_time,
                     time_bound,
                 )
@@ -687,9 +678,7 @@ class Intensifier(AbstractRacer):
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
         inc_perf = run_history.get_cost(incumbent)
         format_value = format_array(inc_perf)
-        self.logger.info(
-            f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}"
-        )
+        self.logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}")
 
         # if running first configuration, go to next stage after 1st run
         if self.stage in [
@@ -706,9 +695,7 @@ class Intensifier(AbstractRacer):
             else:
                 self.stage = IntensifierStage.RUN_INCUMBENT
 
-        self._compare_configs(
-            incumbent=incumbent, challenger=incumbent, run_history=run_history, log_traj=log_traj
-        )
+        self._compare_configs(incumbent=incumbent, challenger=incumbent, run_history=run_history, log_traj=log_traj)
 
     def _get_next_racer(
         self,
@@ -756,9 +743,7 @@ class Intensifier(AbstractRacer):
 
         cutoff = self.cutoff
         if self.run_obj_time:
-            cutoff = self._adapt_cutoff(
-                challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost
-            )
+            cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost)
 
         self.logger.debug("Cutoff for challenger: %s" % str(cutoff))
 
@@ -792,9 +777,7 @@ class Intensifier(AbstractRacer):
         if not self.run_obj_time:
             return True
 
-        cutoff = self._adapt_cutoff(
-            challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost
-        )
+        cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost)
         if cutoff is not None and cutoff <= 0:
             return False
         else:
@@ -912,12 +895,8 @@ class Intensifier(AbstractRacer):
         """
         # get next instances left for the challenger
         # Line 8
-        inc_inst_seeds = set(
-            run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        )
-        chall_inst_seeds = set(
-            run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
-        )
+        inc_inst_seeds = set(run_history.get_runs_for_config(incumbent, only_max_observed_budget=True))
+        chall_inst_seeds = set(run_history.get_runs_for_config(challenger, only_max_observed_budget=True))
         # Line 10
         missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
 
@@ -979,15 +958,11 @@ class Intensifier(AbstractRacer):
 
         # select new configuration when entering 'race challenger' stage
         # or for the first run
-        if not self.current_challenger or (
-            self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run
-        ):
+        if not self.current_challenger or (self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run):
 
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
-                configs_to_run = self._generate_challengers(
-                    challengers=challengers, chooser=chooser
-                )
+                configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
                 self.configs_to_run = typing.cast(_config_to_run_type, configs_to_run)
                 self.update_configs_to_run = False
 

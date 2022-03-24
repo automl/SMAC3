@@ -113,8 +113,6 @@ def fmin_smac(
     config_id = smac.solver.runhistory.config_ids[incumbent]
     run_key = RunKey(config_id, None, 0)
     incumbent_performance = smac.solver.runhistory.data[run_key]
-    incumbent = np.array(
-        [incumbent[tmplt.format(idx + 1)] for idx in range(len(bounds))], dtype=float
-    )
+    incumbent = np.array([incumbent[tmplt.format(idx + 1)] for idx in range(len(bounds))], dtype=float)
 
     return incumbent, incumbent_performance.cost, smac

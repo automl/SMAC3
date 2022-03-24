@@ -70,9 +70,7 @@ class SimpleIntensifier(AbstractRacer):
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker = (
-            {}
-        )  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
+        self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
 
     def process_results(
         self,
@@ -113,15 +111,11 @@ class SimpleIntensifier(AbstractRacer):
             empirical performance of incumbent configuration
         """
         # Mark the fact that we processed this configuration
-        self.run_tracker[
-            (run_info.config, run_info.instance, run_info.seed, run_info.budget)
-        ] = True
+        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
         # If The incumbent is None we use the challenger
         if not incumbent:
-            self.logger.info(
-                "First run, no incumbent provided; challenger is assumed to be the incumbent"
-            )
+            self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = run_info.config
 
         self.num_run += 1
@@ -209,7 +203,5 @@ class SimpleIntensifier(AbstractRacer):
             budget=0.0,
         )
 
-        self.run_tracker[
-            (run_info.config, run_info.instance, run_info.seed, run_info.budget)
-        ] = False
+        self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = False
         return RunInfoIntent.RUN, run_info

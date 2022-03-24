@@ -113,9 +113,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     for further details.
     """
 
-    def __init__(
-        self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any
-    ):
+    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
         """Constructor
 
         Parameters
@@ -128,9 +126,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         """
 
         super().__init__(model)
-        self.long_name = (
-            "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
-        )
+        self.long_name = "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
@@ -154,9 +150,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         model = kwargs["model"]
         del kwargs["model"]
         if not hasattr(model, "models") or len(model.models) == 0:
-            raise ValueError(
-                "IntegratedAcquisitionFunction requires at least one model to integrate!"
-            )
+            raise ValueError("IntegratedAcquisitionFunction requires at least one model to integrate!")
         if len(self._functions) == 0 or len(self._functions) != len(model.models):
             self._functions = [copy.deepcopy(self.acq) for _ in model.models]
         for submodel, func in zip(model.models, self._functions):
@@ -337,9 +331,7 @@ class EIPS(EI):
             f = calculate_f()
 
         if (f < 0).any():
-            raise ValueError(
-                "Expected Improvement per Second is smaller than 0 " "for at least one sample."
-            )
+            raise ValueError("Expected Improvement per Second is smaller than 0 " "for at least one sample.")
 
         return f.reshape((-1, 1))
 

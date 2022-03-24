@@ -147,9 +147,7 @@ if __name__ == "__main__":
     cs.add_hyperparameters([C, shrinking])
 
     # Others are kernel-specific, so we can add conditions to limit the searchspace
-    degree = UniformIntegerHyperparameter(
-        "degree", 1, 5, default_value=3
-    )  # Only used by kernel poly
+    degree = UniformIntegerHyperparameter("degree", 1, 5, default_value=3)  # Only used by kernel poly
     coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
     cs.add_hyperparameters([degree, coef0])
 
@@ -160,9 +158,7 @@ if __name__ == "__main__":
     # This also works for parameters that are a mix of categorical and values
     # from a range of numbers
     # For example, gamma can be either "auto" or a fixed float
-    gamma = CategoricalHyperparameter(
-        "gamma", ["auto", "value"], default_value="auto"
-    )  # only rbf, poly, sigmoid
+    gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
     gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
     cs.add_hyperparameters([gamma, gamma_value])
     # We only activate gamma_value if gamma is set to "value"

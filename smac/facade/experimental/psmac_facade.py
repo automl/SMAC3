@@ -57,9 +57,7 @@ def optimize(
         The incumbent configuration of this run
 
     """
-    solver = SMAC4AC(
-        scenario=scenario, tae_runner=tae, tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs
-    )
+    solver = SMAC4AC(scenario=scenario, tae_runner=tae, tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs)
     solver.stats.start_timing()
     solver.stats.print_stats()
 
@@ -137,9 +135,7 @@ class PSMAC(object):
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if n_optimizers <= 1:
-            self.logger.warning(
-                "Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers
-            )
+            self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
         self.validate = validate
         self.shared_model = shared_model
@@ -166,9 +162,7 @@ class PSMAC(object):
             self.scenario.output_dir = "psmac3-output_%s" % (
                 datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")
             )
-            self.output_dir = create_output_directory(
-                self.scenario, run_id=self.run_id, logger=self.logger
-            )
+            self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
             if self.shared_model:
                 self.scenario.shared_model = self.shared_model
         if self.scenario.input_psmac_dirs is None:
@@ -195,9 +189,7 @@ class PSMAC(object):
         if self.n_optimizers == self.n_incs:  # no validation necessary just return all incumbents
             return incs
         else:
-            _, val_ids, _, est_ids = self.get_best_incumbents_ids(
-                incs
-            )  # determine the best incumbents
+            _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
             if val_ids:
                 return [inc for i, inc in enumerate(incs) if i in val_ids]
             return [inc for i, inc in enumerate(incs) if i in est_ids]
@@ -221,15 +213,15 @@ class PSMAC(object):
         """
         if self.validate is True:
             mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
-            val_ids = list(
-                map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1]))
-            )[: self.n_incs]
+            val_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[
+                : self.n_incs
+            ]
         else:
             cost_per_config_valid = val_ids = None
         mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
-        est_ids = list(
-            map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1]))
-        )[: self.n_incs]
+        est_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[
+            : self.n_incs
+        ]
         return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
 
     def _get_mean_costs(self, incs: typing.List[Configuration], new_rh: RunHistory):

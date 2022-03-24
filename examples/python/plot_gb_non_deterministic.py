@@ -69,14 +69,10 @@ if __name__ == "__main__":
     max_depth = UniformIntegerHyperparameter("max_depth", 1, 10, default_value=3)
     cs.add_hyperparameter(max_depth)
 
-    learning_rate = UniformFloatHyperparameter(
-        "learning_rate", 0.01, 1.0, default_value=1.0, log=True
-    )
+    learning_rate = UniformFloatHyperparameter("learning_rate", 0.01, 1.0, default_value=1.0, log=True)
     cs.add_hyperparameter(learning_rate)
 
-    min_samples_split = UniformFloatHyperparameter(
-        "min_samples_split", 0.01, 1.0, default_value=0.1, log=True
-    )
+    min_samples_split = UniformFloatHyperparameter("min_samples_split", 0.01, 1.0, default_value=0.1, log=True)
     max_features = UniformIntegerHyperparameter("max_features", 2, 10, default_value=4)
     cs.add_hyperparameters([min_samples_split, max_features])
 
@@ -121,23 +117,17 @@ if __name__ == "__main__":
 
     # get all the seeds applied to incumbent
     run_seeds = []
-    for inst_seed_budget in smac.get_runhistory().get_runs_for_config(
-        incumbent, only_max_observed_budget=True
-    ):
+    for inst_seed_budget in smac.get_runhistory().get_runs_for_config(incumbent, only_max_observed_budget=True):
         run_seeds.append(inst_seed_budget.seed)
 
     cfg_default = cs.get_default_configuration()
 
-    cfg_default_cv_scores, cfg_default_test_scores = eval_undeterministic_model(
-        cfg_default, seeds=run_seeds
-    )
+    cfg_default_cv_scores, cfg_default_test_scores = eval_undeterministic_model(cfg_default, seeds=run_seeds)
 
     print("Default cross validation score: %.2f" % (np.mean(cfg_default_cv_scores)))
     print("Default test score: %.2f" % np.mean(cfg_default_test_scores))
 
     # the optimization process is called
-    cfg_inc_cv_scores, cfg_inc_test_scores = eval_undeterministic_model(
-        cfg_default, seeds=run_seeds
-    )
+    cfg_inc_cv_scores, cfg_inc_test_scores = eval_undeterministic_model(cfg_default, seeds=run_seeds)
     # a classifier is trained with the hyperparameters returned from the optimizer
     print("Score on test set: %.2f" % np.mean(cfg_inc_test_scores))

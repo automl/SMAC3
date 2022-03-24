@@ -84,9 +84,7 @@ class InitialDesign:
         elif configs is not None:
             self.init_budget = len(configs)
         elif n_configs_x_params is not None:
-            self.init_budget = int(
-                max(1, min(n_configs_x_params * n_params, (max_config_fracs * ta_run_limit)))
-            )
+            self.init_budget = int(max(1, min(n_configs_x_params * n_params, (max_config_fracs * ta_run_limit))))
         else:
             raise ValueError(
                 "Need to provide either argument `init_budget`, `configs` or "
@@ -94,8 +92,7 @@ class InitialDesign:
             )
         if self.init_budget > ta_run_limit:
             raise ValueError(
-                "Initial budget %d cannot be higher than the run limit %d."
-                % (self.init_budget, ta_run_limit)
+                "Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, ta_run_limit)
             )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
@@ -148,9 +145,7 @@ class InitialDesign:
         configs = []
         for vector in design:
             try:
-                conf = deactivate_inactive_hyperparameters(
-                    configuration=None, configuration_space=cs, vector=vector
-                )
+                conf = deactivate_inactive_hyperparameters(configuration=None, configuration_space=cs, vector=vector)
             except ForbiddenValueError:
                 continue
             conf.origin = origin

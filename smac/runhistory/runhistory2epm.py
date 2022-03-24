@@ -145,14 +145,11 @@ class AbstractRunHistory2EPM(object):
 
         # Check imputor stuff
         if impute_censored_data and self.imputor is None:
-            self.logger.critical(
-                "You want me to impute censored data, but " "I don't know how. Imputor is None"
-            )
+            self.logger.critical("You want me to impute censored data, but " "I don't know how. Imputor is None")
             raise ValueError("impute_censored data, but no imputor given")
         elif impute_censored_data and not isinstance(self.imputor, BaseImputor):
             raise ValueError(
-                "Given imputor is not an instance of "
-                "smac.epm.base_imputor.BaseImputor, but %s" % type(self.imputor)
+                "Given imputor is not an instance of " "smac.epm.base_imputor.BaseImputor, but %s" % type(self.imputor)
             )
 
         # Learned statistics
@@ -200,8 +197,7 @@ class AbstractRunHistory2EPM(object):
             s_run_dict = {
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
-                if run.budget in budget_subset
-                and runhistory.data[run].status in self.success_states
+                if run.budget in budget_subset and runhistory.data[run].status in self.success_states
             }
             # Additionally add these states from lower budgets
             add = {
@@ -236,8 +232,7 @@ class AbstractRunHistory2EPM(object):
             t_run_dict = {
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
-                if runhistory.data[run].status == StatusType.TIMEOUT
-                and runhistory.data[run].time >= self.cutoff_time
+                if runhistory.data[run].status == StatusType.TIMEOUT and runhistory.data[run].time >= self.cutoff_time
             }
         return t_run_dict
 
@@ -324,8 +319,7 @@ class AbstractRunHistory2EPM(object):
                 c_run_dict = {
                     run: runhistory.data[run]
                     for run in runhistory.data.keys()
-                    if runhistory.data[run].status in self.impute_state
-                    and runhistory.data[run].time < self.cutoff_time
+                    if runhistory.data[run].status in self.impute_state and runhistory.data[run].time < self.cutoff_time
                 }
 
             if len(c_run_dict) == 0:
@@ -351,17 +345,13 @@ class AbstractRunHistory2EPM(object):
                     return_time_as_y=True,
                     store_statistics=False,
                 )
-                self.logger.debug(
-                    "%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0])
-                )
+                self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0]))
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
 
                 # return imp_Y in PAR depending on the used threshold in imputor
                 assert isinstance(self.imputor, BaseImputor)  # please mypy
-                imp_Y = self.imputor.impute(
-                    censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y
-                )
+                imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y)
 
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
@@ -567,12 +557,8 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         np.ndarray
         """
 
-        min_y = self.min_y - (
-            self.perc - self.min_y
-        )  # Subtract the difference between the percentile and the minimum
-        min_y -= (
-            constants.VERY_SMALL_NUMBER
-        )  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         # prevent diving by zero
 
@@ -588,9 +574,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
-                raise NotImplementedError(
-                    "Handling more than one instance is not supported for inverse scaled cost."
-                )
+                raise NotImplementedError("Handling more than one instance is not supported for inverse scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
@@ -607,12 +591,8 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         np.ndarray
         """
 
-        min_y = self.min_y - (
-            self.perc - self.min_y
-        )  # Subtract the difference between the percentile and the minimum
-        min_y -= (
-            constants.VERY_SMALL_NUMBER
-        )  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         # prevent diving by zero
 
@@ -630,9 +610,7 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
-                raise NotImplementedError(
-                    "Handling more than one instance is not supported for sqrt scaled cost."
-                )
+                raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
@@ -648,12 +626,8 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-        min_y = self.min_y - (
-            self.perc - self.min_y
-        )  # Subtract the difference between the percentile and the minimum
-        min_y -= (
-            constants.VERY_SMALL_NUMBER
-        )  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         # prevent diving by zero
 
@@ -682,12 +656,8 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-        min_y = self.min_y - (
-            self.perc - self.min_y
-        )  # Subtract the difference between the percentile and the minimum
-        min_y -= (
-            constants.VERY_SMALL_NUMBER
-        )  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
         # prevent diving by zero
 

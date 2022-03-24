@@ -428,9 +428,7 @@ class LognormalPrior(Prior):
 
 
 class SoftTopHatPrior(Prior):
-    def __init__(
-        self, lower_bound: float, upper_bound: float, exponent: float, rng: np.random.RandomState
-    ) -> None:
+    def __init__(self, lower_bound: float, upper_bound: float, exponent: float, rng: np.random.RandomState) -> None:
         super().__init__(rng)
 
         with warnings.catch_warnings():
@@ -483,9 +481,7 @@ class SoftTopHatPrior(Prior):
         np.ndarray
         """
 
-        return np.exp(
-            self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,))
-        )
+        return np.exp(self.rng.uniform(self._log_lower_bound, self._log_upper_bound, size=(n_samples,)))
 
     def gradient(self, theta: float) -> float:
         if np.ndim(theta) == 0:

@@ -72,13 +72,10 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         self.num_targets = len(self.target_names)
         print(seed, rf_kwargs)
         self.estimators = [
-            RandomForestWithInstances(configspace, types, bounds, **rf_kwargs)
-            for _ in range(self.num_targets)
+            RandomForestWithInstances(configspace, types, bounds, **rf_kwargs) for _ in range(self.num_targets)
         ]
 
-    def _train(
-        self, X: np.ndarray, Y: np.ndarray
-    ) -> "UncorrelatedMultiObjectiveRandomForestWithInstances":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveRandomForestWithInstances":
         """Trains the random forest on X and y.
 
         Parameters
@@ -98,9 +95,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
 
         return self
 
-    def _predict(
-        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters

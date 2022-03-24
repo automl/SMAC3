@@ -68,15 +68,11 @@ class ExecuteTARunHydra(SerialRunner):
         if instance in self.cost_oracle:
             oracle_perf = self.cost_oracle[instance]
             if self.run_obj == "runtime":
-                self.logger.debug(
-                    "Portfolio perf: %f vs %f = %f", oracle_perf, runtime, min(oracle_perf, runtime)
-                )
+                self.logger.debug("Portfolio perf: %f vs %f = %f", oracle_perf, runtime, min(oracle_perf, runtime))
                 runtime = min(oracle_perf, runtime)
                 cost = runtime
             else:
-                self.logger.debug(
-                    "Portfolio perf: %f vs %f = %f", oracle_perf, cost, min(oracle_perf, cost)
-                )
+                self.logger.debug("Portfolio perf: %f vs %f = %f", oracle_perf, cost, min(oracle_perf, cost))
                 cost = min(oracle_perf, cost)
             if oracle_perf < cutoff and status is StatusType.TIMEOUT:
                 status = StatusType.SUCCESS

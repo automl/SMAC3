@@ -98,14 +98,10 @@ class Hydra(object):
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if incs_per_round <= 0:
-            self.logger.warning(
-                "Invalid value in %s: %d. Setting to 1", "incs_per_round", incs_per_round
-            )
+            self.logger.warning("Invalid value in %s: %d. Setting to 1", "incs_per_round", incs_per_round)
         self.incs_per_round = max(incs_per_round, 1)
         if n_optimizers <= 0:
-            self.logger.warning(
-                "Invalid value in %s: %d. Setting to 1", "n_optimizers", n_optimizers
-            )
+            self.logger.warning("Invalid value in %s: %d. Setting to 1", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 1)
         self.val_set = self._get_validation_set(val_set)
         self.cost_per_inst = {}
@@ -170,12 +166,9 @@ class Hydra(object):
             )
             self.scenario.output_dir = os.path.join(
                 self.top_dir,
-                "psmac3-output_%s"
-                % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
+                "psmac3-output_%s" % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
             )
-            self.output_dir = create_output_directory(
-                self.scenario, run_id=self.run_id, logger=self.logger
-            )
+            self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
         scen = copy.deepcopy(self.scenario)
         scen.output_dir_for_this_run = None
@@ -233,9 +226,7 @@ class Hydra(object):
             self.logger.info("Kept incumbents")
             for inc in incs:
                 self.logger.info(inc)
-                config_cost_per_inst[inc] = (
-                    cost_per_conf_v[inc] if self.val_set else cost_per_conf_e[inc]
-                )
+                config_cost_per_inst[inc] = cost_per_conf_v[inc] if self.val_set else cost_per_conf_e[inc]
 
             cur_portfolio_cost = self._update_portfolio(incs, config_cost_per_inst)
             if portfolio_cost <= cur_portfolio_cost:
@@ -247,21 +238,16 @@ class Hydra(object):
 
             self.scenario.output_dir = os.path.join(
                 self.top_dir,
-                "psmac3-output_%s"
-                % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
+                "psmac3-output_%s" % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
             )
-            self.output_dir = create_output_directory(
-                self.scenario, run_id=self.run_id, logger=self.logger
-            )
+            self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
         read(
             self.rh,
             os.path.join(self.top_dir, "psmac3*", "run_" + str(MAXINT)),
             self.scenario.cs,
             self.logger,
         )
-        self.rh.save_json(
-            fn=os.path.join(self.top_dir, "all_validated_runs_runhistory.json"), save_external=True
-        )
+        self.rh.save_json(fn=os.path.join(self.top_dir, "all_validated_runs_runhistory.json"), save_external=True)
         with open(os.path.join(self.top_dir, "portfolio.pkl"), "wb") as fh:
             pickle.dump(self.portfolio, fh)
         self.logger.info("~" * 120)
@@ -272,9 +258,7 @@ class Hydra(object):
 
         return self.portfolio
 
-    def _update_portfolio(
-        self, incs: np.ndarray, config_cost_per_inst: typing.Dict
-    ) -> typing.Union[float, float]:
+    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[float, float]:
         """
         Validates all configurations (in incs) and determines which ones to add to the portfolio
 
@@ -299,25 +283,17 @@ class Hydra(object):
                             raise ValueError("Num validated Instances mismatch!")
                         else:
                             for key in cost_per_inst:
-                                self.cost_per_inst[key] = min(
-                                    self.cost_per_inst[key], cost_per_inst[key]
-                                )
+                                self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
                     else:
                         self.cost_per_inst = cost_per_inst
             cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: float
         else:  # No validated data. Set the mean to the approximated mean
-            means = (
-                []
-            )  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
+            means = []  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
             for kept in incs:
-                means.append(
-                    np.nanmean(list(self.optimizer.rh.get_instance_costs_for_config(kept).values()))
-                )
+                means.append(np.nanmean(list(self.optimizer.rh.get_instance_costs_for_config(kept).values())))
                 self.portfolio.append(kept)
             if self.portfolio_cost:
-                new_mean = (
-                    self.portfolio_cost * (len(self.portfolio) - len(incs)) / len(self.portfolio)
-                )
+                new_mean = self.portfolio_cost * (len(self.portfolio) - len(incs)) / len(self.portfolio)
                 new_mean += np.nansum(means)
             else:
                 new_mean = np.mean(means)
