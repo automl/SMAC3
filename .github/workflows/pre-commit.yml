@@ -7,7 +7,7 @@ on:
   # When a push occurs on either of these branches
   push:
     branches:
-      - master
+      - main
       - development
 
   # When a push occurs on a PR that targets these branches

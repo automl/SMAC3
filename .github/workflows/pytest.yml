@@ -7,13 +7,13 @@ on:
   # Triggers with push to main
   push:
     branches:
-      - master
+      - main
       - development
 
   # Triggers with push to a pr aimed at main
   pull_request:
     branches:
-      - master
+      - main
       - development
 
   schedule:
