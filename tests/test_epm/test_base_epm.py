@@ -2,10 +2,10 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace import UniformFloatHyperparameter
 
 import smac
 import smac.configspace
+from ConfigSpace import UniformFloatHyperparameter
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import get_types
 

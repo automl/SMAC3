@@ -12,7 +12,6 @@ from ConfigSpace import (
 from ConfigSpace.exceptions import ForbiddenValueError
 from ConfigSpace.read_and_write import json, pcs, pcs_new
 from ConfigSpace.util import get_one_exchange_neighbourhood
-
 from smac.configspace.util import convert_configurations_to_array
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

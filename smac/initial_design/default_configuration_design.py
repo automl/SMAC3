@@ -1,7 +1,6 @@
 from typing import List
 
 from ConfigSpace import Configuration
-
 from smac.initial_design.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"

@@ -3,8 +3,8 @@ from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple
 import logging
 
 import numpy as np
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.runhistory.runhistory import RunKey

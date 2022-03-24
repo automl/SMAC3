@@ -3,13 +3,13 @@ import unittest
 import unittest.mock
 
 import numpy
+
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-
 from smac.epm import rfr_imputator
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types

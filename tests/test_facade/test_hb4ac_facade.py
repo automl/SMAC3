@@ -3,7 +3,6 @@ import shutil
 import unittest.mock
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
-
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.facade.hyperband_facade import HB4AC
