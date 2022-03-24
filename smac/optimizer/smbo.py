@@ -150,9 +150,7 @@ class SMBO(object):
 
         # Callbacks. All known callbacks have a key. If something does not have a key here, there is
         # no callback available.
-        self._callbacks = {
-            "_incorporate_run_results": list()
-        }  # type: typing.Dict[str, typing.List[typing.Callable]]
+        self._callbacks = {"_incorporate_run_results": list()}  # type: typing.Dict[str, typing.List[typing.Callable]]
         self._callback_to_key = {
             IncorporateRunResultCallback: "_incorporate_run_results",
         }  # type: typing.Dict[typing.Type, str]
@@ -230,9 +228,7 @@ class SMBO(object):
             )
 
             # remove config from initial design challengers to not repeat it again
-            self.initial_design_configs = [
-                c for c in self.initial_design_configs if c != run_info.config
-            ]
+            self.initial_design_configs = [c for c in self.initial_design_configs if c != run_info.config]
 
             # update timebound only if a 'new' configuration is sampled as the challenger
             if self.intensifier.num_run == 0:
@@ -324,9 +320,7 @@ class SMBO(object):
                 if self.stats.is_budget_exhausted():
                     self.logger.debug("Exhausted configuration budget")
                 else:
-                    self.logger.debug(
-                        "Shutting down because a configuration or callback returned status STOP"
-                    )
+                    self.logger.debug("Shutting down because a configuration or callback returned status STOP")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,
@@ -442,22 +436,18 @@ class SMBO(object):
         frac_intensify = self.scenario.intensification_percentage  # type: ignore[attr-defined] # noqa F821
         if frac_intensify <= 0 or frac_intensify >= 1:
             raise ValueError(
-                "The value for intensification_percentage-"
-                "option must lie in (0,1), instead: %.2f" % frac_intensify
+                "The value for intensification_percentage-" "option must lie in (0,1), instead: %.2f" % frac_intensify
             )
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
         self.logger.debug(
             "Total time: %.4f, time spent on choosing next "
             "configurations: %.4f (%.2f), time left for "
-            "intensification: %.4f (%.2f)"
-            % (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify)
+            "intensification: %.4f (%.2f)" % (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify)
         )
         return time_left
 
-    def _incorporate_run_results(
-        self, run_info: RunInfo, result: RunValue, time_left: float
-    ) -> None:
+    def _incorporate_run_results(self, run_info: RunInfo, result: RunValue, time_left: float) -> None:
         """
         The SMBO submits a config-run-request via a RunInfo object.
         When that config run is completed, a RunValue, which contains
@@ -535,9 +525,7 @@ class SMBO(object):
             # If a callback returns False, the optimization loop should be interrupted
             # the other callbacks are still being called
             if response is False:
-                self.logger.debug(
-                    "An IncorporateRunResultCallback returned False, requesting abort."
-                )
+                self.logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
                 self._stop = True
 
         if self.scenario.save_instantly:  # type: ignore[attr-defined] # noqa F821

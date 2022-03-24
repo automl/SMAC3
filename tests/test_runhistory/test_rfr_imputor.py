@@ -83,15 +83,9 @@ class ImputorTest(unittest.TestCase):
 
     def get_runhistory(self, num_success, num_capped, num_timeout):
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(
-            CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a")
-        )
-        cs.add_hyperparameter(
-            UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5)
-        )
-        cs.add_hyperparameter(
-            UniformIntegerHyperparameter(name="integer_0_100", lower=-10, upper=10, default_value=0)
-        )
+        cs.add_hyperparameter(CategoricalHyperparameter(name="cat_a_b", choices=["a", "b"], default_value="a"))
+        cs.add_hyperparameter(UniformFloatHyperparameter(name="float_0_1", lower=0, upper=1, default_value=0.5))
+        cs.add_hyperparameter(UniformIntegerHyperparameter(name="integer_0_100", lower=-10, upper=10, default_value=0))
 
         rh = runhistory.RunHistory()
         rs = numpy.random.RandomState(1)
@@ -163,9 +157,7 @@ class ImputorTest(unittest.TestCase):
 
             cs = ConfigurationSpace()
             for i in range(num_feat):
-                cs.add_hyperparameter(
-                    UniformFloatHyperparameter(name="a_%d" % i, lower=0, upper=1, default_value=0.5)
-                )
+                cs.add_hyperparameter(UniformFloatHyperparameter(name="a_%d" % i, lower=0, upper=1, default_value=0.5))
 
             imputor = rfr_imputator.RFRImputator(
                 rng=rs,
@@ -176,9 +168,7 @@ class ImputorTest(unittest.TestCase):
                 model=self.get_model(cs),
             )
 
-            imp_y = imputor.impute(
-                censored_X=cen_X, censored_y=cen_y, uncensored_X=uncen_X, uncensored_y=uncen_y
-            )
+            imp_y = imputor.impute(censored_X=cen_X, censored_y=cen_y, uncensored_X=uncen_X, uncensored_y=uncen_y)
 
             if imp_y is None:
                 continue
@@ -225,9 +215,7 @@ class ImputorTest(unittest.TestCase):
         scen = self.get_scenario(instance_features)
         model = self.get_model(cs, instance_features)
 
-        with unittest.mock.patch.object(
-            model, attribute="train", wraps=model.train
-        ) as train_wrapper:
+        with unittest.mock.patch.object(model, attribute="train", wraps=model.train) as train_wrapper:
             imputor = rfr_imputator.RFRImputator(
                 rng=rs,
                 cutoff=scen.cutoff,

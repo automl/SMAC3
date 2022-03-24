@@ -1,6 +1,6 @@
 [flake8]
 show-source = True
-max-line-length = 100
+max-line-length = 120
 extend-exclude =
     venv
     .venv

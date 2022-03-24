@@ -35,6 +35,4 @@ __all__ = [
     "ForbiddenValueError",
 ]
 
-get_one_exchange_neighbourhood = partial(
-    get_one_exchange_neighbourhood, stdev=0.05, num_neighbors=8
-)
+get_one_exchange_neighbourhood = partial(get_one_exchange_neighbourhood, stdev=0.05, num_neighbors=8)

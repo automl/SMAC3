@@ -43,9 +43,7 @@ class TestRandomConfigurationDesign(unittest.TestCase):
             self.cs.add_hyperparameter(get_param(param_name))
 
         for i in range(5):
-            self.cs.add_hyperparameter(
-                UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1)
-            )
+            self.cs.add_hyperparameter(UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1))
 
     def test_random_configurations(self):
         kwargs = dict(

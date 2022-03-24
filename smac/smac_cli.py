@@ -56,9 +56,7 @@ class SMACCLI(object):
         if root_logger.level >= logging.INFO:
             formatter = logging.Formatter("%(levelname)s:\t%(message)s")
         else:
-            formatter = logging.Formatter(
-                "%(asctime)s:%(levelname)s:%(name)s:\t%(message)s", "%Y-%m-%d %H:%M:%S"
-            )
+            formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s:\t%(message)s", "%Y-%m-%d %H:%M:%S")
         logger_handler.setFormatter(formatter)
         root_logger.addHandler(logger_handler)
         # remove default handler
@@ -89,9 +87,7 @@ class SMACCLI(object):
                 root_logger,
             )
             scen.write()
-            incumbent = self.restore_state_after_output_dir(
-                scen, stats, traj_list_aclib, traj_list_old
-            )
+            incumbent = self.restore_state_after_output_dir(scen, stats, traj_list_aclib, traj_list_old)
 
         if main_args_.warmstart_runhistory:
             rh = RunHistory()

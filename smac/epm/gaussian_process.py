@@ -220,10 +220,7 @@ class GaussianProcess(BaseModel):
                             size=(self.n_opt_restarts,),
                         )
                     except OverflowError:
-                        raise ValueError(
-                            "OverflowError while sampling from (%f, %f)"
-                            % (hp_bound[0], hp_bound[1])
-                        )
+                        raise ValueError("OverflowError while sampling from (%f, %f)" % (hp_bound[0], hp_bound[1]))
                     dim_samples.append(sample.flatten())
                 else:
                     dim_samples.append(prior.sample_from_prior(self.n_opt_restarts).flatten())

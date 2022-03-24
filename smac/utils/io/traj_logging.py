@@ -64,8 +64,7 @@ class TrajLogger(object):
         if output_dir is None or output_dir == "":
             self.output_dir = None
             self.logger.info(
-                "No output directory for trajectory logging "
-                "specified -- trajectory will not be logged."
+                "No output directory for trajectory logging " "specified -- trajectory will not be logged."
             )
 
         else:
@@ -133,9 +132,7 @@ class TrajLogger(object):
         if self.output_dir is not None:
             self._add_in_old_format(perf, incumbent_id, incumbent, ta_time_used, wallclock_time)
             self._add_in_aclib_format(perf, incumbent_id, incumbent, ta_time_used, wallclock_time)
-            self._add_in_alljson_format(
-                perf, incumbent_id, incumbent, budget, ta_time_used, wallclock_time
-            )
+            self._add_in_alljson_format(perf, incumbent_id, incumbent, budget, ta_time_used, wallclock_time)
 
     def _add_in_old_format(
         self,
@@ -373,19 +370,13 @@ class TrajLogger(object):
                             continue
 
                 # Second, check if it's in the choices / the correct type.
-                legal = {
-                    interpretation
-                    for interpretation in interpretations
-                    if hp.is_legal(interpretation)
-                }
+                legal = {interpretation for interpretation in interpretations if hp.is_legal(interpretation)}
 
                 # Third, issue warnings if the interpretation is ambigious
                 if len(legal) != 1:
                     logging.getLogger("smac.trajlogger").warning(
                         "Ambigous or no interpretation of value {} for hp {} found ({} possible interpretations). "
-                        "Passing string, but this will likely result in an error".format(
-                            v, hp.name, len(legal)
-                        )
+                        "Passing string, but this will likely result in an error".format(v, hp.name, len(legal))
                     )
                 else:
                     v = legal.pop()

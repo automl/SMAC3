@@ -73,9 +73,7 @@ class TestPSMAC(unittest.TestCase):
 
         # External configuration which will not be written to json file!
         config_5 = configuration_space.sample_configuration()
-        run_history.add(
-            config_5, 1, 1, StatusType.SUCCESS, seed=1, origin=DataOrigin.EXTERNAL_SAME_INSTANCES
-        )
+        run_history.add(config_5, 1, 1, StatusType.SUCCESS, seed=1, origin=DataOrigin.EXTERNAL_SAME_INSTANCES)
 
         logger = logging.getLogger("Test")
         pSMAC.write(run_history, self.tmp_dir, logger=logger)

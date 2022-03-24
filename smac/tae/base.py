@@ -238,9 +238,7 @@ class BaseRunner(ABC):
         end = time.time()
 
         if run_info.budget == 0 and status == StatusType.DONOTADVANCE:
-            raise ValueError(
-                "Cannot handle DONOTADVANCE state when using intensify or SH/HB on " "instances."
-            )
+            raise ValueError("Cannot handle DONOTADVANCE state when using intensify or SH/HB on " "instances.")
 
         # Catch NaN or inf.
         if (self.run_obj == "runtime" and not np.isfinite(runtime)) or (

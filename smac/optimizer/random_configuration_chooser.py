@@ -47,9 +47,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if modulus <= 1.0:
-            self.logger.warning(
-                "Using SMAC with random configurations only." "ROAR is the better choice for this."
-            )
+            self.logger.warning("Using SMAC with random configurations only." "ROAR is the better choice for this.")
         self.modulus = modulus
 
     def next_smbo_iteration(self) -> None:
@@ -86,9 +84,7 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
-            self.logger.warning(
-                "Using SMAC with random configurations only. ROAR is the better choice for this."
-            )
+            self.logger.warning("Using SMAC with random configurations only. ROAR is the better choice for this.")
         self.modulus = start_modulus
         self.modulus_increment = modulus_increment
         self.end_modulus = end_modulus
@@ -196,9 +192,7 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
 
     def next_smbo_iteration(self) -> None:
         self.prob = self.prob_min + (
-            0.5
-            * (self.prob_max - self.prob_min)
-            * (1 + np.cos(self.iteration * np.pi / self.restart_iteration))
+            0.5 * (self.prob_max - self.prob_min) * (1 + np.cos(self.iteration * np.pi / self.restart_iteration))
         )
         self.logger.error("Probability for random configs: %f" % self.prob)
         self.iteration += 1

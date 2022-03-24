@@ -100,18 +100,12 @@ class TestParallelScheduler(unittest.TestCase):
             source_id=2,
         )
 
-        result = RunValue(
-            cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={}
-        )
+        result = RunValue(cost=1, time=0.5, status=StatusType.SUCCESS, starttime=1, endtime=2, additional_info={})
 
-        scheduler.process_results(
-            run_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None
-        )
+        scheduler.process_results(run_info=run_info, result=result, incumbent=None, run_history=None, time_bound=None)
         self.assertIsNone(scheduler.intensifier_instances[0].process_results.call_args)
         self.assertIsNone(scheduler.intensifier_instances[1].process_results.call_args)
-        self.assertEqual(
-            scheduler.intensifier_instances[2].process_results.call_args[1]["run_info"], run_info
-        )
+        self.assertEqual(scheduler.intensifier_instances[2].process_results.call_args[1]["run_info"], run_info)
 
     def test_get_next_run_wait(self):
         """Makes sure we wait if all intensifiers are busy, and no new instance got added.

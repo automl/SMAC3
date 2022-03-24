@@ -200,12 +200,10 @@ class Stats(object):
         )
         log_func("Configurations: %d" % (self.n_configs))
         log_func(
-            "Used wallclock time: %.2f / %.2f sec "
-            % (time.time() - self._start_time, self.__scenario.wallclock_limit)
+            "Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.__scenario.wallclock_limit)
         )
         log_func(
-            "Used target algorithm runtime: %.2f / %.2f sec"
-            % (self.ta_time_used, self.__scenario.algo_runs_timelimit)
+            "Used target algorithm runtime: %.2f / %.2f sec" % (self.ta_time_used, self.__scenario.algo_runs_timelimit)
         )
         self._logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:

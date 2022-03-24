@@ -32,9 +32,7 @@ class TaeOldTest(unittest.TestCase):
         )
         stats = Stats(scen)
 
-        eta = ExecuteTARunOld(
-            ta=shlex.split("python tests/test_tae/dummy_ta_wrapper.py 1"), stats=stats
-        )
+        eta = ExecuteTARunOld(ta=shlex.split("python tests/test_tae/dummy_ta_wrapper.py 1"), stats=stats)
         status, cost, runtime, ar_info = eta.run(config={})
         assert status == StatusType.SUCCESS
         assert cost == 1.0
@@ -42,9 +40,7 @@ class TaeOldTest(unittest.TestCase):
 
         print(status, cost, runtime)
 
-        eta = ExecuteTARunOld(
-            ta=shlex.split("python tests/test_tae/dummy_ta_wrapper.py 2"), stats=stats
-        )
+        eta = ExecuteTARunOld(ta=shlex.split("python tests/test_tae/dummy_ta_wrapper.py 2"), stats=stats)
         status, cost, runtime, ar_info = eta.run(config={})
         assert status == StatusType.SUCCESS
         assert cost == 2.0

@@ -114,9 +114,7 @@ class TestSMACFacade(unittest.TestCase):
             {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT},
         )
         self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.impute_state), set())
-        self.assertSetEqual(
-            set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set()
-        )
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set())
 
         for intensifier in (SuccessiveHalving, Hyperband):
             smbo = SMAC4AC(
@@ -162,9 +160,7 @@ class TestSMACFacade(unittest.TestCase):
                 StatusType.CAPPED,
             },
         )
-        self.assertSetEqual(
-            set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set()
-        )
+        self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set())
 
     def test_construct_runhistory(self):
 
@@ -196,9 +192,7 @@ class TestSMACFacade(unittest.TestCase):
             random_configuration_chooser=ChooserNoCoolDown,
             random_configuration_chooser_kwargs={"modulus": 10},
         )
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, "got an unexpected keyword argument"):
             SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"dummy": 0.1})
@@ -228,9 +222,7 @@ class TestSMACFacade(unittest.TestCase):
         smbo = SMAC4AC(self.scenario)
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         smbo = SMAC4AC(self.scenario, rng=rng)
-        self.assertIsInstance(
-            smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances
-        )
+        self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228)
         smbo = SMAC4AC(self.scenario, acquisition_function_kwargs={"par": 17})
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
@@ -267,9 +259,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(smbo.solver.intensifier, DummyIntensifier)
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
 
-        dummy_intensifier = DummyIntensifier(
-            stats=None, traj_logger=None, rng=rng, instances=self.scenario.train_insts
-        )
+        dummy_intensifier = DummyIntensifier(stats=None, traj_logger=None, rng=rng, instances=self.scenario.train_insts)
         smbo = SMAC4AC(self.scenario, intensifier=dummy_intensifier)
         self.assertEqual(smbo.solver.intensifier, dummy_intensifier)
 
@@ -524,9 +514,7 @@ class TestSMACFacade(unittest.TestCase):
     def test_register_callback(self):
         smac = SMAC4AC(scenario=self.scenario, run_id=1)
 
-        with self.assertRaisesRegex(
-            ValueError, "Cannot register callback of type <class 'function'>"
-        ):
+        with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'function'>"):
             smac.register_callback(lambda: 1)
 
         with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'type'>"):

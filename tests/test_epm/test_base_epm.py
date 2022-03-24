@@ -26,9 +26,7 @@ class TestRFWithInstances(unittest.TestCase):
         types, bounds = get_types(cs, instance_features)
 
         def get_X_y(num_samples, num_instance_features):
-            X = smac.configspace.convert_configurations_to_array(
-                cs.sample_configuration(num_samples)
-            )
+            X = smac.configspace.convert_configurations_to_array(cs.sample_configuration(num_samples))
             if num_instance_features:
                 X_inst = np.random.rand(num_samples, num_instance_features)
                 X = np.hstack((X, X_inst))

@@ -37,8 +37,7 @@ class OutputWriter(object):
         """
         if scenario.output_dir_for_this_run is None or scenario.output_dir_for_this_run == "":
             scenario.logger.info(
-                "No output directory for scenario logging "
-                "specified -- scenario will not be logged."
+                "No output directory for scenario logging " "specified -- scenario will not be logged."
             )
             return
 
@@ -49,16 +48,11 @@ class OutputWriter(object):
                 os.makedirs(scenario.output_dir_for_this_run)
             except OSError:
                 scenario.logger.debug("Could not make output directory.", exc_info=True)
-                raise OSError(
-                    "Could not make output directory: "
-                    "{}.".format(scenario.output_dir_for_this_run)
-                )
+                raise OSError("Could not make output directory: " "{}.".format(scenario.output_dir_for_this_run))
 
         # options_dest2name maps scenario._arguments from dest -> name
         options_dest2name = {
-            (scenario._arguments[v]["dest"] if scenario._arguments[v]["dest"] else v): v.lstrip(
-                "-"
-            ).replace("-", "_")
+            (scenario._arguments[v]["dest"] if scenario._arguments[v]["dest"] else v): v.lstrip("-").replace("-", "_")
             for v in scenario._arguments
         }
 
@@ -115,9 +109,7 @@ class OutputWriter(object):
                     assert scenario.output_dir_for_this_run is not None  # please mypy
                     new_path = os.path.join(scenario.output_dir_for_this_run, file_name + ".json")
                     self.save_configspace(scenario.cs, new_path, "json")  # type: ignore[attr-defined] # noqa F821
-                    scenario.logger.debug(
-                        "Setting the pcs_fn-attr of written scenario from %s to %s", value, new_path
-                    )
+                    scenario.logger.debug("Setting the pcs_fn-attr of written scenario from %s to %s", value, new_path)
             elif key == "pcs_fn" and scenario.cs is not None:  # type: ignore[attr-defined] # noqa F821
                 try:
                     assert scenario.output_dir_for_this_run is not None  # please mypy
@@ -125,8 +117,7 @@ class OutputWriter(object):
                     self.save_configspace(scenario.cs, pcs_path, "pcs_new")  # type: ignore[attr-defined] # noqa F821
                 except TypeError:
                     self.logger.error(
-                        "Could not write pcs file to disk."
-                        " ConfigSpace not compatible with (new) pcs format."
+                        "Could not write pcs file to disk." " ConfigSpace not compatible with (new) pcs format."
                     )
                 assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, "configspace.json")

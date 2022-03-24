@@ -121,9 +121,7 @@ class GaussianProcessMCMC(BaseModel):
         # Internal statistics
         self._n_ll_evals = 0
 
-    def _train(
-        self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True
-    ) -> "GaussianProcessMCMC":
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcessMCMC":
         """
         Performs MCMC sampling to sample hyperparameter configurations from the
         likelihood and trains for each sample a GP on X and y
@@ -159,9 +157,7 @@ class GaussianProcessMCMC(BaseModel):
             )
 
             if self.mcmc_sampler == "emcee":
-                sampler = emcee.EnsembleSampler(
-                    self.n_mcmc_walkers, len(self.kernel.theta), self._ll
-                )
+                sampler = emcee.EnsembleSampler(self.n_mcmc_walkers, len(self.kernel.theta), self._ll)
                 sampler.random_state = self.rng.get_state()
                 # Do a burn-in in the first iteration
                 if not self.burned:
@@ -180,25 +176,19 @@ class GaussianProcessMCMC(BaseModel):
                         if prior is None:
                             raise NotImplementedError()
                         else:
-                            dim_samples.append(
-                                prior.sample_from_prior(self.n_mcmc_walkers).flatten()
-                            )
+                            dim_samples.append(prior.sample_from_prior(self.n_mcmc_walkers).flatten())
                     self.p0 = np.vstack(dim_samples).transpose()
 
                     # Run MCMC sampling
                     with warnings.catch_warnings():
-                        warnings.filterwarnings(
-                            "ignore", r"invalid value encountered in double_scalars.*"
-                        )
+                        warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
                         self.p0, _, _ = sampler.run_mcmc(self.p0, self.burnin_steps)
 
                     self.burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
                 with warnings.catch_warnings():
-                    warnings.filterwarnings(
-                        "ignore", r"invalid value encountered in double_scalars.*"
-                    )
+                    warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
                     self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
 
                 # Take the last samples from each walker
@@ -233,9 +223,7 @@ class GaussianProcessMCMC(BaseModel):
                     max_depth=10,
                     rng=self.rng,
                 )
-                indices = [
-                    int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)
-                ]
+                indices = [int(np.rint(ind)) for ind in np.linspace(start=0, stop=len(samples) - 1, num=10)]
                 self.hypers = samples[indices]
                 self.p0 = self.hypers.mean(axis=0)
             else:

@@ -54,9 +54,7 @@ class MagicMixin:
                 if Y is None:
                     active = get_conditional_hyperparameters(X[:, self.operate_on], None)
                 else:
-                    active = get_conditional_hyperparameters(
-                        X[:, self.operate_on], Y[:, self.operate_on]
-                    )
+                    active = get_conditional_hyperparameters(X[:, self.operate_on], Y[:, self.operate_on])
 
         if self.operate_on is None:
             rval = self._call(X, Y, eval_gradient, active)  # type: ignore[attr-defined] # noqa F821
@@ -193,14 +191,9 @@ class MagicMixin:
         """
         if operate_on is not None and type(operate_on) in (list, np.ndarray):
             if not isinstance(operate_on, np.ndarray):
-                raise TypeError(
-                    "argument operate_on needs to be of type np.ndarray, but is %s"
-                    % type(operate_on)
-                )
+                raise TypeError("argument operate_on needs to be of type np.ndarray, but is %s" % type(operate_on))
             if operate_on.dtype != int:
-                raise ValueError(
-                    "dtype of argument operate_on needs to be int, but is %s" % operate_on.dtype
-                )
+                raise ValueError("dtype of argument operate_on needs to be int, but is %s" % operate_on.dtype)
             self.operate_on = operate_on  # type: Optional[np.ndarray]
             self.len_active = len(operate_on)  # type: Optional[int]
         else:
@@ -313,9 +306,7 @@ class Product(MagicMixin, kernels.Product):
         if eval_gradient:
             K1, K1_gradient = self.k1(X, Y, eval_gradient=True, active=active)
             K2, K2_gradient = self.k2(X, Y, eval_gradient=True, active=active)
-            return K1 * K2, np.dstack(
-                (K1_gradient * K2[:, :, np.newaxis], K2_gradient * K1[:, :, np.newaxis])
-            )
+            return K1 * K2, np.dstack((K1_gradient * K2[:, :, np.newaxis], K2_gradient * K1[:, :, np.newaxis]))
         else:
             return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
@@ -330,9 +321,7 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
         has_conditions: bool = False,
     ) -> None:
 
-        super(ConstantKernel, self).__init__(
-            constant_value=constant_value, constant_value_bounds=constant_value_bounds
-        )
+        super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -413,9 +402,7 @@ class Matern(MagicMixin, kernels.Matern):
         has_conditions: bool = False,
     ) -> None:
 
-        super(Matern, self).__init__(
-            length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu
-        )
+        super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -460,9 +447,7 @@ class Matern(MagicMixin, kernels.Matern):
         else:
             if eval_gradient:
                 raise ValueError("Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(
-                X / length_scale, Y / length_scale, metric="euclidean"
-            )
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="euclidean")
 
         if self.nu == 0.5:
             K = np.exp(-dists)
@@ -534,9 +519,7 @@ class RBF(MagicMixin, kernels.RBF):
         has_conditions: bool = False,
     ) -> None:
 
-        super(RBF, self).__init__(
-            length_scale=length_scale, length_scale_bounds=length_scale_bounds
-        )
+        super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -585,9 +568,7 @@ class RBF(MagicMixin, kernels.RBF):
         else:
             if eval_gradient:
                 raise ValueError("Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(
-                X / length_scale, Y / length_scale, metric="sqeuclidean"
-            )
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="sqeuclidean")
             K = np.exp(-0.5 * dists)
 
         if active is not None:
@@ -622,9 +603,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
         has_conditions: bool = False,
     ) -> None:
 
-        super(WhiteKernel, self).__init__(
-            noise_level=noise_level, noise_level_bounds=noise_level_bounds
-        )
+        super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions

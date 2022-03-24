@@ -37,9 +37,7 @@ class TrajLoggerTest(unittest.TestCase):
                 UniformFloatHyperparameter("param_a", -0.2, 1.77, 1.1),
                 UniformIntegerHyperparameter("param_b", -3, 10, 1),
                 Constant("param_c", "value"),
-                CategoricalHyperparameter(
-                    "ambigous_categorical", choices=["True", True, 5]
-                ),  # True is ambigous here
+                CategoricalHyperparameter("ambigous_categorical", choices=["True", True, 5]),  # True is ambigous here
             ]
         )
         self.test_config = Configuration(
@@ -159,9 +157,7 @@ class TrajLoggerTest(unittest.TestCase):
             tl.add_entry([0.9, 0.8], 1, self.test_config, 0)
 
             # Test the list that's added to the trajectory class
-            self.assertEqual(
-                tl.trajectory[0], TrajEntry([0.9, 0.8], 1, self.test_config, 1, 0.5, 1, 0)
-            )
+            self.assertEqual(tl.trajectory[0], TrajEntry([0.9, 0.8], 1, self.test_config, 1, 0.5, 1, 0))
             # Test named-tuple-access:
             self.assertEqual(tl.trajectory[0].train_perf, [0.9, 0.8])
             self.assertEqual(len(tl.trajectory), 1)
@@ -220,9 +216,7 @@ class TrajLoggerTest(unittest.TestCase):
             )  # not recoverable without json
             tl.add_entry(0.9, 1, problem_config)
 
-            from_aclib2 = tl.read_traj_aclib_format(
-                os.path.join(tmpdir, "traj_aclib2.json"), self.cs
-            )
+            from_aclib2 = tl.read_traj_aclib_format(os.path.join(tmpdir, "traj_aclib2.json"), self.cs)
             from_alljson = tl.read_traj_alljson_format(os.path.join(tmpdir, "traj.json"), self.cs)
 
         # Wrong! but passes:

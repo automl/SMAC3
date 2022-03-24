@@ -48,9 +48,7 @@ class TestLHDesign(unittest.TestCase):
         self.cs.add_forbidden_clause(ForbiddenEqualsClause(param_constrained, "b"))
 
         for i in range(5):
-            self.cs.add_hyperparameter(
-                UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1)
-            )
+            self.cs.add_hyperparameter(UniformFloatHyperparameter("x%d" % (i + len(get_params)), 0, 1))
 
     def test_latin_hypercube_design(self):
         kwargs = dict(
