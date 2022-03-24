@@ -227,8 +227,10 @@ class _SuccessiveHalving(AbstractRacer):
         # current instance index tracks two things. Configurations that are to be launched,
         # That is config A needs to run in 3 instances/seed pairs, then curr_inst_idx should
         # track this. But then, if a new configuration is added in the case of parallelism
-        # a new separate curr_inst_idx needs to be started
-        self.curr_inst_idx = {}  # type: typing.Dict[Configuration, int]
+        # a new separate curr_inst_idx needs to be started.
+        # The indices normally are of type int, but np.inf is used to indicate to not further
+        # launch instances for this configuration, hence the type is Union[int, float].
+        self.curr_inst_idx = {}  # type: typing.Dict[Configuration, typing.Union[int, float]]
         self.running_challenger = None
         self.success_challengers = set()  # type: typing.Set[Configuration]
         self.do_not_advance_challengers = set()  # type: typing.Set[Configuration]
@@ -647,7 +649,9 @@ class _SuccessiveHalving(AbstractRacer):
         self.logger.debug(" Running challenger  -  %s" % str(challenger))
 
         # run the next instance-seed pair for the given configuration
-        instance, seed = curr_insts[self.curr_inst_idx[challenger]]
+        instance, seed = curr_insts[self.curr_inst_idx[challenger]]  # type: ignore[index]
+        # At this point self.curr_inst_idx[challenger] will still be an integer and might
+        # be marked LATER with np.inf, so ignore mypy error.
 
         # selecting cutoff if running adaptive capping
         cutoff = self.cutoff
