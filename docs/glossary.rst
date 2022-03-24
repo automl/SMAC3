@@ -17,7 +17,7 @@ Glossary
         chapter 3.2 for details.
 
     BB
-        Black-Box. Refers to an algorithm being optimized, where only input & output are observable.
+        Black-Box. Refers to an algorithm being optimized, where only input and output are observable.
 
     MF
         Multi-Fidelity. Refers to running an algorithm on multiple budgets (such as number of epochs or

@@ -63,7 +63,7 @@ Intensification
 
 Please see the following figure for a more detailed overview.
 
-.. figure:: ../../images/components.png
+.. figure:: ../images/components.png
 
 
 Comparison

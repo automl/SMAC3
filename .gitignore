@@ -69,7 +69,12 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/build
+docs/api
+docs/examples
+docs/main_options.rst
+docs/scenario_options.rst
+docs/smac_options.rst
 
 # PyBuilder
 target/
@@ -127,3 +132,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+*smac3-output_*

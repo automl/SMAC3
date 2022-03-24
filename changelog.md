@@ -1,3 +1,13 @@
+# 1.2.1
+
+## Code-Quality
+* Updated and integrated flake8, mypy, black, and isort.
+
+## Documentation
+* Uses `automl_sphinx_theme` now.
+* Better API.
+
+
 # 1.2
 
 ## Features
