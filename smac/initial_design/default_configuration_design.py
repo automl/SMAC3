@@ -10,7 +10,6 @@ __license__ = "3-clause BSD"
 
 
 class DefaultConfiguration(InitialDesign):
-
     """Initial design that evaluates default configuration"""
 
     def _select_configurations(self) -> List[Configuration]:

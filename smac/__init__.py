@@ -6,9 +6,9 @@ from smac.utils import dependencies
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
-__version__ = '1.1.1'
+__version__ = '1.2'
 __author__ = 'Marius Lindauer, Katharina Eggensperger, Matthias Feurer, André Biedenkapp, ' \
-             'Difan Deng, Carolin Benjamins, René Sass ' \
+             'Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass ' \
              'and Frank Hutter'
 
 

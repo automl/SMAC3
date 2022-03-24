@@ -36,6 +36,29 @@ class Hydra(object):
     """
     Facade to use Hydra default mode
 
+    Parameters
+    ----------
+    scenario : ~smac.scenario.scenario.Scenario
+        Scenario object
+    n_iterations: int,
+        number of Hydra iterations
+    val_set: str
+        Set to validate incumbent(s) on. [train, valX].
+        train => whole training set,
+        valX => train_set * 100/X where X in (0, 100)
+    incs_per_round: int
+        Number of incumbents to keep per round
+    n_optimizers: int
+        Number of optimizers to run in parallel per round
+    rng: int/np.random.RandomState
+        The randomState/seed to pass to each smac run
+    run_id: int
+        run_id for this hydra run
+    tae: BaseRunner
+        Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
+    tae_kwargs: Optional[dict]
+        arguments passed to constructor of '~tae'
+
     Attributes
     ----------
     logger
@@ -61,33 +84,6 @@ class Hydra(object):
                  tae: typing.Type[BaseRunner] = ExecuteTARunOld,
                  tae_kwargs: typing.Union[dict, None] = None,
                  **kwargs):
-        """
-        Constructor
-
-        Parameters
-        ----------
-        scenario : ~smac.scenario.scenario.Scenario
-            Scenario object
-        n_iterations: int,
-            number of Hydra iterations
-        val_set: str
-            Set to validate incumbent(s) on. [train, valX].
-            train => whole training set,
-            valX => train_set * 100/X where X in (0, 100)
-        incs_per_round: int
-            Number of incumbents to keep per round
-        n_optimizers: int
-            Number of optimizers to run in parallel per round
-        rng: int/np.random.RandomState
-            The randomState/seed to pass to each smac run
-        run_id: int
-            run_id for this hydra run
-        tae: BaseRunner
-            Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
-        tae_kwargs: Optional[dict]
-            arguments passed to constructor of '~tae'
-
-        """
         self.logger = logging.getLogger(
             self.__module__ + "." + self.__class__.__name__)
 
@@ -242,7 +238,7 @@ class Hydra(object):
 
         return self.portfolio
 
-    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[np.float, float]:
+    def _update_portfolio(self, incs: np.ndarray, config_cost_per_inst: typing.Dict) -> typing.Union[float, float]:
         """
         Validates all configurations (in incs) and determines which ones to add to the portfolio
 
@@ -253,7 +249,7 @@ class Hydra(object):
 
         Returns
         -------
-        cur_cost: typing.Union[np.float, float]
+        cur_cost: typing.Union[float, float]
             The current cost of the portfolio
 
         """
@@ -270,7 +266,7 @@ class Hydra(object):
                                 self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])
                     else:
                         self.cost_per_inst = cost_per_inst
-            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: np.float
+            cur_cost = np.mean(list(self.cost_per_inst.values()))  # type: float
         else:  # No validated data. Set the mean to the approximated mean
             means = []  # can contain nans as not every instance was evaluated thus we should use nanmean to approximate
             for kept in incs:

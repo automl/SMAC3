@@ -19,6 +19,47 @@ class RandomForestWithInstances(BaseModel):
 
     """Random forest that takes instance features into account.
 
+    Parameters
+    ----------
+    types : List[int]
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass [3, 0]. Note that we count starting from 0.
+    bounds : List[Tuple[float, float]]
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+    seed : int
+        The seed that is passed to the random_forest_run library.
+    log_y: bool
+        y values (passed to this RF) are expected to be log(y) transformed;
+        this will be considered during predicting
+    num_trees : int
+        The number of trees in the random forest.
+    do_bootstrapping : bool
+        Turns on / off bootstrapping in the random forest.
+    n_points_per_tree : int
+        Number of points per tree. If <= 0 X.shape[0] will be used
+        in _train(X, y) instead
+    ratio_features : float
+        The ratio of features that are considered for splitting.
+    min_samples_split : int
+        The minimum number of data points to perform a split.
+    min_samples_leaf : int
+        The minimum number of data points in a leaf.
+    max_depth : int
+        The maximum depth of a single tree.
+    eps_purity : float
+        The minimum difference between two target values to be considered
+        different
+    max_num_nodes : int
+        The maxmimum total number of nodes in a tree
+    instance_features : np.ndarray (I, K)
+        Contains the K dimensional instance features of the I different instances
+    pca_components : float
+        Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+        set n_feats (> pca_dims).
+
     Attributes
     ----------
     rf_opts : regression.rf_opts
@@ -55,48 +96,6 @@ class RandomForestWithInstances(BaseModel):
         instance_features: typing.Optional[np.ndarray] = None,
         pca_components: typing.Optional[int] = None,
     ) -> None:
-        """
-        Parameters
-        ----------
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        seed : int
-            The seed that is passed to the random_forest_run library.
-        log_y: bool
-            y values (passed to this RF) are expected to be log(y) transformed;
-            this will be considered during predicting
-        num_trees : int
-            The number of trees in the random forest.
-        do_bootstrapping : bool
-            Turns on / off bootstrapping in the random forest.
-        n_points_per_tree : int
-            Number of points per tree. If <= 0 X.shape[0] will be used
-            in _train(X, y) instead
-        ratio_features : float
-            The ratio of features that are considered for splitting.
-        min_samples_split : int
-            The minimum number of data points to perform a split.
-        min_samples_leaf : int
-            The minimum number of data points in a leaf.
-        max_depth : int
-            The maximum depth of a single tree.
-        eps_purity : float
-            The minimum difference between two target values to be considered
-            different
-        max_num_nodes : int
-            The maxmimum total number of nodes in a tree
-        instance_features : np.ndarray (I, K)
-            Contains the K dimensional instance features of the I different instances
-        pca_components : float
-            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
         super().__init__(
             configspace=configspace,
             types=types,
@@ -144,6 +143,7 @@ class RandomForestWithInstances(BaseModel):
         -------
         self
         """
+
         X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()

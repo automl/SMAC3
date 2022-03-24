@@ -39,6 +39,7 @@ class OutputWriter(object):
             scenario.logger.info("No output directory for scenario logging "
                                  "specified -- scenario will not be logged.")
             return
+
         # Create output-dir if necessary
         if not os.path.isdir(scenario.output_dir_for_this_run):
             scenario.logger.debug("Output directory does not exist! Will be "
@@ -62,6 +63,11 @@ class OutputWriter(object):
             for key in options_dest2name:
                 key = key.lstrip('-').replace('-', '_')
                 new_value = self._parse_argument(scenario, key, getattr(scenario, key))
+
+                # Make array to string again
+                if key == "multi_objectives" and isinstance(new_value, list):
+                    new_value = ",".join(new_value)
+
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
 
@@ -198,6 +204,7 @@ class OutputWriter(object):
             'pcs_new': pcs_new.write,
             'json': json.write
         }
+
         writer = writers.get(output_format)
         if writer:
             with open(fn, 'w') as fh:

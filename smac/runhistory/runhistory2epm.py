@@ -10,6 +10,8 @@ from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.utils import constants
 from smac.scenario.scenario import Scenario
+from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -23,6 +25,36 @@ class AbstractRunHistory2EPM(object):
     __metaclass__ = abc.ABCMeta
 
     """Abstract class for preprocessing data in order to train an EPM.
+
+    Parameters
+    ----------
+    scenario: Scenario Object
+        Algorithm Configuration Scenario
+    num_params : int
+        number of parameters in config space
+    success_states: list, optional
+        List of states considered as successful (such as StatusType.SUCCESS).
+        If None, raise TypeError.
+    impute_censored_data: bool, optional
+        Should we impute data?
+    consider_for_higher_budgets_state: list, optional
+        Additionally consider all runs with these states for budget < current budget
+    imputor: epm.base_imputor Instance
+        Object to impute censored data
+    impute_state: list, optional
+        List of states that mark censored data (such as StatusType.TIMEOUT)
+        in combination with runtime < cutoff_time
+        If None, set to empty list [].
+        If None and impute_censored_data is True, raise TypeError.
+    scale_perc: int
+        scaled y-transformation use a percentile to estimate distance to optimum;
+        only used by some subclasses of AbstractRunHistory2EPM
+    rng : numpy.random.RandomState
+        Only used for reshuffling data after imputation.
+        If None, use np.random.RandomState(seed=1).
+    multi_objective_algorithm: Optional[MultiObjectiveAlgorithm]
+        Instance performing multi-objective optimization. Receives an objective cost vector as input
+        and returns a scalar. Is executed before transforming runhistory values.
 
     Attributes
     ----------
@@ -48,54 +80,34 @@ class AbstractRunHistory2EPM(object):
         success_states: typing.List[StatusType],
         impute_censored_data: bool = False,
         impute_state: typing.Optional[typing.List[StatusType]] = None,
-        consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,
+        consider_for_higher_budgets_state: typing.Optional[
+            typing.List[StatusType]
+        ] = None,
         imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
         rng: typing.Optional[np.random.RandomState] = None,
+        multi_objective_algorithm: typing.Optional[AggregationStrategy] = None,
     ) -> None:
-        """Constructor
-
-        Parameters
-        ----------
-        scenario: Scenario Object
-            Algorithm Configuration Scenario
-        num_params : int
-            number of parameters in config space
-        success_states: list, optional
-            List of states considered as successful (such as StatusType.SUCCESS).
-            If None, raise TypeError.
-        impute_censored_data: bool, optional
-            Should we impute data?
-        consider_for_higher_budgets_state: list, optional
-            Additionally consider all runs with these states for budget < current budget
-        imputor: epm.base_imputor Instance
-            Object to impute censored data
-        impute_state: list, optional
-            List of states that mark censored data (such as StatusType.TIMEOUT)
-            in combination with runtime < cutoff_time
-            If None, set to empty list [].
-            If None and impute_censored_data is True, raise TypeError.
-        scale_perc: int
-            scaled y-transformation use a percentile to estimate distance to optimum;
-            only used by some subclasses of AbstractRunHistory2EPM
-        rng : numpy.random.RandomState
-            Only used for reshuffling data after imputation.
-            If None, use np.random.RandomState(seed=1).
-        """
-
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # General arguments
         self.scenario = scenario
         self.rng = rng
         self.num_params = num_params
+
         self.scale_perc = scale_perc
+        self.num_obj = 1  # type: int
+        if scenario.multi_objectives is not None:  # type: ignore[attr-defined] # noqa F821
+            self.num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
 
         # Configuration
         self.impute_censored_data = impute_censored_data
         self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
         self.imputor = imputor
+        if self.num_obj > 1:
+            self.multi_objective_algorithm = multi_objective_algorithm
+        else:
+            self.multi_objective_algorithm = None
 
         # Fill with some default values
         if rng is None:
@@ -129,32 +141,39 @@ class AbstractRunHistory2EPM(object):
         # Sanity checks
         if impute_censored_data and scenario.run_obj != "runtime":
             # So far we don't know how to handle censored quality data
-            self.logger.critical("Cannot impute censored data when not "
-                                 "optimizing runtime")
-            raise NotImplementedError("Cannot impute censored data when not "
-                                      "optimizing runtime")
+            self.logger.critical(
+                "Cannot impute censored data when not " "optimizing runtime"
+            )
+            raise NotImplementedError(
+                "Cannot impute censored data when not " "optimizing runtime"
+            )
 
         # Check imputor stuff
         if impute_censored_data and self.imputor is None:
-            self.logger.critical("You want me to impute censored data, but "
-                                 "I don't know how. Imputor is None")
+            self.logger.critical(
+                "You want me to impute censored data, but "
+                "I don't know how. Imputor is None"
+            )
             raise ValueError("impute_censored data, but no imputor given")
-        elif impute_censored_data and not \
-                isinstance(self.imputor, BaseImputor):
-            raise ValueError("Given imputor is not an instance of "
-                             "smac.epm.base_imputor.BaseImputor, but %s" %
-                             type(self.imputor))
+        elif impute_censored_data and not isinstance(self.imputor, BaseImputor):
+            raise ValueError(
+                "Given imputor is not an instance of "
+                "smac.epm.base_imputor.BaseImputor, but %s" % type(self.imputor)
+            )
 
         # Learned statistics
-        self.min_y = np.NaN
-        self.max_y = np.NaN
-        self.perc = np.NaN
+        self.min_y = np.array([np.NaN] * self.num_obj)
+        self.max_y = np.array([np.NaN] * self.num_obj)
+        self.perc = np.array([np.NaN] * self.num_obj)
 
     @abc.abstractmethod
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory,
-                      return_time_as_y: bool = False,
-                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _build_matrix(
+        self,
+        run_dict: typing.Mapping[RunKey, RunValue],
+        runhistory: RunHistory,
+        return_time_as_y: bool = False,
+        store_statistics: bool = False,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory
 
         Parameters
@@ -184,33 +203,48 @@ class AbstractRunHistory2EPM(object):
         if budget_subset is not None:
             if len(budget_subset) != 1:
                 raise ValueError("Cannot yet handle getting runs from multiple budgets")
-            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if run.budget in budget_subset
-                          and runhistory.data[run].status in self.success_states}
+            s_run_dict = {
+                run: runhistory.data[run]
+                for run in runhistory.data.keys()
+                if run.budget in budget_subset
+                and runhistory.data[run].status in self.success_states
+            }
             # Additionally add these states from lower budgets
-            add = {run: runhistory.data[run] for run in runhistory.data.keys()
-                   if runhistory.data[run].status in self.consider_for_higher_budgets_state
-                   and run.budget < budget_subset[0]}
+            add = {
+                run: runhistory.data[run]
+                for run in runhistory.data.keys()
+                if runhistory.data[run].status in self.consider_for_higher_budgets_state
+                and run.budget < budget_subset[0]
+            }
             s_run_dict.update(add)
         else:
-            s_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status in self.success_states}
+            s_run_dict = {
+                run: runhistory.data[run]
+                for run in runhistory.data.keys()
+                if runhistory.data[run].status in self.success_states
+            }
         return s_run_dict
 
     def _get_t_run_dict(
-            self,
-            runhistory: RunHistory,
-            budget_subset: typing.Optional[typing.List] = None,
+        self,
+        runhistory: RunHistory,
+        budget_subset: typing.Optional[typing.List] = None,
     ) -> typing.Dict[RunKey, RunValue]:
         if budget_subset is not None:
-            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status == StatusType.TIMEOUT
-                          and runhistory.data[run].time >= self.cutoff_time
-                          and run.budget in budget_subset}
+            t_run_dict = {
+                run: runhistory.data[run]
+                for run in runhistory.data.keys()
+                if runhistory.data[run].status == StatusType.TIMEOUT
+                and runhistory.data[run].time >= self.cutoff_time
+                and run.budget in budget_subset
+            }
         else:
-            t_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                          if runhistory.data[run].status == StatusType.TIMEOUT
-                          and runhistory.data[run].time >= self.cutoff_time}
+            t_run_dict = {
+                run: runhistory.data[run]
+                for run in runhistory.data.keys()
+                if runhistory.data[run].status == StatusType.TIMEOUT
+                and runhistory.data[run].time >= self.cutoff_time
+            }
         return t_run_dict
 
     def get_configurations(
@@ -265,15 +299,19 @@ class AbstractRunHistory2EPM(object):
         self.logger.debug("Transform runhistory into X,y format")
 
         s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
-        X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory,
-                                  store_statistics=True)
+        X, Y = self._build_matrix(
+            run_dict=s_run_dict, runhistory=runhistory, store_statistics=True
+        )
 
         # Get real TIMEOUT runs
         t_run_dict = self._get_t_run_dict(runhistory, budget_subset)
         # use penalization (e.g. PAR10) for EPM training
-        store_statistics = True if np.isnan(self.min_y) else False
-        tX, tY = self._build_matrix(run_dict=t_run_dict, runhistory=runhistory,
-                                    store_statistics=store_statistics)
+        store_statistics = True if np.any(np.isnan(self.min_y)) else False
+        tX, tY = self._build_matrix(
+            run_dict=t_run_dict,
+            runhistory=runhistory,
+            store_statistics=store_statistics,
+        )
 
         # if we don't have successful runs,
         # we have to return all timeout runs
@@ -283,14 +321,20 @@ class AbstractRunHistory2EPM(object):
         if self.impute_censored_data:
             # Get all censored runs
             if budget_subset is not None:
-                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                              if runhistory.data[run].status in self.impute_state
-                              and runhistory.data[run].time < self.cutoff_time
-                              and run.budget in budget_subset}
+                c_run_dict = {
+                    run: runhistory.data[run]
+                    for run in runhistory.data.keys()
+                    if runhistory.data[run].status in self.impute_state
+                    and runhistory.data[run].time < self.cutoff_time
+                    and run.budget in budget_subset
+                }
             else:
-                c_run_dict = {run: runhistory.data[run] for run in runhistory.data.keys()
-                              if runhistory.data[run].status in self.impute_state
-                              and runhistory.data[run].time < self.cutoff_time}
+                c_run_dict = {
+                    run: runhistory.data[run]
+                    for run in runhistory.data.keys()
+                    if runhistory.data[run].status in self.impute_state
+                    and runhistory.data[run].time < self.cutoff_time
+                }
 
             if len(c_run_dict) == 0:
                 self.logger.debug("No censored data found, skip imputation")
@@ -301,25 +345,32 @@ class AbstractRunHistory2EPM(object):
 
                 # better empirical results by using PAR1 instead of PAR10
                 # for censored data imputation
-                cen_X, cen_Y = self._build_matrix(run_dict=c_run_dict,
-                                                  runhistory=runhistory,
-                                                  return_time_as_y=True,
-                                                  store_statistics=False,)
+                cen_X, cen_Y = self._build_matrix(
+                    run_dict=c_run_dict,
+                    runhistory=runhistory,
+                    return_time_as_y=True,
+                    store_statistics=False,
+                )
 
                 # Also impute TIMEOUTS
-                tX, tY = self._build_matrix(run_dict=t_run_dict,
-                                            runhistory=runhistory,
-                                            return_time_as_y=True,
-                                            store_statistics=False,)
-                self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" %
-                                  (tX.shape[0], cen_X.shape[0], X.shape[0]))
+                tX, tY = self._build_matrix(
+                    run_dict=t_run_dict,
+                    runhistory=runhistory,
+                    return_time_as_y=True,
+                    store_statistics=False,
+                )
+                self.logger.debug(
+                    "%d TIMEOUTS, %d CAPPED, %d SUCC"
+                    % (tX.shape[0], cen_X.shape[0], X.shape[0])
+                )
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
 
                 # return imp_Y in PAR depending on the used threshold in imputor
                 assert isinstance(self.imputor, BaseImputor)  # please mypy
-                imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y,
-                                            uncensored_X=X, uncensored_y=Y)
+                imp_Y = self.imputor.impute(
+                    censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y
+                )
 
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
@@ -333,7 +384,10 @@ class AbstractRunHistory2EPM(object):
         return X, Y
 
     @abc.abstractmethod
-    def transform_response_values(self, values: np.ndarray, ) -> np.ndarray:
+    def transform_response_values(
+        self,
+        values: np.ndarray,
+    ) -> np.ndarray:
         """Transform function response values.
 
         Parameters
@@ -347,7 +401,9 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError
 
-    def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_X_y(
+        self, runhistory: RunHistory
+    ) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Simple interface to obtain all data in runhistory in X, y format
         Note: This function should not be used as it does not consider all available StatusTypes
 
@@ -365,7 +421,9 @@ class AbstractRunHistory2EPM(object):
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
         """
-        self.logger.warning("This function is not tested and might not work as expected!")
+        self.logger.warning(
+            "This function is not tested and might not work as expected!"
+        )
         X = []
         y = []
         cen = []
@@ -380,17 +438,21 @@ class AbstractRunHistory2EPM(object):
             X.append(x)
             y.append(v.cost)
             cen.append(v.status != StatusType.SUCCESS)
+
         return np.array(X), np.array(y), np.array(cen)
 
 
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory,
-                      return_time_as_y: bool = False,
-                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
-        """"Builds X,y matrixes from selected runs from runhistory
+    def _build_matrix(
+        self,
+        run_dict: typing.Mapping[RunKey, RunValue],
+        runhistory: RunHistory,
+        return_time_as_y: bool = False,
+        store_statistics: bool = False,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
+        """ "Builds X,y matrixes from selected runs from runhistory
 
         Parameters
         ----------
@@ -413,6 +475,9 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         n_rows = len(run_dict)
         n_cols = self.num_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
+
+        # For now we keep it as 1
+        # TODO: Extend for native multi-objective
         y = np.ones([n_rows, 1])
 
         # Then populate matrix
@@ -426,17 +491,28 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
-            if return_time_as_y:
-                y[row, 0] = run.time
+
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
+                # Let's normalize y here
+                # We use the objective_bounds calculated by the runhistory
+                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = self.multi_objective_algorithm(y_)
+                y[row] = y_
             else:
-                y[row, 0] = run.cost
+                if return_time_as_y:
+                    y[row, 0] = run.time
+                else:
+                    y[row] = run.cost
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_perc)
-                self.min_y = np.min(y)
-                self.max_y = np.max(y)
-            y = self.transform_response_values(values=y)
+                self.perc = np.percentile(y, self.scale_perc, axis=0)
+                self.min_y = np.min(y, axis=0)
+                self.max_y = np.max(y, axis=0)
+
+        y = self.transform_response_values(values=y)
 
         return X, y
 
@@ -479,9 +555,11 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         if np.any(values <= 0):
             self.logger.warning(
                 "Got cost of smaller/equal to 0. Replace by %f since we use"
-                " log cost." % constants.MINIMAL_COST_FOR_LOG)
-            values[values < constants.MINIMAL_COST_FOR_LOG] = \
-                constants.MINIMAL_COST_FOR_LOG
+                " log cost." % constants.MINIMAL_COST_FOR_LOG
+            )
+            values[
+                values < constants.MINIMAL_COST_FOR_LOG
+            ] = constants.MINIMAL_COST_FOR_LOG
         values = np.log(values)
         return values
 
@@ -504,11 +582,16 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         np.ndarray
         """
 
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y = self.min_y - (
+            self.perc - self.min_y
+        )  # Subtract the difference between the percentile and the minimum
+        min_y -= (
+            constants.VERY_SMALL_NUMBER
+        )  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if self.min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -101
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-101
         values = (values - min_y) / (self.max_y - min_y)
         return values
 
@@ -520,7 +603,9 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
-                raise NotImplementedError('Handling more than one instance is not supported for inverse scaled cost.')
+                raise NotImplementedError(
+                    "Handling more than one instance is not supported for inverse scaled cost."
+                )
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
@@ -537,12 +622,17 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         np.ndarray
         """
 
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (
+            self.perc - self.min_y
+        )  # Subtract the difference between the percentile and the minimum
+        min_y -= (
+            constants.VERY_SMALL_NUMBER
+        )  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = 1 - 1 / values
         return values
@@ -555,7 +645,9 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         super().__init__(**kwargs)
         if self.instance_features is not None:
             if len(self.instance_features) > 1:
-                raise NotImplementedError('Handling more than one instance is not supported for sqrt scaled cost.')
+                raise NotImplementedError(
+                    "Handling more than one instance is not supported for sqrt scaled cost."
+                )
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
@@ -571,12 +663,17 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
+        min_y = self.min_y - (
+            self.perc - self.min_y
+        )  # Subtract the difference between the percentile and the minimum
+        min_y -= (
+            constants.VERY_SMALL_NUMBER
+        )  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
+
         values = (values - min_y) / (self.max_y - min_y)
         values = np.sqrt(values)
         return values
@@ -600,14 +697,19 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
-        min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
-        min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
+        min_y = self.min_y - (
+            self.perc - self.min_y
+        )  # Subtract the difference between the percentile and the minimum
+        min_y -= (
+            constants.VERY_SMALL_NUMBER
+        )  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
-        if min_y == self.max_y:
-            # prevent diving by zero
-            min_y *= 1 - 10 ** -10
+        # prevent diving by zero
+
+        min_y[np.where(min_y == self.max_y)] *= 1 - 10**-10
+
         values = (values - min_y) / (self.max_y - min_y)
+
         values = np.log(values)
         return values
 
@@ -615,11 +717,15 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
     """TODO"""
 
-    def _build_matrix(self, run_dict: typing.Mapping[RunKey, RunValue],
-                      runhistory: RunHistory,
-                      return_time_as_y: bool = False,
-                      store_statistics: bool = False) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _build_matrix(
+        self,
+        run_dict: typing.Mapping[RunKey, RunValue],
+        runhistory: RunHistory,
+        return_time_as_y: bool = False,
+        store_statistics: bool = False,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO"""
+
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
@@ -642,7 +748,18 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
                 X[row, :] = np.hstack((conf_vector, feats))
             else:
                 X[row, :] = conf_vector
-            y[row, 0] = run.cost
+
+            if self.num_obj > 1:
+                assert self.multi_objective_algorithm is not None
+
+                # Let's normalize y here
+                # We use the objective_bounds calculated by the runhistory
+                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = self.multi_objective_algorithm(y_)
+                y[row, 0] = y_
+            else:
+                y[row, 0] = run.cost
+
             y[row, 1] = 1 + run.time
 
         y = self.transform_response_values(values=y)

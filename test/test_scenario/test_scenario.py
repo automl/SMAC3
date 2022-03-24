@@ -59,6 +59,7 @@ class ScenarioTest(unittest.TestCase):
                                    'deterministic': 0,
                                    'run_obj': 'runtime',
                                    'overall_obj': 'mean10',
+                                   'multi_objectives': 'accuracy, mse',
                                    'cutoff_time': 5,
                                    'wallclock-limit': 18000,
                                    'instance_file':
@@ -238,6 +239,7 @@ class ScenarioTest(unittest.TestCase):
         scenario.write()
         path = os.path.join(scenario.output_dir, 'scenario.txt')
         scenario_reloaded = Scenario(path)
+
         check_scen_eq(scenario, scenario_reloaded)
         # Test whether json is the default pcs_fn
         self.assertTrue(os.path.exists(os.path.join(scenario.output_dir, 'param.pcs')))
@@ -311,6 +313,63 @@ class ScenarioTest(unittest.TestCase):
                             cmd_options=cmd_options)
         self.assertEqual(scenario.feature_names,
                          ['feature1', 'feature2', 'feature3'])
+
+    def test_multi_objectives(self):
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1, test2"})
+
+        assert scenario.multi_objectives == ["test1", "test2"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1,test2"})
+
+        assert scenario.multi_objectives == ["test1", "test2"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": ["test1", "test2"]})
+
+        assert scenario.multi_objectives == ["test1", "test2"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "test1"})
+
+        assert scenario.multi_objectives == ["test1"]
+
+        scenario = Scenario({
+            "run_obj": "quality"})
+
+        assert scenario.multi_objectives == ["cost"]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": "1., 500",
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [1., 500.]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": "2.5",
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [2.5, 2.5]
+
+        scenario = Scenario({
+            "run_obj": "quality",
+            "multi_objectives": "m1, m2",
+            "cost_for_crash": 500,
+        })
+
+        assert scenario.multi_objectives == ["m1", "m2"]
+        assert scenario.cost_for_crash == [500., 500.]
 
 
 if __name__ == "__main__":
