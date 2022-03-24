@@ -83,7 +83,7 @@ class Intensifier(AbstractRacer):
     10        S_missing ← {instance, seed} pairs for which θ_inc was run before, but not θ_new
     11        S_torun ← random subset of S_missing of size min(N, size(S_missing))
     12        foreach (π, s) ∈ S_torun do R ← ExecuteRun(R, θ_new, π, s)
-    13        S_missing ← S_missing \ S_torun
+    13        S_missing ← S_missing \\ S_torun
     14        Π_common ← instances for which we previously ran both θ_inc and θ_new
     15        if cˆ(θ_new, Π_common) > cˆ(θ_inc, Π_common) then break
     16        else if S_missing = ∅ then θ_inc ← θ_new; break
