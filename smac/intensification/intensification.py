@@ -100,7 +100,7 @@ class Intensifier(AbstractRacer):
     rng : np.random.RandomState
     instances : typing.List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str,np.ndarray]
+    instance_specifics : typing.Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : int
         runtime cutoff of TA runs
@@ -135,7 +135,7 @@ class Intensifier(AbstractRacer):
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
         instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        instance_specifics: typing.Mapping[str, str] = None,
         cutoff: int = None,
         deterministic: bool = False,
         run_obj_time: bool = True,

@@ -58,7 +58,7 @@ class AbstractRacer(object):
     rng : np.random.RandomState
     instances : typing.List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str,np.ndarray]
+    instance_specifics : typing.Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : float
         runtime cutoff of TA runs
@@ -84,7 +84,7 @@ class AbstractRacer(object):
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
         instances: typing.List[str],
-        instance_specifics: typing.Optional[typing.Mapping[str, np.ndarray]] = None,
+        instance_specifics: typing.Optional[typing.Mapping[str, str]] = None,
         cutoff: typing.Optional[float] = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
@@ -117,7 +117,7 @@ class AbstractRacer(object):
         # removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
         if instance_specifics is None:
-            self.instance_specifics = {}  # type: typing.Mapping[str, np.ndarray]
+            self.instance_specifics = {}  # type: typing.Mapping[str, str]
         else:
             self.instance_specifics = instance_specifics
 

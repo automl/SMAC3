@@ -32,7 +32,7 @@ class ParallelScheduler(AbstractRacer):
     rng : np.random.RandomState
     instances : typing.List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str,np.ndarray]
+    instance_specifics : typing.Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : typing.Optional[int]
         cutoff of TA runs
@@ -76,7 +76,7 @@ class ParallelScheduler(AbstractRacer):
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
         instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, np.ndarray] = None,
+        instance_specifics: typing.Mapping[str, str] = None,
         cutoff: typing.Optional[float] = None,
         deterministic: bool = False,
         initial_budget: typing.Optional[float] = None,
