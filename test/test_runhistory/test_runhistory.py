@@ -508,7 +508,6 @@ class RunHistoryMappingTest(unittest.TestCase):
         assert len(list(iter(self.runhistory))) == len(self.runhistory)
         assert len(list(iter(self.runhistory))) == len(self.runhistory.data)
 
-
     def test_items(self):
         """Test that items goes in correct insertion order and returns key values
         as expected.
