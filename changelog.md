@@ -1,3 +1,9 @@
+# 1.2.1
+
+## Minor Changes
+* Updated the signature of the `ROAR` facade to match with it's parent class `SMAC4AC`. Anyone relying on the output directory **without** specifying an explicit `run_id` to a `ROAR` facade should now expect to see the output directory at `run_0` instead of `run_1`. See #827
+
+
 # 1.2
 
 ## Features
