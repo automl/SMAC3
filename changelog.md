@@ -1,3 +1,9 @@
+# 1.2.1
+
+## Features
+* The `RunHistory` can now act as a `Mapping` in that you can use the usual methods you can use on dicts, i.e. `len(rh)`, `rh.items()`, `rh[key]`. Previously this was usually done by accessing `rh.data` which is still possible.
+
+
 # 1.2
 
 ## Features
@@ -10,7 +16,7 @@ a trial is added.
 * Determinstic behaviour (defined in scenario) is default now. Calling a function/TAE with the same
 seed and configuration is expected to be the same.
 * Limit resources behaviour is by default false now. This is particually important because pynisher
-does not work on all machines (e.g. Colab, Mac, Windows, ...) properly. 
+does not work on all machines (e.g. Colab, Mac, Windows, ...) properly.
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
 * Expanded `cost_for_crash` for multi-objective support.
