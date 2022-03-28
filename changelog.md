@@ -3,6 +3,9 @@
 ## Features
 * The `RunHistory` can now act as a `Mapping` in that you can use the usual methods you can use on dicts, i.e. `len(rh)`, `rh.items()`, `rh[key]`. Previously this was usually done by accessing `rh.data` which is still possible.
 
+## Minor Changes
+* Updated the signature of the `ROAR` facade to match with it's parent class `SMAC4AC`. Anyone relying on the output directory **without** specifying an explicit `run_id` to a `ROAR` facade should now expect to see the output directory at `run_0` instead of `run_1`. See #827
+
 
 # 1.2
 
