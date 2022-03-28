@@ -1,7 +1,19 @@
 import collections
 from enum import Enum
 import json
-from typing import List, Dict, Union, Optional, Any, Type, Iterable, cast, Tuple
+from typing import (
+    List,
+    Dict,
+    Union,
+    Optional,
+    Any,
+    Type,
+    Iterable,
+    cast,
+    Tuple,
+    Mapping,
+    Iterator
+)
 
 import numpy as np
 
@@ -128,7 +140,7 @@ class DataOrigin(Enum):
     EXTERNAL_DIFFERENT_INSTANCES = 3
 
 
-class RunHistory(object):
+class RunHistory(Mapping[RunKey, RunValue]):
     """Container for target algorithm run information.
 
     Most importantly, the runhistory contains an efficient mapping from each evaluated configuration to the
@@ -947,3 +959,19 @@ class RunHistory(object):
             [(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()]
         )
         return cost_per_inst
+
+    def __contains__(self, k: object) -> bool:
+        """Dictionary semantics for `k in runhistory`"""
+        return k in self.data
+
+    def __getitem__(self, k: RunKey) -> RunValue:
+        """Dictionary semantics for `v = runhistory[k]`"""
+        return self.data[k]
+
+    def __iter__(self) -> Iterator[RunKey]:
+        """Dictionary semantics for `for k in runhistory.keys()`, enables .items()"""
+        return iter(self.data.keys())
+
+    def __len__(self) -> int:
+        """Enables the `len(runhistory)`"""
+        return len(self.data)
