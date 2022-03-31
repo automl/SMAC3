@@ -1,4 +1,4 @@
-import typing
+from typing import List, Tuple, Dict, Any, Optional
 
 import numpy as np
 
@@ -15,8 +15,8 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-INSTANCE_TYPE = typing.List[typing.List[str]]
-INSTANCE_FEATURES_TYPE = typing.Tuple[typing.List[str], np.ndarray]
+INSTANCE_TYPE = List[List[str]]
+INSTANCE_FEATURES_TYPE = Tuple[List[str], Dict[str, np.ndarray]]
 
 
 class InputReader(object):
@@ -31,7 +31,7 @@ class InputReader(object):
     def __init__(self) -> None:
         pass
 
-    def read_scenario_file(self, fn: str) -> typing.Dict[str, typing.Any]:
+    def read_scenario_file(self, fn: str) -> Dict[str, Any]:
         """Encapsulates read_scenario_file of pysmac
 
         Parameters
@@ -183,10 +183,10 @@ class InputReader(object):
             for line in lines[1:]:
                 tmp = line.strip().split(",")
                 instances[tmp[0]] = np.array(tmp[1:], dtype=np.double)
-        return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances
+        return [f.strip() for f in lines[0].rstrip("\n").split(",")[1:]], instances  # type: ignore
 
     @staticmethod
-    def read_pcs_file(fn: str, logger: typing.Optional[PickableLoggerAdapter] = None) -> ConfigurationSpace:
+    def read_pcs_file(fn: str, logger: Optional[PickableLoggerAdapter] = None) -> ConfigurationSpace:
         """Encapsulates generating configuration space object from file.
 
         Automatically detects whether the cs is saved in json, pcs or pcs_new.

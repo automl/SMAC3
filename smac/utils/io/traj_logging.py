@@ -136,7 +136,7 @@ class TrajLogger(object):
 
     def _add_in_old_format(
         self,
-        train_perf: Union[float, np.ndarray],
+        train_perf: Union[float, List[float]],
         incumbent_id: int,
         incumbent: Configuration,
         ta_time_used: float,
@@ -179,7 +179,7 @@ class TrajLogger(object):
 
     def _add_in_aclib_format(
         self,
-        train_perf: Union[float, np.ndarray],
+        train_perf: Union[float, List[float]],
         incumbent_id: int,
         incumbent: Configuration,
         ta_time_used: float,
@@ -221,7 +221,7 @@ class TrajLogger(object):
 
     def _add_in_alljson_format(
         self,
-        train_perf: Union[float, np.ndarray],
+        train_perf: Union[float, List[float]],
         incumbent_id: int,
         incumbent: Configuration,
         budget: float,

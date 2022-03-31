@@ -133,11 +133,11 @@ class InitialDesign:
             elif isinstance(param, CategoricalHyperparameter):
                 v_design = design[:, idx]
                 v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.choices), dtype=np.int)
+                design[:, idx] = np.array(v_design * len(param.choices), dtype=int)
             elif isinstance(param, OrdinalHyperparameter):
                 v_design = design[:, idx]
                 v_design[v_design == 1] = 1 - 10**-10
-                design[:, idx] = np.array(v_design * len(param.sequence), dtype=np.int)
+                design[:, idx] = np.array(v_design * len(param.sequence), dtype=int)
             else:
                 raise ValueError("Hyperparameter not supported in LHD")
 

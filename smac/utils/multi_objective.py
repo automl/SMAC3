@@ -61,7 +61,4 @@ def normalize_costs(
             numerator = data - min_value
             normalized_values.append(numerator / denominator)
 
-    normalized_values = np.array(normalized_values)
-    normalized_values = np.swapaxes(normalized_values, 0, 1)
-
-    return normalized_values
+    return np.swapaxes(np.array(normalized_values), 0, 1)

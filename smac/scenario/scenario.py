@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence, Union, Iterable
 
 import copy
 import logging
@@ -42,7 +42,7 @@ class Scenario(object):
     """
 
     use_ta_time = True
-    feature_dict = {}  # type: Dict[str, np.ndarray]
+    feature_dict = {}  # type: Dict[str, Iterable]
     run_obj = "None"
 
     def __init__(

@@ -1,4 +1,4 @@
-import typing
+from typing import Optional, List, Mapping, Tuple, Dict, Union, Set
 
 import logging
 import warnings
@@ -64,31 +64,31 @@ class _SuccessiveHalving(AbstractRacer):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
+    initial_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
+    max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    _all_budgets: typing.Optional[typing.List[float]] = None
+    _all_budgets: Optional[np.ndarray] = None
         Used internally when HB uses SH as a subrouting
-    _n_configs_in_stage: typing.Optional[typing.List[int]] = None
+    _n_configs_in_stage: Optional[np.ndarray] = None
         Used internally when HB uses SH as a subrouting
-    num_initial_challengers : typing.Optional[int]
+    num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
+    n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
+    instance_order : Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
 
         * None - use as is given by the user
@@ -97,7 +97,7 @@ class _SuccessiveHalving(AbstractRacer):
 
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adaptive cutoff)
-    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
+    inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -119,21 +119,21 @@ class _SuccessiveHalving(AbstractRacer):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
+        initial_budget: Optional[float] = None,
+        max_budget: Optional[float] = None,
         eta: float = 3,
-        _all_budgets: typing.Optional[typing.List[float]] = None,
-        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
-        num_initial_challengers: typing.Optional[int] = None,
+        _all_budgets: Optional[np.ndarray] = None,
+        _n_configs_in_stage: Optional[np.ndarray] = None,
+        num_initial_challengers: Optional[int] = None,
         run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
-        instance_order: typing.Optional[str] = "shuffle_once",
+        n_seeds: Optional[int] = None,
+        instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
-        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
@@ -191,7 +191,7 @@ class _SuccessiveHalving(AbstractRacer):
             # determine instance-seed pair order
             if self.instance_order == "shuffle_once":
                 # randomize once
-                self.rs.shuffle(self.inst_seed_pairs)
+                self.rs.shuffle(self.inst_seed_pairs)  # type: ignore
         else:
             self.inst_seed_pairs = inst_seed_pairs
 
@@ -230,11 +230,11 @@ class _SuccessiveHalving(AbstractRacer):
         # a new separate curr_inst_idx needs to be started.
         # The indices normally are of type int, but np.inf is used to indicate to not further
         # launch instances for this configuration, hence the type is Union[int, float].
-        self.curr_inst_idx = {}  # type: typing.Dict[Configuration, typing.Union[int, float]]
+        self.curr_inst_idx = {}  # type: Dict[Configuration, Union[int, float]]
         self.running_challenger = None
-        self.success_challengers = set()  # type: typing.Set[Configuration]
-        self.do_not_advance_challengers = set()  # type: typing.Set[Configuration]
-        self.fail_challengers = set()  # type: typing.Set[Configuration]
+        self.success_challengers = set()  # type: Set[Configuration]
+        self.do_not_advance_challengers = set()  # type: Set[Configuration]
+        self.fail_challengers = set()  # type: Set[Configuration]
         self.fail_chal_offset = 0
 
         # Track which configs were launched. This will allow to have an extra check to make sure
@@ -248,32 +248,32 @@ class _SuccessiveHalving(AbstractRacer):
         # run history, does not have this information and so we track locally. That way,
         # when we access the complete list of configs from the run history, we filter
         # the ones launched by the current succesive halver using self.run_tracker
-        self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
+        self.run_tracker = {}  # type: Dict[Tuple[Configuration, str, int, float], bool]
 
     def _init_sh_params(
         self,
-        initial_budget: typing.Optional[float],
-        max_budget: typing.Optional[float],
+        initial_budget: Optional[float],
+        max_budget: Optional[float],
         eta: float,
-        num_initial_challengers: typing.Optional[int] = None,
-        _all_budgets: typing.Optional[typing.List[float]] = None,
-        _n_configs_in_stage: typing.Optional[typing.List[int]] = None,
+        num_initial_challengers: Optional[int] = None,
+        _all_budgets: Optional[np.ndarray] = None,
+        _n_configs_in_stage: Optional[np.ndarray] = None,
     ) -> None:
         """Initialize Successive Halving parameters
 
         Parameters
         ----------
-        initial_budget : typing.Optional[float]
+        initial_budget : Optional[float]
             minimum budget allowed for 1 run of successive halving
-        max_budget : typing.Optional[float]
+        max_budget : Optional[float]
             maximum budget allowed for 1 run of successive halving
         eta : float
             'halving' factor after each iteration in a successive halving run
-        num_initial_challengers : typing.Optional[int]
+        num_initial_challengers : Optional[int]
             number of challengers to consider for the initial budget
-        _all_budgets: typing.Optional[typing.List[float]] = None
+        _all_budgets: Optional[np.ndarray] = None
             Used internally when HB uses SH as a subrouting
-        _n_configs_in_stage: typing.Optional[typing.List[int]] = None
+        _n_configs_in_stage: Optional[np.ndarray] = None
             Used internally when HB uses SH as a subrouting
         """
 
@@ -336,7 +336,8 @@ class _SuccessiveHalving(AbstractRacer):
             self.n_configs_in_stage = _n_configs_in_stage
         else:
             # budgets to consider in each stage
-            self.all_budgets = self.max_budget * np.power(self.eta, -np.linspace(max_sh_iter, 0, max_sh_iter + 1))
+            linspace = -np.linspace(max_sh_iter, 0, max_sh_iter + 1)
+            self.all_budgets = self.max_budget * np.power(self.eta, linspace)
             # number of challengers to consider in each stage
             n_configs_in_stage = num_initial_challengers * np.power(
                 self.eta, -np.linspace(0, max_sh_iter, max_sh_iter + 1)
@@ -346,12 +347,12 @@ class _SuccessiveHalving(AbstractRacer):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: typing.Optional[Configuration],
+        incumbent: Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, float]:
+    ) -> Tuple[Configuration, float]:
         """
         The intensifier stage will be updated based on the results/status
         of a configuration execution.
@@ -361,7 +362,7 @@ class _SuccessiveHalving(AbstractRacer):
         ----------
         run_info : RunInfo
                A RunInfo containing the configuration that was evaluated
-        incumbent : typing.Optional[Configuration]
+        incumbent : Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
@@ -483,13 +484,13 @@ class _SuccessiveHalving(AbstractRacer):
 
     def get_next_run(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
+        challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: typing.Optional[EPMChooser],
+        chooser: Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    ) -> Tuple[RunInfoIntent, RunInfo]:
         """
         Selects which challenger to use based on the iteration stage and set the iteration parameters.
         First iteration will choose configurations from the ``chooser`` or input challengers,
@@ -497,7 +498,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         incumbent: Configuration
             incumbent configuration
@@ -712,7 +713,7 @@ class _SuccessiveHalving(AbstractRacer):
             self.sh_iters = 0
             self.stage = 0
             # to track challengers across stages
-            self.configs_to_run = []  # type: typing.List[Configuration]
+            self.configs_to_run = []  # type: List[Configuration]
             self.curr_inst_idx = {}
             self.running_challenger = None
             self.success_challengers = set()  # successful configs
@@ -781,7 +782,7 @@ class _SuccessiveHalving(AbstractRacer):
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == "shuffle":
-                    self.rs.shuffle(self.inst_seed_pairs)
+                    self.rs.shuffle(self.inst_seed_pairs)  # type: ignore
 
         # to track configurations for the next stage
         self.success_challengers = set()  # successful configs
@@ -796,7 +797,7 @@ class _SuccessiveHalving(AbstractRacer):
         challenger: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> typing.Optional[Configuration]:
+    ) -> Optional[Configuration]:
         """
         Compares the challenger with current incumbent and returns the best configuration,
         based on the given incumbent selection design.
@@ -814,7 +815,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        typing.Optional[Configuration]
+        Optional[Configuration]
             incumbent configuration
         """
 
@@ -939,7 +940,7 @@ class _SuccessiveHalving(AbstractRacer):
         incumbent: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> typing.Optional[Configuration]:
+    ) -> Optional[Configuration]:
         """
         compares challenger with current incumbent on any budget
 
@@ -956,7 +957,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        typing.Optional[Configuration]
+        Optional[Configuration]
             incumbent configuration
         """
         curr_budget = self.all_budgets[self.stage]
@@ -1004,9 +1005,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         return new_incumbent
 
-    def _top_k(
-        self, configs: typing.List[Configuration], run_history: RunHistory, k: int
-    ) -> typing.List[Configuration]:
+    def _top_k(self, configs: List[Configuration], run_history: RunHistory, k: int) -> List[Configuration]:
         """
         Selects the top 'k' configurations from the given list based on their performance.
 
@@ -1015,7 +1014,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        configs: typing.List[Configuration]
+        configs: List[Configuration]
             list of configurations to filter from
         run_history: smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
@@ -1024,7 +1023,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Returns
         -------
-        typing.List[Configuration]
+        List[Configuration]
             top challenger configurations, sorted in increasing costs
         """
         # extracting costs for each given configuration
@@ -1053,7 +1052,7 @@ class _SuccessiveHalving(AbstractRacer):
     def _all_config_inst_seed_pairs_launched(
         self,
         run_history: RunHistory,
-        activate_configuration_being_intensified: typing.Optional[Configuration],
+        activate_configuration_being_intensified: Optional[Configuration],
     ) -> bool:
         """
         When running SH, M configs might require N instances. Before moving to the
@@ -1128,7 +1127,7 @@ class _SuccessiveHalving(AbstractRacer):
             # configuration via get_next_run
             pending_instances_to_launch = max(
                 len(curr_insts) - self.curr_inst_idx[activate_configuration_being_intensified], 0
-            )
+            )  # type: ignore
 
         # If the there are any pending configuration, or instances/seed pending for the
         # active runner, we return a boolean
@@ -1175,34 +1174,34 @@ class SuccessiveHalving(ParallelScheduler):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
+    initial_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
+    max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : typing.Optional[int]
+    num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
+    n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
+    instance_order : Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adaptive cutoff)
-    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
+    inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -1220,19 +1219,19 @@ class SuccessiveHalving(ParallelScheduler):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
+        initial_budget: Optional[float] = None,
+        max_budget: Optional[float] = None,
         eta: float = 3,
-        num_initial_challengers: typing.Optional[int] = None,
+        num_initial_challengers: Optional[int] = None,
         run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
-        instance_order: typing.Optional[str] = "shuffle_once",
+        n_seeds: Optional[int] = None,
+        instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
-        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
     ) -> None:
@@ -1264,7 +1263,7 @@ class SuccessiveHalving(ParallelScheduler):
         self.eta = eta
         self.num_initial_challengers = num_initial_challengers
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
         """
         Given a intensifier, returns how advance it is.
         This metric will be used to determine what priority to
