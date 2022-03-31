@@ -757,9 +757,9 @@ class RunHistory(object):
         if costs:
             if self.num_obj > 1:
                 # Normalize costs
-                costs_normalized = normalize_costs(costs, self.objective_bounds)
+                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
 
-            return float(np.mean(costs_normalized))
+            return float(np.mean(costs))
 
         return np.nan
 
