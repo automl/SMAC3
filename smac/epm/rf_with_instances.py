@@ -1,4 +1,4 @@
-import typing
+from typing import Optional, List, Tuple
 
 import numpy as np
 from pyrfr import regression
@@ -80,8 +80,8 @@ class RandomForestWithInstances(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         seed: int,
         log_y: bool = False,
         num_trees: int = N_TREES,
@@ -93,8 +93,8 @@ class RandomForestWithInstances(BaseModel):
         max_depth: int = 2**20,
         eps_purity: float = 1e-8,
         max_num_nodes: int = 2**20,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
@@ -195,16 +195,14 @@ class RandomForestWithInstances(BaseModel):
             data.add_data_point(row_X, row_y)
         return data
 
-    def _predict(
-        self, X: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
         """Predict means and variances for given X.
 
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples,
                                    n_features (config + instance features)]
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
@@ -258,7 +256,7 @@ class RandomForestWithInstances(BaseModel):
 
         return means.reshape((-1, 1)), vars_.reshape((-1, 1))
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all
@@ -305,7 +303,7 @@ class RandomForestWithInstances(BaseModel):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: typing.List[typing.List[float]]
+            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: List[List[float]]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])
@@ -324,6 +322,9 @@ class RandomForestWithInstances(BaseModel):
         # 3. compute statistics across trees
         mean_ = dat_.mean(axis=1)
         var = dat_.var(axis=1)
+
+        if var is None:
+            raise RuntimeError("The variance must not be none.")
 
         var[var < self.var_threshold] = self.var_threshold
 

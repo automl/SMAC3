@@ -59,6 +59,9 @@ class MagicMixin:
         if self.operate_on is None:
             rval = self._call(X, Y, eval_gradient, active)  # type: ignore[attr-defined] # noqa F821
         else:
+            if self.len_active is None:
+                raise RuntimeError("len_active is not set.")
+
             if Y is None:
                 rval = self._call(  # type: ignore[attr-defined] # noqa F821
                     X=X[:, self.operate_on].reshape([-1, self.len_active]),
@@ -754,7 +757,7 @@ class HammingKernel(
             # dK / d theta = l * dK / dl
 
             # dK / dL computation
-            if np.iterable(length_scale) and length_scale.shape[0] > 1:
+            if np.iterable(length_scale) and length_scale.shape[0] > 1:  # type: ignore
                 grad = np.expand_dims(K, axis=-1) * np.array(indicator, dtype=np.float32)
             else:
                 grad = np.expand_dims(K * np.sum(indicator, axis=2), axis=-1)
