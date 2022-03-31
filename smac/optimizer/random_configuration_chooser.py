@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from typing import Optional
 import logging
 
 import numpy as np
@@ -18,8 +18,8 @@ class RandomConfigurationChooser(ABC):
     random configurations in a list of challengers.
     """
 
-    def __init__(self, rng: np.random.RandomState):
-        self.rng = rng
+    def __init__(self, rng: Optional[np.random.RandomState] = None):
+        self.rng = rng or np.random.RandomState(seed=0)
 
     @abstractmethod
     def next_smbo_iteration(self) -> None:
@@ -42,7 +42,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
     """
 
-    def __init__(self, rng: np.random.RandomState, modulus: float = 2.0):
+    def __init__(self, rng: Optional[np.random.RandomState] = None, modulus: float = 2.0):
         super().__init__(rng)
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -75,7 +75,7 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
 
     def __init__(
         self,
-        rng: np.random.RandomState,
+        rng: Optional[np.random.RandomState] = None,
         start_modulus: float = 2.0,
         modulus_increment: float = 0.3,
         end_modulus: float = np.inf,
@@ -115,7 +115,7 @@ class ChooserProb(RandomConfigurationChooser):
         Random state
     """
 
-    def __init__(self, rng: np.random.RandomState, prob: float):
+    def __init__(self, rng: Optional[np.random.RandomState], prob: float):
         super().__init__(rng)
         self.prob = prob
 
@@ -143,7 +143,7 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
         Random state
     """
 
-    def __init__(self, rng: np.random.RandomState, prob: float, cool_down_fac: float):
+    def __init__(self, rng: Optional[np.random.RandomState], prob: float, cool_down_fac: float):
         super().__init__(rng)
         self.prob = prob
         self.cool_down_fac = cool_down_fac
@@ -177,7 +177,7 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
 
     def __init__(
         self,
-        rng: np.random.RandomState,
+        rng: Optional[np.random.RandomState],
         prob_max: float,
         prob_min: float,
         restart_iteration: int,

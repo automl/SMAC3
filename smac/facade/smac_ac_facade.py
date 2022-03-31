@@ -702,7 +702,7 @@ class SMAC4AC(object):
 
     def validate(
         self,
-        config_mode: Union[List[Configuration], np.ndarray, str] = "inc",
+        config_mode: Union[List[Configuration], str] = "inc",
         instance_mode: Union[List[str], str] = "train+test",
         repetitions: int = 1,
         use_epm: bool = False,

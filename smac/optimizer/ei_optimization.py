@@ -50,7 +50,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         self,
         acquisition_function: AbstractAcquisitionFunction,
         config_space: ConfigurationSpace,
-        rng: Union[bool, np.random.RandomState] = None,
+        rng: Union[int, np.random.RandomState] = None,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.acquisition_function = acquisition_function
@@ -59,6 +59,8 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         if rng is None:
             self.logger.debug("no rng given, using default seed of 1")
             self.rng = np.random.RandomState(seed=1)
+        elif isinstance(rng, int):
+            self.rng = np.random.RandomState(seed=rng)
         else:
             self.rng = rng
 
@@ -307,17 +309,17 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         start_points: List[Configuration],
     ) -> List[Tuple[float, Configuration]]:
 
-        # Gather data strucuture for starting points
+        # Gather data structure for starting points
         if isinstance(start_points, Configuration):
             start_points = [start_points]
         candidates = start_points
         # Compute the acquisition value of the candidates
         num_candidates = len(candidates)
-        acq_val_candidates = self.acquisition_function(candidates)
+        acq_val_candidates_ = self.acquisition_function(candidates)
         if num_candidates == 1:
-            acq_val_candidates = [acq_val_candidates[0][0]]
+            acq_val_candidates = [acq_val_candidates_[0][0]]
         else:
-            acq_val_candidates = [a[0] for a in acq_val_candidates]
+            acq_val_candidates = [a[0] for a in acq_val_candidates_]
 
         # Set up additional variables required to do vectorized local search:
         # whether the i-th local search is still running
@@ -384,7 +386,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
                 end_time = time.time()
                 times.append(end_time - start_time)
                 if np.ndim(acq_val.shape) == 0:
-                    acq_val = [acq_val]
+                    acq_val = np.asarray([acq_val])
 
                 # Comparing the acquisition function of the neighbors with the acquisition value of the candidate
                 acq_index = 0
@@ -698,7 +700,7 @@ class ChallengerList(Iterator):
         self,
         challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
-        random_configuration_chooser: Optional[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: Optional[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
     ):
         self.challengers_callback = challenger_callback
         self.challengers = None  # type: Optional[List[Configuration]]
