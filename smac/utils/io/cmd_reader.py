@@ -133,8 +133,9 @@ class ParseRandomConfigurationChooserAction(Action):
         import importlib.util
 
         spec = importlib.util.spec_from_file_location("smac.custom.random_configuration_chooser", module_path)
+        assert spec is not None
         assert spec.loader is not None  # please mypy
-        rcc_module = importlib.util.module_from_spec(spec)
+        rcc_module = importlib.util.module_from_spec(spec)  # type: ignore
         spec.loader.exec_module(rcc_module)  # type: ignore[attr-defined] # noqa F821
         setattr(namespace, self.dest, rcc_module.RandomConfigurationChooserImpl())  # type: ignore[attr-defined] # noqa F821
 
