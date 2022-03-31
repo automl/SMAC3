@@ -1,3 +1,4 @@
+from typing import Optional
 from abc import abstractmethod
 
 import numpy as np
@@ -23,7 +24,7 @@ class BaseImputor(object):
         censored_y: np.ndarray,
         uncensored_X: np.ndarray,
         uncensored_y: np.ndarray,
-    ) -> np.ndarray:
+    ) -> Optional[np.ndarray]:
         """
         Imputes censored runs and returns new y values.
 

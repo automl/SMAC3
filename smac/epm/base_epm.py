@@ -1,4 +1,4 @@
-import typing
+from typing import List, Optional, Tuple
 
 import copy
 import warnings
@@ -75,11 +75,11 @@ class AbstractEPM(object):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         seed: int,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = 7,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = 7,
     ) -> None:
         self.configspace = configspace
         self.seed = seed
@@ -146,7 +146,7 @@ class AbstractEPM(object):
                 self.types = np.array(
                     np.hstack((self.types[: self.n_params], np.zeros((X_feats.shape[1])))),
                     dtype=np.uint,
-                )
+                )  # type: ignore
             self._apply_pca = True
         else:
             self._apply_pca = False
@@ -173,8 +173,8 @@ class AbstractEPM(object):
         raise NotImplementedError
 
     def predict(
-        self, X: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
+        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Predict means and variances for given X.
 
@@ -182,7 +182,7 @@ class AbstractEPM(object):
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
             Training samples
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. (Applies to only Gaussian Process for now)
             Can take 4 values: [None, diagonal_std, diagonal_cov, full_cov]
             * None - only mean is returned
@@ -228,8 +228,8 @@ class AbstractEPM(object):
         return mean, var
 
     def _predict(
-        self, X: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
+        self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         """
         Predict means and variances for given X.
 
@@ -237,7 +237,7 @@ class AbstractEPM(object):
         ----------
         X : np.ndarray
             [n_samples, n_features (config + instance features)]
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
@@ -249,7 +249,7 @@ class AbstractEPM(object):
         """
         raise NotImplementedError()
 
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
 
         Returns the predictive mean and variance marginalised over all

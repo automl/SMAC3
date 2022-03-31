@@ -1,4 +1,4 @@
-import typing
+from typing import Optional
 
 import logging
 import warnings
@@ -83,7 +83,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         censored_y: np.ndarray,
         uncensored_X: np.ndarray,
         uncensored_y: np.ndarray,
-    ) -> typing.Optional[np.ndarray]:
+    ) -> Optional[np.ndarray]:
         """
         Imputes censored runs and returns new y values.
 
@@ -186,7 +186,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.logger.debug("Imputation used %d/%d iterations, last_change=%f" % (it - 1, self.max_iter, change))
 
         # replace all y > cutoff with PAR10 values (i.e., threshold)
-        imputed_y = np.array(imputed_y, dtype=np.float)
+        imputed_y = np.array(imputed_y, dtype=float)
         imputed_y[imputed_y >= self.cutoff] = self.threshold
 
         if not np.isfinite(imputed_y).all():

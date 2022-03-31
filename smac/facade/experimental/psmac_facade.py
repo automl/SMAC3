@@ -1,8 +1,7 @@
 # type: ignore
 # mypy: ignore-errors
 
-import typing
-
+from typing import Type, Dict, Union, List, Optional
 import copy
 import datetime
 import logging
@@ -28,10 +27,10 @@ __license__ = "3-clause BSD"
 
 
 def optimize(
-    scenario: typing.Type[Scenario],
-    tae: typing.Type[BaseRunner],
-    tae_kwargs: typing.Dict,
-    rng: typing.Union[np.random.RandomState, int],
+    scenario: Type[Scenario],
+    tae: Type[BaseRunner],
+    tae_kwargs: Dict,
+    rng: Union[np.random.RandomState, int],
     output_dir: str,
     **kwargs,
 ) -> Configuration:
@@ -94,7 +93,7 @@ class PSMAC(object):
         None => neither and return the full portfolio
     n_incs: int
         Number of incumbents to return (n_incs <= 0 ==> all found configurations)
-    val_set: typing.List[str]
+    val_set: List[str]
         List of instance-ids to validate on
 
     Attributes
@@ -113,15 +112,15 @@ class PSMAC(object):
 
     def __init__(
         self,
-        scenario: typing.Type[Scenario],
-        rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
+        scenario: Type[Scenario],
+        rng: Optional[Union[np.random.RandomState, int]] = None,
         run_id: int = 1,
-        tae: typing.Type[BaseRunner] = ExecuteTARunOld,
-        tae_kwargs: typing.Union[dict, None] = None,
+        tae: Type[BaseRunner] = ExecuteTARunOld,
+        tae_kwargs: Union[dict, None] = None,
         shared_model: bool = True,
         validate: bool = True,
         n_optimizers: int = 2,
-        val_set: typing.Union[typing.List[str], None] = None,
+        val_set: Union[List[str], None] = None,
         n_incs: int = 1,
         **kwargs,
     ):
@@ -194,13 +193,13 @@ class PSMAC(object):
                 return [inc for i, inc in enumerate(incs) if i in val_ids]
             return [inc for i, inc in enumerate(incs) if i in est_ids]
 
-    def get_best_incumbents_ids(self, incs: typing.List[Configuration]):
+    def get_best_incumbents_ids(self, incs: List[Configuration]):
         """
         Determines the IDs and costs of the best configurations
 
         Parameters
         ----------
-        incs : typing.List[Configuration]
+        incs : List[Configuration]
             incumbents determined by all parallel SMAC runs
 
         Returns
@@ -224,13 +223,13 @@ class PSMAC(object):
         ]
         return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
 
-    def _get_mean_costs(self, incs: typing.List[Configuration], new_rh: RunHistory):
+    def _get_mean_costs(self, incs: List[Configuration], new_rh: RunHistory):
         """
         Compute mean cost per instance
 
         Parameters
         ----------
-        incs : typing.List[Configuration]
+        incs : List[Configuration]
             incumbents determined by all parallel SMAC runs
         new_rh : RunHistory
             runhistory to determine mean performance
@@ -253,7 +252,7 @@ class PSMAC(object):
                 results.append(np.nan)
         return results, config_cost_per_inst
 
-    def validate_incs(self, incs: np.ndarray):
+    def validate_incs(self, incs: List[Configuration]):
         """
         Validation
         """

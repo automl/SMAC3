@@ -108,7 +108,7 @@ class SMBO(object):
         rng: np.random.RandomState,
         tae_runner: BaseRunner,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
     ):
@@ -346,7 +346,7 @@ class SMBO(object):
 
     def validate(
         self,
-        config_mode: typing.Union[str, np.ndarray, typing.List[Configuration]] = "inc",
+        config_mode: typing.Union[str, typing.List[Configuration]] = "inc",
         instance_mode: typing.Union[str, typing.List[str]] = "train+test",
         repetitions: int = 1,
         use_epm: bool = False,

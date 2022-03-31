@@ -475,8 +475,8 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
                 y_ = normalize_costs([run.cost], runhistory.objective_bounds)
-                y_ = self.multi_objective_algorithm(y_)
-                y[row] = y_
+                y_agg = self.multi_objective_algorithm(y_)
+                y[row] = y_agg
             else:
                 if return_time_as_y:
                     y[row, 0] = run.time
@@ -710,18 +710,18 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
                 y_ = normalize_costs([run.cost], runhistory.objective_bounds)
-                y_ = self.multi_objective_algorithm(y_)
-                y[row, 0] = y_
+                y_agg = self.multi_objective_algorithm(y_)
+                y[row, 0] = y_agg
             else:
                 y[row, 0] = run.cost
 
             y[row, 1] = 1 + run.time
 
-        y = self.transform_response_values(values=y)
+        y_transformed = self.transform_response_values(values=y)
 
-        return X, y
+        return X, y_transformed
 
-    def transform_response_values(self, values: np.ndarray) -> typing.Tuple[np.ndarray]:
+    def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
 
         Transform the runtimes by a log transformation (log(1 + runtime).

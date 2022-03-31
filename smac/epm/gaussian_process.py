@@ -1,4 +1,4 @@
-import typing
+from typing import List, Tuple, Optional, Union, cast
 
 import logging
 
@@ -62,14 +62,14 @@ class GaussianProcess(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         seed: int,
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ):
         super().__init__(
             configspace=configspace,
@@ -149,7 +149,7 @@ class GaussianProcess(BaseModel):
             random_state=self.rng,
         )
 
-    def _nll(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
+    def _nll(self, theta: np.ndarray) -> Tuple[float, np.ndarray]:
         """
         Returns the negative marginal log likelihood (+ the prior) for
         a hyperparameter configuration theta.
@@ -202,7 +202,7 @@ class GaussianProcess(BaseModel):
         if self.n_opt_restarts > 0:
             dim_samples = []
 
-            prior = None  # type: typing.Optional[typing.Union[typing.List[Prior], Prior]]
+            prior = None  # type: Optional[Union[List[Prior], Prior]]
             for dim, hp_bound in enumerate(log_bounds):
                 prior = self._all_priors[dim]
                 # Always sample from the first prior
@@ -211,7 +211,7 @@ class GaussianProcess(BaseModel):
                         prior = None
                     else:
                         prior = prior[0]
-                prior = typing.cast(typing.Optional[Prior], prior)
+                prior = cast(Optional[Prior], prior)
                 if prior is None:
                     try:
                         sample = self.rng.uniform(
@@ -226,18 +226,22 @@ class GaussianProcess(BaseModel):
                     dim_samples.append(prior.sample_from_prior(self.n_opt_restarts).flatten())
             p0 += list(np.vstack(dim_samples).transpose())
 
-        theta_star = None
+        theta_star: Optional[np.ndarray] = None
         f_opt_star = np.inf
         for i, start_point in enumerate(p0):
             theta, f_opt, _ = optimize.fmin_l_bfgs_b(self._nll, start_point, bounds=log_bounds)
             if f_opt < f_opt_star:
                 f_opt_star = f_opt
                 theta_star = theta
+
+        if theta_star is None:
+            raise RuntimeError
+
         return theta_star
 
     def _predict(
-        self, X_test: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
+        self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -246,7 +250,7 @@ class GaussianProcess(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns

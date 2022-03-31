@@ -66,7 +66,7 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
     ):
@@ -187,7 +187,7 @@ class EPMChooser(object):
         )
         return challengers
 
-    def _get_x_best(self, predict: bool, X: np.ndarray) -> typing.Tuple[float, np.ndarray]:
+    def _get_x_best(self, predict: bool, X: np.ndarray) -> typing.Tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
 
         The definition of best varies depending on the argument ``predict``. If set to ``True``,

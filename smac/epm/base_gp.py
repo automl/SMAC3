@@ -84,7 +84,7 @@ class BaseModel(AbstractEPM):
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
             var = var * self.std_y_**2
-            return y, var
+            return y, var  # type: ignore
         return y
 
     def _get_all_priors(

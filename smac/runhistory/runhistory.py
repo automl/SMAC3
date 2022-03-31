@@ -180,9 +180,9 @@ class RunHistory(object):
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self._cost_per_config = {}  # type: Dict[int, np.ndarray]
+        self._cost_per_config = {}  # type: Dict[int, float]
         # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config = {}  # type: Dict[int, np.ndarray]
+        self._min_cost_per_config = {}  # type: Dict[int, float]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
         self.num_runs_per_config = {}  # type: Dict[int, int]
@@ -331,7 +331,7 @@ class RunHistory(object):
                 assert len(costs) == self.num_obj
                 all_costs.append(costs)
 
-        all_costs = np.array(all_costs, dtype=float)
+        all_costs = np.array(all_costs, dtype=float)  # type: ignore[assignment]
 
         if len(all_costs) == 0:
             self.objective_bounds = [(np.inf, -np.inf)] * self.num_obj
@@ -423,7 +423,7 @@ class RunHistory(object):
         if self.num_obj > 1:
             cost = self.average_cost(config)
 
-        self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)
+        self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)  # type: ignore
         self.num_runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config: Configuration) -> float:
@@ -618,9 +618,9 @@ class RunHistory(object):
                     self.num_obj = len(np.asarray(list(map(float, v[0]))))
 
             if self.num_obj == 1:
-                cost = float(v[0])
+                cost: Union[np.ndarray, float] = float(v[0])
             else:
-                cost = np.asarray(list(map(float, v[0])))
+                cost: Union[np.ndarray, float] = np.asarray(list(map(float, v[0])))  # type: ignore[no-redef]
 
             self.add(
                 config=self.ids_config[int(k[0])],
@@ -757,9 +757,9 @@ class RunHistory(object):
         if costs:
             if self.num_obj > 1:
                 # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)
+                costs_normalized = normalize_costs(costs, self.objective_bounds)
 
-            return float(np.mean(costs))
+            return float(np.mean(costs_normalized))
 
         return np.nan
 
@@ -789,7 +789,7 @@ class RunHistory(object):
         if costs:
             if self.num_obj > 1:
                 # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)
+                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
                 costs = np.mean(costs, axis=1)
 
         return float(np.sum(costs))
@@ -821,7 +821,7 @@ class RunHistory(object):
         if costs:
             if self.num_obj > 1:
                 # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)
+                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
                 costs = np.mean(costs, axis=1)
 
             return float(np.min(costs))
