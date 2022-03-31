@@ -64,9 +64,9 @@ class ROAR(SMAC4AC):
         cannot be used together with initial_design
     stats: Stats
         optional stats object
-    rng: np.random.RandomState
+    rng: Optional[int, np.random.RandomState]
         Random number generator
-    run_id: int, (default: 1)
+    run_id: Optional[int]
         Run ID will be used as subfolder for output_dir.
     dask_client : dask.distributed.Client
         User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
@@ -85,25 +85,26 @@ class ROAR(SMAC4AC):
 
     """
 
-    def __init__(
-        self,
-        scenario: Scenario,
-        tae_runner: typing.Optional[typing.Union[typing.Type[BaseRunner], typing.Callable]] = None,
-        tae_runner_kwargs: typing.Optional[typing.Dict] = None,
-        runhistory: RunHistory = None,
-        intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
-        intensifier_kwargs: typing.Optional[typing.Dict] = None,
-        acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
-        acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
-        initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
-        initial_design_kwargs: typing.Optional[dict] = None,
-        initial_configurations: typing.List[Configuration] = None,
-        stats: Stats = None,
-        rng: np.random.RandomState = None,
-        run_id: int = 1,
-        dask_client: typing.Optional[dask.distributed.Client] = None,
-        n_jobs: typing.Optional[int] = 1,
-    ):
+    def __init__(self,
+         scenario: Scenario,
+         tae_runner: typing.Optional[
+             typing.Union[typing.Type[BaseRunner], typing.Callable]
+         ] = None,
+         tae_runner_kwargs: typing.Optional[typing.Dict] = None,
+         runhistory: RunHistory = None,
+         intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
+         intensifier_kwargs: typing.Optional[typing.Dict] = None,
+         acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
+         acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
+         initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
+         initial_design_kwargs: typing.Optional[dict] = None,
+         initial_configurations: typing.List[Configuration] = None,
+         stats: Stats = None,
+         rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
+         run_id: typing.Optional[int] = None,
+         dask_client: typing.Optional[dask.distributed.Client] = None,
+         n_jobs: typing.Optional[int] = 1,
+     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         scenario.acq_opt_challengers = 1  # type: ignore[attr-defined] # noqa F821

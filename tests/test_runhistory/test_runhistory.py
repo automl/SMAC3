@@ -1,3 +1,5 @@
+from typing import Optional
+
 import os
 import pickle
 import tempfile
@@ -5,8 +7,9 @@ import unittest
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
-from smac.runhistory.runhistory import RunHistory
+
 from smac.tae import StatusType
+from smac.runhistory.runhistory import RunHistory, RunKey
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -68,7 +71,9 @@ class RunhistoryTest(unittest.TestCase):
     def test_illegal_input(self):
         rh = RunHistory()
 
-        with self.assertRaisesRegex(TypeError, "Configuration to add to the runhistory must not be None"):
+        with self.assertRaisesRegex(
+            TypeError, "Configuration to add to the runhistory must not be None"
+        ):
             rh.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
 
         with self.assertRaisesRegex(
@@ -95,7 +100,9 @@ class RunhistoryTest(unittest.TestCase):
             )
 
         self.assertEqual(len(rh.data), 1)
-        self.assertEqual(len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1)
+        self.assertEqual(
+            len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1
+        )
         self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
         self.assertEqual(list(rh.data.values())[0].cost, 1)
 
@@ -413,6 +420,129 @@ class RunhistoryTest(unittest.TestCase):
             self.assertEqual(rh.get_all_configs()[0].origin, origin)
 
             os.remove(path)
+
+
+class RunHistoryMappingTest(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.cs = get_config_space()
+        self.runhistory = RunHistory()
+
+    def add_item(
+        self,
+        cost: float = 0.0,
+        time: float = 1.0,
+        seed: int = 0,
+        instance_id: Optional[str] = None,
+        budget: float = 0.0,
+        status=StatusType.SUCCESS
+    ) -> RunKey:
+        """No easy way to generate a key before hand"""
+        self.runhistory.add(
+            config=self.cs.sample_configuration(),
+            cost=cost,
+            time=time,
+            instance_id=instance_id,
+            seed=seed,
+            budget=budget,
+            status=status,
+        )
+        return RunKey(
+            config_id=self.runhistory._n_id,  # What's used internally during `add`
+            instance_id=instance_id,
+            seed=seed,
+            budget=budget
+        )
+
+    def test_contains(self):
+        """Test that keys added are contained `in` and not if not added"""
+        k = self.add_item()
+        assert k in self.runhistory
+
+        new_rh = RunHistory()
+        assert k not in new_rh
+
+    def test_getting(self):
+        """Test that rh[k] will return the correct value"""
+        k = self.add_item(cost=1.0)
+        k2 = self.add_item(cost=2.0)
+
+        v = self.runhistory[k]
+        assert v.cost == 1.0
+
+        v2 = self.runhistory[k2]
+        assert v2.cost == 2.0
+
+    def test_len(self):
+        """Test that adding items will increase the length monotonically"""
+        assert len(self.runhistory) == 0
+
+        n_items = 5
+
+        for i in range(n_items):
+            assert len(self.runhistory) == i
+
+            self.add_item()
+
+            assert len(self.runhistory) == i + 1
+
+        assert len(self.runhistory) == n_items
+
+    def test_iter(self):
+        """Test that iter goes in the order of insertion and has consitent length
+        with the runhistory's advertised length and it's internal `data`
+        """
+        params = [
+            {"instance_id": "a", "cost": 1.0},
+            {"instance_id": "b", "cost": 2.0},
+            {"instance_id": "c", "cost": 3.0},
+            {"instance_id": "d", "cost": 4.0},
+        ]
+
+        for p in params:
+            self.add_item(**p)
+
+        expected_id_order = [p["instance_id"] for p in params]
+        assert [k.instance_id for k in iter(self.runhistory)] == expected_id_order
+
+        assert len(list(iter(self.runhistory))) == len(self.runhistory)
+        assert len(list(iter(self.runhistory))) == len(self.runhistory.data)
+
+    def test_items(self):
+        """Test that items goes in correct insertion order and returns key values
+        as expected.
+        """
+        params = [
+            {"instance_id": "a", "cost": 1.0},
+            {"instance_id": "b", "cost": 2.0},
+            {"instance_id": "c", "cost": 3.0},
+            {"instance_id": "d", "cost": 4.0},
+        ]
+
+        for p in params:
+            self.add_item(**p)
+
+        for (k, v), expected in zip(self.runhistory.items(), params):
+            assert k.instance_id == expected["instance_id"]
+            assert v.cost == expected["cost"]
+
+    def test_unpack(self):
+        """Test that unpacking maintains order and returns key values as expected"""
+        params = [
+            {"instance_id": "a", "cost": 1.0},
+            {"instance_id": "b", "cost": 2.0},
+            {"instance_id": "c", "cost": 3.0},
+            {"instance_id": "d", "cost": 4.0},
+        ]
+
+        for p in params:
+            self.add_item(**p)
+
+        unpacked = {**self.runhistory}
+
+        for (k, v), expected in zip(unpacked.items(), params):
+            assert k.instance_id == expected["instance_id"]
+            assert v.cost == expected["cost"]
 
 
 if __name__ == "__main__":
