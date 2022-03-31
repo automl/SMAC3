@@ -16,7 +16,7 @@ __version__ = "0.0.1"
 
 
 INSTANCE_TYPE = typing.List[typing.List[str]]
-INSTANCE_FEATURES_TYPE = typing.Tuple[typing.List[str], np.ndarray]
+INSTANCE_FEATURES_TYPE = typing.Tuple[typing.List[str], typing.Dict[str, np.ndarray]]
 
 
 class InputReader(object):
