@@ -8,7 +8,8 @@ from typing import (
     Iterable,
     cast,
     Tuple,
-    Mapping
+    Mapping,
+    Iterator
 )
 
 import collections
