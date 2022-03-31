@@ -31,19 +31,21 @@ def normalize_costs(
     np.ndarray
         Normalized costs.
     """
-
+    _values: np.ndarray
     if isinstance(values, list):
-        values = np.array(values)
+        _values = np.array(values)
+    else:
+        _values = values
 
-    if len(values.shape) == 1:
-        values = np.expand_dims(values, axis=-1)
+    if len(_values.shape) == 1:
+        _values = np.expand_dims(_values, axis=-1)
 
     normalized_values = []
-    for col in range(values.shape[1]):
-        data = values[:, col].astype(float)
+    for col in range(_values.shape[1]):
+        data = _values[:, col].astype(float)
 
         if bounds is not None:
-            assert len(bounds) == values.shape[1]
+            assert len(bounds) == _values.shape[1]
 
             min_value = bounds[col][0]
             max_value = bounds[col][1]
