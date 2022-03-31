@@ -73,7 +73,7 @@ def _unbound_tae_starter(
     return result
 
 
-_Run = namedtuple("Run", "config inst seed inst_specs")
+_Run = namedtuple("_Run", "config inst seed inst_specs")
 
 
 class Validator(object):
