@@ -437,7 +437,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 self.get_runs_for_config(config, only_max_observed_budget=True)
             )
         )
-        self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
+        self._cost_per_config[config_id] = np.array(self.average_cost(config, inst_seed_budgets))
         self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
         all_inst_seed_budgets = list(
@@ -445,9 +445,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 self.get_runs_for_config(config, only_max_observed_budget=False)
             )
         )
-        self._min_cost_per_config[config_id] = self.min_cost(
+        self._min_cost_per_config[config_id] = np.array(self.min_cost(
             config, all_inst_seed_budgets
-        )
+        ))
 
     def incremental_update_cost(
         self, config: Configuration, cost: Union[np.ndarray, list, float, int]
