@@ -192,9 +192,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self._cost_per_config = {}  # type: Dict[int, np.ndarray]
+        self._cost_per_config = {}  # type: Dict[int, float]
         # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config = {}  # type: Dict[int, np.ndarray]
+        self._min_cost_per_config = {}  # type: Dict[int, float]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
         self.num_runs_per_config = {}  # type: Dict[int, int]
@@ -405,11 +405,11 @@ class RunHistory(Mapping[RunKey, RunValue]):
         config_id = self.config_ids[config]
         # removing duplicates while keeping the order
         inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
-        self._cost_per_config[config_id] = np.array(self.average_cost(config, inst_seed_budgets))
+        self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
-        self._min_cost_per_config[config_id] = np.array(self.min_cost(config, all_inst_seed_budgets))
+        self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
 
     def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a moving average.

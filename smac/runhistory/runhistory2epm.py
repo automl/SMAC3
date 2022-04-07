@@ -354,7 +354,7 @@ class AbstractRunHistory2EPM(object):
 
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
-                Y = np.concatenate((Y, imp_Y))
+                Y = np.concatenate((Y, imp_Y))  # type: ignore
         else:
             # If we do not impute, we also return TIMEOUT data
             X = np.vstack((X, tX))
@@ -463,7 +463,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
             conf_vector = convert_configurations_to_array([conf])[0]
             if self.n_feats:
                 feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf_vector, feats))
+                X[row, :] = np.hstack((conf_vector, feats))  # type: ignore
             else:
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
@@ -689,7 +689,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
             conf_vector = convert_configurations_to_array([conf])[0]
             if self.n_feats:
                 feats = self.instance_features[key.instance_id]
-                X[row, :] = np.hstack((conf_vector, feats))
+                X[row, :] = np.hstack((conf_vector, feats))  # type: ignore
             else:
                 X[row, :] = conf_vector
 

@@ -403,7 +403,7 @@ class Validator(object):
                 X_pred[idx] = np.hstack(
                     [
                         convert_configurations_to_array([run.config])[0],
-                        self.scen.feature_dict[run.inst],
+                        self.scen.feature_dict[run.inst],  # type: ignore
                     ]
                 )
             else:
