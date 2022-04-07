@@ -4,9 +4,9 @@ import unittest
 from unittest import mock
 
 import numpy as np
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 import smac.facade.smac_ac_facade
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.rf_with_instances import RandomForestWithInstances

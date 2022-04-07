@@ -1,7 +1,6 @@
 import unittest
 
 import numpy as np
-
 from ConfigSpace import ConfigurationSpace, EqualsCondition
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
@@ -10,6 +9,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+
 from smac.epm.util_funcs import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

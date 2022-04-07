@@ -2,9 +2,9 @@ import logging
 import unittest
 
 import numpy as np
-
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario

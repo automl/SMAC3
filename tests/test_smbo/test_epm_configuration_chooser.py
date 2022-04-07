@@ -3,8 +3,8 @@ import unittest
 from unittest import mock
 
 import numpy as np
-
 from ConfigSpace import Configuration
+
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory

@@ -2,7 +2,6 @@ import unittest
 import unittest.mock
 
 import numpy as np
-
 from ConfigSpace import (
     CategoricalHyperparameter,
     ConfigurationSpace,
@@ -10,6 +9,7 @@ from ConfigSpace import (
     OrdinalHyperparameter,
     UniformFloatHyperparameter,
 )
+
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

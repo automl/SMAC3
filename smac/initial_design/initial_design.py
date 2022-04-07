@@ -4,7 +4,6 @@ import logging
 from collections import OrderedDict
 
 import numpy as np
-
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
@@ -13,6 +12,7 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+
 from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Marius Lindauer"

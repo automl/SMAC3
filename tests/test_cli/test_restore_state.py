@@ -3,8 +3,8 @@ import shutil
 import unittest
 
 import numpy as np
-
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario

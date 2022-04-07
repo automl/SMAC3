@@ -4,9 +4,9 @@ import tempfile
 import unittest
 
 import pytest
-
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
 

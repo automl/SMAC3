@@ -6,7 +6,6 @@ import logging
 import os
 
 import numpy as np
-
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
@@ -14,6 +13,7 @@ from ConfigSpace.hyperparameters import (
     FloatHyperparameter,
     IntegerHyperparameter,
 )
+
 from smac.stats.stats import Stats
 from smac.utils.logging import format_array
 

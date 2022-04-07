@@ -3,6 +3,7 @@ import shutil
 import unittest.mock
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_mf_facade import SMAC4MF
 from smac.initial_design.random_configuration_design import RandomConfigurations

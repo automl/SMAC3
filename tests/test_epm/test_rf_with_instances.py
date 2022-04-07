@@ -2,9 +2,6 @@ import unittest
 import unittest.mock
 
 import numpy as np
-
-import smac
-import smac.configspace
 from ConfigSpace import (
     CategoricalHyperparameter,
     EqualsCondition,
@@ -12,6 +9,9 @@ from ConfigSpace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+
+import smac
+import smac.configspace
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 

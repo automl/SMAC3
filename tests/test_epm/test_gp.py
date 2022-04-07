@@ -4,8 +4,8 @@ import numpy as np
 import scipy.optimize
 import sklearn.datasets
 import sklearn.model_selection
-
 from ConfigSpace import EqualsCondition
+
 from smac.configspace import (
     CategoricalHyperparameter,
     ConfigurationSpace,

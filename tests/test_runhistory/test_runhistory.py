@@ -7,6 +7,7 @@ import unittest
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
 from smac.runhistory.runhistory import RunHistory, RunKey
 from smac.tae import StatusType
 

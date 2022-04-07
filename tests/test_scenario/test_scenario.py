@@ -6,9 +6,9 @@ import sys
 import unittest
 
 import numpy as np
-
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
+
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
