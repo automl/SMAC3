@@ -1,14 +1,13 @@
 from typing import List, Optional, Tuple, Union
 
-from smac.configspace import ConfigurationSpace
 import numpy as np
-
-from smac.epm.base_epm import AbstractEPM
-import smac.epm.gp_base_prior
-
 import sklearn.gaussian_process
-from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel, KernelOperator
+
+import smac.epm.gp_base_prior
+from smac.configspace import ConfigurationSpace
+from smac.epm.base_epm import AbstractEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -25,9 +24,7 @@ class BaseModel(AbstractEPM):
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
     ):
-        """
-        Abstract base class for all Gaussian process models.
-        """
+        """Abstract base class for all Gaussian process models."""
         super().__init__(
             configspace=configspace,
             types=types,
@@ -42,6 +39,7 @@ class BaseModel(AbstractEPM):
         self.gp = self._get_gp()
 
     def _get_gp(self) -> GaussianProcessRegressor:
+        """Returns the Gaussian process."""
         raise NotImplementedError()
 
     def _normalize_y(self, y: np.ndarray) -> np.ndarray:
@@ -69,7 +67,8 @@ class BaseModel(AbstractEPM):
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Transform zeromean unit standard deviation data into the regular space.
 
-        This function should be used after a prediction with the Gaussian process which was trained on normalized data.
+        This function should be used after a prediction with the Gaussian process which was
+        trained on normalized data.
 
         Parameters
         ----------
@@ -84,8 +83,8 @@ class BaseModel(AbstractEPM):
         """
         y = y * self.std_y_ + self.mean_y_
         if var is not None:
-            var = var * self.std_y_ ** 2
-            return y, var
+            var = var * self.std_y_**2
+            return y, var  # type: ignore
         return y
 
     def _get_all_priors(
@@ -93,6 +92,7 @@ class BaseModel(AbstractEPM):
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
     ) -> List[List[smac.epm.gp_base_prior.Prior]]:
+        """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
         to_visit = []
@@ -119,17 +119,25 @@ class BaseModel(AbstractEPM):
                         if add_soft_bounds:
                             priors_for_hp.append(
                                 smac.epm.gp_base_prior.SoftTopHatPrior(
-                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng, exponent=2,
-                                ))
+                                    lower_bound=bounds[i][0],
+                                    upper_bound=bounds[i][1],
+                                    rng=self.rng,
+                                    exponent=2,
+                                )
+                            )
                         else:
                             priors_for_hp.append(
                                 smac.epm.gp_base_prior.TophatPrior(
-                                    lower_bound=bounds[i][0], upper_bound=bounds[i][1], rng=self.rng,
-                                ))
+                                    lower_bound=bounds[i][0],
+                                    upper_bound=bounds[i][1],
+                                    rng=self.rng,
+                                )
+                            )
                     all_priors.append(priors_for_hp)
         return all_priors
 
     def _set_has_conditions(self) -> None:
+        """Sets `has_conditions` on `current_param`."""
         has_conditions = len(self.configspace.get_conditions()) > 0
         to_visit = []
         to_visit.append(self.kernel)
@@ -145,6 +153,7 @@ class BaseModel(AbstractEPM):
                 raise ValueError(current_param)
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
+        """Imputes inactives."""
         X = X.copy()
         X[~np.isfinite(X)] = -1
         return X

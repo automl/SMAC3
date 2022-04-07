@@ -1,10 +1,14 @@
 import itertools
 
-from ConfigSpace.configuration_space import Configuration
-from ConfigSpace.hyperparameters import Constant, NumericalHyperparameter, \
-    CategoricalHyperparameter, OrdinalHyperparameter
-from ConfigSpace.util import deactivate_inactive_hyperparameters
 import numpy as np
+from ConfigSpace.configuration_space import Configuration
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    Constant,
+    NumericalHyperparameter,
+    OrdinalHyperparameter,
+)
+from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design.initial_design import InitialDesign
 
@@ -14,7 +18,7 @@ __license__ = "3-clause BSD"
 
 
 class FactorialInitialDesign(InitialDesign):
-    """Factorial initial design
+    """Factorial initial design.
 
     Attributes
     ----------
@@ -25,14 +29,13 @@ class FactorialInitialDesign(InitialDesign):
     """
 
     def _select_configurations(self) -> Configuration:
-        """Selects a single configuration to run
+        """Selects a single configuration to run.
 
         Returns
         -------
         config: Configuration
             initial incumbent configuration
         """
-
         params = self.cs.get_hyperparameters()
 
         values = []

@@ -5,13 +5,13 @@ Home
    :hidden:
    :maxdepth: 2
 
-   pages/getting_started/index
-   pages/examples/index
-   pages/details/index
-   pages/api/index
-   pages/glossary
-   pages/faq
-   pages/license
+   getting_started/index
+   examples/index
+   details/index
+   api
+   glossary
+   faq
+   license
 
 
 SMAC is a tool for algorithm configuration to optimize the parameters of
@@ -46,7 +46,6 @@ For the original idea, we refer to:
 Contact
 -------
 
-SMAC3 is developed by `<automl.org>`_.
+SMAC3 is developed by `<https://automl.org>`_.
 If you want to contribute or found an issue please visit our github page `<https://github.com/automl/SMAC3>`_.
-Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/master/CONTRIBUTING.md>`_.
-
+Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md>`_.

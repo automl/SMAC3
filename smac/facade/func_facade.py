@@ -1,15 +1,15 @@
+from typing import Any, Callable, Dict, Iterable, List, Mapping, Optional, Tuple, Union
+
 import logging
-from typing import Callable, List, Union, Optional, Mapping, Any, Iterable, Dict, Tuple
 
 import numpy as np
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 
+from smac.configspace import Configuration, ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.scenario.scenario import Scenario
-from smac.configspace import ConfigurationSpace, Configuration
 from smac.runhistory.runhistory import RunKey
+from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncArray
-
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -24,12 +24,10 @@ def fmin_smac(
     rng: Optional[Union[np.random.RandomState, int]] = None,
     scenario_args: Optional[Mapping[str, Any]] = None,
     tae_runner_kwargs: Optional[Dict[str, Any]] = None,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> Tuple[Configuration, Union[np.ndarray, float], SMAC4HPO]:
-    """
-    Minimize a function func using the SMAC4HPO facade
-    (i.e., a modified version of SMAC).
-    This function is a convenience wrapper for the SMAC4HPO class.
+    """Minimize a function func using the SMAC4HPO facade (i.e., a modified version of SMAC). This
+    function is a convenience wrapper for the SMAC4HPO class.
 
     Parameters
     ----------
@@ -61,7 +59,6 @@ def fmin_smac(
     s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
-
     """
     # create configuration space
     cs = ConfigurationSpace()
@@ -105,7 +102,7 @@ def fmin_smac(
         tae_runner=ExecuteTAFuncArray,
         tae_runner_kwargs=tae_runner_kwargs,
         rng=rng,
-        **kwargs
+        **kwargs,
     )
 
     smac.logger = logging.getLogger(smac.__module__ + "." + smac.__class__.__name__)
@@ -113,8 +110,6 @@ def fmin_smac(
     config_id = smac.solver.runhistory.config_ids[incumbent]
     run_key = RunKey(config_id, None, 0)
     incumbent_performance = smac.solver.runhistory.data[run_key]
-    incumbent = np.array(
-        [incumbent[tmplt.format(idx + 1)] for idx in range(len(bounds))], dtype=float
-    )
+    incumbent = np.array([incumbent[tmplt.format(idx + 1)] for idx in range(len(bounds))], dtype=float)
 
     return incumbent, incumbent_performance.cost, smac

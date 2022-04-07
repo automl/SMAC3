@@ -1,5 +1,7 @@
-import numpy as np
 from typing import Optional
+
+import numpy as np
+
 from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
 
 
@@ -25,7 +27,6 @@ class ParEGO(AggregationStrategy):
         -------
             cost (float): Combined cost.
         """
-
         # Then we have to compute the weight
         theta = self.rng.rand(self.num_obj)
 

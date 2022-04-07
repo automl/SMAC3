@@ -1,7 +1,8 @@
-import logging
 import typing
 
-import dask.distributed
+import logging
+
+import dask.distributed  # type: ignore
 import numpy as np
 
 from smac.configspace import Configuration
@@ -9,11 +10,15 @@ from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.optimizer.ei_optimization import RandomSearch, AcquisitionFunctionMaximizer
+from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost, AbstractRunHistory2EPM
-from smac.stats.stats import Stats
+from smac.runhistory.runhistory2epm import (
+    AbstractRunHistory2EPM,
+    RunHistory2EPM4Cost,
+    RunHistory2EPM4LogCost,
+)
 from smac.scenario.scenario import Scenario
+from smac.stats.stats import Stats
 from smac.tae.base import BaseRunner
 
 __author__ = "Marius Lindauer"
@@ -22,8 +27,7 @@ __license__ = "3-clause BSD"
 
 
 class ROAR(SMAC4AC):
-    """
-    Facade to use ROAR mode
+    """Facade to use ROAR mode.
 
     Parameters
     ----------
@@ -77,32 +81,30 @@ class ROAR(SMAC4AC):
     See Also
     --------
     :class:`~smac.facade.smac_ac_facade.SMAC4AC`
-
     """
 
-    def __init__(self,
-                 scenario: Scenario,
-                 tae_runner: typing.Optional[
-                     typing.Union[typing.Type[BaseRunner], typing.Callable]
-                 ] = None,
-                 tae_runner_kwargs: typing.Optional[typing.Dict] = None,
-                 runhistory: RunHistory = None,
-                 intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
-                 intensifier_kwargs: typing.Optional[typing.Dict] = None,
-                 acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
-                 acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
-                 initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
-                 initial_design_kwargs: typing.Optional[dict] = None,
-                 initial_configurations: typing.List[Configuration] = None,
-                 stats: Stats = None,
-                 rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
-                 run_id: typing.Optional[int] = None,
-                 dask_client: typing.Optional[dask.distributed.Client] = None,
-                 n_jobs: typing.Optional[int] = 1,
-                 ):
+    def __init__(
+        self,
+        scenario: Scenario,
+        tae_runner: typing.Optional[typing.Union[typing.Type[BaseRunner], typing.Callable]] = None,
+        tae_runner_kwargs: typing.Optional[typing.Dict] = None,
+        runhistory: RunHistory = None,
+        intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
+        intensifier_kwargs: typing.Optional[typing.Dict] = None,
+        acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
+        acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
+        initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
+        initial_design_kwargs: typing.Optional[dict] = None,
+        initial_configurations: typing.List[Configuration] = None,
+        stats: Stats = None,
+        rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
+        run_id: typing.Optional[int] = None,
+        dask_client: typing.Optional[dask.distributed.Client] = None,
+        n_jobs: typing.Optional[int] = 1,
+    ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        scenario.acq_opt_challengers = 1   # type: ignore[attr-defined] # noqa F821
+        scenario.acq_opt_challengers = 1  # type: ignore[attr-defined] # noqa F821
 
         if acquisition_function_optimizer is None:
             acquisition_function_optimizer = RandomSearch

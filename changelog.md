@@ -6,6 +6,13 @@
 ## Minor Changes
 * Updated the signature of the `ROAR` facade to match with it's parent class `SMAC4AC`. Anyone relying on the output directory **without** specifying an explicit `run_id` to a `ROAR` facade should now expect to see the output directory at `run_0` instead of `run_1`. See #827
 
+## Code-Quality
+* Updated and integrated flake8, mypy, black, and isort.
+
+## Documentation
+* Uses `automl_sphinx_theme` now.
+* Better API.
+
 
 # 1.2
 
