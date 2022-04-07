@@ -3,17 +3,18 @@ import typing
 import logging
 
 import numpy as np
+
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    UniformFloatHyperparameter,
-    UniformIntegerHyperparameter,
-    Constant,
-    OrdinalHyperparameter,
-    NormalFloatHyperparameter,
-    NormalIntegerHyperparameter,
     BetaFloatHyperparameter,
     BetaIntegerHyperparameter,
+    CategoricalHyperparameter,
+    Constant,
+    NormalFloatHyperparameter,
+    NormalIntegerHyperparameter,
+    OrdinalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
 )
 from smac.utils.constants import MAXINT
 

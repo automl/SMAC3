@@ -37,8 +37,8 @@ from smac.optimizer.acquisition import (
 )
 from smac.optimizer.ei_optimization import (
     AcquisitionFunctionMaximizer,
-    LocalAndSortedRandomSearch,
     LocalAndSortedPriorRandomSearch,
+    LocalAndSortedRandomSearch,
 )
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -371,18 +371,19 @@ class SMAC4AC(object):
             )
 
         if user_priors:
-            # a solid default value for decay_beta - empirically founded
-            default_beta = scenario.ta_run_limit / 10
             if user_prior_kwargs is None:
                 user_prior_kwargs = {}
-                
-            discretize = isinstance(model_instance, RandomForestWithInstances) or isinstance(
-                model_instance, RFRImputator
-            )
-            user_prior_kwargs['decay_beta'] = user_prior_kwargs.get('decay_beta', default_beta)
-            user_prior_kwargs['discretize'] = discretize
+
+            # a solid default value for decay_beta - empirically founded
+            default_beta = scenario.ta_run_limit / 10  # type: ignore
+            discretize = isinstance(model_instance, (RandomForestWithInstances, RFRImputator))
+            user_prior_kwargs["decay_beta"] = user_prior_kwargs.get("decay_beta", default_beta)
+            user_prior_kwargs["discretize"] = discretize
+
             acquisition_function_instance = PriorAcquisitionFunction(
-                acquisition_function=acquisition_function_instance, **user_prior_kwargs, **acq_def_kwargs
+                acquisition_function=acquisition_function_instance,  # type: ignore
+                **user_prior_kwargs,
+                **acq_def_kwargs,  # type: ignore
             )
             acquisition_function_optimizer = LocalAndSortedPriorRandomSearch
 

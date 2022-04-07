@@ -7,8 +7,8 @@ import copy
 import numpy as np
 from scipy.stats import norm
 
-from smac.configspace import Configuration
 from ConfigSpace.hyperparameters import FloatHyperparameter
+from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM
 from smac.utils.logging import PickableLoggerAdapter
