@@ -15,6 +15,7 @@ This chapter gives more details of single components of SMAC.
     run_history
     instances
     validation
+    callbacks
     parallelism
     cuda
     restoring
