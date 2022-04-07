@@ -33,10 +33,12 @@ from smac.optimizer.acquisition import (
     AbstractAcquisitionFunction,
     IntegratedAcquisitionFunction,
     LogEI,
+    PriorAcquisitionFunction,
 )
 from smac.optimizer.ei_optimization import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedRandomSearch,
+    LocalAndSortedPriorRandomSearch,
 )
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
@@ -387,7 +389,7 @@ class SMAC4AC(object):
             "rng": rng,
         }
         if user_priors:
-            acq_func_opt_kwargs["uniform_config_space"] = scenario.cs.remove_hyperparameter_priors()
+            acq_func_opt_kwargs["uniform_config_space"] = scenario.cs.remove_hyperparameter_priors()  # type: ignore
 
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)

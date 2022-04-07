@@ -306,7 +306,7 @@ class AbstractEPM(object):
         """
         Retrieves the ConfigurationSpace used for the model.
 
-        Returns:
+        Returns
         -------
             self.configspace: The ConfigurationSpace of the model
         """
