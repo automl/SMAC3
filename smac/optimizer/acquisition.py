@@ -1,7 +1,8 @@
 # encoding=utf8
 import abc
+from typing import Any, List, Tuple
+
 import copy
-from typing import List, Any, Tuple
 
 import numpy as np
 from scipy.stats import norm
@@ -18,7 +19,7 @@ __license__ = "3-clause BSD"
 
 
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
-    """Abstract base class for acquisition function
+    """Abstract base class for acquisition function.
 
     Parameters
     ----------
@@ -33,7 +34,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     def __init__(self, model: AbstractEPM):
         self.model = model
-        self._required_updates = ('model', )  # type: Tuple[str, ...]
+        self._required_updates = ("model",)  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def update(self, **kwargs: Any) -> None:
@@ -52,16 +53,15 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
         for key in self._required_updates:
             if key not in kwargs:
                 raise ValueError(
-                    'Acquisition function %s needs to be updated with key %s, but only got '
-                    'keys %s.'
-                    % (self.__class__.__name__, key, list(kwargs.keys()))
+                    "Acquisition function %s needs to be updated with key %s, but only got "
+                    "keys %s." % (self.__class__.__name__, key, list(kwargs.keys()))
                 )
         for key in kwargs:
             if key in self._required_updates:
                 setattr(self, key, kwargs[key])
 
     def __call__(self, configurations: List[Configuration]) -> np.ndarray:
-        """Computes the acquisition value for a given X
+        """Computes the acquisition value for a given X.
 
         Parameters
         ----------
@@ -86,8 +86,8 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the acquisition value for a given point X. This function has
-        to be overwritten in a derived class.
+        """Computes the acquisition value for a given point X. This function has to be overwritten
+        in a derived class.
 
         Parameters
         ----------
@@ -106,7 +106,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
-
     r"""Marginalize over Model hyperparameters to compute the integrated acquisition function.
 
     See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
@@ -115,7 +114,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     """
 
     def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
-        """Constructor
+        """Constructor.
 
         Parameters
         ----------
@@ -125,9 +124,8 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         kwargs
             Additional keyword arguments
         """
-
         super().__init__(model)
-        self.long_name = 'Integrated Acquisition Function (%s)' % acquisition_function.__class__.__name__
+        self.long_name = "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
@@ -148,10 +146,10 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             integrate over.
         kwargs
         """
-        model = kwargs['model']
-        del kwargs['model']
-        if not hasattr(model, 'models') or len(model.models) == 0:
-            raise ValueError('IntegratedAcquisitionFunction requires at least one model to integrate!')
+        model = kwargs["model"]
+        del kwargs["model"]
+        if not hasattr(model, "models") or len(model.models) == 0:
+            raise ValueError("IntegratedAcquisitionFunction requires at least one model to integrate!")
         if len(self._functions) == 0 or len(self._functions) != len(model.models):
             self._functions = [copy.deepcopy(self.acq) for _ in model.models]
         for submodel, func in zip(model.models, self._functions):
@@ -173,7 +171,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
             Expected Improvement of X
         """
         if self._functions is None:
-            raise ValueError('Need to call update first!')
+            raise ValueError("Need to call update first!")
         return np.array([func._compute(X) for func in self._functions]).mean(axis=0)
 
 
@@ -183,9 +181,17 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
     See "PiBO: Augmenting Acquisition Functions with User Beliefs for Bayesian Optimization" by Carl
     Hvarfner et al. (###nolinkyet###) for further details.
     """
-    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction,\
-        decay_beta: float, prior_floor: float = 1e-12, discretize: bool = False, \
-        discrete_bins_factor: float = 10.0, **kwargs: Any):
+
+    def __init__(
+        self,
+        model: AbstractEPM,
+        acquisition_function: AbstractAcquisitionFunction,
+        decay_beta: float,
+        prior_floor: float = 1e-12,
+        discretize: bool = False,
+        discrete_bins_factor: float = 10.0,
+        **kwargs: Any,
+    ):
         """Constructor
 
         Parameters
@@ -195,19 +201,19 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
             otherwise.
         prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
-            in the search space. 
+            in the search space.
         discretize : Whether to discretize (bin) the densities for continous parameters. Triggered
             for Random Forest models and continous hyperparameters to avoid a pathological case
             where all Random Forest randomness is removed (RF surrogates require piecewise constant
             acquisition functions to be well-behaved)
-        discrete_bins_factor : If discretizing, the multiple on the number of allowed bins for 
+        discrete_bins_factor : If discretizing, the multiple on the number of allowed bins for
             each parameter
 
         kwargs
             Additional keyword arguments
         """
         super().__init__(model)
-        self.long_name = 'Prior Acquisition Function (%s)' % acquisition_function.__class__.__name__
+        self.long_name = "Prior Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
@@ -240,7 +246,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         """
         self.iteration_number += 1
         self.acq.update(**kwargs)
-        self.eta = kwargs.get('eta')
+        self.eta = kwargs.get("eta")
 
     def _compute_prior(self, X: np.ndarray) -> np.ndarray:
         """Computes the prior-weighted acquisition function values, where the prior on each
@@ -268,10 +274,12 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
                 prior_values *= self._compute_discretized_pdf(parameter, X_col, number_of_bins) + self.prior_floor
             else:
                 prior_values *= parameter._pdf(X_col[:, np.newaxis])
-        
+
         return prior_values
 
-    def _compute_discretized_pdf(self, parameter: FloatHyperparameter, X_col: np.ndarray, number_of_bins: int) -> np.ndarray:
+    def _compute_discretized_pdf(
+        self, parameter: FloatHyperparameter, X_col: np.ndarray, number_of_bins: int
+    ) -> np.ndarray:
         """Discretizes (bins) prior values on continous a specific continous parameter
         to an increasingly coarse discretization determined by the prior decay parameter.
 
@@ -284,7 +292,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             the number of points to evaluate for the specific hyperparameter
         number_of_bins: The number of unique values allowed on the
             discretized version of the pdf.
-        
+
         Returns
         -------
         np.ndarray(N,1)
@@ -292,13 +300,15 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         """
         # evaluates the actual pdf on all the relevant points
         pdf_values = parameter._pdf(X_col[:, np.newaxis])
-        # retrieves the largest value of the pdf in the domain 
+        # retrieves the largest value of the pdf in the domain
         lower, upper = (0, parameter.get_max_density())
         # creates the bins (the possible discrete options of the pdf)
         bin_values = np.linspace(lower, upper, number_of_bins)
         # generates an index (bin) for each evaluated point
-        bin_indices = np.clip(np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins-1).astype(int)
-        #gets the actual value for each point
+        bin_indices = np.clip(
+            np.round((pdf_values - lower) * number_of_bins / (upper - lower)), 0, number_of_bins - 1
+        ).astype(int)
+        # gets the actual value for each point
         prior_values = bin_values[bin_indices]
         return prior_values
 
@@ -328,12 +338,11 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
             acq_values = self.acq._compute(X)
         prior_values = self._compute_prior(X) + self.prior_floor
         decayed_prior_values = np.power(prior_values, self.decay_beta / self.iteration_number)
-        
+
         return acq_values * decayed_prior_values
 
 
 class EI(AbstractAcquisitionFunction):
-
     r"""Computes for a given x the expected improvement as
     acquisition value.
 
@@ -341,10 +350,8 @@ class EI(AbstractAcquisitionFunction):
     with :math:`f(X^+)` as the best location.
     """
 
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 0.0):
-        """Constructor
+    def __init__(self, model: AbstractEPM, par: float = 0.0):
+        """Constructor.
 
         Parameters
         ----------
@@ -355,12 +362,11 @@ class EI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-
         super(EI, self).__init__(model)
-        self.long_name = 'Expected Improvement'
+        self.long_name = "Expected Improvement"
         self.par = par
         self.eta = None
-        self._required_updates = ('model', 'eta')
+        self._required_updates = ("model", "eta")
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
@@ -384,9 +390,11 @@ class EI(AbstractAcquisitionFunction):
         s = np.sqrt(v)
 
         if self.eta is None:
-            raise ValueError('No current best specified. Call update('
-                             'eta=<int>) to inform the acquisition function '
-                             'about the current best value.')
+            raise ValueError(
+                "No current best specified. Call update("
+                "eta=<int>) to inform the acquisition function "
+                "about the current best value."
+            )
 
         def calculate_f():
             z = (self.eta - m - self.par) / s
@@ -405,17 +413,13 @@ class EI(AbstractAcquisitionFunction):
         else:
             f = calculate_f()
         if (f < 0).any():
-            raise ValueError(
-                "Expected Improvement is smaller than 0 for at least one "
-                "sample.")
+            raise ValueError("Expected Improvement is smaller than 0 for at least one " "sample.")
 
         return f
 
 
 class EIPS(EI):
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 0.0):
+    def __init__(self, model: AbstractEPM, par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
@@ -432,7 +436,7 @@ class EIPS(EI):
             acquisition function.
         """
         super(EIPS, self).__init__(model, par=par)
-        self.long_name = 'Expected Improvement per Second'
+        self.long_name = "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EIPS value.
@@ -465,9 +469,11 @@ class EIPS(EI):
         s = np.sqrt(v_cost)
 
         if self.eta is None:
-            raise ValueError('No current best specified. Call update('
-                             'eta=<int>) to inform the acquisition function '
-                             'about the current best value.')
+            raise ValueError(
+                "No current best specified. Call update("
+                "eta=<int>) to inform the acquisition function "
+                "about the current best value."
+            )
 
         def calculate_f():
             z = (self.eta - m_cost - self.par) / s
@@ -489,18 +495,13 @@ class EIPS(EI):
             f = calculate_f()
 
         if (f < 0).any():
-            raise ValueError(
-                "Expected Improvement per Second is smaller than 0 "
-                "for at least one sample.")
+            raise ValueError("Expected Improvement per Second is smaller than 0 " "for at least one sample.")
 
         return f.reshape((-1, 1))
 
 
 class LogEI(AbstractAcquisitionFunction):
-
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 0.0):
+    def __init__(self, model: AbstractEPM, par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
@@ -514,10 +515,10 @@ class LogEI(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(LogEI, self).__init__(model)
-        self.long_name = 'Expected Improvement'
+        self.long_name = "Expected Improvement"
         self.par = par
         self.eta = None
-        self._required_updates = ('model', 'eta')
+        self._required_updates = ("model", "eta")
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the EI value and its derivatives.
@@ -535,9 +536,11 @@ class LogEI(AbstractAcquisitionFunction):
             Expected Improvement of X
         """
         if self.eta is None:
-            raise ValueError('No current best specified. Call update('
-                             'eta=<int>) to inform the acquisition function '
-                             'about the current best value.')
+            raise ValueError(
+                "No current best specified. Call update("
+                "eta=<int>) to inform the acquisition function "
+                "about the current best value."
+            )
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
@@ -549,8 +552,7 @@ class LogEI(AbstractAcquisitionFunction):
             # we expect that f_min is in log-space
             f_min = self.eta - self.par
             v = (f_min - m) / std
-            return (np.exp(f_min) * norm.cdf(v)) - \
-                (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
+            return (np.exp(f_min) * norm.cdf(v)) - (np.exp(0.5 * var_ + m) * norm.cdf(v - std))
 
         if np.any(std == 0.0):
             # if std is zero, we have observed x on all instances
@@ -566,16 +568,13 @@ class LogEI(AbstractAcquisitionFunction):
             log_ei = calculate_log_ei()
 
         if (log_ei < 0).any():
-            raise ValueError(
-                "Expected Improvement is smaller than 0 for at least one sample.")
+            raise ValueError("Expected Improvement is smaller than 0 for at least one sample.")
 
         return log_ei.reshape((-1, 1))
 
 
 class PI(AbstractAcquisitionFunction):
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 0.0):
+    def __init__(self, model: AbstractEPM, par: float = 0.0):
         r"""Computes the probability of improvement for a given x over the best so far value as acquisition value.
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
@@ -591,10 +590,10 @@ class PI(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(PI, self).__init__(model)
-        self.long_name = 'Probability of Improvement'
+        self.long_name = "Probability of Improvement"
         self.par = par
         self.eta = None
-        self._required_updates = ('model', 'eta')
+        self._required_updates = ("model", "eta")
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the PI value.
@@ -610,9 +609,11 @@ class PI(AbstractAcquisitionFunction):
             Expected Improvement of X
         """
         if self.eta is None:
-            raise ValueError('No current best specified. Call update('
-                             'eta=<float>) to inform the acquisition function '
-                             'about the current best value.')
+            raise ValueError(
+                "No current best specified. Call update("
+                "eta=<float>) to inform the acquisition function "
+                "about the current best value."
+            )
 
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
@@ -622,9 +623,7 @@ class PI(AbstractAcquisitionFunction):
 
 
 class LCB(AbstractAcquisitionFunction):
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 1.0):
+    def __init__(self, model: AbstractEPM, par: float = 1.0):
         r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
@@ -642,10 +641,10 @@ class LCB(AbstractAcquisitionFunction):
             acquisition function.
         """
         super(LCB, self).__init__(model)
-        self.long_name = 'Lower Confidence Bound'
+        self.long_name = "Lower Confidence Bound"
         self.par = par
         self.num_data = None
-        self._required_updates = ('model', 'num_data')
+        self._required_updates = ("model", "num_data")
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
         """Computes the LCB value.
@@ -661,9 +660,11 @@ class LCB(AbstractAcquisitionFunction):
             Expected Improvement of X
         """
         if self.num_data is None:
-            raise ValueError('No current number of Datapoints specified. Call update('
-                             'num_data=<int>) to inform the acquisition function '
-                             'about the number of datapoints.')
+            raise ValueError(
+                "No current number of Datapoints specified. Call update("
+                "num_data=<int>) to inform the acquisition function "
+                "about the number of datapoints."
+            )
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
         m, var_ = self.model.predict_marginalized_over_instances(X)
@@ -673,38 +674,45 @@ class LCB(AbstractAcquisitionFunction):
 
 
 class TS(AbstractAcquisitionFunction):
-    def __init__(self,
-                 model: AbstractEPM,
-                 par: float = 0.0):
+    def __init__(self, model: AbstractEPM, par: float = 0.0):
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
 
-        Thompson Sampling can only be used together with smac.optimizer.ei_optimization.RandomSearch, please do not
-        use smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS acquisition function!!!
+        Warning
+        -------
+        Thompson Sampling can only be used together with
+        smac.optimizer.ei_optimization.RandomSearch, please do not use
+        smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS
+        acquisition function!
 
         :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
         Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+
         Parameters
         ----------
         model : AbstractEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
-            TS does not require par here, we only wants to make it consistent with other acquisition functions
+            TS does not require par here, we only wants to make it consistent with
+            other acquisition functions.
         """
         super(TS, self).__init__(model)
-        self.long_name = 'Thompson Sampling'
+        self.long_name = "Thompson Sampling"
         self.par = par
         self.num_data = None
-        self._required_updates = ('model', )
+        self._required_updates = ("model",)
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Sample a new value from a gaussian distribution whose mean and covariance values are given by model
+        """Sample a new value from a gaussian distribution whose mean and covariance values
+        are given by model.
+
         Parameters
         ----------
         X: np.ndarray(N, D)
            Points to be evaluated where we could sample a value. N is the number of points and D the dimension
            for the points
+
         Returns
         -------
         np.ndarray(N,1)
@@ -714,10 +722,10 @@ class TS(AbstractAcquisitionFunction):
             X = X[:, np.newaxis]
         sample_function = getattr(self.model, "sample_functions", None)
         if callable(sample_function):
-            return - sample_function(X, n_funcs=1)
+            return -sample_function(X, n_funcs=1)
 
         m, var_ = self.model.predict_marginalized_over_instances(X)
-        rng = getattr(self.model, 'rng', np.random.RandomState(self.model.seed))
+        rng = getattr(self.model, "rng", np.random.RandomState(self.model.seed))
         m = m.flatten()
         var_ = np.diag(var_.flatten())
-        return - rng.multivariate_normal(m, var_, 1).T
+        return -rng.multivariate_normal(m, var_, 1).T

@@ -1,5 +1,6 @@
 import typing
-from subprocess import Popen, PIPE
+
+from subprocess import PIPE, Popen
 
 from smac.configspace import Configuration
 from smac.tae import StatusType
@@ -14,10 +15,10 @@ __version__ = "0.0.1"
 
 
 class ExecuteTARunOld(SerialRunner):
+    """Executes a target algorithm run with a given configuration on a given instance and some
+    resource limitations.
 
-    """Executes a target algorithm run with a given configuration on a given
-    instance and some resource limitations. Uses the original SMAC/PILS format
-    (SMAC < v2.10)
+    Uses the original SMAC/PILS format (SMAC < v2.10).
     """
 
     def run(
@@ -29,9 +30,11 @@ class ExecuteTARunOld(SerialRunner):
         budget: typing.Optional[float] = 0.0,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on
-        instance <instance> with instance specifics <specifics> for at most
-        <cutoff> seconds and random seed <seed>
+        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        instance specifics.
+
+        <specifics> for at most.
+        <cutoff> seconds and random seed <seed>.
 
         Parameters
         ----------
@@ -48,6 +51,7 @@ class ExecuteTARunOld(SerialRunner):
                 Handled by the target algorithm internally. Currently ignored
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
+
         Returns
         -------
             status: enum of StatusType (int)
@@ -59,7 +63,6 @@ class ExecuteTARunOld(SerialRunner):
             additional_info: dict
                 all further additional run information
         """
-
         if instance is None:
             instance = "0"
         if cutoff is None:
@@ -87,9 +90,7 @@ class ExecuteTARunOld(SerialRunner):
 
                 # If we have more than 6 fields, we combine them all together
                 if len(fields) > 5:
-                    fields[5:len(fields)] = [
-                        "".join(map(str, fields[5:len(fields)]))
-                    ]
+                    fields[5 : len(fields)] = ["".join(map(str, fields[5 : len(fields)]))]
 
                     # Make it prettier
                     for char in [",", ";", "'", "[", "]"]:
@@ -137,9 +138,7 @@ class ExecuteTARunOld(SerialRunner):
             status = StatusType.CRASHED
 
         if status in [StatusType.CRASHED, StatusType.ABORT]:
-            self.logger.warning(
-                "Target algorithm crashed. Last 5 lines of stdout and stderr"
-            )
+            self.logger.warning("Target algorithm crashed. Last 5 lines of stdout and stderr")
             self.logger.warning("\n".join(stdout_.split("\n")[-5:]))
             self.logger.warning("\n".join(stderr_.split("\n")[-5:]))
 
@@ -162,9 +161,7 @@ class ExecuteTARunOld(SerialRunner):
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
         cmd = []  # type: typing.List[str]
         if not isinstance(self.ta, (list, tuple)):
-            raise TypeError(
-                "self.ta needs to be of type list or tuple, but is %s" % type(self.ta)
-            )
+            raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
         cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
         for p in config:

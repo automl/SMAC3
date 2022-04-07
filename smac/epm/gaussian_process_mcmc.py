@@ -1,24 +1,25 @@
-from copy import deepcopy
-import logging
 import typing
+
+import logging
 import warnings
+from copy import deepcopy
 
 try:
     import emcee
 except ImportError as e:
     raise ImportError(
-        'Could not import emcee - emcee is an optional dependency.\n'
-        'Please install it manually with `pip install emcee`.') from e
+        "Could not import emcee - emcee is an optional dependency.\n"
+        "Please install it manually with `pip install emcee`."
+    ) from e
 
 import numpy as np
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_gp import BaseModel
 from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gp_base_prior import Prior
-
-from sklearn.gaussian_process.kernels import Kernel
-from sklearn.gaussian_process import GaussianProcessRegressor
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -28,8 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcessMCMC(BaseModel):
-    """
-    Gaussian process model.
+    """Gaussian process model.
 
     The GP hyperparameters are integrated out by MCMC. If you use this class
     make sure that you also use an integrated acquisition function to
@@ -77,6 +77,7 @@ class GaussianProcessMCMC(BaseModel):
         dimensionality of instance features. Requires to
         set n_feats (> pca_dims).
     """
+
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -88,7 +89,7 @@ class GaussianProcessMCMC(BaseModel):
         chain_length: int = 50,
         burnin_steps: int = 50,
         normalize_y: bool = True,
-        mcmc_sampler: str = 'emcee',
+        mcmc_sampler: str = "emcee",
         average_samples: bool = False,
         instance_features: typing.Optional[np.ndarray] = None,
         pca_components: typing.Optional[int] = None,
@@ -119,10 +120,9 @@ class GaussianProcessMCMC(BaseModel):
         # Internal statistics
         self._n_ll_evals = 0
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> 'GaussianProcessMCMC':
-        """
-        Performs MCMC sampling to sample hyperparameter configurations from the
-        likelihood and trains for each sample a GP on X and y
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcessMCMC":
+        """Performs MCMC sampling to sample hyperparameter configurations from the likelihood and
+        trains for each sample a GP on X and y.
 
         Parameters
         ----------
@@ -151,13 +151,11 @@ class GaussianProcessMCMC(BaseModel):
             self.gp.fit(X, y)
             self._all_priors = self._get_all_priors(
                 add_bound_priors=True,
-                add_soft_bounds=True if self.mcmc_sampler == 'nuts' else False,
+                add_soft_bounds=True if self.mcmc_sampler == "nuts" else False,
             )
 
-            if self.mcmc_sampler == 'emcee':
-                sampler = emcee.EnsembleSampler(self.n_mcmc_walkers,
-                                                len(self.kernel.theta),
-                                                self._ll)
+            if self.mcmc_sampler == "emcee":
+                sampler = emcee.EnsembleSampler(self.n_mcmc_walkers, len(self.kernel.theta), self._ll)
                 sampler.random_state = self.rng.get_state()
                 # Do a burn-in in the first iteration
                 if not self.burned:
@@ -181,20 +179,19 @@ class GaussianProcessMCMC(BaseModel):
 
                     # Run MCMC sampling
                     with warnings.catch_warnings():
-                        warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
-                        self.p0, _, _ = sampler.run_mcmc(self.p0,
-                                                         self.burnin_steps)
+                        warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
+                        self.p0, _, _ = sampler.run_mcmc(self.p0, self.burnin_steps)
 
                     self.burned = True
 
                 # Start sampling & save the current position, it will be the start point in the next iteration
                 with warnings.catch_warnings():
-                    warnings.filterwarnings('ignore', r'invalid value encountered in double_scalars.*')
+                    warnings.filterwarnings("ignore", r"invalid value encountered in double_scalars.*")
                     self.p0, _, _ = sampler.run_mcmc(self.p0, self.chain_length)
 
                 # Take the last samples from each walker
                 self.hypers = sampler.get_chain()[-1]
-            elif self.mcmc_sampler == 'nuts':
+            elif self.mcmc_sampler == "nuts":
                 # Originally published as:
                 # http://www.stat.columbia.edu/~gelman/research/published/nuts.pdf
                 # A good explanation of HMC:
@@ -297,9 +294,8 @@ class GaussianProcessMCMC(BaseModel):
         )
 
     def _ll(self, theta: np.ndarray) -> float:
-        """
-        Returns the marginal log likelihood (+ the prior) for
-        a hyperparameter configuration theta.
+        """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
+        theta.
 
         Parameters
         ----------
@@ -308,7 +304,7 @@ class GaussianProcessMCMC(BaseModel):
             on a log scale.
 
         Returns
-        ----------
+        -------
         float
             lnlikelihood + prior
         """
@@ -337,9 +333,8 @@ class GaussianProcessMCMC(BaseModel):
             return lml
 
     def _ll_w_grad(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
-        """
-        Returns the marginal log likelihood (+ the prior) for
-        a hyperparameter configuration theta.
+        """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
+        theta.
 
         Parameters
         ----------
@@ -348,7 +343,7 @@ class GaussianProcessMCMC(BaseModel):
             on a log scale.
 
         Returns
-        ----------
+        -------
         float
             lnlikelihood + prior
         """
@@ -360,7 +355,7 @@ class GaussianProcessMCMC(BaseModel):
         if (theta > 50).any():
             theta[theta > 50] = 50
 
-        lml = 0.
+        lml = 0.0
         grad = np.zeros(theta.shape)
 
         # Add prior
@@ -386,9 +381,9 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return lml, grad
 
-    def _predict(self, X_test: np.ndarray,
-                 cov_return_type: typing.Optional[str] = 'diagonal_cov') \
-            -> typing.Tuple[np.ndarray, np.ndarray]:
+    def _predict(
+        self, X_test: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -405,17 +400,16 @@ class GaussianProcessMCMC(BaseModel):
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
-        ----------
+        -------
         np.array(N,)
             predictive mean
         np.array(N,)
             predictive variance
-
         """
         if not self.is_trained:
-            raise Exception('Model has to be trained first!')
+            raise Exception("Model has to be trained first!")
 
-        if cov_return_type != 'diagonal_cov':
+        if cov_return_type != "diagonal_cov":
             raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         X_test = self._impute_inactive(X_test)

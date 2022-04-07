@@ -1,129 +1,80 @@
 name: tests
 
 on:
-  # Manual trigger option in github
+  # Allow to manually trigger through github API
   workflow_dispatch:
 
-  # Trigger on push to these branches
+  # Triggers with push to main
   push:
     branches:
-      - master
+      - main
       - development
 
-  # Trigger on a open/push to a PR targeting one of these branches
+  # Triggers with push to a pr aimed at main
   pull_request:
     branches:
-      - master
+      - main
       - development
 
-  # Every dat at 7AM
   schedule:
-    - cron: '0 7 * * *'
+    # Every day at 7AM UTC
+    - cron: '0 07 * * *'
 
 env:
+  package-name: smac
+  test-dir: tests
+  extra-requires: "[dev]"
 
   # Arguments used for pytest
   pytest-args: >-
-    --forked
     --durations=20
-    --timeout=300
-    --timeout-method=thread
-    --full-trace
-    -s
     -v
 
-  # Arguments used for code-cov which is later used to annotate PR's on github
-  code-cov-args: >-
-    --cov=smac
-    --cov-report=xml
-
 jobs:
-  ubuntu:
+  # General unit tests
+  source-test:
+    name: ${{ matrix.python-version }}-${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash # Default to using bash on all
 
-    name: ${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.kind }}
     strategy:
-      fail-fast:  false
+      fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-        kind: ["conda", "source", "dist"]
-
-        exclude:
-          # Exclude all configurations *-*-dist, include one later
-          - kind: "dist"
-
-          # Exclude windows as bash commands wont work in windows runner
-          - os: windows-latest
-
-          # Exclude macos as there are permission errors using conda as we do
-          - os: macos-latest
-
-        include:
-          # Add the tag code-cov to ubuntu-3.7-source
-          - os: ubuntu-latest
-            python-version: 3.7
-            kind: "source"
-            code-cov: true
-
-          # Include one config with dist, ubunut-3.7-dist
-          - os: ubuntu-latest
-            python-version: 3.7
-            kind: "dist"
+        python-version: ["3.8"]
+        os: ["ubuntu-latest"]
 
     steps:
-
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Setup Python ${{ matrix.python-version }}
+    - name: Setup Python
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Conda install
-      if: matrix.kind == 'conda'
-      run: |
-        # Miniconda is available in $CONDA env var
-        $CONDA/bin/conda create -n testenv --yes pip wheel gxx_linux-64 gcc_linux-64 swig python=${{ matrix.python-version }}
-        $CONDA/envs/testenv/bin/python3 -m pip install --upgrade pip
-        $CONDA/envs/testenv/bin/pip3 install -e .[all]
-
-    - name: Source install
-      if: matrix.kind == 'source'
+    - name: Install ${{ env.package-name }}
       run: |
         python -m pip install --upgrade pip
-        pip install -e .[all]
-
-    - name: Dist install
-      if: matrix.kind == 'dist'
-      run: |
-        python -m pip install --upgrade pip
-        python setup.py sdist
-        last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
-        pip install $last_dist[all]
+        python -m pip install wheel
+        python -m pip install -e ".${{ env.extra-requires }}"
 
     - name: Store git status
       id: status-before
+      shell: bash
       run: |
         echo "::set-output name=BEFORE::$(git status --porcelain -b)"
 
     - name: Tests
-      timeout-minutes: 45
       run: |
-        if [[ ${{ matrix.kind }} == "conda" ]]; then
-          export PATH="$CONDA/envs/testenv/bin:$PATH"
-        fi
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}
 
-        if [ ${{ matrix.code-cov }} ]; then
-          pytest ${{ env.pytest-args }} ${{ env.code-cov-args }} test
-        else
-          pytest ${{ env.pytest-args }} test
-        fi
+        # Post-hoc clean-up
+        make clean
 
     - name: Check for files left behind by test
-      if: ${{ always() }}
       run: |
         before="${{ steps.status-before.outputs.BEFORE }}"
         after="$(git status --porcelain -b)"
@@ -134,11 +85,77 @@ jobs:
             exit 1
         fi
 
-    - name: Upload coverage
-      if: matrix.code-cov && always()
-      uses: codecov/codecov-action@v2
+# Testing with conda
+  conda-tests:
+    name: conda-${{ matrix.python-version }}-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}  # Default to using bash on all and load (-l) .bashrc which miniconda uses
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+        os: ["ubuntu-latest"]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Conda install
+      uses: conda-incubator/setup-miniconda@v2
       with:
-        # token: ${{secrets.CODECOV_TOKEN}}
-        # version: "v0.1.15"
-        fail_ci_if_error: true
-        verbose: true
+        auto-update-conda: true
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install ${{ env.package-name }}
+      run: |
+        python -V
+        python -m pip install --upgrade pip
+        python -m pip install wheel
+        python -m pip install -e ".${{ env.extra-requires }}"
+
+    - name: Tests
+      run: |
+          pytest ${{ env.pytest-args }} ${{ env.test-dir }}
+
+  # Testing a dist install
+  dist-test:
+    name: dist-${{ matrix.python-version }}-${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+        os: ["ubuntu-latest"]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Create sdist
+      id: sdist
+      run: |
+        python -m pip install --upgrade pip
+        python setup.py sdist
+        echo "${{env.package-name}}"
+        echo "sdist_name=$(ls -t dist/${{ env.package-name }}-*.tar.gz | head -n 1)" >> $GITHUB_ENV
+
+    - name: Install ${{ env.package-name }}
+      run: |
+        python -m pip install ${{ env.sdist_name }}${{ env.extra-requires }}
+
+    - name: Tests
+      run: |
+        pytest ${{ env.pytest-args }} ${{ env.test-dir }}

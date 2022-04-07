@@ -1,4 +1,5 @@
-from typing import Union, List, Tuple, Optional
+from typing import List, Optional, Tuple, Union
+
 import numpy as np
 
 
@@ -6,8 +7,8 @@ def normalize_costs(
     values: Union[np.ndarray, List, List[List], List[np.ndarray]],
     bounds: Optional[List[Tuple[float, float]]] = None,
 ) -> np.ndarray:
-    """Normalizes the costs to be between 0 and 1 if no bounds are given.
-    Otherwise, the costs are normalized according to the bounds.
+    """Normalizes the costs to be between 0 and 1 if no bounds are given. Otherwise, the costs are
+    normalized according to the bounds.
 
     Example
     -------
@@ -30,19 +31,21 @@ def normalize_costs(
     np.ndarray
         Normalized costs.
     """
-
+    _values: np.ndarray
     if isinstance(values, list):
-        values = np.array(values)
+        _values = np.array(values)
+    else:
+        _values = values
 
-    if len(values.shape) == 1:
-        values = np.expand_dims(values, axis=-1)
+    if len(_values.shape) == 1:
+        _values = np.expand_dims(_values, axis=-1)
 
     normalized_values = []
-    for col in range(values.shape[1]):
-        data = values[:, col].astype(float)
+    for col in range(_values.shape[1]):
+        data = _values[:, col].astype(float)
 
         if bounds is not None:
-            assert len(bounds) == values.shape[1]
+            assert len(bounds) == _values.shape[1]
 
             min_value = bounds[col][0]
             max_value = bounds[col][1]
@@ -60,7 +63,4 @@ def normalize_costs(
             numerator = data - min_value
             normalized_values.append(numerator / denominator)
 
-    normalized_values = np.array(normalized_values)
-    normalized_values = np.swapaxes(normalized_values, 0, 1)
-
-    return normalized_values
+    return np.swapaxes(np.array(normalized_values), 0, 1)

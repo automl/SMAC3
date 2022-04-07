@@ -1,22 +1,32 @@
-import importlib
-import pkg_resources
-import re
 import typing
+
+import importlib
+import re
+
+import pkg_resources
 from packaging.version import Version
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-SUBPATTERN = (
-    r"((?P<operation%d>==|>=|>|<)(?P<version%d>(\d+)?(\.[a-zA-Z0-9]+)?(\.\d+)?))"
-)
-RE_PATTERN = re.compile(
-    r"^(?P<name>[\w\-]+)%s?(,%s)?$" % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2))
-)
+SUBPATTERN = r"((?P<operation%d>==|>=|>|<)(?P<version%d>(\d+)?(\.[a-zA-Z0-9]+)?(\.\d+)?))"
+RE_PATTERN = re.compile(r"^(?P<name>[\w\-]+)%s?(,%s)?$" % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2)))
 
 
 def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
+    """Verifies packages. Calls `_verify_packages` as subroutine.
+
+    Parameters
+    ----------
+    packages : typing.Union[typing.List[str], str]
+        Packages to verify.
+
+    Raises
+    ------
+    ValueError
+        If requirements can not be read.
+    """
     if not packages:
         return
     if isinstance(packages, str):
@@ -40,6 +50,26 @@ def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
 
 
 def _verify_package(name: str, operation: str, version: str) -> None:
+    """Verifies a package.
+
+    Parameters
+    ----------
+    name : str
+        Name of the package.
+    operation : str
+        Operation of the package.
+    version : str
+        Version of the package.
+
+    Raises
+    ------
+    MissingPackageError
+        If package is missing.
+    NotImplementedError
+        If operation is not implemented.
+    IncorrectPackageVersionError
+        If package version is incorrect.
+    """
     try:
         distribution = pkg_resources.get_distribution(name)
         installed_version = Version(distribution.version)
@@ -62,21 +92,13 @@ def _verify_package(name: str, operation: str, version: str) -> None:
     elif operation == "<":
         check = installed_version < required_version
     elif operation == ">=":
-        check = (
-            installed_version > required_version
-            or installed_version == required_version
-        )
+        check = installed_version > required_version or installed_version == required_version
     elif operation == "<=":
-        check = (
-            installed_version < required_version
-            or installed_version == required_version
-        )
+        check = installed_version < required_version or installed_version == required_version
     else:
         raise NotImplementedError("operation '%s' is not supported" % operation)
     if not check:
-        raise IncorrectPackageVersionError(
-            name, installed_version, operation, required_version
-        )
+        raise IncorrectPackageVersionError(name, installed_version, operation, required_version)
 
 
 class MissingPackageError(Exception):
@@ -84,15 +106,11 @@ class MissingPackageError(Exception):
 
     def __init__(self, package_name: str) -> None:
         self.package_name = package_name
-        super(MissingPackageError, self).__init__(
-            self.error_message.format(name=package_name)
-        )
+        super(MissingPackageError, self).__init__(self.error_message.format(name=package_name))
 
 
 class IncorrectPackageVersionError(Exception):
-    error_message = (
-        "'{name} {installed_version}' version mismatch ({operation}{required_version})"
-    )
+    error_message = "'{name} {installed_version}' version mismatch ({operation}{required_version})"
 
     def __init__(
         self,

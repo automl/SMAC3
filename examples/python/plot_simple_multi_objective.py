@@ -10,8 +10,8 @@ __license__ = "3-clause BSD"
 import numpy as np
 from matplotlib import pyplot as plt
 
-from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.scenario.scenario import Scenario
 

@@ -1,12 +1,20 @@
 import typing
-import logging
-import numpy as np
 
+import logging
+
+import numpy as np
 from ConfigSpace import ConfigurationSpace
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, \
-    UniformFloatHyperparameter, UniformIntegerHyperparameter, Constant, \
-    OrdinalHyperparameter, NormalFloatHyperparameter, NormalIntegerHyperparameter, \
-    BetaFloatHyperparameter, BetaIntegerHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+    Constant,
+    OrdinalHyperparameter,
+    NormalFloatHyperparameter,
+    NormalIntegerHyperparameter,
+    BetaFloatHyperparameter,
+    BetaIntegerHyperparameter,
+)
 from smac.utils.constants import MAXINT
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -17,7 +25,7 @@ def get_types(
     config_space: ConfigurationSpace,
     instance_features: typing.Optional[np.ndarray] = None,
 ) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
-    """TODO"""
+    """TODO."""
     # Extract types vector for rf from config space and the bounds
     types = [0] * len(config_space.get_hyperparameters())
     bounds = [(np.nan, np.nan)] * len(types)
@@ -68,32 +76,37 @@ def get_types(
                 bounds[i] = (0, 1.0)
         elif isinstance(param, NormalFloatHyperparameter):
             if can_be_inactive:
-                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+                raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
             else:
                 bounds[i] = (param._lower, param._upper)
         elif isinstance(param, NormalIntegerHyperparameter):
             if can_be_inactive:
-                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+                raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
             else:
                 bounds[i] = (param.nfhp._lower, param.nfhp._upper)
         elif isinstance(param, BetaFloatHyperparameter):
             if can_be_inactive:
-                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+                raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
             else:
                 bounds[i] = (param._lower, param._upper)
         elif isinstance(param, BetaIntegerHyperparameter):
             if can_be_inactive:
-                raise ValueError('Inactive parameters not supported for Beta and Normal Hyperparameters')
+                raise ValueError("Inactive parameters not supported for Beta and Normal Hyperparameters")
             else:
                 bounds[i] = (param.bfhp._lower, param.bfhp._upper)
-        elif not isinstance(param, (UniformFloatHyperparameter,
-                                    UniformIntegerHyperparameter,
-                                    OrdinalHyperparameter,
-                                    CategoricalHyperparameter,
-                                    NormalFloatHyperparameter,
-                                    NormalIntegerHyperparameter,
-                                    BetaFloatHyperparameter,
-                                    BetaIntegerHyperparameter)):
+        elif not isinstance(
+            param,
+            (
+                UniformFloatHyperparameter,
+                UniformIntegerHyperparameter,
+                OrdinalHyperparameter,
+                CategoricalHyperparameter,
+                NormalFloatHyperparameter,
+                NormalIntegerHyperparameter,
+                BetaFloatHyperparameter,
+                BetaIntegerHyperparameter,
+            ),
+        ):
             raise TypeError("Unknown hyperparameter type %s" % type(param))
 
     if instance_features is not None:
@@ -103,12 +116,11 @@ def get_types(
 
 
 def get_rng(
-        rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
-        run_id: typing.Optional[int] = None,
-        logger: typing.Optional[logging.Logger] = None,
+    rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
+    run_id: typing.Optional[int] = None,
+    logger: typing.Optional[logging.Logger] = None,
 ) -> typing.Tuple[int, np.random.RandomState]:
-    """
-    Initialize random number generator and set run_id
+    """Initialize random number generator and set run_id.
 
     * If rng and run_id are None, initialize a new generator and sample a run_id
     * If rng is None and a run_id is given, use the run_id to initialize the rng
@@ -126,25 +138,27 @@ def get_rng(
     -------
     int
     np.random.RandomState
-
     """
     if logger is None:
-        logger = logging.getLogger('GetRNG')
+        logger = logging.getLogger("GetRNG")
     # initialize random number generator
     if rng is not None and not isinstance(rng, (int, np.random.RandomState)):
-        raise TypeError('Argument rng accepts only arguments of type None, int or np.random.RandomState, '
-                        'you provided %s.' % str(type(rng)))
+        raise TypeError(
+            "Argument rng accepts only arguments of type None, int or np.random.RandomState, "
+            "you provided %s." % str(type(rng))
+        )
     if run_id is not None and not isinstance(run_id, int):
-        raise TypeError('Argument run_id accepts only arguments of type None, int, '
-                        'you provided %s.' % str(type(run_id)))
+        raise TypeError(
+            "Argument run_id accepts only arguments of type None, int, " "you provided %s." % str(type(run_id))
+        )
 
     if rng is None and run_id is None:
         # Case that both are None
-        logger.debug('No rng and no run_id given: using a random value to initialize run_id.')
+        logger.debug("No rng and no run_id given: using a random value to initialize run_id.")
         rng_return = np.random.RandomState()
         run_id_return = rng_return.randint(MAXINT)
     elif rng is None and isinstance(run_id, int):
-        logger.debug('No rng and no run_id given: using run_id %d as seed.', run_id)
+        logger.debug("No rng and no run_id given: using run_id %d as seed.", run_id)
         rng_return = np.random.RandomState(seed=run_id)
         run_id_return = run_id
     elif isinstance(rng, int) and run_id is None:
@@ -160,6 +174,8 @@ def get_rng(
         rng_return = rng
         run_id_return = run_id
     else:
-        raise ValueError('This should not happen! Please contact the developers! Arguments: rng=%s of type %s and '
-                         'run_id=%s of type %s' % (rng, type(rng), str(run_id), type(run_id)))
+        raise ValueError(
+            "This should not happen! Please contact the developers! Arguments: rng=%s of type %s and "
+            "run_id=%s of type %s" % (rng, type(rng), str(run_id), type(run_id))
+        )
     return run_id_return, rng_return
