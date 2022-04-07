@@ -34,26 +34,13 @@ jobs:
         python setup.py sdist
 
     - name: Twine check
-      id: twine_check
       run: |
         pip install twine
         last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
         twine_output=`twine check "$last_dist"`
-        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]; then echo $twine_output && exit 1;fi
-
-    - name: Install dist
-      if: steps.twine_check.conclusion == 'success'
-      run: |
-        last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
-        pip install $last_dist
-
-    - name: PEP 561 Compliance
-      if: steps.twine_check.conclusion == 'success'
-      run: |
-        pip install mypy
-
-        cd ..  # required to use the installed version of smac
-
-        # Note that doesn't do a mypy check, only that the package exports type
-        # information
-        if ! mypy -c "import smac"; then exit 1; fi
+        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]
+        then
+          echo $twine_output && exit 1
+        else
+          pip install $last_dist
+        fi
