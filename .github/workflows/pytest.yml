@@ -21,10 +21,9 @@ on:
     - cron: '0 07 * * *'
 
 env:
-
   package-name: smac
   test-dir: tests
-  extra-requires: "[dev]"  # "" for no extra_requires
+  extra-requires: "[dev]"
 
   # Arguments used for pytest
   pytest-args: >-
@@ -32,7 +31,6 @@ env:
     -v
 
 jobs:
-
   # General unit tests
   source-test:
     name: ${{ matrix.python-version }}-${{ matrix.os }}

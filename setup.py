@@ -36,8 +36,8 @@ def read_file(filepath: str) -> str:
 
 extras_require = {
     "dev": [
-        "setuptools",
-        "types-setuptools",
+        "setuptools>=62.0.0",
+        "types-setuptools>=57.4.12",
         # Test
         "pytest>=4.6",
         "pytest-cov",
