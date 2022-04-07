@@ -35,7 +35,7 @@ repos:
       - id: mypy
         name: mypy smac
         files: smac
-        exclude: "scripts|tests|smac/utils/dependencies.py"
+        exclude: "scripts|tests|smac/utils/dependencies.py|smac/__init__.py"
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
