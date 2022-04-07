@@ -231,7 +231,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         else:
             acquisition_type = self.acq
 
-        self.rescale_acq = isinstance(acquisition_type, LCB) or isinstance(acquisition_type, TS)
+        self.rescale_acq = isinstance(acquisition_type, (LCB, TS))
         self.iteration_number = 0
 
     def update(self, **kwargs: Any) -> None:
