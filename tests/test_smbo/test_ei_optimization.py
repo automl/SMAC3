@@ -3,11 +3,6 @@ import unittest
 import unittest.mock
 
 import numpy as np
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    UniformFloatHyperparameter,
-    UniformIntegerHyperparameter,
-)
 from scipy.spatial.distance import euclidean
 
 from smac.configspace import ConfigurationSpace, pcs
@@ -15,7 +10,6 @@ from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalSearch, RandomSearch, LocalAndSortedPriorRandomSearch
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
-from smac.configspace import ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     UniformFloatHyperparameter,
