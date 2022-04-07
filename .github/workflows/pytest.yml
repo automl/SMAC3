@@ -73,6 +73,9 @@ jobs:
       run: |
         pytest ${{ env.pytest-args }} ${{ env.test-dir }}
 
+        # Post-hoc clean-up
+        make clean
+
     - name: Check for files left behind by test
       run: |
         before="${{ steps.status-before.outputs.BEFORE }}"

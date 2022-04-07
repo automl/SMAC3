@@ -16,7 +16,12 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import warnings
+
 import numpy as np
+from sklearn.datasets import load_digits
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.neural_network import MLPClassifier
 
 import ConfigSpace as CS
 from ConfigSpace.hyperparameters import (
@@ -24,12 +29,6 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-
-from sklearn.datasets import load_digits
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.model_selection import cross_val_score, StratifiedKFold
-from sklearn.neural_network import MLPClassifier
-
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_mf_facade import SMAC4MF
 from smac.scenario.scenario import Scenario

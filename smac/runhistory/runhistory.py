@@ -1,4 +1,16 @@
-from typing import List, Dict, Union, Optional, Any, Type, Iterable, cast, Tuple, Mapping, Iterator
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Mapping,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 
 import collections
 import json

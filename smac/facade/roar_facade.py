@@ -86,9 +86,7 @@ class ROAR(SMAC4AC):
     def __init__(
         self,
         scenario: Scenario,
-        tae_runner: typing.Optional[
-            typing.Union[typing.Type[BaseRunner], typing.Callable]
-        ] = None,
+        tae_runner: typing.Optional[typing.Union[typing.Type[BaseRunner], typing.Callable]] = None,
         tae_runner_kwargs: typing.Optional[typing.Dict] = None,
         runhistory: RunHistory = None,
         intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,

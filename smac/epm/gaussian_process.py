@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional, Union, cast
+from typing import List, Optional, Tuple, Union, cast
 
 import logging
 

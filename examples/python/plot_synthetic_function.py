@@ -16,6 +16,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
+
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 # Import ConfigSpace and different types of parameters

@@ -29,6 +29,7 @@ crucial. The format of the results must be the following to ensure correct usage
 """
 
 import sys
+
 import numpy as np
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

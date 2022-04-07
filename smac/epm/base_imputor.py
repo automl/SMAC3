@@ -1,5 +1,5 @@
-from typing import Optional
 from abc import abstractmethod
+from typing import Optional
 
 import numpy as np
 

@@ -1,7 +1,8 @@
 # type: ignore
 # mypy: ignore-errors
 
-from typing import Type, Dict, Union, List, Optional
+from typing import Dict, List, Optional, Type, Union
+
 import copy
 import datetime
 import logging

@@ -16,15 +16,15 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
+from sklearn import datasets, svm
+from sklearn.model_selection import cross_val_score
+
 from ConfigSpace.conditions import InCondition
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from sklearn import svm, datasets
-from sklearn.model_selection import cross_val_score
-
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario

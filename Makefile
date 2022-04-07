@@ -123,6 +123,8 @@ clean-data:
 	rm  -f test/test_files/validation/validated_runhistory.json*
 	rm  -f test/test_files/validation/validated_runhistory_EPM.json*
 	rm -Rf test/test_files/out_*/
+	rm -Rf smac3-output_*
+	rm -Rf .coverage*
 
 # Publish to testpypi
 # Will echo the commands to actually publish to be run to publish to actual PyPi

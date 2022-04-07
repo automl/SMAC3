@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-import logging
-import sys
-import os
 import inspect
+import logging
+import os
+import sys
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
 
 cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile(inspect.currentframe()))[0]))
 cmd_folder = os.path.realpath(os.path.join(cmd_folder, ".."))
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
-from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
-from smac.stats.stats import Stats
-from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.validate import Validator
+from smac.runhistory.runhistory import RunHistory  # noqa: E402
+from smac.scenario.scenario import Scenario  # noqa: E402
+from smac.stats.stats import Stats  # noqa: E402
+from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib  # noqa: E402
+from smac.tae.execute_ta_run_old import ExecuteTARunOld  # noqa: E402
+from smac.utils.io.traj_logging import TrajLogger  # noqa: E402
+from smac.utils.validate import Validator  # noqa: E402
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

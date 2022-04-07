@@ -21,11 +21,15 @@ import itertools
 import warnings
 
 import numpy as np
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter
 from sklearn import datasets
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+)
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace

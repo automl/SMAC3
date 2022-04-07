@@ -74,11 +74,11 @@ python -O SATCSSCWrapper.py \
     -sp-use-pure-literal-rule 0
 """
 
-import sys
-import re
-import os
 import importlib
-from subprocess import Popen, PIPE
+import os
+import re
+import sys
+from subprocess import PIPE, Popen
 
 from genericWrapper import AbstractWrapper
 
