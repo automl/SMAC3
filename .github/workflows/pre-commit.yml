@@ -17,7 +17,6 @@ on:
       - development
 
 jobs:
-
   run-all-files:
     runs-on: ubuntu-latest
 

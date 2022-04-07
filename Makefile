@@ -49,6 +49,7 @@ check-black:
 
 check-isort:
 	$(ISORT) ${SOURCE_DIR} --check || :
+	$(BLACK) ${EXAMPLES_DIR} --check || :
 	$(ISORT) ${TESTS_DIR} --check || :
 
 check-pydocstyle:
@@ -59,6 +60,7 @@ check-mypy:
 
 check-flake8:
 	$(FLAKE8) ${SOURCE_DIR} || :
+	$(BLACK) ${EXAMPLES_DIR} --check || :
 	$(FLAKE8) ${TESTS_DIR} || :
 
 check: check-black check-isort check-mypy check-flake8 check-pydocstyle
@@ -73,11 +75,12 @@ format-black:
 
 format-isort:
 	$(ISORT) ${SOURCE_DIR}
+	$(BLACK) ${EXAMPLES_DIR}
 	$(ISORT) ${TESTS_DIR}
 
 format: format-black format-isort
 
-test:
+tests:
 	$(PYTEST) ${TESTS_DIR}
 
 docs:
@@ -144,6 +147,4 @@ publish: clean build
 	@echo "* Run this to make sure it can import correctly, plus whatever else you'd like to test:"
 	@echo
 	@echo "        python -c 'import ${PACKAGE_NAME}'"
-	@echo
-	@echo "Once you have decided it works, publish to actual pypi with"
-	@echo
+

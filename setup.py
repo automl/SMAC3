@@ -46,12 +46,12 @@ extras_require = {
         # Docs
         "automl-sphinx-theme>=0.1.8",
         # Others
-        "mypy",
-        "isort",
-        "black",
-        "pydocstyle",
-        "flake8",
-        "pre-commit",
+        "mypy>=0.942",
+        "isort>=5.10.1",
+        "black>=22.3.0",
+        "pydocstyle>=6.1.1",
+        "flake8>=4.0.1",
+        "pre-commit>=2.18.1",
     ]
 }
 

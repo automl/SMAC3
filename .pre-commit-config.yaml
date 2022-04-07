@@ -8,39 +8,40 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        exclude: "scripts|tests"
-        name: isort imports smac
+        name: isort smac
         files: smac
+        exclude: "scripts|tests"
 
   - repo: https://github.com/ambv/black
     rev: 22.3.0
     hooks:
       - id: black
-        exclude: "scripts|tests"
-        name: black formatter smac
+        name: black smac
         files: smac
+        exclude: "scripts|tests"
 
   - repo: https://github.com/pycqa/pydocstyle
     rev: 6.1.1
     hooks:
       - id: pydocstyle
-        exclude: "scripts|tests"
+        name: pydocstyle smac
         files: smac
+        exclude: "scripts|tests"
         additional_dependencies: ["toml"]  # Needed to parse pyproject.toml
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.942
     hooks:
       - id: mypy
-        exclude: "scripts|tests|smac/utils/dependencies.py"
         name: mypy smac
         files: smac
+        exclude: "scripts|tests|smac/utils/dependencies.py"
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
     hooks:
       - id: flake8
-        exclude: "scripts|tests"
         name: flake8 smac
         files: smac
+        exclude: "scripts|tests"
 
