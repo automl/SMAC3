@@ -40,7 +40,7 @@ jobs:
         twine_output=`twine check "$last_dist"`
         if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]
         then
-          echo $twine_output && exit 1
+          echo $twine_output
         else
           pip install $last_dist
         fi
