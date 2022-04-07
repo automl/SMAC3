@@ -27,7 +27,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
 
     - name: Build dist
       run: |
@@ -38,7 +38,7 @@ jobs:
         pip install twine
         last_dist=$(ls -t dist/smac-*.tar.gz | head -n 1)
         twine_output=`twine check "$last_dist"`
-        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]; then echo $twine_output && exit 1;fi
+        if [[ "$twine_output" != "Checking $last_dist: PASSED" ]]; then echo $twine_output;fi
 
     - name: Install dist
       run: |
