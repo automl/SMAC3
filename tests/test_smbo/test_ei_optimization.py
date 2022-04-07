@@ -4,7 +4,9 @@ import unittest.mock
 
 import numpy as np
 from ConfigSpace.hyperparameters import (
+    BetaIntegerHyperparameter,
     CategoricalHyperparameter,
+    NormalFloatHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
@@ -12,7 +14,11 @@ from scipy.spatial.distance import euclidean
 
 from smac.configspace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
-from smac.optimizer.ei_optimization import LocalSearch, RandomSearch
+from smac.optimizer.ei_optimization import (
+    LocalAndSortedPriorRandomSearch,
+    LocalSearch,
+    RandomSearch,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
 from smac.utils import test_helpers
@@ -319,6 +325,50 @@ class TestRandomSearch(unittest.TestCase):
             self.assertIsInstance(rval[i][1], ConfigurationMock)
             self.assertEqual(rval[i][1].origin, "Random Search")
             self.assertEqual(rval[i][0], 0)
+
+
+class TestLocalAndSortedPriorRandomSearch(unittest.TestCase):
+    def setUp(self):
+        seed = 1
+        self.uniform_cs = ConfigurationSpace(seed=seed)
+        x1 = UniformFloatHyperparameter("x1", -5, 5, default_value=5)
+        x2 = UniformIntegerHyperparameter("x2", -5, 5, default_value=5)
+        x3 = CategoricalHyperparameter("x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5)
+        x4 = UniformIntegerHyperparameter("x4", -5, 5, default_value=5)
+        self.uniform_cs.add_hyperparameters([x1, x2, x3, x4])
+
+        self.prior_cs = ConfigurationSpace(seed=seed)
+        x1 = NormalFloatHyperparameter("x1", lower=-5, upper=5, mu=0, sigma=1e-3, default_value=5)
+        x2 = BetaIntegerHyperparameter("x2", lower=-5, upper=5, alpha=100, beta=1, default_value=5)
+        x3 = CategoricalHyperparameter(
+            "x3", [5, 2, 0, 1, -1, -2, 4, -3, 3, -5, -4], default_value=5, weights=[999, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        )
+        x4 = UniformIntegerHyperparameter("x4", lower=-5, upper=5, default_value=5)
+        self.prior_cs.add_hyperparameters([x1, x2, x3, x4])
+
+        self.budget_kwargs = {"max_steps": 2, "n_steps_plateau_walk": 2, "n_sls_iterations": 2}
+
+    def test_sampling_fractions(self):
+        class AcquisitionFunction:
+            def __call__(self, arrays):
+                rval = []
+                for array in arrays:
+                    rval.append([-rosenbrock_4d(array)])
+                return np.array(rval)
+
+        prs_0 = LocalAndSortedPriorRandomSearch(
+            AcquisitionFunction(), self.prior_cs, self.uniform_cs, prior_sampling_fraction=0, **self.budget_kwargs
+        )
+        prs_05 = LocalAndSortedPriorRandomSearch(
+            AcquisitionFunction(), self.prior_cs, self.uniform_cs, prior_sampling_fraction=0.9, **self.budget_kwargs
+        )
+        prs_1 = LocalAndSortedPriorRandomSearch(
+            AcquisitionFunction(), self.prior_cs, self.uniform_cs, prior_sampling_fraction=1, **self.budget_kwargs
+        )
+
+        res_0 = prs_0._maximize(runhistory=unittest.mock.Mock(), stats=None, num_points=10)
+        res_05 = prs_05._maximize(runhistory=unittest.mock.Mock(), stats=None, num_points=10)
+        res_1 = prs_1._maximize(runhistory=unittest.mock.Mock(), stats=None, num_points=10)
 
 
 if __name__ == "__main__":

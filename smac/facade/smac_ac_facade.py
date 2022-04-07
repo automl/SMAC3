@@ -33,9 +33,11 @@ from smac.optimizer.acquisition import (
     AbstractAcquisitionFunction,
     IntegratedAcquisitionFunction,
     LogEI,
+    PriorAcquisitionFunction,
 )
 from smac.optimizer.ei_optimization import (
     AcquisitionFunctionMaximizer,
+    LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
 )
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
@@ -121,6 +123,11 @@ class SMAC4AC(object):
     integrate_acquisition_function : bool, default=False
         Whether to integrate the acquisition function. Works only with models which can sample their
         hyperparameters (i.e. GaussianProcessMCMC).
+    user_priors : bool, default=False
+        Whether to make use of user priors in the optimization procedure, using PriorAcquisitionFunction.
+    user_prior_kwargs : Optional[Dict]
+        Dictionary to pass specific arguments to optimization with prior, e.g. prior confidence parameter,
+        and the floor value for the prior (lowest possible value the prior can take).
     acquisition_function_optimizer : ~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
         Object that implements the :class:`~smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer`.
         Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
@@ -199,6 +206,8 @@ class SMAC4AC(object):
         acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
         acquisition_function_kwargs: Optional[Dict] = None,
         integrate_acquisition_function: bool = False,
+        user_priors: bool = False,
+        user_prior_kwargs: Optional[Dict] = None,
         acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[Dict] = None,
         model: Optional[Type[AbstractEPM]] = None,
@@ -361,12 +370,32 @@ class SMAC4AC(object):
                 **acq_def_kwargs,
             )
 
+        if user_priors:
+            if user_prior_kwargs is None:
+                user_prior_kwargs = {}
+
+            # a solid default value for decay_beta - empirically founded
+            default_beta = scenario.ta_run_limit / 10  # type: ignore
+            discretize = isinstance(model_instance, (RandomForestWithInstances, RFRImputator))
+            user_prior_kwargs["decay_beta"] = user_prior_kwargs.get("decay_beta", default_beta)
+            user_prior_kwargs["discretize"] = discretize
+
+            acquisition_function_instance = PriorAcquisitionFunction(
+                acquisition_function=acquisition_function_instance,  # type: ignore
+                **user_prior_kwargs,
+                **acq_def_kwargs,  # type: ignore
+            )
+            acquisition_function_optimizer = LocalAndSortedPriorRandomSearch
+
         # initialize optimizer on acquisition function
         acq_func_opt_kwargs = {
             "acquisition_function": acquisition_function_instance,
             "config_space": scenario.cs,  # type: ignore[attr-defined] # noqa F821
             "rng": rng,
         }
+        if user_priors:
+            acq_func_opt_kwargs["uniform_config_space"] = scenario.cs.remove_hyperparameter_priors()  # type: ignore
+
         if acquisition_function_optimizer_kwargs is not None:
             acq_func_opt_kwargs.update(acquisition_function_optimizer_kwargs)
         if acquisition_function_optimizer is None:

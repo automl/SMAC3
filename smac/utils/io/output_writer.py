@@ -2,6 +2,7 @@ import typing
 
 import os
 import shutil
+import warnings
 
 from smac.configspace import ConfigurationSpace, json, pcs_new
 from smac.utils.logging import PickableLoggerAdapter
@@ -115,10 +116,14 @@ class OutputWriter(object):
                     assert scenario.output_dir_for_this_run is not None  # please mypy
                     pcs_path = os.path.join(scenario.output_dir_for_this_run, "configspace.pcs")
                     self.save_configspace(scenario.cs, pcs_path, "pcs_new")  # type: ignore[attr-defined] # noqa F821
-                except TypeError:
-                    self.logger.error(
-                        "Could not write pcs file to disk." " ConfigSpace not compatible with (new) pcs format."
-                    )
+                except (TypeError, ValueError) as e:
+                    if isinstance(e, TypeError):
+                        self.logger.error(
+                            "Could not write pcs file to disk." " ConfigSpace not compatible with (new) pcs format."
+                        )
+                    else:
+                        warnings.warn(f"{e}. No pcs file will be generated in the output.")
+
                 assert scenario.output_dir_for_this_run is not None  # please mypy
                 new_path = os.path.join(scenario.output_dir_for_this_run, "configspace.json")
                 self.save_configspace(scenario.cs, new_path, "json")  # type: ignore[attr-defined] # noqa F821

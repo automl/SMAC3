@@ -11,6 +11,7 @@ from smac.optimizer.acquisition import (
     TS,
     IntegratedAcquisitionFunction,
     LogEI,
+    PriorAcquisitionFunction,
 )
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -46,6 +47,41 @@ class MockModelDual(object):
         return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 2)), np.array(
             [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
         ).reshape((-1, 2))
+
+
+class MockPrior(object):
+    def __init__(self, pdf, max_density):
+        self.pdf = pdf
+        self.max_density = max_density
+
+    def _pdf(self, X):
+        return self.pdf(X)
+
+    def get_max_density(self):
+        return self.max_density
+
+
+class PriorMockModel(object):
+    def __init__(self, hyperparameter_dict=None, num_targets=1, seed=0):
+        self.num_targets = num_targets
+        self.seed = seed
+        self.configuration_space = unittest.mock.MagicMock()
+        self.hyperparameter_dict = hyperparameter_dict
+        # since the PriorAcquisitionFunction needs to return the hyperparameters in dict
+        # form through two function calls (self.model.get_configspace().get_hyperparameters_dict()),
+        # we need a slightly intricate solution
+        self.configuration_space.get_hyperparameters_dict.return_value = self.hyperparameter_dict
+
+    def get_configspace(self):
+        return self.configuration_space
+
+    def predict_marginalized_over_instances(self, X):
+        return np.array([np.mean(X, axis=1).reshape((1, -1))] * self.num_targets).reshape((-1, 1)), np.array(
+            [np.mean(X, axis=1).reshape((1, -1))] * self.num_targets
+        ).reshape((-1, 1))
+
+    def update_prior(self, hyperparameter_dict):
+        self.configuration_space.get_hyperparameters_dict.return_value = hyperparameter_dict
 
 
 class MockModelRNG(MockModel):
@@ -157,6 +193,208 @@ class TestIntegratedAcquisitionFunction(unittest.TestCase):
             ]
             rval = iaf(configurations)
             self.assertEqual(rval.shape, (2, 1))
+
+
+class TestPriorAcquisitionFunction(unittest.TestCase):
+    def setUp(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior}
+        self.model = PriorMockModel(hyperparameter_dict=hyperparameter_dict)
+        self.ei = EI(self.model)
+        self.ts = TS(self.model)
+        self.beta = 2
+        self.prior_floor = 1e-1
+
+    def test_init_ei(self):
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+        self.assertFalse(paf.rescale_acq)
+
+    def test_init_ts(self):
+        paf = PriorAcquisitionFunction(self.model, self.ts, self.beta)
+        self.assertTrue(paf.rescale_acq)
+
+    def test_update(self):
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+        paf.update(model=self.model, eta=2)
+        self.assertEqual(paf.eta, 2)
+        self.assertEqual(paf.acq.eta, 2)
+        self.assertEqual(paf.iteration_number, 1)
+
+    def test_compute_prior_Nx1(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+
+        X = np.array([0, 0.5, 1]).reshape(3, 1)
+        prior_values = paf._compute_prior(X)
+
+        self.assertEqual(prior_values.shape, (3, 1))
+        self.assertEqual(prior_values[0][0], 0)
+        self.assertEqual(prior_values[1][0], 1)
+        self.assertEqual(prior_values[2][0], 2)
+
+    def test_compute_prior_NxD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+
+        X = np.array([[0, 0], [0, 1], [1, 1]])
+        prior_values = paf._compute_prior(X)
+
+        self.assertEqual(prior_values.shape, (3, 1))
+        self.assertEqual(prior_values[0][0], 0)
+        self.assertEqual(prior_values[1][0], 0)
+        self.assertEqual(prior_values[2][0], 2)
+
+    def test_compute_prior_1xD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+
+        X = np.array([[0.5, 0.5]])
+        prior_values = paf._compute_prior(X)
+
+        self.assertEqual(prior_values.shape, (1, 1))
+        self.assertEqual(prior_values[0][0], 1)
+
+    def test_compute_prior_1x1(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta)
+
+        X = np.array([0.5]).reshape(1, 1)
+        prior_values = paf._compute_prior(X)
+
+        self.assertEqual(prior_values.shape, (1, 1))
+        self.assertEqual(prior_values[0][0], 1)
+
+    def test_1xD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior, "x2": x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
+
+        paf.update(model=self.model, eta=1.0)
+        configurations = [ConfigurationMock([1.0, 1.0, 1.0])]
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (1, 1))
+
+        prior_0_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+
+        self.assertAlmostEqual(acq[0][0], 0.3989422804014327 * prior_0_factor)
+
+    def test_NxD(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior, "x2": x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
+
+        paf.update(model=self.model, eta=1.0)
+        # These are the exact same numbers as in the EI tests below
+        configurations = [
+            ConfigurationMock([0.0, 0.0, 0.0]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+
+        prior_0_factor = np.power(0.0 * 1.0 * 2.0 + paf.prior_floor, self.beta / 1.0)
+        prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / 1.0)
+        prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+
+        # We do only one update, so we are at iteration 1 (beta/iteration_nbr=2)
+        self.assertAlmostEqual(acq[0][0], 0.0 * prior_0_factor)
+        self.assertAlmostEqual(acq[1][0], 0.90020601136712231 * prior_1_factor)
+        self.assertAlmostEqual(acq[2][0], 0.3989422804014327 * prior_2_factor)
+
+    def test_NxD_TS(self):
+        # since there is some rescaling that needs to be done for TS and UCB (the same
+        # scaling for the two of them), it justifies testing as well
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior, "x2": x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ts, self.beta, self.prior_floor)
+        eta = 1.0
+
+        paf.update(model=self.model, eta=eta)
+
+        configurations = [
+            ConfigurationMock([0.0001, 0.0001, 0.0001]),
+            ConfigurationMock([0.1, 0.1, 0.1]),
+            ConfigurationMock([1.0, 1.0, 1.0]),
+        ]
+        acq = paf(configurations)
+        self.assertEqual(acq.shape, (3, 1))
+
+        # retrieved from TS example
+        ts_value_0 = -0.00988738
+        ts_value_1 = -0.22654082
+        ts_value_2 = -2.76405235
+
+        prior_0_factor = np.power(0.0002 * 1 * 1.9998 + paf.prior_floor, self.beta / 1.0)
+        prior_1_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / 1.0)
+        prior_2_factor = np.power(2.0 * 1.0 * 0.0 + paf.prior_floor, self.beta / 1.0)
+
+        # rescaling to avoid negative values, and keep the TS ranking intact
+        combined_value_0 = np.clip(ts_value_0 + eta, 0, np.inf) * prior_0_factor
+        combined_value_1 = np.clip(ts_value_1 + eta, 0, np.inf) * prior_1_factor
+        combined_value_2 = np.clip(ts_value_2 + eta, 0, np.inf) * prior_2_factor
+
+        self.assertAlmostEqual(acq[0][0], combined_value_0)
+        self.assertAlmostEqual(acq[1][0], combined_value_1)
+        self.assertAlmostEqual(acq[2][0], combined_value_2)
+
+    def test_decay(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        x1_prior = MockPrior(pdf=lambda x: np.ones_like(x), max_density=1)
+        x2_prior = MockPrior(pdf=lambda x: 2 - 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior, "x1": x1_prior, "x2": x2_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor)
+        configurations = [ConfigurationMock([0.1, 0.1, 0.1])]
+
+        for i in range(1, 6):
+            paf.update(model=self.model, eta=1.0)
+            prior_factor = np.power(0.2 * 1.0 * 1.8 + paf.prior_floor, self.beta / i)
+            acq = paf(configurations)
+            self.assertAlmostEqual(acq[0][0], 0.90020601136712231 * prior_factor)
+
+    def test_discretize_pdf(self):
+        x0_prior = MockPrior(pdf=lambda x: 2 * x, max_density=2)
+        hyperparameter_dict = {"x0": x0_prior}
+        self.model.update_prior(hyperparameter_dict)
+        paf = PriorAcquisitionFunction(self.model, self.ei, self.beta, self.prior_floor, discretize=True)
+
+        number_of_bins_1 = 13
+        number_of_bins_2 = 27521
+        number_of_points = 1001
+
+        discrete_values_1 = paf._compute_discretized_pdf(
+            x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_1
+        )
+        discrete_values_2 = paf._compute_discretized_pdf(
+            x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=number_of_bins_2
+        )
+        number_unique_values_1 = len(np.unique(discrete_values_1))
+        number_unique_values_2 = len(np.unique(discrete_values_2))
+
+        self.assertEqual(number_unique_values_1, number_of_bins_1)
+        self.assertEqual(number_unique_values_2, number_of_points)
+        with self.assertRaises(ValueError):
+            paf._compute_discretized_pdf(x0_prior, np.linspace(0, 1, number_of_points), number_of_bins=-1)
 
 
 class TestEI(unittest.TestCase):

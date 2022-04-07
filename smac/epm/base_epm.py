@@ -301,3 +301,13 @@ class AbstractEPM(object):
             var = var.reshape((-1, 1))
 
         return mean, var
+
+    def get_configspace(self) -> ConfigurationSpace:
+        """
+        Retrieves the ConfigurationSpace used for the model.
+
+        Returns
+        -------
+            self.configspace: The ConfigurationSpace of the model
+        """
+        return self.configspace
