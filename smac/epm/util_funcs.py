@@ -3,7 +3,6 @@ import typing
 import logging
 
 import numpy as np
-
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     BetaFloatHyperparameter,
@@ -16,6 +15,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+
 from smac.utils.constants import MAXINT
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

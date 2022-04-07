@@ -5,9 +5,9 @@ from typing import Any, List, Tuple
 import copy
 
 import numpy as np
+from ConfigSpace.hyperparameters import FloatHyperparameter
 from scipy.stats import norm
 
-from ConfigSpace.hyperparameters import FloatHyperparameter
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.base_epm import AbstractEPM

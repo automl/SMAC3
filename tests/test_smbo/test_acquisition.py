@@ -10,8 +10,8 @@ from smac.optimizer.acquisition import (
     PI,
     TS,
     IntegratedAcquisitionFunction,
-    PriorAcquisitionFunction,
     LogEI,
+    PriorAcquisitionFunction,
 )
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

@@ -3,20 +3,24 @@ import unittest
 import unittest.mock
 
 import numpy as np
+from ConfigSpace.hyperparameters import (
+    BetaIntegerHyperparameter,
+    CategoricalHyperparameter,
+    NormalFloatHyperparameter,
+    UniformFloatHyperparameter,
+    UniformIntegerHyperparameter,
+)
 from scipy.spatial.distance import euclidean
 
 from smac.configspace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
-from smac.optimizer.ei_optimization import LocalSearch, RandomSearch, LocalAndSortedPriorRandomSearch
+from smac.optimizer.ei_optimization import (
+    LocalAndSortedPriorRandomSearch,
+    LocalSearch,
+    RandomSearch,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    UniformFloatHyperparameter,
-    UniformIntegerHyperparameter,
-    NormalFloatHyperparameter,
-    BetaIntegerHyperparameter,
-)
 from smac.utils import test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
