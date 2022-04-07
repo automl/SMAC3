@@ -52,7 +52,6 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     model : AbstractEPM
         Predictive model (i.e. RandomForestWithInstances)
     var_threshold: float
-
     """
 
     def __init__(
@@ -84,8 +83,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         uncensored_X: np.ndarray,
         uncensored_y: np.ndarray,
     ) -> Optional[np.ndarray]:
-        """
-        Imputes censored runs and returns new y values.
+        """Imputes censored runs and returns new y values.
 
         Parameters
         ----------
@@ -99,7 +97,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             Target values for all non-censored runs.
 
         Returns
-        ----------
+        -------
         imputed_y : np.ndarray
             Same shape as censored_y [N, 1]
         """

@@ -25,8 +25,7 @@ class BaseImputor(object):
         uncensored_X: np.ndarray,
         uncensored_y: np.ndarray,
     ) -> Optional[np.ndarray]:
-        """
-        Imputes censored runs and returns new y values.
+        """Imputes censored runs and returns new y values.
 
         Parameters
         ----------
@@ -40,7 +39,7 @@ class BaseImputor(object):
             Target values for all non-censored runs.
 
         Returns
-        ----------
+        -------
         imputed_y: np.ndarray
             Same shape as censored_y [N, 1]
         """

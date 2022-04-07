@@ -15,10 +15,8 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-# This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
-
-
 def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray] = None) -> np.ndarray:
+    """Returns conditional hyperparameters."""
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1
     if Y is not None:
@@ -30,12 +28,13 @@ def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray] = Non
 
 
 class MagicMixin:
-
-    # This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
-    # it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
-    # Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know
-    # about anything related to the superclass and I had to add a few type:ignore statements when accessing a member
-    # that is declared in the superclass such as self.has_conditions, self._call, super().get_params etc.
+    # This is a mixin for a kernel to override functions of the kernel.
+    # Because it overrides functions of the kernel, it needs to be placed first in the inheritance
+    # hierarchy. For this reason it is not possible to subclass the
+    # Mixin from the kernel class because this will prevent it from being instantiatable.
+    # Therefore, mypy won't know about anything related to the superclass and I had
+    # to add a few type:ignore statements when accessing a member that is declared in the
+    # superclass such as self.has_conditions, self._call, super().get_params etc.
 
     prior = None  # type: Optional[Prior]
 
@@ -46,7 +45,7 @@ class MagicMixin:
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-
+        """Call the kernel function."""
         if active is None and self.has_conditions:  # type: ignore[attr-defined] # noqa F821
             if self.operate_on is None:
                 active = get_conditional_hyperparameters(X, Y)
@@ -164,7 +163,6 @@ class MagicMixin:
     @property
     def n_dims(self) -> int:
         """Returns the number of non-fixed hyperparameters of the kernel."""
-
         try:
             return self._n_dims_cache
         except AttributeError:
@@ -186,7 +184,7 @@ class MagicMixin:
         return self
 
     def set_active_dims(self, operate_on: Optional[np.ndarray] = None) -> None:
-        """Sets dimensions this kernel should work on
+        """Sets dimensions this kernel should work on.
 
         Parameters
         ----------
@@ -441,7 +439,6 @@ class Matern(MagicMixin, kernels.Matern):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
@@ -558,7 +555,6 @@ class RBF(MagicMixin, kernels.RBF):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
@@ -642,7 +638,6 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
 
         if Y is not None and eval_gradient:
@@ -690,6 +685,7 @@ class HammingKernel(
 
     @property
     def hyperparameter_length_scale(self) -> kernels.Hyperparameter:
+        """Hyperparameter of the length scale."""
         length_scale = self.length_scale
         anisotropic = np.iterable(length_scale) and len(length_scale) > 1  # type: ignore
         if anisotropic:
@@ -733,7 +729,6 @@ class HammingKernel(
         Code partially copied from skopt (https://github.com/scikit-optimize).
         Made small changes to only compute necessary values and use scikit-learn helper functions.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 

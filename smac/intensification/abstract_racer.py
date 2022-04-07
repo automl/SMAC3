@@ -22,12 +22,10 @@ __license__ = "3-clause BSD"
 
 
 class RunInfoIntent(Enum):
-    """Class to define different requests on how to process
-    the runinfo
+    """Class to define different requests on how to process the runinfo.
 
-    Gives the flexibility to indicate whether a configuration
-    should be skipped (SKIP) or if the SMBO should simple
-    run a generated run_info.
+    Gives the flexibility to indicate whether a configuration should be skipped (SKIP) or if the
+    SMBO should simple run a generated run_info.
     """
 
     RUN = 0  # Normal run execution of a run info
@@ -36,8 +34,7 @@ class RunInfoIntent(Enum):
 
 
 class AbstractRacer(object):
-    """
-    Base class for all racing methods
+    """Base class for all racing methods.
 
     The "intensification" is designed to output a RunInfo object with enough information
     to run a given configuration (for example, the run info contains the instance/seed
@@ -147,9 +144,8 @@ class AbstractRacer(object):
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        Abstract method for choosing the next challenger, to allow for different selections across intensifiers
-        uses ``_next_challenger()`` by default
+        """Abstract method for choosing the next challenger, to allow for different selections
+        across intensifiers uses ``_next_challenger()`` by default.
 
         If no more challengers are available, the method should issue a SKIP via
         RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
@@ -188,10 +184,8 @@ class AbstractRacer(object):
         result: RunValue,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
@@ -226,8 +220,8 @@ class AbstractRacer(object):
         run_history: RunHistory,
         repeat_configs: bool = True,
     ) -> typing.Optional[Configuration]:
-        """Retuns the next challenger to use in intensification
-        If challenger is None, then optimizer will be used to generate the next challenger
+        """Retuns the next challenger to use in intensification If challenger is None, then
+        optimizer will be used to generate the next challenger.
 
         Parameters
         ----------
@@ -277,9 +271,8 @@ class AbstractRacer(object):
         return None
 
     def _adapt_cutoff(self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float) -> float:
-        """Adaptive capping:
-        Compute cutoff based on time so far used for incumbent
-        and reduce cutoff for next run of challenger accordingly
+        """Adaptive capping: Compute cutoff based on time so far used for incumbent and reduce
+        cutoff for next run of challenger accordingly.
 
         !Only applicable if self.run_obj_time
 
@@ -300,7 +293,6 @@ class AbstractRacer(object):
         cutoff: float
             Adapted cutoff
         """
-
         if not self.run_obj_time:
             raise ValueError("This method only works when the run objective is time")
 
@@ -324,9 +316,8 @@ class AbstractRacer(object):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> typing.Optional[Configuration]:
-        """
-        Compare two configuration wrt the runhistory and return the one which
-        performs better (or None if the decision is not safe)
+        """Compare two configuration wrt the runhistory and return the one which performs better (or
+        None if the decision is not safe)
 
         Decision strategy to return x as being better than y:
             1. x has at least as many runs as y
@@ -351,7 +342,6 @@ class AbstractRacer(object):
         -------
         None or better of the two configurations x,y
         """
-
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)

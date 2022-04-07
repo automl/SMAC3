@@ -24,7 +24,7 @@ __license__ = "3-clause BSD"
 
 
 class _Hyperband(_SuccessiveHalving):
-    """Races multiple challengers against an incumbent using Hyperband method
+    """Races multiple challengers against an incumbent using Hyperband method.
 
     This class contains the logic to implement:
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -139,10 +139,8 @@ class _Hyperband(_SuccessiveHalving):
         result: RunValue,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
@@ -168,7 +166,6 @@ class _Hyperband(_SuccessiveHalving):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-
         # run 1 iteration of successive halving
         incumbent, inc_perf = self.sh_intensifier.process_results(
             run_info=run_info,
@@ -195,10 +192,10 @@ class _Hyperband(_SuccessiveHalving):
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        Selects which challenger to use based on the iteration stage and set the iteration parameters.
-        First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations pick top configurations from the previously selected challengers in that iteration
+        """Selects which challenger to use based on the iteration stage and set the iteration
+        parameters. First iteration will choose configurations from the ``chooser`` or input
+        challengers, while the later iterations pick top configurations from the previously selected
+        challengers in that iteration.
 
         If no new run is available, the method returns a configuration of None.
 
@@ -225,7 +222,6 @@ class _Hyperband(_SuccessiveHalving):
         run_info: RunInfo
                An object that encapsulates necessary information for a config run
         """
-
         if num_workers > 1:
             raise ValueError(
                 "HyperBand does not support more than 1 worker, yet "
@@ -255,10 +251,9 @@ class _Hyperband(_SuccessiveHalving):
         return intent, run_info
 
     def _update_stage(self, run_history: RunHistory = None) -> None:
-        """
-        Update tracking information for a new stage/iteration and update statistics.
-        This method is called to initialize stage variables and after all configurations
-        of a successive halving stage are completed.
+        """Update tracking information for a new stage/iteration and update statistics. This method
+        is called to initialize stage variables and after all configurations of a successive halving
+        stage are completed.
 
         Parameters
         ----------
@@ -318,7 +313,7 @@ class _Hyperband(_SuccessiveHalving):
 
 
 class Hyperband(ParallelScheduler):
-    """Races multiple challengers against an incumbent using Hyperband method
+    """Races multiple challengers against an incumbent using Hyperband method.
 
     Implementation from "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
 
@@ -418,10 +413,8 @@ class Hyperband(ParallelScheduler):
         self.eta = eta
 
     def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
-        """
-        Given a intensifier, returns how advance it is.
-        This metric will be used to determine what priority to
-        assign to the intensifier
+        """Given a intensifier, returns how advance it is. This metric will be used to determine
+        what priority to assign to the intensifier.
 
         Parameters
         ----------
@@ -451,20 +444,17 @@ class Hyperband(ParallelScheduler):
         return stage, len(intensifier.sh_intensifier.run_tracker)
 
     def _add_new_instance(self, num_workers: int) -> bool:
-        """
-        Decides if it is possible to add a new intensifier instance,
-        and adds it.
-        If a new intensifier instance is added, True is returned, else False.
+        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
+        intensifier instance is added, True is returned, else False.
 
         Parameters
-        -----------
+        ----------
         num_workers: int
-            the maximum number of workers available
-            at a given time.
+            the maximum number of workers available at a given time.
 
         Returns
         -------
-            Whether or not a new instance was added
+            Whether or not a new instance was added.
         """
         if len(self.intensifier_instances) >= num_workers:
             return False

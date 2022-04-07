@@ -11,9 +11,8 @@ __license__ = "3-clause BSD"
 
 
 class SMAC4MF(SMAC4HPO):
-    """
-    Facade to use SMAC with a Hyperband intensifier for hyperparameter optimization using multiple
-    fidelities
+    """Facade to use SMAC with a Hyperband intensifier for hyperparameter optimization using
+    multiple fidelities.
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -31,7 +30,6 @@ class SMAC4MF(SMAC4HPO):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(self, **kwargs: typing.Any):

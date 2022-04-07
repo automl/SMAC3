@@ -18,9 +18,8 @@ __version__ = "0.0.1"
 
 
 class Stats(object):
-    """
-    All statistics collected during configuration run.
-    Written to output-directory to be restored
+    """All statistics collected during configuration run. Written to output- directory to be
+    restored.
 
     Parameters
     ----------
@@ -57,9 +56,7 @@ class Stats(object):
         self._logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def save(self) -> None:
-        """
-        Save all relevant attributes to json-dictionary.
-        """
+        """Save all relevant attributes to json-dictionary."""
         if not self.__scenario.output_dir_for_this_run:
             self._logger.debug("No scenario.output_dir: not saving stats!")
             return
@@ -78,8 +75,7 @@ class Stats(object):
             json.dump(data, fh)
 
     def load(self, fn: typing.Optional[str] = None) -> None:
-        """
-        Load all attributes from dictionary in file into stats-object.
+        """Load all attributes from dictionary in file into stats-object.
 
         Parameters
         ----------
@@ -101,8 +97,8 @@ class Stats(object):
                 raise ValueError("Stats does not recognize {}".format(key))
 
     def start_timing(self) -> None:
-        """
-        Starts the timer (for the runtime configuration budget).
+        """Starts the timer (for the runtime configuration budget).
+
         Substracting wallclock time used so we can continue loaded Stats.
         """
         if self.__scenario:
@@ -111,55 +107,51 @@ class Stats(object):
             raise ValueError("Scenario is missing")
 
     def get_used_wallclock_time(self) -> float:
-        """Returns used wallclock time
+        """Returns used wallclock time.
 
         Returns
         -------
         wallclock_time : int
             used wallclock time in sec
         """
-
         return time.time() - self._start_time
 
     def get_remaing_time_budget(self) -> float:
-        """Subtracts the runtime configuration budget with the used wallclock
-        time"""
+        """Subtracts the runtime configuration budget with the used wallclock time."""
         if self.__scenario:
             return self.__scenario.wallclock_limit - (time.time() - self._start_time)
         else:
             raise ValueError("Scenario is missing")
 
     def get_remaining_ta_runs(self) -> int:
-        """Subtract the target algorithm runs in the scenario with the used ta
-        runs"""
+        """Subtract the target algorithm runs in the scenario with the used ta runs."""
         if self.__scenario:
             return self.__scenario.ta_run_limit - self.submitted_ta_runs  # type: ignore[attr-defined] # noqa F821
         else:
             raise ValueError("Scenario is missing")
 
     def get_remaining_ta_budget(self) -> float:
-        """Subtracts the ta running budget with the used time"""
+        """Subtracts the ta running budget with the used time."""
         if self.__scenario:
             return self.__scenario.algo_runs_timelimit - self.ta_time_used
         else:
             raise ValueError("Scenario is missing")
 
     def is_budget_exhausted(self) -> bool:
-        """Check whether the configuration budget for time budget, ta_budget
-        and submitted_ta_runs is exhausted
+        """Check whether the configuration budget for time budget, ta_budget and submitted_ta_runs
+        is exhausted.
 
         Returns
         -------
         exhaustedness: boolean
-            true if one of the budgets is exhausted
+            true if one of the budgets is exhausted.
         """
         return (
             self.get_remaing_time_budget() < 0 or self.get_remaining_ta_budget() < 0
         ) or self.get_remaining_ta_runs() <= 0
 
     def update_average_configs_per_intensify(self, n_configs: int) -> None:
-        """Updates statistics how many configurations on average per used in
-        intensify
+        """Updates statistics how many configurations on average per used in intensify.
 
         Parameters
         ----------
@@ -177,10 +169,10 @@ class Stats(object):
             ) * self._ema_n_configs_per_intensifiy + self._EMA_ALPHA * n_configs
 
     def print_stats(self, debug_out: bool = False) -> None:
-        """Prints all statistics
+        """Prints all statistics.
 
         Parameters
-        ---------
+        ----------
         debug: bool
             use logging.debug instead of logging.info if set to true
         """

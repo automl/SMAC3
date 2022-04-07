@@ -25,9 +25,7 @@ class BaseModel(AbstractEPM):
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
     ) -> None:
-        """
-        Abstract base class for all random forest models.
-        """
+        """Abstract base class for all random forest models."""
         super().__init__(
             configspace=configspace,
             types=types,

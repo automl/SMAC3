@@ -74,7 +74,6 @@ class BaseRunner(ABC):
     par_factor
     cost_for_crash
     abort_on_first_run_crash
-
     """
 
     def __init__(
@@ -108,10 +107,9 @@ class BaseRunner(ABC):
 
     @abstractmethod
     def submit_run(self, run_info: RunInfo) -> None:
-        """This function submits a configuration
-        embedded in a RunInfo object, and uses one of the workers
-        to produce a result (such result will eventually be available
-        on the self.results FIFO).
+        """This function submits a configuration embedded in a RunInfo object, and uses one of the
+        workers to produce a result (such result will eventually be available on the self.results
+        FIFO).
 
         This interface method will be called by SMBO, with the expectation
         that a function will be executed by a worker.
@@ -126,7 +124,6 @@ class BaseRunner(ABC):
         ----------
         run_info: RunInfo
             An object containing the configuration and the necessary data to run it
-
         """
         pass
 
@@ -140,8 +137,11 @@ class BaseRunner(ABC):
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on
-        instance <instance> with instance specifics <specifics> for at most
+        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        instance specifics.
+
+        <specifics> for at most.
+
         <cutoff> seconds and random seed <seed>
 
         This method exemplifies how to defined the run() method
@@ -180,7 +180,7 @@ class BaseRunner(ABC):
         self,
         run_info: RunInfo,
     ) -> Tuple[RunInfo, RunValue]:
-        """Wrapper around run() to exec and check the execution of a given config file
+        """Wrapper around run() to exec and check the execution of a given config file.
 
         This function encapsulates common handling/processing, so that run() implementation
         is simplified.
@@ -288,11 +288,10 @@ class BaseRunner(ABC):
 
     @abstractmethod
     def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
-        """This method returns any finished configuration, and returns a list with
-        the results of exercising the configurations. This class keeps populating results
-        to self.results until a call to get_finished runs is done. In this case, the
-        self.results list is emptied and all RunValues produced by running run() are
-        returned.
+        """This method returns any finished configuration, and returns a list with the results of
+        exercising the configurations. This class keeps populating results to self.results until a
+        call to get_finished runs is done. In this case, the self.results list is emptied and all
+        RunValues produced by running run() are returned.
 
         Returns
         -------
@@ -304,22 +303,21 @@ class BaseRunner(ABC):
     @abstractmethod
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
         This method waits until 1 run completes
         """
         pass
 
     @abstractmethod
     def pending_runs(self) -> bool:
-        """
-        Whether or not there are configs still running. Generally if the runner is serial,
-        launching a run instantly returns it's result. On parallel runners, there might
-        be pending configurations to complete.
+        """Whether or not there are configs still running.
+
+        Generally if the runner is serial, launching a run instantly returns it's result. On
+        parallel runners, there might be pending configurations to complete.
         """
         pass
 
     @abstractmethod
     def num_workers(self) -> int:
-        """
-        Return the active number of workers that will execute tae runs.
-        """
+        """Return the active number of workers that will execute tae runs."""
         pass

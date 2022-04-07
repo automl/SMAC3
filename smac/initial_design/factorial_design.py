@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 
 
 class FactorialInitialDesign(InitialDesign):
-    """Factorial initial design
+    """Factorial initial design.
 
     Attributes
     ----------
@@ -29,14 +29,13 @@ class FactorialInitialDesign(InitialDesign):
     """
 
     def _select_configurations(self) -> Configuration:
-        """Selects a single configuration to run
+        """Selects a single configuration to run.
 
         Returns
         -------
         config: Configuration
             initial incumbent configuration
         """
-
         params = self.cs.get_hyperparameters()
 
         values = []

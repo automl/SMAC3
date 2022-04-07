@@ -10,8 +10,7 @@ __license__ = "3-clause BSD"
 
 
 class HB4AC(ROAR):
-    """
-    Facade to use model-free Hyperband for algorithm configuration
+    """Facade to use model-free Hyperband for algorithm configuration.
 
     This facade overwrites options available via the SMAC facade.
 
@@ -28,7 +27,6 @@ class HB4AC(ROAR):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(self, **kwargs: typing.Any):

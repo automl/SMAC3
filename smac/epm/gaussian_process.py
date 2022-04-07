@@ -20,8 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcess(BaseModel):
-    """
-    Gaussian process model.
+    """Gaussian process model.
 
     The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.
 
@@ -91,11 +90,9 @@ class GaussianProcess(BaseModel):
         self._set_has_conditions()
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcess":
-        """
-        Computes the Cholesky decomposition of the covariance of X and
-        estimates the GP hyperparameters by optimizing the marginal
-        loglikelihood. The prior mean of the GP is set to the empirical
-        mean of X.
+        """Computes the Cholesky decomposition of the covariance of X and estimates the GP
+        hyperparameters by optimizing the marginal loglikelihood. The prior mean of the GP is set to
+        the empirical mean of X.
 
         Parameters
         ----------
@@ -108,7 +105,6 @@ class GaussianProcess(BaseModel):
             If set to true the hyperparameters are optimized otherwise
             the default hyperparameters of the kernel are used.
         """
-
         X = self._impute_inactive(X)
         if self.normalize_y:
             y = self._normalize_y(y)
@@ -150,10 +146,8 @@ class GaussianProcess(BaseModel):
         )
 
     def _nll(self, theta: np.ndarray) -> Tuple[float, np.ndarray]:
-        """
-        Returns the negative marginal log likelihood (+ the prior) for
-        a hyperparameter configuration theta.
-        (negative because we use scipy minimize for optimization)
+        """Returns the negative marginal log likelihood (+ the prior) for a hyperparameter
+        configuration theta. (negative because we use scipy minimize for optimization)
 
         Parameters
         ----------
@@ -162,7 +156,7 @@ class GaussianProcess(BaseModel):
             on a log scale.
 
         Returns
-        ----------
+        -------
         float
             lnlikelihood + prior
         """
@@ -185,16 +179,14 @@ class GaussianProcess(BaseModel):
             return -lml, -grad
 
     def _optimize(self) -> np.ndarray:
-        """
-        Optimizes the marginal log likelihood and returns the best found
-        hyperparameter configuration theta.
+        """Optimizes the marginal log likelihood and returns the best found hyperparameter
+        configuration theta.
 
         Returns
         -------
         theta : np.ndarray(H)
             Hyperparameter vector that maximizes the marginal log likelihood
         """
-
         log_bounds = [(b[0], b[1]) for b in self.gp.kernel.bounds]
 
         # Start optimization from the previous hyperparameter configuration
@@ -254,14 +246,12 @@ class GaussianProcess(BaseModel):
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
-        ----------
+        -------
         np.array(N,)
             predictive mean
         np.array(N,) or np.array(N, N) or None
             predictive variance or standard deviation
-
         """
-
         if not self.is_trained:
             raise Exception("Model has to be trained first!")
 
@@ -297,9 +287,7 @@ class GaussianProcess(BaseModel):
         return mu, var
 
     def sample_functions(self, X_test: np.ndarray, n_funcs: int = 1) -> np.ndarray:
-        """
-        Samples F function values from the current posterior at the N
-        specified test points.
+        """Samples F function values from the current posterior at the N specified test points.
 
         Parameters
         ----------
@@ -309,11 +297,10 @@ class GaussianProcess(BaseModel):
             Number of function values that are drawn at each test point.
 
         Returns
-        ----------
+        -------
         function_samples: np.array(N, F)
             The F function values drawn at the N test points.
         """
-
         if not self.is_trained:
             raise Exception("Model has to be trained first!")
 

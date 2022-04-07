@@ -19,9 +19,7 @@ def create_output_directory(
 
     Parameters
     ----------
-
     scenario : ~smac.scenario.scenario.Scenario
-
     run_id : int
 
     Returns

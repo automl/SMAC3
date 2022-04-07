@@ -31,14 +31,13 @@ __license__ = "3-clause BSD"
 
 
 class NoMoreChallengers(Exception):
-    """Indicates that no more challengers are available
-    for the intensification to proceed"""
+    """Indicates that no more challengers are available for the intensification to proceed."""
 
     pass
 
 
 class IntensifierStage(Enum):
-    """Class to define different stages of intensifier"""
+    """Class to define different stages of intensifier."""
 
     RUN_FIRST_CONFIG = 0  # to replicate the old initial design
     RUN_INCUMBENT = 1  # Lines 3-7
@@ -53,8 +52,7 @@ class IntensifierStage(Enum):
 
 
 class Intensifier(AbstractRacer):
-    """Races challengers against an incumbent
-
+    r"""Races challengers against an incumbent.
     SMAC's intensification procedure, in detail:
 
     Procedure 2: Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, cˆ)
@@ -207,10 +205,8 @@ class Intensifier(AbstractRacer):
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        This procedure is in charge of generating a RunInfo object to comply
-        with lines 7 (in case stage is stage==RUN_INCUMBENT) or line 12
-        (In case of stage==RUN_CHALLENGER)
+        """This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
+        case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)
 
         A RunInfo object encapsulates the necessary information for a worker
         to execute the job, nevertheless, a challenger is not always available.
@@ -461,9 +457,8 @@ class Intensifier(AbstractRacer):
         result: RunValue,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution.
 
         During intensification, the following can happen:
 
@@ -574,8 +569,7 @@ class Intensifier(AbstractRacer):
         self,
         available_insts: typing.List[str],
     ) -> typing.Tuple[str, int, typing.Optional[float]]:
-        """Method to extract the next seed/instance in which a
-        incumbent run most be evaluated.
+        """Method to extract the next seed/instance in which a incumbent run most be evaluated.
 
         Parameters
         ----------
@@ -590,7 +584,6 @@ class Intensifier(AbstractRacer):
             Seed in which to evaluate the instance
         cutoff: Optional[float]
             Max time for a given instance/seed pair
-
         """
         # Line 5 - and avoid https://github.com/numpy/numpy/issues/10791
         _idx = self.rs.choice(len(available_insts))
@@ -617,8 +610,7 @@ class Intensifier(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> typing.List[str]:
-        """
-        Implementation of line 4 of Intensification
+        """Implementation of line 4 of Intensification.
 
         This method queries the inc runs in the run history
         and return the pending instances if any is available
@@ -631,7 +623,6 @@ class Intensifier(AbstractRacer):
             stores all runs we ran so far
         log_traj: bool
             Whether to log changes of incumbents in trajectory
-
         """
         # Line 4
         # find all instances that have the most runs on the inc
@@ -661,8 +652,7 @@ class Intensifier(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> None:
-        """Method to process the results of a challenger that races
-        an incumbent
+        """Method to process the results of a challenger that races an incumbent.
 
         Parameters
         ----------
@@ -672,7 +662,6 @@ class Intensifier(AbstractRacer):
             stores all runs we ran so far
         log_traj: bool
             Whether to log changes of incumbents in trajectory
-
         """
         # output estimated performance of incumbent
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
@@ -704,8 +693,8 @@ class Intensifier(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, str, int, typing.Optional[float]]:
-        """Method to return the next config setting to
-        aggressively race challenger against incumbent.
+        """Method to return the next config setting to aggressively race challenger against
+        incumbent.
 
         Parameters
         ----------
@@ -729,7 +718,6 @@ class Intensifier(AbstractRacer):
         cutoff: Optional[float]
             Max time for a given instance/seed pair
         """
-
         # By the time this function is called, the run history might
         # have shifted. Re-populate the list if necessary
         if not self.to_run:
@@ -757,10 +745,8 @@ class Intensifier(AbstractRacer):
         challenger: Configuration,
         run_history: RunHistory,
     ) -> bool:
-        """A check to see if there is no more time for a challenger
-        given the fact, that we are optimizing time and the
-        incumbent looks more promising
-        Line 18
+        """A check to see if there is no more time for a challenger given the fact, that we are
+        optimizing time and the incumbent looks more promising Line 18.
 
         Parameters
         ----------
@@ -790,8 +776,8 @@ class Intensifier(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> typing.Optional[Configuration]:
-        """Process the result of a racing configuration against the
-        current incumbent. Might propose a new incumbent.
+        """Process the result of a racing configuration against the current incumbent. Might propose
+        a new incumbent.
 
         Parameters
         ----------
@@ -871,9 +857,8 @@ class Intensifier(AbstractRacer):
         N: int,
         run_history: RunHistory,
     ) -> typing.Tuple[typing.List[InstSeedBudgetKey], float]:
-        """
-        Returns the minimum list of <instance, seed> pairs to run the challenger on
-        before comparing it with the incumbent
+        """Returns the minimum list of <instance, seed> pairs to run the challenger on before
+        comparing it with the incumbent.
 
         Parameters
         ----------
@@ -923,9 +908,7 @@ class Intensifier(AbstractRacer):
         challengers: typing.Optional[typing.List[Configuration]],
         chooser: typing.Optional[EPMChooser],
     ) -> typing.Tuple[typing.Optional[Configuration], bool]:
-        """
-        This function returns the next challenger, that should be exercised
-        though lines 8-17.
+        """This function returns the next challenger, that should be exercised though lines 8-17.
 
         It does so by populating configs_to_run, which is a pool of configuration
         from which the racer will sample. Each configuration within configs_to_run,
@@ -953,9 +936,7 @@ class Intensifier(AbstractRacer):
             next configuration to evaluate
         bool
             flag telling if the configuration is newly sampled or one currently being tracked
-
         """
-
         # select new configuration when entering 'race challenger' stage
         # or for the first run
         if not self.current_challenger or (self.stage == IntensifierStage.RUN_CHALLENGER and not self.to_run):
@@ -991,9 +972,8 @@ class Intensifier(AbstractRacer):
         challengers: typing.Optional[typing.List[Configuration]],
         chooser: typing.Optional[EPMChooser],
     ) -> _config_to_run_type:
-        """
-        Retuns a sequence of challengers to use in intensification
-        If challengers are not provided, then optimizer will be used to generate the challenger list
+        """Retuns a sequence of challengers to use in intensification If challengers are not
+        provided, then optimizer will be used to generate the challenger list.
 
         Parameters
         ----------
@@ -1007,7 +987,6 @@ class Intensifier(AbstractRacer):
         typing.Optional[typing.Generator[Configuration]]
             A generator containing the next challengers to use
         """
-
         if challengers:
             # iterate over challengers provided
             self.logger.debug("Using challengers provided")
@@ -1022,9 +1001,7 @@ class Intensifier(AbstractRacer):
         return chall_gen
 
     def _next_iteration(self) -> None:
-        """
-        Updates tracking variables at the end of an intensification run
-        """
+        """Updates tracking variables at the end of an intensification run."""
         # track iterations
         self.n_iters += 1
         self.iteration_done = True

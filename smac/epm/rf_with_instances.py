@@ -16,7 +16,6 @@ __version__ = "0.0.1"
 
 
 class RandomForestWithInstances(BaseModel):
-
     """Random forest that takes instance features into account.
 
     Parameters
@@ -151,7 +150,6 @@ class RandomForestWithInstances(BaseModel):
         -------
         self
         """
-
         X = self._impute_inactive(X)
         self.X = X
         self.y = y.flatten()
@@ -167,8 +165,8 @@ class RandomForestWithInstances(BaseModel):
         return self
 
     def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:
-        """Fills a pyrfr default data container, s.t. the forest knows
-        categoricals and bounds for continous data
+        """Fills a pyrfr default data container, s.t. the forest knows categoricals and bounds for
+        continous data.
 
         Parameters
         ----------
@@ -282,7 +280,6 @@ class RandomForestWithInstances(BaseModel):
         vars : np.ndarray  of shape = [n_samples, 1]
             Predictive variance
         """
-
         if self.instance_features is None or len(self.instance_features) == 0:
             mean_, var = self.predict(X)
             assert var is not None  # please mypy

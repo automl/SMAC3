@@ -22,7 +22,7 @@ def get_types(
     config_space: ConfigurationSpace,
     instance_features: typing.Optional[np.ndarray] = None,
 ) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
-    """TODO"""
+    """TODO."""
     # Extract types vector for rf from config space and the bounds
     types = [0] * len(config_space.get_hyperparameters())
     bounds = [(np.nan, np.nan)] * len(types)
@@ -93,8 +93,7 @@ def get_rng(
     run_id: typing.Optional[int] = None,
     logger: typing.Optional[logging.Logger] = None,
 ) -> typing.Tuple[int, np.random.RandomState]:
-    """
-    Initialize random number generator and set run_id
+    """Initialize random number generator and set run_id.
 
     * If rng and run_id are None, initialize a new generator and sample a run_id
     * If rng is None and a run_id is given, use the run_id to initialize the rng
@@ -112,7 +111,6 @@ def get_rng(
     -------
     int
     np.random.RandomState
-
     """
     if logger is None:
         logger = logging.getLogger("GetRNG")

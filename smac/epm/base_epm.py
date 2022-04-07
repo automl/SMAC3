@@ -122,7 +122,6 @@ class AbstractEPM(object):
         -------
         self : AbstractEPM
         """
-
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != self.n_params + self.n_feats:
@@ -175,8 +174,7 @@ class AbstractEPM(object):
     def predict(
         self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
-        """
-        Predict means and variances for given X.
+        """Predict means and variances for given X.
 
         Parameters
         ----------
@@ -230,8 +228,7 @@ class AbstractEPM(object):
     def _predict(
         self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
     ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
-        """
-        Predict means and variances for given X.
+        """Predict means and variances for given X.
 
         Parameters
         ----------
@@ -267,7 +264,6 @@ class AbstractEPM(object):
         vars : np.ndarray  of shape = [n_samples, 1]
             Predictive variance
         """
-
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))
         if X.shape[1] != len(self.bounds):

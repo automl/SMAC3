@@ -15,7 +15,8 @@ def merge_foreign_data_from_file(
     in_runhistory_fn_list: typing.List[str],
     cs: ConfigurationSpace,
 ) -> typing.Tuple[Scenario, RunHistory]:
-    """Extend <scenario> and <runhistory> with runhistory data from another
+    """Extend <scenario> and <runhistory> with runhistory data from another.
+
     <in_scenario> assuming the same pcs, feature space, but different instances
 
     Parameters
@@ -36,7 +37,6 @@ def merge_foreign_data_from_file(
     scenario: Scenario
     runhistory: Runhistory
     """
-
     if not in_scenario_fn_list:
         raise ValueError(
             "To read warmstart data from previous runhistories,"
@@ -58,7 +58,8 @@ def merge_foreign_data(
     in_scenario_list: typing.List[Scenario],
     in_runhistory_list: typing.List[RunHistory],
 ) -> typing.Tuple[Scenario, RunHistory]:
-    """Extend <scenario> and <runhistory> with runhistory data from another
+    """Extend <scenario> and <runhistory> with runhistory data from another.
+
     <in_scenario> assuming the same pcs, feature space, but different instances
 
     Parameters

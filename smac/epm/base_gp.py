@@ -24,9 +24,7 @@ class BaseModel(AbstractEPM):
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
     ):
-        """
-        Abstract base class for all Gaussian process models.
-        """
+        """Abstract base class for all Gaussian process models."""
         super().__init__(
             configspace=configspace,
             types=types,
@@ -41,6 +39,7 @@ class BaseModel(AbstractEPM):
         self.gp = self._get_gp()
 
     def _get_gp(self) -> GaussianProcessRegressor:
+        """Returns the Gaussian process."""
         raise NotImplementedError()
 
     def _normalize_y(self, y: np.ndarray) -> np.ndarray:
@@ -68,7 +67,8 @@ class BaseModel(AbstractEPM):
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
         """Transform zeromean unit standard deviation data into the regular space.
 
-        This function should be used after a prediction with the Gaussian process which was trained on normalized data.
+        This function should be used after a prediction with the Gaussian process which was
+        trained on normalized data.
 
         Parameters
         ----------
@@ -92,6 +92,7 @@ class BaseModel(AbstractEPM):
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
     ) -> List[List[smac.epm.gp_base_prior.Prior]]:
+        """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
         to_visit = []
@@ -136,6 +137,7 @@ class BaseModel(AbstractEPM):
         return all_priors
 
     def _set_has_conditions(self) -> None:
+        """Sets `has_conditions` on `current_param`."""
         has_conditions = len(self.configspace.get_conditions()) > 0
         to_visit = []
         to_visit.append(self.kernel)
@@ -151,6 +153,7 @@ class BaseModel(AbstractEPM):
                 raise ValueError(current_param)
 
     def _impute_inactive(self, X: np.ndarray) -> np.ndarray:
+        """Imputes inactives."""
         X = X.copy()
         X[~np.isfinite(X)] = -1
         return X

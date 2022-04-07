@@ -81,7 +81,6 @@ def write(run_history: RunHistory, output_directory: str, logger: logging.Logger
 
     logger : logging.Logger
     """
-
     output_filename = os.path.join(output_directory, RUNHISTORY_FILEPATTERN)
 
     logger.debug("Saving runhistory to %s" % output_filename)

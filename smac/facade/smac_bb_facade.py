@@ -17,8 +17,7 @@ __license__ = "3-clause BSD"
 
 
 class SMAC4BB(SMAC4AC):
-    """
-    Facade to use SMAC for Black-Box optimization using a GP
+    """Facade to use SMAC for Black-Box optimization using a GP.
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -51,7 +50,6 @@ class SMAC4BB(SMAC4AC):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(self, model_type: str = "gp_mcmc", **kwargs: typing.Any):

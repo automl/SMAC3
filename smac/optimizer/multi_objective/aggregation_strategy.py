@@ -26,7 +26,6 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
         -------
             cost: float.
         """
-
         raise NotImplementedError
 
 
@@ -48,5 +47,4 @@ class MeanAggregationStrategy(AggregationStrategy):
         -------
             cost (float): Combined cost.
         """
-
         return np.mean(values, axis=1)

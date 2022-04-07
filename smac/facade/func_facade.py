@@ -26,10 +26,8 @@ def fmin_smac(
     tae_runner_kwargs: Optional[Dict[str, Any]] = None,
     **kwargs: Any,
 ) -> Tuple[Configuration, Union[np.ndarray, float], SMAC4HPO]:
-    """
-    Minimize a function func using the SMAC4HPO facade
-    (i.e., a modified version of SMAC).
-    This function is a convenience wrapper for the SMAC4HPO class.
+    """Minimize a function func using the SMAC4HPO facade (i.e., a modified version of SMAC). This
+    function is a convenience wrapper for the SMAC4HPO class.
 
     Parameters
     ----------
@@ -61,7 +59,6 @@ def fmin_smac(
     s : :class:`smac.facade.smac_hpo_facade.SMAC4HPO`
         SMAC objects which enables the user to get
         e.g., the trajectory and runhistory.
-
     """
     # create configuration space
     cs = ConfigurationSpace()

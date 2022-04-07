@@ -86,8 +86,7 @@ __license__ = "3-clause BSD"
 
 
 class SMAC4AC(object):
-    """
-    Facade to use SMAC default mode for Algorithm configuration
+    """Facade to use SMAC default mode for Algorithm configuration.
 
     Parameters
     ----------
@@ -186,7 +185,6 @@ class SMAC4AC(object):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(
@@ -673,14 +671,12 @@ class SMAC4AC(object):
             self.solver = smbo_class(**smbo_args)  # type: ignore[arg-type] # noqa F821
 
     def optimize(self) -> Configuration:
-        """
-        Optimizes the algorithm provided in scenario (given in constructor)
+        """Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
         -------
         incumbent : Configuration
             Best found configuration
-
         """
         incumbent = None
         try:
@@ -709,9 +705,8 @@ class SMAC4AC(object):
         n_jobs: int = -1,
         backend: str = "threading",
     ) -> RunHistory:
-        """
-        Create validator-object and run validation, using
-        scenario-information, runhistory from smbo and tae_runner from intensify
+        """Create validator-object and run validation, using scenario- information, runhistory from
+        smbo and tae_runner from intensify.
 
         Parameters
         ----------
@@ -737,45 +732,36 @@ class SMAC4AC(object):
         -------
         runhistory: RunHistory
             runhistory containing all specified runs
-
         """
         return self.solver.validate(config_mode, instance_mode, repetitions, use_epm, n_jobs, backend)
 
     def get_tae_runner(self) -> BaseRunner:
-        """
-        Returns target algorithm evaluator (TAE) object which can run the
-        target algorithm given a configuration
+        """Returns target algorithm evaluator (TAE) object which can run the target algorithm given
+        a configuration.
 
         Returns
         -------
         TAE: smac.tae.base.BaseRunner
-
         """
         return self.solver.tae_runner
 
     def get_runhistory(self) -> RunHistory:
-        """
-        Returns the runhistory (i.e., all evaluated configurations and
-         the results).
+        """Returns the runhistory (i.e., all evaluated configurations and the results).
 
         Returns
         -------
         Runhistory: smac.runhistory.runhistory.RunHistory
-
         """
         if not hasattr(self, "runhistory"):
             raise ValueError("SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory.")
         return self.runhistory
 
     def get_trajectory(self) -> List[TrajEntry]:
-        """
-        Returns the trajectory (i.e., all incumbent configurations over
-        time).
+        """Returns the trajectory (i.e., all incumbent configurations over time).
 
         Returns
         -------
         Trajectory : List of :class:`~smac.utils.io.traj_logging.TrajEntry`
-
         """
         if not hasattr(self, "trajectory"):
             raise ValueError("SMAC was not fitted yet. Call optimize() prior " "to accessing the runhistory.")

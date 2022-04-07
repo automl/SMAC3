@@ -23,12 +23,10 @@ __license__ = "3-clause BSD"
 
 
 class EPMChooser(object):
-    """
-    Interface to train the EPM and generate next configurations
+    """Interface to train the EPM and generate next configurations.
 
     Parameters
     ----------
-
     scenario: smac.scenario.scenario.Scenario
         Scenario object
     stats: smac.stats.stats.Stats
@@ -138,9 +136,8 @@ class EPMChooser(object):
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
     def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
-        """Choose next candidate solution with Bayesian optimization. The
-        suggested configurations depend on the argument ``acq_optimizer`` to
-        the ``SMBO`` class.
+        """Choose next candidate solution with Bayesian optimization. The suggested configurations
+        depend on the argument ``acq_optimizer`` to the ``SMBO`` class.
 
         Parameters
         ----------
@@ -153,7 +150,6 @@ class EPMChooser(object):
         -------
         Iterator
         """
-
         self.logger.debug("Search for next configuration")
         X, Y, X_configurations = self._collect_data_to_train_model()
 

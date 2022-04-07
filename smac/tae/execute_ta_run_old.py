@@ -15,10 +15,10 @@ __version__ = "0.0.1"
 
 
 class ExecuteTARunOld(SerialRunner):
+    """Executes a target algorithm run with a given configuration on a given instance and some
+    resource limitations.
 
-    """Executes a target algorithm run with a given configuration on a given
-    instance and some resource limitations. Uses the original SMAC/PILS format
-    (SMAC < v2.10)
+    Uses the original SMAC/PILS format (SMAC < v2.10).
     """
 
     def run(
@@ -30,9 +30,11 @@ class ExecuteTARunOld(SerialRunner):
         budget: typing.Optional[float] = 0.0,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on
-        instance <instance> with instance specifics <specifics> for at most
-        <cutoff> seconds and random seed <seed>
+        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        instance specifics.
+
+        <specifics> for at most.
+        <cutoff> seconds and random seed <seed>.
 
         Parameters
         ----------
@@ -49,6 +51,7 @@ class ExecuteTARunOld(SerialRunner):
                 Handled by the target algorithm internally. Currently ignored
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
+
         Returns
         -------
             status: enum of StatusType (int)
@@ -60,7 +63,6 @@ class ExecuteTARunOld(SerialRunner):
             additional_info: dict
                 all further additional run information
         """
-
         if instance is None:
             instance = "0"
         if cutoff is None:

@@ -35,7 +35,7 @@ __license__ = "3-clause BSD"
 
 
 class SMBO(object):
-    """Interface that contains the main Bayesian optimization loop
+    """Interface that contains the main Bayesian optimization loop.
 
     Parameters
     ----------
@@ -157,6 +157,7 @@ class SMBO(object):
 
     def start(self) -> None:
         """Starts the Bayesian Optimization loop.
+
         Detects whether the optimization is restored from a previous state.
         """
         self.stats.start_timing()
@@ -193,12 +194,12 @@ class SMBO(object):
             self.stats.print_stats()
 
     def run(self) -> Configuration:
-        """Runs the Bayesian optimization loop
+        """Runs the Bayesian optimization loop.
 
         Returns
-        ----------
+        -------
         incumbent: np.array(1, H)
-            The best found configuration
+            The best found configuration.
         """
         self.start()
 
@@ -353,8 +354,8 @@ class SMBO(object):
         n_jobs: int = -1,
         backend: str = "threading",
     ) -> RunHistory:
-        """Create validator-object and run validation, using
-        scenario-information, runhistory from smbo and tae_runner from intensify
+        """Create validator-object and run validation, using scenario- information, runhistory from
+        smbo and tae_runner from intensify.
 
         Parameters
         ----------
@@ -417,9 +418,8 @@ class SMBO(object):
         return new_rh
 
     def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
-        """Calculate time left for intensify from the time spent on
-        choosing challengers using the fraction of time intended for
-        intensification (which is specified in
+        """Calculate time left for intensify from the time spent on choosing challengers using the
+        fraction of time intended for intensification (which is specified in
         scenario.intensification_percentage).
 
         Parameters
@@ -448,13 +448,10 @@ class SMBO(object):
         return time_left
 
     def _incorporate_run_results(self, run_info: RunInfo, result: RunValue, time_left: float) -> None:
-        """
-        The SMBO submits a config-run-request via a RunInfo object.
-        When that config run is completed, a RunValue, which contains
-        all the relevant information obtained after running a job, is returned.
-        This method incorporates the status of that run into
-        the stats/runhistory objects so that other consumers
-        can advance with their task.
+        """The SMBO submits a config-run-request via a RunInfo object. When that config run is
+        completed, a RunValue, which contains all the relevant information obtained after running a
+        job, is returned. This method incorporates the status of that run into the stats/runhistory
+        objects so that other consumers can advance with their task.
 
         Additionally, it checks for a new incumbent via the intensifier process results,
         which also has the side effect of moving the intensifier to a new state
@@ -468,7 +465,6 @@ class SMBO(object):
         time_left: float
             time in [sec] available to perform intensify
         """
-
         # update SMAC stats
         self.stats.ta_time_used += float(result.time)
         self.stats.finished_ta_runs += 1
@@ -534,9 +530,7 @@ class SMBO(object):
         return
 
     def save(self) -> None:
-        """
-        Saves the current stats and runhistory.
-        """
+        """Saves the current stats and runhistory."""
         self.stats.save()
 
         output_dir = self.scenario.output_dir_for_this_run

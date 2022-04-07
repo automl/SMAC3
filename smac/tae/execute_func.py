@@ -114,8 +114,8 @@ class AbstractTAFunc(SerialRunner):
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self._ta> with configuration <config> for at
-        most <cutoff> seconds, allowing it to use at most <memory_limit> RAM.
+        """Runs target algorithm <self._ta> with configuration <config> for at most <cutoff>
+        seconds, allowing it to use at most <memory_limit> RAM.
 
         Whether the target algorithm is called with the <instance> and
         <seed> depends on the subclass implementing the actual call to
@@ -137,6 +137,7 @@ class AbstractTAFunc(SerialRunner):
                 Handled by the target algorithm internally
             instance_specific: str
                 Instance specific information (e.g., domain file or solution)
+
         Returns
         -------
             status: enum of StatusType (int)
@@ -148,7 +149,6 @@ class AbstractTAFunc(SerialRunner):
             additional_info: dict
                 all further additional run information
         """
-
         obj_kwargs = {}  # type: Dict[str, Union[int, str, float, None]]
         if self._accepts_seed:
             obj_kwargs["seed"] = seed
@@ -272,7 +272,6 @@ class AbstractTAFunc(SerialRunner):
 
 
 class ExecuteTAFuncDict(AbstractTAFunc):
-
     """Evaluate function for given configuration and resource limit.
 
     Passes the configuration as a dictionary to the target algorithm. The

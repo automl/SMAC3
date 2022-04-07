@@ -21,10 +21,10 @@ __license__ = "3-clause BSD"
 
 
 class InitialDesign:
-    """Base class for initial design strategies that evaluates multiple configurations
+    """Base class for initial design strategies that evaluates multiple configurations.
 
     Parameters
-    ---------
+    ----------
     cs: ConfigurationSpace
         configuration space object
     rng: np.random.RandomState
@@ -97,7 +97,7 @@ class InitialDesign:
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> typing.List[Configuration]:
-
+        """Selects the initial configurations."""
         if self.configs is None:
             self.configs = self._select_configurations()
 

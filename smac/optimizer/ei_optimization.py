@@ -134,7 +134,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         raise NotImplementedError()
 
     def _sort_configs_by_acq_value(self, configs: List[Configuration]) -> List[Tuple[float, Configuration]]:
-        """Sort the given configurations by acquisition value
+        """Sort the given configurations by acquisition value.
 
         Parameters
         ----------
@@ -145,7 +145,6 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         list: (acquisition value, Candidate solutions),
                 ordered by their acquisition function value
         """
-
         acq_values = self.acquisition_function(configs)
 
         # From here
@@ -160,31 +159,23 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
 
 
 class LocalSearch(AcquisitionFunctionMaximizer):
-
     """Implementation of SMAC's local search.
 
     Parameters
     ----------
     acquisition_function : ~smac.optimizer.acquisition.AbstractAcquisitionFunction
-
     config_space : ~smac.configspace.ConfigurationSpace
-
     rng : np.random.RandomState or int, optional
-
     max_steps: int
         Maximum number of iterations that the local search will perform
-
     n_steps_plateau_walk: int
         number of steps during a plateau walk before local search terminates
-
     vectorization_min_obtain : int
         Minimal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
         reduce the overhead of SMAC
-
     vectorization_max_obtain : int
         Maximal number of neighbors to obtain at once for each local search for vectorized calls. Can be tuned to
         reduce the overhead of SMAC
-
     """
 
     def __init__(
@@ -210,9 +201,8 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         num_points: int,
         additional_start_points: Optional[List[Tuple[float, Configuration]]] = None,
     ) -> List[Tuple[float, Configuration]]:
-        """Starts a local search from the given startpoint and quits
-        if either the max number of steps is reached or no neighbor
-        with an higher improvement was found.
+        """Starts a local search from the given startpoint and quits if either the max number of
+        steps is reached or no neighbor with an higher improvement was found.
 
         Parameters
         ----------
@@ -229,7 +219,6 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         -------
         List
         """
-
         init_points = self._get_initial_points(num_points, runhistory, additional_start_points)
         configs_acq = self._do_search(init_points)
 
@@ -486,7 +475,7 @@ class DiffOpt(AcquisitionFunctionMaximizer):
         num_points: int,
         _sorted: bool = False,
     ) -> List[Tuple[float, Configuration]]:
-        """DifferentialEvolutionSolver
+        """DifferentialEvolutionSolver.
 
         Parameters
         ----------
@@ -505,7 +494,6 @@ class DiffOpt(AcquisitionFunctionMaximizer):
             An iterable consistng of
             tuple(acqusition_value, :class:`smac.configspace.Configuration`).
         """
-
         from scipy.optimize._differentialevolution import DifferentialEvolutionSolver
 
         configs = []
@@ -561,7 +549,7 @@ class RandomSearch(AcquisitionFunctionMaximizer):
         num_points: int,
         _sorted: bool = False,
     ) -> List[Tuple[float, Configuration]]:
-        """Randomly sampled configurations
+        """Randomly sampled configurations.
 
         Parameters
         ----------
@@ -618,7 +606,6 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
 
     n_sls_iterations: int
         [Local Search] number of local search iterations
-
     """
 
     def __init__(
@@ -744,8 +731,7 @@ class FixedSet(AcquisitionFunctionMaximizer):
         config_space: ConfigurationSpace,
         rng: Union[bool, np.random.RandomState] = None,
     ):
-        """
-        Maximize the acquisition function over a finite list of configurations.
+        """Maximize the acquisition function over a finite list of configurations.
 
         Parameters
         ----------

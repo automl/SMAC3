@@ -13,11 +13,10 @@ __maintainer__ = "Marius Lindauer"
 
 
 class ExecuteTARunHydra(SerialRunner):
-    """
-    Returns min(cost, cost_portfolio)
+    """Returns min(cost, cost_portfolio)
 
     Parameters
-    ---------
+    ----------
     cost_oracle: typing.Mapping[str,float]
         cost of oracle per instance
     tae: typing.Type[SerialRunner]
@@ -52,8 +51,7 @@ class ExecuteTARunHydra(SerialRunner):
         budget: typing.Optional[float] = None,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """see ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring"""
-
+        """See ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring."""
         if cutoff is None:
             raise ValueError("Cutoff of type None is not supported")
 

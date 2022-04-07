@@ -27,8 +27,7 @@ __license__ = "3-clause BSD"
 
 
 class ROAR(SMAC4AC):
-    """
-    Facade to use ROAR mode
+    """Facade to use ROAR mode.
 
     Parameters
     ----------
@@ -82,7 +81,6 @@ class ROAR(SMAC4AC):
     See Also
     --------
     :class:`~smac.facade.smac_ac_facade.SMAC4AC`
-
     """
 
     def __init__(

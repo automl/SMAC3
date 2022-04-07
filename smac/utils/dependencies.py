@@ -15,6 +15,18 @@ RE_PATTERN = re.compile(r"^(?P<name>[\w\-]+)%s?(,%s)?$" % (SUBPATTERN % (1, 1), 
 
 
 def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
+    """Verifies packages. Calls `_verify_packages` as subroutine.
+
+    Parameters
+    ----------
+    packages : typing.Union[typing.List[str], str]
+        Packages to verify.
+
+    Raises
+    ------
+    ValueError
+        If requirements can not be read.
+    """
     if not packages:
         return
     if isinstance(packages, str):
@@ -38,6 +50,26 @@ def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
 
 
 def _verify_package(name: str, operation: str, version: str) -> None:
+    """Verifies a package.
+
+    Parameters
+    ----------
+    name : str
+        Name of the package.
+    operation : str
+        Operation of the package.
+    version : str
+        Version of the package.
+
+    Raises
+    ------
+    MissingPackageError
+        If package is missing.
+    NotImplementedError
+        If operation is not implemented.
+    IncorrectPackageVersionError
+        If package version is incorrect.
+    """
     try:
         distribution = pkg_resources.get_distribution(name)
         installed_version = Version(distribution.version)

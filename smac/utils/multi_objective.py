@@ -7,8 +7,8 @@ def normalize_costs(
     values: Union[np.ndarray, List, List[List], List[np.ndarray]],
     bounds: Optional[List[Tuple[float, float]]] = None,
 ) -> np.ndarray:
-    """Normalizes the costs to be between 0 and 1 if no bounds are given.
-    Otherwise, the costs are normalized according to the bounds.
+    """Normalizes the costs to be between 0 and 1 if no bounds are given. Otherwise, the costs are
+    normalized according to the bounds.
 
     Example
     -------

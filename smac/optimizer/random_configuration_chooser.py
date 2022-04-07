@@ -13,9 +13,8 @@ __version__ = "0.0.1"
 
 
 class RandomConfigurationChooser(ABC):
-    """
-    Abstract base of helper classes to configure interleaving of
-    random configurations in a list of challengers.
+    """Abstract base of helper classes to configure interleaving of random configurations in a list
+    of challengers.
     """
 
     def __init__(self, rng: Optional[np.random.RandomState] = None):
@@ -23,23 +22,23 @@ class RandomConfigurationChooser(ABC):
 
     @abstractmethod
     def next_smbo_iteration(self) -> None:
-        """Indicate beginning of next SMBO iteration"""
+        """Indicate beginning of next SMBO iteration."""
         pass
 
     @abstractmethod
     def check(self, iteration: int) -> bool:
-        """Check if the next configuration should be at random"""
+        """Check if the next configuration should be at random."""
         pass
 
 
 class ChooserNoCoolDown(RandomConfigurationChooser):
-    """Interleave a random configuration after a constant number of configurations found by Bayesian optimization.
+    """Interleave a random configuration after a constant number of configurations found by Bayesian
+    optimization.
 
     Parameters
     ----------
     modulus : float
         Every modulus-th configuration will be at random.
-
     """
 
     def __init__(self, rng: Optional[np.random.RandomState] = None, modulus: float = 2.0):
@@ -51,15 +50,17 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
         self.modulus = modulus
 
     def next_smbo_iteration(self) -> None:
+        """Does nothing."""
         pass
 
     def check(self, iteration: int) -> bool:
+        """Checks if the next configuration should be at random."""
         return iteration % self.modulus < 1
 
 
 class ChooserLinearCoolDown(RandomConfigurationChooser):
-    """
-    Interleave a random configuration, decreasing the fraction of random configurations over time.
+    """Interleave a random configuration, decreasing the fraction of random configurations over
+    time.
 
     Parameters
     ----------
@@ -91,11 +92,13 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
         self.last_iteration = 0
 
     def next_smbo_iteration(self) -> None:
+        """Change modulus."""
         self.modulus += self.modulus_increment
         self.modulus = min(self.modulus, self.end_modulus)
         self.last_iteration = 0
 
     def check(self, iteration: int) -> bool:
+        """Check if the next configuration should be interleaved based on modulus."""
         if (iteration - self.last_iteration) % self.modulus < 1:
             self.last_iteration = iteration
             return True
@@ -104,8 +107,7 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
 
 
 class ChooserProb(RandomConfigurationChooser):
-    """
-    Interleave a random configuration according to a given probability.
+    """Interleave a random configuration according to a given probability.
 
     Parameters
     ----------
@@ -120,9 +122,11 @@ class ChooserProb(RandomConfigurationChooser):
         self.prob = prob
 
     def next_smbo_iteration(self) -> None:
+        """Does nothing."""
         pass
 
     def check(self, iteration: int) -> bool:
+        """Check if the next configuration should be at random."""
         if self.rng.rand() < self.prob:
             return True
         else:
@@ -130,8 +134,8 @@ class ChooserProb(RandomConfigurationChooser):
 
 
 class ChooserProbCoolDown(RandomConfigurationChooser):
-    """
-    Interleave a random configuration according to a given probability which is decreased over time.
+    """Interleave a random configuration according to a given probability which is decreased over
+    time.
 
     Parameters
     ----------
@@ -149,9 +153,11 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
         self.cool_down_fac = cool_down_fac
 
     def next_smbo_iteration(self) -> None:
+        """Set the probability to the current value multiplied by the `cool_down_fac`."""
         self.prob *= self.cool_down_fac
 
     def check(self, iteration: int) -> bool:
+        """Check if the next configuration should be at random."""
         if self.rng.rand() < self.prob:
             return True
         else:
@@ -159,9 +165,8 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
 
 
 class ChooserCosineAnnealing(RandomConfigurationChooser):
-    """
-    Interleave a random configuration according to a given probability which is decreased according to a cosine
-    annealing schedule.
+    """Interleave a random configuration according to a given probability which is decreased
+    according to a cosine annealing schedule.
 
     Parameters
     ----------
@@ -191,6 +196,7 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
         self.prob = prob_max
 
     def next_smbo_iteration(self) -> None:
+        """Set `self.prob` and increases the iteration counter."""
         self.prob = self.prob_min + (
             0.5 * (self.prob_max - self.prob_min) * (1 + np.cos(self.iteration * np.pi / self.restart_iteration))
         )
@@ -201,6 +207,7 @@ class ChooserCosineAnnealing(RandomConfigurationChooser):
             self.logger.error("Perform restart in next iteration!")
 
     def check(self, iteration: int) -> bool:
+        """Check if a random configuration should be interleaved."""
         if self.rng.rand() < self.prob:
             self.logger.error("Random Config")
             return True

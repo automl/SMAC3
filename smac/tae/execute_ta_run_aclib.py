@@ -16,9 +16,10 @@ __version__ = "0.0.1"
 
 
 class ExecuteTARunAClib(SerialRunner):
+    """Executes a target algorithm run with a given configuration on a given instance and some
+    resource limitations.
 
-    """Executes a target algorithm run with a given configuration on a given
-    instance and some resource limitations. Uses the AClib 2.0 style
+    Uses the AClib 2.0 style
     """
 
     def run(
@@ -30,8 +31,11 @@ class ExecuteTARunAClib(SerialRunner):
         budget: typing.Optional[float] = None,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on
-        instance <instance> with instance specifics <specifics> for at most
+        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        instance specifics.
+
+        <specifics> for at most.
+
         <cutoff> seconds and random seed <seed>
 
         Parameters

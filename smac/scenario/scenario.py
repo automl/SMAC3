@@ -18,10 +18,8 @@ __version__ = "0.0.2"
 
 
 class Scenario(object):
-
-    """
-    Scenario contains the configuration of the optimization process and
-    constructs a scenario object from a file or dictionary.
+    """Scenario contains the configuration of the optimization process and constructs a scenario
+    object from a file or dictionary.
 
     All arguments set in the Scenario are set as attributes.
 
@@ -98,8 +96,7 @@ class Scenario(object):
                     self.logger.debug("%s = %s" % (arg_name, arg_value))
 
     def _transform_arguments(self) -> None:
-        """TODO"""
-
+        """TODO."""
         self.n_features = len(self.feature_dict)
         self.feature_array = None
 

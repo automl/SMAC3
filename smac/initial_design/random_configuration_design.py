@@ -19,7 +19,6 @@ class RandomConfigurations(InitialDesign):
         config: Configuration()
             Initial incumbent configuration
         """
-
         configs = self.cs.sample_configuration(size=self.init_budget)
         if self.init_budget == 1:
             configs = [configs]

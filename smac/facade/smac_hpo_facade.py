@@ -12,8 +12,7 @@ __license__ = "3-clause BSD"
 
 
 class SMAC4HPO(SMAC4AC):
-    """
-    Facade to use SMAC for hyperparameter optimization
+    """Facade to use SMAC for hyperparameter optimization.
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -31,7 +30,6 @@ class SMAC4HPO(SMAC4AC):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(self, **kwargs: typing.Any):

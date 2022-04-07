@@ -16,8 +16,7 @@ __license__ = "3-clause BSD"
 
 
 class ParallelScheduler(AbstractRacer):
-    """Common Racer class for Intensifiers that will schedule configurations on
-    a parallel fashion.
+    """Common Racer class for Intensifiers that will schedule configurations on a parallel fashion.
 
     This class instantiates intensifier objects on a need basis, that is, to
     prevent workers from being idle. This intensifier objects will give configurations
@@ -120,9 +119,8 @@ class ParallelScheduler(AbstractRacer):
         repeat_configs: bool = False,
         num_workers: int = 1,
     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        This procedure decides from which instance to pick a config,
-        in order to determine the next run.
+        """This procedure decides from which instance to pick a config, in order to determine the
+        next run.
 
         To prevent having idle workers, this procedure creates new instances
         up to the maximum number of workers available.
@@ -154,7 +152,6 @@ class ParallelScheduler(AbstractRacer):
             An object that encapsulates the minimum information to
             evaluate a configuration
         """
-
         if num_workers <= 1 and self.print_worker_warning:
             warnings.warn(
                 f"{self.__class__.__name__} is executed with {num_workers} workers only. "
@@ -219,9 +216,8 @@ class ParallelScheduler(AbstractRacer):
         result: RunValue,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution.
 
         To do so, this procedures redirects the result argument, to the
         respective intensifier object that generated the original config.
@@ -255,7 +251,6 @@ class ParallelScheduler(AbstractRacer):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-
         return self.intensifier_instances[run_info.source_id].process_results(
             run_info=run_info,
             incumbent=incumbent,
@@ -266,10 +261,8 @@ class ParallelScheduler(AbstractRacer):
         )
 
     def _add_new_instance(self, num_workers: int) -> bool:
-        """
-        Decides if it is possible to add a new intensifier instance,
-        and adds it.
-        If a new intensifier instance is added, True is returned, else False.
+        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
+        intensifier instance is added, True is returned, else False.
 
         Parameters
         ----------
@@ -284,10 +277,8 @@ class ParallelScheduler(AbstractRacer):
         raise NotImplementedError()
 
     def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
-        """
-        Given a intensifier, returns how advance it is.
-        This metric will be used to determine what priority to
-        assign to the intensifier
+        """Given a intensifier, returns how advance it is. This metric will be used to determine
+        what priority to assign to the intensifier.
 
         Parameters
         ----------
@@ -308,11 +299,9 @@ class ParallelScheduler(AbstractRacer):
         raise NotImplementedError()
 
     def _sort_instances_by_stage(self, instances: typing.Dict[int, AbstractRacer]) -> typing.List[int]:
-        """
-        This procedure dictates what SH to prioritize in
-        launching jobs. It prioritizes resource allocation to
-        SH instances that have higher stages. In case of tie,
-        we prioritize the SH instance with more launched configs
+        """This procedure dictates what SH to prioritize in launching jobs. It prioritizes resource
+        allocation to SH instances that have higher stages. In case of tie, we prioritize the SH
+        instance with more launched configs.
 
         Parameters
         ----------
@@ -323,9 +312,7 @@ class ParallelScheduler(AbstractRacer):
         -------
         List:
             The order in which to query for new jobs
-
         """
-
         # This function might be called when no intensifier instances
         # exist (first iteration), so we return an empty list in that case
         if len(instances) == 0:

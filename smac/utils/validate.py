@@ -34,9 +34,8 @@ def _unbound_tae_starter(
     *args: typing.Any,
     **kwargs: typing.Any,
 ) -> RunValue:
-    """
-    Unbound function to be used by joblibs Parallel, since directly passing the
-    TAE results in pickling-problems.
+    """Unbound function to be used by joblibs Parallel, since directly passing the TAE results in
+    pickling-problems.
 
     Parameters
     ----------
@@ -77,8 +76,7 @@ _Run = namedtuple("_Run", "config inst seed inst_specs")
 
 
 class Validator(object):
-    """
-    Validator for the output of SMAC-scenarios.
+    """Validator for the output of SMAC-scenarios.
 
     Evaluates specified configurations on specified instances.
 
@@ -119,7 +117,7 @@ class Validator(object):
         output_fn: typing.Optional[str],
         backup_fn: typing.Optional[str] = None,
     ) -> None:
-        """Helper to save results to file
+        """Helper to save results to file.
 
         Parameters
         ----------
@@ -161,9 +159,8 @@ class Validator(object):
         tae: BaseRunner = None,
         output_fn: typing.Optional[str] = None,
     ) -> RunHistory:
-        """
-        Validate configs on instances and save result in runhistory.
-        If a runhistory is provided as input it is important that you run it on the same/comparable hardware.
+        """Validate configs on instances and save result in runhistory. If a runhistory is provided
+        as input it is important that you run it on the same/comparable hardware.
 
         side effect: if output is specified, saves runhistory to specified
         output directory.
@@ -263,8 +260,7 @@ class Validator(object):
         backend: str,
         runhistory: typing.Optional[RunHistory] = None,
     ) -> typing.List[RunValue]:
-        """
-        Validate runs with joblibs Parallel-interface
+        """Validate runs with joblibs Parallel-interface.
 
         Parameters
         ----------
@@ -313,8 +309,7 @@ class Validator(object):
         output_fn: typing.Optional[str] = None,
         reuse_epm: bool = True,
     ) -> RunHistory:
-        """
-        Use EPM to predict costs/runtimes for unknown config/inst-pairs.
+        """Use EPM to predict costs/runtimes for unknown config/inst-pairs.
 
         side effect: if output is specified, saves runhistory to specified
         output directory.
@@ -441,8 +436,8 @@ class Validator(object):
         repetitions: int = 1,
         runhistory: RunHistory = None,
     ) -> typing.Tuple[typing.List[_Run], RunHistory]:
-        """Generate list of SMAC-TAE runs to be executed. This means
-        combinations of configs with all instances on a certain number of seeds.
+        """Generate list of SMAC-TAE runs to be executed. This means combinations of configs with
+        all instances on a certain number of seeds.
 
         side effect: Adds runs that don't need to be reevaluated to self.rh!
 
@@ -563,9 +558,8 @@ class Validator(object):
         insts: typing.Sequence[typing.Optional[str]],
         runhistory: typing.Optional[RunHistory],
     ) -> typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]:
-        """
-        Processes runhistory from self._get_runs by extracting already evaluated
-        (relevant) config-inst-seed tuples.
+        """Processes runhistory from self._get_runs by extracting already evaluated (relevant)
+        config-inst-seed tuples.
 
         Parameters
         ----------
@@ -619,8 +613,7 @@ class Validator(object):
             return rval
 
     def _get_configs(self, mode: str) -> typing.List[str]:
-        """
-        Return desired configs
+        """Return desired configs.
 
         Parameters
         ----------
@@ -635,7 +628,6 @@ class Validator(object):
         configs: list<Configuration>
             list with desired configurations
         """
-
         # Get trajectory and make sure it's not None to please mypy
         traj = self.traj
         assert traj is not None  # please mypy
@@ -673,8 +665,7 @@ class Validator(object):
         return configs
 
     def _get_instances(self, mode: str) -> typing.List[str]:
-        """
-        Get desired instances
+        """Get desired instances.
 
         Parameters
         ----------

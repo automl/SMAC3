@@ -35,13 +35,13 @@ __version__ = "0.0.1"
 
 
 class SMACCLI(object):
-    """Main class of SMAC"""
+    """Main class of SMAC."""
 
     def __init__(self) -> None:
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
     def main_cli(self, commandline_arguments: typing.Optional[typing.List[str]] = None) -> None:
-        """Main function of SMAC for CLI interface"""
+        """Main function of SMAC for CLI interface."""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
         cmd_reader = CMDReader()
@@ -211,9 +211,12 @@ class SMACCLI(object):
         traj_list_aclib: typing.List,
         traj_list_old: typing.List,
     ) -> Configuration:
-        """Finish processing files for state-restoration. Trajectory
-        is read in, but needs to be written to new output-folder. Therefore, the
-        output-dir is created. This needs to be considered in the SMAC-facade."""
+        """Finish processing files for state-restoration.
+
+        Trajectory is read in, but needs to be written to new output-
+        folder. Therefore, the output-dir is created. This needs to be
+        considered in the SMAC-facade.
+        """
         # write trajectory-list
         traj_path_aclib = os.path.join(scen.output_dir, "traj_aclib2.json")  # type: ignore[attr-defined] # noqa F821
         traj_path_old = os.path.join(scen.output_dir, "traj_old.csv")  # type: ignore[attr-defined] # noqa F821
@@ -230,9 +233,6 @@ class SMACCLI(object):
 
 
 def cmd_line_call() -> None:
-    """
-    Entry point to be installable to /user/bin
-    :return:
-    """
+    """Entry point to be installable to /user/bin."""
     smac = SMACCLI()
     smac.main_cli()

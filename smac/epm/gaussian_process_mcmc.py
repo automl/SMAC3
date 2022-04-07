@@ -29,8 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 class GaussianProcessMCMC(BaseModel):
-    """
-    Gaussian process model.
+    """Gaussian process model.
 
     The GP hyperparameters are integrated out by MCMC. If you use this class
     make sure that you also use an integrated acquisition function to
@@ -122,9 +121,8 @@ class GaussianProcessMCMC(BaseModel):
         self._n_ll_evals = 0
 
     def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcessMCMC":
-        """
-        Performs MCMC sampling to sample hyperparameter configurations from the
-        likelihood and trains for each sample a GP on X and y
+        """Performs MCMC sampling to sample hyperparameter configurations from the likelihood and
+        trains for each sample a GP on X and y.
 
         Parameters
         ----------
@@ -296,9 +294,8 @@ class GaussianProcessMCMC(BaseModel):
         )
 
     def _ll(self, theta: np.ndarray) -> float:
-        """
-        Returns the marginal log likelihood (+ the prior) for
-        a hyperparameter configuration theta.
+        """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
+        theta.
 
         Parameters
         ----------
@@ -307,7 +304,7 @@ class GaussianProcessMCMC(BaseModel):
             on a log scale.
 
         Returns
-        ----------
+        -------
         float
             lnlikelihood + prior
         """
@@ -336,9 +333,8 @@ class GaussianProcessMCMC(BaseModel):
             return lml
 
     def _ll_w_grad(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
-        """
-        Returns the marginal log likelihood (+ the prior) for
-        a hyperparameter configuration theta.
+        """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
+        theta.
 
         Parameters
         ----------
@@ -347,7 +343,7 @@ class GaussianProcessMCMC(BaseModel):
             on a log scale.
 
         Returns
-        ----------
+        -------
         float
             lnlikelihood + prior
         """
@@ -404,12 +400,11 @@ class GaussianProcessMCMC(BaseModel):
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns
-        ----------
+        -------
         np.array(N,)
             predictive mean
         np.array(N,)
             predictive variance
-
         """
         if not self.is_trained:
             raise Exception("Model has to be trained first!")

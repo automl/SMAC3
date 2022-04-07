@@ -15,8 +15,7 @@ __license__ = "3-clause BSD"
 
 
 class SimpleIntensifier(AbstractRacer):
-    """Performs the traditional Bayesian Optimization loop, without
-        instance/seed intensification
+    """Performs the traditional Bayesian Optimization loop, without instance/seed intensification.
 
     Parameters
     ----------
@@ -81,10 +80,8 @@ class SimpleIntensifier(AbstractRacer):
         result: RunValue,
         log_traj: bool = True,
     ) -> typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
@@ -140,10 +137,9 @@ class SimpleIntensifier(AbstractRacer):
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        Selects which challenger to be used. As in a traditional BO loop,
-        we sample from the EPM, which is the next configuration based on
-        the acquisition function. The input data is read from the runhistory.
+        """Selects which challenger to be used. As in a traditional BO loop, we sample from the EPM,
+        which is the next configuration based on the acquisition function. The input data is read
+        from the runhistory.
 
         Parameters
         ----------

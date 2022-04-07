@@ -253,9 +253,7 @@ class PSMAC(object):
         return results, config_cost_per_inst
 
     def validate_incs(self, incs: List[Configuration]):
-        """
-        Validation
-        """
+        """Validation of the incumbents."""
         solver = SMAC4AC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
         self.logger.info("*" * 120)
         self.logger.info("Validating")

@@ -21,7 +21,7 @@ __license__ = "3-clause BSD"
 
 
 class _SuccessiveHalving(AbstractRacer):
-    """Races multiple challengers against an incumbent using Successive Halving method
+    """Races multiple challengers against an incumbent using Successive Halving method.
 
     This class contains the logic to implement:
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -259,7 +259,7 @@ class _SuccessiveHalving(AbstractRacer):
         _all_budgets: Optional[np.ndarray] = None,
         _n_configs_in_stage: Optional[np.ndarray] = None,
     ) -> None:
-        """Initialize Successive Halving parameters
+        """Initialize Successive Halving parameters.
 
         Parameters
         ----------
@@ -276,7 +276,6 @@ class _SuccessiveHalving(AbstractRacer):
         _n_configs_in_stage: Optional[np.ndarray] = None
             Used internally when HB uses SH as a subrouting
         """
-
         if eta <= 1:
             raise ValueError("eta must be greater than 1")
         self.eta = eta
@@ -353,10 +352,8 @@ class _SuccessiveHalving(AbstractRacer):
         result: RunValue,
         log_traj: bool = True,
     ) -> Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
@@ -382,7 +379,6 @@ class _SuccessiveHalving(AbstractRacer):
         inc_perf: float
             empirical performance of incumbent configuration
         """
-
         # Mark the fact that we processed this configuration
         self.run_tracker[(run_info.config, run_info.instance, run_info.seed, run_info.budget)] = True
 
@@ -491,10 +487,10 @@ class _SuccessiveHalving(AbstractRacer):
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
-        """
-        Selects which challenger to use based on the iteration stage and set the iteration parameters.
-        First iteration will choose configurations from the ``chooser`` or input challengers,
-        while the later iterations pick top configurations from the previously selected challengers in that iteration
+        """Selects which challenger to use based on the iteration stage and set the iteration
+        parameters. First iteration will choose configurations from the ``chooser`` or input
+        challengers, while the later iterations pick top configurations from the previously selected
+        challengers in that iteration.
 
         Parameters
         ----------
@@ -695,17 +691,15 @@ class _SuccessiveHalving(AbstractRacer):
         )
 
     def _update_stage(self, run_history: RunHistory) -> None:
-        """
-        Update tracking information for a new stage/iteration and update statistics.
-        This method is called to initialize stage variables and after all configurations
-        of a successive halving stage are completed.
+        """Update tracking information for a new stage/iteration and update statistics. This method
+        is called to initialize stage variables and after all configurations of a successive halving
+        stage are completed.
 
         Parameters
         ----------
          run_history : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
-
         if not hasattr(self, "stage"):
             # initialize all relevant variables for first run
             # (this initialization is not a part of init because hyperband uses the same init method and has a )
@@ -798,9 +792,8 @@ class _SuccessiveHalving(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> Optional[Configuration]:
-        """
-        Compares the challenger with current incumbent and returns the best configuration,
-        based on the given incumbent selection design.
+        """Compares the challenger with current incumbent and returns the best configuration, based
+        on the given incumbent selection design.
 
         Parameters
         ----------
@@ -818,7 +811,6 @@ class _SuccessiveHalving(AbstractRacer):
         Optional[Configuration]
             incumbent configuration
         """
-
         if self.instance_as_budget:
             new_incumbent = super()._compare_configs(incumbent, challenger, run_history, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
@@ -941,8 +933,7 @@ class _SuccessiveHalving(AbstractRacer):
         run_history: RunHistory,
         log_traj: bool = True,
     ) -> Optional[Configuration]:
-        """
-        compares challenger with current incumbent on any budget
+        """Compares challenger with current incumbent on any budget.
 
         Parameters
         ----------
@@ -1006,8 +997,7 @@ class _SuccessiveHalving(AbstractRacer):
         return new_incumbent
 
     def _top_k(self, configs: List[Configuration], run_history: RunHistory, k: int) -> List[Configuration]:
-        """
-        Selects the top 'k' configurations from the given list based on their performance.
+        """Selects the top 'k' configurations from the given list based on their performance.
 
         This retrieves the performance for each configuration from the runhistory and checks
         that the highest budget they've been evaluated on is the same for each of the configurations.
@@ -1054,9 +1044,8 @@ class _SuccessiveHalving(AbstractRacer):
         run_history: RunHistory,
         activate_configuration_being_intensified: Optional[Configuration],
     ) -> bool:
-        """
-        When running SH, M configs might require N instances. Before moving to the
-        next stage, we need to make sure that tasks (each of the MxN jobs) are launched.
+        """When running SH, M configs might require N instances. Before moving to the next stage, we
+        need to make sure that tasks (each of the MxN jobs) are launched.
 
         This function returns a true if any M configs are pending or if N instance/seed are
         still remaining.
@@ -1073,7 +1062,6 @@ class _SuccessiveHalving(AbstractRacer):
             bool: whether a instance/pair of any of the M configurations for the current
                 stage are pending
         """
-
         # 1: First we count the number of configurations that have been launched
         # We only submit a new configuration M if all instance-seed pairs of (M - 1)
         # have been proposed
@@ -1135,7 +1123,7 @@ class _SuccessiveHalving(AbstractRacer):
 
 
 class SuccessiveHalving(ParallelScheduler):
-    """Races multiple challengers against an incumbent using Successive Halving method
+    """Races multiple challengers against an incumbent using Successive Halving method.
 
     Implementation following the description in
     "BOHB: Robust and Efficient Hyperparameter Optimization at Scale" (Falkner et al. 2018)
@@ -1264,10 +1252,8 @@ class SuccessiveHalving(ParallelScheduler):
         self.num_initial_challengers = num_initial_challengers
 
     def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
-        """
-        Given a intensifier, returns how advance it is.
-        This metric will be used to determine what priority to
-        assign to the intensifier
+        """Given a intensifier, returns how advance it is. This metric will be used to determine
+        what priority to assign to the intensifier.
 
         Parameters
         ----------
@@ -1299,10 +1285,8 @@ class SuccessiveHalving(ParallelScheduler):
         return stage, len(intensifier.run_tracker)
 
     def _add_new_instance(self, num_workers: int) -> bool:
-        """
-        Decides if it is possible to add a new intensifier instance,
-        and adds it.
-        If a new intensifier instance is added, True is returned, else False.
+        """Decides if it is possible to add a new intensifier instance, and adds it. If a new
+        intensifier instance is added, True is returned, else False.
 
         Parameters
         ----------

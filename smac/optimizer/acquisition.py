@@ -18,7 +18,7 @@ __license__ = "3-clause BSD"
 
 
 class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
-    """Abstract base class for acquisition function
+    """Abstract base class for acquisition function.
 
     Parameters
     ----------
@@ -60,7 +60,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
                 setattr(self, key, kwargs[key])
 
     def __call__(self, configurations: List[Configuration]) -> np.ndarray:
-        """Computes the acquisition value for a given X
+        """Computes the acquisition value for a given X.
 
         Parameters
         ----------
@@ -85,8 +85,8 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Computes the acquisition value for a given point X. This function has
-        to be overwritten in a derived class.
+        """Computes the acquisition value for a given point X. This function has to be overwritten
+        in a derived class.
 
         Parameters
         ----------
@@ -105,7 +105,6 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
 
 class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
-
     r"""Marginalize over Model hyperparameters to compute the integrated acquisition function.
 
     See "Practical Bayesian Optimization of Machine Learning Algorithms" by Jasper Snoek et al.
@@ -114,7 +113,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     """
 
     def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
-        """Constructor
+        """Constructor.
 
         Parameters
         ----------
@@ -124,7 +123,6 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         kwargs
             Additional keyword arguments
         """
-
         super().__init__(model)
         self.long_name = "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
@@ -177,7 +175,6 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
 
 class EI(AbstractAcquisitionFunction):
-
     r"""Computes for a given x the expected improvement as
     acquisition value.
 
@@ -186,7 +183,7 @@ class EI(AbstractAcquisitionFunction):
     """
 
     def __init__(self, model: AbstractEPM, par: float = 0.0):
-        """Constructor
+        """Constructor.
 
         Parameters
         ----------
@@ -197,7 +194,6 @@ class EI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-
         super(EI, self).__init__(model)
         self.long_name = "Expected Improvement"
         self.par = par
@@ -514,18 +510,24 @@ class TS(AbstractAcquisitionFunction):
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
 
-        Thompson Sampling can only be used together with smac.optimizer.ei_optimization.RandomSearch, please do not
-        use smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS acquisition function!!!
+        Warning
+        -------
+        Thompson Sampling can only be used together with
+        smac.optimizer.ei_optimization.RandomSearch, please do not use
+        smac.optimizer.ei_optimization.LocalAndSortedRandomSearch to optimize TS
+        acquisition function!
 
         :math:`TS(X) ~ \mathcal{N}(\mu(\mathbf{X}),\sigma(\mathbf{X}))'
         Returns -TS(X) as the acquisition_function optimizer maximizes the acquisition value.
+
         Parameters
         ----------
         model : AbstractEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
-            TS does not require par here, we only wants to make it consistent with other acquisition functions
+            TS does not require par here, we only wants to make it consistent with
+            other acquisition functions.
         """
         super(TS, self).__init__(model)
         self.long_name = "Thompson Sampling"
@@ -534,12 +536,15 @@ class TS(AbstractAcquisitionFunction):
         self._required_updates = ("model",)
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
-        """Sample a new value from a gaussian distribution whose mean and covariance values are given by model
+        """Sample a new value from a gaussian distribution whose mean and covariance values
+        are given by model.
+
         Parameters
         ----------
         X: np.ndarray(N, D)
            Points to be evaluated where we could sample a value. N is the number of points and D the dimension
            for the points
+
         Returns
         -------
         np.ndarray(N,1)

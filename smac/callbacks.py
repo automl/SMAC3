@@ -32,8 +32,8 @@ How to add a new callback
 class IncorporateRunResultCallback:
     """Callback to react on a new run result.
 
-    Called after the finished run is added to the runhistory.
-    Optionally return `False` to (gracefully) stop the optimization.
+    Called after the finished run is added to the runhistory. Optionally
+    return `False` to (gracefully) stop the optimization.
     """
 
     def __call__(
@@ -43,4 +43,5 @@ class IncorporateRunResultCallback:
         result: RunValue,
         time_left: float,
     ) -> Optional[bool]:
+        """Calls the callback."""
         pass

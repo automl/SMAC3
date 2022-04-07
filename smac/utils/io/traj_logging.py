@@ -112,7 +112,6 @@ class TrajLogger(object):
         budget: float
             budget used in intensifier to limit TA (default: 0)
         """
-
         perf = format_array(train_perf)
 
         finished_ta_runs = self.stats.finished_ta_runs
@@ -157,7 +156,6 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-
         conf = []
         for p in incumbent:
             if not incumbent.get(p) is None:
@@ -200,7 +198,6 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-
         conf = []
         for p in incumbent:
             if not incumbent.get(p) is None:
@@ -286,7 +283,6 @@ class TrajLogger(object):
             "incumbent": Configuration
             }
         """
-
         trajectory = []
         with open(fn) as fp:
             for line in fp:
@@ -322,7 +318,6 @@ class TrajLogger(object):
             "incumbent": Configuration
             }
         """
-
         trajectory = []
         with open(fn) as fp:
             for line in fp:

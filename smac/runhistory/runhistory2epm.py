@@ -165,7 +165,7 @@ class AbstractRunHistory2EPM(object):
         return_time_as_y: bool = False,
         store_statistics: bool = False,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
-        """Builds x,y matrixes from selected runs from runhistory
+        """Builds x,y matrixes from selected runs from runhistory.
 
         Parameters
         ----------
@@ -241,9 +241,8 @@ class AbstractRunHistory2EPM(object):
         runhistory: RunHistory,
         budget_subset: typing.Optional[typing.List] = None,
     ) -> np.ndarray:
-        """Returns vector representation of only the configurations.
-
-        Instance features are not appended and cost values are not taken into account.
+        """Returns vector representation of only the configurations. Instance features are not
+        appended and cost values are not taken into account.
 
         Parameters
         ----------
@@ -269,8 +268,8 @@ class AbstractRunHistory2EPM(object):
         runhistory: RunHistory,
         budget_subset: typing.Optional[typing.List] = None,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
-        """Returns vector representation of runhistory; if imputation is
-        disabled, censored (TIMEOUT with time < cutoff) will be skipped
+        """Returns vector representation of runhistory; if imputation is disabled, censored (TIMEOUT
+        with time < cutoff) will be skipped.
 
         Parameters
         ----------
@@ -383,8 +382,9 @@ class AbstractRunHistory2EPM(object):
         raise NotImplementedError
 
     def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        """Simple interface to obtain all data in runhistory in X, y format
-        Note: This function should not be used as it does not consider all available StatusTypes
+        """
+        Simple interface to obtain all data in runhistory in X, y format.
+        Note: This function should not be used as it does not consider all available StatusTypes.
 
         Parameters
         ----------
@@ -420,7 +420,7 @@ class AbstractRunHistory2EPM(object):
 
 
 class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
-    """TODO"""
+    """TODO."""
 
     def _build_matrix(
         self,
@@ -429,7 +429,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         return_time_as_y: bool = False,
         store_statistics: bool = False,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
-        """ "Builds X,y matrixes from selected runs from runhistory
+        """Builds X,y matrixes from selected runs from runhistory.
 
         Parameters
         ----------
@@ -447,7 +447,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         X: np.ndarray
         Y: np.ndarray
         """
-
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
         n_cols = self.num_params
@@ -494,9 +493,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Returns the input values.
+        """Transform function response values. Returns the input values.
 
         Parameters
         ----------
@@ -511,12 +508,11 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
 
 class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transforms the response values by using a log transformation.
+        """Transform function response values. Transforms the response values by using a log
+        transformation.
 
         Parameters
         ----------
@@ -527,7 +523,6 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         # ensure that minimal value is larger than 0
         if np.any(values <= 0):
             self.logger.warning(
@@ -540,12 +535,11 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transforms the response values by linearly scaling them between zero and one.
+        """Transform function response values. Transforms the response values by linearly scaling
+        them between zero and one.
 
         Parameters
         ----------
@@ -556,7 +550,6 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
@@ -568,7 +561,7 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """TODO."""
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
         super().__init__(**kwargs)
@@ -577,9 +570,8 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
                 raise NotImplementedError("Handling more than one instance is not supported for inverse scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transform the response values by linearly scaling them between zero and one and then using inverse scaling.
+        """Transform function response values. Transform the response values by linearly scaling
+        them between zero and one and then using inverse scaling.
 
         Parameters
         ----------
@@ -590,7 +582,6 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         -------
         np.ndarray
         """
-
         min_y = self.min_y - (self.perc - self.min_y)  # Subtract the difference between the percentile and the minimum
         min_y -= constants.VERY_SMALL_NUMBER  # Minimal value to avoid numerical issues in the log scaling below
         # linear scaling
@@ -604,7 +595,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """TODO."""
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
         super().__init__(**kwargs)
@@ -613,9 +604,8 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
                 raise NotImplementedError("Handling more than one instance is not supported for sqrt scaled cost.")
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
-
-        Transform the response values by linearly scaling them between zero and one and then using the square root.
+        """Transform function response values. Transform the response values by linearly scaling
+        them between zero and one and then using the square root.
 
         Parameters
         ----------
@@ -639,13 +629,13 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
-    """TODO"""
+    """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
         """Transform function response values.
 
-        Transform the response values by linearly scaling them between zero and one and then using the log
-        transformation.
+        Transform the response values by linearly scaling them between zero and one and
+        then using the log transformation.
 
         Parameters
         ----------
@@ -670,7 +660,7 @@ class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
 
 
 class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
-    """TODO"""
+    """TODO."""
 
     def _build_matrix(
         self,
@@ -679,8 +669,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         return_time_as_y: bool = False,
         store_statistics: bool = False,
     ) -> typing.Tuple[np.ndarray, np.ndarray]:
-        """TODO"""
-
+        """TODO."""
         if return_time_as_y:
             raise NotImplementedError()
         if store_statistics:
@@ -722,9 +711,10 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         return X, y_transformed
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values.
+        """Transform function response values. Transform the runtimes by a log transformation
+        (log(1.
 
-        Transform the runtimes by a log transformation (log(1 + runtime).
+        + runtime).
 
         Parameters
         ----------
@@ -735,6 +725,5 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         -------
         np.ndarray
         """
-
         values[:, 1] = np.log(1 + values[:, 1])
         return values

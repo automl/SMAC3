@@ -48,7 +48,7 @@ class DaskParallelRunner(BaseRunner):
 
 
     Parameters
-    ---------
+    ----------
     single_worker: BaseRunner
         A runner to run in a distributed fashion
     n_workers: int
@@ -75,7 +75,6 @@ class DaskParallelRunner(BaseRunner):
     n_workers
     futures
     client
-
     """
 
     def __init__(
@@ -128,9 +127,8 @@ class DaskParallelRunner(BaseRunner):
         self.scheduler_info = self.client._get_scheduler_info()
 
     def submit_run(self, run_info: RunInfo) -> None:
-        """This function submits a configuration
-        embedded in a run_info object, and uses one of the workers
-        to produce a result locally to each worker.
+        """This function submits a configuration embedded in a run_info object, and uses one of the
+        workers to produce a result locally to each worker.
 
         The execution of a configuration follows this procedure:
         1.  SMBO/intensifier generates a run_info
@@ -147,7 +145,6 @@ class DaskParallelRunner(BaseRunner):
         ----------
         run_info: RunInfo
             An object containing the configuration and the necessary data to run it
-
         """
         # Check for resources or block till one is available
         if not self._workers_available():
@@ -171,11 +168,10 @@ class DaskParallelRunner(BaseRunner):
         self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
     def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
-        """This method returns any finished configuration, and returns a list with
-        the results of exercising the configurations. This class keeps populating results
-        to self.results until a call to get_finished runs is done. In this case, the
-        self.results list is emptied and all RunValues produced by running run() are
-        returned.
+        """This method returns any finished configuration, and returns a list with the results of
+        exercising the configurations. This class keeps populating results to self.results until a
+        call to get_finished runs is done. In this case, the self.results list is emptied and all
+        RunValues produced by running run() are returned.
 
         Returns
         -------
@@ -183,7 +179,6 @@ class DaskParallelRunner(BaseRunner):
                 the results of executing a run_info
             a submitted configuration
         """
-
         # Proactively see if more configs have finished
         self._extract_completed_runs_from_futures()
 
@@ -193,15 +188,11 @@ class DaskParallelRunner(BaseRunner):
         return results_list
 
     def _extract_completed_runs_from_futures(self) -> None:
-        """
-        A run is over, when a future has done() equal true.
-        This function collects the completed futures and move
-        them from self.futures to self.results.
+        """A run is over, when a future has done() equal true. This function collects the completed
+        futures and move them from self.futures to self.results.
 
-        We make sure futures never exceed the capacity of
-        the scheduler
+        We make sure futures never exceed the capacity of the scheduler
         """
-
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
             warnings.warn(
@@ -220,16 +211,17 @@ class DaskParallelRunner(BaseRunner):
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
         This class waits until 1 run completes
         """
         if self.futures:
             wait(self.futures, return_when="FIRST_COMPLETED").done
 
     def pending_runs(self) -> bool:
-        """
-        Whether or not there are configs still running. Generally if the runner is serial,
-        launching a run instantly returns it's result. On parallel runners, there might
-        be pending configurations to complete.
+        """Whether or not there are configs still running.
+
+        Generally if the runner is serial, launching a run instantly returns it's result. On
+        parallel runners, there might be pending configurations to complete.
         """
         # If there are futures available, it translates
         # to runs still not finished/processed
@@ -244,9 +236,8 @@ class DaskParallelRunner(BaseRunner):
         budget: typing.Optional[float] = None,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """
-        This method only complies with the abstract parent class. In the parallel case,
-        we call the single worker run() method
+        """This method only complies with the abstract parent class. In the parallel case, we call
+        the single worker run() method.
 
         Parameters
         ----------
@@ -286,20 +277,27 @@ class DaskParallelRunner(BaseRunner):
         )
 
     def num_workers(self) -> int:
-        """Total number of workers available. This number is dynamic
-        as more resources can be allocated"""
+        """Total number of workers available.
+
+        This number is dynamic as more resources can be allocated
+        """
         return sum(self.client.nthreads().values())
 
     def _workers_available(self) -> bool:
-        """ "Query if there are workers available, which means
-        that there are resources to launch a dask job"""
+        """
+        Query if there are workers available, which means that there are resources to launch a
+        dask job.
+        """
         total_compute_power = sum(self.client.nthreads().values())
         if len(self.futures) < total_compute_power:
             return True
         return False
 
     def __del__(self) -> None:
-        """Make sure that when this object gets deleted, the client is terminated. This is only done if
-        the client was created by the dask runner."""
+        """
+        Make sure that when this object gets deleted, the client is terminated.
+
+        This is only done if the client was created by the dask runner.
+        """
         if self.close_client_at_del:
             self.client.close()

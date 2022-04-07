@@ -20,7 +20,6 @@ INSTANCE_FEATURES_TYPE = Tuple[List[str], Dict[str, np.ndarray]]
 
 
 class InputReader(object):
-
     """Reading all input files for SMAC (scenario file, instance files, ...)
 
     Note: Most of this code was taken from the pysmac repository.

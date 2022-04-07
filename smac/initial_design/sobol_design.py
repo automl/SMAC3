@@ -27,14 +27,13 @@ class SobolDesign(InitialDesign):
     """
 
     def _select_configurations(self) -> typing.List[Configuration]:
-        """Selects a single configuration to run
+        """Selects a single configuration to run.
 
         Returns
         -------
         config: Configuration
             initial incumbent configuration
         """
-
         params = self.cs.get_hyperparameters()
 
         constants = 0

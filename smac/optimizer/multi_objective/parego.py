@@ -27,7 +27,6 @@ class ParEGO(AggregationStrategy):
         -------
             cost (float): Combined cost.
         """
-
         # Then we have to compute the weight
         theta = self.rng.rand(self.num_obj)
 
