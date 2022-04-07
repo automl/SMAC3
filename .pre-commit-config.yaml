@@ -8,7 +8,7 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        exclude: "^(scripts/|tests/)"
+        exclude: "scripts|tests"
         name: isort imports smac
         files: smac
 
@@ -16,7 +16,7 @@ repos:
     rev: 22.3.0
     hooks:
       - id: black
-        exclude: "^(scripts/|tests/)"
+        exclude: "scripts|tests"
         name: black formatter smac
         files: smac
 
@@ -24,7 +24,7 @@ repos:
     rev: 6.1.1
     hooks:
       - id: pydocstyle
-        exclude: "^(scripts/|tests/)"
+        exclude: "scripts|tests"
         files: smac
         additional_dependencies: ["toml"]  # Needed to parse pyproject.toml
 
@@ -32,7 +32,7 @@ repos:
     rev: v0.942
     hooks:
       - id: mypy
-        exclude: "^(scripts/|tests/|smac/utils/dependencies.py)"
+        exclude: "scripts|tests|smac/utils/dependencies.py"
         name: mypy smac
         files: smac
 
@@ -40,7 +40,7 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-        exclude: "^(scripts/|tests/)"
+        exclude: "scripts|tests"
         name: flake8 smac
         files: smac
 

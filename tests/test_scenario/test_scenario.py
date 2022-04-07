@@ -208,7 +208,7 @@ class ScenarioTest(unittest.TestCase):
         packed_scenario = pickle.dumps(scenario)
         self.assertIsNotNone(packed_scenario)
 
-        unpacked_scenario = pickle.loads(packed_scenario)
+        unpacked_scenario = pickle.loads(packed_scenario)  # nosec
         self.assertIsNotNone(unpacked_scenario)
         self.assertIsNotNone(unpacked_scenario.logger)
         self.assertEqual(scenario.logger.name, unpacked_scenario.logger.name)

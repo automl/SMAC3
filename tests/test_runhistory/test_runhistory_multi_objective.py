@@ -76,7 +76,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         tmpfile.close()
 
         with open(name, "rb") as fh:
-            loaded_rh = pickle.load(fh)
+            loaded_rh = pickle.load(fh)  # nosec
 
         self.assertEqual(loaded_rh.data, rh.data)
 

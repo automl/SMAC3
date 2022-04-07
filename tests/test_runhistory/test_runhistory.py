@@ -64,15 +64,13 @@ class RunhistoryTest(unittest.TestCase):
         tmpfile.close()
 
         with open(name, "rb") as fh:
-            loaded_rh = pickle.load(fh)
+            loaded_rh = pickle.load(fh)  # nosec
         self.assertEqual(loaded_rh.data, rh.data)
 
     def test_illegal_input(self):
         rh = RunHistory()
 
-        with self.assertRaisesRegex(
-            TypeError, "Configuration to add to the runhistory must not be None"
-        ):
+        with self.assertRaisesRegex(TypeError, "Configuration to add to the runhistory must not be None"):
             rh.add(config=None, cost=1.23, time=2.34, status=StatusType.SUCCESS)
 
         with self.assertRaisesRegex(
@@ -99,9 +97,7 @@ class RunhistoryTest(unittest.TestCase):
             )
 
         self.assertEqual(len(rh.data), 1)
-        self.assertEqual(
-            len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1
-        )
+        self.assertEqual(len(rh.get_runs_for_config(config, only_max_observed_budget=True)), 1)
         self.assertEqual(len(rh._configid_to_inst_seed_budget[1]), 1)
         self.assertEqual(list(rh.data.values())[0].cost, 1)
 
@@ -422,7 +418,6 @@ class RunhistoryTest(unittest.TestCase):
 
 
 class RunHistoryMappingTest(unittest.TestCase):
-
     def setUp(self) -> None:
         self.cs = get_config_space()
         self.runhistory = RunHistory()
@@ -434,7 +429,7 @@ class RunHistoryMappingTest(unittest.TestCase):
         seed: int = 0,
         instance_id: Optional[str] = None,
         budget: float = 0.0,
-        status=StatusType.SUCCESS
+        status=StatusType.SUCCESS,
     ) -> RunKey:
         """No easy way to generate a key before hand"""
         self.runhistory.add(
@@ -450,7 +445,7 @@ class RunHistoryMappingTest(unittest.TestCase):
             config_id=self.runhistory._n_id,  # What's used internally during `add`
             instance_id=instance_id,
             seed=seed,
-            budget=budget
+            budget=budget,
         )
 
     def test_contains(self):
