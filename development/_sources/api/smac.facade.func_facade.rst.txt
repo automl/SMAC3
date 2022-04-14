@@ -1,0 +1,29 @@
+smac.facade.func\_facade
+========================
+
+.. automodule:: smac.facade.func_facade
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      fmin_smac
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

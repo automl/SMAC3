@@ -1,0 +1,37 @@
+smac.optimizer.acquisition
+==========================
+
+.. automodule:: smac.optimizer.acquisition
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractAcquisitionFunction
+      EI
+      EIPS
+      IntegratedAcquisitionFunction
+      LCB
+      LogEI
+      PI
+      PriorAcquisitionFunction
+      TS
+   
+   
+
+   
+   
+   
+
+
+

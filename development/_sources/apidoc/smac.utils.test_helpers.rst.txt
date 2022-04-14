@@ -1,8 +1,0 @@
-smac.utils.test\_helpers
-========================
-
-.. automodule:: smac.utils.test_helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

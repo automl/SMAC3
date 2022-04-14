@@ -1,0 +1,29 @@
+smac.intensification.successive\_halving
+========================================
+
+.. automodule:: smac.intensification.successive_halving
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SuccessiveHalving
+   
+   
+
+   
+   
+   
+
+
+

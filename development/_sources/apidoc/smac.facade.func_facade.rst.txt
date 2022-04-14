@@ -1,8 +1,0 @@
-smac.facade.func\_facade
-========================
-
-.. automodule:: smac.facade.func_facade
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

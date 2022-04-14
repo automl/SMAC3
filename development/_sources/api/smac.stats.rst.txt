@@ -1,0 +1,31 @@
+﻿smac.stats
+==========
+
+.. automodule:: smac.stats
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.stats.stats
+

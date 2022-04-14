@@ -1,0 +1,29 @@
+smac.epm.gaussian\_process\_mcmc
+================================
+
+.. automodule:: smac.epm.gaussian_process_mcmc
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GaussianProcessMCMC
+   
+   
+
+   
+   
+   
+
+
+

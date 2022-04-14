@@ -1,0 +1,29 @@
+smac.optimizer.epm\_configuration\_chooser
+==========================================
+
+.. automodule:: smac.optimizer.epm_configuration_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      EPMChooser
+   
+   
+
+   
+   
+   
+
+
+

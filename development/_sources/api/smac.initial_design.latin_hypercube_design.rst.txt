@@ -1,0 +1,29 @@
+smac.initial\_design.latin\_hypercube\_design
+=============================================
+
+.. automodule:: smac.initial_design.latin_hypercube_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LHDesign
+   
+   
+
+   
+   
+   
+
+
+

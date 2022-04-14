@@ -1,0 +1,29 @@
+smac.epm.base\_epm
+==================
+
+.. automodule:: smac.epm.base_epm
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AbstractEPM
+   
+   
+
+   
+   
+   
+
+
+

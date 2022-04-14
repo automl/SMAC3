@@ -1,0 +1,34 @@
+smac.epm.gp\_base\_prior
+========================
+
+.. automodule:: smac.epm.gp_base_prior
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GammaPrior
+      HorseshoePrior
+      LognormalPrior
+      Prior
+      SoftTopHatPrior
+      TophatPrior
+   
+   
+
+   
+   
+   
+
+
+

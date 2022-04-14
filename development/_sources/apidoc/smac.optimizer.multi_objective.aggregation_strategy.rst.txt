@@ -1,8 +1,0 @@
-smac.optimizer.multi\_objective.aggregation\_strategy
-=====================================================
-
-.. automodule:: smac.optimizer.multi_objective.aggregation_strategy
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

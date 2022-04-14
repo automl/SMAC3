@@ -1,0 +1,29 @@
+﻿smac.callbacks
+==============
+
+.. automodule:: smac.callbacks
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      IncorporateRunResultCallback
+   
+   
+
+   
+   
+   
+
+
+

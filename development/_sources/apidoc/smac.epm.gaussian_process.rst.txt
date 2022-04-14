@@ -1,8 +1,0 @@
-smac.epm.gaussian\_process
-==========================
-
-.. automodule:: smac.epm.gaussian_process
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:

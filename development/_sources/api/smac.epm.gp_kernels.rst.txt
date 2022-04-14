@@ -1,0 +1,42 @@
+smac.epm.gp\_kernels
+====================
+
+.. automodule:: smac.epm.gp_kernels
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_conditional_hyperparameters
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConstantKernel
+      HammingKernel
+      MagicMixin
+      Matern
+      Product
+      RBF
+      Sum
+      WhiteKernel
+   
+   
+
+   
+   
+   
+
+
+
