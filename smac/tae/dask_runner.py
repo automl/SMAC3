@@ -148,7 +148,8 @@ class DaskParallelRunner(BaseRunner):
         """
         # Check for resources or block till one is available
         if not self._workers_available():
-            wait(self.futures, return_when="FIRST_COMPLETED").done
+            futures = wait(self.futures, return_when="FIRST_COMPLETED")
+            futures.done
             self._extract_completed_runs_from_futures()
 
         # In code check to make sure that there are resources
@@ -215,7 +216,8 @@ class DaskParallelRunner(BaseRunner):
         This class waits until 1 run completes
         """
         if self.futures:
-            wait(self.futures, return_when="FIRST_COMPLETED").done
+            futures = wait(self.futures, return_when="FIRST_COMPLETED")
+            futures.done
 
     def pending_runs(self) -> bool:
         """Whether or not there are configs still running.

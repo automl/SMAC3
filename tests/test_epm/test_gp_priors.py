@@ -1,3 +1,4 @@
+from functools import partial
 import unittest
 
 import numpy as np
@@ -18,6 +19,14 @@ __license__ = "3-clause BSD"
 
 def wrap_ln(theta, prior):
     return np.exp(prior.lnprob(np.log(theta)))
+
+
+def wrap_lnprob(x, prior):
+    return prior.lnprob(x[0])
+
+
+def wrap_gradient(x, prior):
+    return prior.gradient(x[0])
 
 
 class TestTophatPrior(unittest.TestCase):
@@ -117,9 +126,13 @@ class TestHorseshoePrior(unittest.TestCase):
             for theta in range(-20, 15):
                 if theta == 0:
                     continue
+
+                wrap_lnprob_ = partial(wrap_lnprob, prior=prior)
+                wrap_gradient_ = partial(wrap_gradient, prior=prior)
+
                 error = scipy.optimize.check_grad(
-                    lambda x: prior.lnprob(x[0]),
-                    lambda x: prior.gradient(x[0]),
+                    wrap_lnprob_,
+                    wrap_gradient_,
                     np.array([theta]),
                     epsilon=1e-5,
                 )
@@ -150,9 +163,13 @@ class TestGammaPrior(unittest.TestCase):
             for theta in np.arange(1e-15, 10, 0.01):
                 if theta == 0:
                     continue
+
+                wrap_lnprob_ = partial(wrap_lnprob, prior=prior)
+                wrap_gradient_ = partial(wrap_gradient, prior=prior)
+
                 error = scipy.optimize.check_grad(
-                    lambda x: prior.lnprob(x[0]),
-                    lambda x: prior.gradient(x[0]),
+                    wrap_lnprob_,
+                    wrap_gradient_,
                     np.array([theta]),
                     epsilon=1e-5,
                 )
@@ -167,9 +184,13 @@ class TestLogNormalPrior(unittest.TestCase):
             for theta in range(0, 15):
                 # Gradient approximation becomes unstable when going closer to zero
                 theta += 1e-2
+
+                wrap_lnprob_ = partial(wrap_lnprob, prior=prior)
+                wrap_gradient_ = partial(wrap_gradient, prior=prior)
+
                 error = scipy.optimize.check_grad(
-                    lambda x: prior.lnprob(x[0]),
-                    lambda x: prior.gradient(x[0]),
+                    wrap_lnprob_,
+                    wrap_gradient_,
                     np.array([theta]),
                     epsilon=1e-5,
                 )

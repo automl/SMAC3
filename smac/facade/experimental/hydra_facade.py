@@ -134,18 +134,19 @@ class Hydra(object):
         elif val_set[:3] != "val":
             self.logger.warning("Can not determine validation set size. Using full training-set!")
             return self.scenario.train_insts
-        else:
-            size = int(val_set[3:]) / 100
-            if size <= 0 or size >= 1:
-                raise ValueError("X invalid in valX, should be between 0 and 1")
-            insts = np.array(self.scenario.train_insts)
-            # just to make sure this also works with the small example we have to round up to 3
-            size = max(np.floor(insts.shape[0] * size).astype(int), 3)
-            ids = np.random.choice(insts.shape[0], size, replace=False)
-            val = insts[ids].tolist()
-            if delete:
-                self.scenario.train_insts = np.delete(insts, ids).tolist()
-            return val
+
+        size = int(val_set[3:]) / 100
+        if size <= 0 or size >= 1:
+            raise ValueError("X invalid in valX, should be between 0 and 1")
+        insts = np.array(self.scenario.train_insts)
+        # just to make sure this also works with the small example we have to round up to 3
+        size = max(np.floor(insts.shape[0] * size).astype(int), 3)
+        ids = np.random.choice(insts.shape[0], size, replace=False)
+        val = insts[ids].tolist()
+        if delete:
+            self.scenario.train_insts = np.delete(insts, ids).tolist()
+
+        return val
 
     def optimize(self) -> typing.List[Configuration]:
         """

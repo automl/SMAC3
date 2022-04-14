@@ -351,8 +351,6 @@ class RunhistoryTest(unittest.TestCase):
         # log_10(20 * 10)
         self.assertTrue(np.allclose(y, np.array([[1.0], [200.0]]), atol=0.001))
 
-        # TODO: unit test for censored data in quality scenario
-
     def test_get_X_y(self):
         """
         add some data to RH and check returned values in X,y format

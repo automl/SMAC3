@@ -276,8 +276,8 @@ class AbstractEPM(object):
             var[var < self.var_threshold] = self.var_threshold
             var[np.isnan(var)] = self.var_threshold
             return mean, var
-        else:
-            n_instances = len(self.instance_features)
+
+        n_instances = len(self.instance_features)
 
         mean = np.zeros(X.shape[0])
         var = np.zeros(X.shape[0])
