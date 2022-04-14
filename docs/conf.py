@@ -1,11 +1,11 @@
 import automl_sphinx_theme
 
-from smac import copyright_notice, author, version, name
+from smac import copyright, author, version, name
 from smac.utils.io.cmd_reader import CMDReader
 
 
 options = {
-    "copyright": copyright_notice,
+    "copyright": copyright,
     "author": author,
     "version": version,
     "name": name,
