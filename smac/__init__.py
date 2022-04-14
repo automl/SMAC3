@@ -14,7 +14,7 @@ project_urls = {
     "Documentation": "https://https://github.com/automl.github.io/SMAC3/main",
     "Source Code": "https://github.com/https://github.com/automl/smac",
 }
-copyright = f"""
+copyright_notice = f"""
     Copyright {datetime.date.today().strftime('%Y')}, Marius Lindauer, Katharina Eggensperger,
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter
