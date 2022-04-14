@@ -29,9 +29,6 @@ class TestPSMACFacade(unittest.TestCase):
 
     @patch("smac.facade.smac_ac_facade.SMBO", new=MockSMBO)
     def test_psmac(self):
-        # TODO: Fix tests
-        pass
-
         """
         import joblib
         from smac.facade.experimental.psmac_facade import PSMAC
@@ -47,6 +44,8 @@ class TestPSMACFacade(unittest.TestCase):
             incs = optimizer.optimize()
             self.assertEqual(len(incs), 4)
         """
+        # TODO: Fix tests
+        pass
 
     def tearDown(self):
         hydras = glob.glob1(".", "psmac*")

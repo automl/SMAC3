@@ -219,8 +219,8 @@ class ScenarioTest(unittest.TestCase):
         pcs- or instance-files, so they are checked manually."""
 
         def check_scen_eq(scen1, scen2):
-            print("check_scen_eq")
             """ Customized check for scenario-equality, ignoring file-paths """
+            print("check_scen_eq")
             for name in scen1._arguments:
                 dest = scen1._arguments[name]["dest"]
                 name = dest if dest else name  # if 'dest' is None, use 'name'

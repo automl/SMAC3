@@ -411,16 +411,16 @@ class SoftTopHatPrior(Prior):
             except RuntimeWarning as w:
                 if "invalid value encountered in log" in w.args[0]:
                     raise ValueError("Invalid lower bound %f (cannot compute log)" % lower_bound)
-                else:
-                    raise w
+
+                raise w
             self.upper_bound = upper_bound
             try:
                 self._log_upper_bound = np.log(upper_bound)
             except RuntimeWarning as w:
                 if "invalid value encountered in log" in w.args[0]:
                     raise ValueError("Invalid lower bound %f (cannot compute log)" % lower_bound)
-                else:
-                    raise w
+
+                raise w
 
         if exponent <= 0:
             raise ValueError("Exponent cannot be less or equal than zero (but is %f)" % exponent)
