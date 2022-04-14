@@ -1,4 +1,4 @@
-# 1.2.1
+# 1.3
 
 ## Features
 * PiBO: Augment the acquisition function by multiplying by a pdf given by the user.
@@ -16,8 +16,7 @@ facade should now expect to see the output directory at `run_0` instead of `run_
 * Updated and integrated flake8, mypy, black, and isort.
 
 ## Documentation
-* SMAC uses `automl_sphinx_theme` now.
-* Better API view.
+* SMAC uses `automl_sphinx_theme` now and therefore the API is displayed nicer.
 
 
 # 1.2
