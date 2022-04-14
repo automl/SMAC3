@@ -1,7 +1,7 @@
 # 1.3
 
 ## Features
-* PiBO: Augment the acquisition function by multiplying by a pdf given by the user.
+* [PiBO](https://openreview.net/forum?id=MMAeCXIa89): Augment the acquisition function by multiplying by a pdf given by the user.
 The prior then decays over time, allowing for the optimization to carry on as per default.
 * The `RunHistory` can now act as a `Mapping` in that you can use the usual methods you
 can use on dicts, i.e. `len(rh)`, `rh.items()`, `rh[key]`. Previously this was usually done by
@@ -16,7 +16,8 @@ facade should now expect to see the output directory at `run_0` instead of `run_
 * Updated and integrated flake8, mypy, black, and isort.
 
 ## Documentation
-* SMAC uses `automl_sphinx_theme` now and therefore the API is displayed nicer.
+* SMAC uses [automl_sphinx_theme](https://github.com/automl/automl_sphinx_theme) now and therefore
+the API is displayed nicer.
 
 
 # 1.2
