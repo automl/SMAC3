@@ -424,7 +424,7 @@ style="width: 100%;">
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.logging.format_array" title="smac.utils.logging.format_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_array</span></code></a>(input[, format])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.logging.format_array" title="smac.utils.logging.format_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_array</span></code></a>(inputs[, format_vals])</p></td>
 <td><p>Transform a numpy array to a list of format so that it can be printed by logger.</p></td>
 </tr>
 </tbody>
@@ -443,14 +443,14 @@ style="width: 100%;">
 </table>
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.utils.logging.format_array">
-<span class="sig-prename descclassname"><span class="pre">smac.utils.logging.</span></span><span class="sig-name descname"><span class="pre">format_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/logging.html#format_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.logging.format_array" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">smac.utils.logging.</span></span><span class="sig-name descname"><span class="pre">format_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_vals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/logging.html#format_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.logging.format_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a numpy array to a list of format so that it can be printed by logger. If the list
 holds one element only, then a formatted string is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input</strong> (<em>np.ndarray</em><em> or </em><em>list.</em>) – input value, could be anything serializable or a np array</p></li>
-<li><p><strong>format</strong> (<em>bool.</em>) – if the items in list are formatted values</p></li>
+<li><p><strong>inputs</strong> (<em>np.ndarray</em><em> or </em><em>list.</em>) – inputs value, could be anything serializable or a np array</p></li>
+<li><p><strong>format_vals</strong> (<em>bool.</em>) – if the items in list are formatted values</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
