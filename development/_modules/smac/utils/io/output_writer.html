@@ -551,8 +551,8 @@ style="width: 100%;">
         <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;train_insts&quot;</span><span class="p">,</span> <span class="s2">&quot;test_insts&quot;</span><span class="p">,</span> <span class="s2">&quot;cs&quot;</span><span class="p">,</span> <span class="s2">&quot;feature_dict&quot;</span><span class="p">]:</span>
             <span class="c1"># No need to log, recreated from files</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="OutputWriter.write_inst_file"><a class="viewcode-back" href="../../../../api/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_inst_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Writes instance-list to file.</span>

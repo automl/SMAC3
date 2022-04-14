@@ -678,8 +678,8 @@ style="width: 100%;">
             <span class="n">var</span><span class="p">[</span><span class="n">var</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
             <span class="n">var</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">var</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_threshold</span>
             <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">n_instances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span>
+
+        <span class="n">n_instances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance_features</span><span class="p">)</span>
 
         <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>

@@ -550,7 +550,8 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check for resources or block till one is available</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers_available</span><span class="p">():</span>
-            <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">done</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span>
+            <span class="n">futures</span><span class="o">.</span><span class="n">done</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_extract_completed_runs_from_futures</span><span class="p">()</span>
 
         <span class="c1"># In code check to make sure that there are resources</span>
@@ -617,7 +618,8 @@ style="width: 100%;">
 <span class="sd">        This class waits until 1 run completes</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">:</span>
-            <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">done</span></div>
+            <span class="n">futures</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">futures</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="s2">&quot;FIRST_COMPLETED&quot;</span><span class="p">)</span>
+            <span class="n">futures</span><span class="o">.</span><span class="n">done</span></div>
 
 <div class="viewcode-block" id="DaskParallelRunner.pending_runs"><a class="viewcode-back" href="../../../api/smac.tae.dask_runner.html#smac.tae.dask_runner.DaskParallelRunner.pending_runs">[docs]</a>    <span class="k">def</span> <span class="nf">pending_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Whether or not there are configs still running.</span>

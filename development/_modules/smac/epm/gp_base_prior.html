@@ -813,16 +813,16 @@ style="width: 100%;">
             <span class="k">except</span> <span class="ne">RuntimeWarning</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;invalid value encountered in log&quot;</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid lower bound </span><span class="si">%f</span><span class="s2"> (cannot compute log)&quot;</span> <span class="o">%</span> <span class="n">lower_bound</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">w</span>
+
+                <span class="k">raise</span> <span class="n">w</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">upper_bound</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_log_upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">RuntimeWarning</span> <span class="k">as</span> <span class="n">w</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s2">&quot;invalid value encountered in log&quot;</span> <span class="ow">in</span> <span class="n">w</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid lower bound </span><span class="si">%f</span><span class="s2"> (cannot compute log)&quot;</span> <span class="o">%</span> <span class="n">lower_bound</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">w</span>
+
+                <span class="k">raise</span> <span class="n">w</span>
 
         <span class="k">if</span> <span class="n">exponent</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Exponent cannot be less or equal than zero (but is </span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">exponent</span><span class="p">)</span>
