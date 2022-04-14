@@ -135,9 +135,9 @@ class TestRFWithInstances(unittest.TestCase):
             seed=1,
         )
         model.train(X_, Y)
-        means, vars = model.predict_marginalized_over_instances(X)
+        means, variances = model.predict_marginalized_over_instances(X)
         self.assertEqual(means.shape, (20, 1))
-        self.assertEqual(vars.shape, (20, 1))
+        self.assertEqual(variances.shape, (20, 1))
 
     @unittest.mock.patch.object(RandomForestWithInstances, "predict")
     def test_predict_marginalized_over_instances_mocked(self, rf_mock):
@@ -167,14 +167,14 @@ class TestRFWithInstances(unittest.TestCase):
         Y = rs.randint(1, size=(len(X) * len(F), 1)) * 1.0
         X_ = rs.rand(200, 15)
         model.train(X_, Y)
-        means, vars = model.predict_marginalized_over_instances(rs.rand(11, 10))
+        means, variances = model.predict_marginalized_over_instances(rs.rand(11, 10))
         # expected to be 0 as the predict is replaced by manual unloggin the trees
         self.assertEqual(rf_mock.call_count, 0)
         self.assertEqual(means.shape, (11, 1))
-        self.assertEqual(vars.shape, (11, 1))
+        self.assertEqual(variances.shape, (11, 1))
         for i in range(11):
             self.assertEqual(means[i], 0.0)
-            self.assertEqual(vars[i], 1.0e-10)
+            self.assertEqual(variances[i], 1.0e-10)
 
     def test_predict_with_actual_values(self):
         X = np.array(
