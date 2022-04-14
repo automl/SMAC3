@@ -123,7 +123,6 @@ class TestSMACCLI(unittest.TestCase):
             "--verbose",
             "DEBUG",
         ]
-        # TODO: fix
         try:
             self.smaccli.main_cli(testargs[2:])
         except FileNotFoundError:

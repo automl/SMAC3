@@ -196,9 +196,9 @@ class TestGP(unittest.TestCase):
             def __call__(self, X, y):
                 if self.counter >= 10:
                     return None
-                else:
-                    self.counter += 1
-                    raise np.linalg.LinAlgError
+
+                self.counter += 1
+                raise np.linalg.LinAlgError
 
         fit_mock.side_effect = Dummy()
 
@@ -221,9 +221,9 @@ class TestGP(unittest.TestCase):
                 # If this is not aligned with the GP an error will be raised that None is not iterable
                 if self.counter == 13:
                     return None
-                else:
-                    self.counter += 1
-                    raise np.linalg.LinAlgError
+
+                self.counter += 1
+                raise np.linalg.LinAlgError
 
         fit_mock.side_effect = Dummy()
 

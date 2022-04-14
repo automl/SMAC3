@@ -149,8 +149,8 @@ class OutputWriter(object):
         elif key in ["train_insts", "test_insts", "cs", "feature_dict"]:
             # No need to log, recreated from files
             return None
-        else:
-            return value
+
+        return value
 
     def write_inst_file(self, insts: typing.List[str], fn: str) -> None:
         """Writes instance-list to file.
