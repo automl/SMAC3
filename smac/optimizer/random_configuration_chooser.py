@@ -52,7 +52,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
 
     def next_smbo_iteration(self) -> None:
         """Does nothing."""
-        pass
+        ...
 
     def check(self, iteration: int) -> bool:
         """Checks if the next configuration should be at random."""
@@ -124,7 +124,7 @@ class ChooserProb(RandomConfigurationChooser):
 
     def next_smbo_iteration(self) -> None:
         """Does nothing."""
-        pass
+        ...
 
     def check(self, iteration: int) -> bool:
         """Check if the next configuration should be at random."""

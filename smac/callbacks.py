@@ -23,4 +23,4 @@ class IncorporateRunResultCallback:
         time_left: float,
     ) -> Optional[bool]:
         """Calls the callback."""
-        pass
+        ...

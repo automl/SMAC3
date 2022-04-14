@@ -148,7 +148,7 @@ class TestHyperband(unittest.TestCase):
             self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["run_info"], run_info)
             self.assertEqual(self.HB.intensifier_instances[i].process_results.call_args[1]["result"], result)
             all_other_run_infos, all_other_results = [], []
-            for j in range(len(self.HB.intensifier_instances)):
+            for j, item in enumerate(self.HB.intensifier_instances):
                 # Skip the expected_HB instance
                 if i == j:
                     continue

@@ -97,7 +97,6 @@ class TestSerialRunner(unittest.TestCase):
 
         # The run takes a second, so 0.5 is sufficient
         self.assertLess(time.time() - start, 0.5)
-        pass
 
 
 if __name__ == "__main__":
