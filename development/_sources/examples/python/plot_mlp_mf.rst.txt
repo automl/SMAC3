@@ -227,7 +227,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  45.722 seconds)
+   **Total running time of the script:** ( 1 minutes  44.036 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_mlp_mf.py:
