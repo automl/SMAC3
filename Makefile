@@ -141,10 +141,10 @@ publish: clean build
 	@echo "Test with the following:"
 	@echo "* Create a new virtual environment to install the uplaoded distribution into"
 	@echo "* Run the following:"
-	@echo
-	@echo "        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${NAME}"
+	@echo "--- pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ${NAME}"
 	@echo
 	@echo "* Run this to make sure it can import correctly, plus whatever else you'd like to test:"
+	@echo "--- python -c 'import ${PACKAGE_NAME}'"
 	@echo
-	@echo "        python -c 'import ${PACKAGE_NAME}'"
-
+	@echo "Once you have decided it works, publish to actual pypi with"
+	@echo "--- python -m twine upload dist/*"
