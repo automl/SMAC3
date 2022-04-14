@@ -705,7 +705,7 @@ class OArgumentParser(object):
         self.required = []
         self.args = Arguments()
 
-    def add_argument(self, parameter_name, dest, default=None, help="", type=str, required=False):
+    def add_argument(self, parameter_name, dest, default=None, help="", type=str, required=False):  # pylint: disable=built-in
         """
         adds arguments to parse from command line
         Args:
