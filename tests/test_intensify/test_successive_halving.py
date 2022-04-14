@@ -151,7 +151,7 @@ class TestSuccessiveHalving(unittest.TestCase):
                 result,
             )
             all_other_run_infos, all_other_results = [], []
-            for j in range(len(self.SH.intensifier_instances)):
+            for j, item in enumerate(self.SH.intensifier_instances):
                 # Skip the expected _SH
                 if i == j:
                     continue
