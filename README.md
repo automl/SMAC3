@@ -1,9 +1,9 @@
 # Sequential Model Algorithm Configuration (SMAC)
 
 
-[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
-[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
-[![Examples](https://github.com/automl/SMAC3/actions/workflows/examples.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/examples.yml)
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![Examples](https://github.com/automl/SMAC3/actions/workflows/examples.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/examples.yml)
 [![codecov
 Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
@@ -15,7 +15,7 @@ efficiently decide which of two configurations performs better.
 SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-[---- Documention ----](https://automl.github.io/SMAC3)
+[Documention](https://automl.github.io/SMAC3)
 
 
 ## Installation
