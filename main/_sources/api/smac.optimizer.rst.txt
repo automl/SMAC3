@@ -1,0 +1,37 @@
+﻿smac.optimizer
+==============
+
+.. automodule:: smac.optimizer
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.optimizer.acquisition
+   smac.optimizer.ei_optimization
+   smac.optimizer.epm_configuration_chooser
+   smac.optimizer.multi_objective
+   smac.optimizer.pSMAC
+   smac.optimizer.random_configuration_chooser
+   smac.optimizer.smbo
+

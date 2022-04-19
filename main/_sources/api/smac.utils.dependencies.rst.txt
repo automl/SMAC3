@@ -1,0 +1,36 @@
+smac.utils.dependencies
+=======================
+
+.. automodule:: smac.utils.dependencies
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      verify_packages
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+   
+      IncorrectPackageVersionError
+      MissingPackageError
+   
+   
+
+
+

@@ -1,0 +1,29 @@
+smac.epm.uncorrelated\_mo\_rf\_with\_instances
+==============================================
+
+.. automodule:: smac.epm.uncorrelated_mo_rf_with_instances
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      UncorrelatedMultiObjectiveRandomForestWithInstances
+   
+   
+
+   
+   
+   
+
+
+

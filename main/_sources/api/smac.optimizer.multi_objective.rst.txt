@@ -1,0 +1,33 @@
+smac.optimizer.multi\_objective
+===============================
+
+.. automodule:: smac.optimizer.multi_objective
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.optimizer.multi_objective.abstract_multi_objective_algorithm
+   smac.optimizer.multi_objective.aggregation_strategy
+   smac.optimizer.multi_objective.parego
+

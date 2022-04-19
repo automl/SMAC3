@@ -1,0 +1,30 @@
+smac.optimizer.multi\_objective.aggregation\_strategy
+=====================================================
+
+.. automodule:: smac.optimizer.multi_objective.aggregation_strategy
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AggregationStrategy
+      MeanAggregationStrategy
+   
+   
+
+   
+   
+   
+
+
+

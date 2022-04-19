@@ -1,0 +1,29 @@
+smac.epm.base\_gp
+=================
+
+.. automodule:: smac.epm.base_gp
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BaseModel
+   
+   
+
+   
+   
+   
+
+
+

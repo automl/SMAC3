@@ -1,0 +1,38 @@
+﻿smac.facade
+===========
+
+.. automodule:: smac.facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.facade.experimental
+   smac.facade.func_facade
+   smac.facade.hyperband_facade
+   smac.facade.roar_facade
+   smac.facade.smac_ac_facade
+   smac.facade.smac_bb_facade
+   smac.facade.smac_hpo_facade
+   smac.facade.smac_mf_facade
+

@@ -1,0 +1,35 @@
+smac.facade.experimental.psmac\_facade
+======================================
+
+.. automodule:: smac.facade.experimental.psmac_facade
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      optimize
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PSMAC
+   
+   
+
+   
+   
+   
+
+
+

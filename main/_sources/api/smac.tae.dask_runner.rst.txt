@@ -1,0 +1,29 @@
+smac.tae.dask\_runner
+=====================
+
+.. automodule:: smac.tae.dask_runner
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DaskParallelRunner
+   
+   
+
+   
+   
+   
+
+
+

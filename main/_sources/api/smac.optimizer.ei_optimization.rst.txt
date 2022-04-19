@@ -1,0 +1,36 @@
+smac.optimizer.ei\_optimization
+===============================
+
+.. automodule:: smac.optimizer.ei_optimization
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AcquisitionFunctionMaximizer
+      ChallengerList
+      DiffOpt
+      FixedSet
+      LocalAndSortedPriorRandomSearch
+      LocalAndSortedRandomSearch
+      LocalSearch
+      RandomSearch
+   
+   
+
+   
+   
+   
+
+
+

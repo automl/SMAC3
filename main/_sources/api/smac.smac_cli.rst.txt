@@ -1,0 +1,35 @@
+﻿smac.smac\_cli
+==============
+
+.. automodule:: smac.smac_cli
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      cmd_line_call
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SMACCLI
+   
+   
+
+   
+   
+   
+
+
+

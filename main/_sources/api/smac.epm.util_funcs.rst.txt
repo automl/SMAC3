@@ -1,0 +1,30 @@
+smac.epm.util\_funcs
+====================
+
+.. automodule:: smac.epm.util_funcs
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      get_rng
+      get_types
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

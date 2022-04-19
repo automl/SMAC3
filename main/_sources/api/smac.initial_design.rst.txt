@@ -1,0 +1,36 @@
+﻿smac.initial\_design
+====================
+
+.. automodule:: smac.initial_design
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.initial_design.default_configuration_design
+   smac.initial_design.factorial_design
+   smac.initial_design.initial_design
+   smac.initial_design.latin_hypercube_design
+   smac.initial_design.random_configuration_design
+   smac.initial_design.sobol_design
+
