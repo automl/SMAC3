@@ -1,31 +1,29 @@
 # type: ignore
 # mypy: ignore-errors
 
+import typing
+
+import copy
+import datetime
 import logging
 import os
-import datetime
+import pickle
 import time
-import typing
-import copy
 from collections import defaultdict
 
-import pickle
-
 import numpy as np
-
 from ConfigSpace.configuration_space import Configuration
 
-from smac.tae.base import BaseRunner
-from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra
-from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
-from smac.scenario.scenario import Scenario
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.facade.experimental.psmac_facade import PSMAC
-from smac.utils.io.output_directory import create_output_directory
-from smac.runhistory.runhistory import RunHistory
 from smac.epm.util_funcs import get_rng
-from smac.utils.constants import MAXINT
+from smac.facade.experimental.psmac_facade import PSMAC
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.pSMAC import read
+from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
+from smac.tae.base import BaseRunner
+from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
+from smac.utils.constants import MAXINT
+from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -73,19 +71,20 @@ class Hydra(object):
 
     """
 
-    def __init__(self,
-                 scenario: typing.Type[Scenario],
-                 n_iterations: int,
-                 val_set: str = 'train',
-                 incs_per_round: int = 1,
-                 n_optimizers: int = 1,
-                 rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
-                 run_id: int = 1,
-                 tae: typing.Type[BaseRunner] = ExecuteTARunOld,
-                 tae_kwargs: typing.Union[dict, None] = None,
-                 **kwargs):
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+    def __init__(
+        self,
+        scenario: typing.Type[Scenario],
+        n_iterations: int,
+        val_set: str = "train",
+        incs_per_round: int = 1,
+        n_optimizers: int = 1,
+        rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
+        run_id: int = 1,
+        tae: typing.Type[BaseRunner] = ExecuteTARunOld,
+        tae_kwargs: typing.Union[dict, None] = None,
+        **kwargs,
+    ):
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.n_iterations = n_iterations
         self.scenario = scenario
@@ -99,10 +98,10 @@ class Hydra(object):
         self._tae = tae
         self._tae_kwargs = tae_kwargs
         if incs_per_round <= 0:
-            self.logger.warning('Invalid value in %s: %d. Setting to 1', 'incs_per_round', incs_per_round)
+            self.logger.warning("Invalid value in %s: %d. Setting to 1", "incs_per_round", incs_per_round)
         self.incs_per_round = max(incs_per_round, 1)
         if n_optimizers <= 0:
-            self.logger.warning('Invalid value in %s: %d. Setting to 1', 'n_optimizers', n_optimizers)
+            self.logger.warning("Invalid value in %s: %d. Setting to 1", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 1)
         self.val_set = self._get_validation_set(val_set)
         self.cost_per_inst = {}
@@ -128,25 +127,26 @@ class Hydra(object):
             List of instance-ids to validate on
 
         """
-        if val_set == 'none':
+        if val_set == "none":
             return None
-        if val_set == 'train':
+        if val_set == "train":
             return self.scenario.train_insts
-        elif val_set[:3] != 'val':
-            self.logger.warning('Can not determine validation set size. Using full training-set!')
+        elif val_set[:3] != "val":
+            self.logger.warning("Can not determine validation set size. Using full training-set!")
             return self.scenario.train_insts
-        else:
-            size = int(val_set[3:]) / 100
-            if size <= 0 or size >= 1:
-                raise ValueError('X invalid in valX, should be between 0 and 1')
-            insts = np.array(self.scenario.train_insts)
-            # just to make sure this also works with the small example we have to round up to 3
-            size = max(np.floor(insts.shape[0] * size).astype(int), 3)
-            ids = np.random.choice(insts.shape[0], size, replace=False)
-            val = insts[ids].tolist()
-            if delete:
-                self.scenario.train_insts = np.delete(insts, ids).tolist()
-            return val
+
+        size = int(val_set[3:]) / 100
+        if size <= 0 or size >= 1:
+            raise ValueError("X invalid in valX, should be between 0 and 1")
+        insts = np.array(self.scenario.train_insts)
+        # just to make sure this also works with the small example we have to round up to 3
+        size = max(np.floor(insts.shape[0] * size).astype(int), 3)
+        ids = np.random.choice(insts.shape[0], size, replace=False)
+        val = insts[ids].tolist()
+        if delete:
+            self.scenario.train_insts = np.delete(insts, ids).tolist()
+
+        return val
 
     def optimize(self) -> typing.List[Configuration]:
         """
@@ -163,17 +163,26 @@ class Hydra(object):
         portfolio_cost = np.inf
         if self.output_dir is None:
             self.top_dir = "hydra-output_%s" % (
-                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f'))
-            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
-                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
+                datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")
+            )
+            self.scenario.output_dir = os.path.join(
+                self.top_dir,
+                "psmac3-output_%s" % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
+            )
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
 
         scen = copy.deepcopy(self.scenario)
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC4AC(scenario=scen, tae_runner=self._tae, rng=self.rng, run_id=self.run_id, **self.kwargs,
-                              tae_runner_kwargs=self._tae_kwargs)
+        self.solver = SMAC4AC(
+            scenario=scen,
+            tae_runner=self._tae,
+            rng=self.rng,
+            run_id=self.run_id,
+            **self.kwargs,
+            tae_runner_kwargs=self._tae_kwargs,
+        )
         for i in range(self.n_iterations):
             self.logger.info("=" * 120)
             self.logger.info("Hydra Iteration: %d", (i + 1))
@@ -187,7 +196,7 @@ class Hydra(object):
                     tae_kwargs = self._tae_kwargs
                 else:
                     tae_kwargs = {}
-                tae_kwargs['cost_oracle'] = self.cost_per_inst
+                tae_kwargs["cost_oracle"] = self.cost_per_inst
             self.optimizer = PSMAC(
                 scenario=self.scenario,
                 run_id=self.run_id,
@@ -199,18 +208,23 @@ class Hydra(object):
                 n_optimizers=self.n_optimizers,
                 val_set=self.val_set,
                 n_incs=self.n_optimizers,  # return all configurations (unvalidated)
-                **self.kwargs
+                **self.kwargs,
             )
             self.optimizer.output_dir = self.output_dir
             incs = self.optimizer.optimize()
-            cost_per_conf_v, val_ids, cost_per_conf_e, est_ids = self.optimizer.get_best_incumbents_ids(incs)
+            (
+                cost_per_conf_v,
+                val_ids,
+                cost_per_conf_e,
+                est_ids,
+            ) = self.optimizer.get_best_incumbents_ids(incs)
             if self.val_set:
-                to_keep_ids = val_ids[:self.incs_per_round]
+                to_keep_ids = val_ids[: self.incs_per_round]
             else:
-                to_keep_ids = est_ids[:self.incs_per_round]
+                to_keep_ids = est_ids[: self.incs_per_round]
             config_cost_per_inst = {}
             incs = incs[to_keep_ids]
-            self.logger.info('Kept incumbents')
+            self.logger.info("Kept incumbents")
             for inc in incs:
                 self.logger.info(inc)
                 config_cost_per_inst[inc] = cost_per_conf_v[inc] if self.val_set else cost_per_conf_e[inc]
@@ -223,15 +237,22 @@ class Hydra(object):
                 portfolio_cost = cur_portfolio_cost
                 self.logger.info("Current pertfolio cost: %f", portfolio_cost)
 
-            self.scenario.output_dir = os.path.join(self.top_dir, "psmac3-output_%s" % (
-                datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d_%H:%M:%S_%f')))
+            self.scenario.output_dir = os.path.join(
+                self.top_dir,
+                "psmac3-output_%s" % (datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d_%H:%M:%S_%f")),
+            )
             self.output_dir = create_output_directory(self.scenario, run_id=self.run_id, logger=self.logger)
-        read(self.rh, os.path.join(self.top_dir, 'psmac3*', 'run_' + str(MAXINT)), self.scenario.cs, self.logger)
-        self.rh.save_json(fn=os.path.join(self.top_dir, 'all_validated_runs_runhistory.json'), save_external=True)
-        with open(os.path.join(self.top_dir, 'portfolio.pkl'), 'wb') as fh:
+        read(
+            self.rh,
+            os.path.join(self.top_dir, "psmac3*", "run_" + str(MAXINT)),
+            self.scenario.cs,
+            self.logger,
+        )
+        self.rh.save_json(fn=os.path.join(self.top_dir, "all_validated_runs_runhistory.json"), save_external=True)
+        with open(os.path.join(self.top_dir, "portfolio.pkl"), "wb") as fh:
             pickle.dump(self.portfolio, fh)
         self.logger.info("~" * 120)
-        self.logger.info('Resulting Portfolio:')
+        self.logger.info("Resulting Portfolio:")
         for configuration in self.portfolio:
             self.logger.info(str(configuration))
         self.logger.info("~" * 120)
@@ -260,7 +281,7 @@ class Hydra(object):
                     cost_per_inst = config_cost_per_inst[kept]
                     if self.cost_per_inst:
                         if len(self.cost_per_inst) != len(cost_per_inst):
-                            raise ValueError('Num validated Instances mismatch!')
+                            raise ValueError("Num validated Instances mismatch!")
                         else:
                             for key in cost_per_inst:
                                 self.cost_per_inst[key] = min(self.cost_per_inst[key], cost_per_inst[key])

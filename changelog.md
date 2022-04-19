@@ -1,3 +1,25 @@
+# 1.3
+
+## Features
+* [PiBO](https://openreview.net/forum?id=MMAeCXIa89): Augment the acquisition function by multiplying by a pdf given by the user.
+The prior then decays over time, allowing for the optimization to carry on as per default.
+* The `RunHistory` can now act as a `Mapping` in that you can use the usual methods you
+can use on dicts, i.e. `len(rh)`, `rh.items()`, `rh[key]`. Previously this was usually done by
+accessing `rh.data` which is still possible.
+
+## Minor Changes
+* Updated the signature of the `ROAR` facade to match with it's parent class `SMAC4AC`.
+Anyone relying on the output directory **without** specifying an explicit `run_id` to a `ROAR`
+facade should now expect to see the output directory at `run_0` instead of `run_1`. See #827
+
+## Code-Quality
+* Updated and integrated flake8, mypy, black, and isort.
+
+## Documentation
+* SMAC uses [automl_sphinx_theme](https://github.com/automl/automl_sphinx_theme) now and therefore
+the API is displayed nicer.
+
+
 # 1.2
 
 ## Features
@@ -10,7 +32,7 @@ a trial is added.
 * Determinstic behaviour (defined in scenario) is default now. Calling a function/TAE with the same
 seed and configuration is expected to be the same.
 * Limit resources behaviour is by default false now. This is particually important because pynisher
-does not work on all machines (e.g. Colab, Mac, Windows, ...) properly. 
+does not work on all machines (e.g. Colab, Mac, Windows, ...) properly.
 * Renamed scenario object `save_results_instantly` to `save_instantly`.
 * Added `multi_objectives` as scenario argument.
 * Expanded `cost_for_crash` for multi-objective support.

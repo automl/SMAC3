@@ -1,13 +1,18 @@
-import os
-import logging
-import json
-from typing import Union, List, Dict, Optional
+from typing import Dict, List, Optional, Union
+
 import collections
+import json
+import logging
+import os
 
 import numpy as np
-
-from ConfigSpace.configuration_space import ConfigurationSpace, Configuration
-from ConfigSpace.hyperparameters import FloatHyperparameter, IntegerHyperparameter, CategoricalHyperparameter, Constant
+from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    Constant,
+    FloatHyperparameter,
+    IntegerHyperparameter,
+)
 
 from smac.stats.stats import Stats
 from smac.utils.logging import format_array
@@ -17,8 +22,17 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 TrajEntry = collections.namedtuple(
-    'TrajEntry', ['train_perf', 'incumbent_id', 'incumbent',
-                  'ta_runs', 'ta_time_used', 'wallclock_time', 'budget'])
+    "TrajEntry",
+    [
+        "train_perf",
+        "incumbent_id",
+        "incumbent",
+        "ta_runs",
+        "ta_time_used",
+        "wallclock_time",
+        "budget",
+    ],
+)
 
 
 class TrajLogger(object):
@@ -49,8 +63,9 @@ class TrajLogger(object):
         self.output_dir = output_dir
         if output_dir is None or output_dir == "":
             self.output_dir = None
-            self.logger.info("No output directory for trajectory logging "
-                             "specified -- trajectory will not be logged.")
+            self.logger.info(
+                "No output directory for trajectory logging " "specified -- trajectory will not be logged."
+            )
 
         else:
             if not os.path.isdir(output_dir):
@@ -68,17 +83,21 @@ class TrajLogger(object):
                         '"CPU Time Used","Estimated Training Performance",'
                         '"Wallclock Time","Incumbent ID",'
                         '"Automatic Configurator (CPU) Time",'
-                        '"Configuration..."\n')
+                        '"Configuration..."\n'
+                    )
 
             self.aclib_traj_fn = os.path.join(output_dir, "traj_aclib2.json")
             self.alljson_traj_fn = os.path.join(output_dir, "traj.json")
 
         self.trajectory = []  # type: List[TrajEntry]
 
-    def add_entry(self, train_perf: Union[float, np.ndarray],
-                  incumbent_id: int,
-                  incumbent: Configuration,
-                  budget: float = 0) -> None:
+    def add_entry(
+        self,
+        train_perf: Union[float, np.ndarray],
+        incumbent_id: int,
+        incumbent: Configuration,
+        budget: float = 0,
+    ) -> None:
         """Adds entries to trajectory files (several formats) with using the
         same timestamps for each entry
 
@@ -93,26 +112,35 @@ class TrajLogger(object):
         budget: float
             budget used in intensifier to limit TA (default: 0)
         """
-
         perf = format_array(train_perf)
 
         finished_ta_runs = self.stats.finished_ta_runs
         ta_time_used = self.stats.ta_time_used
         wallclock_time = self.stats.get_used_wallclock_time()
-        self.trajectory.append(TrajEntry(perf, incumbent_id, incumbent,
-                                         finished_ta_runs, ta_time_used, wallclock_time, budget))
+        self.trajectory.append(
+            TrajEntry(
+                perf,
+                incumbent_id,
+                incumbent,
+                finished_ta_runs,
+                ta_time_used,
+                wallclock_time,
+                budget,
+            )
+        )
         if self.output_dir is not None:
-            self._add_in_old_format(perf, incumbent_id, incumbent,
-                                    ta_time_used, wallclock_time)
-            self._add_in_aclib_format(perf, incumbent_id, incumbent,
-                                      ta_time_used, wallclock_time)
-            self._add_in_alljson_format(perf, incumbent_id, incumbent, budget,
-                                        ta_time_used, wallclock_time)
+            self._add_in_old_format(perf, incumbent_id, incumbent, ta_time_used, wallclock_time)
+            self._add_in_aclib_format(perf, incumbent_id, incumbent, ta_time_used, wallclock_time)
+            self._add_in_alljson_format(perf, incumbent_id, incumbent, budget, ta_time_used, wallclock_time)
 
-    def _add_in_old_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
-                           incumbent: Configuration,
-                           ta_time_used: float,
-                           wallclock_time: float) -> None:
+    def _add_in_old_format(
+        self,
+        train_perf: Union[float, List[float]],
+        incumbent_id: int,
+        incumbent: Configuration,
+        ta_time_used: float,
+        wallclock_time: float,
+    ) -> None:
         """Adds entries to old SMAC2-like trajectory file
 
         Parameters
@@ -128,7 +156,6 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-
         conf = []
         for p in incumbent:
             if not incumbent.get(p) is None:
@@ -136,20 +163,26 @@ class TrajLogger(object):
         if isinstance(train_perf, float):
             # Make it compatible with old format
             with open(self.old_traj_fn, "a") as fp:
-                fp.write(f"{ta_time_used:f}, {train_perf:f}, {wallclock_time:f}, {incumbent_id:d}, "
-                         f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
-                         )
+                fp.write(
+                    f"{ta_time_used:f}, {train_perf:f}, {wallclock_time:f}, {incumbent_id:d}, "
+                    f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
+                )
         else:
             # We recommend to use pandas to read this csv file
             with open(self.old_traj_fn, "a") as fp:
-                fp.write(f"{ta_time_used:f}, {train_perf}, {wallclock_time:f}, {incumbent_id:d}, "
-                         f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
-                         )
+                fp.write(
+                    f"{ta_time_used:f}, {train_perf}, {wallclock_time:f}, {incumbent_id:d}, "
+                    f"{wallclock_time - ta_time_used:f}, {','.join(conf):s}\n"
+                )
 
-    def _add_in_aclib_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
-                             incumbent: Configuration,
-                             ta_time_used: float,
-                             wallclock_time: float) -> None:
+    def _add_in_aclib_format(
+        self,
+        train_perf: Union[float, List[float]],
+        incumbent_id: int,
+        incumbent: Configuration,
+        ta_time_used: float,
+        wallclock_time: float,
+    ) -> None:
         """Adds entries to AClib2-like trajectory file
 
         Parameters
@@ -165,28 +198,33 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-
         conf = []
         for p in incumbent:
             if not incumbent.get(p) is None:
                 conf.append("%s='%s'" % (p, repr(incumbent[p])))
 
-        traj_entry = {"cpu_time": ta_time_used,
-                      "wallclock_time": wallclock_time,
-                      "evaluations": self.stats.finished_ta_runs,
-                      "cost": format_array(train_perf, False),
-                      "incumbent": conf,
-                      "origin": incumbent.origin,
-                      }
+        traj_entry = {
+            "cpu_time": ta_time_used,
+            "wallclock_time": wallclock_time,
+            "evaluations": self.stats.finished_ta_runs,
+            "cost": format_array(train_perf, False),
+            "incumbent": conf,
+            "origin": incumbent.origin,
+        }
 
         with open(self.aclib_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
             fp.write("\n")
 
-    def _add_in_alljson_format(self, train_perf: Union[float, np.ndarray], incumbent_id: int,
-                               incumbent: Configuration, budget: float,
-                               ta_time_used: float,
-                               wallclock_time: float) -> None:
+    def _add_in_alljson_format(
+        self,
+        train_perf: Union[float, List[float]],
+        incumbent_id: int,
+        incumbent: Configuration,
+        budget: float,
+        ta_time_used: float,
+        wallclock_time: float,
+    ) -> None:
         """Adds entries to AClib2-like (but with configs as json) trajectory file
 
         Parameters
@@ -204,14 +242,15 @@ class TrajLogger(object):
         wallclock_time: float
             Wallclock time used so far
         """
-        traj_entry = {"cpu_time": ta_time_used,
-                      "wallclock_time": wallclock_time,
-                      "evaluations": self.stats.finished_ta_runs,
-                      "cost": train_perf,
-                      "incumbent": incumbent.get_dictionary(),
-                      "budget": budget,
-                      "origin": incumbent.origin,
-                      }
+        traj_entry = {
+            "cpu_time": ta_time_used,
+            "wallclock_time": wallclock_time,
+            "evaluations": self.stats.finished_ta_runs,
+            "cost": train_perf,
+            "incumbent": incumbent.get_dictionary(),
+            "budget": budget,
+            "origin": incumbent.origin,
+        }
 
         with open(self.alljson_traj_fn, "a") as fp:
             json.dump(traj_entry, fp)
@@ -219,8 +258,8 @@ class TrajLogger(object):
 
     @staticmethod
     def read_traj_alljson_format(
-            fn: str,
-            cs: ConfigurationSpace,
+        fn: str,
+        cs: ConfigurationSpace,
     ) -> List[Dict[str, Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
@@ -244,7 +283,6 @@ class TrajLogger(object):
             "incumbent": Configuration
             }
         """
-
         trajectory = []
         with open(fn) as fp:
             for line in fp:
@@ -256,8 +294,8 @@ class TrajLogger(object):
 
     @staticmethod
     def read_traj_aclib_format(
-            fn: str,
-            cs: ConfigurationSpace,
+        fn: str,
+        cs: ConfigurationSpace,
     ) -> List[Dict[str, Union[float, int, Configuration]]]:
         """Reads trajectory from file
 
@@ -280,13 +318,11 @@ class TrajLogger(object):
             "incumbent": Configuration
             }
         """
-
         trajectory = []
         with open(fn) as fp:
             for line in fp:
                 entry = json.loads(line)
-                entry["incumbent"] = TrajLogger._convert_dict_to_config(
-                    entry["incumbent"], cs=cs)
+                entry["incumbent"] = TrajLogger._convert_dict_to_config(entry["incumbent"], cs=cs)
                 trajectory.append(entry)
 
         return trajectory
@@ -304,7 +340,7 @@ class TrajLogger(object):
             Configuration Space to translate dict object into Confiuration object
         """
         config_dict = {}
-        v = ''  # type: Union[str, float, int, bool]
+        v = ""  # type: Union[str, float, int, bool]
         for param in config_list:
             k, v = param.split("=")
             v = v.strip("'")
@@ -320,7 +356,7 @@ class TrajLogger(object):
                 if v in ["True", "False"]:
                     # Special Case for booleans (assuming we support them)
                     # This is important to avoid false positive warnings triggered by 1 == True or "False" == True
-                    interpretations.append(True if v == 'True' else False)
+                    interpretations.append(True if v == "True" else False)
                 else:
                     for t in [int, float]:
                         try:
@@ -335,7 +371,8 @@ class TrajLogger(object):
                 if len(legal) != 1:
                     logging.getLogger("smac.trajlogger").warning(
                         "Ambigous or no interpretation of value {} for hp {} found ({} possible interpretations). "
-                        "Passing string, but this will likely result in an error".format(v, hp.name, len(legal)))
+                        "Passing string, but this will likely result in an error".format(v, hp.name, len(legal))
+                    )
                 else:
                     v = legal.pop()
 

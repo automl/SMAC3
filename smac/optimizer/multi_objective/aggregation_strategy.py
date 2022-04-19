@@ -1,5 +1,7 @@
-import numpy as np
 from abc import abstractmethod
+
+import numpy as np
+
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
@@ -24,7 +26,6 @@ class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
         -------
             cost: float.
         """
-
         raise NotImplementedError
 
 
@@ -46,5 +47,4 @@ class MeanAggregationStrategy(AggregationStrategy):
         -------
             cost (float): Combined cost.
         """
-
         return np.mean(values, axis=1)

@@ -1,12 +1,13 @@
-from inspect import signature, Signature
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
 import math
-from typing import Optional, Union, Tuple, List, Callable, Dict, Any
+from inspect import Signature, signature
 
 import numpy as np
-import sklearn.gaussian_process.kernels as kernels
 import scipy.optimize
 import scipy.spatial.distance
 import scipy.special
+import sklearn.gaussian_process.kernels as kernels
 
 from smac.epm.gp_base_prior import Prior
 
@@ -14,12 +15,8 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-# This file contains almost no type annotations to simplify comparing it to the original scikit-learn version!
-
-
-def get_conditional_hyperparameters(
-    X: np.ndarray, Y: Optional[np.ndarray] = None
-) -> np.ndarray:
+def get_conditional_hyperparameters(X: np.ndarray, Y: Optional[np.ndarray] = None) -> np.ndarray:
+    """Returns conditional hyperparameters."""
     # Taking care of conditional hyperparameters according to Levesque et al.
     X_cond = X <= -1
     if Y is not None:
@@ -31,12 +28,13 @@ def get_conditional_hyperparameters(
 
 
 class MagicMixin:
-
-    # This is a mixin for a kernel to override functions of the kernel. Because it overrides functions of the kernel,
-    # it needs to be placed first in the inheritance hierarchy. For this reason it is not possible to subclass the
-    # Mixin from the kernel class because this will prevent it from being instantiatable. Therefore, mypy won't know
-    # about anything related to the superclass and I had to add a few type:ignore statements when accessing a member
-    # that is declared in the superclass such as self.has_conditions, self._call, super().get_params etc.
+    # This is a mixin for a kernel to override functions of the kernel.
+    # Because it overrides functions of the kernel, it needs to be placed first in the inheritance
+    # hierarchy. For this reason it is not possible to subclass the
+    # Mixin from the kernel class because this will prevent it from being instantiatable.
+    # Therefore, mypy won't know about anything related to the superclass and I had
+    # to add a few type:ignore statements when accessing a member that is declared in the
+    # superclass such as self.has_conditions, self._call, super().get_params etc.
 
     prior = None  # type: Optional[Prior]
 
@@ -47,23 +45,22 @@ class MagicMixin:
         eval_gradient: bool = False,
         active: Optional[np.ndarray] = None,
     ) -> Union[np.ndarray, Tuple[np.ndarray, np.ndarray]]:
-
+        """Call the kernel function."""
         if active is None and self.has_conditions:  # type: ignore[attr-defined] # noqa F821
             if self.operate_on is None:
                 active = get_conditional_hyperparameters(X, Y)
             else:
                 if Y is None:
-                    active = get_conditional_hyperparameters(
-                        X[:, self.operate_on], None
-                    )
+                    active = get_conditional_hyperparameters(X[:, self.operate_on], None)
                 else:
-                    active = get_conditional_hyperparameters(
-                        X[:, self.operate_on], Y[:, self.operate_on]
-                    )
+                    active = get_conditional_hyperparameters(X[:, self.operate_on], Y[:, self.operate_on])
 
         if self.operate_on is None:
             rval = self._call(X, Y, eval_gradient, active)  # type: ignore[attr-defined] # noqa F821
         else:
+            if self.len_active is None:
+                raise RuntimeError("len_active is not set.")
+
             if Y is None:
                 rval = self._call(  # type: ignore[attr-defined] # noqa F821
                     X=X[:, self.operate_on].reshape([-1, self.len_active]),
@@ -166,7 +163,6 @@ class MagicMixin:
     @property
     def n_dims(self) -> int:
         """Returns the number of non-fixed hyperparameters of the kernel."""
-
         try:
             return self._n_dims_cache
         except AttributeError:
@@ -188,7 +184,7 @@ class MagicMixin:
         return self
 
     def set_active_dims(self, operate_on: Optional[np.ndarray] = None) -> None:
-        """Sets dimensions this kernel should work on
+        """Sets dimensions this kernel should work on.
 
         Parameters
         ----------
@@ -196,15 +192,9 @@ class MagicMixin:
         """
         if operate_on is not None and type(operate_on) in (list, np.ndarray):
             if not isinstance(operate_on, np.ndarray):
-                raise TypeError(
-                    "argument operate_on needs to be of type np.ndarray, but is %s"
-                    % type(operate_on)
-                )
+                raise TypeError("argument operate_on needs to be of type np.ndarray, but is %s" % type(operate_on))
             if operate_on.dtype != int:
-                raise ValueError(
-                    "dtype of argument operate_on needs to be int, but is %s"
-                    % operate_on.dtype
-                )
+                raise ValueError("dtype of argument operate_on needs to be int, but is %s" % operate_on.dtype)
             self.operate_on = operate_on  # type: Optional[np.ndarray]
             self.len_active = len(operate_on)  # type: Optional[int]
         else:
@@ -317,9 +307,7 @@ class Product(MagicMixin, kernels.Product):
         if eval_gradient:
             K1, K1_gradient = self.k1(X, Y, eval_gradient=True, active=active)
             K2, K2_gradient = self.k2(X, Y, eval_gradient=True, active=active)
-            return K1 * K2, np.dstack(
-                (K1_gradient * K2[:, :, np.newaxis], K2_gradient * K1[:, :, np.newaxis])
-            )
+            return K1 * K2, np.dstack((K1_gradient * K2[:, :, np.newaxis], K2_gradient * K1[:, :, np.newaxis]))
         else:
             return self.k1(X, Y, active=active) * self.k2(X, Y, active=active)
 
@@ -334,9 +322,7 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
         has_conditions: bool = False,
     ) -> None:
 
-        super(ConstantKernel, self).__init__(
-            constant_value=constant_value, constant_value_bounds=constant_value_bounds
-        )
+        super(ConstantKernel, self).__init__(constant_value=constant_value, constant_value_bounds=constant_value_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -406,8 +392,8 @@ class ConstantKernel(MagicMixin, kernels.ConstantKernel):
 class Matern(MagicMixin, kernels.Matern):
     def __init__(
         self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+        length_scale: Union[float, Tuple[float, ...], np.ndarray] = 1.0,
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]], np.ndarray] = (
             1e-5,
             1e5,
         ),
@@ -417,9 +403,7 @@ class Matern(MagicMixin, kernels.Matern):
         has_conditions: bool = False,
     ) -> None:
 
-        super(Matern, self).__init__(
-            length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu
-        )
+        super(Matern, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds, nu=nu)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -455,7 +439,6 @@ class Matern(MagicMixin, kernels.Matern):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
@@ -464,9 +447,7 @@ class Matern(MagicMixin, kernels.Matern):
         else:
             if eval_gradient:
                 raise ValueError("Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(
-                X / length_scale, Y / length_scale, metric="euclidean"
-            )
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="euclidean")
 
         if self.nu == 0.5:
             K = np.exp(-dists)
@@ -500,16 +481,12 @@ class Matern(MagicMixin, kernels.Matern):
 
             # We need to recompute the pairwise dimension-wise distances
             if self.anisotropic:
-                D = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (
-                    length_scale**2
-                )
+                D = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale**2)
             else:
                 D = scipy.spatial.distance.squareform(dists**2)[:, :, np.newaxis]
 
             if self.nu == 0.5:
-                K_gradient = (
-                    K[..., np.newaxis] * D / np.sqrt(D.sum(2))[:, :, np.newaxis]
-                )
+                K_gradient = K[..., np.newaxis] * D / np.sqrt(D.sum(2))[:, :, np.newaxis]
                 K_gradient[~np.isfinite(K_gradient)] = 0
             elif self.nu == 1.5:
                 K_gradient = 3 * D * np.exp(-np.sqrt(3 * D.sum(-1)))[..., np.newaxis]
@@ -542,9 +519,7 @@ class RBF(MagicMixin, kernels.RBF):
         has_conditions: bool = False,
     ) -> None:
 
-        super(RBF, self).__init__(
-            length_scale=length_scale, length_scale_bounds=length_scale_bounds
-        )
+        super(RBF, self).__init__(length_scale=length_scale, length_scale_bounds=length_scale_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -580,7 +555,6 @@ class RBF(MagicMixin, kernels.RBF):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
@@ -593,9 +567,7 @@ class RBF(MagicMixin, kernels.RBF):
         else:
             if eval_gradient:
                 raise ValueError("Gradient can only be evaluated when Y is None.")
-            dists = scipy.spatial.distance.cdist(
-                X / length_scale, Y / length_scale, metric="sqeuclidean"
-            )
+            dists = scipy.spatial.distance.cdist(X / length_scale, Y / length_scale, metric="sqeuclidean")
             K = np.exp(-0.5 * dists)
 
         if active is not None:
@@ -606,15 +578,11 @@ class RBF(MagicMixin, kernels.RBF):
                 # Hyperparameter l kept fixed
                 return K, np.empty((X.shape[0], X.shape[0], 0))
             elif not self.anisotropic or length_scale.shape[0] == 1:
-                K_gradient = (K * scipy.spatial.distance.squareform(dists))[
-                    :, :, np.newaxis
-                ]
+                K_gradient = (K * scipy.spatial.distance.squareform(dists))[:, :, np.newaxis]
                 return K, K_gradient
             elif self.anisotropic:
                 # We need to recompute the pairwise dimension-wise distances
-                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (
-                    length_scale**2
-                )
+                K_gradient = (X[:, np.newaxis, :] - X[np.newaxis, :, :]) ** 2 / (length_scale**2)
                 K_gradient *= K[..., np.newaxis]
                 return K, K_gradient
 
@@ -634,9 +602,7 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
         has_conditions: bool = False,
     ) -> None:
 
-        super(WhiteKernel, self).__init__(
-            noise_level=noise_level, noise_level_bounds=noise_level_bounds
-        )
+        super(WhiteKernel, self).__init__(noise_level=noise_level, noise_level_bounds=noise_level_bounds)
         self.set_active_dims(operate_on)
         self.prior = prior
         self.has_conditions = has_conditions
@@ -672,7 +638,6 @@ class WhiteKernel(MagicMixin, kernels.WhiteKernel):
             hyperparameter of the kernel. Only returned when eval_gradient
             is True.
         """
-
         X = np.atleast_2d(X)
 
         if Y is not None and eval_gradient:
@@ -703,8 +668,8 @@ class HammingKernel(
 ):
     def __init__(
         self,
-        length_scale: Union[float, Tuple[float, ...]] = 1.0,
-        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]]] = (
+        length_scale: Union[float, Tuple[float, ...], np.ndarray] = 1.0,
+        length_scale_bounds: Union[Tuple[float, float], List[Tuple[float, float]], np.ndarray] = (
             1e-5,
             1e5,
         ),
@@ -720,13 +685,12 @@ class HammingKernel(
 
     @property
     def hyperparameter_length_scale(self) -> kernels.Hyperparameter:
+        """Hyperparameter of the length scale."""
         length_scale = self.length_scale
         anisotropic = np.iterable(length_scale) and len(length_scale) > 1  # type: ignore
         if anisotropic:
             return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds, len(length_scale))  # type: ignore  # noqa: E501
-        return kernels.Hyperparameter(
-            "length_scale", "numeric", self.length_scale_bounds
-        )
+        return kernels.Hyperparameter("length_scale", "numeric", self.length_scale_bounds)
 
     def _call(
         self,
@@ -765,7 +729,6 @@ class HammingKernel(
         Code partially copied from skopt (https://github.com/scikit-optimize).
         Made small changes to only compute necessary values and use scikit-learn helper functions.
         """
-
         X = np.atleast_2d(X)
         length_scale = kernels._check_length_scale(X, self.length_scale)
 
@@ -789,10 +752,8 @@ class HammingKernel(
             # dK / d theta = l * dK / dl
 
             # dK / dL computation
-            if np.iterable(length_scale) and length_scale.shape[0] > 1:
-                grad = np.expand_dims(K, axis=-1) * np.array(
-                    indicator, dtype=np.float32
-                )
+            if np.iterable(length_scale) and length_scale.shape[0] > 1:  # type: ignore
+                grad = np.expand_dims(K, axis=-1) * np.array(indicator, dtype=np.float32)
             else:
                 grad = np.expand_dims(K * np.sum(indicator, axis=2), axis=-1)
 

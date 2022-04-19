@@ -1,12 +1,13 @@
 import typing
+
 import numpy as np
 
-from smac.facade.smac_ac_facade import SMAC4AC
 from smac.epm.base_gp import BaseModel
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC, GaussianProcess
+from smac.epm.gaussian_process_mcmc import GaussianProcess, GaussianProcessMCMC
 from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel, HammingKernel
-from smac.epm.util_funcs import get_types, get_rng
+from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.util_funcs import get_rng, get_types
+from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 
@@ -16,8 +17,7 @@ __license__ = "3-clause BSD"
 
 
 class SMAC4BB(SMAC4AC):
-    """
-    Facade to use SMAC for Black-Box optimization using a GP
+    """Facade to use SMAC for Black-Box optimization using a GP.
 
     see smac.facade.smac_Facade for API
     This facade overwrites options available via the SMAC facade
@@ -50,7 +50,6 @@ class SMAC4BB(SMAC4AC):
         List with information about previous runs
     trajectory : list
         List of all incumbents
-
     """
 
     def __init__(self, model_type: str = "gp_mcmc", **kwargs: typing.Any):
@@ -94,10 +93,7 @@ class SMAC4BB(SMAC4AC):
             if len(cont_dims) > 0:
                 exp_kernel = Matern(
                     np.ones([len(cont_dims)]),
-                    [
-                        (np.exp(-6.754111155189306), np.exp(0.0858637988771976))
-                        for _ in range(len(cont_dims))
-                    ],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cont_dims))],
                     nu=2.5,
                     operate_on=cont_dims,
                 )
@@ -105,16 +101,11 @@ class SMAC4BB(SMAC4AC):
             if len(cat_dims) > 0:
                 ham_kernel = HammingKernel(
                     np.ones([len(cat_dims)]),
-                    [
-                        (np.exp(-6.754111155189306), np.exp(0.0858637988771976))
-                        for _ in range(len(cat_dims))
-                    ],
+                    [(np.exp(-6.754111155189306), np.exp(0.0858637988771976)) for _ in range(len(cat_dims))],
                     operate_on=cat_dims,
                 )
 
-            assert (len(cont_dims) + len(cat_dims)) == len(
-                scenario.cs.get_hyperparameters()
-            )
+            assert (len(cont_dims) + len(cat_dims)) == len(scenario.cs.get_hyperparameters())
 
             noise_kernel = WhiteKernel(
                 noise_level=1e-8,
@@ -167,9 +158,7 @@ class SMAC4BB(SMAC4AC):
                 )
                 or dict()
             )
-            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get(
-                "prob", 0.08447232371720552
-            )
+            random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.08447232371720552)
             kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
 
         if kwargs.get("acquisition_function_optimizer") is None:
@@ -181,9 +170,7 @@ class SMAC4BB(SMAC4AC):
                 or dict()
             )
             acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
-            kwargs[
-                "acquisition_function_optimizer_kwargs"
-            ] = acquisition_function_optimizer_kwargs
+            kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
 
         # only 1 configuration per SMBO iteration
         intensifier_kwargs = kwargs.get("intensifier_kwargs", dict()) or dict()
