@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from pyrfr import regression
@@ -120,7 +120,8 @@ class RandomForestWithInstances(BaseModel):
         self.rf_opts.compute_law_of_total_variance = False
 
         self.n_points_per_tree = n_points_per_tree
-        self.rf = None  # type: regression.binary_rss_forest
+        self.rf = None  # type: List[regression.binary_rss_forest]
+        self.num_obj = 1
 
         # This list well be read out by save_iteration() in the solver
         self.hypers = [
@@ -152,16 +153,21 @@ class RandomForestWithInstances(BaseModel):
         """
         X = self._impute_inactive(X)
         self.X = X
-        self.y = y.flatten()
+        if y.ndim > 1:
+            self.num_obj = y.shape[-1]
+            self.y = y.reshape([-1, y.shape[1]])
+        else:
+            self.y = y[:, np.newaxis]
 
         if self.n_points_per_tree <= 0:
             self.rf_opts.num_data_points_per_tree = self.X.shape[0]
         else:
             self.rf_opts.num_data_points_per_tree = self.n_points_per_tree
-        self.rf = regression.binary_rss_forest()
-        self.rf.options = self.rf_opts
-        data = self._init_data_container(self.X, self.y)
-        self.rf.fit(data, rng=self.rng)
+        self.rf = [regression.binary_rss_forest() for _ in range(self.num_obj)]
+        data_all = [self._init_data_container(self.X, self.y[i]) for i in range(self.num_obj)]
+        for data, rf in zip(data_all, self.rf):
+            rf.options = self.rf_opts
+            rf.fit(data, rng=self.rng)
         return self
 
     def _init_data_container(self, X: np.ndarray, y: np.ndarray) -> regression.default_data_container:
@@ -220,39 +226,40 @@ class RandomForestWithInstances(BaseModel):
         X = self._impute_inactive(X)
 
         if self.log_y:
-            all_preds = []
-            third_dimension = 0
+            all_preds = []  # (roughly) with shape [num_points, num_obj, num_trees, last_dimension]
+            last_dimension = 0
 
             # Gather data in a list of 2d arrays and get statistics about the required size of the 3d array
             for row_X in X:
-                preds_per_tree = self.rf.all_leaf_values(row_X)
-                all_preds.append(preds_per_tree)
-                max_num_leaf_data = max(map(len, preds_per_tree))
-                third_dimension = max(max_num_leaf_data, third_dimension)
+                preds_per_tree_all_dims = [rf.all_leaf_values(row_X) for rf in self.rf]
+                all_preds.append(preds_per_tree_all_dims)
+                max_num_leaf_data = [max(map(len, preds_per_tree)) for preds_per_tree in preds_per_tree_all_dims]
+                last_dimension = max(*max_num_leaf_data, last_dimension)
 
             # Transform list of 2d arrays into a 3d array
-            preds_as_array = np.zeros((X.shape[0], self.rf_opts.num_trees, third_dimension)) * np.NaN
-            for i, preds_per_tree in enumerate(all_preds):
-                for j, pred in enumerate(preds_per_tree):
-                    preds_as_array[i, j, : len(pred)] = pred
+            preds_as_array = np.zeros((X.shape[0], self.num_obj, self.rf_opts.num_trees, last_dimension)) * np.NaN
+            for i, preds_per_obj in enumerate(all_preds):
+                for j, preds_per_tree in enumerate(preds_per_obj):
+                    for k, pred in enumerate(preds_per_tree):
+                        preds_as_array[i, j, k, : len(pred)] = pred
 
             # Do all necessary computation with vectorized functions
-            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=2) + VERY_SMALL_NUMBER)
+            preds_as_array = np.log(np.nanmean(np.exp(preds_as_array), axis=-1) + VERY_SMALL_NUMBER)
 
             # Compute the mean and the variance across the different trees
-            means = preds_as_array.mean(axis=1)
-            vars_ = preds_as_array.var(axis=1)
+            means = preds_as_array.mean(axis=-1)
+            vars_ = preds_as_array.var(axis=-1)
         else:
             means, vars_ = [], []
             for row_X in X:
-                mean_, var = self.rf.predict_mean_var(row_X)
+                mean_, var = [rf.predict_mean_var(row_X) for rf in self.rf]
                 means.append(mean_)
                 vars_.append(var)
 
         means = np.array(means)
         vars_ = np.array(vars_)
 
-        return means.reshape((-1, 1)), vars_.reshape((-1, 1))
+        return means.reshape((-1, self.num_obj)), vars_.reshape((-1, self.num_obj))
 
     def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """Predict mean and variance marginalized over all instances.
@@ -300,25 +307,28 @@ class RandomForestWithInstances(BaseModel):
 
             # marginalize over instances
             # 1. get all leaf values for each tree
-            preds_trees = [[] for i in range(self.rf_opts.num_trees)]  # type: List[List[float]]
+            preds_trees = [
+                [[] for i in range(self.rf_opts.num_trees)] for _ in range(self.num_obj)
+            ]  # type: List[List[List[float]]]
 
             for feat in self.instance_features:
                 x_ = np.concatenate([x, feat])
-                preds_per_tree = self.rf.all_leaf_values(x_)
-                for tree_id, preds in enumerate(preds_per_tree):
-                    preds_trees[tree_id] += preds
+                preds_per_tree = [rf.all_leaf_values(x_) for rf in self.rf]
+                for i_obj in range(self.num_obj):
+                    for tree_id, preds in enumerate(preds_per_tree):
+                        preds_trees[i_obj][tree_id] += preds
 
             # 2. average in each tree
             if self.log_y:
                 for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean())
+                    dat_[i, tree_id] = np.log(np.exp(np.array(preds_trees[tree_id])).mean(-1))
             else:
                 for tree_id in range(self.rf_opts.num_trees):
-                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean()
+                    dat_[i, tree_id] = np.array(preds_trees[tree_id]).mean(-1)
 
         # 3. compute statistics across trees
-        mean_ = dat_.mean(axis=1)
-        var = dat_.var(axis=1)
+        mean_ = dat_.mean(axis=-1)
+        var = dat_.var(axis=-1)
 
         if var is None:
             raise RuntimeError("The variance must not be none.")
