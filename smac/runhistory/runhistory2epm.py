@@ -725,5 +725,5 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         -------
         np.ndarray
         """
-        values[:, 1] = np.log(1 + values[:, 1])
+        values[:, 1] = np.log(values[:, 1])
         return values
