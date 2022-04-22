@@ -19,4 +19,4 @@ copyright = f"""
     Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
     and Frank Hutter
 """
-version = "1.3"
+version = "1.3.1"

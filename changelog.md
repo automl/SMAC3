@@ -1,3 +1,8 @@
+# 1.3.1
+
+* Added Python 3.7 support again.
+
+
 # 1.3
 
 ## Features
