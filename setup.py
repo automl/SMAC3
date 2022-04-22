@@ -36,22 +36,22 @@ def read_file(filepath: str) -> str:
 
 extras_require = {
     "dev": [
-        "setuptools>=62.0.0",
-        "types-setuptools>=57.4.12",
+        "setuptools",
+        "types-setuptools",
         # Test
         "pytest>=4.6",
         "pytest-cov",
         "pytest-xdist",
         "pytest-timeout",
         # Docs
-        "automl-sphinx-theme>=0.1.8",
+        "automl-sphinx-theme>=0.1.9",
         # Others
-        "mypy>=0.942",
-        "isort>=5.10.1",
-        "black>=22.3.0",
-        "pydocstyle>=6.1.1",
-        "flake8>=4.0.1",
-        "pre-commit>=2.18.1",
+        "mypy",
+        "isort",
+        "black",
+        "pydocstyle",
+        "flake8",
+        "pre-commit",
     ]
 }
 
@@ -67,12 +67,13 @@ setuptools.setup(
     project_urls=project_urls,
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
-    python_requires=">=3.8",
+    python_requires=">=3.7",
     install_requires=read_file(os.path.join(HERE, "requirements.txt")).split("\n"),
     extras_require=extras_require,
     test_suite="pytest",
     platforms=["Linux"],
     classifiers=[
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
