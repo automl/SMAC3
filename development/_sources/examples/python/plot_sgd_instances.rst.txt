@@ -223,7 +223,7 @@ budget is no longer required by the target function.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  43.660 seconds)
+   **Total running time of the script:** ( 1 minutes  43.864 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_sgd_instances.py:
