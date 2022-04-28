@@ -1,5 +1,8 @@
-# 1.3.1
+# 1.3.2
+* Added stale bot support.
 
+
+# 1.3.1
 * Added Python 3.7 support again.
 
 
