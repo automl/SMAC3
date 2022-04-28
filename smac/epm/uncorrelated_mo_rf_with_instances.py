@@ -3,14 +3,14 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
+class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjectiveModel):
     """Wrapper for the random forest to predict multiple targets.
 
     Only the a list with the target names and the types array for the
@@ -58,6 +58,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         pca_components: Optional[int] = None,
     ) -> None:
         super().__init__(
+            target_names=target_names,
             configspace=configspace,
             bounds=bounds,
             types=types,
@@ -67,84 +68,8 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(AbstractEPM):
         )
         if rf_kwargs is None:
             rf_kwargs = {}
-
-        self.target_names = target_names
-        self.num_targets = len(self.target_names)
-        print(seed, rf_kwargs)
+        rf_kwargs['seed'] = seed
+        rf_kwargs = rf_kwargs
         self.estimators = [
             RandomForestWithInstances(configspace, types, bounds, **rf_kwargs) for _ in range(self.num_targets)
         ]
-
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveRandomForestWithInstances":
-        """Trains the random forest on X and y.
-
-        Parameters
-        ----------
-        X : np.ndarray [n_samples, n_features (config + instance features)]
-            Input data points.
-        Y : np.ndarray [n_samples, n_objectives]
-            The corresponding target values. n_objectives must match the
-            number of target names specified in the constructor.
-
-        Returns
-        -------
-        self
-        """
-        for i, estimator in enumerate(self.estimators):
-            estimator.train(X, Y[:, i])
-
-        return self
-
-    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
-        """Predict means and variances for given X.
-
-        Parameters
-        ----------
-        X : np.ndarray of shape = [n_samples, n_features (config + instance
-        features)]
-        cov_return_type: typing.Optional[str]
-            Specifies what to return along with the mean. Refer ``predict()`` for more information.
-
-        Returns
-        -------
-        means : np.ndarray of shape = [n_samples, n_objectives]
-            Predictive mean
-        vars : np.ndarray  of shape = [n_samples, n_objectives]
-            Predictive variance
-        """
-        if cov_return_type != "diagonal_cov":
-            raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
-
-        mean = np.zeros((X.shape[0], self.num_targets))
-        var = np.zeros((X.shape[0], self.num_targets))
-        for i, estimator in enumerate(self.estimators):
-            m, v = estimator.predict(X)
-            assert v is not None  # please mypy
-            mean[:, i] = m.flatten()
-            var[:, i] = v.flatten()
-        return mean, var
-
-    def predict_marginalized_over_instances(self, X: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """Predict mean and variance marginalized over all instances.
-
-        Returns the predictive mean and variance marginalised over all
-        instances for a set of configurations.
-
-        Parameters
-        ----------
-        X : np.ndarray of shape = [n_features (config), ]
-
-        Returns
-        -------
-        means : np.ndarray of shape = [n_samples, n_objectives]
-            Predictive mean
-        vars : np.ndarray  of shape = [n_samples, n_objectives]
-            Predictive variance
-        """
-        mean = np.zeros((X.shape[0], self.num_targets))
-        var = np.zeros((X.shape[0], self.num_targets))
-        for i, estimator in enumerate(self.estimators):
-            m, v = estimator.predict_marginalized_over_instances(X)
-            mean[:, i] = m.flatten()
-            var[:, i] = v.flatten()
-        return mean, var
