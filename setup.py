@@ -52,7 +52,7 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
-    ]
+    ],
 }
 
 setuptools.setup(
@@ -67,6 +67,7 @@ setuptools.setup(
     project_urls=project_urls,
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
+    include_package_data=True,
     python_requires=">=3.7",
     install_requires=read_file(os.path.join(HERE, "requirements.txt")).split("\n"),
     extras_require=extras_require,
