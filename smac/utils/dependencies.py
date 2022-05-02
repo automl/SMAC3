@@ -3,7 +3,7 @@ import typing
 import importlib
 import re
 
-import pkg_resources
+import pkg_resources  # type: ignore
 from packaging.version import Version
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
