@@ -1,7 +1,6 @@
+import datetime
 import os
 import sys
-import datetime
-
 
 name = "SMAC3"
 package_name = "smac"
