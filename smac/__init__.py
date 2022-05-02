@@ -1,4 +1,7 @@
+import os
+import sys
 import datetime
+
 
 name = "SMAC3"
 package_name = "smac"
@@ -20,3 +23,19 @@ copyright = f"""
     and Frank Hutter
 """
 version = "1.3.2"
+
+
+if "setup.py" not in sys.argv[0]:
+    from smac.utils import dependencies
+
+    with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as fh:
+        dependencies.verify_packages(fh.read())
+
+    if sys.version_info < (3, 7, 0):
+        raise ValueError("SMAC requires Python 3.7.0 or newer.")
+
+    if os.name != "posix":
+        print(
+            f"Detected unsupported operating system: {sys.platform}."
+            "Please be aware, that SMAC might not run on this system."
+        )

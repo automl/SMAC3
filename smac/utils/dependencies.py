@@ -83,6 +83,12 @@ def _verify_package(name: str, operation: str, version: str) -> None:
     if not operation:
         return
 
+    # pkg_resources.get_distribution can (not) find a version depending on how the package was built
+    # if we get version 0.0.0 we fallback to the module's version
+    if installed_version == Version("0.0.0"):
+        module = importlib.import_module(name)
+        installed_version = Version(module.__version__)
+
     required_version = Version(version)
 
     if operation == "==":
