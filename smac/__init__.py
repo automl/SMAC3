@@ -26,10 +26,11 @@ version = "1.3.2"
 
 
 if "setup.py" not in sys.argv[0]:
-    import smac
+    from pathlib import Path
     from smac.utils import dependencies
 
-    with open(os.path.join(smac.__path__[0], "requirements.txt")) as fh:
+    PACKAGE_ROOT = Path(__file__).parent
+    with open(PACKAGE_ROOT / "requirements.txt") as fh:
         dependencies.verify_packages(fh.read())
 
     if sys.version_info < (3, 7, 0):
