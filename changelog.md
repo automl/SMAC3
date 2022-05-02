@@ -3,6 +3,8 @@
 * Checks on start if correct packages are installed.
 * If package version 0.0.0 via `get_distribution` is found, the version of the module is used
 instead.
+* Removed `tox.ini`.
+* Moved `requirements.txt` to `setup.py`.
 
 
 # 1.3.1
