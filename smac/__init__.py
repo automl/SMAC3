@@ -25,19 +25,8 @@ copyright = f"""
 version = "1.3.2"
 
 
-if "setup.py" not in sys.argv[0]:
-    from pathlib import Path
-    from smac.utils import dependencies
-
-    PACKAGE_ROOT = Path(__file__).parent
-    with open(PACKAGE_ROOT / "requirements.txt") as fh:
-        dependencies.verify_packages(fh.read())
-
-    if sys.version_info < (3, 7, 0):
-        raise ValueError("SMAC requires Python 3.7.0 or newer.")
-
-    if os.name != "posix":
-        print(
-            f"Detected unsupported operating system: {sys.platform}."
-            "Please be aware, that SMAC might not run on this system."
-        )
+if os.name != "posix":
+    print(
+        f"Detected unsupported operating system: {sys.platform}."
+        "Please be aware, that SMAC might not run on this system."
+    )
