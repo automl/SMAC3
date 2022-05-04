@@ -1,6 +1,7 @@
 import datetime
 import os
 import sys
+import warnings
 
 name = "SMAC3"
 package_name = "smac"
@@ -25,7 +26,7 @@ version = "1.3.2"
 
 
 if os.name != "posix":
-    print(
+    warnings.warn(
         f"Detected unsupported operating system: {sys.platform}."
         "Please be aware, that SMAC might not run on this system."
     )
