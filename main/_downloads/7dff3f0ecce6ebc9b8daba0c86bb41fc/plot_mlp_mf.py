@@ -9,6 +9,11 @@ aggressive racing mechanism and successive halving.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
+
+.. note::
+
+    This example uses the ``SMAC4MF`` facade, which is the closest implementation to
+    `BOHB <https://github.com/automl/HpBandSter>`_.
 """
 
 import logging

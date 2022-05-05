@@ -29,7 +29,12 @@ aggressive racing mechanism and successive halving.
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-178
+.. note::
+
+    This example uses the ``SMAC4MF`` facade, which is the closest implementation to
+    `BOHB <https://github.com/automl/HpBandSter>`_.
+
+.. GENERATED FROM PYTHON SOURCE LINES 18-183
 
 
 
@@ -227,7 +232,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  47.291 seconds)
+   **Total running time of the script:** ( 1 minutes  45.690 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_mlp_mf.py:
