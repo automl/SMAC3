@@ -5,6 +5,7 @@ instead.
 * Removed `tox.ini`.
 * Moved `requirements.txt` to `setup.py`.
 * Added multi-objective support for ROAR.
+* Added notes in documentation that `SMAC4MF` is the closest implementation to BOHB/HpBandSter.
 
 
 # 1.3.1
