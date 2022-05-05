@@ -11,6 +11,7 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.roar_facade import ROAR
 from smac.optimizer.multi_objective.parego import ParEGO
 from smac.scenario.scenario import Scenario
 
@@ -96,8 +97,18 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [SMAC4BB, SMAC4HPO, SMAC4AC]:
+        for facade in [ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
             smac = facade(**self.facade_kwargs)
+            incumbent = smac.optimize()
+            
+            f1_inc, f2_inc = schaffer(incumbent["x"])
+            f1_opt, f2_opt = get_optimum()
+            
+            self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
+            results.append(smac)
+
+        for facade in [ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
+            smac = facade(**self.parego_facade_kwargs)
             incumbent = smac.optimize()
 
             f1_inc, f2_inc = schaffer(incumbent["x"])

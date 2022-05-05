@@ -4,6 +4,7 @@
 instead.
 * Removed `tox.ini`.
 * Moved `requirements.txt` to `setup.py`.
+* Added multi-objective support for ROAR.
 
 
 # 1.3.1
