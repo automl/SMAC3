@@ -1,5 +1,14 @@
-# 1.3.1
+# 1.3.2
+* Added stale bot support.
+* If package version 0.0.0 via `get_distribution` is found, the version of the module is used
+instead.
+* Removed `tox.ini`.
+* Moved `requirements.txt` to `setup.py`.
+* Added multi-objective support for ROAR.
+* Added notes in documentation that `SMAC4MF` is the closest implementation to BOHB/HpBandSter.
 
+
+# 1.3.1
 * Added Python 3.7 support again.
 
 

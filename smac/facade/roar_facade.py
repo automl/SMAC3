@@ -1,4 +1,4 @@
-import typing
+from typing import Callable, Dict, List, Optional, Type, Union
 
 import logging
 
@@ -11,6 +11,9 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     AbstractRunHistory2EPM,
@@ -54,11 +57,18 @@ class ROAR(SMAC4AC):
         to perform random search over a fixed set of configurations.
     acquisition_function_optimizer_kwargs: Optional[dict]
         Arguments passed to constructor of `~acquisition_function_optimizer`
+    multi_objective_algorithm: Optional[Type["AbstractMultiObjectiveAlgorithm"]]
+        Class that implements multi objective logic. If None, will use:
+    smac.optimizer.multi_objective.aggregation_strategy.MeanAggregationStrategy
+        Multi objective only becomes active if the objective
+        specified in `~scenario.run_obj` is a List[str] with at least two entries.
+    multi_objective_kwargs: Optional[Dict]
+        Arguments passed to `~multi_objective_algorithm`.
     initial_design : InitialDesign
         initial sampling design
     initial_design_kwargs: Optional[dict]
         arguments passed to constructor of `~initial_design`
-    initial_configurations: typing.List[Configuration]
+    initial_configurations: List[Configuration]
         list of initial configurations for initial design --
         cannot be used together with initial_design
     stats: Stats
@@ -86,21 +96,23 @@ class ROAR(SMAC4AC):
     def __init__(
         self,
         scenario: Scenario,
-        tae_runner: typing.Optional[typing.Union[typing.Type[BaseRunner], typing.Callable]] = None,
-        tae_runner_kwargs: typing.Optional[typing.Dict] = None,
+        tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
+        tae_runner_kwargs: Optional[Dict] = None,
         runhistory: RunHistory = None,
-        intensifier: typing.Optional[typing.Type[AbstractRacer]] = None,
-        intensifier_kwargs: typing.Optional[typing.Dict] = None,
-        acquisition_function_optimizer: typing.Optional[typing.Type[AcquisitionFunctionMaximizer]] = None,
-        acquisition_function_optimizer_kwargs: typing.Optional[dict] = None,
-        initial_design: typing.Optional[typing.Type[InitialDesign]] = None,
-        initial_design_kwargs: typing.Optional[dict] = None,
-        initial_configurations: typing.List[Configuration] = None,
+        intensifier: Optional[Type[AbstractRacer]] = None,
+        intensifier_kwargs: Optional[Dict] = None,
+        acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
+        acquisition_function_optimizer_kwargs: Optional[dict] = None,
+        multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
+        multi_objective_kwargs: Optional[Dict] = None,
+        initial_design: Optional[Type[InitialDesign]] = None,
+        initial_design_kwargs: Optional[dict] = None,
+        initial_configurations: List[Configuration] = None,
         stats: Stats = None,
-        rng: typing.Optional[typing.Union[int, np.random.RandomState]] = None,
-        run_id: typing.Optional[int] = None,
-        dask_client: typing.Optional[dask.distributed.Client] = None,
-        n_jobs: typing.Optional[int] = 1,
+        rng: Optional[Union[int, np.random.RandomState]] = None,
+        run_id: Optional[int] = None,
+        dask_client: Optional[dask.distributed.Client] = None,
+        n_jobs: Optional[int] = 1,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -111,7 +123,7 @@ class ROAR(SMAC4AC):
 
         if scenario.run_obj == "runtime":
             # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
-            runhistory2epm = RunHistory2EPM4LogCost  # type: typing.Type[AbstractRunHistory2EPM]
+            runhistory2epm = RunHistory2EPM4LogCost  # type: Type[AbstractRunHistory2EPM]
         else:
             runhistory2epm = RunHistory2EPM4Cost
 
@@ -124,6 +136,8 @@ class ROAR(SMAC4AC):
             intensifier=intensifier,
             intensifier_kwargs=intensifier_kwargs,
             runhistory2epm=runhistory2epm,
+            multi_objective_algorithm=multi_objective_algorithm,
+            multi_objective_kwargs=multi_objective_kwargs,
             initial_design=initial_design,
             initial_design_kwargs=initial_design_kwargs,
             initial_configurations=initial_configurations,

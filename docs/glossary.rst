@@ -7,6 +7,14 @@ Glossary
         Bayesian Optimization. A Black-Box optimization algorithm weighing exploration & exploitation
         to find the minimum of its objective.
 
+    HB
+        `Hyperband <https://arxiv.org/abs/1603.06560>`_. A novel bandit-based algorithm for hyperparameter
+        optimization. Hyperband is an extension of successive halving and therefore works with
+        multi-fidelities.
+
+    BOHB
+        `Bayesian optimization and Hyperband <https://arxiv.org/abs/1807.01774>`_.
+
     SMAC
         Sequential Model-Based Algorithm Configuration.
 

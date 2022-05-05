@@ -20,12 +20,7 @@ The basic recipe is as follows:
    Please set ``run_obj = 'quality'``.
 #. Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
    facade (via ``multi_objective_algorithm`` and/or ``multi_objective_kwargs``).
-   Per default, ParEgo is used as the multi-objective algorithm.
-
-
-.. warning::
-
-   Multi-Objective Optimization does currently *not* support Intensifications like Hyperband or Successive Halving.
+   Per default, a mean aggregation strategy is used as the multi-objective algorithm.
 
 
 We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
