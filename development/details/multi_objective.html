@@ -433,12 +433,8 @@ argument, e.g. <code class="docutils literal notranslate"><span class="pre">mult
 Please set <code class="docutils literal notranslate"><span class="pre">run_obj</span> <span class="pre">=</span> <span class="pre">'quality'</span></code>.</p></li>
 <li><p>Now you can optionally pass a custom multi-objective algorithm class or further kwargs to the SMAC
 facade (via <code class="docutils literal notranslate"><span class="pre">multi_objective_algorithm</span></code> and/or <code class="docutils literal notranslate"><span class="pre">multi_objective_kwargs</span></code>).
-Per default, ParEgo is used as the multi-objective algorithm.</p></li>
+Per default, a mean aggregation strategy is used as the multi-objective algorithm.</p></li>
 </ol>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Multi-Objective Optimization does currently <em>not</em> support Intensifications like Hyperband or Successive Halving.</p>
-</div>
 <p>We show an example of how to use multi-objective with a nice Pareto front plot in our examples:
 <a class="reference internal" href="../examples/python/plot_scalarized_multi_objective.html#scalarized-multi-objective-using-parego"><span class="std std-ref">Scalarized Multi-Objective Using ParEGO</span></a>.</p>
 </div>
