@@ -1,12 +1,10 @@
-from typing import List, Optional, Tuple, Dict, Any
+from abc import abstractmethod
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from smac.configspace import (
-    ConfigurationSpace,
-)
+from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from abc import abstractmethod
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -54,15 +52,15 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
     """
 
     def __init__(
-            self,
-            target_names: List[str],
-            configspace: ConfigurationSpace,
-            types: List[int],
-            bounds: List[Tuple[float, float]],
-            seed: int,
-            instance_features: Optional[np.ndarray] = None,
-            pca_components: Optional[int] = None,
-            model_kwargs: Optional[Dict[str, Any]] = None,
+        self,
+        target_names: List[str],
+        configspace: ConfigurationSpace,
+        types: List[int],
+        bounds: List[Tuple[float, float]],
+        seed: int,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
+        model_kwargs: Optional[Dict[str, Any]] = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
@@ -80,11 +78,13 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
         self.estimators: List[AbstractEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
 
     @abstractmethod
-    def construct_estimators(self,
-                             configspace: ConfigurationSpace,
-                             types: List[int],
-                             bounds: List[Tuple[float, float]],
-                             model_kwargs: Dict[str, Any]) -> List[AbstractEPM]:
+    def construct_estimators(
+        self,
+        configspace: ConfigurationSpace,
+        types: List[int],
+        bounds: List[Tuple[float, float]],
+        model_kwargs: Dict[str, Any],
+    ) -> List[AbstractEPM]:
         raise NotImplementedError
 
     def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveModel":

@@ -1,8 +1,7 @@
-from typing import Any, Dict, List, Optional, Tuple
-
-import numpy as np
+from typing import Any, Dict, List, Tuple
 
 from smac.configspace import ConfigurationSpace
+from smac.epm.base_epm import AbstractEPM
 from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
 from smac.epm.rf_with_instances import RandomForestWithInstances
 
@@ -19,11 +18,11 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjec
     the random forest for the hyperparameters and their meanings.
     """
 
-    def construct_estimators(self,
-                             configspace: ConfigurationSpace,
-                             types: List[int],
-                             bounds: List[Tuple[float, float]],
-                             model_kwargs: Dict[str, Any]) -> List[RandomForestWithInstances]:
-        return [
-            RandomForestWithInstances(configspace, types, bounds, **model_kwargs) for _ in range(self.num_targets)
-        ]
+    def construct_estimators(
+        self,
+        configspace: ConfigurationSpace,
+        types: List[int],
+        bounds: List[Tuple[float, float]],
+        model_kwargs: Dict[str, Any],
+    ) -> List[AbstractEPM]:
+        return [RandomForestWithInstances(configspace, types, bounds, **model_kwargs) for _ in range(self.num_targets)]
