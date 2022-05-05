@@ -317,7 +317,7 @@ class TestSMACFacade(unittest.TestCase):
             smbo = SMAC4AC(
                 self.scenario,
                 model=UncorrelatedMultiObjectiveRandomForestWithInstances,
-                model_kwargs={"target_names": ["a", "b"], "rf_kwargs": {"seed": 1}},
+                model_kwargs={"target_names": ["a", "b"], "model_kwargs": {"seed": 1}},
                 acquisition_function=EIPS,
                 runhistory2epm=RunHistory2EPM4EIPS,
             ).solver
@@ -331,6 +331,9 @@ class TestSMACFacade(unittest.TestCase):
                 UncorrelatedMultiObjectiveRandomForestWithInstances,
             )
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
+
+            with self.assertRaisesRegex(TypeError,  "the surrogate model must support multi-objective prediction!"):
+                SMAC4AC(self.scenario, acquisition_function=EIPS, runhistory2epm=RunHistory2EPM4EIPS)
 
     ####################################################################################################################
     # Other tests...

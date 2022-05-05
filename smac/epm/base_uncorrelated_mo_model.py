@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict, Any
 
 import numpy as np
 
@@ -6,6 +6,7 @@ from smac.configspace import (
     ConfigurationSpace,
 )
 from smac.epm.base_epm import AbstractEPM
+from abc import abstractmethod
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -14,7 +15,7 @@ __license__ = "3-clause BSD"
 class UncorrelatedMultiObjectiveModel(AbstractEPM):
     """Wrapper for the surrogate models to predict multiple targets.
 
-    Only the a list with the target names and the types array for the
+    Only a list with the target names and the types array for the
     underlying forest model are mandatory. All other hyperparameters to
     model can be passed via kwargs. Consult the documentation of
     the corresponding model for the hyperparameters and their meanings.
@@ -34,27 +35,34 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
     bounds : List[Tuple[float, float]]
         bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
     instance_features : np.ndarray (I, K)
-        Contains the K dimensional instance features of the I different instances
+        Contains the K dimensional instance features of I different instances
     pca_components : float
         Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
         set n_feats (> pca_dims).
+    model_kwargs: Optional[Dict[str, Any]]:
+        arguments for initialing estimators
 
 
     Attributes
     ----------
-    target_names
-    num_targets
-    estimators
+    target_names:
+        target names
+    num_targets: int
+        number of targets
+    estimators: List[AbstractEPM]
+        a list of estimators predicting different target values
     """
+
     def __init__(
-        self,
-        target_names: List[str],
-        configspace: ConfigurationSpace,
-        types: List[int],
-        bounds: List[Tuple[float, float]],
-        seed: int,
-        instance_features: Optional[np.ndarray] = None,
-        pca_components: Optional[int] = None,
+            self,
+            target_names: List[str],
+            configspace: ConfigurationSpace,
+            types: List[int],
+            bounds: List[Tuple[float, float]],
+            seed: int,
+            instance_features: Optional[np.ndarray] = None,
+            pca_components: Optional[int] = None,
+            model_kwargs: Optional[Dict[str, Any]] = None,
     ) -> None:
         super().__init__(
             configspace=configspace,
@@ -64,9 +72,20 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
             instance_features=instance_features,
             pca_components=pca_components,
         )
+        if model_kwargs is None:
+            model_kwargs = {}
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators: List[AbstractEPM] = []
+        print(seed, model_kwargs)
+        self.estimators: List[AbstractEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
+
+    @abstractmethod
+    def construct_estimators(self,
+                             configspace: ConfigurationSpace,
+                             types: List[int],
+                             bounds: List[Tuple[float, float]],
+                             model_kwargs: Dict[str, Any]) -> List[AbstractEPM]:
+        raise NotImplementedError
 
     def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveModel":
         """Trains the random forest on X and y.
@@ -143,5 +162,3 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
             mean[:, i] = m.flatten()
             var[:, i] = v.flatten()
         return mean, var
-    
-    
