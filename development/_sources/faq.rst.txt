@@ -33,6 +33,10 @@ Can I restore SMAC from a previous state?
   Yes. Have a look :ref:`here<Restoring>`.
 
 
+How can I use :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_ with SMAC?
+  The facade SMAC4HPO is the closes implementation to :term:`BOHB` and/or `HpBandSter <https://github.com/automl/HpBandSter>`_.
+
+
 I discovered a bug or SMAC does not behave as expected. Where should I report to?
   Open an issue in our issue list on GitHub. Before you report a bug, please make sure that:
 
