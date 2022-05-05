@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional, Callable, Union, Type
+from typing import Callable, Dict, List, Optional, Type, Union
 
 import logging
 
@@ -11,7 +11,9 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     AbstractRunHistory2EPM,
