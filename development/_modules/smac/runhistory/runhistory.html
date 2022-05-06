@@ -756,11 +756,18 @@ style="width: 100%;">
             <span class="bp">self</span><span class="o">.</span><span class="n">objective_bounds</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">min_v</span><span class="p">,</span> <span class="n">max_v</span><span class="p">)]</span>
 
     <span class="k">def</span> <span class="nf">_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">RunKey</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">StatusType</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="n">DataOrigin</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Actual function to add new entry to data structures.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Actual function to add new entry to data structures.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        This method always calls `update_cost` in the multi-</span>
+<span class="sd">        objective setting.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">external</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">origin</span>
 
-        <span class="c1"># Update objective bounds</span>
+        <span class="c1"># Update objective bounds based on raw data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_objective_bounds</span><span class="p">()</span>
 
         <span class="c1"># Capped data is added above</span>
@@ -779,17 +786,23 @@ style="width: 100%;">
                 <span class="c1"># append new budget to existing inst-seed-key dict</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_configid_to_inst_seed_budget</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">][</span><span class="n">is_k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="o">.</span><span class="n">budget</span><span class="p">)</span>
 
-            <span class="c1"># if budget is used, then update cost instead of incremental updates</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># assumes an average across runs as cost function aggregation, this is used for algorithm configuration</span>
-                <span class="c1"># (incremental updates are used to save time as getting the cost for &gt; 100 instances is high)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">],</span> <span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+            <span class="c1"># Update costs in multi-objective setting s.t. all costs are</span>
+            <span class="c1"># normalized the same.</span>
+            <span class="c1"># Note: This is only a temporary solution.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_obj</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">update_all_costs</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># this is when budget &gt; 0 (only successive halving and hyperband so far)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">])</span>
-                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_runs_per_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># This is updated in update_cost</span>
-                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not happen!&quot;</span><span class="p">)</span>
+                <span class="c1"># if budget is used, then update cost instead of incremental updates</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">overwrite_existing_runs</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># assumes an average across runs as cost function aggregation, this is used for algorithm configuration</span>
+                    <span class="c1"># (incremental updates are used to save time as getting the cost for &gt; 100 instances is high)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">],</span> <span class="n">v</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># this is when budget &gt; 0 (only successive halving and hyperband so far)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">budget</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_runs_per_config</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">config_id</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># This is updated in update_cost</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;This should not happen!&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RunHistory.update_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Stores the performance of a configuration across the instances in self.cost_per_config</span>
@@ -812,6 +825,11 @@ style="width: 100%;">
 
         <span class="n">all_inst_seed_budgets</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_cost_per_config</span><span class="p">[</span><span class="n">config_id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cost</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">all_inst_seed_budgets</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RunHistory.update_all_costs"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.update_all_costs">[docs]</a>    <span class="k">def</span> <span class="nf">update_all_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Update all costs in the runhistory.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ids_config</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_cost</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RunHistory.incremental_update_cost"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.incremental_update_cost">[docs]</a>    <span class="k">def</span> <span class="nf">incremental_update_cost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">cost</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Incrementally updates the performance of a configuration by using a moving average.</span>
