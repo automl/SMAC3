@@ -41,9 +41,9 @@ Simple Multi-Objective
     __license__ = "3-clause BSD"
 
     import numpy as np
+    from ConfigSpace.hyperparameters import UniformFloatHyperparameter
     from matplotlib import pyplot as plt
 
-    from ConfigSpace.hyperparameters import UniformFloatHyperparameter
     from smac.configspace import ConfigurationSpace
     from smac.facade.smac_bb_facade import SMAC4BB
     from smac.scenario.scenario import Scenario
@@ -112,7 +112,7 @@ Simple Multi-Objective
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  45.845 seconds)
+   **Total running time of the script:** ( 0 minutes  30.867 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_simple_multi_objective.py:

@@ -31,7 +31,7 @@ digit-2 vs digit-3.
 If we use instance as our fidelity, we need to initialize scenario with argument instance. In this case the argument
 budget is no longer required by the target function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-178
+.. GENERATED FROM PYTHON SOURCE LINES 15-177
 
 
 
@@ -65,15 +65,14 @@ budget is no longer required by the target function.
     import warnings
 
     import numpy as np
-    from sklearn import datasets
-    from sklearn.exceptions import ConvergenceWarning
-    from sklearn.linear_model import SGDClassifier
-    from sklearn.model_selection import StratifiedKFold, cross_val_score
-
     from ConfigSpace.hyperparameters import (
         CategoricalHyperparameter,
         UniformFloatHyperparameter,
     )
+    from sklearn import datasets
+    from sklearn.exceptions import ConvergenceWarning
+    from sklearn.linear_model import SGDClassifier
+    from sklearn.model_selection import StratifiedKFold, cross_val_score
 
     # Import ConfigSpace and different types of parameters
     from smac.configspace import ConfigurationSpace
@@ -223,7 +222,7 @@ budget is no longer required by the target function.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  49.319 seconds)
+   **Total running time of the script:** ( 1 minutes  45.947 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_sgd_instances.py:
