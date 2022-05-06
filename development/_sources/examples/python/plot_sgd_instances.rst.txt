@@ -45,7 +45,7 @@ budget is no longer required by the target function.
     Value for default configuration: 0.1450
     /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/smac/intensification/parallel_scheduling.py:156: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
       warnings.warn(
-    Optimized Value: 0.0040
+    Optimized Value: 0.0043
 
 
 
@@ -223,7 +223,7 @@ budget is no longer required by the target function.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  45.559 seconds)
+   **Total running time of the script:** ( 1 minutes  46.054 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_sgd_instances.py:
