@@ -135,6 +135,54 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         # We expect to get 1.0 and 2.0 because runhistory does not overwrite by default
         self.assertEqual(list(rh.data.values())[0].cost, [1.0, 2.0])
 
+    def test_full(self):
+        rh = RunHistory()
+        cs = get_config_space()
+        config1 = Configuration(cs, values={"a": 1, "b": 2})
+        config2 = Configuration(cs, values={"a": 1, "b": 3})
+        config3 = Configuration(cs, values={"a": 1, "b": 4})
+        rh.add(
+            config=config1,
+            cost=[50, 100],
+            time=20,
+            status=StatusType.SUCCESS,
+        )
+
+        print(rh._cost_per_config)
+
+        # Only one value: Normalization goes to 1.0
+        self.assertEqual(rh.get_cost(config1), 1.0)
+
+        rh.add(
+            config=config2,
+            cost=[150, 50],
+            time=30,
+            status=StatusType.SUCCESS,
+        )
+
+        # The cost of the first config must be updated
+        # We would expect [0, 1] and the normalized value would be 0.5
+        self.assertEqual(rh.get_cost(config1), 0.5)
+
+        # We would expect [1, 0] and the normalized value would be 0.5
+        self.assertEqual(rh.get_cost(config2), 0.5)
+
+        rh.add(
+            config=config3,
+            cost=[100, 0],
+            time=40,
+            status=StatusType.SUCCESS,
+        )
+
+        # [0, 1] -> 0.5
+        self.assertEqual(rh.get_cost(config1), 0.5)
+
+        # [1, 0.5] -> 0.75
+        self.assertEqual(rh.get_cost(config2), 0.75)
+
+        # [0.5, 0] -> 0.25
+        self.assertEqual(rh.get_cost(config3), 0.25)
+
     def test_full_update(self):
         rh = RunHistory(overwrite_existing_runs=True)
         cs = get_config_space()
@@ -214,9 +262,9 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             seed=1,
         )
 
-        # We except 0.75 because of moving average
-        # First we have 1 and then 0.5, the moving average is then 0.75
-        self.assertEqual(rh.get_cost(config1), 0.75)
+        # We don't except moving average of 0.75 here because
+        # the costs should always be updated.
+        self.assertEqual(rh.get_cost(config1), 0.5)
 
         rh.add(
             config=config1,
@@ -227,7 +275,7 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             seed=1,
         )
 
-        self.assertAlmostEqual(rh.get_cost(config1), 0.694, places=3)
+        self.assertAlmostEqual(rh.get_cost(config1), 0.583, places=3)
 
     def test_multiple_budgets(self):
 
@@ -562,4 +610,3 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
 
 if __name__ == "__main__":
     t = RunhistoryMultiObjectiveTest()
-    t.test_add_and_pickle()

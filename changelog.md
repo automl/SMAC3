@@ -1,3 +1,7 @@
+# 1.3.3
+* Since multi-objective implementation depends on normalized costs, it now is ensured that the cached costs are updated everytime a new entry is added.
+
+
 # 1.3.2
 * Added stale bot support.
 * If package version 0.0.0 via `get_distribution` is found, the version of the module is used

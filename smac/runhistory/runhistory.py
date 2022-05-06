@@ -354,11 +354,18 @@ class RunHistory(Mapping[RunKey, RunValue]):
             self.objective_bounds += [(min_v, max_v)]
 
     def _add(self, k: RunKey, v: RunValue, status: StatusType, origin: DataOrigin) -> None:
-        """Actual function to add new entry to data structures."""
+        """
+        Actual function to add new entry to data structures.
+
+        Note
+        ----
+        This method always calls `update_cost` in the multi-
+        objective setting.
+        """
         self.data[k] = v
         self.external[k] = origin
 
-        # Update objective bounds
+        # Update objective bounds based on raw data
         self._update_objective_bounds()
 
         # Capped data is added above
@@ -377,17 +384,23 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 # append new budget to existing inst-seed-key dict
                 self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
 
-            # if budget is used, then update cost instead of incremental updates
-            if not self.overwrite_existing_runs and k.budget == 0:
-                # assumes an average across runs as cost function aggregation, this is used for algorithm configuration
-                # (incremental updates are used to save time as getting the cost for > 100 instances is high)
-                self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
+            # Update costs in multi-objective setting s.t. all costs are
+            # normalized the same.
+            # Note: This is only a temporary solution.
+            if self.num_obj > 1:
+                self.update_all_costs()
             else:
-                # this is when budget > 0 (only successive halving and hyperband so far)
-                self.update_cost(config=self.ids_config[k.config_id])
-                if k.budget > 0:
-                    if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
-                        raise ValueError("This should not happen!")
+                # if budget is used, then update cost instead of incremental updates
+                if not self.overwrite_existing_runs and k.budget == 0:
+                    # assumes an average across runs as cost function aggregation, this is used for algorithm configuration
+                    # (incremental updates are used to save time as getting the cost for > 100 instances is high)
+                    self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
+                else:
+                    # this is when budget > 0 (only successive halving and hyperband so far)
+                    self.update_cost(config=self.ids_config[k.config_id])
+                    if k.budget > 0:
+                        if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
+                            raise ValueError("This should not happen!")
 
     def update_cost(self, config: Configuration) -> None:
         """Stores the performance of a configuration across the instances in self.cost_per_config
@@ -410,6 +423,11 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
+
+    def update_all_costs(self) -> None:
+        """Update all costs in the runhistory."""
+        for config in self.ids_config.values():
+            self.update_cost(config)
 
     def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a moving average.
