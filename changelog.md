@@ -1,6 +1,7 @@
 # 1.3.3
 * Since multi-objective implementation depends on normalized costs, it now is ensured that the cached costs are updated everytime a new entry is added.
 * Removed mac-specific files.
+* Added entry point for cli.
 
 
 # 1.3.2
