@@ -52,7 +52,7 @@ extras_require = {
         "pydocstyle",
         "flake8",
         "pre-commit",
-    ]
+    ],
 }
 
 setuptools.setup(
@@ -67,11 +67,27 @@ setuptools.setup(
     project_urls=project_urls,
     version=version,
     packages=setuptools.find_packages(exclude=["tests"]),
+    include_package_data=True,
     python_requires=">=3.7",
-    install_requires=read_file(os.path.join(HERE, "requirements.txt")).split("\n"),
+    install_requires=[
+        "numpy>=1.7.1",
+        "scipy>=1.7.0",
+        "psutil",
+        "pynisher>=0.4.1",
+        "ConfigSpace>=0.5.0",
+        "joblib",
+        "scikit-learn>=0.22.0",
+        "pyrfr>=0.8.0",
+        "dask",
+        "distributed",
+        "emcee>=3.0.0",
+    ],
     extras_require=extras_require,
     test_suite="pytest",
     platforms=["Linux"],
+    entry_points={
+        "console_scripts": ["smac = smac.smac_cli:cmd_line_call"],
+    },
     classifiers=[
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",

@@ -4,14 +4,7 @@ import logging
 import warnings
 from copy import deepcopy
 
-try:
-    import emcee
-except ImportError as e:
-    raise ImportError(
-        "Could not import emcee - emcee is an optional dependency.\n"
-        "Please install it manually with `pip install emcee`."
-    ) from e
-
+import emcee
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel

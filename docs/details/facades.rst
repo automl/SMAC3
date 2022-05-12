@@ -22,6 +22,12 @@ These recommendations are based on our experience and technical limitations and 
     Forest<RF>`", ":term:`Random Forest<RF>`, :term:`Gaussian Process<GP>`, :term:`GP-MCMC` or Random"
 
 
+.. note::
+
+    The ``SMAC4MF`` facade is the closest implementation to
+    `BOHB <https://github.com/automl/HpBandSter>`_.
+
+
 Inheritance
 ~~~~~~~~~~~
 

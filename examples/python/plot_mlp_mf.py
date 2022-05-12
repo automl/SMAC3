@@ -9,6 +9,11 @@ aggressive racing mechanism and successive halving.
 
 MLP is a deep neural network, and therefore, we choose epochs as fidelity type. The digits dataset
 is chosen to optimize the average accuracy on 5-fold cross validation.
+
+.. note::
+
+    This example uses the ``SMAC4MF`` facade, which is the closest implementation to
+    `BOHB <https://github.com/automl/HpBandSter>`_.
 """
 
 import logging
@@ -17,18 +22,18 @@ logging.basicConfig(level=logging.INFO)
 
 import warnings
 
-import numpy as np
-from sklearn.datasets import load_digits
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.neural_network import MLPClassifier
-
 import ConfigSpace as CS
+import numpy as np
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+from sklearn.datasets import load_digits
+from sklearn.exceptions import ConvergenceWarning
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.neural_network import MLPClassifier
+
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_mf_facade import SMAC4MF
 from smac.scenario.scenario import Scenario

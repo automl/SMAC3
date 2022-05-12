@@ -8,6 +8,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from matplotlib import pyplot as plt
 
 from smac.configspace import ConfigurationSpace
+from smac.facade.roar_facade import ROAR
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
@@ -72,7 +73,7 @@ class SchafferTest(unittest.TestCase):
         self.scenario = Scenario(
             {
                 "run_obj": "quality",  # we optimize quality (alternatively runtime)
-                "runcount-limit": 50,  # max. number of function evaluations
+                "runcount-limit": 20,  # max. number of function evaluations
                 "cs": self.cs,  # configuration space
                 "deterministic": True,
                 "multi_objectives": "metric1, metric2",
@@ -82,13 +83,13 @@ class SchafferTest(unittest.TestCase):
 
         self.facade_kwargs = {
             "scenario": self.scenario,
-            "rng": np.random.RandomState(5),
+            "rng": np.random.RandomState(0),
             "tae_runner": tae,
         }
 
         self.parego_facade_kwargs = {
             "scenario": self.scenario,
-            "rng": np.random.RandomState(5),
+            "rng": np.random.RandomState(0),
             "tae_runner": tae,
             "multi_objective_algorithm": ParEGO,
             "multi_objective_kwargs": {"rho": 0.05},
@@ -96,15 +97,19 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [SMAC4BB, SMAC4HPO, SMAC4AC]:
-            smac = facade(**self.facade_kwargs)
-            incumbent = smac.optimize()
+        for facade in [ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
+            for kwargs in [self.facade_kwargs, self.parego_facade_kwargs]:
+                smac = facade(**kwargs)
+                incumbent = smac.optimize()
 
-            f1_inc, f2_inc = schaffer(incumbent["x"])
-            f1_opt, f2_opt = get_optimum()
+                f1_inc, f2_inc = schaffer(incumbent["x"])
+                f1_opt, f2_opt = get_optimum()
+                inc = f1_inc + f2_inc
+                opt = f1_opt + f2_opt
+                diff = abs(inc - opt)
 
-            self.assertAlmostEqual(f1_inc + f2_inc, f1_opt + f2_opt, places=1)
-            results.append(smac)
+                assert diff < 0.1
+                results.append(smac)
 
         return results
 

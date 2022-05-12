@@ -19,26 +19,25 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import warnings
-import numpy as np
 
 import ConfigSpace as CS
+import numpy as np
 from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    UniformIntegerHyperparameter,
     BetaIntegerHyperparameter,
+    CategoricalHyperparameter,
     NormalFloatHyperparameter,
+    UniformIntegerHyperparameter,
 )
-
 from sklearn.datasets import load_digits
 from sklearn.exceptions import ConvergenceWarning
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.scenario.scenario import Scenario
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

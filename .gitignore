@@ -134,3 +134,6 @@ dmypy.json
 .pyre/
 
 *smac3-output_*
+
+# macOS files
+.DS_Store

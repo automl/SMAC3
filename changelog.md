@@ -1,5 +1,24 @@
-# 1.3.1
+# 1.3.3
+* Since multi-objective implementation depends on normalized costs, it now is ensured that the cached costs are updated everytime a new entry is added.
+* Removed mac-specific files.
+* Added entry point for cli.
+* Added `ConfigSpace` to third known parties s.t. sorting should be the same across different
+operating systems.
+* Fixed bugs in makefile in which tools were specified incorrectly.
+* Executed isort/black on examples and tests.
 
+
+# 1.3.2
+* Added stale bot support.
+* If package version 0.0.0 via `get_distribution` is found, the version of the module is used
+instead.
+* Removed `tox.ini`.
+* Moved `requirements.txt` to `setup.py`.
+* Added multi-objective support for ROAR.
+* Added notes in documentation that `SMAC4MF` is the closest implementation to BOHB/HpBandSter.
+
+
+# 1.3.1
 * Added Python 3.7 support again.
 
 

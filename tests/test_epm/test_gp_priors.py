@@ -1,5 +1,5 @@
-from functools import partial
 import unittest
+from functools import partial
 
 import numpy as np
 import scipy.optimize
