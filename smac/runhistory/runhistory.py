@@ -379,8 +379,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
             # if budget is used, then update cost instead of incremental updates
             if not self.overwrite_existing_runs and k.budget == 0:
-                # assumes an average across runs as cost function aggregation, this is used for algorithm configuration
-                # (incremental updates are used to save time as getting the cost for > 100 instances is high)
+                # assumes an average across runs as cost function aggregation, this is used for
+                # algorithm configuration (incremental updates are used to save time as getting
+                # Zthe cost for > 100 instances is high)
                 self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
                 # this is when budget > 0 (only successive halving and hyperband so far)
