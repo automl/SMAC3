@@ -1,9 +1,10 @@
 """
 SVM with EIPS as acquisition functions
-^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example to optimize a simple SVM on the IRIS-benchmark with EIPS (EI per seconds) acquisition function. Since EIPS
-requires two types of objections: EI values and the predicted time used for the configurations. We need to fit the data
+An example to optimize a simple SVM on the IRIS-benchmark with EIPS (EI per seconds)
+acquisition function. Since EIPS requires two types of objections: EI values and the predicted
+time used for the configurations. We need to fit the data
 with a multi-objective model
 """
 
@@ -105,4 +106,15 @@ if __name__ == "__main__":
         **KWARGS,
     )
 
-    smac.optimize()
+    incumbent = smac.optimize()
+
+    inc_value = svm_from_cfg(incumbent)
+    print("Optimized Value: %.2f" % (inc_value))
+
+    # We can also validate our results (though this makes a lot more sense with instances)
+    smac.validate(
+        config_mode="inc",  # We can choose which configurations to evaluate
+        # instance_mode='train+test',  # Defines what instances to validate
+        repetitions=100,  # Ignored, unless you set "deterministic" to "false" in line 95
+        n_jobs=1,
+    )  # How many cores to use in parallel for optimization
