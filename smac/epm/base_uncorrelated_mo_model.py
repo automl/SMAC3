@@ -14,7 +14,7 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
     """Wrapper for the surrogate models to predict multiple targets.
 
     Only a list with the target names and the types array for the
-    underlying forest model are mandatory. All other hyperparameters to
+    underlying model are mandatory. All other hyperparameters to
     model can be passed via kwargs. Consult the documentation of
     the corresponding model for the hyperparameters and their meanings.
 
@@ -74,7 +74,6 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
             model_kwargs = {}
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        print(seed, model_kwargs)
         self.estimators: List[AbstractEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
 
     @abstractmethod
@@ -109,7 +108,7 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
         raise NotImplementedError
 
     def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveModel":
-        """Trains the random forest on X and y.
+        """Trains the models on X and y.
 
         Parameters
         ----------
