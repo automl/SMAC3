@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Parallelism &#8212; SMAC3 Documentation 1.3.3 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
@@ -430,7 +431,7 @@ style="width: 100%;">
               
               <div>
                 
-  <div class="section" id="parallelism">
+  <section id="parallelism">
 <h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this headline">¶</a></h1>
 <p>SMAC also provides a parallel mode to use several parallel computational resources (such as CPU cores).
 This variant of SMAC is called pSMAC (parallel SMAC).
@@ -447,7 +448,7 @@ So, a requirement for pSMAC is that it can write to a shared file space.</p>
 <p class="admonition-title">Note</p>
 <p>SMAC also supports DASH. The documentation is in progress.</p>
 </div>
-<div class="section" id="commandline">
+<section id="commandline">
 <h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
 <p>To use pSMAC via the commandline interface, please specify the following two arguments:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--shared_model True --input_psmac_dirs &lt;output_path&gt;
@@ -472,16 +473,16 @@ please set the <code class="docutils literal notranslate"><span class="pre">verb
 <p class="admonition-title">Warning</p>
 <p>We recommend that each pSMAC uses a different random seed.</p>
 </div>
-</div>
-<div class="section" id="usage-in-python">
+</section>
+<section id="usage-in-python">
 <h2>Usage in Python<a class="headerlink" href="#usage-in-python" title="Permalink to this headline">¶</a></h2>
 <p>The same arguments used on the commandline can also be passed to the <em>Scenario</em> constructor.
 See above for a detailed description.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">({</span><span class="s2">&quot;shared_model&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;input_psmac_dirs&quot;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">output_path</span><span class="o">&gt;</span><span class="p">})</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
               </div>

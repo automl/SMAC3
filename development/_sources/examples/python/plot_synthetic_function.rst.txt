@@ -40,7 +40,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-05-06_12:24:05_662537
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-05-19_08:17:38_397613
     Default Value: 16916.00
     Optimizing! Depending on your machine, this might take a few minutes.
     INFO:smac.facade.smac_bb_facade.SMAC4BB:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -67,7 +67,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
     INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 10 / 10.0
     INFO:smac.stats.stats.Stats:Finished target algorithm runs: 10 / 10.0
     INFO:smac.stats.stats.Stats:Configurations: 10
-    INFO:smac.stats.stats.Stats:Used wallclock time: 1.48 / inf sec 
+    INFO:smac.stats.stats.Stats:Used wallclock time: 1.46 / inf sec 
     INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
     INFO:smac.stats.stats.Stats:----------------------------------------------------
     INFO:smac.facade.smac_bb_facade.SMAC4BB:Final Incumbent: Configuration(values={
@@ -162,7 +162,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.483 seconds)
+   **Total running time of the script:** ( 0 minutes  1.466 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function.py:

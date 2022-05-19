@@ -4,7 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Target Algorithm Evaluator &#8212; SMAC3 Documentation 1.3.3 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
@@ -430,12 +431,12 @@ style="width: 100%;">
               
               <div>
                 
-  <div class="section" id="target-algorithm-evaluator">
+  <section id="target-algorithm-evaluator">
 <h1>Target Algorithm Evaluator<a class="headerlink" href="#target-algorithm-evaluator" title="Permalink to this headline">¶</a></h1>
 <p>SMAC evaluates the algorithm to be optimized by invoking it through a Target
 Algorithm Evaluator (TAE). There are different TAEs implemented in SMAC which
 provide slightly different interfaces.</p>
-<div class="section" id="python">
+<section id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
 <p>The target algorithm is called with a dict- or array-like configuration and optionally
 with seed and instance, returning either the loss as a float or a tuple (loss,
@@ -474,8 +475,8 @@ follow the next example:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="commandline">
+</section>
+<section id="commandline">
 <h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
 <p>When using the commandline, SMAC takes the algorithm call from the <code class="docutils literal notranslate"><span class="pre">algo</span></code> parameter of the
 <a class="reference internal" href="scenario.html#scenario"><span class="std std-ref">scenario</span></a>. The parameters will be appended to the algorithm call, which in total
@@ -503,8 +504,8 @@ Result <span class="k">for</span> ParamILS: &lt;STATUS&gt;, &lt;running time&gt;
 <li><p><strong>seed</strong> is the seed used for the algorithm call.</p></li>
 <li><p><strong>instance-specifics</strong> is additional information.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
               </div>
