@@ -49,7 +49,7 @@ check-black:
 
 check-isort:
 	$(ISORT) ${SOURCE_DIR} --check || :
-	$(BLACK) ${EXAMPLES_DIR} --check || :
+	$(ISORT) ${EXAMPLES_DIR} --check || :
 	$(ISORT) ${TESTS_DIR} --check || :
 
 check-pydocstyle:
@@ -60,7 +60,7 @@ check-mypy:
 
 check-flake8:
 	$(FLAKE8) ${SOURCE_DIR} || :
-	$(BLACK) ${EXAMPLES_DIR} --check || :
+	$(FLAKE8) ${EXAMPLES_DIR} --check || :
 	$(FLAKE8) ${TESTS_DIR} || :
 
 check: check-black check-isort check-mypy check-flake8 check-pydocstyle
@@ -75,7 +75,7 @@ format-black:
 
 format-isort:
 	$(ISORT) ${SOURCE_DIR}
-	$(BLACK) ${EXAMPLES_DIR}
+	$(ISORT) ${EXAMPLES_DIR}
 	$(ISORT) ${TESTS_DIR}
 
 format: format-black format-isort

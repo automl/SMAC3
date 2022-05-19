@@ -1,14 +1,11 @@
 """
-SVM with Cross-Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^
+SVM with EIPS as acquisition functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-An example to optimize a simple SVM on the IRIS-benchmark. SMAC4HPO is designed
-for hyperparameter optimization (HPO) problems and uses an RF as its surrogate model.
-It is able to scale to higher evaluation budgets and higher number of
-dimensions. Also, you can use mixed data types as well as conditional hyperparameters.
-
-SMAC4HPO by default only contains single fidelity approach. Therefore, only the configuration is
-processed by the :term:`TAE`.
+An example to optimize a simple SVM on the IRIS-benchmark with EIPS (EI per seconds)
+acquisition function. Since EIPS requires two types of objections: EI values and the predicted
+time used for the configurations. We need to fit the data
+with a multi-objective model
 """
 
 import logging
@@ -16,27 +13,29 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
-from ConfigSpace.conditions import InCondition
-from ConfigSpace.hyperparameters import (
-    CategoricalHyperparameter,
-    UniformFloatHyperparameter,
-    UniformIntegerHyperparameter,
-)
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
+from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
+
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.smac_ac_facade import SMAC4AC
+
+# Import SMAC-utilities
 from smac.scenario.scenario import Scenario
+
+# EIPS related
+from smac.optimizer.acquisition import EIPS
+from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
+from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
-
-# We load the iris-dataset (a widely used benchmark)
 iris = datasets.load_iris()
 
 
+# Target Algorithm
 def svm_from_cfg(cfg):
     """Creates a SVM based on a configuration and evaluates it on the
     iris-dataset using cross-validation. Note here random seed is fixed
@@ -78,26 +77,6 @@ if __name__ == "__main__":
     shrinking = CategoricalHyperparameter("shrinking", [True, False], default_value=True)
     cs.add_hyperparameters([C, shrinking])
 
-    # Others are kernel-specific, so we can add conditions to limit the searchspace
-    degree = UniformIntegerHyperparameter("degree", 1, 5, default_value=3)  # Only used by kernel poly
-    coef0 = UniformFloatHyperparameter("coef0", 0.0, 10.0, default_value=0.0)  # poly, sigmoid
-    cs.add_hyperparameters([degree, coef0])
-
-    use_degree = InCondition(child=degree, parent=kernel, values=["poly"])
-    use_coef0 = InCondition(child=coef0, parent=kernel, values=["poly", "sigmoid"])
-    cs.add_conditions([use_degree, use_coef0])
-
-    # This also works for parameters that are a mix of categorical and values
-    # from a range of numbers
-    # For example, gamma can be either "auto" or a fixed float
-    gamma = CategoricalHyperparameter("gamma", ["auto", "value"], default_value="auto")  # only rbf, poly, sigmoid
-    gamma_value = UniformFloatHyperparameter("gamma_value", 0.0001, 8, default_value=1, log=True)
-    cs.add_hyperparameters([gamma, gamma_value])
-    # We only activate gamma_value if gamma is set to "value"
-    cs.add_condition(InCondition(child=gamma_value, parent=gamma, values=["value"]))
-    # And again we can restrict the use of gamma in general to the choice of the kernel
-    cs.add_condition(InCondition(child=gamma, parent=kernel, values=["rbf", "poly", "sigmoid"]))
-
     # Scenario object
     scenario = Scenario(
         {
@@ -111,11 +90,23 @@ if __name__ == "__main__":
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
-    print("Default Value: %.2f" % (def_value))
-
+    print("Default Value: %.2f" % def_value)
+    
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(42), tae_runner=svm_from_cfg)
+    
+    # Besides the kwargs used for initializing UncorrelatedMultiObjectiveRandomForestWithInstances,
+    # we also need kwargs for initializing the model insides UncorrelatedMultiObjectiveModel
+    model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
+    smac = SMAC4AC(
+        scenario=scenario,
+        model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+        rng=np.random.RandomState(42),
+        model_kwargs=model_kwargs,
+        tae_runner=svm_from_cfg,
+        acquisition_function=EIPS,
+        runhistory2epm=RunHistory2EPM4EIPS
+    )
 
     incumbent = smac.optimize()
 

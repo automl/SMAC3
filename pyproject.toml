@@ -34,6 +34,7 @@ src_paths = ["smac", "tests"]
 known_types = ["typing", "abc"] # We put these in their own section "types"
 known_test = ["tests"]
 known_first_party = ["smac"]
+known_third_party = ["ConfigSpace"]
 sections = [
     "FUTURE",
     "TYPES",

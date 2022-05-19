@@ -16,14 +16,14 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
-from sklearn.datasets import make_hastie_10_2
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.model_selection import KFold, cross_val_score
-
 from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
+from sklearn.datasets import make_hastie_10_2
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import KFold, cross_val_score
+
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.scenario.scenario import Scenario

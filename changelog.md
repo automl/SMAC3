@@ -1,3 +1,20 @@
+# 1.3.3
+* Hotfix: Since multi-objective implementation depends on normalized costs, it now is ensured that the
+cached costs are updated everytime a new entry is added.
+* Removed mac-specific files.
+* Added entry point for cli.
+* Added `ConfigSpace` to third known parties s.t. sorting should be the same across different
+operating systems.
+* Fixed bugs in makefile in which tools were specified incorrectly.
+* Executed isort/black on examples and tests.
+* Updated README.
+* Fixed a problem, which incremented time twice before taking log (#833).
+* New wrapper for multi-objective models (base_uncorrelated_mo_model). Makes it easier for
+developing new multi-objective models.
+* Raise error if acquisition function is incompatible with the epm models.
+* Restricting pynisher.
+
+
 # 1.3.2
 * Added stale bot support.
 * If package version 0.0.0 via `get_distribution` is found, the version of the module is used
