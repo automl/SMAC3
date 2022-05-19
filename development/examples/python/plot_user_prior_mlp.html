@@ -190,6 +190,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -418,11 +423,11 @@ style="width: 100%;">
                 
   <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
-<p>Click <a class="reference internal" href="#sphx-glr-download-examples-python-user-prior-mlp-py"><span class="std std-ref">here</span></a>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-python-plot-user-prior-mlp-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="hpo-with-user-priors-over-the-optimum">
-<span id="sphx-glr-examples-python-user-prior-mlp-py"></span><h1>HPO with User Priors over the Optimum<a class="headerlink" href="#hpo-with-user-priors-over-the-optimum" title="Permalink to this headline">¶</a></h1>
+<span id="sphx-glr-examples-python-plot-user-prior-mlp-py"></span><h1>HPO with User Priors over the Optimum<a class="headerlink" href="#hpo-with-user-priors-over-the-optimum" title="Permalink to this headline">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) setting priors over the optimum on the
 hyperparameters. These priors are derived from user knowledge - from previous runs on similar
 tasks, common knowledge or intuition gained from manual tuning. To create the priors, we make
@@ -432,6 +437,16 @@ but we stick with SMAC4HPO here. To incorporate user priors into the optimizatio
 πBO (nolinkexistsyet) is used to bias the point selection strategy.</p>
 <p>MLP is used as the deep neural network.
 The digits datasetis chosen to optimize the average accuracy on 5-fold cross validation.</p>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/smac/utils/io/output_writer.py:125: UserWarning: The pcs format does not support categorical hyperparameters with assigned weights (for hyperparameter activation). No pcs file will be generated in the output.
+  warnings.warn(f&quot;{e}. No pcs file will be generated in the output.&quot;)
+Value for default configuration: 0.0200
+Optimized Value: 0.0184
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -552,7 +567,8 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
         <span class="p">}</span>
     <span class="p">)</span>
 
-    <span class="c1"># The rate at which SMAC forgets the prior. The higher the value, the more the prior is considered.</span>
+    <span class="c1"># The rate at which SMAC forgets the prior.</span>
+    <span class="c1"># The higher the value, the more the prior is considered.</span>
     <span class="c1"># Defaults to # n_iterations / 10</span>
     <span class="n">user_prior_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;decay_beta&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
 
@@ -561,9 +577,11 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
         <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
         <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
         <span class="n">tae_runner</span><span class="o">=</span><span class="n">mlp_from_cfg</span><span class="p">,</span>
-        <span class="n">user_priors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># This flag is required to conduct the optimisation using priors over the optimum</span>
+        <span class="c1"># This flag is required to conduct the optimisation using priors over the optimum</span>
+        <span class="n">user_priors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">user_prior_kwargs</span><span class="o">=</span><span class="n">user_prior_kwargs</span><span class="p">,</span>
-        <span class="n">initial_design</span><span class="o">=</span><span class="n">RandomConfigurations</span><span class="p">,</span>  <span class="c1"># Using random configurations will cause the initialization to be samples drawn from the prior</span>
+        <span class="c1"># Using random configurations will cause the initialization to be samples drawn from the prior</span>
+        <span class="n">initial_design</span><span class="o">=</span><span class="n">RandomConfigurations</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Example call of the function with default values</span>
@@ -583,13 +601,13 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">inc_value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-user-prior-mlp-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 5 minutes  34.093 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-user-prior-mlp-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/44279e96dcc5a612cd231f0aab6939a2/user_prior_mlp.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">user_prior_mlp.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/6c57c542f65fe6852fad2324112fbf77/plot_user_prior_mlp.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_user_prior_mlp.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../../_downloads/5b9ab65eb1de65f780868d8a95b5698e/user_prior_mlp.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">user_prior_mlp.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../../_downloads/824c57991d8ec65f172a8c524cd71963/plot_user_prior_mlp.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_user_prior_mlp.ipynb</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>

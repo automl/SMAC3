@@ -187,6 +187,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="examples/python/plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -202,7 +207,7 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="examples/python/user_prior_mlp.html">
+    <a class="reference internal" href="examples/python/plot_user_prior_mlp.html">
      HPO with User Priors over the Optimum
     </a>
    </li>
@@ -601,10 +606,10 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.smac_cli.html#smac.smac_cli.cmd_line_call">cmd_line_call() (in module smac.smac_cli)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader">CMDReader (class in smac.utils.io.cmd_reader)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.compute_all_costs">compute_all_costs() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.config_ids">config_ids (smac.runhistory.runhistory.RunHistory attribute)</a>
@@ -625,6 +630,12 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.epm.gp_kernels.html#smac.epm.gp_kernels.ConstantKernel">ConstantKernel (class in smac.epm.gp_kernels)</a>
 </li>
+      <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.construct_estimators">construct_estimators() (smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel method)</a>
+
+      <ul>
+        <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.construct_estimators">(smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunValue.cost">cost (smac.runhistory.runhistory.RunValue attribute)</a>
 </li>
       <li><a href="api/smac.tae.base.html#smac.tae.base.BaseRunner.cost_for_crash">cost_for_crash (smac.tae.base.BaseRunner attribute)</a>
@@ -693,7 +704,7 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser">EPMChooser (class in smac.optimizer.epm_configuration_chooser)</a>
 </li>
-      <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.estimators">estimators (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
+      <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.estimators">estimators (smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel attribute)</a>
 </li>
       <li><a href="api/smac.tae.execute_func.html#smac.tae.execute_func.ExecuteTAFuncArray">ExecuteTAFuncArray (class in smac.tae.execute_func)</a>
 </li>
@@ -1013,6 +1024,8 @@ style="width: 100%;">
 </li>
         <li><a href="api/smac.epm.base_rf.html#module-smac.epm.base_rf">smac.epm.base_rf</a>
 </li>
+        <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#module-smac.epm.base_uncorrelated_mo_model">smac.epm.base_uncorrelated_mo_model</a>
+</li>
         <li><a href="api/smac.epm.gaussian_process.html#module-smac.epm.gaussian_process">smac.epm.gaussian_process</a>
 </li>
         <li><a href="api/smac.epm.gaussian_process_mcmc.html#module-smac.epm.gaussian_process_mcmc">smac.epm.gaussian_process_mcmc</a>
@@ -1208,7 +1221,7 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.num_runs_per_config">num_runs_per_config (smac.runhistory.runhistory.RunHistory attribute)</a>
 </li>
-      <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.num_targets">num_targets (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
+      <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.num_targets">num_targets (smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel attribute)</a>
 </li>
       <li><a href="api/smac.tae.base.html#smac.tae.base.BaseRunner.num_workers">num_workers() (smac.tae.base.BaseRunner method)</a>
 
@@ -1301,9 +1314,9 @@ style="width: 100%;">
       <li><a href="api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">predict_marginalized_over_instances() (smac.epm.base_epm.AbstractEPM method)</a>
 
       <ul>
-        <li><a href="api/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances">(smac.epm.rf_with_instances.RandomForestWithInstances method)</a>
+        <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.predict_marginalized_over_instances">(smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel method)</a>
 </li>
-        <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.predict_marginalized_over_instances">(smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances method)</a>
+        <li><a href="api/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.predict_marginalized_over_instances">(smac.epm.rf_with_instances.RandomForestWithInstances method)</a>
 </li>
       </ul></li>
       <li><a href="api/smac.stats.stats.html#smac.stats.stats.Stats.print_stats">print_stats() (smac.stats.stats.Stats method)</a>
@@ -1568,6 +1581,13 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.epm.base_rf.html#module-smac.epm.base_rf">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.epm.base_uncorrelated_mo_model
+
+      <ul>
+        <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#module-smac.epm.base_uncorrelated_mo_model">module</a>
 </li>
       </ul></li>
       <li>
@@ -1850,6 +1870,8 @@ style="width: 100%;">
         <li><a href="api/smac.optimizer.multi_objective.abstract_multi_objective_algorithm.html#module-smac.optimizer.multi_objective.abstract_multi_objective_algorithm">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.multi_objective.aggregation_strategy
 
@@ -1857,8 +1879,6 @@ style="width: 100%;">
         <li><a href="api/smac.optimizer.multi_objective.aggregation_strategy.html#module-smac.optimizer.multi_objective.aggregation_strategy">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.multi_objective.parego
 
@@ -2215,7 +2235,7 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.tae.html#smac.tae.TAEAbortException">TAEAbortException</a>
 </li>
-      <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances.target_names">target_names (smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances attribute)</a>
+      <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.target_names">target_names (smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel attribute)</a>
 </li>
       <li><a href="api/smac.epm.rfr_imputator.html#smac.epm.rfr_imputator.RFRImputator.threshold">threshold (smac.epm.rfr_imputator.RFRImputator attribute)</a>
 </li>
@@ -2279,6 +2299,8 @@ style="width: 100%;">
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/smac.epm.base_uncorrelated_mo_model.html#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel">UncorrelatedMultiObjectiveModel (class in smac.epm.base_uncorrelated_mo_model)</a>
+</li>
       <li><a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#smac.epm.uncorrelated_mo_rf_with_instances.UncorrelatedMultiObjectiveRandomForestWithInstances">UncorrelatedMultiObjectiveRandomForestWithInstances (class in smac.epm.uncorrelated_mo_rf_with_instances)</a>
 </li>
       <li><a href="api/smac.epm.rf_with_instances.html#smac.epm.rf_with_instances.RandomForestWithInstances.unlog_y">unlog_y (smac.epm.rf_with_instances.RandomForestWithInstances attribute)</a>

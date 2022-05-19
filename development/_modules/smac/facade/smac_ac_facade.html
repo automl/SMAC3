@@ -187,6 +187,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -202,7 +207,7 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../examples/python/user_prior_mlp.html">
+    <a class="reference internal" href="../../../examples/python/plot_user_prior_mlp.html">
      HPO with User Priors over the Optimum
     </a>
    </li>
@@ -411,6 +416,7 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_uncorrelated_mo_model</span> <span class="kn">import</span> <span class="n">UncorrelatedMultiObjectiveModel</span>
 
 <span class="c1"># epm</span>
 <span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
@@ -432,6 +438,7 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">EI</span><span class="p">,</span>
+    <span class="n">EIPS</span><span class="p">,</span>
     <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
     <span class="n">IntegratedAcquisitionFunction</span><span class="p">,</span>
     <span class="n">LogEI</span><span class="p">,</span>
@@ -765,6 +772,12 @@ style="width: 100%;">
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;Argument acquisition_function must be None or an object implementing the &quot;</span>
                 <span class="s2">&quot;AbstractAcquisitionFunction, not </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acquisition_function_instance</span><span class="p">,</span> <span class="n">EIPS</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">model_instance</span><span class="p">,</span> <span class="n">UncorrelatedMultiObjectiveModel</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;If the acquisition function is EIPS, the surrogate model must support multi-objective prediction!&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">integrate_acquisition_function</span><span class="p">:</span>
             <span class="n">acquisition_function_instance</span> <span class="o">=</span> <span class="n">IntegratedAcquisitionFunction</span><span class="p">(</span>
