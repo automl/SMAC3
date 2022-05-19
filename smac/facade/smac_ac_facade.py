@@ -9,6 +9,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
 
 # epm
 from smac.epm.rf_with_instances import RandomForestWithInstances
@@ -30,6 +31,7 @@ from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.acquisition import (
     EI,
+    EIPS,
     AbstractAcquisitionFunction,
     IntegratedAcquisitionFunction,
     LogEI,
@@ -363,6 +365,12 @@ class SMAC4AC(object):
             raise TypeError(
                 "Argument acquisition_function must be None or an object implementing the "
                 "AbstractAcquisitionFunction, not %s." % type(acquisition_function)
+            )
+        if isinstance(acquisition_function_instance, EIPS) and not isinstance(
+            model_instance, UncorrelatedMultiObjectiveModel
+        ):
+            raise TypeError(
+                "If the acquisition function is EIPS, the surrogate model must support multi-objective prediction!"
             )
         if integrate_acquisition_function:
             acquisition_function_instance = IntegratedAcquisitionFunction(

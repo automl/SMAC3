@@ -134,7 +134,8 @@ if __name__ == "__main__":
         }
     )
 
-    # The rate at which SMAC forgets the prior. The higher the value, the more the prior is considered.
+    # The rate at which SMAC forgets the prior.
+    # The higher the value, the more the prior is considered.
     # Defaults to # n_iterations / 10
     user_prior_kwargs = {"decay_beta": 1.5}
 
@@ -143,9 +144,11 @@ if __name__ == "__main__":
         scenario=scenario,
         rng=np.random.RandomState(42),
         tae_runner=mlp_from_cfg,
-        user_priors=True,  # This flag is required to conduct the optimisation using priors over the optimum
+        # This flag is required to conduct the optimisation using priors over the optimum
+        user_priors=True,
         user_prior_kwargs=user_prior_kwargs,
-        initial_design=RandomConfigurations,  # Using random configurations will cause the initialization to be samples drawn from the prior
+        # Using random configurations will cause the initialization to be samples drawn from the prior
+        initial_design=RandomConfigurations,
     )
 
     # Example call of the function with default values

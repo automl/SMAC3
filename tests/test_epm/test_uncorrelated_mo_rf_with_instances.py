@@ -41,7 +41,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
                 (0, np.nan),
             ],
             seed=1,
-            rf_kwargs={"seed": 1},
+            model_kwargs={"seed": 1},
             pca_components=5,
         )
         self.assertEqual(model.estimators[0].seed, 1)
@@ -49,6 +49,10 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         self.assertEqual(model.pca_components, 5)
         model.train(X[:10], Y)
         m, v = model.predict(X[10:])
+        self.assertEqual(m.shape, (10, 2))
+        self.assertEqual(v.shape, (10, 2))
+
+        m, v = model.predict_marginalized_over_instances(X[10:])
         self.assertEqual(m.shape, (10, 2))
         self.assertEqual(v.shape, (10, 2))
 
@@ -87,7 +91,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
                 (0, np.nan),
             ],
             seed=1,
-            rf_kwargs={"seed": 1},
+            model_kwargs={"seed": 1},
         )
 
         model.train(X[:10], Y[:10])
