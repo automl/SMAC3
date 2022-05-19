@@ -8,6 +8,7 @@ operating systems.
 * Fixed bugs in makefile in which tools were specified incorrectly.
 * Executed isort/black on examples and tests.
 * Updated README.
+* Fixed a problem, which incremented time twice before taking log (#833).
 
 
 # 1.3.2
