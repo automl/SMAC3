@@ -704,7 +704,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
             else:
                 y[row, 0] = run.cost
 
-            y[row, 1] = 1 + run.time
+            y[row, 1] = run.time
 
         y_transformed = self.transform_response_values(values=y)
 
@@ -725,5 +725,6 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         -------
         np.ndarray
         """
+        # We need to ensure that time remains positive after the log transform.
         values[:, 1] = np.log(1 + values[:, 1])
         return values
