@@ -5,22 +5,22 @@
 
 Computation times
 =================
-**07:04.829** total execution time for **examples_python** files:
+**08:09.523** total execution time for **examples_python** files:
 
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_gb_non_deterministic.py` (``plot_gb_non_deterministic.py``)             | 02:31.641 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_gb_non_deterministic.py` (``plot_gb_non_deterministic.py``)             | 03:06.249 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_sgd_instances.py` (``plot_sgd_instances.py``)                           | 01:45.658 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_mlp_mf.py` (``plot_mlp_mf.py``)                                         | 01:45.933 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_mlp_mf.py` (``plot_mlp_mf.py``)                                         | 01:44.515 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_sgd_instances.py` (``plot_sgd_instances.py``)                           | 01:45.600 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_simple_multi_objective.py` (``plot_simple_multi_objective.py``)         | 00:30.005 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_simple_multi_objective.py` (``plot_simple_multi_objective.py``)         | 00:46.170 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_svm_cv.py` (``plot_svm_cv.py``)                                         | 00:16.820 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_scalarized_multi_objective.py` (``plot_scalarized_multi_objective.py``) | 00:22.581 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_scalarized_multi_objective.py` (``plot_scalarized_multi_objective.py``) | 00:14.723 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_svm_cv.py` (``plot_svm_cv.py``)                                         | 00:20.623 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_python_plot_synthetic_function.py` (``plot_synthetic_function.py``)                 | 00:01.466 | 0.0 MB |
+| :ref:`sphx_glr_examples_python_plot_synthetic_function.py` (``plot_synthetic_function.py``)                 | 00:02.367 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_examples_python_spear_mf_instances.py` (``spear_mf_instances.py``)                           | 00:00.000 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------------------+-----------+--------+
