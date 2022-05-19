@@ -9,6 +9,9 @@ operating systems.
 * Executed isort/black on examples and tests.
 * Updated README.
 * Fixed a problem, which incremented time twice before taking log (#833).
+* New wrapper for multi-objective models (base_uncorrelated_mo_model). Makes it easier for
+developing new multi-objective models.
+* Raise error if acquisition function is incompatible with the epm models.
 
 
 # 1.3.2
