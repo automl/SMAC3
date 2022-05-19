@@ -73,7 +73,7 @@ setuptools.setup(
         "numpy>=1.7.1",
         "scipy>=1.7.0",
         "psutil",
-        "pynisher>=0.4.1",
+        "pynisher<1.0.0",
         "ConfigSpace>=0.5.0",
         "joblib",
         "scikit-learn>=0.22.0",
