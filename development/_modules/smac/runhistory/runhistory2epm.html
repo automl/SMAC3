@@ -1106,7 +1106,7 @@ style="width: 100%;">
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">cost</span>
 
-            <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">run</span><span class="o">.</span><span class="n">time</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">time</span>
 
         <span class="n">y_transformed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
 
@@ -1127,6 +1127,7 @@ style="width: 100%;">
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We need to ensure that time remains positive after the log transform.</span>
         <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">values</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">values</span></div></div>
 </pre></div>
