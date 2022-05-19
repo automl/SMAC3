@@ -4,8 +4,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arguments &#8212; SMAC3 Documentation 1.3.2 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Arguments &#8212; SMAC3 Documentation 1.3.3 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,7 +114,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -189,6 +190,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -204,7 +210,7 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/python/user_prior_mlp.html">
+    <a class="reference internal" href="../examples/python/plot_user_prior_mlp.html">
      HPO with User Priors over the Optimum
     </a>
    </li>
@@ -430,7 +436,7 @@ style="width: 100%;">
               
               <div>
                 
-  <div class="section" id="arguments">
+  <section id="arguments">
 <h1>Arguments<a class="headerlink" href="#arguments" title="Permalink to this headline">¶</a></h1>
 <p>If you are using Python, have a look <a class="reference internal" href="../api/smac.facade.html#module-smac.facade"><span class="std std-ref">here</span></a> for a detailed API reference. When
 using the commandline, view the basic command options via</p>
@@ -438,7 +444,7 @@ using the commandline, view the basic command options via</p>
 </pre></div>
 </div>
 <p>or view all other options in the following:</p>
-<div class="section" id="main-options">
+<section id="main-options">
 <h2>Main Options<a class="headerlink" href="#main-options" title="Permalink to this headline">¶</a></h2>
 <dl class="field-list simple">
 <dt class="field-odd">hydra_iterations</dt>
@@ -475,8 +481,8 @@ using the commandline, view the basic command options via</p>
 <dd class="field-odd"><p>Verbosity level. Default: 20.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="smac-options">
+</section>
+<section id="smac-options">
 <h2>SMAC Options<a class="headerlink" href="#smac-options" title="Permalink to this headline">¶</a></h2>
 <dl class="field-list simple">
 <dt class="field-odd">abort_on_first_run_crash</dt>
@@ -513,7 +519,7 @@ using the commandline, view the basic command options via</p>
 <dd class="field-odd"><p>Minimum number of calls per configuration. Default: 1.</p>
 </dd>
 <dt class="field-even">output_dir</dt>
-<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2022-05-05_08:44:56_634303.</p>
+<dd class="field-even"><p>Specifies the output-directory for all emerging files, such as logging and results. Default: smac3-output_2022-05-19_17:48:31_534972.</p>
 </dd>
 <dt class="field-odd">rand_prob</dt>
 <dd class="field-odd"><p>probablity to run a random configuration instead of configuration optimized on the acquisition function Default: 0.5.</p>
@@ -555,8 +561,8 @@ using the commandline, view the basic command options via</p>
 <dd class="field-odd"><p>Instead of measuring SMAC’s wallclock time, only consider time reported by the target algorithm (ta).</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
               </div>

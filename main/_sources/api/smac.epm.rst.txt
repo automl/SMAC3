@@ -31,6 +31,7 @@
    smac.epm.base_gp
    smac.epm.base_imputor
    smac.epm.base_rf
+   smac.epm.base_uncorrelated_mo_model
    smac.epm.gaussian_process
    smac.epm.gaussian_process_mcmc
    smac.epm.gp_base_prior

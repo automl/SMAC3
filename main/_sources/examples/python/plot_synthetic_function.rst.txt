@@ -29,7 +29,7 @@ hyperparameters are integrated by Markov-Chain Monte-Carlo as its surrogate mode
 SMAC4BB works best on numerical hyperparameter configuration space and should not
 be applied to the problems with large evaluation budgets (up to 1000 evaluations).
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-86
+.. GENERATED FROM PYTHON SOURCE LINES 13-85
 
 
 
@@ -40,7 +40,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-05-05_08:45:36_419112
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-05-19_17:49:17_017275
     Default Value: 16916.00
     Optimizing! Depending on your machine, this might take a few minutes.
     INFO:smac.facade.smac_bb_facade.SMAC4BB:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -92,7 +92,6 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
     logging.basicConfig(level=logging.INFO)
 
     import numpy as np
-
     from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
     # Import ConfigSpace and different types of parameters
@@ -163,7 +162,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.840 seconds)
+   **Total running time of the script:** ( 0 minutes  1.844 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function.py:

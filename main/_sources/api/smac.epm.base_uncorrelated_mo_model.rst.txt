@@ -1,0 +1,29 @@
+smac.epm.base\_uncorrelated\_mo\_model
+======================================
+
+.. automodule:: smac.epm.base_uncorrelated_mo_model
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      UncorrelatedMultiObjectiveModel
+   
+   
+
+   
+   
+   
+
+
+

@@ -4,8 +4,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Validation &#8212; SMAC3 Documentation 1.3.2 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Validation &#8212; SMAC3 Documentation 1.3.3 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,7 +114,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -189,6 +190,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -204,7 +210,7 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="../examples/python/user_prior_mlp.html">
+    <a class="reference internal" href="../examples/python/plot_user_prior_mlp.html">
      HPO with User Priors over the Optimum
     </a>
    </li>
@@ -430,7 +436,7 @@ style="width: 100%;">
               
               <div>
                 
-  <div class="section" id="validation">
+  <section id="validation">
 <h1>Validation<a class="headerlink" href="#validation" title="Permalink to this headline">¶</a></h1>
 <p>During optimization, SMAC does not automatically evaluate all configurations on all instances.
 The <a class="reference internal" href="../api/smac.utils.validate.html#module-smac.utils.validate" title="smac.utils.validate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">validate-module</span></code></a> provides a convenient
@@ -447,7 +453,7 @@ reusing results from runhistories.</p>
 <p>When evaluating the cost via target-algorithm runs (no EPM), runs should be
 reused from a given runhistory only on comparable hardware!</p>
 </div>
-<div class="section" id="python">
+<section id="python">
 <h2>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h2>
 <p>To validate directly in Python (e.g. to perform a validation immediately after an
 optimization), the <a class="reference internal" href="../api/smac.utils.validate.html#smac.utils.validate.Validator" title="smac.utils.validate.Validator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></a> can be used. It provides two different
@@ -456,8 +462,8 @@ methods, <a class="reference internal" href="../api/smac.utils.validate.html#sma
 containing results for all desired config/instance-pairs.
 To validate an actual <a class="reference internal" href="../api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC" title="smac.facade.smac_ac_facade.SMAC4AC"><code class="xref py py-class docutils literal notranslate"><span class="pre">SMAC-object</span></code></a>,
 it has its own method <a class="reference internal" href="../api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.validate" title="smac.facade.smac_ac_facade.SMAC4AC.validate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">validate</span></code></a> within SMAC.</p>
-</div>
-<div class="section" id="commandline">
+</section>
+<section id="commandline">
 <h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 smac-validate.py --scenario SCENARIO --trajectory TRAJECTORY --output OUTPUT <span class="o">[</span>--configs CONFIG_MODE<span class="o">]</span> <span class="o">[</span>--instances INSTANCE_MODE<span class="o">]</span> <span class="o">[</span>--<span class="o">[</span>no-<span class="o">]</span>epm<span class="o">]</span> <span class="o">[</span>--runhistory RUNHISTORY<span class="o">]</span> <span class="o">[</span>--seed SEED<span class="o">]</span> <span class="o">[</span>--repetitions REPETITIONS<span class="o">]</span> <span class="o">[</span>--n_jobs N_JOBS<span class="o">]</span> <span class="o">[</span>--tae TAE<span class="o">]</span>
 </pre></div>
@@ -511,8 +517,8 @@ it has its own method <a class="reference internal" href="../api/smac.facade.sma
 </dl>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
               </div>

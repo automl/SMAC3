@@ -48,9 +48,9 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
     Value for default configuration: 0.1970
     /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/smac/intensification/parallel_scheduling.py:156: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
       warnings.warn(
-    /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+    /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:152: RuntimeWarning: overflow encountered in matmul
       ret = a @ b
-    /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+    /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:152: RuntimeWarning: overflow encountered in matmul
       ret = a @ b
     Optimized Value: 0.0217
 
@@ -70,18 +70,18 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
     import warnings
 
-    import numpy as np
-    from sklearn.datasets import load_digits
-    from sklearn.exceptions import ConvergenceWarning
-    from sklearn.model_selection import StratifiedKFold, cross_val_score
-    from sklearn.neural_network import MLPClassifier
-
     import ConfigSpace as CS
+    import numpy as np
     from ConfigSpace.hyperparameters import (
         CategoricalHyperparameter,
         UniformFloatHyperparameter,
         UniformIntegerHyperparameter,
     )
+    from sklearn.datasets import load_digits
+    from sklearn.exceptions import ConvergenceWarning
+    from sklearn.model_selection import StratifiedKFold, cross_val_score
+    from sklearn.neural_network import MLPClassifier
+
     from smac.configspace import ConfigurationSpace
     from smac.facade.smac_mf_facade import SMAC4MF
     from smac.scenario.scenario import Scenario
@@ -232,7 +232,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  45.690 seconds)
+   **Total running time of the script:** ( 1 minutes  48.320 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_mlp_mf.py:

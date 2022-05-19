@@ -4,8 +4,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MLP with Multi-Fidelity &#8212; SMAC3 Documentation 1.3.2 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>MLP with Multi-Fidelity &#8212; SMAC3 Documentation 1.3.3 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Scalarized Multi-Objective Using ParEGO" href="plot_scalarized_multi_objective.html" />
-    <link rel="prev" title="HPO with User Priors over the Optimum" href="user_prior_mlp.html" />
+    <link rel="prev" title="HPO with User Priors over the Optimum" href="plot_user_prior_mlp.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -113,7 +114,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.2</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -189,6 +190,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_gb_non_deterministic.html">
      Non-Deterministic Gradient-Boosting
     </a>
@@ -204,7 +210,7 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
-    <a class="reference internal" href="user_prior_mlp.html">
+    <a class="reference internal" href="plot_user_prior_mlp.html">
      HPO with User Priors over the Optimum
     </a>
    </li>
@@ -420,7 +426,7 @@ style="width: 100%;">
 <p>Click <a class="reference internal" href="#sphx-glr-download-examples-python-plot-mlp-mf-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="mlp-with-multi-fidelity">
+<section class="sphx-glr-example-title" id="mlp-with-multi-fidelity">
 <span id="sphx-glr-examples-python-plot-mlp-mf-py"></span><h1>MLP with Multi-Fidelity<a class="headerlink" href="#mlp-with-multi-fidelity" title="Permalink to this headline">¶</a></h1>
 <p>Example for optimizing a Multi-Layer Perceptron (MLP) using multiple budgets.
 Since we want to take advantage of Multi-Fidelity, the SMAC4MF facade is a good choice. By default,
@@ -437,9 +443,9 @@ is chosen to optimize the average accuracy on 5-fold cross validation.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Value for default configuration: 0.1970
 /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/smac/intensification/parallel_scheduling.py:156: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
   warnings.warn(
-/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:152: RuntimeWarning: overflow encountered in matmul
   ret = a @ b
-/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:153: RuntimeWarning: overflow encountered in matmul
+/opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:152: RuntimeWarning: overflow encountered in matmul
   ret = a @ b
 Optimized Value: 0.0217
 </pre></div>
@@ -453,18 +459,18 @@ Optimized Value: 0.0217
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
-<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
-
 <span class="kn">import</span> <span class="nn">ConfigSpace</span> <span class="k">as</span> <span class="nn">CS</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">CategoricalHyperparameter</span><span class="p">,</span>
     <span class="n">UniformFloatHyperparameter</span><span class="p">,</span>
     <span class="n">UniformIntegerHyperparameter</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">ConvergenceWarning</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_mf_facade</span> <span class="kn">import</span> <span class="n">SMAC4MF</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -613,7 +619,7 @@ Optimized Value: 0.0217
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">inc_value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  45.690 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  48.320 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-mlp-mf-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/7dff3f0ecce6ebc9b8daba0c86bb41fc/plot_mlp_mf.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_mlp_mf.py</span></code></a></p>
@@ -623,7 +629,7 @@ Optimized Value: 0.0217
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
+</section>
 
 
               </div>
@@ -631,7 +637,7 @@ Optimized Value: 0.0217
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="user_prior_mlp.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="plot_user_prior_mlp.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>

@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>smac.epm.base_uncorrelated_mo_model &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.9ea38e314b9e6d9dab77.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="smac.epm.gaussian_process" href="smac.epm.gaussian_process.html" />
+    <link rel="prev" title="smac.epm.base_rf" href="smac.epm.base_rf.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+  <a class="navbar-brand" href="../index.html">
+    <img src="../_static/logo.png" class="logo" alt="logo">
+  </a>
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/https://github.com/automl/SMAC3" rel="noopener" target="_blank" title="GitHub">
+            <span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/automl_org?lang=de" rel="noopener" target="_blank" title="Twitter">
+            <span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label>
+          </a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search align-items-center" action="../search.html" method="get"
+style="width: 100%;">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../getting_started/index.html">
+   Getting Started
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started/installation.html">
+     Installation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started/minimal_example.html">
+     Minimal Example
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started/package_overview.html">
+     Package Overview
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../getting_started/basic_usage.html">
+     Basic Usage
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../examples/index.html">
+   Examples
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/commandline/spear_qcp.html">
+     SPEAR-QCP
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/commandline/branin.html">
+     Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/commandline/restore_branin.html">
+     Restore Branin
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/spear_mf_instances.html">
+     SPEAR-QCP with Multi-Fidelity on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_simple_multi_objective.html">
+     Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_svm_eips.html">
+     SVM with EIPS as acquisition functions
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_gb_non_deterministic.html">
+     Non-Deterministic Gradient-Boosting
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_svm_cv.html">
+     SVM with Cross-Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_sgd_instances.html">
+     SGD on Instances
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_user_prior_mlp.html">
+     HPO with User Priors over the Optimum
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_mlp_mf.html">
+     MLP with Multi-Fidelity
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_scalarized_multi_objective.html">
+     Scalarized Multi-Objective Using ParEGO
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../details/index.html">
+   Details
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/facades.html">
+     Facades
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/target_algorithm_evaluator.html">
+     Target Algorithm Evaluator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/scenario.html">
+     Scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/arguments.html">
+     Arguments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/multi_objective.html">
+     Multi-Objective Optimization
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/run_history.html">
+     Run-History
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/instances.html">
+     Instances and Features
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/validation.html">
+     Validation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/callbacks.html">
+     Callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/parallelism.html">
+     Parallelism
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/cuda.html">
+     CUDA
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../details/restoring.html">
+     Restoring
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../api.html">
+   API References
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="reference internal" href="smac.epm.html">
+     smac.epm
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.facade.html">
+     smac.facade
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.initial_design.html">
+     smac.initial_design
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.intensification.html">
+     smac.intensification
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.optimizer.html">
+     smac.optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.runhistory.html">
+     smac.runhistory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.scenario.html">
+     smac.scenario
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.smac_cli.html">
+     smac.smac_cli
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.stats.html">
+     smac.stats
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.tae.html">
+     smac.tae
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.callbacks.html">
+     smac.callbacks
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="smac.utils.html">
+     smac.utils
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../glossary.html">
+   Glossary
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../faq.html">
+   F.A.Q.
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../license.html">
+   License
+  </a>
+ </li>
+</ul>
+
+  </div>
+</nav>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+              
+              <div class="toc-item">
+                
+
+<nav id="bd-toc-nav">
+    
+</nav>
+              </div>
+              
+              <div class="toc-item">
+                
+              </div>
+              
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-smac.epm.base_uncorrelated_mo_model">
+<span id="smac-epm-base-uncorrelated-mo-model"></span><h1>smac.epm.base_uncorrelated_mo_model<a class="headerlink" href="#module-smac.epm.base_uncorrelated_mo_model" title="Permalink to this headline">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel" title="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UncorrelatedMultiObjectiveModel</span></code></a>(...[, ...])</p></td>
+<td><p>Wrapper for the surrogate models to predict multiple targets.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.epm.base_uncorrelated_mo_model.</span></span><span class="sig-name descname"><span class="pre">UncorrelatedMultiObjectiveModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_uncorrelated_mo_model.html#UncorrelatedMultiObjectiveModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.AbstractEPM</span></code></a></p>
+<p>Wrapper for the surrogate models to predict multiple targets.</p>
+<p>Only a list with the target names and the types array for the
+underlying model are mandatory. All other hyperparameters to
+model can be passed via kwargs. Consult the documentation of
+the corresponding model for the hyperparameters and their meanings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_names</strong> (<em>list</em>) – List of str, each entry is the name of one target dimension. Length
+of the list will be <code class="docutils literal notranslate"><span class="pre">n_objectives</span></code>.</p></li>
+<li><p><strong>types</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Specifies the number of categorical values of an input dimension where
+the i-th entry corresponds to the i-th input dimension. Let’s say we
+have 2 dimension where the first dimension consists of 3 different
+categorical choices and the second dimension is continuous than we
+have to pass [3, 0]. Note that we count starting from 0.</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan)
+for categorical dims</p></li>
+<li><p><strong>instance_features</strong> (<em>np.ndarray</em><em> (</em><em>I</em><em>, </em><em>K</em><em>)</em>) – Contains the K dimensional instance features of I different instances</p></li>
+<li><p><strong>pca_components</strong> (<em>float</em>) – Number of components to keep when using PCA to reduce dimensionality of instance features.
+Requires to set n_feats (&gt; pca_dims).</p></li>
+<li><p><strong>model_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>:</em>) – arguments for initialing estimators</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.target_names">
+<span class="sig-name descname"><span class="pre">target_names</span></span><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.target_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>target names</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.num_targets">
+<span class="sig-name descname"><span class="pre">num_targets</span></span><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.num_targets" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of targets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.estimators">
+<span class="sig-name descname"><span class="pre">estimators</span></span><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.estimators" title="Permalink to this definition">¶</a></dt>
+<dd><p>a list of estimators predicting different target values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">AbstractEPM</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.construct_estimators">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">construct_estimators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_uncorrelated_mo_model.html#UncorrelatedMultiObjectiveModel.construct_estimators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.construct_estimators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a list of estimators. The number of the estimators equals ‘self.num_targets’
+:type configspace: <code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigurationSpace</span></code>
+:param configspace: Configuration space to tune for.
+:type configspace: ConfigurationSpace
+:type types: <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]
+:param types: Specifies the number of categorical values of an input dimension where</p>
+<blockquote>
+<div><p>the i-th entry corresponds to the i-th input dimension. Let’s say we
+have 2 dimension where the first dimension consists of 3 different
+categorical choices and the second dimension is continuous than we
+have to pass [3, 0]. Note that we count starting from 0.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>) – bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims</p></li>
+<li><p><strong>model_kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – model kwargs for initializing models</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>estimators</strong> – A list of estimators</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM" title="smac.epm.base_epm.AbstractEPM">AbstractEPM</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.predict_marginalized_over_instances">
+<span class="sig-name descname"><span class="pre">predict_marginalized_over_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/base_uncorrelated_mo_model.html#UncorrelatedMultiObjectiveModel.predict_marginalized_over_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.base_uncorrelated_mo_model.UncorrelatedMultiObjectiveModel.predict_marginalized_over_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict mean and variance marginalized over all instances.</p>
+<p>Returns the predictive mean and variance marginalised over all
+instances for a set of configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>np.ndarray of shape =</em><em> [</em><em>n_features</em><em> (</em><em>config</em><em>)</em><em>, </em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray of shape = [n_samples, n_objectives]</em>) – Predictive mean</p></li>
+<li><p><strong>vars</strong> (<em>np.ndarray  of shape = [n_samples, n_objectives]</em>) – Predictive variance</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="smac.epm.base_rf.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">smac.epm.base_rf</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="smac.epm.gaussian_process.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">smac.epm.gaussian_process</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.9ea38e314b9e6d9dab77.js"></script>
+<footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 
+    Copyright 2022, Marius Lindauer, Katharina Eggensperger,
+    Matthias Feurer, André Biedenkapp, Difan Deng, Carolin Benjamins, Tim Ruhkopf, René Sass
+    and Frank Hutter
+.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+4.5.0. Template is modified version of <a
+href="https://pydata-sphinx-theme.readthedocs.io">PyData Sphinx Theme</a>. <br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>

@@ -161,6 +161,27 @@ Python
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example to optimize a simple SVM on the IRIS-benchmark with EIPS (EI per seconds) acquisitio...">
+
+.. only:: html
+
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_svm_eips_thumb.png
+     :alt: SVM with EIPS as acquisition functions
+
+     :ref:`sphx_glr_examples_python_plot_svm_eips.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/python/plot_svm_eips
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="We optimize a GradientBoosting on an artificially created binary classification dataset. The re...">
 
 .. only:: html
@@ -228,10 +249,10 @@ Python
 
 .. only:: html
 
- .. figure:: /examples/python/images/thumb/sphx_glr_user_prior_mlp_thumb.png
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_user_prior_mlp_thumb.png
      :alt: HPO with User Priors over the Optimum
 
-     :ref:`sphx_glr_examples_python_user_prior_mlp.py`
+     :ref:`sphx_glr_examples_python_plot_user_prior_mlp.py`
 
 .. raw:: html
 
@@ -241,7 +262,7 @@ Python
 .. toctree::
    :hidden:
 
-   /examples/python/user_prior_mlp
+   /examples/python/plot_user_prior_mlp
 
 .. raw:: html
 
