@@ -18,7 +18,6 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
     model can be passed via kwargs. Consult the documentation of
     the corresponding model for the hyperparameters and their meanings.
 
-
     Parameters
     ----------
     target_names : list
@@ -31,15 +30,15 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
         categorical choices and the second dimension is continuous than we
         have to pass [3, 0]. Note that we count starting from 0.
     bounds : List[Tuple[float, float]]
-        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan)
+        for categorical dims
     instance_features : np.ndarray (I, K)
         Contains the K dimensional instance features of I different instances
     pca_components : float
-        Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
-        set n_feats (> pca_dims).
+        Number of components to keep when using PCA to reduce dimensionality of instance features.
+        Requires to set n_feats (> pca_dims).
     model_kwargs: Optional[Dict[str, Any]]:
         arguments for initialing estimators
-
 
     Attributes
     ----------

@@ -386,7 +386,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
             # Update costs in multi-objective setting s.t. all costs are
             # normalized the same.
-            # Note: This is only a temporary solution.
+            # TODO: This is only a temporary solution because the caching is not used.
             if self.num_obj > 1:
                 self.update_all_costs()
             else:
