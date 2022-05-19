@@ -725,6 +725,6 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
         -------
         np.ndarray
         """
-        # EIPS is computed by EI/ time. We need to ensure that time remains positive after the log transform
+        # We need to ensure that time remains positive after the log transform.
         values[:, 1] = np.log(1 + values[:, 1])
         return values
