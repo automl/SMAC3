@@ -1,11 +1,13 @@
 # 1.3.3
-* Since multi-objective implementation depends on normalized costs, it now is ensured that the cached costs are updated everytime a new entry is added.
+* Hotfix: Since multi-objective implementation depends on normalized costs, it now is ensured that the
+cached costs are updated everytime a new entry is added.
 * Removed mac-specific files.
 * Added entry point for cli.
 * Added `ConfigSpace` to third known parties s.t. sorting should be the same across different
 operating systems.
 * Fixed bugs in makefile in which tools were specified incorrectly.
 * Executed isort/black on examples and tests.
+* Updated README.
 
 
 # 1.3.2
