@@ -46,7 +46,7 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
     /opt/hostedtoolcache/Python/3.9.12/x64/lib/python3.9/site-packages/smac/utils/io/output_writer.py:125: UserWarning: The pcs format does not support categorical hyperparameters with assigned weights (for hyperparameter activation). No pcs file will be generated in the output.
       warnings.warn(f"{e}. No pcs file will be generated in the output.")
     Value for default configuration: 0.0200
-    Optimized Value: 0.0184
+    Optimized Value: 0.0145
 
 
 
@@ -214,7 +214,7 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 5 minutes  34.093 seconds)
+   **Total running time of the script:** ( 8 minutes  49.348 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_user_prior_mlp.py:
