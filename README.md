@@ -125,7 +125,7 @@ Freiburg](http://www.automl.org/).
 If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are appreciating any kind of help.
 Find our guidlines for contributing to this package [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md).
 
-If you use SMAC in one of your research projects, please cite us:
+If you use SMAC in one of your research projects, please cite our [JMLR paper](https://jmlr.org/papers/v23/21-0888.html):
 ```
 @misc{lindauer2021smac3,
       title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
