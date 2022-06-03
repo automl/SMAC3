@@ -127,13 +127,15 @@ Find our guidlines for contributing to this package [here](https://github.com/au
 
 If you use SMAC in one of your research projects, please cite our [JMLR paper](https://jmlr.org/papers/v23/21-0888.html):
 ```
-@misc{lindauer2021smac3,
-      title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
-      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
-      year={2021},
-      eprint={2109.09831},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{JMLR:v23:21-0888,
+  author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
+  title   = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+  journal = {Journal of Machine Learning Research},
+  year    = {2022},
+  volume  = {23},
+  number  = {54},
+  pages   = {1--9},
+  url     = {http://jmlr.org/papers/v23/21-0888.html}
 }
 ```
 
