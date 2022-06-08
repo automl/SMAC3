@@ -1,5 +1,6 @@
 # 1.3.4
 * Added reference to JMLR paper.
+* Typos in documentations.
 
 
 # 1.3.3
