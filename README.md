@@ -139,4 +139,4 @@ If you use SMAC in one of your research projects, please cite our [JMLR paper](h
 }
 ```
 
-Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/).
+Copyright (C) 2016-2022  [AutoML Group](http://www.automl.org/).
