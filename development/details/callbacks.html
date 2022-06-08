@@ -438,23 +438,17 @@ implemented callbacks is very limited, but they can easily be added.</p>
 <section id="how-to-add-a-new-callback">
 <h2>How to add a new callback<a class="headerlink" href="#how-to-add-a-new-callback" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Implement a callback class in <code class="docutils literal notranslate"><span class="pre">smac/callbacks.py</span></code>. There are no restrictions on how such a</p></li>
+<li><p>Implement a callback class in <code class="docutils literal notranslate"><span class="pre">smac/callbacks.py</span></code>. There are no restrictions on how such a
+callback must look like, but it is recommended to implement the main logic inside the <cite>__call__</cite>
+function, such as for example in <code class="docutils literal notranslate"><span class="pre">IncorporateRunResultCallback</span></code>.</p></li>
+<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callbacks</span></code>, using the name of your callback
+as the key, and an empty list as the value.</p></li>
+<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callback_to_key</span></code>, using the callback class as
+the key, and the name as value (the name used in 2.).</p></li>
+<li><p>Implement calling all registered callbacks at the correct place. This is as simple as
+<code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">callback</span> <span class="pre">in</span> <span class="pre">self._callbacks['your_callback']:</span> <span class="pre">callback(*args,</span> <span class="pre">**kwargs)</span></code>, where you
+obviously need to change the callback name and signature.</p></li>
 </ul>
-<p>callback must look like, but it is recommended to implement the main logic inside the <cite>__call__</cite>
-function, such as for example in <code class="docutils literal notranslate"><span class="pre">IncorporateRunResultCallback</span></code>.</p>
-<ul class="simple">
-<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callbacks</span></code>, using the name of your callback</p></li>
-</ul>
-<p>as the key, and an empty list as the value.</p>
-<ul class="simple">
-<li><p>Add your callback to <code class="docutils literal notranslate"><span class="pre">smac.smbo.optimizer.SMBO._callback_to_key</span></code>, using the callback class as</p></li>
-</ul>
-<p>the key, and the name as value (the name used in 2.).</p>
-<ul class="simple">
-<li><p>Implement calling all registered callbacks at the correct place. This is as simple as</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">callback</span> <span class="pre">in</span> <span class="pre">self._callbacks['your_callback']:</span> <span class="pre">callback(*args,</span> <span class="pre">**kwargs)</span></code>, where you
-obviously need to change the callback name and signature.</p>
 </section>
 </section>
 
