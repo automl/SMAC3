@@ -1,65 +1,65 @@
 import unittest
 
 import numpy as np
-
-from gpytorch.kernels import MaternKernel, ScaleKernel
-from gpytorch.constraints.constraints import Interval
-from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
-from gpytorch.priors import LogNormalPrior, HorseshoePrior
-
 import torch
+from ConfigSpace import (
+    CategoricalHyperparameter,
+    ConfigurationSpace,
+    UniformFloatHyperparameter,
+)
+from gpytorch.constraints.constraints import Interval
+from gpytorch.kernels import MaternKernel, ScaleKernel
+from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
+from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.util_funcs import check_points_in_ss, get_types
 from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.optimizer.local_bo.epm_chooser_boing import (
+    EPMChooserBOinG,
+    subspace_extraction,
+)
+from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
 from smac.utils import test_helpers
-from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG, subspace_extraction
-
-from smac.epm.util_funcs import get_types, check_points_in_ss
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
-
-from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter, CategoricalHyperparameter
 
 
 class TestEPMChooserBOinG(unittest.TestCase):
     def setUp(self):
-        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
-                                  'run_obj': 'quality',
-                                  'output_dir': 'data-test_epmchooser'})
+        self.scenario = Scenario(
+            {"cs": test_helpers.get_branin_config_space(), "run_obj": "quality", "output_dir": "data-test_epmchooser"}
+        )
         self.output_dirs = []
         self.output_dirs.append(self.scenario.output_dir)
 
-        exp_kernel = MaternKernel(2.5,
-                                  lengthscale_constraint=Interval(
-                                      torch.tensor(np.exp(-6.754111155189306).repeat(2)),
-                                      torch.tensor(np.exp(0.0858637988771976).repeat(2)),
-                                      transform=None,
-                                      initial_value=1.0
-                                  ),
-                                  ard_num_dims=2,
-                                  active_dims=(0, 1)).double()
+        exp_kernel = MaternKernel(
+            2.5,
+            lengthscale_constraint=Interval(
+                torch.tensor(np.exp(-6.754111155189306).repeat(2)),
+                torch.tensor(np.exp(0.0858637988771976).repeat(2)),
+                transform=None,
+                initial_value=1.0,
+            ),
+            ard_num_dims=2,
+            active_dims=(0, 1),
+        ).double()
 
         noise_prior = HorseshoePrior(0.1)
         likelihood = GaussianLikelihood(
-            noise_prior=noise_prior,
-            noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
+            noise_prior=noise_prior, noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
         ).double()
 
-        kernel = ScaleKernel(exp_kernel,
-                             outputscale_constraint=Interval(
-                                 np.exp(-10.),
-                                 np.exp(2.),
-                                 transform=None,
-                                 initial_value=2.0
-                             ),
-                             outputscale_prior=LogNormalPrior(0.0, 1.0))
+        kernel = ScaleKernel(
+            exp_kernel,
+            outputscale_constraint=Interval(np.exp(-10.0), np.exp(2.0), transform=None, initial_value=2.0),
+            outputscale_prior=LogNormalPrior(0.0, 1.0),
+        )
 
-        self.model_kwargs = dict(kernel=kernel,
-                                 likelihood=likelihood)
+        self.model_kwargs = dict(kernel=kernel, likelihood=likelihood)
 
     def test_init(self):
         seed = 42
@@ -67,29 +67,50 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
-        epm_chooser_kwargs = {"model_local": GloballyAugmentedLocalGP,
-                              "model_local_kwargs": self.model_kwargs, }
+        epm_chooser_kwargs = {
+            "model_local": GloballyAugmentedLocalGP,
+            "model_local_kwargs": self.model_kwargs,
+        }
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG,
-                       "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
 
-        self.assertRaisesRegex(ValueError, "BOinG only supports RandomForestWithInstances as its global optimizer",
-                               SMAC4BB,
-                               scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw)
-        self.assertRaisesRegex(ValueError, "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer",
-                               SMAC4HPO,
-                               scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs)
+        self.assertRaisesRegex(
+            ValueError,
+            "BOinG only supports RandomForestWithInstances as its global optimizer",
+            SMAC4BB,
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        )
+        self.assertRaisesRegex(
+            ValueError,
+            "BOinG only supports RunHistory2EPM4CostWithRaw as its rh transformer",
+            SMAC4HPO,
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+        )
 
-        epm_chooser = SMAC4HPO(scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
-                               ).solver.epm_chooser
+        epm_chooser = SMAC4HPO(
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        ).solver.epm_chooser
         self.assertFalse(hasattr(epm_chooser, "turbo_optimizer"))
 
         epm_chooser_kwargs.update({"do_switching": True})
-        epm_chooser = SMAC4HPO(scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
-                               ).solver.epm_chooser
+        epm_chooser = SMAC4HPO(
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        ).solver.epm_chooser
         self.assertTrue(hasattr(epm_chooser, "turbo_optimizer"))
 
     def test_choose_next(self):
@@ -98,15 +119,20 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
-        epm_chooser_kwargs = {"model_local": GloballyAugmentedLocalGP,
-                              "model_local_kwargs": self.model_kwargs, }
+        epm_chooser_kwargs = {
+            "model_local": GloballyAugmentedLocalGP,
+            "model_local_kwargs": self.model_kwargs,
+        }
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG,
-                       "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
 
-        epm_chooser = SMAC4HPO(scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
-                               ).solver.epm_chooser
+        epm_chooser = SMAC4HPO(
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        ).solver.epm_chooser
         x = next(epm_chooser.choose_next())
         # when number of points is not large enough for building a subspace, GP works locally
         self.assertEqual(x.origin, "Local Search")
@@ -119,9 +145,13 @@ class TestEPMChooserBOinG(unittest.TestCase):
         self.assertEqual(x.origin, "BOinG")
 
         epm_chooser_kwargs.update({"do_switching": True})
-        epm_chooser = SMAC4HPO(scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
-                               ).solver.epm_chooser
+        epm_chooser = SMAC4HPO(
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        ).solver.epm_chooser
         epm_chooser.run_TuRBO = True
         x = next(epm_chooser.choose_next())
         self.assertEqual(x.origin, "TuRBO")
@@ -133,19 +163,23 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
-        epm_chooser_kwargs = {"model_local": GloballyAugmentedLocalGP,
-                              "model_local_kwargs": self.model_kwargs,
-                              "do_switching": True}
-        turbo_kwargs = {"failure_tol_min": 1,
-                        "length_min": 0.6}
+        epm_chooser_kwargs = {
+            "model_local": GloballyAugmentedLocalGP,
+            "model_local_kwargs": self.model_kwargs,
+            "do_switching": True,
+        }
+        turbo_kwargs = {"failure_tol_min": 1, "length_min": 0.6}
         epm_chooser_kwargs.update({"turbo_kwargs": turbo_kwargs})
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG,
-                       "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
 
-        epm_chooser = SMAC4HPO(scenario=self.scenario, rng=seed, runhistory=rh, smbo_kwargs=smbo_kwargs,
-                               runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw
-                               ).solver.epm_chooser
+        epm_chooser = SMAC4HPO(
+            scenario=self.scenario,
+            rng=seed,
+            runhistory=rh,
+            smbo_kwargs=smbo_kwargs,
+            runhistory2epm=RunHistory2EPM4ScaledLogCostWithRaw,
+        ).solver.epm_chooser
 
         for i in range(15):
             config = self.scenario.cs.sample_configuration()
@@ -193,18 +227,22 @@ class TestEPMChooserBOinG(unittest.TestCase):
 class TestSubSpaceExtraction(unittest.TestCase):
     def test_subspace_extraction(self):
         cs = ConfigurationSpace(0)
-        cs.add_hyperparameter(UniformFloatHyperparameter('x0', 0., 1.))
-        cs.add_hyperparameter(CategoricalHyperparameter('x1', [0, 1, 2, 3, 4, 5]))
+        cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0.0, 1.0))
+        cs.add_hyperparameter(CategoricalHyperparameter("x1", [0, 1, 2, 3, 4, 5]))
 
         types, bounds = get_types(cs)
-        rf = RandomForestWithInstances(cs, types=types, bounds=bounds, seed=0, num_trees=10, ratio_features=1.,
-                                       min_samples_split=2, min_samples_leaf=1, )
+        rf = RandomForestWithInstances(
+            cs,
+            types=types,
+            bounds=bounds,
+            seed=0,
+            num_trees=10,
+            ratio_features=1.0,
+            min_samples_split=2,
+            min_samples_leaf=1,
+        )
 
-        X = np.array([[0.0, 0],
-                      [0.2, 1],
-                      [0.3, 2],
-                      [0.7, 5],
-                      [0.6, 3]])
+        X = np.array([[0.0, 0], [0.2, 1], [0.3, 2], [0.7, 5], [0.6, 3]])
 
         Y = np.array([0.1, 0.2, 0.7, 0.6, 0.5])
 
@@ -216,18 +254,18 @@ class TestSubSpaceExtraction(unittest.TestCase):
         num_min = 2
         num_max = 5
 
-        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(num_min=num_min,
-                                                                        num_max=np.inf,
-                                                                        **ss_extraction_kwargs)
+        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(
+            num_min=num_min, num_max=np.inf, **ss_extraction_kwargs
+        )
         self.assertTrue(num_min <= sum(ss_indices))
         x_in_ss = check_points_in_ss(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertTrue(x_in_ss[0])
         ss_indices_re_exam = check_points_in_ss(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertEqual(sum(ss_indices), sum(ss_indices_re_exam))
 
-        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(num_min=num_min,
-                                                                        num_max=num_max,
-                                                                        **ss_extraction_kwargs)
+        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(
+            num_min=num_min, num_max=num_max, **ss_extraction_kwargs
+        )
         self.assertTrue(num_min <= sum(ss_indices) <= num_max)
         x_in_ss = check_points_in_ss(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertTrue(x_in_ss[0])
@@ -235,9 +273,9 @@ class TestSubSpaceExtraction(unittest.TestCase):
         self.assertEqual(sum(ss_indices), sum(ss_indices_re_exam))
 
         num_max = 3
-        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(num_min=num_min,
-                                                                        num_max=num_max,
-                                                                        **ss_extraction_kwargs)
+        ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(
+            num_min=num_min, num_max=num_max, **ss_extraction_kwargs
+        )
         self.assertTrue(num_min <= sum(ss_indices) <= num_max)
         self.assertTrue(x_in_ss[0])
         ss_indices_re_exam = check_points_in_ss(X, [0], [1], ss_bounds_cont, ss_bounds_cat)

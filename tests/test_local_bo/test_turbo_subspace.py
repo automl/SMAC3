@@ -1,37 +1,42 @@
+import copy
 import unittest
 
 import numpy as np
-import copy
-
-from smac.optimizer.acquisition import TS
-from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.util_funcs import get_types
-from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
-from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.conditions import GreaterThanCondition
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, \
-    CategoricalHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+)
+
+from smac.epm.gaussian_process import GaussianProcess
+from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+from smac.epm.util_funcs import get_types
+from smac.optimizer.acquisition import TS
+from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
 
 
 class TestTurBoSubspace(unittest.TestCase):
     def setUp(self) -> None:
         self.cs = ConfigurationSpace()
-        self.cs.add_hyperparameter(UniformFloatHyperparameter('x0', 0, 1, 0.5))
+        self.cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
         self.model_local = GaussianProcess
         exp_kernel = Matern(nu=2.5)
-        cov_amp = ConstantKernel(2.0,)
+        cov_amp = ConstantKernel(
+            2.0,
+        )
         noise_kernel = WhiteKernel(1e-8)
         kernel = cov_amp * exp_kernel + noise_kernel
         self.types, self.bounds = get_types(self.cs)
-        self.model_local_kwargs = {'kernel': kernel}
+        self.model_local_kwargs = {"kernel": kernel}
         self.acq_local = TS
-        self.ss_kwargs = dict(config_space=self.cs,
-                              bounds=self.bounds,
-                              hps_types=self.types,
-                              model_local=self.model_local,
-                              model_local_kwargs=self.model_local_kwargs,
-                              )
+        self.ss_kwargs = dict(
+            config_space=self.cs,
+            bounds=self.bounds,
+            hps_types=self.types,
+            model_local=self.model_local,
+            model_local_kwargs=self.model_local_kwargs,
+        )
 
     def test_init(self):
         ss = TuRBOSubSpace(**self.ss_kwargs)
@@ -45,23 +50,35 @@ class TestTurBoSubspace(unittest.TestCase):
             self.assertEqual(eval_next, ss_init_configs[i])
 
         cs_mix = ConfigurationSpace()
-        cs_mix.add_hyperparameter(UniformFloatHyperparameter('x0', 0, 1, 0.5))
-        cs_mix.add_hyperparameter(CategoricalHyperparameter('x1', [0, 1, 2]))
+        cs_mix.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
+        cs_mix.add_hyperparameter(CategoricalHyperparameter("x1", [0, 1, 2]))
 
-        self.assertRaisesRegex(ValueError, "Current TurBO Optimizer only supports Numerical Hyperparameters",
-                               TuRBOSubSpace,
-                               config_space=cs_mix, bounds=None, hps_types=None, model_local=None)
+        self.assertRaisesRegex(
+            ValueError,
+            "Current TurBO Optimizer only supports Numerical Hyperparameters",
+            TuRBOSubSpace,
+            config_space=cs_mix,
+            bounds=None,
+            hps_types=None,
+            model_local=None,
+        )
 
-        x0 = UniformFloatHyperparameter('x0', 0, 1, 0.5)
-        x1 = UniformFloatHyperparameter('x1', 0, 1, 0.5)
+        x0 = UniformFloatHyperparameter("x0", 0, 1, 0.5)
+        x1 = UniformFloatHyperparameter("x1", 0, 1, 0.5)
 
         cs_condition = ConfigurationSpace()
         cs_condition.add_hyperparameters([x0, x1])
 
         cs_condition.add_condition(GreaterThanCondition(x0, x1, 0.5))
-        self.assertRaisesRegex(ValueError, "Currently TurBO does not support Conditional or Forbidden Hyperparameters",
-                               TuRBOSubSpace,
-                               config_space=cs_condition, bounds=None, hps_types=None, model_local=None)
+        self.assertRaisesRegex(
+            ValueError,
+            "Currently TurBO does not support Conditional or Forbidden Hyperparameters",
+            TuRBOSubSpace,
+            config_space=cs_condition,
+            bounds=None,
+            hps_types=None,
+            model_local=None,
+        )
 
     def test_adjust_length(self):
         ss = TuRBOSubSpace(**self.ss_kwargs)
@@ -87,13 +104,13 @@ class TestTurBoSubspace(unittest.TestCase):
             ss.adjust_length(0.5 + i * 0.01)
         self.assertLessEqual(ss.length, length / 2)
 
-    @unittest.mock.patch.object(GaussianProcess, 'predict')
+    @unittest.mock.patch.object(GaussianProcess, "predict")
     def test_restart(self, rf_mock):
         ss = TuRBOSubSpace(**self.ss_kwargs)
         ss.add_new_observations(np.array([0.5]), np.array([0.5]))
         ss.init_configs = []
 
-        ss.length = 0.
+        ss.length = 0.0
         challenge = ss.generate_challengers()
 
         self.assertEqual(ss.length, ss.length_init)
@@ -116,22 +133,26 @@ class TestTurBoSubspace(unittest.TestCase):
         self.assertEqual(len(np.where(perturb_sample == 2.0)[0]), 0)
 
         cs = ConfigurationSpace()
-        cs.add_hyperparameter(UniformFloatHyperparameter('x0', 0, 1, 0.5))
-        cs.add_hyperparameter(UniformFloatHyperparameter('x1', 0, 1, 0.5))
+        cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
+        cs.add_hyperparameter(UniformFloatHyperparameter("x1", 0, 1, 0.5))
         model_local = GaussianProcess
         exp_kernel = Matern(nu=2.5)
-        cov_amp = ConstantKernel(2.0,)
+        cov_amp = ConstantKernel(
+            2.0,
+        )
         noise_kernel = WhiteKernel(1e-8)
         kernel = cov_amp * exp_kernel + noise_kernel
         types, bounds = get_types(cs)
-        model_local_kwargs = {'kernel': kernel}
+        model_local_kwargs = {"kernel": kernel}
 
-        ss = TuRBOSubSpace(config_space=cs,
-                           bounds=bounds,
-                           hps_types=types,
-                           model_local=model_local,
-                           model_local_kwargs=model_local_kwargs,
-                           incumbent_array=np.array([2.0, 2.0]))
+        ss = TuRBOSubSpace(
+            config_space=cs,
+            bounds=bounds,
+            hps_types=types,
+            model_local=model_local,
+            model_local_kwargs=model_local_kwargs,
+            incumbent_array=np.array([2.0, 2.0]),
+        )
 
         prob = 0.0
         perturb_sample = ss._perturb_samples(prob, np.random.rand(ss.n_candidates, ss.n_dims))
@@ -147,8 +168,7 @@ class TestTurBoSubspace(unittest.TestCase):
 
     def test_suggestion(self):
         num_init_points = 5
-        ss = TuRBOSubSpace(**self.ss_kwargs,
-                           incumbent_array=np.array([0.5]))
+        ss = TuRBOSubSpace(**self.ss_kwargs, incumbent_array=np.array([0.5]))
         ss.length = 0.1
         ss.init_configs = []
         new_data_x = np.vstack([np.random.rand(num_init_points, 1), np.array([[0.5]])])
@@ -162,4 +182,4 @@ class TestTurBoSubspace(unittest.TestCase):
 
         challengers = ss._generate_challengers(_sorted=False)
         challenger_acq_values = np.asarray([challenger[0] for challenger in challengers])
-        np.testing.assert_equal(0., challenger_acq_values)
+        np.testing.assert_equal(0.0, challenger_acq_values)

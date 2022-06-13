@@ -23,7 +23,6 @@ from smac.optimizer.random_configuration_chooser import (
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 
-
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
@@ -246,20 +245,23 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             # initiate local search
             configs_previous_runs = runhistory.get_all_configs()
 
-            init_points = self._get_init_points_from_previous_configs(num_points,
-                                                                      configs_previous_runs,
-                                                                      additional_start_points)
+            init_points = self._get_init_points_from_previous_configs(
+                num_points, configs_previous_runs, additional_start_points
+            )
         return init_points
 
-    def _get_init_points_from_previous_configs(self,
-                                               num_points: int,
-                                               configs_previous_runs: List[Configuration],
-                                               additional_start_points: Optional[List[Tuple[float, Configuration]]],
-                                               ) -> List[Configuration]:
+    def _get_init_points_from_previous_configs(
+        self,
+        num_points: int,
+        configs_previous_runs: List[Configuration],
+        additional_start_points: Optional[List[Tuple[float, Configuration]]],
+    ) -> List[Configuration]:
         """
-        a function that generates a set of initial points from the previous configurations and additional points (if
+        A function that generates a set of initial points from the previous configurations and additional points (if
         applicable). The idea is to decouple runhistory from the local search model and replace it with a more genreal
         form (List[Configuration]).
+
+        Parameters
         ----------
         num_points: int
             Number of initial points to be generated
@@ -267,6 +269,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
             previous configuration from runhistory
         additional_start_points: Optional[List[Tuple[float, Configuration]]]
             if we want to specify another set of points as initial points
+
         Returns
         -------
         init_points: List[Configuration]
@@ -310,9 +313,9 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         init_points = []
         init_points_as_set = set()  # type: Set[Configuration]
         for cand in itertools.chain(
-                configs_previous_runs_sorted,
-                configs_previous_runs_sorted_by_cost,
-                additional_start_points,
+            configs_previous_runs_sorted,
+            configs_previous_runs_sorted_by_cost,
+            additional_start_points,
         ):
             if cand not in init_points_as_set:
                 init_points.append(cand)

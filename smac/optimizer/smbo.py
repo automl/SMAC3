@@ -94,6 +94,7 @@ class SMBO(object):
     epm_chooser
     tae_runner
     """
+
     def __init__(
         self,
         scenario: Scenario,
@@ -113,7 +114,7 @@ class SMBO(object):
         predict_x_best: bool = True,
         min_samples_model: int = 1,
         epm_chooser: typing.Type[EPMChooser] = EPMChooser,
-        epm_chooser_kwargs: typing.Optional[typing.Dict] = None
+        epm_chooser_kwargs: typing.Optional[typing.Dict] = None,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)

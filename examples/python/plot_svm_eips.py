@@ -13,21 +13,25 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+)
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
-
 from smac.configspace import ConfigurationSpace
+from smac.epm.uncorrelated_mo_rf_with_instances import (
+    UncorrelatedMultiObjectiveRandomForestWithInstances,
+)
 from smac.facade.smac_ac_facade import SMAC4AC
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
-from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
+
+# Import SMAC-utilities
+from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -91,10 +95,10 @@ if __name__ == "__main__":
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
     print("Default Value: %.2f" % def_value)
-    
+
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    
+
     # Besides the kwargs used for initializing UncorrelatedMultiObjectiveRandomForestWithInstances,
     # we also need kwargs for initializing the model insides UncorrelatedMultiObjectiveModel
     model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
@@ -105,7 +109,7 @@ if __name__ == "__main__":
         model_kwargs=model_kwargs,
         tae_runner=svm_from_cfg,
         acquisition_function=EIPS,
-        runhistory2epm=RunHistory2EPM4EIPS
+        runhistory2epm=RunHistory2EPM4EIPS,
     )
 
     incumbent = smac.optimize()

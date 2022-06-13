@@ -24,6 +24,7 @@ __license__ = "3-clause BSD"
 
 class EPMChooser(object):
     """Interface to train the EPM and generate next configurations.
+
     Parameters
     ----------
     scenario: smac.scenario.scenario.Scenario
@@ -68,8 +69,7 @@ class EPMChooser(object):
         random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        **epm_chooser_kwargs: typing.Any
-
+        **epm_chooser_kwargs: typing.Any,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent

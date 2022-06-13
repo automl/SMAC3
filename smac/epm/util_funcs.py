@@ -23,8 +23,8 @@ __license__ = "3-clause BSD"
 
 
 def get_types(
-        config_space: ConfigurationSpace,
-        instance_features: typing.Optional[np.ndarray] = None,
+    config_space: ConfigurationSpace,
+    instance_features: typing.Optional[np.ndarray] = None,
 ) -> typing.Tuple[typing.List[int], typing.List[typing.Tuple[float, float]]]:
     """Return the types of the hyperparameters and the bounds of the
     hyperparameters and instance features.
@@ -182,15 +182,16 @@ def get_rng(
     return run_id_return, rng_return
 
 
-def check_points_in_ss(X: np.ndarray,
-                       cont_dims: typing.Union[np.ndarray, typing.List] = [],
-                       cat_dims: typing.Union[np.ndarray, typing.List] = [],
-                       bounds_cont: typing.Optional[np.ndarray] = None,
-                       bounds_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-                       expand_bound: bool = False,
-                       ) -> np.ndarray:
+def check_points_in_ss(
+    X: np.ndarray,
+    cont_dims: typing.Union[np.ndarray, typing.List] = [],
+    cat_dims: typing.Union[np.ndarray, typing.List] = [],
+    bounds_cont: typing.Optional[np.ndarray] = None,
+    bounds_cat: typing.Optional[typing.List[typing.Tuple]] = None,
+    expand_bound: bool = False,
+) -> np.ndarray:
     """
-    check which points are place inside a given subspace
+    Check which points are place inside a given subspace
     Parameters
     ----------
     X: typing.Optional[np.ndarray(N,D)],
@@ -217,14 +218,17 @@ def check_points_in_ss(X: np.ndarray,
 
     if len(cont_dims) > 0:
         if bounds_cont is None:
-            raise ValueError('bounds_cont must be given if cont_dims provided')
+            raise ValueError("bounds_cont must be given if cont_dims provided")
 
         if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
-            raise ValueError(f'bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of'
-                             f'({len(cont_dims)}, 2)')
+            raise ValueError(
+                f"bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of"
+                f"({len(cont_dims)}, 2)"
+            )
 
-        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(X[:, cont_dims] >= bounds_cont[:, 0],
-                                                                                   axis=1)
+        data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(
+            X[:, cont_dims] >= bounds_cont[:, 0], axis=1
+        )
 
         if expand_bound:
             bound_left = bounds_cont[:, 0] - np.min(X[data_in_ss][:, cont_dims] - bounds_cont[:, 0], axis=0)
@@ -236,11 +240,12 @@ def check_points_in_ss(X: np.ndarray,
     if len(cat_dims) == 0:
         return data_in_ss
     if bounds_cat is None:
-        raise ValueError('bounds_cat must be given if cat_dims provided')
+        raise ValueError("bounds_cat must be given if cat_dims provided")
 
     if len(bounds_cat) != len(cat_dims):
-        raise ValueError(f'bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have '
-                         f'the same number of elements')
+        raise ValueError(
+            f"bounds_cat ({len(bounds_cat)}) and cat_dims ({len(cat_dims)}) must have " f"the same number of elements"
+        )
 
     for bound_cat, cat_dim in zip(bounds_cat, cat_dims):
         data_in_ss &= np.in1d(X[:, cat_dim], bound_cat)

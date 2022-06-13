@@ -1,47 +1,47 @@
-import unittest.mock
 from typing import Tuple
+
+import unittest.mock
+
+import gpytorch
 import numpy as np
+import pyro
+import torch
+from gpytorch.constraints.constraints import Interval
+from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
+from gpytorch.priors import HorseshoePrior
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process_gpytorch import ExactGPModel
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP, AugmentedLocalGP
+from smac.epm.globally_augmented_local_gp import (
+    AugmentedLocalGP,
+    GloballyAugmentedLocalGP,
+)
 
-import torch
-import pyro
-
-import gpytorch
-from gpytorch.priors import HorseshoePrior
-from gpytorch.constraints.constraints import Interval
-
-from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
-
-from .. import requires_extra
+from .test_boing_kernel import generate_kernel, generate_test_data
 from .test_gp_gpytorch import TestGPGPyTorch
-from .test_fitc_kernel import generate_test_data, generate_kernel
 
 torch.manual_seed(0)
 pyro.set_rng_seed(0)
 
 
-@requires_extra('gpytorch')
-def generate_lgpga(kernel, n_dimensions, rs, noise=None, num_inducing=2, normalize_y=True) \
-        -> Tuple[GloballyAugmentedLocalGP, ConfigurationSpace]:
+def generate_lgpga(
+    kernel, n_dimensions, rs, noise=None, num_inducing=2, normalize_y=True
+) -> Tuple[GloballyAugmentedLocalGP, ConfigurationSpace]:
     if noise is None:
         likelihood = None
     else:
         noise_prior = HorseshoePrior(0.1)
         likelihood = GaussianLikelihood(
-            noise_prior=noise_prior,
-            noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
+            noise_prior=noise_prior, noise_constraint=Interval(np.exp(-25), np.exp(2), transform=None)
         ).double()
         likelihood.initialize(noise=noise)
 
-    bounds = [(0., 1.) for _ in range(n_dimensions)]
+    bounds = [(0.0, 1.0) for _ in range(n_dimensions)]
     types = np.zeros(n_dimensions)
 
     configspace = ConfigurationSpace()
     for i in range(n_dimensions):
-        configspace.add_hyperparameter(UniformFloatHyperparameter('x%d' % i, 0, 1))
+        configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
     model = GloballyAugmentedLocalGP(
         configspace=configspace,
@@ -59,7 +59,6 @@ def generate_lgpga(kernel, n_dimensions, rs, noise=None, num_inducing=2, normali
     return model, configspace
 
 
-@requires_extra('gpytorch')
 class TestLGPGA(TestGPGPyTorch):
     def setUp(self) -> None:
         rs = np.random.RandomState(1)
@@ -109,7 +108,7 @@ class TestLGPGA(TestGPGPyTorch):
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=False)
         self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGP)
         self.assertFalse(self.gp_model.gp_model.augmented)
-        self.assertFalse(hasattr(self.gp_model.gp_model, 'covar_module'))
+        self.assertFalse(hasattr(self.gp_model.gp_model, "covar_module"))
 
     def test_normalize(self):
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=False)
@@ -152,7 +151,7 @@ class TestLGPGA(TestGPGPyTorch):
         self.assertFalse(torch.equal(output_agp.mean, output_exact_gp.mean))
         self.assertFalse(torch.equal(output_agp.covariance_matrix, output_exact_gp.covariance_matrix))
 
-    @unittest.mock.patch('gpytorch.models.exact_gp.ExactGP.__init__')
+    @unittest.mock.patch("gpytorch.models.exact_gp.ExactGP.__init__")
     def test_exception(self, fit_mock):
         # Check that training will not continue sampling if pyro raises an error
         class Dummy:
@@ -160,7 +159,7 @@ class TestLGPGA(TestGPGPyTorch):
 
             def __call__(self):
                 self.counter += 1
-                raise RuntimeError('Unable to sample new cfgs')
+                raise RuntimeError("Unable to sample new cfgs")
 
         fit_mock.side_effect = Dummy()
 
@@ -169,48 +168,53 @@ class TestLGPGA(TestGPGPyTorch):
 
     def test_predict_with_actual_values(self):
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=False)
-        self.assertFalse(hasattr(self.gp_model.gp_model, 'covar_module'))
+        self.assertFalse(hasattr(self.gp_model.gp_model, "covar_module"))
 
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=True)
-        self.assertTrue(hasattr(self.gp_model.gp_model, 'covar_module'))
+        self.assertTrue(hasattr(self.gp_model.gp_model, "covar_module"))
 
-        X = np.array([
-            [0., 0., 0.],
-            [0., 0., 1.],
-            [0., 1., 0.],
-            [0., 1., 1.],
-            [1., 0., 0.],
-            [1., 0., 1.],
-            [1., 1., 0.],
-            [1., 1., 1.],
-
-            [-1., -1., -1.],
-            [-1., -1., 2.],
-            [-1., 2., -1.],
-            [-1., 2., 2.],
-            [2., -1., -1.],
-            [2., -1., 2.],
-            [2., 2., -1.],
-            [2., 2., 2.]
-        ], dtype=np.float64)
-        y = np.array([
-            [.1],
-            [.2],
-            [9],
-            [9.2],
-            [100.],
-            [100.2],
-            [109.],
-            [109.2],
-            [1.0],
-            [1.2],
-            [14.0],
-            [14.2],
-            [110.],
-            [111.2],
-            [129.],
-            [129.2],
-        ], dtype=np.float64)
+        X = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 1.0, 1.0],
+                [1.0, 0.0, 0.0],
+                [1.0, 0.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 1.0, 1.0],
+                [-1.0, -1.0, -1.0],
+                [-1.0, -1.0, 2.0],
+                [-1.0, 2.0, -1.0],
+                [-1.0, 2.0, 2.0],
+                [2.0, -1.0, -1.0],
+                [2.0, -1.0, 2.0],
+                [2.0, 2.0, -1.0],
+                [2.0, 2.0, 2.0],
+            ],
+            dtype=np.float64,
+        )
+        y = np.array(
+            [
+                [0.1],
+                [0.2],
+                [9],
+                [9.2],
+                [100.0],
+                [100.2],
+                [109.0],
+                [109.2],
+                [1.0],
+                [1.2],
+                [14.0],
+                [14.2],
+                [110.0],
+                [111.2],
+                [129.0],
+                [129.2],
+            ],
+            dtype=np.float64,
+        )
         rs = np.random.RandomState(1)
         num_inducing = 4
         model, _ = generate_lgpga(kernel=generate_kernel(3), n_dimensions=3, rs=rs, num_inducing=num_inducing)
@@ -218,7 +222,7 @@ class TestLGPGA(TestGPGPyTorch):
 
         self.assertEqual(model.is_trained, True)
 
-        self.assertTrue(hasattr(self.gp_model.gp_model, 'covar_module'))
+        self.assertTrue(hasattr(self.gp_model.gp_model, "covar_module"))
         mu_hat, var_hat = model.predict(np.array([[0.5, 0.5, 0.5]]))
 
         self.assertAlmostEqual(mu_hat[0][0], 54.612500000000004)

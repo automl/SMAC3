@@ -1,37 +1,40 @@
 import typing
-import numpy as np
+
 import inspect
 
+import numpy as np
 from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import Configuration
-from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 from smac.epm.base_epm import AbstractEPM
-from smac.optimizer.acquisition import AbstractAcquisitionFunction, EI
 from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, LocalAndSortedRandomSearch
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.ei_optimization import (
+    AcquisitionFunctionMaximizer,
+    LocalAndSortedRandomSearch,
+)
+from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
 
 class BOinGSubspace(AbstractSubspace):
-    def __init__(self,
-                 config_space: ConfigurationSpace,
-                 bounds: typing.List[typing.Tuple[float, float]],
-                 hps_types: typing.List[int],
-                 bounds_ss_cont: typing.Optional[np.ndarray] = None,
-                 bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-                 model_local: typing.Union[typing.Union[AbstractEPM],
-                                           typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
-                 model_local_kwargs: typing.Optional[typing.Dict] = None,
-                 acq_func_local: typing.Union[AbstractAcquisitionFunction,
-                                              typing.Type[AbstractAcquisitionFunction]] = EI,
-                 acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
-                 rng: typing.Optional[np.random.RandomState] = None,
-                 initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
-                 activate_dims: typing.Optional[np.ndarray] = None,
-                 incumbent_array: typing.Optional[np.ndarray] = None,
-                 acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
-                 acq_optimizer_local_kwargs: typing.Optional[dict] = None,
-                 ):
+    def __init__(
+        self,
+        config_space: ConfigurationSpace,
+        bounds: typing.List[typing.Tuple[float, float]],
+        hps_types: typing.List[int],
+        bounds_ss_cont: typing.Optional[np.ndarray] = None,
+        bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
+        model_local: typing.Union[typing.Union[AbstractEPM], typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
+        model_local_kwargs: typing.Dict = {},
+        acq_func_local: typing.Union[AbstractAcquisitionFunction, typing.Type[AbstractAcquisitionFunction]] = EI,
+        acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
+        rng: typing.Optional[np.random.RandomState] = None,
+        initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
+        activate_dims: typing.Optional[np.ndarray] = None,
+        incumbent_array: typing.Optional[np.ndarray] = None,
+        acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
+        acq_optimizer_local_kwargs: typing.Optional[dict] = None,
+    ):
         """
         Subspace for BOinG optimizer
         Parameters
@@ -43,19 +46,21 @@ class BOinGSubspace(AbstractSubspace):
             Parameters for acq_optimizer_local
 
         """
-        super(BOinGSubspace, self).__init__(config_space=config_space,
-                                            bounds=bounds,
-                                            hps_types=hps_types,
-                                            bounds_ss_cont=bounds_ss_cont,
-                                            bounds_ss_cat=bounds_ss_cat,
-                                            model_local=model_local,
-                                            model_local_kwargs=model_local_kwargs,
-                                            acq_func_local=acq_func_local,
-                                            acq_func_local_kwargs=acq_func_local_kwargs,
-                                            rng=rng,
-                                            initial_data=initial_data,
-                                            activate_dims=activate_dims,
-                                            incumbent_array=incumbent_array)
+        super(BOinGSubspace, self).__init__(
+            config_space=config_space,
+            bounds=bounds,
+            hps_types=hps_types,
+            bounds_ss_cont=bounds_ss_cont,
+            bounds_ss_cat=bounds_ss_cat,
+            model_local=model_local,
+            model_local_kwargs=model_local_kwargs,
+            acq_func_local=acq_func_local,
+            acq_func_local_kwargs=acq_func_local_kwargs,
+            rng=rng,
+            initial_data=initial_data,
+            activate_dims=activate_dims,
+            incumbent_array=incumbent_array,
+        )
         if bounds_ss_cont is None and bounds_ss_cat is None:
             self.config_origin = None  # type: ignore
         else:
@@ -65,16 +70,16 @@ class BOinGSubspace(AbstractSubspace):
             self.model.update_attribute(num_inducing_points=num_inducing_points)
 
         subspace_acq_func_opt_kwargs = {
-            'acquisition_function': self.acquisition_function,
-            'config_space': self.cs_local,  # type: ignore[attr-defined] # noqa F821
-            'rng': np.random.RandomState(self.rng.randint(1, 2**20)),
+            "acquisition_function": self.acquisition_function,
+            "config_space": self.cs_local,  # type: ignore[attr-defined] # noqa F821
+            "rng": np.random.RandomState(self.rng.randint(1, 2**20)),
         }
 
         if isinstance(acq_optimizer_local, AcquisitionFunctionMaximizer):
             # we copy the attribute of the local acquisition function optimizer but replace it with our local model
             # setting. This helps a better exploration in the beginning.
-            for key in inspect.signature(acq_optimizer_local.__init__).parameters.keys():   # type: ignore[misc]
-                if key == 'self':
+            for key in inspect.signature(acq_optimizer_local.__init__).parameters.keys():  # type: ignore[misc]
+                if key == "self":
                     continue
                 elif key in subspace_acq_func_opt_kwargs:
                     continue
@@ -96,8 +101,7 @@ class BOinGSubspace(AbstractSubspace):
                     7: 8,
                     8: 6,
                 }.get(len(self.cs_local.get_hyperparameters()), 5)
-                subspace_acq_func_opt_kwargs.update({'n_steps_plateau_walk': 5,
-                                                     'n_sls_iterations': n_sls_iterations})
+                subspace_acq_func_opt_kwargs.update({"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations})
 
             elif inspect.isclass(acq_optimizer_local, AcquisitionFunctionMaximizer):
                 subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
@@ -111,7 +115,7 @@ class BOinGSubspace(AbstractSubspace):
 
     def _generate_challengers(self, **optimizer_kwargs: typing.Dict) -> typing.List[typing.Tuple[float, Configuration]]:
         """
-        generate new challengers list for this subspace, this optimizer is similar to
+        Generate new challengers list for this subspace, this optimizer is similar to
         smac.optimizer.ei_optimization.LocalAndSortedRandomSearch
         """
         self.model.train(self.model_x, self.model_y)
@@ -130,9 +134,7 @@ class BOinGSubspace(AbstractSubspace):
             else:
                 previous_configs = [Configuration(configuration_space=self.cs_local, vector=ss_x) for ss_x in self.ss_x]
                 init_points_local = self.acq_optimizer_local.local_search._get_init_points_from_previous_configs(
-                    self.acq_optimizer_local.n_sls_iterations,
-                    previous_configs,
-                    next_configs_random
+                    self.acq_optimizer_local.n_sls_iterations, previous_configs, next_configs_random
                 )
 
             configs_acq_local = self.acq_optimizer_local.local_search._do_search(init_points_local)
@@ -144,7 +146,7 @@ class BOinGSubspace(AbstractSubspace):
             configs_acq_local.sort(reverse=True, key=lambda x: x[0])
 
             for _, inc in configs_acq_local:
-                inc.origin = 'Local Search'
+                inc.origin = "Local Search"
 
             # Having the configurations from random search, sorted by their
             # acquisition function value is important for the first few iterations
@@ -157,8 +159,8 @@ class BOinGSubspace(AbstractSubspace):
             next_configs_by_acq_value.sort(reverse=True, key=lambda x: x[0])
             self.logger.debug(
                 "First 5 acq func (origin) values of selected configurations: %s",
-                str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]])
+                str([[_[0], _[1].origin] for _ in next_configs_by_acq_value[:5]]),
             )
             return next_configs_by_acq_value
         else:
-            return self.acq_optimizer_local._maximize(None, None, num_points_rs)   # type: ignore
+            return self.acq_optimizer_local._maximize(None, None, num_points_rs)  # type: ignore

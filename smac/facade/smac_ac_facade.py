@@ -197,6 +197,7 @@ class SMAC4AC(object):
     trajectory : list
         List of all incumbents
     """
+
     def __init__(
         self,
         scenario: Scenario,

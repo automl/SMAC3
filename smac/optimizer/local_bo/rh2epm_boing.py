@@ -1,10 +1,14 @@
-import numpy as np
 import typing
+
 import copy
 
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogScaledCost
+import numpy as np
 
 from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm import (
+    RunHistory2EPM4Cost,
+    RunHistory2EPM4LogScaledCost,
+)
 
 
 class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
@@ -12,6 +16,7 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
     A transformer that transform RUnHistroy to vectors, Here addition to the transformed values, we will also
     return the raw values
     """
+
     def transform_with_raw(
         self,
         runhistory: RunHistory,
@@ -41,13 +46,46 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
         return X, Y, Y_raw
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values. Returns the input values.
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
         # otherwise it will be overwritten by its superclass
         return values
 
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values. Returns the input values before transformation
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
         return values
 
 
 class RunHistory2EPM4ScaledLogCostWithRaw(RunHistory2EPM4CostWithRaw, RunHistory2EPM4LogScaledCost):
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
+        """Transform function response values. Returns the input values before transformation
+
+        Parameters
+        ----------
+        values : np.ndarray
+            Response values to be transformed.
+
+        Returns
+        -------
+        np.ndarray
+        """
         return RunHistory2EPM4LogScaledCost.transform_response_values(self, values)

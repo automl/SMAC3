@@ -1,23 +1,20 @@
-import unittest.mock
 import copy
+import unittest.mock
 
+import gpytorch
 import numpy as np
 import torch
-import gpytorch
-from gpytorch.lazy import delazify
-from gpytorch.kernels import MaternKernel, ScaleKernel
-from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.constraints.constraints import Interval
-from gpytorch.lazy import LazyEvaluatedKernelTensor
-from gpytorch.kernels.inducing_point_kernel import InducingPointKernel
-from gpytorch.models.exact_gp import ExactGP
-from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.distributions import MultivariateNormal
+from gpytorch.kernels import MaternKernel, ScaleKernel
+from gpytorch.kernels.inducing_point_kernel import InducingPointKernel
+from gpytorch.lazy import LazyEvaluatedKernelTensor, delazify
+from gpytorch.likelihoods import GaussianLikelihood
+from gpytorch.means.zero_mean import ZeroMean
+from gpytorch.models.exact_gp import ExactGP
 
-from smac.epm.boing_kernels import FITCMean, FITCKernel
+from smac.epm.boing_kernels import FITCKernel, FITCMean
 from smac.epm.util_funcs import check_points_in_ss
-
-from .. import requires_extra
 
 
 class FITC(ExactGP):
@@ -33,12 +30,9 @@ class FITC(ExactGP):
         return MultivariateNormal(mean, covar)
 
 
-def generate_test_data(rs: np.random.RandomState,
-                       num_inducing=4,
-                       num_points_in=8,
-                       num_points_out=10,
-                       num_dims=5,
-                       expand_bound=True):
+def generate_test_data(
+    rs: np.random.RandomState, num_inducing=4, num_points_in=8, num_points_out=10, num_dims=5, expand_bound=True
+):
     X_out = rs.rand(num_points_out, num_dims)
     Y_out = rs.rand(num_points_out, 1)
     # X \in [-0.6, 1.4] and the bound is [0, 1]
@@ -61,10 +55,9 @@ def generate_test_data(rs: np.random.RandomState,
     X = X[data_indices]
     Y = Y[data_indices]
 
-    ss_in = check_points_in_ss(X,
-                               cont_dims=np.arange(num_dims),
-                               bounds_cont=np.tile([0., 1.], [num_dims, 1]),
-                               expand_bound=expand_bound)
+    ss_in = check_points_in_ss(
+        X, cont_dims=np.arange(num_dims), bounds_cont=np.tile([0.0, 1.0], [num_dims, 1]), expand_bound=expand_bound
+    )
 
     X_in = X[ss_in]
     Y_in = Y[ss_in]
@@ -74,30 +67,25 @@ def generate_test_data(rs: np.random.RandomState,
     return X_in, Y_in, X_out, Y_out, X_inducing
 
 
-@requires_extra('gpytorch')
 def generate_kernel(n_dimensions):
-    exp_kernel = MaternKernel(2.5,
-                              lengthscale_constraint=Interval(
-                                  torch.tensor(np.exp(-6.754111155189306).repeat(n_dimensions)),
-                                  torch.tensor(np.exp(0.0858637988771976).repeat(n_dimensions)),
-                                  transform=None,
-                                  initial_value=1.0
-                              ),
-                              ard_num_dims=n_dimensions,
-                              active_dims=torch.arange(n_dimensions),
-                              ).double()
+    exp_kernel = MaternKernel(
+        2.5,
+        lengthscale_constraint=Interval(
+            torch.tensor(np.exp(-6.754111155189306).repeat(n_dimensions)),
+            torch.tensor(np.exp(0.0858637988771976).repeat(n_dimensions)),
+            transform=None,
+            initial_value=1.0,
+        ),
+        ard_num_dims=n_dimensions,
+        active_dims=torch.arange(n_dimensions),
+    ).double()
 
-    kernel = ScaleKernel(exp_kernel,
-                         outputscale_constraint=Interval(
-                             np.exp(-10.),
-                             np.exp(2.),
-                             transform=None,
-                             initial_value=2.0
-                         )).double()
+    kernel = ScaleKernel(
+        exp_kernel, outputscale_constraint=Interval(np.exp(-10.0), np.exp(2.0), transform=None, initial_value=2.0)
+    ).double()
     return kernel
 
 
-@requires_extra('gpytorch')
 class TestFITCKernel(unittest.TestCase):
     def setUp(self) -> None:
         rs = np.random.RandomState(1)
@@ -110,33 +98,41 @@ class TestFITCKernel(unittest.TestCase):
         self.X_out = torch.from_numpy(X_out)
         self.Y_out = torch.from_numpy(Y_out)
         self.X_inducing = torch.from_numpy(X_inducing)
-        self.ga_kernel = FITCKernel(base_kernel=self.kernel,
-                                    X_inducing=self.X_inducing,
-                                    likelihood=self.likelihood,
-                                    X_out=self.X_out,
-                                    y_out=self.Y_out,
-                                    ).double()
+        self.ga_kernel = FITCKernel(
+            base_kernel=self.kernel,
+            X_inducing=self.X_inducing,
+            likelihood=self.likelihood,
+            X_out=self.X_out,
+            y_out=self.Y_out,
+        ).double()
         self.ga_mean = FITCMean(covar_module=self.ga_kernel)
-        self.fitc = FITC(train_x=self.X_out, train_y=self.Y_out, likelihood=self.likelihood,
-                         base_kernel=self.kernel, inducing_points=self.X_inducing)
+        self.fitc = FITC(
+            train_x=self.X_out,
+            train_y=self.Y_out,
+            likelihood=self.likelihood,
+            base_kernel=self.kernel,
+            inducing_points=self.X_inducing,
+        )
 
-        self.fitc_eval_cache = {'_cached_kernel_mat': '_inducing_mat',
-                                '_cached_inducing_sigma': '_inducing_sigma',
-                                '_cached_poster_mean_mat': '_poster_mean_mat',
-                                '_cached_kernel_inv_root': '_inducing_inv_root'}
-        self.fitc_train_cache = {'_train_cached_k_u1': '_k_u1',
-                                 '_train_cached_lambda_diag_inv': '_lambda_diag_inv',
-                                 '_train_cached_posterior_mean': 'posterior_mean'}
+        self.fitc_eval_cache = {
+            "_cached_kernel_mat": "_inducing_mat",
+            "_cached_inducing_sigma": "_inducing_sigma",
+            "_cached_poster_mean_mat": "_poster_mean_mat",
+            "_cached_kernel_inv_root": "_inducing_inv_root",
+        }
+        self.fitc_train_cache = {
+            "_train_cached_k_u1": "_k_u1",
+            "_train_cached_lambda_diag_inv": "_lambda_diag_inv",
+            "_train_cached_posterior_mean": "posterior_mean",
+        }
 
     def test_init(self):
-        ga_kernel = FITCKernel(base_kernel=self.kernel,
-                               X_inducing=torch.from_numpy(np.empty(2)),
-                               likelihood=None,
-                               X_out=None,
-                               y_out=None)
-        self.assertTrue(hasattr(ga_kernel, 'X_inducing'))
+        ga_kernel = FITCKernel(
+            base_kernel=self.kernel, X_inducing=torch.from_numpy(np.empty(2)), likelihood=None, X_out=None, y_out=None
+        )
+        self.assertTrue(hasattr(ga_kernel, "X_inducing"))
         self.assertEqual(len(ga_kernel.X_inducing.shape), 2)
-        self.assertTrue('X_inducing' in dict(ga_kernel.named_parameters()))
+        self.assertTrue("X_inducing" in dict(ga_kernel.named_parameters()))
         self.assertTrue(self.ga_mean.covar_module is self.ga_kernel)
 
     def test_forward(self):
@@ -173,12 +169,10 @@ class TestFITCKernel(unittest.TestCase):
         # Make sure that all the cached values are successfully stored
         for cache, value in self.fitc_train_cache.items():
             self.assertTrue(hasattr(self.ga_kernel, cache))
-            if cache == '_train_cached_posterior_mean':
-                torch.testing.assert_allclose(getattr(self.ga_kernel, cache),
-                                              getattr(self.ga_kernel, value)(self.X_in))
+            if cache == "_train_cached_posterior_mean":
+                torch.testing.assert_allclose(getattr(self.ga_kernel, cache), getattr(self.ga_kernel, value)(self.X_in))
             else:
-                torch.testing.assert_allclose(getattr(self.ga_kernel, cache),
-                                              getattr(self.ga_kernel, value))
+                torch.testing.assert_allclose(getattr(self.ga_kernel, cache), getattr(self.ga_kernel, value))
 
         self.ga_kernel.eval()
         delazify(self.ga_kernel(self.X_in))

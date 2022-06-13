@@ -1,46 +1,46 @@
-from collections import OrderedDict
 import typing
 
+from collections import OrderedDict
+
+import gpytorch
 import numpy as np
+import torch
+from botorch.optim.numpy_converter import module_to_array, set_params_with_array
+from botorch.optim.utils import _get_extra_mll_args
+from gpytorch.constraints.constraints import Interval
+from gpytorch.distributions import MultivariateNormal
+from gpytorch.kernels import Kernel
+from gpytorch.likelihoods import GaussianLikelihood
+from gpytorch.means import ZeroMean
+from gpytorch.mlls import ExactMarginalLogLikelihood
+from gpytorch.models import ExactGP
+from gpytorch.utils.errors import NanError
 from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
-import torch
-import gpytorch
-
-from gpytorch.models import ExactGP
-from gpytorch.means import ZeroMean
-from gpytorch.kernels import Kernel
-from gpytorch.constraints.constraints import Interval
-from gpytorch.distributions import MultivariateNormal
-from gpytorch.likelihoods import GaussianLikelihood
-from gpytorch.mlls import ExactMarginalLogLikelihood
-
-from gpytorch.utils.errors import NanError
-
-from botorch.optim.numpy_converter import module_to_array, set_params_with_array
-from botorch.optim.utils import _get_extra_mll_args
-
 from smac.configspace import ConfigurationSpace
-from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
 from smac.epm.boing_kernels import FITCKernel, FITCMean
+from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
 from smac.epm.util_funcs import check_points_in_ss
 
 gpytorch.settings.debug.off()
 
 
 class AugmentedLocalGP(ExactGP):
-    def __init__(self,
-                 X_in: torch.Tensor,
-                 y_in: torch.Tensor,
-                 X_out: torch.Tensor,
-                 y_out: torch.Tensor,
-                 likelihood: GaussianLikelihood,
-                 base_covar_kernel: Kernel):
+    def __init__(
+        self,
+        X_in: torch.Tensor,
+        y_in: torch.Tensor,
+        X_out: torch.Tensor,
+        y_out: torch.Tensor,
+        likelihood: GaussianLikelihood,
+        base_covar_kernel: Kernel,
+    ):
         """
         An Augmented Local GP, it is dense inside a given subregion and the impact of all other
         points are approximated by a sparse GP.
-        Parameters:
+
+        Parameters
         ----------
         X_in: torch.Tensor (N_in, D),
             feature vector of the points inside the subregion
@@ -72,7 +72,8 @@ class AugmentedLocalGP(ExactGP):
 
     def set_augment_module(self, X_inducing: torch.Tensor) -> None:
         """
-        set an augmention module, which will be used later for inference
+        Set an augmention module, which will be used later for inference
+
         Parameters
         ----------
         X_inducing: torch.Tensor(N_inducing, D)
@@ -80,14 +81,15 @@ class AugmentedLocalGP(ExactGP):
         """
         X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
         # assert X_inducing.shape[-1] == self.X_out.shape[-1]
-        self.covar_module = FITCKernel(self.base_covar, X_inducing=X_inducing,
-                                       X_out=self.X_out, y_out=self.y_out, likelihood=self.likelihood)
+        self.covar_module = FITCKernel(
+            self.base_covar, X_inducing=X_inducing, X_out=self.X_out, y_out=self.y_out, likelihood=self.likelihood
+        )
         self.mean_module = FITCMean(covar_module=self.covar_module)
         self.augmented = True
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
         """
-        compute the prior values, if optimize_kernel_hps is set True in the training phases, this model degenerates to
+        Compute the prior values, if optimize_kernel_hps is set True in the training phases, this model degenerates to
          a vanilla GP model with ZeroMean and base_covar as covariance matrix, otherwise we apply partial sparse GP
          mean and kernels here.
         """
@@ -112,7 +114,8 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
         Initialize a Variational GP
         we set the lower bound and upper bounds of indcuing points for numerical hyperparmaters between 0 and 1,
         that is, we constraint the indcuing points to lay inside the subregion.
-        Parameters:
+
+        Parameters
         ----------
         kernel: Kernel
             kernel of the variational GP, its hyperparameter needs to be fixed when it is by PSGP
@@ -131,11 +134,10 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
         lower_X_inducing = torch.zeros([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])
         upper_X_inducing = torch.ones([shape_X_inducing[-1]]).repeat(shape_X_inducing[0])
 
-        self.variational_strategy.register_constraint(param_name="inducing_points",
-                                                      constraint=Interval(lower_X_inducing,
-                                                                          upper_X_inducing,
-                                                                          transform=None),
-                                                      )
+        self.variational_strategy.register_constraint(
+            param_name="inducing_points",
+            constraint=Interval(lower_X_inducing, upper_X_inducing, transform=None),
+        )
         self.double()
 
         for p_name, t in self.named_hyperparameters():
@@ -143,27 +145,38 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
                 t.requires_grad = False
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
+        """
+        Pass compute the posterior mean and varaince given input X
+
+        Parameters
+        ----------
+        x: torch.Tensor
+            Input data
+        Returns
+        -------
+        """
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x, cont_only=True)
         return MultivariateNormal(mean_x, covar_x)
 
 
 class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
-    def __init__(self,
-                 configspace: ConfigurationSpace,
-                 types: typing.List[int],
-                 bounds: typing.List[typing.Tuple[float, float]],
-                 bounds_cont: np.ndarray,
-                 bounds_cat: typing.List[typing.Tuple],
-                 seed: int,
-                 kernel: Kernel,
-                 num_inducing_points: int = 2,
-                 likelihood: typing.Optional[GaussianLikelihood] = None,
-                 normalize_y: bool = True,
-                 n_opt_restarts: int = 10,
-                 instance_features: typing.Optional[np.ndarray] = None,
-                 pca_components: typing.Optional[int] = None,
-                 ):
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: typing.List[int],
+        bounds: typing.List[typing.Tuple[float, float]],
+        bounds_cont: np.ndarray,
+        bounds_cat: typing.List[typing.Tuple],
+        seed: int,
+        kernel: Kernel,
+        num_inducing_points: int = 2,
+        likelihood: typing.Optional[GaussianLikelihood] = None,
+        normalize_y: bool = True,
+        n_opt_restarts: int = 10,
+        instance_features: typing.Optional[np.ndarray] = None,
+        pca_components: typing.Optional[int] = None,
+    ):
         """
         Local GP with global augmentation. It is composed of two models: an Exact GP to descirbe the data
         distribution inside a subregion and an Approximate GP to approxiamte the data distribution outside a
@@ -192,17 +205,18 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         normalize_y : bool
             Zero mean unit variance normalization of the output values, when the model is a partial sparse GP model,
         """
-        super(GloballyAugmentedLocalGP, self).__init__(configspace=configspace,
-                                                       types=types,
-                                                       bounds=bounds,
-                                                       seed=seed,
-                                                       kernel=kernel,
-                                                       likelihood=likelihood,
-                                                       normalize_y=normalize_y,
-                                                       n_opt_restarts=n_opt_restarts,
-                                                       instance_features=instance_features,
-                                                       pca_components=pca_components,
-                                                       )
+        super(GloballyAugmentedLocalGP, self).__init__(
+            configspace=configspace,
+            types=types,
+            bounds=bounds,
+            seed=seed,
+            kernel=kernel,
+            likelihood=likelihood,
+            normalize_y=normalize_y,
+            n_opt_restarts=n_opt_restarts,
+            instance_features=instance_features,
+            pca_components=pca_components,
+        )
         self.cont_dims = np.where(np.array(types) == 0)[0]
         self.cat_dims = np.where(np.array(types) != 0)[0]
         self.bounds_cont = bounds_cont
@@ -210,16 +224,15 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         self.num_inducing_points = num_inducing_points
 
     def update_attribute(self, **kwargs: typing.Dict) -> None:
-        """
-        we update the class attribute (for instance, number of inducing points)
-        """
+        """We update the class attribute (for instance, number of inducing points)"""
         for key in kwargs:
             if not hasattr(self, key):
                 raise AttributeError(f"{self.__class__.__name__} has no attribute named {key}")
             setattr(self, key, kwargs[key])
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> \
-            typing.Union[AugmentedLocalGP, GaussianProcessGPyTorch]:
+    def _train(
+        self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True
+    ) -> typing.Union[AugmentedLocalGP, GaussianProcessGPyTorch]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -243,19 +256,21 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         if self.n_objectives_ == 1:
             y = y.flatten()
 
-        ss_data_indices = check_points_in_ss(X,
-                                             cont_dims=self.cont_dims,
-                                             cat_dims=self.cat_dims,
-                                             bounds_cont=self.bounds_cont,
-                                             bounds_cat=self.bounds_cat,
-                                             expand_bound=True)
+        ss_data_indices = check_points_in_ss(
+            X,
+            cont_dims=self.cont_dims,
+            cat_dims=self.cat_dims,
+            bounds_cont=self.bounds_cont,
+            bounds_cat=self.bounds_cat,
+            expand_bound=True,
+        )
 
         if np.sum(ss_data_indices) > np.shape(y)[0] - self.num_inducing_points:
             # we initialize a vanilla GaussianProcessGPyTorch
             if self.normalize_y:
                 y = self._normalize_y(y)
             self.num_points = np.shape(y)[0]
-            get_gp_kwargs = {'X_in': X, 'y_in': y, 'X_out': None, 'y_out': None}
+            get_gp_kwargs = {"X_in": X, "y_in": y, "X_out": None, "y_out": None}
         else:
             # we initialize a PartialSparseGaussianProcess object
             X_in = X[ss_data_indices]
@@ -266,7 +281,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
             if self.normalize_y:
                 y_in = self._normalize_y(y_in)
                 y_out = (y_out - self.mean_y_) / self.std_y_
-            get_gp_kwargs = {'X_in': X_in, 'y_in': y_in, 'X_out': X_out, 'y_out': y_out}
+            get_gp_kwargs = {"X_in": X_in, "y_in": y_in, "X_out": X_out, "y_out": y_out}
 
         n_tries = 10
 
@@ -294,8 +309,9 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
                 X_out_ = torch.from_numpy(X_out)
                 y_out_ = torch.from_numpy(y_out)
 
-                variational_ngd_optimizer = gpytorch.optim.NGD(var_gp.variational_parameters(), num_data=y_out_.size(0),
-                                                               lr=0.1)
+                variational_ngd_optimizer = gpytorch.optim.NGD(
+                    var_gp.variational_parameters(), num_data=y_out_.size(0), lr=0.1
+                )
 
                 var_gp.train()
                 likelihood = GaussianLikelihood().double()
@@ -329,16 +345,17 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
                         break
                 while len(start_points) < 3:
                     new_start_point = np.random.rand(*x0.shape)
-                    new_inducing_points = torch.from_numpy(
-                        lhd.random(n=self.num_inducing_points)).flatten()
-                    new_start_point[inducing_idx: inducing_idx + inducing_size] = new_inducing_points
+                    new_inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points)).flatten()
+                    new_start_point[inducing_idx : inducing_idx + inducing_size] = new_inducing_points
                     start_points.append(new_start_point)
 
-                def sci_opi_wrapper(x: np.ndarray,
-                                    mll: gpytorch.module,
-                                    property_dict: typing.Dict,
-                                    train_inputs: torch.Tensor,
-                                    train_targets: torch.Tensor) -> typing.Tuple[float, np.ndarray]:
+                def sci_opi_wrapper(
+                    x: np.ndarray,
+                    mll: gpytorch.module,
+                    property_dict: typing.Dict,
+                    train_inputs: torch.Tensor,
+                    train_targets: torch.Tensor,
+                ) -> typing.Tuple[float, np.ndarray]:
                     """
                     A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that
                     we do an additional natural gradient update before computing the gradient values
@@ -396,12 +413,13 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
                 f_opt_star = np.inf
                 for start_point in start_points:
                     try:
-                        theta, f_opt, res_dict = optimize.fmin_l_bfgs_b(sci_opi_wrapper,
-                                                                        start_point,
-                                                                        args=(var_mll, property_dict, X_out_, y_out_),
-                                                                        bounds=bounds,
-                                                                        maxiter=50,
-                                                                        )
+                        theta, f_opt, res_dict = optimize.fmin_l_bfgs_b(
+                            sci_opi_wrapper,
+                            start_point,
+                            args=(var_mll, property_dict, X_out_, y_out_),
+                            bounds=bounds,
+                            maxiter=50,
+                        )
                         if f_opt < f_opt_star:
                             f_opt_star = f_opt
                             theta_star = theta
@@ -432,11 +450,13 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         self.is_trained = True
         return self
 
-    def _get_gp(self,
-                X_in: typing.Optional[np.ndarray] = None,
-                y_in: typing.Optional[np.ndarray] = None,
-                X_out: typing.Optional[np.ndarray] = None,
-                y_out: typing.Optional[np.ndarray] = None) -> typing.Optional[ExactMarginalLogLikelihood]:
+    def _get_gp(
+        self,
+        X_in: typing.Optional[np.ndarray] = None,
+        y_in: typing.Optional[np.ndarray] = None,
+        X_out: typing.Optional[np.ndarray] = None,
+        y_out: typing.Optional[np.ndarray] = None,
+    ) -> typing.Optional[ExactMarginalLogLikelihood]:
         """
         Construction a new GP model based on the inputs
         If both in and out are None: return an empty models
@@ -456,8 +476,9 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         function will return a vanilla Gaussian Process
         y_out: typing.Optional[np.ndarray (N_out)]
             The corresponding target values outside the subregion.
+
         Returns
-        ----------
+        -------
         mll: ExactMarginalLogLikelihood
             a gp module
         """
@@ -472,9 +493,9 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
             X_out = torch.from_numpy(X_out)
             y_out = torch.from_numpy(y_out)
 
-            self.gp_model = AugmentedLocalGP(X_in, y_in, X_out, y_out,
-                                             likelihood=self.likelihood,
-                                             base_covar_kernel=self.kernel).double()
+            self.gp_model = AugmentedLocalGP(
+                X_in, y_in, X_out, y_out, likelihood=self.likelihood, base_covar_kernel=self.kernel  # type:ignore
+            ).double()
         mll = ExactMarginalLogLikelihood(self.likelihood, self.gp_model)
         mll.double()
         return mll

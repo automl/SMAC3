@@ -23,7 +23,7 @@ on:
 env:
   package-name: smac
   test-dir: tests
-  extra-requires: "[dev]"
+  extra-requires: "[boing, dev]"
 
   # Arguments used for pytest
   pytest-args: >-

@@ -22,7 +22,7 @@ from smac.scenario.scenario import Scenario
 
 
 def rosenbrock_2d(x):
-    """ The 2 dimensional Rosenbrock function as a toy model
+    """The 2 dimensional Rosenbrock function as a toy model
     The Rosenbrock function is well know in the optimization community and
     often serves as a toy problem. It can be defined for arbitrary
     dimensions. The minimium is always at x_i = 1 with a function value of
@@ -32,11 +32,11 @@ def rosenbrock_2d(x):
     x1 = x["x0"]
     x2 = x["x1"]
 
-    val = 100. * (x2 - x1 ** 2.) ** 2. + (1 - x1) ** 2.
+    val = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
     return val
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)  # logging.DEBUG for debug output
 
     # Build Configuration Space which defines all parameters and their ranges
@@ -46,11 +46,14 @@ if __name__ == '__main__':
     cs.add_hyperparameters([x0, x1])
 
     # Scenario object
-    scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
-                         "runcount-limit": 100,
-                         "cs": cs,  # configuration space
-                         "deterministic": "true"
-                         })
+    scenario = Scenario(
+        {
+            "run_obj": "quality",  # we optimize quality (alternatively runtime)
+            "runcount-limit": 100,
+            "cs": cs,  # configuration space
+            "deterministic": "true",
+        }
+    )
 
     # Example call of the function
     # It returns: Status, Cost, Runtime, Additional Infos
@@ -59,12 +62,13 @@ if __name__ == '__main__':
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4BB(scenario=scenario,
-                   rng=np.random.RandomState(42),
-                   model_type="gp",
-                   smbo_kwargs={"epm_chooser": EPMChooserTurBO},
-                   initial_design_kwargs={"init_budget": 0},
-                   tae_runner=rosenbrock_2d,
-                   )
+    smac = SMAC4BB(
+        scenario=scenario,
+        rng=np.random.RandomState(42),
+        model_type="gp",
+        smbo_kwargs={"epm_chooser": EPMChooserTurBO},
+        initial_design_kwargs={"init_budget": 0},
+        tae_runner=rosenbrock_2d,
+    )
 
     smac.optimize()
