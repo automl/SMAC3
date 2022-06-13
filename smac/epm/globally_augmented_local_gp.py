@@ -23,7 +23,7 @@ from botorch.optim.utils import _get_extra_mll_args
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
-from smac.epm.fitc_kernel import FITCKernel, FITCMean
+from smac.epm.boing_kernels import FITCKernel, FITCMean
 from smac.epm.util_funcs import check_points_in_ss
 
 gpytorch.settings.debug.off()
@@ -76,10 +76,10 @@ class AugmentedLocalGP(ExactGP):
         Parameters
         ----------
         X_inducing: torch.Tensor(N_inducing, D)
-            inducing points, it has the same number of dimension as X_in
+            inducing points, it needs to have the same number of dimension as X_in
         """
         X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
-        assert X_inducing.shape[-1] == self.X_out.shape[-1]
+        # assert X_inducing.shape[-1] == self.X_out.shape[-1]
         self.covar_module = FITCKernel(self.base_covar, X_inducing=X_inducing,
                                        X_out=self.X_out, y_out=self.y_out, likelihood=self.likelihood)
         self.mean_module = FITCMean(covar_module=self.covar_module)
@@ -103,7 +103,8 @@ class AugmentedLocalGP(ExactGP):
 
 class VariationalGPModel(gpytorch.models.ApproximateGP):
     """
-    A variational GP to compute the position of the inducing points
+    A variational GP to compute the position of the inducing points.
+    We only compute the position of the inducing points w.r.t. the continuous dimensions
     """
 
     def __init__(self, kernel: Kernel, X_inducing: torch.Tensor):
@@ -143,7 +144,7 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
         mean_x = self.mean_module(x)
-        covar_x = self.covar_module(x)
+        covar_x = self.covar_module(x, cont_only=True)
         return MultivariateNormal(mean_x, covar_x)
 
 
@@ -283,7 +284,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
             if isinstance(self.gp.model, AugmentedLocalGP):
                 # we optimize the position of the inducing points and thus needs to deactivate the gradient of kernel
                 # hyperparameters
-                lhd = LatinHypercube(d=X_out.shape[-1], seed=self.rng.randint(0, 1000000))
+                lhd = LatinHypercube(d=X.shape[-1], seed=self.rng.randint(0, 1000000))
 
                 inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points))
 

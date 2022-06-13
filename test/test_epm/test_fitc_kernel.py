@@ -14,7 +14,7 @@ from gpytorch.models.exact_gp import ExactGP
 from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.distributions import MultivariateNormal
 
-from smac.epm.fitc_kernel import FITCMean, FITCKernel
+from smac.epm.boing_kernels import FITCMean, FITCKernel
 from smac.epm.util_funcs import check_points_in_ss
 
 from .. import requires_extra

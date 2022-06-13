@@ -1,12 +1,13 @@
 import unittest
 
 import numpy as np
-
-from smac.epm.util_funcs import get_types, check_points_in_ss
-from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace, ChallengerListLocal
 from ConfigSpace import ConfigurationSpace, Configuration
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter, UniformFloatHyperparameter, \
     CategoricalHyperparameter, OrdinalHyperparameter
+from ConfigSpace.forbidden import ForbiddenAndConjunction, ForbiddenInClause, ForbiddenEqualsClause
+
+from smac.epm.util_funcs import get_types, check_points_in_ss
+from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace, ChallengerListLocal
 
 
 def generate_cont_hps():
@@ -66,9 +67,6 @@ class TestAbstachSubSpace(unittest.TestCase):
                                     bounds_ss_cont=bounds_ss_cont,
                                     bounds_ss_cat=bounds_ss_cat,
                                     model_local=None)
-
-        np.testing.assert_equal(cont_dims, subspace.activate_dims_cont)
-        np.testing.assert_equal(cat_dims, subspace.activate_dims_cat)
 
         for hp in subspace.cs_local.get_hyperparameters():
             if isinstance(hp, CategoricalHyperparameter):
@@ -142,7 +140,7 @@ class TestAbstachSubSpace(unittest.TestCase):
                                     model_local=None,
                                     activate_dims=activ_dims)
         np.testing.assert_equal(subspace.activate_dims_cat, [0])
-        np.testing.assert_equal(subspace.activate_dims_cont, [2, 6])
+        np.testing.assert_equal(subspace.activate_dims_cont, [0, 4])
 
         hps_global = cs.get_hyperparameters()
         hps_local = subspace.cs_local.get_hyperparameters()
@@ -415,3 +413,41 @@ class TestChallengerListLocal(unittest.TestCase):
                                "hyperparameters then the local configuration space",
                                ChallengerListLocal,
                                cs_local, cs_global, challengers, "test")
+
+    def test_add_forbidden_ss(self):
+        f0 = UniformFloatHyperparameter('f0', 0.0, 100.)
+        c0 = CategoricalHyperparameter('c0', [0, 1, 2])
+        o0 = OrdinalHyperparameter('o0', [1, 2, 3])
+
+        i0 = UniformIntegerHyperparameter('i0', 0, 100)
+
+        forbid_1 = ForbiddenEqualsClause(c0, 0)
+        forbid_2 = ForbiddenInClause(o0, [1, 2])
+
+        forbid_3 = ForbiddenEqualsClause(f0, 0.3)
+        forbid_4 = ForbiddenEqualsClause(f0, 59.)
+
+        forbid_5 = ForbiddenAndConjunction(forbid_2, forbid_3)
+        forbid_6 = ForbiddenAndConjunction(forbid_1, forbid_4)
+        forbid_7 = ForbiddenEqualsClause(i0, 10)
+
+        cs_local = ConfigurationSpace()
+        f0_ss = UniformFloatHyperparameter('f0', 0.0, 50.)
+        c0_ss = CategoricalHyperparameter('c0', [0, 1, 2])
+        o0_ss = OrdinalHyperparameter('o0', [1, 2, 3])
+        cs_local.add_hyperparameters([f0_ss, c0_ss, o0_ss])
+
+        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_1))
+        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_2))
+
+        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_3))
+        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_4))
+
+        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_5))
+        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_6))
+
+        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_7))
+
+
+
+

@@ -148,7 +148,7 @@ def check_points_in_ss(X: np.ndarray,
                        expand_bound: bool = False,
                        ) -> np.ndarray:
     """
-    check which points will be place inside a subspace
+    check which points are place inside a given subspace
     Parameters
     ----------
     X: typing.Optional[np.ndarray(N,D)],
@@ -179,7 +179,7 @@ def check_points_in_ss(X: np.ndarray,
 
         if len(bounds_cont.shape) != 2 or bounds_cont.shape[1] != 2 or bounds_cont.shape[0] != len(cont_dims):
             raise ValueError(f'bounds_cont (with shape  {bounds_cont.shape}) should be an array with shape of'
-                             f'{len(cont_dims)}, 2)')
+                             f'({len(cont_dims)}, 2)')
 
         data_in_ss = np.all(X[:, cont_dims] <= bounds_cont[:, 1], axis=1) & np.all(X[:, cont_dims] >= bounds_cont[:, 0],
                                                                                    axis=1)

@@ -8,8 +8,28 @@ from gpytorch import settings
 from gpytorch.utils.cholesky import psd_safe_cholesky
 from gpytorch.means.mean import Mean
 from gpytorch.lazy import DiagLazyTensor, MatmulLazyTensor, PsdSumLazyTensor, RootLazyTensor, delazify
-from gpytorch.kernels import Kernel
+from gpytorch.kernels import Kernel, ProductKernel
 from gpytorch.likelihoods import GaussianLikelihood
+
+
+class MixedKernel(ProductKernel):
+    """
+    A special form of ProductKernel. It is composed of a cont_kernel and a cat_kernel that work with continuous and
+    categorical parameters respectively. Its forward pass allows an additional parameter to determine if only
+    cont_kernel is used
+    """
+    def __init__(self, cont_kernel: Kernel, cat_kernel: Kernel):
+        kernels = cont_kernel.kernels if isinstance(cont_kernel, ProductKernel) else [cont_kernel]
+        kernels += cat_kernel.kernels if isinstance(cat_kernel, ProductKernel) else [cat_kernel]
+        super().__init__(*kernels)
+        self.cont_kernel = cont_kernel
+        self.cat_kernel = cat_kernel
+
+    def forward(self, x1, x2, diag=False, cont_only: bool = False, **params):
+        if not cont_only:
+            return super().forward(x1, x2, diag, **params)
+        else:
+            return self.cont_kernel(x1, x2, diag, **params)
 
 
 class FITCKernel(Kernel):
@@ -303,7 +323,7 @@ class FITCKernel(Kernel):
         if inputs.ndimension() == 1:
             inputs = inputs.unsqueeze(1)
 
-        k_iu = delazify(self.base_kernel(inputs, self.X_inducing))
+        k_iu = delazify(self.base_kernel(inputs, self.X_inducing, cont_only=True))
         poster_mean = self._poster_mean_mat
         res = torch.matmul(k_iu, poster_mean)
         return res

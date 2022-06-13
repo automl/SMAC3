@@ -70,6 +70,7 @@ class TuRBOSubSpace(AbstractSubspace):
         n_candidate_max: int
             Maximal Number of points used as candidates
         """
+        self.num_valid_observations = 0
         super(TuRBOSubSpace, self).__init__(config_space=config_space,
                                             bounds=bounds,
                                             hps_types=hps_types,

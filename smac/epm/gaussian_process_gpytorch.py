@@ -302,6 +302,7 @@ class GaussianProcessGPyTorch(BaseModel):
         self.gp_model.eval()
 
         with torch.no_grad(), gpytorch.settings.fast_pred_var():
+
             observed_pred = self.likelihood(self.gp_model(X_test))
 
             mu = observed_pred.mean.numpy()

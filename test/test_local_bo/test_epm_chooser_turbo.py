@@ -1,12 +1,22 @@
+import unittest
+
 import numpy as np
 from smac.facade.smac_bb_facade import SMAC4BB
-from ..test_smbo.test_epm_configuration_chooser import TestEPMChooser
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
+from smac.utils import test_helpers
 from smac.optimizer.local_bo.epm_chooser_turbo import EPMChooserTurBO
 
 
-class TestEPMChooserTuRBO(TestEPMChooser):
+class TestEPMChooserTuRBO(unittest.TestCase):
+    def setUp(self):
+        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
+                                  'run_obj': 'quality',
+                                  'output_dir': 'data-test_epmchooser'})
+        self.output_dirs = []
+        self.output_dirs.append(self.scenario.output_dir)
+
     def test_choose_next(self):
         config = self.scenario.cs.sample_configuration()
         rh = RunHistory()

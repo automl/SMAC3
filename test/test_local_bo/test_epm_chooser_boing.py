@@ -9,11 +9,12 @@ from gpytorch.priors import LogNormalPrior, HorseshoePrior
 
 import torch
 
-from ..test_smbo.test_epm_configuration_chooser import TestEPMChooser
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.runhistory.runhistory import RunHistory
+from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
+from smac.utils import test_helpers
 from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG, subspace_extraction
 
 from smac.epm.util_funcs import get_types, check_points_in_ss
@@ -24,9 +25,14 @@ from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWit
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter, CategoricalHyperparameter
 
 
-class TestEPMChooserBOinG(TestEPMChooser):
+class TestEPMChooserBOinG(unittest.TestCase):
     def setUp(self):
-        super().setUp()
+        self.scenario = Scenario({'cs': test_helpers.get_branin_config_space(),
+                                  'run_obj': 'quality',
+                                  'output_dir': 'data-test_epmchooser'})
+        self.output_dirs = []
+        self.output_dirs.append(self.scenario.output_dir)
+
         exp_kernel = MaternKernel(2.5,
                                   lengthscale_constraint=Interval(
                                       torch.tensor(np.exp(-6.754111155189306).repeat(2)),

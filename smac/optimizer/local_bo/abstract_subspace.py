@@ -1,4 +1,4 @@
-import typing
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Type, Union
 import copy
 import inspect
 import math
@@ -7,14 +7,27 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from ConfigSpace.hyperparameters import CategoricalHyperparameter, OrdinalHyperparameter, \
-    UniformIntegerHyperparameter, Constant, UniformFloatHyperparameter
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter, 
+    Constant,
+    Hyperparameter,
+    OrdinalHyperparameter,
+    NumericalHyperparameter,
+    UniformIntegerHyperparameter, 
+    UniformFloatHyperparameter
+)
+from ConfigSpace.forbidden import (
+    AbstractForbiddenComponent,
+    ForbiddenAndConjunction,
+    SingleValueForbiddenClause,
+    MultipleValueForbiddenClause,
+)
 
 from smac.configspace import Configuration, ConfigurationSpace
-
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.util_funcs import check_points_in_ss
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.local_bo.utils import construct_gp_kernel
 from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.optimizer.acquisition import EI
 
@@ -22,52 +35,51 @@ from smac.optimizer.acquisition import EI
 class AbstractSubspace(ABC):
     def __init__(self,
                  config_space: ConfigurationSpace,
-                 bounds: typing.List[typing.Tuple[float, float]],
-                 hps_types: typing.List[int],
-                 bounds_ss_cont: typing.Optional[np.ndarray] = None,
-                 bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-                 model_local: typing.Union[typing.Union[AbstractEPM],
-                                           typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
-                 model_local_kwargs: typing.Optional[typing.Dict] = None,
-                 acq_func_local: typing.Union[AbstractAcquisitionFunction,
-                                              typing.Type[AbstractAcquisitionFunction]] = EI,
-                 acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
-                 rng: typing.Optional[np.random.RandomState] = None,
-                 initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
-                 activate_dims: typing.Optional[np.ndarray] = None,
-                 incumbent_array: typing.Optional[np.ndarray] = None,
+                 bounds: List[Tuple[float, float]],
+                 hps_types: List[int],
+                 bounds_ss_cont: Optional[np.ndarray] = None,
+                 bounds_ss_cat: Optional[List[Tuple]] = None,
+                 model_local: Union[Union[AbstractEPM],
+                                           Type[AbstractEPM]] = GloballyAugmentedLocalGP,
+                 model_local_kwargs: Optional[Dict] = None,
+                 acq_func_local: Union[AbstractAcquisitionFunction,
+                                              Type[AbstractAcquisitionFunction]] = EI,
+                 acq_func_local_kwargs: Optional[Dict] = None,
+                 rng: Optional[np.random.RandomState] = None,
+                 initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+                 activate_dims: Optional[np.ndarray] = None,
+                 incumbent_array: Optional[np.ndarray] = None,
                  ):
         """
         A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
-        this subspace is equivalent to the original configuration space which manage its own runhistory that allows to
-        implement its own optimizer in self._generate_challengers(), for example, turbo. Alternatively, this subspace
-        support local BO that only focus on a subset of the dimensions, where the missing values are filled by the
+        this subspace is equivalent to the original configuration space. Additionally, this subspace
+        supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
         corresponding values in incumbent_array
         Parameters
         ----------
         config_space: ConfigurationSpace
             raw Configuration space
-        bounds: typing.List[typing.Tuple[float, float]]
+        bounds: List[Tuple[float, float]]
             raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space
-        hps_types: typing.List[int],
+        hps_types: List[int],
             types of the hyperparameters
         bounds_ss_cont: np.ndarray(D_cont, 2)
             subspaces bounds of continuous hyperparameters, its length is the number of continuous hyperparameters
-        bounds_ss_cat: typing.List[typing.Tuple]
+        bounds_ss_cat: List[Tuple]
             subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
         rng: np.random.RandomState
             random state
         model_local: ~smac.epm.base_epm.AbstractEPM
             model in subspace
-        model_local_kwargs: typing.Optional[typing.Dict]
+        model_local_kwargs: Optional[Dict]
             argument for subspace model
         acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction
             local acquisition function
-        acq_func_local_kwargs: typing.Optional[typing.Dict]
+        acq_func_local_kwargs: Optional[Dict]
             argument for acquisition function
-        activate_dims: typing.Optional[np.ndarray]
+        activate_dims: Optional[np.ndarray]
             activate dimensions in the subspace, if it is None, we preserve all the dimensions
-        incumbent_array: typing.Optional[np.ndarray]
+        incumbent_array: Optional[np.ndarray]
             incumbent array, used when activate_dims has less dimension and this value is used to complementary the
             resulted configurations
         """
@@ -90,14 +102,18 @@ class AbstractSubspace(ABC):
             activate_dims = np.arange(n_hypers)
             activate_dims_cont = cont_dims
             activate_dims_cat = cat_dims
-            self.activate_dims = np.arange(n_hypers)
+            self.activate_dims = activate_dims
+            activate_dims_cont_ss = np.arange(len(activate_dims_cont))
+            activate_dims_cat_ss = np.arange(len(activate_dims_cat))
         else:
-            activate_dims_cont = np.intersect1d(activate_dims, cont_dims)
-            activate_dims_cat = np.intersect1d(activate_dims, cat_dims)
+            activate_dims_cont, _, activate_dims_cont_ss = np.intersect1d(activate_dims, cont_dims,
+                                                                          assume_unique=True, return_indices=True)
+            activate_dims_cat, _, activate_dims_cat_ss = np.intersect1d(activate_dims, cat_dims,
+                                                                        assume_unique=True, return_indices=True)
             self.activate_dims = activate_dims
 
-        self.activate_dims_cont = activate_dims_cont
-        self.activate_dims_cat = activate_dims_cat
+        self.activate_dims_cont = activate_dims_cont_ss
+        self.activate_dims_cat = activate_dims_cat_ss
 
         lbs = np.full(n_hypers, 0.)
         scales = np.full(n_hypers, 1.)
@@ -107,7 +123,7 @@ class AbstractSubspace(ABC):
             self.cs_local = config_space
             self.new_config_space = False
             self.bounds_ss_cont = np.tile([0., 1.], [len(self.activate_dims_cont), 1])
-            self.bounds_ss_cat = []  # type: typing.Optional[typing.List[typing.Tuple]]
+            self.bounds_ss_cat = []  # type: Optional[List[Tuple]]
             self.lbs = lbs
             self.scales = scales
             self.new_config = False
@@ -119,7 +135,7 @@ class AbstractSubspace(ABC):
             hps = config_space.get_hyperparameters()
 
             # deal with categorical hyperaprameters
-            for i, cat_idx in enumerate(cat_dims):
+            for i, cat_idx in enumerate(activate_dims_cat):
                 hp_cat = hps[cat_idx]  # type: CategoricalHyperparameter
                 parents = config_space.get_parents_of(hp_cat.name)
                 if len(parents) == 0:
@@ -144,7 +160,7 @@ class AbstractSubspace(ABC):
             ord_hps = {}
 
             # deal with ordinary hyperaprameters
-            for i, cont_idx in enumerate(cont_dims):
+            for i, cont_idx in enumerate(activate_dims_cont):
                 param = hps[cont_idx]
                 if isinstance(param, OrdinalHyperparameter):
                     parents = config_space.get_parents_of(param.name)
@@ -172,8 +188,11 @@ class AbstractSubspace(ABC):
                     dims_cont_num.append(cont_idx)
                     idx_cont_num.append(i)
 
-            self.bounds_ss_cat = bounds_ss_cat
-            self.bounds_ss_cont = bounds_ss_cont
+            if bounds_ss_cat is not None:
+                self.bounds_ss_cat = [bounds_ss_cat[act_dims_cat_ss] for act_dims_cat_ss in activate_dims_cat_ss]
+            else:
+                self.bounds_ss_cat = None
+            self.bounds_ss_cont = bounds_ss_cont[activate_dims_cont_ss] if bounds_ss_cont is not None else None
 
             if bounds_ss_cont is None:
                 lbs[dims_cont_num] = 0.
@@ -183,8 +202,8 @@ class AbstractSubspace(ABC):
                 # rescale numerical hyperparameters to [0., 1.]
                 scales[dims_cont_num] = 1. / (bounds_ss_cont[idx_cont_num, 1] - bounds_ss_cont[idx_cont_num, 0])
 
-            self.lbs = lbs
-            self.scales = scales
+            self.lbs = lbs[activate_dims]
+            self.scales = scales[activate_dims]
 
             self.cs_local = ConfigurationSpace()
             hp_list = []
@@ -287,22 +306,36 @@ class AbstractSubspace(ABC):
                     raise ValueError(f"Unsupported type of Hyperparameter: {type(param)}")
                 hp_list.append(hp_new)
 
-            # TODO Consider how to deal with subspace with reduced dimensions here, e.g. some of the conditions
-            #  and forbidden clauses might become invalid. Currently we only support plain hyperparameter subspace
+            # We only consider plain hyperparameters
             self.cs_local.add_hyperparameters(hp_list)
-            self.cs_local.add_conditions(config_space.get_conditions())
-            self.cs_local.add_forbidden_clauses(config_space.get_forbiddens())
+            forbiddens_ss = []
+            forbiddens = config_space.get_forbiddens()
+            for forbidden in forbiddens:
+                forbiden_ss = self.fit_forbidden_to_ss(cs_local=self.cs_local, forbidden=forbidden)
+                if forbiden_ss is not None:
+                    forbiddens_ss.append(forbiden_ss)
+            if len(forbiddens_ss) > 0:
+                self.cs_local.add_forbidden_clauses(forbiddens_ss)
 
-        model_kwargs = dict(configspace=self.cs_local,
-                            types=model_types,
-                            bounds=model_bounds,
-                            bounds_cont=np.array([[0, 1.] for _ in range(len(activate_dims_cont))]),
-                            bounds_cat=bounds_ss_cat,
-                            seed=self.rng.randint(0, 2 ** 20))
+        model_kwargs = dict(
+            configspace=self.cs_local,
+            types=[model_types[activate_dim] for activate_dim in activate_dims] if model_types is not None else None,
+            bounds=[model_bounds[activate_dim] for activate_dim in activate_dims] if model_bounds is not None else None,
+            bounds_cont=np.array([[0, 1.] for _ in range(len(activate_dims_cont))]),
+            bounds_cat=self.bounds_ss_cat,
+            seed=self.rng.randint(0, 2 ** 20)
+        )
 
         if inspect.isclass(model_local):
+            model_local_kwargs_copy = copy.deepcopy(model_local_kwargs)
+            if 'kernel_kwargs' in model_local_kwargs_copy:
+                kernel_kwargs = model_local_kwargs_copy['kernel_kwargs']
+                kernel = construct_gp_kernel(kernel_kwargs, activate_dims_cont_ss, activate_dims_cat_ss)
+                del model_local_kwargs_copy['kernel_kwargs']
+                model_local_kwargs_copy['kernel'] = kernel
+
             if model_local_kwargs is not None:
-                model_kwargs.update(copy.deepcopy(model_local_kwargs))
+                model_kwargs.update(model_local_kwargs_copy)
             if model_local.__name__ not in ('GaussianProcessGPyTorch', 'GloballyAugmentedLocalGP'):  # type: ignore
                 del model_kwargs['bounds_cont']
                 del model_kwargs['bounds_cat']
@@ -332,11 +365,67 @@ class AbstractSubspace(ABC):
         if initial_data is not None:
             X = initial_data[0]
             y = initial_data[1]
-            X = X[:, activate_dims]
 
             self.add_new_observations(X, y)
 
         self.config_origin = "subspace"
+
+    @staticmethod
+    def fit_forbidden_to_ss(cs_local: ConfigurationSpace,
+                            forbidden: AbstractForbiddenComponent) -> Optional[AbstractForbiddenComponent]:
+        """
+        fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden
+        with exactly the same type of the input forbidden. Otherwise, we return None.
+        Parameters
+        ----------
+        cs_local: ConfigurationSpace
+            local configuration space of the subspace
+        forbidden: AbstractForbiddenComponent
+            forbidden to check
+        Returns
+        -------
+        forbidden_ss: Optional[AbstractForbiddenComponent]
+            forbidden in subspaces
+
+        """
+        if isinstance(forbidden, ForbiddenAndConjunction):
+            forbidden_ss_components = []
+            for forbid in forbidden.components:
+                # If any of the AndConjunction is not supported by the subspace, we simply ignore them
+                forbid_ss = AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid)
+                if forbid_ss is None:
+                    return None
+                forbidden_ss_components.append(forbid_ss)
+            return type(forbidden)(*forbidden_ss_components)
+        else:
+            forbidden_hp_name = forbidden.hyperparameter.name
+            if forbidden_hp_name not in cs_local:
+                return None
+            hp_ss = cs_local.get_hyperparameter(forbidden_hp_name)
+
+            def is_value_in_hp(value: Any, hp: Hyperparameter) -> bool:
+                """
+                check if the value is in the range of the hp
+                """
+                if isinstance(hp, NumericalHyperparameter):
+                    return hp.lower <= value <= hp.upper
+                elif isinstance(hp, OrdinalHyperparameter):
+                    return value in hp.sequence
+                elif isinstance(hp, CategoricalHyperparameter):
+                    return value in hp.choices
+                else:
+                    raise NotImplementedError('Unsupported type of hyperparameter!')
+            if isinstance(forbidden, MultipleValueForbiddenClause):
+                forbidden_values = forbidden.values
+                for forbidden_value in forbidden_values:
+                    if not is_value_in_hp(forbidden_value, hp_ss):
+                        return None
+                return type(forbidden)(hp_ss, forbidden_values)
+            else:
+                forbidden_value = forbidden.value
+                if is_value_in_hp(forbidden_value, hp_ss):
+                    return type(forbidden)(hp_ss, forbidden_value)
+            return None
 
     def update_model(self, predict_x_best: bool = True, update_incumbent_array: bool = False) -> None:
         """
@@ -367,7 +456,10 @@ class AbstractSubspace(ABC):
             incumbent_array = self.ss_x[idx_eta]
             acq_func_kwargs.update({'incumbent_array': incumbent_array, 'eta': self.ss_y[idx_eta]})
         if update_incumbent_array:
-            self.incumbent_array = self.ss_x[idx_eta]
+            if self.incumbent_array is None:
+                self.incumbent_array = self.ss_x[idx_eta]
+            else:
+                self.incumbent_array[self.activate_dims] = self.ss_x[idx_eta]
 
         self.acquisition_function.update(**acq_func_kwargs)
 
@@ -390,12 +482,15 @@ class AbstractSubspace(ABC):
         if len(y.shape) == 1:
             y = y[:, np.newaxis]
 
+        X = X[:, self.activate_dims]
+
         ss_indices = check_points_in_ss(X=X,
                                         cont_dims=self.activate_dims_cont,
                                         cat_dims=self.activate_dims_cat,
                                         bounds_cont=self.bounds_ss_cont,
                                         bounds_cat=self.bounds_ss_cat,
                                         )
+
         X = self.normalize_input(X=X)
 
         self.model_x = np.vstack([self.model_x, X])
@@ -414,7 +509,7 @@ class AbstractSubspace(ABC):
         """
         self.incumbent_array = self.normalize_input(X=new_incumbent)
 
-    def generate_challengers(self, **optimizer_kwargs: typing.Dict) -> 'ChallengerListLocal':
+    def generate_challengers(self, **optimizer_kwargs: Dict) -> Iterator:
         challengers = self._generate_challengers(**optimizer_kwargs)
         return ChallengerListLocal(cs_local=self.cs_local,
                                    cs_global=self.cs_global,
@@ -423,7 +518,7 @@ class AbstractSubspace(ABC):
                                    incumbent_array=self.incumbent_array)
 
     @abstractmethod
-    def _generate_challengers(self, **optimizer_kwargs: typing.Dict) -> typing.List[typing.Tuple[float, Configuration]]:
+    def _generate_challengers(self, **optimizer_kwargs: Dict) -> List[Tuple[float, Configuration]]:
         """
         generate new challengers list for this subspace
         """
@@ -462,14 +557,14 @@ class AbstractSubspace(ABC):
         return X_normalized
 
 
-class ChallengerListLocal(typing.Iterator):
+class ChallengerListLocal(Iterator):
     def __init__(
             self,
             cs_local: ConfigurationSpace,
             cs_global: ConfigurationSpace,
-            challengers: typing.List[typing.Tuple[float, Configuration]],
+            challengers: List[Tuple[float, Configuration]],
             config_origin: str,
-            incumbent_array: typing.Optional[np.ndarray] = None,
+            incumbent_array: Optional[np.ndarray] = None,
     ):
         """
         A Challenger list to convert the configuration from local configuration space to global configuration space
@@ -479,11 +574,11 @@ class ChallengerListLocal(typing.Iterator):
             local configuration space
         cs_global: ConfigurationSpace
             global configuration space
-        challengers: typing.List[typing.Tuple[float, Configuration]],
+        challengers: List[Tuple[float, Configuration]],
             challenger lists
         config_origin: str
             configuration origin
-        incumbent_array: typing.Optional[np.ndarray] = None,
+        incumbent_array: Optional[np.ndarray] = None,
             global incumbent array, used when cs_local and cs_global have different number of dimensions and we need to
             supplement the missing values.
         """

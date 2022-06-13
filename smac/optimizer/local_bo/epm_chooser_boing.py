@@ -1,7 +1,10 @@
 import typing
 import copy
+from itertools import chain
 
 import numpy as np
+
+from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
@@ -294,20 +297,22 @@ class EPMChooserBOinG(EPMChooser):
         # if the number of points is not big enough, we simply build one subspace (the raw configuration space) and
         # the local model becomes global model
         if X.shape[0] < (self.min_configs_local / self.frac_to_start_bi):
-            cs = self.scenario.cs  # type: ignore
-            ss = BOinGSubspace(config_space=cs,
-                               bounds=self.bounds,
-                               hps_types=self.types,
-                               rng=self.rng,
-                               initial_data=(X, Y_raw),
-                               incumbent_array=None,
-                               model_local=self.subspace_info['model_local'],  # type: ignore
-                               model_local_kwargs=self.subspace_info['model_local_kwargs'],  # type: ignore
-                               acq_func_local=self.subspace_info['acq_func_local'],  # type: ignore
-                               acq_func_local_kwargs=self.subspace_info['acq_func_local_kwargs'],  # type: ignore
-                               acq_optimizer_local=self.acq_optimizer,
-                               )
-            return ss.generate_challengers()
+            if len(self.config_space.get_conditions()) == 0:
+                self.model.train(X, Y)
+                cs = self.scenario.cs  # type: ignore
+                ss = BOinGSubspace(config_space=cs,
+                                   bounds=self.bounds,
+                                   hps_types=self.types,
+                                   rng=self.rng,
+                                   initial_data=(X, Y_raw),
+                                   incumbent_array=None,
+                                   model_local=self.subspace_info['model_local'],  # type: ignore
+                                   model_local_kwargs=self.subspace_info['model_local_kwargs'],  # type: ignore
+                                   acq_func_local=self.subspace_info['acq_func_local'],  # type: ignore
+                                   acq_func_local_kwargs=self.subspace_info['acq_func_local_kwargs'],  # type: ignore
+                                   acq_optimizer_local=self.acq_optimizer,
+                                   )
+                return ss.generate_challengers()
 
         # train the outer model
         self.model.train(X, Y)
@@ -370,19 +375,52 @@ class EPMChooserBOinG(EPMChooser):
             random_configuration_chooser=self.random_configuration_chooser
         )
 
-        cfg_challenger_global = next(challengers_global)
-        challenger_global = cfg_challenger_global.get_array()  # type: np.ndarray
+        if X.shape[0] < (self.min_configs_local / self.frac_to_start_bi) and\
+                len(self.config_space.get_conditions()) == 0:
+            return challengers_global
+
+        cfg_challenger_global_first = next(challengers_global)
+        array_challenger_global_first = cfg_challenger_global_first.get_array()  # type: np.ndarray
 
         num_max_configs = int(X.shape[0] * self.max_configs_local_fracs)
 
-        # to avoid the case that num_max_configs is only a little bit larger than self.min_configs_local and we drop
-        # some subspace too early without sparing too much time
+        # to avoid the case that num_max_configs is only a little larger than self.min_configs_local
         num_max = MAXINT if num_max_configs <= 2 * self.min_configs_local else num_max_configs
 
+        if (len(self.config_space.get_conditions()) > 0):
+            challanger_activate_hps = np.isfinite(array_challenger_global_first).astype(np.int)
+            rh_activate_hps = np.isfinite(X).astype(np.int)
+            indices_X_in_same_hierarchy = np.all((challanger_activate_hps - rh_activate_hps) == 0, axis=1)
+            num_indices_X_in_same_hierarchy = sum(indices_X_in_same_hierarchy)
+
+            if num_indices_X_in_same_hierarchy == 0:
+                return chain([cfg_challenger_global_first], challengers_global)
+
+            activate_dims = []
+            hps = self.config_space.get_hyperparameters()
+            for idx_hp in np.where(challanger_activate_hps > 0)[0]:
+                if isinstance(hps[idx_hp], NumericalHyperparameter):
+                    activate_dims.append(idx_hp)
+                else:
+                    indices_X_in_same_hierarchy = indices_X_in_same_hierarchy & (
+                                X[:, idx_hp] == array_challenger_global_first[idx_hp]
+                    )
+            num_indices_X_in_same_hierarchy = sum(indices_X_in_same_hierarchy)
+
+            X = X[indices_X_in_same_hierarchy]
+            Y_raw = Y_raw[indices_X_in_same_hierarchy]
+
+            if len(activate_dims) == 0 or num_indices_X_in_same_hierarchy <= max(5, len(activate_dims)):
+                return chain([cfg_challenger_global_first], challengers_global)
+            n_min_configs_inner = self.min_configs_local // len(hps) * len(activate_dims)
+        else:
+            n_min_configs_inner = self.min_configs_local
+            activate_dims = np.arange(len(self.config_space.get_hyperparameters()))
+
         bounds_ss_cont, bounds_ss_cat, ss_data_indices = subspace_extraction(X=X,
-                                                                             challenger=challenger_global,
+                                                                             challenger=array_challenger_global_first,
                                                                              model=self.model,
-                                                                             num_min=self.min_configs_local,
+                                                                             num_min=n_min_configs_inner,
                                                                              num_max=num_max,
                                                                              bounds=self.bounds,
                                                                              cont_dims=self.cont_dims,
@@ -393,14 +431,15 @@ class EPMChooserBOinG(EPMChooser):
         ss = BOinGSubspace(config_space=self.scenario.cs,  # type: ignore
                            bounds=self.bounds,
                            hps_types=self.types,
-                           bounds_ss_cont=bounds_ss_cont,  # type: ignore
+                           bounds_ss_cont=bounds_ss_cont,  # type: ignore[arg-type]
                            bounds_ss_cat=bounds_ss_cat,
                            rng=self.rng,
                            initial_data=(X, Y_raw),
-                           incumbent_array=challenger_global,  # type: ignore
+                           incumbent_array=array_challenger_global_first,  # type: ignore[arg-type]
+                           activate_dims=activate_dims,
                            **self.subspace_info,   # type: ignore[arg-type]
                            )
-        return ss.generate_challengers()  # type: ignore
+        return ss.generate_challengers()
 
     def _collect_all_data_to_train_model(
             self
