@@ -1,6 +1,7 @@
+import typing
+
 import os
 import time
-import typing
 import warnings
 
 import dask
@@ -45,6 +46,35 @@ class DaskParallelRunner(BaseRunner):
 
     Dask works with Future object which are managed via the DaskParallelRunner.client.
 
+
+    Parameters
+    ----------
+    single_worker: BaseRunner
+        A runner to run in a distributed fashion
+    n_workers: int
+        Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
+    patience: int
+        How much to wait for workers to be available if one fails
+    output_directory: str, optional
+        If given, this will be used for the dask worker directory and for storing server information.
+        If a dask client is passed, it will only be used for storing server information as the
+        worker directory must be set by the program/user starting the workers.
+    dask_client: dask.distributed.Client
+        User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
+
+
+    Attributes
+    ----------
+    results
+    ta
+    stats
+    run_obj
+    par_factor
+    cost_for_crash
+    abort_i_first_run_crash
+    n_workers
+    futures
+    client
     """
 
     def __init__(
@@ -55,38 +85,10 @@ class DaskParallelRunner(BaseRunner):
         output_directory: typing.Optional[str] = None,
         dask_client: typing.Optional[dask.distributed.Client] = None,
     ):
-        """
-        Attributes
-        ----------
-        results
-        ta
-        stats
-        run_obj
-        par_factor
-        cost_for_crash
-        abort_i_first_run_crash
-        n_workers
-        futures
-        client
-
-        Parameters
-        ---------
-        single_worker: BaseRunner
-            A runner to run in a distributed fashion
-        n_workers: int
-            Number of workers to use for distributed run. Will be ignored if ``dask_client`` is not ``None``.
-        patience: int
-            How much to wait for workers to be available if one fails
-        output_directory: str, optional
-            If given, this will be used for the dask worker directory and for storing server information.
-            If a dask client is passed, it will only be used for storing server information as the
-            worker directory must be set by the program/user starting the workers.
-        dask_client: dask.distributed.Client
-            User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-        """
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
             stats=single_worker.stats,
+            multi_objectives=single_worker.multi_objectives,
             run_obj=single_worker.run_obj,
             par_factor=single_worker.par_factor,
             cost_for_crash=single_worker.cost_for_crash,
@@ -105,13 +107,17 @@ class DaskParallelRunner(BaseRunner):
 
         # Because a run() method can have pynisher, we need to prevent the multiprocessing
         # workers to be instantiated as demonic - this cannot be passed via worker_kwargs
-        dask.config.set({'distributed.worker.daemon': False})
+        dask.config.set({"distributed.worker.daemon": False})
         if dask_client is None:
             self.close_client_at_del = True
-            self.client = Client(n_workers=self.n_workers, processes=True, threads_per_worker=1,
-                                 local_directory=output_directory)
+            self.client = Client(
+                n_workers=self.n_workers,
+                processes=True,
+                threads_per_worker=1,
+                local_directory=output_directory,
+            )
             if self.output_directory:
-                self.scheduler_file = os.path.join(self.output_directory, '.dask_scheduler_file')
+                self.scheduler_file = os.path.join(self.output_directory, ".dask_scheduler_file")
                 self.client.write_scheduler_file(scheduler_file=self.scheduler_file)
         else:
             self.close_client_at_del = False
@@ -121,9 +127,8 @@ class DaskParallelRunner(BaseRunner):
         self.scheduler_info = self.client._get_scheduler_info()
 
     def submit_run(self, run_info: RunInfo) -> None:
-        """This function submits a configuration
-        embedded in a run_info object, and uses one of the workers
-        to produce a result locally to each worker.
+        """This function submits a configuration embedded in a run_info object, and uses one of the
+        workers to produce a result locally to each worker.
 
         The execution of a configuration follows this procedure:
         1.  SMBO/intensifier generates a run_info
@@ -140,38 +145,34 @@ class DaskParallelRunner(BaseRunner):
         ----------
         run_info: RunInfo
             An object containing the configuration and the necessary data to run it
-
         """
         # Check for resources or block till one is available
         if not self._workers_available():
-            wait(self.futures, return_when='FIRST_COMPLETED').done
+            futures = wait(self.futures, return_when="FIRST_COMPLETED")
+            futures.done
             self._extract_completed_runs_from_futures()
 
         # In code check to make sure that there are resources
         if not self._workers_available():
-            warnings.warn("No workers are available. This could mean workers crashed"
-                          "Waiting for new workers...")
+            warnings.warn("No workers are available. This could mean workers crashed" "Waiting for new workers...")
             time.sleep(self.patience)
             if not self._workers_available():
-                raise ValueError("Tried to execute a job, but no worker was "
-                                 "available. This likely means that a worker crashed "
-                                 "or no workers were properly configured."
-                                 )
+                raise ValueError(
+                    "Tried to execute a job, but no worker was "
+                    "available. This likely means that a worker crashed "
+                    "or no workers were properly configured."
+                )
 
         # At this point we can submit the job
-        self.futures.append(
-            self.client.submit(
-                self.single_worker.run_wrapper,
-                run_info
-            )
-        )
+        # For `pure=False`, see
+        #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
+        self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
     def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
-        """This method returns any finished configuration, and returns a list with
-        the results of exercising the configurations. This class keeps populating results
-        to self.results until a call to get_finished runs is done. In this case, the
-        self.results list is emptied and all RunValues produced by running run() are
-        returned.
+        """This method returns any finished configuration, and returns a list with the results of
+        exercising the configurations. This class keeps populating results to self.results until a
+        call to get_finished runs is done. In this case, the self.results list is emptied and all
+        RunValues produced by running run() are returned.
 
         Returns
         -------
@@ -179,7 +180,6 @@ class DaskParallelRunner(BaseRunner):
                 the results of executing a run_info
             a submitted configuration
         """
-
         # Proactively see if more configs have finished
         self._extract_completed_runs_from_futures()
 
@@ -189,22 +189,19 @@ class DaskParallelRunner(BaseRunner):
         return results_list
 
     def _extract_completed_runs_from_futures(self) -> None:
-        """
-        A run is over, when a future has done() equal true.
-        This function collects the completed futures and move
-        them from self.futures to self.results.
+        """A run is over, when a future has done() equal true. This function collects the completed
+        futures and move them from self.futures to self.results.
 
-        We make sure futures never exceed the capacity of
-        the scheduler
+        We make sure futures never exceed the capacity of the scheduler
         """
-
         # In code check to make sure we don;t exceed resource allocation
         if len(self.futures) > sum(self.client.nthreads().values()):
-            warnings.warn("More running jobs than resources available "
-                          "Should not have more futures/runs in remote workers "
-                          "than the number of workers. This could mean a worker "
-                          "crashed and was not able to be recovered by dask. "
-                          )
+            warnings.warn(
+                "More running jobs than resources available "
+                "Should not have more futures/runs in remote workers "
+                "than the number of workers. This could mean a worker "
+                "crashed and was not able to be recovered by dask. "
+            )
 
         # A future is removed to the list of futures as an indication
         # that a worker is available to take in an extra job
@@ -215,32 +212,34 @@ class DaskParallelRunner(BaseRunner):
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
         This class waits until 1 run completes
         """
         if self.futures:
-            wait(self.futures, return_when='FIRST_COMPLETED').done
+            futures = wait(self.futures, return_when="FIRST_COMPLETED")
+            futures.done
 
     def pending_runs(self) -> bool:
-        """
-        Whether or not there are configs still running. Generally if the runner is serial,
-        launching a run instantly returns it's result. On parallel runners, there might
-        be pending configurations to complete.
+        """Whether or not there are configs still running.
+
+        Generally if the runner is serial, launching a run instantly returns it's result. On
+        parallel runners, there might be pending configurations to complete.
         """
         # If there are futures available, it translates
         # to runs still not finished/processed
         return len(self.futures) > 0
 
     def run(
-        self, config: Configuration,
+        self,
+        config: Configuration,
         instance: str,
         cutoff: typing.Optional[float] = None,
         seed: int = 12345,
         budget: typing.Optional[float] = None,
         instance_specific: str = "0",
     ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """
-        This method only complies with the abstract parent class. In the parallel case,
-        we call the single worker run() method
+        """This method only complies with the abstract parent class. In the parallel case, we call
+        the single worker run() method.
 
         Parameters
         ----------
@@ -280,20 +279,27 @@ class DaskParallelRunner(BaseRunner):
         )
 
     def num_workers(self) -> int:
-        """Total number of workers available. This number is dynamic
-        as more resources can be allocated"""
+        """Total number of workers available.
+
+        This number is dynamic as more resources can be allocated
+        """
         return sum(self.client.nthreads().values())
 
     def _workers_available(self) -> bool:
-        """"Query if there are workers available, which means
-        that there are resources to launch a dask job"""
+        """
+        Query if there are workers available, which means that there are resources to launch a
+        dask job.
+        """
         total_compute_power = sum(self.client.nthreads().values())
         if len(self.futures) < total_compute_power:
             return True
         return False
 
     def __del__(self) -> None:
-        """Make sure that when this object gets deleted, the client is terminated. This is only done if
-        the client was created by the dask runner."""
+        """
+        Make sure that when this object gets deleted, the client is terminated.
+
+        This is only done if the client was created by the dask runner.
+        """
         if self.close_client_at_del:
             self.client.close()

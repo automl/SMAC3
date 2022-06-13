@@ -5,13 +5,13 @@ Home
    :hidden:
    :maxdepth: 2
 
-   pages/getting_started/index
-   pages/examples/index
-   pages/details/index
-   pages/api/index
-   pages/glossary
-   pages/faq
-   pages/license
+   getting_started/index
+   examples/index
+   details/index
+   api
+   glossary
+   faq
+   license
 
 
 SMAC is a tool for algorithm configuration to optimize the parameters of
@@ -22,12 +22,12 @@ efficiently decide which of two configurations performs better.
 SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-If you use SMAC, please cite our paper:
+If you use SMAC, please cite our `JMLR paper <https://jmlr.org/papers/v23/21-0888.html>`_:
 
 .. code-block:: text
 
     @inproceedings {lindauer-arxiv21a,
-      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
+      author = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
       title = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
       booktitle = {ArXiv: 2109.09831},
       year = {2021},
@@ -46,7 +46,6 @@ For the original idea, we refer to:
 Contact
 -------
 
-SMAC3 is developed by `<automl.org>`_.
+SMAC3 is developed by `<https://automl.org>`_.
 If you want to contribute or found an issue please visit our github page `<https://github.com/automl/SMAC3>`_.
-Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/master/CONTRIBUTING.md>`_.
-
+Our guidelines for contributing to this package can be found `here <https://github.com/automl/SMAC3/blob/main/CONTRIBUTING.md>`_.

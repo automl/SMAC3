@@ -1,22 +1,21 @@
-from typing import Dict, Optional, Tuple, List
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-from smac.epm.base_epm import AbstractEPM
 from smac.configspace import (
     CategoricalHyperparameter,
+    ConfigurationSpace,
+    Constant,
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
-    Constant,
-    ConfigurationSpace,
 )
+from smac.epm.base_epm import AbstractEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 class BaseModel(AbstractEPM):
-
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -26,9 +25,7 @@ class BaseModel(AbstractEPM):
         instance_features: Optional[np.ndarray] = None,
         pca_components: Optional[int] = None,
     ) -> None:
-        """
-        Abstract base class for all random forest models.
-        """
+        """Abstract base class for all random forest models."""
         super().__init__(
             configspace=configspace,
             types=types,

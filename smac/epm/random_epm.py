@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, List
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -14,41 +14,40 @@ __version__ = "0.0.1"
 
 
 class RandomEPM(AbstractEPM):
-    """EPM which returns random values on a call to ``fit``."""
+    """EPM which returns random values on a call to ``fit``.
 
-    def __init__(self,
-                 configspace: ConfigurationSpace,
-                 types: List[int],
-                 bounds: List[Tuple[float, float]],
-                 seed: int,
-                 instance_features: Optional[np.ndarray] = None,
-                 pca_components: Optional[int] = None,
-                 ) -> None:
-        """Constructor
+    Parameters
+    ----------
+    configspace : ConfigurationSpace
+        Configuration space to tune for.
+    types : List[int]
+        Specifies the number of categorical values of an input dimension where
+        the i-th entry corresponds to the i-th input dimension. Let's say we
+        have 2 dimension where the first dimension consists of 3 different
+        categorical choices and the second dimension is continuous than we
+        have to pass [3, 0]. Note that we count starting from 0.
+    bounds : List[Tuple[float, float]]
+        bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
+    seed : int
+        The seed that is passed to the model library.
+    instance_features : np.ndarray (I, K), optional
+        Contains the K dimensional instance features
+        of the I different instances
+    pca_components : float
+        Number of components to keep when using PCA to reduce
+        dimensionality of instance features. Requires to
+        set n_feats (> pca_dims).
+    """
 
-        Parameters
-        ----------
-        configspace : ConfigurationSpace
-            Configuration space to tune for.
-        types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
-        bounds : List[Tuple[float, float]]
-            bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
-        seed : int
-            The seed that is passed to the model library.
-        instance_features : np.ndarray (I, K), optional
-            Contains the K dimensional instance features
-            of the I different instances
-        pca_components : float
-            Number of components to keep when using PCA to reduce
-            dimensionality of instance features. Requires to
-            set n_feats (> pca_dims).
-        """
-
+    def __init__(
+        self,
+        configspace: ConfigurationSpace,
+        types: List[int],
+        bounds: List[Tuple[float, float]],
+        seed: int,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
+    ) -> None:
         super().__init__(
             configspace=configspace,
             types=types,
@@ -59,9 +58,8 @@ class RandomEPM(AbstractEPM):
         )
         self.rng = np.random.RandomState(self.seed)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> 'RandomEPM':
-        """
-        Pseudo training on X and Y.
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "RandomEPM":
+        """Pseudo training on X and Y.
 
         Parameters
         ----------
@@ -71,7 +69,6 @@ class RandomEPM(AbstractEPM):
         Y : np.ndarray (N, 1)
             The corresponding target values.
         """
-
         if not isinstance(X, np.ndarray):
             raise NotImplementedError("X has to be of type np.ndarray")
         if not isinstance(Y, np.ndarray):
@@ -80,11 +77,8 @@ class RandomEPM(AbstractEPM):
         self.logger.debug("(Pseudo) Fit model to data")
         return self
 
-    def _predict(self, X: np.ndarray,
-                 cov_return_type: Optional[str] = 'diagonal_cov') \
-            -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Predict means and variances for given X.
+    def _predict(self, X: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov") -> Tuple[np.ndarray, np.ndarray]:
+        """Predict means and variances for given X.
 
         Parameters
         ----------
@@ -99,7 +93,7 @@ class RandomEPM(AbstractEPM):
         vars : np.ndarray  of shape = [n_samples, n_objectives]
             Predictive variance
         """
-        if cov_return_type != 'diagonal_cov':
+        if cov_return_type != "diagonal_cov":
             raise ValueError("'cov_return_type' can only take 'diagonal_cov' for this model")
 
         if not isinstance(X, np.ndarray):

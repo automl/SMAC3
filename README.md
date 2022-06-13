@@ -1,7 +1,9 @@
 # Sequential Model Algorithm Configuration (SMAC)
-[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
-[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
-[![Examples](https://github.com/automl/SMAC3/actions/workflows/examples.yml/badge.svg?branch=master)](https://github.com/automl/SMAC3/actions/workflows/examples.yml)
+
+
+[![Tests](https://github.com/automl/SMAC3/actions/workflows/pytest.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/pytest.yml)
+[![Docs](https://github.com/automl/SMAC3/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/docs.yml)
+[![Examples](https://github.com/automl/SMAC3/actions/workflows/examples.yml/badge.svg?branch=main)](https://github.com/automl/SMAC3/actions/workflows/examples.yml)
 [![codecov
 Status](https://codecov.io/gh/automl/SMAC3/branch/master/graph/badge.svg)](https://codecov.io/gh/automl/SMAC3)
 
@@ -10,10 +12,10 @@ arbitrary algorithms, including hyperparameter optimization of Machine Learning 
 Bayesian Optimization in combination with an aggressive racing mechanism to
 efficiently decide which of two configurations performs better.
 
-SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
+SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8, 3.9, and 3.10. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-[---- Documention ----](https://automl.github.io/SMAC3)
+[Documention](https://automl.github.io/SMAC3)
 
 
 ## Installation
@@ -123,16 +125,18 @@ Freiburg](http://www.automl.org/).
 If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are appreciating any kind of help.
 Find our guidlines for contributing to this package [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md).
 
-If you use SMAC in one of your research projects, please cite us:
+If you use SMAC in one of your research projects, please cite our [JMLR paper](https://jmlr.org/papers/v23/21-0888.html):
 ```
-@misc{lindauer2021smac3,
-      title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
-      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and René Sass and Frank Hutter},
-      year={2021},
-      eprint={2109.09831},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{JMLR:v23:21-0888,
+  author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
+  title   = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+  journal = {Journal of Machine Learning Research},
+  year    = {2022},
+  volume  = {23},
+  number  = {54},
+  pages   = {1--9},
+  url     = {http://jmlr.org/papers/v23/21-0888.html}
 }
 ```
 
-Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/).
+Copyright (C) 2016-2022  [AutoML Group](http://www.automl.org/).

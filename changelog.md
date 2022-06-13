@@ -1,3 +1,117 @@
+# 1.4.0
+## Features
+* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
+optimizer to focus on the most promising regions.
+* [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm
+
+# 1.3.4
+* Added reference to JMLR paper.
+* Typos in documentations.
+
+
+# 1.3.3
+* Hotfix: Since multi-objective implementation depends on normalized costs, it now is ensured that the
+cached costs are updated everytime a new entry is added.
+* Removed mac-specific files.
+* Added entry point for cli.
+* Added `ConfigSpace` to third known parties s.t. sorting should be the same across different
+operating systems.
+* Fixed bugs in makefile in which tools were specified incorrectly.
+* Executed isort/black on examples and tests.
+* Updated README.
+* Fixed a problem, which incremented time twice before taking log (#833).
+* New wrapper for multi-objective models (base_uncorrelated_mo_model). Makes it easier for
+developing new multi-objective models.
+* Raise error if acquisition function is incompatible with the epm models.
+* Restricting pynisher.
+
+
+# 1.3.2
+* Added stale bot support.
+* If package version 0.0.0 via `get_distribution` is found, the version of the module is used
+instead.
+* Removed `tox.ini`.
+* Moved `requirements.txt` to `setup.py`.
+* Added multi-objective support for ROAR.
+* Added notes in documentation that `SMAC4MF` is the closest implementation to BOHB/HpBandSter.
+
+
+# 1.3.1
+* Added Python 3.7 support again.
+
+
+# 1.3
+
+## Features
+* [PiBO](https://openreview.net/forum?id=MMAeCXIa89): Augment the acquisition function by multiplying by a pdf given by the user.
+The prior then decays over time, allowing for the optimization to carry on as per default.
+* The `RunHistory` can now act as a `Mapping` in that you can use the usual methods you
+can use on dicts, i.e. `len(rh)`, `rh.items()`, `rh[key]`. Previously this was usually done by
+accessing `rh.data` which is still possible.
+
+## Minor Changes
+* Updated the signature of the `ROAR` facade to match with it's parent class `SMAC4AC`.
+Anyone relying on the output directory **without** specifying an explicit `run_id` to a `ROAR`
+facade should now expect to see the output directory at `run_0` instead of `run_1`. See #827
+
+## Code-Quality
+* Updated and integrated flake8, mypy, black, and isort.
+
+## Documentation
+* SMAC uses [automl_sphinx_theme](https://github.com/automl/automl_sphinx_theme) now and therefore
+the API is displayed nicer.
+
+
+# 1.2
+
+## Features
+* Added multi-objective optimization via Mean-Aggregation or Par-EGO (#817, #818). Both approaches normalize
+the costs objective-wise based on all data in the history.
+
+## Major Changes
+* Results are instantly saved by default now. That means, runhistory.json is saved every time
+a trial is added.
+* Determinstic behaviour (defined in scenario) is default now. Calling a function/TAE with the same
+seed and configuration is expected to be the same.
+* Limit resources behaviour is by default false now. This is particually important because pynisher
+does not work on all machines (e.g. Colab, Mac, Windows, ...) properly.
+* Renamed scenario object `save_results_instantly` to `save_instantly`.
+* Added `multi_objectives` as scenario argument.
+* Expanded `cost_for_crash` for multi-objective support.
+
+## Examples
+* Integrated spear_qcp example for commandline.
+* Python examples are now executed so that the output in the documentation is shown.
+* Added multi-objective example.
+
+## Documentation
+* Added runhistory page.
+
+## Workflow Clean-up
+* Adds PEP 561 compliance (exports types so other packages can be aware of them).
+* Allow manual workflow_dispatch on actions that might require it (can manually trigger them from github UI).
+* Prevent the double trigger of actions by making push and pull_request and more strict.
+* A push to a pull request should no longer cause double the amount of tests to run (along with the other workflows that had on: [push, pull_request].
+* Some general cleanup, giving names to some actions, adding some linebreaks to break up things, ...
+* Command-line examples are tested again.
+* pytest.yaml:
+  * Now scheduled to auto run everyday instead of every week.
+  * Clean up the body of the steps and move some things to env var.
+  * Scaffold for matrix that includes windows and mac testing (currently excluded, see comments).
+  * Includes tests for Python 3.10.
+  * Changed the boolean flags in the matrix to just be a categorical, easier to read.
+
+## Minor Changes
+* Specified that dask should not cache functions/results (#803) .
+* Handles invalid configuration vectors gracefully (#776).
+* Specified scenario docs that also SMAC options can be used.
+* Docs display init methods now.
+* Parameters in the docs are shown first now.
+* Successive Halving only warns you once if one worker is used only.
+* Statistics are better readable now.
+* Sobol sequence does not print warnings anymore.
+
+
 # 1.1.1
 
 ## Minor Changes
@@ -24,10 +138,10 @@
 * `minR`, `maxR` and `use_ta_time` can now be initialized by the scenario. (#775)
 * `ConfigSpace.util.get_one_exchange_neighborhood`'s invalid configurations are ignored. (#773)
 
-
 ## Bug Fixes
 * Fixed an incorrect adaptive capping behaviour. (#749)
 * Avoid the potential `ValueError` raised by `LocalSearch._do_search`. (#773)
+
 
 # 1.0.1
 

@@ -1,9 +1,10 @@
 import typing
 
-from scipy.stats.qmc import Sobol
+import warnings
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
+from scipy.stats.qmc import Sobol
 
 from smac.initial_design.initial_design import InitialDesign
 
@@ -13,7 +14,7 @@ __license__ = "3-clause BSD"
 
 
 class SobolDesign(InitialDesign):
-    """ Sobol sequence design with a scrambled Sobol sequence.
+    """Sobol sequence design with a scrambled Sobol sequence.
 
     See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html for further information
 
@@ -26,14 +27,13 @@ class SobolDesign(InitialDesign):
     """
 
     def _select_configurations(self) -> typing.List[Configuration]:
-        """Selects a single configuration to run
+        """Selects a single configuration to run.
 
         Returns
         -------
         config: Configuration
             initial incumbent configuration
         """
-
         params = self.cs.get_hyperparameters()
 
         constants = 0
@@ -43,8 +43,9 @@ class SobolDesign(InitialDesign):
 
         dim = len(params) - constants
         sobol_gen = Sobol(d=dim, scramble=True, seed=self.rng.randint(low=0, high=10000000))
-        sobol = sobol_gen.random(self.init_budget)
 
-        return self._transform_continuous_designs(design=sobol,
-                                                  origin='Sobol',
-                                                  cs=self.cs)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            sobol = sobol_gen.random(self.init_budget)
+
+        return self._transform_continuous_designs(design=sobol, origin="Sobol", cs=self.cs)

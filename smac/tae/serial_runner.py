@@ -1,4 +1,4 @@
-import typing
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
@@ -14,7 +14,6 @@ __license__ = "3-clause BSD"
 class SerialRunner(BaseRunner):
     """Interface to submit and collect a job in a serial fashion.
 
-
     It dictates what a worker should do to convert a
     configuration/instance/seed to a result.
 
@@ -23,7 +22,6 @@ class SerialRunner(BaseRunner):
 
     Attributes
     ----------
-
     results
     ta
     stats
@@ -33,11 +31,13 @@ class SerialRunner(BaseRunner):
     abort_i_first_run_crash
 
     Parameters
-    ---------
+    ----------
     ta : list
         target algorithm command line as list of arguments
     stats: Stats()
          stats object to collect statistics about runtime and so on
+    multi_objectives: List[str]
+        names of the objectives, by default it is a single objective parameter "cost"
     run_obj: str
         run objective of SMAC
     par_factor: int
@@ -51,23 +51,26 @@ class SerialRunner(BaseRunner):
 
     def __init__(
         self,
-        ta: typing.Union[typing.List[str], typing.Callable],
+        ta: Union[List[str], Callable],
         stats: Stats,
+        multi_objectives: List[str] = ["cost"],
         run_obj: str = "runtime",
         par_factor: int = 1,
-        cost_for_crash: float = float(MAXINT),
+        cost_for_crash: Union[float, List[float]] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
         super(SerialRunner, self).__init__(
-            ta=ta, stats=stats, run_obj=run_obj,
+            ta=ta,
+            stats=stats,
+            multi_objectives=multi_objectives,
+            run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
         )
 
     def submit_run(self, run_info: RunInfo) -> None:
-        """This function submits a run_info object
-        in a serial fashion.
+        """This function submits a run_info object in a serial fashion.
 
         As there is a single worker for this task, this
         interface can be considered a wrapper over the run()
@@ -80,18 +83,14 @@ class SerialRunner(BaseRunner):
         ----------
         run_info: RunInfo
             An object containing the configuration and the necessary data to run it
-
         """
-        self.results.append(
-            self.run_wrapper(run_info)
-        )
+        self.results.append(self.run_wrapper(run_info))
 
-    def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
-        """This method returns any finished configuration, and returns a list with
-        the results of exercising the configurations. This class keeps populating results
-        to self.results until a call to get_finished runs is done. In this case, the
-        self.results list is emptied and all RunValues produced by running self.run() are
-        returned.
+    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
+        """This method returns any finished configuration, and returns a list with the results of
+        exercising the configurations. This class keeps populating results to self.results until a
+        call to get_finished runs is done. In this case, the self.results list is emptied and all
+        RunValues produced by running self.run() are returned.
 
         Returns
         -------
@@ -105,9 +104,9 @@ class SerialRunner(BaseRunner):
 
     def wait(self) -> None:
         """SMBO/intensifier might need to wait for runs to finish before making a decision.
+
         For serial runs, no wait is needed as the result is immediately available.
         """
-
         # There is no need to wait in serial runs.
         # When launching a run via submit, as the serial run
         # uses the same process to run, the result is always available
@@ -117,24 +116,28 @@ class SerialRunner(BaseRunner):
         return
 
     def pending_runs(self) -> bool:
-        """
-        Whether or not there are configs still running. Generally if the runner is serial,
-        launching a run instantly returns it's result. On parallel runners, there might
-        be pending configurations to complete.
+        """Whether or not there are configs still running.
+
+        Generally if the runner is serial, launching a run instantly returns it's result. On
+        parallel runners, there might be pending configurations to complete.
         """
         # No pending runs in a serial run. Execution is blocking
         return False
 
     def run(
-        self, config: Configuration,
+        self,
+        config: Configuration,
         instance: str,
-        cutoff: typing.Optional[float] = None,
+        cutoff: Optional[float] = None,
         seed: int = 12345,
-        budget: typing.Optional[float] = None,
+        budget: Optional[float] = None,
         instance_specific: str = "0",
-    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on
-        instance <instance> with instance specifics <specifics> for at most
+    ) -> Tuple[StatusType, float, float, Dict]:
+        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        instance specifics.
+
+        <specifics> for at most.
+
         <cutoff> seconds and random seed <seed>
 
         This method exemplifies how to defined the run() method

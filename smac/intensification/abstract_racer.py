@@ -1,17 +1,18 @@
-import logging
 import typing
+
+import logging
 import time
 from collections import OrderedDict
 from enum import Enum
 
 import numpy as np
 
-from smac.optimizer.epm_configuration_chooser import EPMChooser
-
-from smac.stats.stats import Stats
 from smac.configspace import Configuration
+from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.logging import format_array
 
 _config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 
@@ -21,21 +22,19 @@ __license__ = "3-clause BSD"
 
 
 class RunInfoIntent(Enum):
-    """Class to define different requests on how to process
-    the runinfo
+    """Class to define different requests on how to process the runinfo.
 
-    Gives the flexibility to indicate whether a configuration
-    should be skipped (SKIP) or if the SMBO should simple
-    run a generated run_info.
+    Gives the flexibility to indicate whether a configuration should be skipped (SKIP) or if the
+    SMBO should simple run a generated run_info.
     """
+
     RUN = 0  # Normal run execution of a run info
     SKIP = 1  # Skip running the run_info
     WAIT = 2  # Wait for more configs to be processed
 
 
 class AbstractRacer(object):
-    """
-    Base class for all racing methods
+    """Base class for all racing methods.
 
     The "intensification" is designed to output a RunInfo object with enough information
     to run a given configuration (for example, the run info contains the instance/seed
@@ -56,7 +55,7 @@ class AbstractRacer(object):
     rng : np.random.RandomState
     instances : typing.List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str,np.ndarray]
+    instance_specifics : typing.Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : float
         runtime cutoff of TA runs
@@ -76,22 +75,24 @@ class AbstractRacer(object):
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
-    def __init__(self,
-                 stats: Stats,
-                 traj_logger: TrajLogger,
-                 rng: np.random.RandomState,
-                 instances: typing.List[str],
-                 instance_specifics: typing.Optional[typing.Mapping[str, np.ndarray]] = None,
-                 cutoff: typing.Optional[float] = None,
-                 deterministic: bool = False,
-                 run_obj_time: bool = True,
-                 minR: int = 1,
-                 maxR: int = 2000,
-                 adaptive_capping_slackfactor: float = 1.2,
-                 min_chall: int = 1,):
+    def __init__(
+        self,
+        stats: Stats,
+        traj_logger: TrajLogger,
+        rng: np.random.RandomState,
+        instances: typing.List[str],
+        instance_specifics: typing.Optional[typing.Mapping[str, str]] = None,
+        cutoff: typing.Optional[float] = None,
+        deterministic: bool = False,
+        run_obj_time: bool = True,
+        minR: int = 1,
+        maxR: int = 2000,
+        adaptive_capping_slackfactor: float = 1.2,
+        min_chall: int = 1,
+        num_obj: int = 1,
+    ):
 
-        self.logger = logging.getLogger(
-            self.__module__ + "." + self.__class__.__name__)
+        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.stats = stats
         self.traj_logger = traj_logger
@@ -113,14 +114,14 @@ class AbstractRacer(object):
         # removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
         if instance_specifics is None:
-            self.instance_specifics = {}  # type: typing.Mapping[str, np.ndarray]
+            self.instance_specifics = {}  # type: typing.Mapping[str, str]
         else:
             self.instance_specifics = instance_specifics
 
         # general attributes
         self.num_run = 0  # Number of runs done in an iteration so far
         self._chall_indx = 0
-        self._ta_time = 0.
+        self._ta_time = 0.0
 
         # attributes for sampling next configuration
         # Repeating configurations is discouraged for parallel runs
@@ -128,17 +129,23 @@ class AbstractRacer(object):
         # to mark the end of an iteration
         self.iteration_done = False
 
-    def get_next_run(self,
-                     challengers: typing.Optional[typing.List[Configuration]],
-                     incumbent: Configuration,
-                     chooser: typing.Optional[EPMChooser],
-                     run_history: RunHistory,
-                     repeat_configs: bool = True,
-                     num_workers: int = 1,
-                     ) -> typing.Tuple[RunInfoIntent, RunInfo]:
-        """
-        Abstract method for choosing the next challenger, to allow for different selections across intensifiers
-        uses ``_next_challenger()`` by default
+        if num_obj > 1:
+            raise ValueError(
+                "Intensifiers only support single objective optimization. For multi-objective problems,"
+                "please refer to multi-objective intensifiers"
+            )
+
+    def get_next_run(
+        self,
+        challengers: typing.Optional[typing.List[Configuration]],
+        incumbent: Configuration,
+        chooser: typing.Optional[EPMChooser],
+        run_history: RunHistory,
+        repeat_configs: bool = True,
+        num_workers: int = 1,
+    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+        """Abstract method for choosing the next challenger, to allow for different selections
+        across intensifiers uses ``_next_challenger()`` by default.
 
         If no more challengers are available, the method should issue a SKIP via
         RunInfoIntent.SKIP, so that a new iteration can sample new configurations.
@@ -168,19 +175,17 @@ class AbstractRacer(object):
         """
         raise NotImplementedError()
 
-    def process_results(self,
-                        run_info: RunInfo,
-                        incumbent: typing.Optional[Configuration],
-                        run_history: RunHistory,
-                        time_bound: float,
-                        result: RunValue,
-                        log_traj: bool = True,
-                        ) -> \
-            typing.Tuple[Configuration, float]:
-        """
-        The intensifier stage will be updated based on the results/status
-        of a configuration execution.
-        Also, a incumbent will be determined.
+    def process_results(
+        self,
+        run_info: RunInfo,
+        incumbent: typing.Optional[Configuration],
+        run_history: RunHistory,
+        time_bound: float,
+        result: RunValue,
+        log_traj: bool = True,
+    ) -> typing.Tuple[Configuration, float]:
+        """The intensifier stage will be updated based on the results/status of a configuration
+        execution. Also, a incumbent will be determined.
 
         Parameters
         ----------
@@ -208,13 +213,15 @@ class AbstractRacer(object):
         """
         raise NotImplementedError()
 
-    def _next_challenger(self,
-                         challengers: typing.Optional[typing.List[Configuration]],
-                         chooser: typing.Optional[EPMChooser],
-                         run_history: RunHistory,
-                         repeat_configs: bool = True) -> typing.Optional[Configuration]:
-        """ Retuns the next challenger to use in intensification
-        If challenger is None, then optimizer will be used to generate the next challenger
+    def _next_challenger(
+        self,
+        challengers: typing.Optional[typing.List[Configuration]],
+        chooser: typing.Optional[EPMChooser],
+        run_history: RunHistory,
+        repeat_configs: bool = True,
+    ) -> typing.Optional[Configuration]:
+        """Retuns the next challenger to use in intensification If challenger is None, then
+        optimizer will be used to generate the next challenger.
 
         Parameters
         ----------
@@ -245,9 +252,9 @@ class AbstractRacer(object):
             self.logger.debug("Generating new challenger from optimizer")
             chall_gen = chooser.choose_next()
         else:
-            raise ValueError('No configurations/chooser provided. Cannot generate challenger!')
+            raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
 
-        self.logger.debug('Time to select next challenger: %.4f' % (time.time() - start_time))
+        self.logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 
         # select challenger from the generators
         assert chall_gen is not None
@@ -263,13 +270,9 @@ class AbstractRacer(object):
         self.logger.debug("No valid challenger was generated!")
         return None
 
-    def _adapt_cutoff(self,
-                      challenger: Configuration,
-                      run_history: RunHistory,
-                      inc_sum_cost: float) -> float:
-        """Adaptive capping:
-        Compute cutoff based on time so far used for incumbent
-        and reduce cutoff for next run of challenger accordingly
+    def _adapt_cutoff(self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float) -> float:
+        """Adaptive capping: Compute cutoff based on time so far used for incumbent and reduce
+        cutoff for next run of challenger accordingly.
 
         !Only applicable if self.run_obj_time
 
@@ -290,9 +293,8 @@ class AbstractRacer(object):
         cutoff: float
             Adapted cutoff
         """
-
         if not self.run_obj_time:
-            raise ValueError('This method only works when the run objective is time')
+            raise ValueError("This method only works when the run objective is time")
 
         curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
 
@@ -304,19 +306,18 @@ class AbstractRacer(object):
             config=challenger,
             instance_seed_budget_keys=chall_inst_seeds,
         )
-        cutoff = min(curr_cutoff,
-                     inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
-                     )
+        cutoff = min(curr_cutoff, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost)
         return cutoff
 
-    def _compare_configs(self,
-                         incumbent: Configuration,
-                         challenger: Configuration,
-                         run_history: RunHistory,
-                         log_traj: bool = True) -> typing.Optional[Configuration]:
-        """
-        Compare two configuration wrt the runhistory and return the one which
-        performs better (or None if the decision is not safe)
+    def _compare_configs(
+        self,
+        incumbent: Configuration,
+        challenger: Configuration,
+        run_history: RunHistory,
+        log_traj: bool = True,
+    ) -> typing.Optional[Configuration]:
+        """Compare two configuration wrt the runhistory and return the one which performs better (or
+        None if the decision is not safe)
 
         Decision strategy to return x as being better than y:
             1. x has at least as many runs as y
@@ -341,52 +342,64 @@ class AbstractRacer(object):
         -------
         None or better of the two configurations x,y
         """
-
         inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
         chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
-        # performance on challenger runs
+        # performance on challenger runs, the challenger only becomes incumbent
+        # if it dominates the incumbent
         chal_perf = run_history.average_cost(challenger, to_compare_runs)
         inc_perf = run_history.average_cost(incumbent, to_compare_runs)
 
         # Line 15
-        if chal_perf > inc_perf and len(chall_runs) >= self.minR:
+        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            self.logger.debug("Incumbent (%.4f) is better than challenger "
-                              "(%.4f) on %d runs." %
-                              (inc_perf, chal_perf, len(chall_runs)))
+            self.logger.debug(
+                f"Incumbent ({inc_perf_format}) is better than challenger "
+                f"({chal_perf_format}) on {len(chall_runs)} runs."
+            )
             return incumbent
 
         # Line 16
         if not set(inc_runs) - set(chall_runs):
-
             # no plateau walks
-            if chal_perf >= inc_perf:
-                self.logger.debug("Incumbent (%.4f) is at least as good as the "
-                                  "challenger (%.4f) on %d runs." %
-                                  (inc_perf, chal_perf, len(chall_runs)))
+            if np.any(chal_perf >= inc_perf):
+                chal_perf_format = format_array(chal_perf)
+                inc_perf_format = format_array(inc_perf)
+
+                self.logger.debug(
+                    f"Incumbent ({inc_perf_format}) is at least as good as the "
+                    f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
+                )
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(train_perf=inc_perf,
-                                               incumbent_id=self.stats.inc_changed,
-                                               incumbent=incumbent)
+                    self.traj_logger.add_entry(
+                        train_perf=chal_perf,
+                        incumbent_id=self.stats.inc_changed,
+                        incumbent=incumbent,
+                    )
                 return incumbent
 
             # Challenger is better than incumbent
             # and has at least the same runs as inc
             # -> change incumbent
             n_samples = len(chall_runs)
-            self.logger.info("Challenger (%.4f) is better than incumbent (%.4f)"
-                             " on %d runs." % (chal_perf, inc_perf, n_samples))
+            chal_perf_format = format_array(chal_perf)
+            inc_perf_format = format_array(inc_perf)
+
+            self.logger.info(
+                f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
+            )
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
                 self.stats.inc_changed += 1
-                self.traj_logger.add_entry(train_perf=chal_perf,
-                                           incumbent_id=self.stats.inc_changed,
-                                           incumbent=challenger)
+                self.traj_logger.add_entry(
+                    train_perf=chal_perf, incumbent_id=self.stats.inc_changed, incumbent=challenger
+                )
             return challenger
 
         # undecided

@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Optional
 
 import numpy as np
 
@@ -17,10 +18,14 @@ class BaseImputor(object):
         pass
 
     @abstractmethod
-    def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> np.ndarray:
-        """
-        Imputes censored runs and returns new y values.
+    def impute(
+        self,
+        censored_X: np.ndarray,
+        censored_y: np.ndarray,
+        uncensored_X: np.ndarray,
+        uncensored_y: np.ndarray,
+    ) -> Optional[np.ndarray]:
+        """Imputes censored runs and returns new y values.
 
         Parameters
         ----------
@@ -34,7 +39,7 @@ class BaseImputor(object):
             Target values for all non-censored runs.
 
         Returns
-        ----------
+        -------
         imputed_y: np.ndarray
             Same shape as censored_y [N, 1]
         """

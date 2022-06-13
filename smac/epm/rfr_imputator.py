@@ -1,5 +1,6 @@
+from typing import Optional
+
 import logging
-import typing
 import warnings
 
 import numpy as np
@@ -22,6 +23,23 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     **Note:** Sets var_threshold as the lower bound on the variance for the
     predictions of the random forest
 
+
+    Parameters
+    ----------
+    rng : np.random.RandomState
+        Will be used to draw a seed (currently not used)
+    cutoff : float
+        Cutoff value for this scenario (upper runnning time limit)
+    threshold : float
+        Highest possible values (e.g. cutoff * parX).
+    model : AbstractEPM
+        Predictive model (i.e. RandomForestWithInstances)
+    change_threshold : float
+        Stop imputation if change is less than this.
+    max_iter : int
+        Maximum number of imputation iterations.
+
+
     Attributes
     ----------
     logger : logging.Logger
@@ -34,30 +52,17 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     model : AbstractEPM
         Predictive model (i.e. RandomForestWithInstances)
     var_threshold: float
-
     """
 
-    def __init__(self, rng: np.random.RandomState, cutoff: float,
-                 threshold: float, model: AbstractEPM,
-                 change_threshold: float = 0.01,
-                 max_iter: int = 2):
-        """Constructor
-
-        Parameters
-        ----------
-        rng : np.random.RandomState
-            Will be used to draw a seed (currently not used)
-        cutoff : float
-            Cutoff value for this scenario (upper runnning time limit)
-        threshold : float
-            Highest possible values (e.g. cutoff * parX).
-        model : AbstractEPM
-            Predictive model (i.e. RandomForestWithInstances)
-        change_threshold : float
-            Stop imputation if change is less than this.
-        max_iter : int
-            Maximum number of imputation iterations.
-        """
+    def __init__(
+        self,
+        rng: np.random.RandomState,
+        cutoff: float,
+        threshold: float,
+        model: AbstractEPM,
+        change_threshold: float = 0.01,
+        max_iter: int = 2,
+    ):
         super(RFRImputator, self).__init__()
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter
@@ -69,12 +74,16 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         self.model = model
 
         # Never use a lower variance than this
-        self.var_threshold = 10 ** -2
+        self.var_threshold = 10**-2
 
-    def impute(self, censored_X: np.ndarray, censored_y: np.ndarray,
-               uncensored_X: np.ndarray, uncensored_y: np.ndarray) -> typing.Optional[np.ndarray]:
-        """
-        Imputes censored runs and returns new y values.
+    def impute(
+        self,
+        censored_X: np.ndarray,
+        censored_y: np.ndarray,
+        uncensored_X: np.ndarray,
+        uncensored_y: np.ndarray,
+    ) -> Optional[np.ndarray]:
+        """Imputes censored runs and returns new y values.
 
         Parameters
         ----------
@@ -88,7 +97,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             Target values for all non-censored runs.
 
         Returns
-        ----------
+        -------
         imputed_y : np.ndarray
             Same shape as censored_y [N, 1]
         """
@@ -102,13 +111,12 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         # first learn model without censored data
         self.model.train(uncensored_X, uncensored_y)
 
-        self.logger.debug("Going to impute %d y-values with %s" %
-                          (censored_X.shape[0], str(self.model)))
+        self.logger.debug("Going to impute %d y-values with %s" % (censored_X.shape[0], str(self.model)))
 
         imputed_y = None  # define this, if imputation fails
 
         # Define variables
-        y = np.empty((0, ))  # This only defines the type, the actual value will not be used later on.
+        y = np.empty((0,))  # This only defines the type, the actual value will not be used later on.
 
         it = 1
         change = 0
@@ -127,15 +135,15 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             # ignore the warnings of truncnorm.stats
             # since we handle them appropriately
             with warnings.catch_warnings():
-                warnings.filterwarnings(
-                    'ignore', r'invalid value encountered in (subtract|true_divide|power).*')
-                warnings.filterwarnings(
-                    'ignore', r'divide by zero encountered in (true_divide|log).*')
-                imputed_y = truncnorm.stats(a=(censored_y - y_mean) / y_stdev,
-                                            b=(self.threshold - y_mean) / y_stdev,
-                                            loc=y_mean,
-                                            scale=y_stdev,
-                                            moments='m')
+                warnings.filterwarnings("ignore", r"invalid value encountered in (subtract|true_divide|power).*")
+                warnings.filterwarnings("ignore", r"divide by zero encountered in (true_divide|log).*")
+                imputed_y = truncnorm.stats(
+                    a=(censored_y - y_mean) / y_stdev,
+                    b=(self.threshold - y_mean) / y_stdev,
+                    loc=y_mean,
+                    scale=y_stdev,
+                    moments="m",
+                )
 
             imputed_y = np.array(imputed_y)
 
@@ -145,17 +153,15 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
                 # Replace all nans with maximum of predicted perf and censored value
                 # this happens if the prediction is far smaller than the
                 # censored data point
-                self.logger.debug("Going to replace %d nan-value(s) with "
-                                  "max(captime, predicted mean)" % n_nans)
-                imputed_y[nans] = np.max(
-                    [censored_y[nans], y_mean[nans]], axis=0)
+                self.logger.debug("Going to replace %d nan-value(s) with " "max(captime, predicted mean)" % n_nans)
+                imputed_y[nans] = np.max([censored_y[nans], y_mean[nans]], axis=0)
 
             if it > 1:
                 # Calc mean difference between imputed values this and last
                 # iteration, assume imputed values are always concatenated
                 # after uncensored values
 
-                change = np.mean(np.abs(imputed_y - y[uncensored_y.shape[0]:]) / y[uncensored_y.shape[0]:])
+                change = np.mean(np.abs(imputed_y - y[uncensored_y.shape[0] :]) / y[uncensored_y.shape[0] :])
 
             # lower all values that are higher than threshold
             # should probably never happen
@@ -175,14 +181,12 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
             if it > self.max_iter:
                 break
 
-        self.logger.debug("Imputation used %d/%d iterations, last_change=%f" %
-                          (it - 1, self.max_iter, change))
+        self.logger.debug("Imputation used %d/%d iterations, last_change=%f" % (it - 1, self.max_iter, change))
 
         # replace all y > cutoff with PAR10 values (i.e., threshold)
-        imputed_y = np.array(imputed_y, dtype=np.float)
+        imputed_y = np.array(imputed_y, dtype=float)
         imputed_y[imputed_y >= self.cutoff] = self.threshold
 
         if not np.isfinite(imputed_y).all():
-            self.logger.critical("Imputed values are not finite, %s" %
-                                 str(imputed_y))
+            self.logger.critical("Imputed values are not finite, %s" % str(imputed_y))
         return np.reshape(imputed_y, [imputed_y.shape[0], 1])
