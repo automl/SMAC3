@@ -38,6 +38,7 @@ class TestSMAC4BOinGFacade(unittest.TestCase):
         # Scenario object
         scenario = Scenario({"run_obj": "quality", "runcount-limit": 10, "cs": cs, "deterministic": "true"})
         self.scenario = scenario
+        self.output_dirs = []
 
     def tearDown(self):
         shutil.rmtree("run_1", ignore_errors=True)
@@ -57,3 +58,4 @@ class TestSMAC4BOinGFacade(unittest.TestCase):
         )
         smac.optimize()
         self.assertIsInstance(smac.solver.epm_chooser, EPMChooserBOinG)
+        self.output_dirs.append(smac.scenario.output_dir)
