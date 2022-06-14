@@ -28,6 +28,7 @@ class BOinGSubspace(AbstractSubspace):
         Parameters for acq_optimizer_local
 
     """
+
     def __init__(
         self,
         config_space: ConfigurationSpace,

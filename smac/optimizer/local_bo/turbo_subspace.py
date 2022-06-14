@@ -10,10 +10,10 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.epm_gpytorch.gaussian_process_gpytorch import GaussianProcessGPyTorch
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process import GaussianProcess
+from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
@@ -44,6 +44,7 @@ class TuRBOSubSpace(AbstractSubspace):
     n_candidate_max: int
         Maximal Number of points used as candidates
     """
+
     def __init__(
         self,
         config_space: ConfigurationSpace,

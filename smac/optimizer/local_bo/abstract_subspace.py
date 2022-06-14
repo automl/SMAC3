@@ -64,6 +64,7 @@ class AbstractSubspace(ABC):
         incumbent array, used when activate_dims has less dimension and this value is used to complementary the
         resulted configurations
     """
+
     def __init__(
         self,
         config_space: ConfigurationSpace,

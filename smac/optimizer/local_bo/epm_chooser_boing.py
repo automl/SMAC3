@@ -62,6 +62,7 @@ class EPMChooserBOinG(EPMChooser):
     turbo_kwargs: typing.Optional[typing.Dict] = None
        parameters for building a turbo optimizer
     """
+
     def __init__(
         self,
         scenario: Scenario,
