@@ -19,8 +19,8 @@ from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.boing_kernels import FITCKernel, FITCMean
-from smac.epm.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
+from smac.epm.epm_gpytorch.boing_kernels import FITCKernel, FITCMean
+from smac.epm.epm_gpytorch.gaussian_process_gpytorch import ExactGPModel, GaussianProcessGPyTorch
 from smac.epm.util_funcs import check_points_in_ss
 
 gpytorch.settings.debug.off()

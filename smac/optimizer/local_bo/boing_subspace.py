@@ -7,7 +7,7 @@ from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.ei_optimization import (
     AcquisitionFunctionMaximizer,
@@ -17,6 +17,17 @@ from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
 
 class BOinGSubspace(AbstractSubspace):
+    """
+    Subspace for BOinG optimizer
+    Parameters
+    ----------
+    acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer]
+        Subspace optimizer, used to give a set of suggested points. Unlike the optimizer implemented in epm_chooser,
+        this optimizer does not require runhistory objects.
+    acq_optimizer_local_kwargs
+        Parameters for acq_optimizer_local
+
+    """
     def __init__(
         self,
         config_space: ConfigurationSpace,
@@ -35,17 +46,6 @@ class BOinGSubspace(AbstractSubspace):
         acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
         acq_optimizer_local_kwargs: typing.Optional[dict] = None,
     ):
-        """
-        Subspace for BOinG optimizer
-        Parameters
-        ----------
-        acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer]
-            Subspace optimizer, used to give a set of suggested points. Unlike the optimizer implemented in epm_chooser,
-            this optimizer does not require runhistory objects.
-        acq_optimizer_local_kwargs
-            Parameters for acq_optimizer_local
-
-        """
         super(BOinGSubspace, self).__init__(
             config_space=config_space,
             bounds=bounds,

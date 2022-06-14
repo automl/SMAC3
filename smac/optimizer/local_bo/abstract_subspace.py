@@ -24,13 +24,46 @@ from ConfigSpace.hyperparameters import (
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.util_funcs import check_points_in_ss
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.local_bo.utils import construct_gp_kernel
 
 
 class AbstractSubspace(ABC):
+    """
+    A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
+    this subspace is equivalent to the original configuration space. Additionally, this subspace
+    supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
+    corresponding values from incumbent_array
+    Parameters
+    ----------
+    config_space: ConfigurationSpace
+        raw Configuration space
+    bounds: List[Tuple[float, float]]
+        raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space
+    hps_types: List[int],
+        types of the hyperparameters
+    bounds_ss_cont: np.ndarray(D_cont, 2)
+        subspaces bounds of continuous hyperparameters, its length is the number of continuous hyperparameters
+    bounds_ss_cat: List[Tuple]
+        subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
+    rng: np.random.RandomState
+        random state
+    model_local: ~smac.epm.base_epm.AbstractEPM
+        model in subspace
+    model_local_kwargs: Optional[Dict]
+        argument for subspace model
+    acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction
+        local acquisition function
+    acq_func_local_kwargs: Optional[Dict]
+        argument for acquisition function
+    activate_dims: Optional[np.ndarray]
+        activate dimensions in the subspace, if it is None, we preserve all the dimensions
+    incumbent_array: Optional[np.ndarray]
+        incumbent array, used when activate_dims has less dimension and this value is used to complementary the
+        resulted configurations
+    """
     def __init__(
         self,
         config_space: ConfigurationSpace,
@@ -47,39 +80,6 @@ class AbstractSubspace(ABC):
         activate_dims: Optional[np.ndarray] = None,
         incumbent_array: Optional[np.ndarray] = None,
     ):
-        """
-        A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
-        this subspace is equivalent to the original configuration space. Additionally, this subspace
-        supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
-        corresponding values in incumbent_array
-        Parameters
-        ----------
-        config_space: ConfigurationSpace
-            raw Configuration space
-        bounds: List[Tuple[float, float]]
-            raw bounds of the Configuration space, notice that here bounds denotes the bounds of the entire space
-        hps_types: List[int],
-            types of the hyperparameters
-        bounds_ss_cont: np.ndarray(D_cont, 2)
-            subspaces bounds of continuous hyperparameters, its length is the number of continuous hyperparameters
-        bounds_ss_cat: List[Tuple]
-            subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
-        rng: np.random.RandomState
-            random state
-        model_local: ~smac.epm.base_epm.AbstractEPM
-            model in subspace
-        model_local_kwargs: Optional[Dict]
-            argument for subspace model
-        acq_func_local: ~smac.optimizer.ei_optimization.AbstractAcquisitionFunction
-            local acquisition function
-        acq_func_local_kwargs: Optional[Dict]
-            argument for acquisition function
-        activate_dims: Optional[np.ndarray]
-            activate dimensions in the subspace, if it is None, we preserve all the dimensions
-        incumbent_array: Optional[np.ndarray]
-            incumbent array, used when activate_dims has less dimension and this value is used to complementary the
-            resulted configurations
-        """
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.cs_global = config_space
         if rng is None:

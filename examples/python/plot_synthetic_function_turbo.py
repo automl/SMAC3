@@ -4,7 +4,12 @@ Synthetic Function with TuRBO as optimizer
 An example of applying SMAC with trust region BO(TuRBO) to optimize a
 synthetic function (2d rosenbrock function).
 
-TuRBO optimizer requires EPMChooserTurBO to suggest next configuration to be evaluated
+Eriksson et al. Scalable Global Optimization via Local {Bayesian} Optimization,
+http://papers.nips.cc/paper/8788-scalable-global-optimization-via-local-bayesian-optimization.pdf
+
+TurBO gradually shrinks its search space to the vicinity of the optimium configuration that is ever optimized.
+TuRBO optimizer requires EPMChooserTurBO to suggest next configuration. Currently, it only supports pure numerical
+hyperparameters.
 """
 
 import logging

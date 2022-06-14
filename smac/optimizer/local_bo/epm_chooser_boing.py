@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
@@ -62,7 +62,6 @@ class EPMChooserBOinG(EPMChooser):
     turbo_kwargs: typing.Optional[typing.Dict] = None
        parameters for building a turbo optimizer
     """
-
     def __init__(
         self,
         scenario: Scenario,

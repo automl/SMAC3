@@ -13,8 +13,8 @@ from smac.runhistory.runhistory2epm import (
 
 class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
     """
-    A transformer that transform RUnHistroy to vectors, Here addition to the transformed values, we will also
-    return the raw values
+    A transformer that transform RUnHistroy to vectors, this set of classes will return the raw cost values in
+    addition to the transformed cost values. The raw cost values can then be applied for local BO approaches.
     """
 
     def transform_with_raw(
@@ -23,7 +23,8 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
         budget_subset: typing.Optional[typing.List] = None,
     ) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is
-        disabled, censored (TIMEOUT with time < cutoff) will be skipped
+        disabled, censored (TIMEOUT with time < cutoff) will be skipped. This function returns both the raw
+        and transformed cost values
 
         Parameters
         ----------
@@ -61,7 +62,7 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
         return values
 
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the input values before transformation
+        """Transform function response values. Returns the raw input values before transformation
 
         Parameters
         ----------
@@ -77,7 +78,7 @@ class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
 
 class RunHistory2EPM4ScaledLogCostWithRaw(RunHistory2EPM4CostWithRaw, RunHistory2EPM4LogScaledCost):
     def transform_raw_values(self, values: np.ndarray) -> np.ndarray:
-        """Transform function response values. Returns the input values before transformation
+        """Transform function response values. Returns the raw input values before transformation
 
         Parameters
         ----------

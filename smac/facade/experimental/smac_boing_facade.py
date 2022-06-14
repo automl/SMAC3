@@ -9,7 +9,7 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG
 from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
@@ -17,10 +17,10 @@ from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWit
 
 class SMAC4BOING(SMAC4HPO):
     """
-    SMAC facade for  BO inside Grove(BOinG):
+    SMAC wrapper for  BO inside Grove(BOinG):
         Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization
         https://arxiv.org/abs/2111.05834
-    This is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random
+    BOiNG is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random
     forest (RF) model. Then in the second stage, the optimizer constructs a local model in the vicinity of the
     configuration suggested by the global surrogate model.
     """

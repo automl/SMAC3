@@ -13,7 +13,7 @@ from gpytorch.likelihoods import GaussianLikelihood
 from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.models.exact_gp import ExactGP
 
-from smac.epm.boing_kernels import FITCKernel, FITCMean
+from smac.epm.epm_gpytorch.boing_kernels import FITCKernel, FITCMean
 from smac.epm.util_funcs import check_points_in_ss
 
 

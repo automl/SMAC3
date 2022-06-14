@@ -22,8 +22,8 @@ from smac.stats.stats import Stats
 class EPMChooserTurBO(EPMChooser):
     """
     Interface to train the EPM and generate next configurations with TurBO:
-    D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-    https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf
+        D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
+        https://papers.nips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf
 
     Parameters
     ----------

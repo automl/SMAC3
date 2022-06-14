@@ -5,7 +5,7 @@ from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from gpytorch.kernels import MaternKernel, ScaleKernel
 
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import EI
 from smac.optimizer.ei_optimization import LocalAndSortedRandomSearch

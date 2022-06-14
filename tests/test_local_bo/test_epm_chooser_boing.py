@@ -12,7 +12,7 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import check_points_in_ss, get_types
 from smac.facade.smac_bb_facade import SMAC4BB

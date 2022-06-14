@@ -11,9 +11,9 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gaussian_process_gpytorch import GaussianProcessGPyTorch
+from smac.epm.epm_gpytorch.gaussian_process_gpytorch import GaussianProcessGPyTorch
 from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
 from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
@@ -21,6 +21,29 @@ warnings.filterwarnings("ignore", message="The balance properties of Sobol' poin
 
 
 class TuRBOSubSpace(AbstractSubspace):
+    """
+    Subspace designed for TurBO:
+        D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
+        https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html
+    The hyperparameters follow the illustration under supplementary D, `TuRBO details`
+    Parameters
+    ----------
+    length_init: float
+        initialized length of subspace
+    length_min: float
+        minimal length of subspace, if subspace has length smaller than this value, turbo will restart
+    length_max: float
+        maximal length of subspace
+    success_tol: float
+       the number of successive successful evaluations required for expanding the subregion
+    failure_tol_min: float
+       minimal number of successive successful evaluations required for shrinking the subregion (otherwise
+       this value is set as number of feature dimensions)
+    n_init_x_params: int
+        how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace
+    n_candidate_max: int
+        Maximal Number of points used as candidates
+    """
     def __init__(
         self,
         config_space: ConfigurationSpace,
@@ -44,29 +67,6 @@ class TuRBOSubSpace(AbstractSubspace):
         n_init_x_params: int = 2,
         n_candidate_max: int = 5000,
     ):
-        """
-        Subspace designed for TurBO:
-        D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
-        https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html
-        The hyperparameters are the same as teh setting under supplementary D TuRBO details
-        Parameters
-        ----------
-        length_init: float
-            initialized length of subspace
-        length_min: float
-            minimal length of subspace, if subspace has length smaller than this value, turbo will restart
-        length_max: float
-            maximal length of subspace
-        success_tol: float
-           the number of successive successful evaluations required for expanding the subregion
-        failure_tol_min: float
-           minimal number of successive successful evaluations required for shrinking the subregion (otherwise
-           this value is set as number of feature dimensions)
-        n_init_x_params: int
-            how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace
-        n_candidate_max: int
-            Maximal Number of points used as candidates
-        """
         self.num_valid_observations = 0
         super(TuRBOSubSpace, self).__init__(
             config_space=config_space,

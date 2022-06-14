@@ -4,7 +4,7 @@ import numpy as np
 from gpytorch.kernels import Kernel, MaternKernel, ScaleKernel
 from sklearn.gaussian_process.kernels import Kernel as SKLKernels
 
-from smac.epm.boing_kernels import MixedKernel
+from smac.epm.epm_gpytorch.boing_kernels import MixedKernel
 from smac.epm.gp_kernels import ConstantKernel, WhiteKernel
 
 
@@ -12,7 +12,9 @@ def construct_gp_kernel(
     kernel_kwargs: Dict[str, Any], cont_dims: np.ndarray, cat_dims: np.ndarray
 ) -> Union[Kernel, SKLKernels]:
     """
-    Construct a GP kernel with the given kernel init kwargs and the cont_dims and cat_dims
+    Construct a GP kernel with the given kernel init kwargs and the cont_dims and cat_dims. Since the subspace might
+    not have the same number of dimensions as the global search space. We need to reconstruct the kernel everytime a
+    new subspace is generated.
 
     Parameters
     ----------

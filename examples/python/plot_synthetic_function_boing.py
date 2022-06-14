@@ -4,7 +4,10 @@ Synthetic Function with BOinG as optimizer
 An example of applying SMAC with BO inside Grove(BOinG) to optimize a
 synthetic function (2d rosenbrock function).
 
-BOinG optimizer requires EPMChooserBOinG to suggest next configuration to be evaluated
+BOinG optimizer requires a SMAC4BOING wrapper to optimize the target algorithm. It is a two stage BO algorithm.
+At the first stage, BOinG constructs an RF to capture the global loss landscape. Then in the second stage, it only
+optimizes inside a subregion near the candidate suggested by the RF model with a GP model to focus only on the most
+promising region.
 """
 
 import logging
