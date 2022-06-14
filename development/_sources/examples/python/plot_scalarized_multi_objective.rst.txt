@@ -41,7 +41,7 @@ Optimize both the final performance and the time used for training.
 
  .. code-block:: none
 
-    Default config's cost: 0.033333, training time: 0.000027 seconds
+    Default config's cost: 0.033333, training time: 0.000032 seconds
     Optimizing! Depending on your machine, this might take a few minutes.
 
 
@@ -253,7 +253,7 @@ Optimize both the final performance and the time used for training.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  15.368 seconds)
+   **Total running time of the script:** ( 0 minutes  19.585 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_scalarized_multi_objective.py:
