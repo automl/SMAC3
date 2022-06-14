@@ -35,7 +35,7 @@ def read_file(filepath: str) -> str:
 
 
 extras_require = {
-    "boing": [
+    "gpytorch": [
         "torch>=1.9.0",
         "gpytorch>=1.5.0",
         "pyro-ppl>=1.7.0",
