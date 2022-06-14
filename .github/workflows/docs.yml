@@ -35,7 +35,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ".[boing, dev]"
+        pip install ".[gyptorch,dev]"
 
     - name: Make docs
       run: |
