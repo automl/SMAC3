@@ -92,20 +92,24 @@ class BOinGSubspace(AbstractSubspace):
         else:
             if acq_optimizer_local is None:
                 acq_optimizer_local = LocalAndSortedRandomSearch  # type: ignore
-                # Here are the setting used by squirrel-optimizer
-                # https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optimizer/smac_optim.py
-                n_sls_iterations = {
-                    1: 10,
-                    2: 10,
-                    3: 10,
-                    4: 10,
-                    5: 10,
-                    6: 10,
-                    7: 8,
-                    8: 6,
-                }.get(len(self.cs_local.get_hyperparameters()), 5)
+                if acq_optimizer_local_kwargs is not None:
+                    subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
+                else:
+                    # Here are the setting used by squirrel-optimizer
+                    # https://github.com/automl/Squirrel-Optimizer-BBO-NeurIPS20-automlorg/blob/main/squirrel-optimizer/smac_optim.py
+                    n_sls_iterations = {
+                        1: 10,
+                        2: 10,
+                        3: 10,
+                        4: 10,
+                        5: 10,
+                        6: 10,
+                        7: 8,
+                        8: 6,
+                    }.get(len(self.cs_local.get_hyperparameters()), 5)
 
-                subspace_acq_func_opt_kwargs.update({"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations})
+                    subspace_acq_func_opt_kwargs.update({"n_steps_plateau_walk": 5,
+                                                         "n_sls_iterations": n_sls_iterations})
 
             elif inspect.isclass(acq_optimizer_local, AcquisitionFunctionMaximizer):
                 subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
