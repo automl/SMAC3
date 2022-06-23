@@ -1,6 +1,7 @@
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.
+* Updated stale bot options.
 
 
 # 1.3.3

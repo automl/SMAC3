@@ -6,11 +6,20 @@ daysUntilClose: 7
 
 # Issues with these labels will never be considered stale
 exemptLabels:
-  - pinned
-  - security
+  - bug
+  - dependencies
+  - documentation
+  - enhancement
+  - feature request
+
+# Only issues/PRs with ANY of these labels are checked
+any-of-labels:
+  - discussion
+  - duplicate
+  - question
 
 # Label to use when marking an issue as stale
-staleLabel: wontfix
+staleLabel: stale
 
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >
