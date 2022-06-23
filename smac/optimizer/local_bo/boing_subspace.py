@@ -18,7 +18,9 @@ from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
 
 class BOinGSubspace(AbstractSubspace):
     """
-    Subspace for BOinG optimizer
+    Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize for maximizing the
+    acquisition function inside this subregion.
+
     Parameters
     ----------
     acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer]
@@ -102,6 +104,7 @@ class BOinGSubspace(AbstractSubspace):
                     7: 8,
                     8: 6,
                 }.get(len(self.cs_local.get_hyperparameters()), 5)
+
                 subspace_acq_func_opt_kwargs.update({"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations})
 
             elif inspect.isclass(acq_optimizer_local, AcquisitionFunctionMaximizer):
@@ -117,7 +120,8 @@ class BOinGSubspace(AbstractSubspace):
     def _generate_challengers(self, **optimizer_kwargs: typing.Dict) -> typing.List[typing.Tuple[float, Configuration]]:
         """
         Generate new challengers list for this subspace, this optimizer is similar to
-        smac.optimizer.ei_optimization.LocalAndSortedRandomSearch
+        smac.optimizer.ei_optimization.LocalAndSortedRandomSearch except that we don't read the past evaluated
+        information from the runhistory but directly assign new values to the
         """
         self.model.train(self.model_x, self.model_y)
         self.update_model(predict_x_best=True, update_incumbent_array=True)
