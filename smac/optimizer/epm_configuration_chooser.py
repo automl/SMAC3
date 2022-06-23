@@ -1,4 +1,4 @@
-from typing import List, Tuple, Iterator, Optional
+from typing import Iterator, List, Optional, Tuple
 
 import logging
 
