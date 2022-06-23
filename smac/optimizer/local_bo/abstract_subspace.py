@@ -25,7 +25,7 @@ from ConfigSpace.hyperparameters import (
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.epm.util_funcs import check_points_in_ss
+from smac.epm.util_funcs import check_subspace_points
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.local_bo.utils import construct_gp_kernel
 
@@ -493,7 +493,7 @@ class AbstractSubspace(ABC):
 
         X = X[:, self.activate_dims]
 
-        ss_indices = check_points_in_ss(
+        ss_indices = check_subspace_points(
             X=X,
             cont_dims=self.activate_dims_cont,
             cat_dims=self.activate_dims_cat,

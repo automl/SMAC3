@@ -182,7 +182,7 @@ def get_rng(
     return run_id_return, rng_return
 
 
-def check_points_in_ss(
+def check_subspace_points(
     X: np.ndarray,
     cont_dims: typing.Union[np.ndarray, typing.List] = [],
     cat_dims: typing.Union[np.ndarray, typing.List] = [],

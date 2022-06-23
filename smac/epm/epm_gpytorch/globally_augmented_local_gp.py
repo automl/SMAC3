@@ -24,7 +24,7 @@ from smac.epm.epm_gpytorch.gaussian_process_gpytorch import (
     ExactGPModel,
     GaussianProcessGPyTorch,
 )
-from smac.epm.util_funcs import check_points_in_ss
+from smac.epm.util_funcs import check_subspace_points
 
 gpytorch.settings.debug.off()
 
@@ -259,7 +259,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         if self.n_objectives_ == 1:
             y = y.flatten()
 
-        ss_data_indices = check_points_in_ss(
+        ss_data_indices = check_subspace_points(
             X,
             cont_dims=self.cont_dims,
             cat_dims=self.cat_dims,
