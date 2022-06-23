@@ -1,7 +1,7 @@
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.
-* Code more readable since all typings are imported on the top.
+* Code more readable since all typings are imported at the beginning of the file.
 * Updated stale bot options.
 
 
