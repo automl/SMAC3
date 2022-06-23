@@ -108,8 +108,9 @@ class BOinGSubspace(AbstractSubspace):
                         8: 6,
                     }.get(len(self.cs_local.get_hyperparameters()), 5)
 
-                    subspace_acq_func_opt_kwargs.update({"n_steps_plateau_walk": 5,
-                                                         "n_sls_iterations": n_sls_iterations})
+                    subspace_acq_func_opt_kwargs.update(
+                        {"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations}
+                    )
 
             elif inspect.isclass(acq_optimizer_local, AcquisitionFunctionMaximizer):
                 subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
