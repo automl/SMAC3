@@ -1,4 +1,4 @@
-import typing
+from typing import Any, Dict
 
 from enum import Enum
 
@@ -30,7 +30,7 @@ class StatusType(Enum):
     RUNNING = 9
 
     @staticmethod
-    def enum_hook(obj: typing.Dict) -> typing.Any:
+    def enum_hook(obj: Dict) -> Any:
         """Hook function passed to json-deserializer as "object_hook".
 
         EnumEncoder in runhistory/runhistory.

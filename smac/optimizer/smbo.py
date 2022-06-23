@@ -1,4 +1,4 @@
-import typing
+from typing import Callable, Dict, List, Optional, Type, Union
 
 import logging
 import os
@@ -127,7 +127,7 @@ class SMBO(object):
         self._min_time = 10**-5
         self.tae_runner = tae_runner
 
-        self.initial_design_configs = []  # type: typing.List[Configuration]
+        self.initial_design_configs = []  # type: List[Configuration]
 
         # TODO: consider if we need an additional EPMChooser for multi-objective optimization
         self.epm_chooser = EPMChooser(
@@ -150,10 +150,10 @@ class SMBO(object):
 
         # Callbacks. All known callbacks have a key. If something does not have a key here, there is
         # no callback available.
-        self._callbacks = {"_incorporate_run_results": list()}  # type: typing.Dict[str, typing.List[typing.Callable]]
+        self._callbacks = {"_incorporate_run_results": list()}  # type: Dict[str, List[Callable]]
         self._callback_to_key = {
             IncorporateRunResultCallback: "_incorporate_run_results",
-        }  # type: typing.Dict[typing.Type, str]
+        }  # type: Dict[Type, str]
 
     def start(self) -> None:
         """Starts the Bayesian Optimization loop.
@@ -347,8 +347,8 @@ class SMBO(object):
 
     def validate(
         self,
-        config_mode: typing.Union[str, typing.List[Configuration]] = "inc",
-        instance_mode: typing.Union[str, typing.List[str]] = "train+test",
+        config_mode: Union[str, List[Configuration]] = "inc",
+        instance_mode: Union[str, List[str]] = "train+test",
         repetitions: int = 1,
         use_epm: bool = False,
         n_jobs: int = -1,
@@ -385,13 +385,13 @@ class SMBO(object):
             traj_fn = os.path.join(self.scenario.output_dir_for_this_run, "traj_aclib2.json")
             trajectory = TrajLogger.read_traj_aclib_format(
                 fn=traj_fn, cs=self.config_space
-            )  # type: typing.Optional[typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]]
+            )  # type: Optional[List[Dict[str, Union[float, int, Configuration]]]]
         else:
             trajectory = None
         if self.scenario.output_dir_for_this_run:
             new_rh_path = os.path.join(
                 self.scenario.output_dir_for_this_run, "validated_runhistory.json"
-            )  # type: typing.Optional[str] # noqa E501
+            )  # type: Optional[str] # noqa E501
         else:
             new_rh_path = None
 

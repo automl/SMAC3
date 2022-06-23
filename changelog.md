@@ -1,3 +1,10 @@
+# 1.3.4
+* Added reference to JMLR paper.
+* Typos in documentations.
+* Code more readable since all typings are imported at the beginning of the file.
+* Updated stale bot options.
+
+
 # 1.3.3
 * Hotfix: Since multi-objective implementation depends on normalized costs, it now is ensured that the
 cached costs are updated everytime a new entry is added.

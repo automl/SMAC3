@@ -66,20 +66,10 @@ X_val, y_val = np.random.randint(2, size=(5, 2)), np.random.randint(2, size=5)
 
 
 def train_random_forest(config):
-    """ 
-    Trains a random forest on the given hyperparameters, defined by config, and returns the accuracy
-    on the validation data.
-
-    Input:
-        config (Configuration): Configuration object derived from ConfigurationSpace.
-
-    Return:
-        cost (float): Performance measure on the validation data.
-    """
     model = RandomForestClassifier(max_depth=config["depth"])
     model.fit(X_train, y_train)
 
-    # define the evaluation metric as return
+    # Define the evaluation metric as return
     return 1 - model.score(X_val, y_val)
 
 
@@ -125,16 +115,18 @@ Freiburg](http://www.automl.org/).
 If you have found a bug, please report to [issues](https://github.com/automl/SMAC3/issues). Moreover, we are appreciating any kind of help.
 Find our guidlines for contributing to this package [here](https://github.com/automl/SMAC3/blob/master/.github/CONTRIBUTING.md).
 
-If you use SMAC in one of your research projects, please cite us:
+If you use SMAC in one of your research projects, please cite our [JMLR paper](https://jmlr.org/papers/v23/21-0888.html):
 ```
-@misc{lindauer2021smac3,
-      title={SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization}, 
-      author={Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
-      year={2021},
-      eprint={2109.09831},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@article{JMLR:v23:21-0888,
+  author  = {Marius Lindauer and Katharina Eggensperger and Matthias Feurer and André Biedenkapp and Difan Deng and Carolin Benjamins and Tim Ruhkopf and René Sass and Frank Hutter},
+  title   = {SMAC3: A Versatile Bayesian Optimization Package for Hyperparameter Optimization},
+  journal = {Journal of Machine Learning Research},
+  year    = {2022},
+  volume  = {23},
+  number  = {54},
+  pages   = {1--9},
+  url     = {http://jmlr.org/papers/v23/21-0888.html}
 }
 ```
 
-Copyright (C) 2016-2021  [AutoML Group](http://www.automl.org/).
+Copyright (C) 2016-2022  [AutoML Group](http://www.automl.org/).

@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Mapping, Optional, Tuple
 
 import warnings
 
@@ -29,34 +29,34 @@ class ParallelScheduler(AbstractRacer):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
+    initial_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
+    max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    num_initial_challengers : typing.Optional[int]
+    num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
+    n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
+    instance_order : Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
         slack factor of adpative capping (factor * adaptive cutoff)
-    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional
+    inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_chall: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
@@ -74,19 +74,19 @@ class ParallelScheduler(AbstractRacer):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
+        initial_budget: Optional[float] = None,
+        max_budget: Optional[float] = None,
         eta: float = 3,
-        num_initial_challengers: typing.Optional[int] = None,
+        num_initial_challengers: Optional[int] = None,
         run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
-        instance_order: typing.Optional[str] = "shuffle_once",
+        n_seeds: Optional[int] = None,
+        instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
-        inst_seed_pairs: typing.Optional[typing.List[typing.Tuple[str, int]]] = None,
+        inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         num_obj: int = 1,
@@ -107,18 +107,18 @@ class ParallelScheduler(AbstractRacer):
         )
 
         # We have a pool of instances that yield configurations ot run
-        self.intensifier_instances = {}  # type: typing.Dict[int, AbstractRacer]
+        self.intensifier_instances = {}  # type: Dict[int, AbstractRacer]
         self.print_worker_warning = True
 
     def get_next_run(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
+        challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: typing.Optional[EPMChooser],
+        chooser: Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = False,
         num_workers: int = 1,
-    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    ) -> Tuple[RunInfoIntent, RunInfo]:
         """This procedure decides from which instance to pick a config, in order to determine the
         next run.
 
@@ -130,7 +130,7 @@ class ParallelScheduler(AbstractRacer):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         incumbent: Configuration
             incumbent configuration
@@ -210,12 +210,12 @@ class ParallelScheduler(AbstractRacer):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: typing.Optional[Configuration],
+        incumbent: Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, float]:
+    ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution.
 
@@ -231,7 +231,7 @@ class ParallelScheduler(AbstractRacer):
         ----------
         run_info : RunInfo
             A RunInfo containing the configuration that was evaluated
-        incumbent : typing.Optional[Configuration]
+        incumbent : Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
@@ -276,7 +276,7 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.
 
@@ -298,14 +298,14 @@ class ParallelScheduler(AbstractRacer):
         """
         raise NotImplementedError()
 
-    def _sort_instances_by_stage(self, instances: typing.Dict[int, AbstractRacer]) -> typing.List[int]:
+    def _sort_instances_by_stage(self, instances: Dict[int, AbstractRacer]) -> List[int]:
         """This procedure dictates what SH to prioritize in launching jobs. It prioritizes resource
         allocation to SH instances that have higher stages. In case of tie, we prioritize the SH
         instance with more launched configs.
 
         Parameters
         ----------
-        instances: typing.Dict[int, AbstractRacer]
+        instances: Dict[int, AbstractRacer]
             Dict with the instances to prioritize
 
         Returns

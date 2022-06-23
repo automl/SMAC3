@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple
 
 from subprocess import PIPE, Popen
 
@@ -24,12 +24,12 @@ class ExecuteTARunOld(SerialRunner):
     def run(
         self,
         config: Configuration,
-        instance: typing.Optional[str] = None,
-        cutoff: typing.Optional[float] = None,
+        instance: Optional[str] = None,
+        cutoff: Optional[float] = None,
         seed: int = 12345,
-        budget: typing.Optional[float] = 0.0,
+        budget: Optional[float] = 0.0,
         instance_specific: str = "0",
-    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+    ) -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
         instance specifics.
 
@@ -79,7 +79,7 @@ class ExecuteTARunOld(SerialRunner):
         status_string = "CRASHED"
         quality = 1234567890.0
         runtime = 1234567890.0
-        additional_info = {}  # type: typing.Dict[str, str]
+        additional_info = {}  # type: Dict[str, str]
         for line in stdout_.split("\n"):
             if (
                 line.startswith("Result of this algorithm run:")
@@ -156,10 +156,10 @@ class ExecuteTARunOld(SerialRunner):
         instance_specific: str,
         cutoff: float,
         seed: int,
-    ) -> typing.Tuple[str, str]:
+    ) -> Tuple[str, str]:
 
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
-        cmd = []  # type: typing.List[str]
+        cmd = []  # type: List[str]
         if not isinstance(self.ta, (list, tuple)):
             raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
