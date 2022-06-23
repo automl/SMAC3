@@ -13,7 +13,7 @@ from smac.runhistory.runhistory2epm import (
 
 class RunHistory2EPM4CostWithRaw(RunHistory2EPM4Cost):
     """
-    A transformer that transform RUnHistroy to vectors, this set of classes will return the raw cost values in
+    A transformer that transform RunHistroy to vectors, this set of classes will return the raw cost values in
     addition to the transformed cost values. The raw cost values can then be applied for local BO approaches.
     """
 
