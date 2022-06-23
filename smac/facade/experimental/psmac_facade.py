@@ -1,7 +1,7 @@
 # type: ignore
 # mypy: ignore-errors
 
-from typing import Dict, List, Optional, Type, Union
+from typing import Dict, List, Optional, Union, Type
 
 import copy
 import datetime
@@ -28,11 +28,12 @@ __license__ = "3-clause BSD"
 
 
 def optimize(
-    scenario: Type[Scenario],
-    tae: Type[BaseRunner],
-    tae_kwargs: Dict,
+    scenario: Scenario,
+    tae_runner: Type[BaseRunner],
+    tae_runner_kwargs: Dict,
     rng: Union[np.random.RandomState, int],
     output_dir: str,
+    facade_class: Optional[Type[SMAC4AC]] = None,
     **kwargs,
 ) -> Configuration:
     """
@@ -42,14 +43,14 @@ def optimize(
     ----------
     scenario: Scenario
         smac.Scenario to initialize SMAC
-    tae: BaseRunner
+    tae_runner: BaseRunner
         Target Algorithm Runner (supports old and aclib format)
     tae_runner_kwargs: Optional[dict]
         arguments passed to constructor of '~tae'
     rng: int/np.random.RandomState
         The randomState/seed to pass to each smac run
     output_dir: str
-        The directory in which each smac run should write it's results
+        The directory in which each smac run should write its results
 
     Returns
     -------
@@ -57,7 +58,9 @@ def optimize(
         The incumbent configuration of this run
 
     """
-    solver = SMAC4AC(scenario=scenario, tae_runner=tae, tae_runner_kwargs=tae_kwargs, rng=rng, **kwargs)
+    if facade_class is None:
+        facade_class = SMAC4AC
+    solver = facade_class(scenario=scenario, tae_runner=tae_runner, tae_runner_kwargs=tae_runner_kwargs, rng=rng, **kwargs)
     solver.stats.start_timing()
     solver.stats.print_stats()
 
@@ -71,7 +74,19 @@ def optimize(
 
 class PSMAC(object):
     """
-    Facade to use PSMAC
+    Facade to use pSMAC
+
+    With pSMAC you can either run n distinct SMAC optimizations in parallel
+    (`shared_model=False`) or you can parallelize the target algorithm evaluations
+    (`shared_model=True`).
+    In the latter case all SMAC workers share one file directory and communicate via
+    the logfiles. You can specify the number of SMAC workers/optimizers with the
+    argument `n_optimizers`.
+
+    You can pass all other kwargs for the SMAC4AC facade.
+    In addition, you can access the facade's attributes normally (e.g. smac.stats),
+    however each time a new SMAC object is built, reading the information from the
+    file system.
 
     Parameters
     ----------
@@ -83,10 +98,10 @@ class PSMAC(object):
         The randomState/seed to pass to each smac run
     run_id: int
         run_id for this hydra run
-    tae: BaseRunner
+    tae_runner: BaseRunner
         Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)
-    tae_kwargs: Optional[dict]
-        arguments passed to constructor of '~tae'
+    tae_runner_kwargs: Optional[dict]
+        arguments passed to constructor of '~tae_runner'
     shared_model: bool
         Flag to indicate whether information is shared between SMAC runs or not
     validate: bool / None
@@ -96,9 +111,12 @@ class PSMAC(object):
         Number of incumbents to return (n_incs <= 0 ==> all found configurations)
     val_set: List[str]
         List of instance-ids to validate on
+    **kwargs
+        Keyword arguments for the SMAC4AC facade
 
     Attributes
     ----------
+    # TODO update attributes
     logger
     stats : Stats
         loggs information about used resources
@@ -113,12 +131,13 @@ class PSMAC(object):
 
     def __init__(
         self,
-        scenario: Type[Scenario],
+        scenario: Scenario,
         rng: Optional[Union[np.random.RandomState, int]] = None,
         run_id: int = 1,
-        tae: Type[BaseRunner] = ExecuteTARunOld,
-        tae_kwargs: Union[dict, None] = None,
+        tae_runner: Type[BaseRunner] = ExecuteTARunOld,
+        tae_runner_kwargs: Union[dict, None] = None,
         shared_model: bool = True,
+        facade_class: Optional[Type[SMAC4AC]] = None,
         validate: bool = True,
         n_optimizers: int = 2,
         val_set: Union[List[str], None] = None,
@@ -131,9 +150,12 @@ class PSMAC(object):
         self.run_id, self.rng = get_rng(rng, run_id, logger=self.logger)
         self.kwargs = kwargs
         self.output_dir = None
+        if facade_class is None:
+            facade_class = SMAC4AC
+        self.facade_class = facade_class
         self.rh = RunHistory()
-        self._tae = tae
-        self._tae_kwargs = tae_kwargs
+        self._tae_runner = tae_runner
+        self._tae_runner_kwargs = tae_runner_kwargs
         if n_optimizers <= 1:
             self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
@@ -145,7 +167,7 @@ class PSMAC(object):
         else:
             self.val_set = val_set
 
-    def optimize(self):
+    def optimize(self) -> Union[Configuration, List[Configuration]]:
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
@@ -176,23 +198,28 @@ class PSMAC(object):
 
         incs = joblib.Parallel(n_jobs=self.n_optimizers)(
             joblib.delayed(optimize)(
-                self.scenario,  # Scenario object
-                self._tae,  # type of tae to run target with
-                self._tae_kwargs,
-                p,  # seed for the rng/run_id
-                self.output_dir,  # directory to create outputs in
+                scenario=self.scenario,  # Scenario object
+                tae_runner=self._tae_runner,  # type of tae_runner to run target with
+                tae_runner_kwargs=self._tae_runner_kwargs,
+                rng=p,  # seed for the rng/run_id
+                output_dir=self.output_dir,  # directory to create outputs in
+                facade_class=self.facade_class,
                 **self.kwargs,
             )
             for p in range(self.n_optimizers)
         )
 
+        incs_to_return = None
         if self.n_optimizers == self.n_incs:  # no validation necessary just return all incumbents
-            return incs
+            incs_to_return = incs  # type: List[Configuration]
         else:
             _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
             if val_ids:
-                return [inc for i, inc in enumerate(incs) if i in val_ids]
-            return [inc for i, inc in enumerate(incs) if i in est_ids]
+                incs_to_return = [inc for i, inc in enumerate(incs) if i in val_ids]
+            incs_to_return = [inc for i, inc in enumerate(incs) if i in est_ids]
+        if len(incs_to_return) == 1:
+            incs_to_return = incs_to_return[0]
+        return incs_to_return
 
     def get_best_incumbents_ids(self, incs: List[Configuration]):
         """
@@ -253,9 +280,34 @@ class PSMAC(object):
                 results.append(np.nan)
         return results, config_cost_per_inst
 
+    def _get_solver(self):
+        # TODO specify one output dir or no output dir
+        solver = self.facade_class(scenario=self.scenario, rng=self.rng, run_id=None, **self.kwargs)
+        return solver
+
+    def __getattr__(self, item):
+        smac4ac_attrs = [
+            "get_tae_runner",
+            "get_runhistory",
+            "get_trajectory",
+            "register_callback",
+            "logger",
+            "output_dir",
+            "runhistory",
+            "scenario",
+            "solver",
+            "stats",
+            "trajectory",
+        ]
+        if item in smac4ac_attrs:
+            solver = self._get_solver()
+            return getattr(solver, item)
+        else:
+            return getattr(self, item)
+
     def validate_incs(self, incs: List[Configuration]):
         """Validation of the incumbents."""
-        solver = SMAC4AC(scenario=self.scenario, rng=self.rng, run_id=MAXINT, **self.kwargs)
+        solver = self._get_solver()
         self.logger.info("*" * 120)
         self.logger.info("Validating")
         new_rh = solver.validate(
