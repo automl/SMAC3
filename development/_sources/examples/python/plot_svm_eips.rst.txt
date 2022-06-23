@@ -171,7 +171,7 @@ with a multi-objective model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  6.990 seconds)
+   **Total running time of the script:** ( 0 minutes  4.941 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_svm_eips.py:
