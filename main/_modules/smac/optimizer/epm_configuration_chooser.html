@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.optimizer.epm_configuration_chooser &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.optimizer.epm_configuration_chooser &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.optimizer.epm_configuration_chooser</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -471,7 +471,7 @@ style="width: 100%;">
         <span class="n">acquisition_func</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
         <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="n">modulus</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
+        <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">RandomConfigurationChooser</span> <span class="o">=</span> <span class="n">ChooserNoCoolDown</span><span class="p">(</span><span class="n">modulus</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
         <span class="n">predict_x_best</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">min_samples_model</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">):</span>
@@ -494,7 +494,7 @@ style="width: 100%;">
             <span class="n">rng</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Configuration]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">predict_x_best</span> <span class="o">=</span> <span class="n">predict_x_best</span>
 
@@ -503,7 +503,7 @@ style="width: 100%;">
             <span class="mf">0.0</span><span class="p">,</span>
         <span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_collect_data_to_train_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="c1"># if we use a float value as a budget, we want to train the model only on the highest budget</span>
         <span class="n">available_budgets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">run_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -539,10 +539,10 @@ style="width: 100%;">
             <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_evaluated_configs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">get_all_configs_per_budget</span><span class="p">(</span><span class="n">budget_subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currently_considered_budgets</span><span class="p">)</span>
 
-<div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../api/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="EPMChooser.choose_next"><a class="viewcode-back" href="../../../api/smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser.choose_next">[docs]</a>    <span class="k">def</span> <span class="nf">choose_next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incumbent_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Choose next candidate solution with Bayesian optimization. The suggested configurations</span>
 <span class="sd">        depend on the argument ``acq_optimizer`` to the ``SMBO`` class.</span>
 
@@ -568,7 +568,7 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="n">incumbent_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">best_observation</span> <span class="o">=</span> <span class="n">incumbent_value</span>
-            <span class="n">x_best_array</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: typing.Optional[np.ndarray]</span>
+            <span class="n">x_best_array</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[np.ndarray]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runhistory</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Runhistory is empty and the cost value of &quot;</span> <span class="s2">&quot;the incumbent is unknown.&quot;</span><span class="p">)</span>
@@ -590,7 +590,7 @@ style="width: 100%;">
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">challengers</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_x_best</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predict</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Get value, configuration, and array representation of the &quot;best&quot; configuration.</span>
 
 <span class="sd">        The definition of best varies depending on the argument ``predict``. If set to ``True``,</span>

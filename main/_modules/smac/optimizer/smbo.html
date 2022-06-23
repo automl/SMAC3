@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.optimizer.smbo &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.optimizer.smbo &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.optimizer.smbo</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -534,7 +534,7 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_time</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**-</span><span class="mi">5</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[Configuration]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_design_configs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[Configuration]</span>
 
         <span class="c1"># TODO: consider if we need an additional EPMChooser for multi-objective optimization</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">epm_chooser</span> <span class="o">=</span> <span class="n">EPMChooser</span><span class="p">(</span>
@@ -557,10 +557,10 @@ style="width: 100%;">
 
         <span class="c1"># Callbacks. All known callbacks have a key. If something does not have a key here, there is</span>
         <span class="c1"># no callback available.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_incorporate_run_results&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">()}</span>  <span class="c1"># type: typing.Dict[str, typing.List[typing.Callable]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callbacks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_incorporate_run_results&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">()}</span>  <span class="c1"># type: Dict[str, List[Callable]]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_callback_to_key</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">IncorporateRunResultCallback</span><span class="p">:</span> <span class="s2">&quot;_incorporate_run_results&quot;</span><span class="p">,</span>
-        <span class="p">}</span>  <span class="c1"># type: typing.Dict[typing.Type, str]</span>
+        <span class="p">}</span>  <span class="c1"># type: Dict[Type, str]</span>
 
 <div class="viewcode-block" id="SMBO.start"><a class="viewcode-back" href="../../../api/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Starts the Bayesian Optimization loop.</span>
@@ -754,8 +754,8 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="SMBO.validate"><a class="viewcode-back" href="../../../api/smac.optimizer.smbo.html#smac.optimizer.smbo.SMBO.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">config_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;inc&quot;</span><span class="p">,</span>
-        <span class="n">instance_mode</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;train+test&quot;</span><span class="p">,</span>
+        <span class="n">config_mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;inc&quot;</span><span class="p">,</span>
+        <span class="n">instance_mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;train+test&quot;</span><span class="p">,</span>
         <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">use_epm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
@@ -792,13 +792,13 @@ style="width: 100%;">
             <span class="n">traj_fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;traj_aclib2.json&quot;</span><span class="p">)</span>
             <span class="n">trajectory</span> <span class="o">=</span> <span class="n">TrajLogger</span><span class="o">.</span><span class="n">read_traj_aclib_format</span><span class="p">(</span>
                 <span class="n">fn</span><span class="o">=</span><span class="n">traj_fn</span><span class="p">,</span> <span class="n">cs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config_space</span>
-            <span class="p">)</span>  <span class="c1"># type: typing.Optional[typing.List[typing.Dict[str, typing.Union[float, int, Configuration]]]]</span>
+            <span class="p">)</span>  <span class="c1"># type: Optional[List[Dict[str, Union[float, int, Configuration]]]]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">trajectory</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">:</span>
             <span class="n">new_rh_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">output_dir_for_this_run</span><span class="p">,</span> <span class="s2">&quot;validated_runhistory.json&quot;</span>
-            <span class="p">)</span>  <span class="c1"># type: typing.Optional[str] # noqa E501</span>
+            <span class="p">)</span>  <span class="c1"># type: Optional[str] # noqa E501</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">new_rh_path</span> <span class="o">=</span> <span class="kc">None</span>
 

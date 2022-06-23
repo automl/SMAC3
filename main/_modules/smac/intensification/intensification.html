@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.intensification.intensification &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.intensification.intensification &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.intensification.intensification</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
@@ -503,9 +503,9 @@ style="width: 100%;">
 <span class="sd">    traj_logger: TrajLogger</span>
 <span class="sd">        TrajLogger object to log all new incumbents</span>
 <span class="sd">    rng : np.random.RandomState</span>
-<span class="sd">    instances : typing.List[str]</span>
+<span class="sd">    instances : List[str]</span>
 <span class="sd">        list of all instance ids</span>
-<span class="sd">    instance_specifics : typing.Mapping[str, str]</span>
+<span class="sd">    instance_specifics : Mapping[str, str]</span>
 <span class="sd">        mapping from instance name to instance specific string</span>
 <span class="sd">    cutoff : int</span>
 <span class="sd">        runtime cutoff of TA runs</span>
@@ -539,8 +539,8 @@ style="width: 100%;">
         <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
         <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
-        <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cutoff</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -599,19 +599,19 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># racing related variables</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: typing.List[InstSeedBudgetKey]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[InstSeedBudgetKey]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
 <div class="viewcode-block" id="Intensifier.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This procedure is in charge of generating a RunInfo object to comply with lines 7 (in</span>
 <span class="sd">        case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)</span>
 
@@ -628,7 +628,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">        challengers : List[Configuration]</span>
 <span class="sd">            promising configurations</span>
 <span class="sd">        incumbent: Configuration</span>
 <span class="sd">            incumbent configuration</span>
@@ -858,12 +858,12 @@ style="width: 100%;">
 <div class="viewcode-block" id="Intensifier.process_results"><a class="viewcode-back" href="../../../api/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;The intensifier stage will be updated based on the results/status of a configuration</span>
 <span class="sd">        execution.</span>
 
@@ -883,7 +883,7 @@ style="width: 100%;">
 <span class="sd">        ----------</span>
 <span class="sd">        run_info : RunInfo</span>
 <span class="sd">               A RunInfo containing the configuration that was evaluated</span>
-<span class="sd">        incumbent : typing.Optional[Configuration]</span>
+<span class="sd">        incumbent : Optional[Configuration]</span>
 <span class="sd">            best configuration so far, None in 1st run</span>
 <span class="sd">        run_history : RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
@@ -974,13 +974,13 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_get_next_inc_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">available_insts</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="n">available_insts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Method to extract the next seed/instance in which a incumbent run most be evaluated.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        available_insts : typing.List[str]</span>
+<span class="sd">        available_insts : List[str]</span>
 <span class="sd">            A list of instances from which to extract the next incumbent run</span>
 
 <span class="sd">        Returns</span>
@@ -1016,7 +1016,7 @@ style="width: 100%;">
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Implementation of line 4 of Intensification.</span>
 
 <span class="sd">        This method queries the inc runs in the run history</span>
@@ -1099,7 +1099,7 @@ style="width: 100%;">
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Method to return the next config setting to aggressively race challenger against</span>
 <span class="sd">        incumbent.</span>
 
@@ -1182,7 +1182,7 @@ style="width: 100%;">
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Process the result of a racing configuration against the current incumbent. Might propose</span>
 <span class="sd">        a new incumbent.</span>
 
@@ -1197,7 +1197,7 @@ style="width: 100%;">
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        new_incumbent: typing.Optional[Configuration]</span>
+<span class="sd">        new_incumbent: Optional[Configuration]</span>
 <span class="sd">            Either challenger or incumbent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">chal_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1263,7 +1263,7 @@ style="width: 100%;">
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
         <span class="n">N</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">InstSeedBudgetKey</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Returns the minimum list of &lt;instance, seed&gt; pairs to run the challenger on before</span>
 <span class="sd">        comparing it with the incumbent.</span>
 
@@ -1280,7 +1280,7 @@ style="width: 100%;">
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        typing.List[InstSeedBudgetKey]</span>
+<span class="sd">        List[InstSeedBudgetKey]</span>
 <span class="sd">            list of &lt;instance, seed, budget&gt; tuples to run</span>
 <span class="sd">        float</span>
 <span class="sd">            total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)</span>
@@ -1312,9 +1312,9 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="Intensifier.get_next_challenger"><a class="viewcode-back" href="../../../api/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_challenger</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This function returns the next challenger, that should be exercised though lines 8-17.</span>
 
 <span class="sd">        It does so by populating configs_to_run, which is a pool of configuration</span>
@@ -1332,14 +1332,14 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">        challengers : List[Configuration]</span>
 <span class="sd">            promising configurations</span>
 <span class="sd">        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser</span>
 <span class="sd">            optimizer that generates next configurations to use for racing</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        typing.Optional[Configuration]</span>
+<span class="sd">        Optional[Configuration]</span>
 <span class="sd">            next configuration to evaluate</span>
 <span class="sd">        bool</span>
 <span class="sd">            flag telling if the configuration is newly sampled or one currently being tracked</span>
@@ -1351,7 +1351,7 @@ style="width: 100%;">
             <span class="c1"># this is a new intensification run, get the next list of configurations to run</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span><span class="p">:</span>
                 <span class="n">configs_to_run</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_challengers</span><span class="p">(</span><span class="n">challengers</span><span class="o">=</span><span class="n">challengers</span><span class="p">,</span> <span class="n">chooser</span><span class="o">=</span><span class="n">chooser</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">_config_to_run_type</span><span class="p">,</span> <span class="n">configs_to_run</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">configs_to_run</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">_config_to_run_type</span><span class="p">,</span> <span class="n">configs_to_run</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_configs_to_run</span> <span class="o">=</span> <span class="kc">False</span>
 
             <span class="c1"># pick next configuration from the generator</span>
@@ -1376,22 +1376,22 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="nf">_generate_challengers</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_config_to_run_type</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Retuns a sequence of challengers to use in intensification If challengers are not</span>
 <span class="sd">        provided, then optimizer will be used to generate the challenger list.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">        challengers : List[Configuration]</span>
 <span class="sd">            promising configurations to evaluate next</span>
 <span class="sd">        chooser : smac.optimizer.epm_configuration_chooser.EPMChooser</span>
 <span class="sd">            a sampler that generates next configurations to use for racing</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        typing.Optional[typing.Generator[Configuration]]</span>
+<span class="sd">        Optional[Generator[Configuration]]</span>
 <span class="sd">            A generator containing the next challengers to use</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">challengers</span><span class="p">:</span>
