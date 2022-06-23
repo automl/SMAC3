@@ -1,5 +1,4 @@
-import typing
-from typing import Dict
+from typing import Any, Dict
 
 from enum import Enum
 
