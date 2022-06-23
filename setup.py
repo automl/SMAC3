@@ -16,20 +16,6 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 
 
 def read_file(filepath: str) -> str:
-    """
-    Read in a files contents
-
-    Parameters
-    ----------
-    filepath : str
-        The name of the file.
-
-    Returns
-    -------
-    str
-        The contents of the file.
-    """
-
     with open(filepath, "r", encoding="utf-8") as fh:
         return fh.read()
 
@@ -78,7 +64,7 @@ setuptools.setup(
         "joblib",
         "scikit-learn>=0.22.0",
         "pyrfr>=0.8.0",
-        "dask<2022.6.0",
+        "dask",
         "distributed",
         "emcee>=3.0.0",
     ],
