@@ -22,7 +22,7 @@ efficiently decide which of two configurations performs better.
 SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8 and 3.9. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-If you use SMAC, please cite our paper:
+If you use SMAC, please cite our `JMLR paper <https://jmlr.org/papers/v23/21-0888.html>`_:
 
 .. code-block:: text
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.initial_design.initial_design &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.initial_design.initial_design &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.initial_design.initial_design</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -441,7 +441,7 @@ style="width: 100%;">
 <span class="sd">        design.</span>
 <span class="sd">    ta_run_limit: int</span>
 <span class="sd">        Number of iterations allowed for the target algorithm</span>
-<span class="sd">    configs: typing.Optional[typing.List[Configuration]]</span>
+<span class="sd">    configs: Optional[List[Configuration]]</span>
 <span class="sd">        List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.</span>
 <span class="sd">        Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.</span>
 <span class="sd">    n_configs_x_params: int</span>
@@ -458,7 +458,7 @@ style="width: 100%;">
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    cs : ConfigurationSpace</span>
-<span class="sd">    configs : typing.List[Configuration]</span>
+<span class="sd">    configs : List[Configuration]</span>
 <span class="sd">        List of configurations to be evaluated</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -468,10 +468,10 @@ style="width: 100%;">
         <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
         <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
         <span class="n">ta_run_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">configs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_configs_x_params</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">configs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_configs_x_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">max_config_fracs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
-        <span class="n">init_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">init_budget</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cs</span> <span class="o">=</span> <span class="n">cs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
@@ -503,7 +503,7 @@ style="width: 100%;">
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running initial design for </span><span class="si">%d</span><span class="s2"> configurations&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_budget</span><span class="p">)</span>
 
-<div class="viewcode-block" id="InitialDesign.select_configurations"><a class="viewcode-back" href="../../../api/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.select_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+<div class="viewcode-block" id="InitialDesign.select_configurations"><a class="viewcode-back" href="../../../api/smac.initial_design.initial_design.html#smac.initial_design.initial_design.InitialDesign.select_configurations">[docs]</a>    <span class="k">def</span> <span class="nf">select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Selects the initial configurations.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_configurations</span><span class="p">()</span>
@@ -520,12 +520,12 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">configs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">OrderedDict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">configs</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configs</span></div>
 
-    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_select_configurations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span> <span class="nf">_transform_continuous_designs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">origin</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]:</span>
 
         <span class="n">params</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>

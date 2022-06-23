@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.utils.merge_foreign_data &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.utils.merge_foreign_data &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.utils.merge_foreign_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
 <span class="kn">from</span> <span class="nn">smac.runhistory.runhistory</span> <span class="kn">import</span> <span class="n">DataOrigin</span><span class="p">,</span> <span class="n">RunHistory</span>
@@ -418,10 +418,10 @@ style="width: 100%;">
 <div class="viewcode-block" id="merge_foreign_data_from_file"><a class="viewcode-back" href="../../../api/smac.utils.merge_foreign_data.html#smac.utils.merge_foreign_data.merge_foreign_data_from_file">[docs]</a><span class="k">def</span> <span class="nf">merge_foreign_data_from_file</span><span class="p">(</span>
     <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-    <span class="n">in_scenario_fn_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">in_runhistory_fn_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">in_scenario_fn_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">in_runhistory_fn_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">cs</span><span class="p">:</span> <span class="n">ConfigurationSpace</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another.</span>
 
 <span class="sd">    &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</span>
@@ -432,9 +432,9 @@ style="width: 100%;">
 <span class="sd">        original scenario -- feature dictionary will be extended</span>
 <span class="sd">    runhistory: RunHistory</span>
 <span class="sd">        original runhistory -- will be extended by further data points</span>
-<span class="sd">    in_scenario_fn_list: typing.List[str]</span>
+<span class="sd">    in_scenario_fn_list: List[str]</span>
 <span class="sd">        input scenario file names</span>
-<span class="sd">    in_runhistory_fn_list: typing.List[str]</span>
+<span class="sd">    in_runhistory_fn_list: List[str]</span>
 <span class="sd">        list filenames of runhistory dumps</span>
 <span class="sd">    cs: ConfigurationSpace</span>
 <span class="sd">        parameter configuration space to read runhistory from file</span>
@@ -462,9 +462,9 @@ style="width: 100%;">
 <div class="viewcode-block" id="merge_foreign_data"><a class="viewcode-back" href="../../../api/smac.utils.merge_foreign_data.html#smac.utils.merge_foreign_data.merge_foreign_data">[docs]</a><span class="k">def</span> <span class="nf">merge_foreign_data</span><span class="p">(</span>
     <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
     <span class="n">runhistory</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
-    <span class="n">in_scenario_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
-    <span class="n">in_runhistory_list</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
+    <span class="n">in_scenario_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
+    <span class="n">in_runhistory_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Scenario</span><span class="p">,</span> <span class="n">RunHistory</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Extend &lt;scenario&gt; and &lt;runhistory&gt; with runhistory data from another.</span>
 
 <span class="sd">    &lt;in_scenario&gt; assuming the same pcs, feature space, but different instances</span>
@@ -475,9 +475,9 @@ style="width: 100%;">
 <span class="sd">        original scenario -- feature dictionary will be extended</span>
 <span class="sd">    runhistory: RunHistory</span>
 <span class="sd">        original runhistory -- will be extended by further data points</span>
-<span class="sd">    in_scenario_list: typing.List[Scenario]</span>
+<span class="sd">    in_scenario_list: List[Scenario]</span>
 <span class="sd">        input scenario</span>
-<span class="sd">    in_runhistory_list: typing.List[RunHistory]</span>
+<span class="sd">    in_runhistory_list: List[RunHistory]</span>
 <span class="sd">        list of runhistories wrt &lt;in_scenario&gt;</span>
 
 <span class="sd">    Returns</span>

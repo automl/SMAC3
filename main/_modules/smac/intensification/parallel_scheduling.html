@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.intensification.parallel_scheduling &#8212; SMAC3 Documentation 1.3.3 documentation</title>
+    <title>smac.intensification.parallel_scheduling &#8212; SMAC3 Documentation 1.3.4 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -111,7 +111,7 @@ style="width: 100%;">
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
             <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.3</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -405,7 +405,7 @@ style="width: 100%;">
               <div>
                 
   <h1>Source code for smac.intensification.parallel_scheduling</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">typing</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -436,34 +436,34 @@ style="width: 100%;">
 <span class="sd">    traj_logger: smac.utils.io.traj_logging.TrajLogger</span>
 <span class="sd">        TrajLogger object to log all new incumbents</span>
 <span class="sd">    rng : np.random.RandomState</span>
-<span class="sd">    instances : typing.List[str]</span>
+<span class="sd">    instances : List[str]</span>
 <span class="sd">        list of all instance ids</span>
-<span class="sd">    instance_specifics : typing.Mapping[str, str]</span>
+<span class="sd">    instance_specifics : Mapping[str, str]</span>
 <span class="sd">        mapping from instance name to instance specific string</span>
-<span class="sd">    cutoff : typing.Optional[int]</span>
+<span class="sd">    cutoff : Optional[int]</span>
 <span class="sd">        cutoff of TA runs</span>
 <span class="sd">    deterministic : bool</span>
 <span class="sd">        whether the TA is deterministic or not</span>
-<span class="sd">    initial_budget : typing.Optional[float]</span>
+<span class="sd">    initial_budget : Optional[float]</span>
 <span class="sd">        minimum budget allowed for 1 run of successive halving</span>
-<span class="sd">    max_budget : typing.Optional[float]</span>
+<span class="sd">    max_budget : Optional[float]</span>
 <span class="sd">        maximum budget allowed for 1 run of successive halving</span>
 <span class="sd">    eta : float</span>
 <span class="sd">        &#39;halving&#39; factor after each iteration in a successive halving run. Defaults to 3</span>
-<span class="sd">    num_initial_challengers : typing.Optional[int]</span>
+<span class="sd">    num_initial_challengers : Optional[int]</span>
 <span class="sd">        number of challengers to consider for the initial budget. If None, calculated internally</span>
 <span class="sd">    run_obj_time : bool</span>
 <span class="sd">        whether the run objective is runtime or not (if true, apply adaptive capping)</span>
-<span class="sd">    n_seeds : typing.Optional[int]</span>
+<span class="sd">    n_seeds : Optional[int]</span>
 <span class="sd">        Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0</span>
-<span class="sd">    instance_order : typing.Optional[str]</span>
+<span class="sd">    instance_order : Optional[str]</span>
 <span class="sd">        how to order instances. Can be set to: [None, shuffle_once, shuffle]</span>
 <span class="sd">        * None - use as is given by the user</span>
 <span class="sd">        * shuffle_once - shuffle once and use across all SH run (default)</span>
 <span class="sd">        * shuffle - shuffle before every SH run</span>
 <span class="sd">    adaptive_capping_slackfactor : float</span>
 <span class="sd">        slack factor of adpative capping (factor * adaptive cutoff)</span>
-<span class="sd">    inst_seed_pairs : typing.List[typing.Tuple[str, int]], optional</span>
+<span class="sd">    inst_seed_pairs : List[Tuple[str, int]], optional</span>
 <span class="sd">        Do not set this argument, it will only be used by hyperband!</span>
 <span class="sd">    min_chall: int</span>
 <span class="sd">        minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will</span>
@@ -481,19 +481,19 @@ style="width: 100%;">
         <span class="n">stats</span><span class="p">:</span> <span class="n">Stats</span><span class="p">,</span>
         <span class="n">traj_logger</span><span class="p">:</span> <span class="n">TrajLogger</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span>
-        <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cutoff</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">instance_specifics</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">initial_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">max_budget</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">initial_budget</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_budget</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">eta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_initial_challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">n_seeds</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">instance_order</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">,</span>
+        <span class="n">n_seeds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">instance_order</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;shuffle_once&quot;</span><span class="p">,</span>
         <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
-        <span class="n">inst_seed_pairs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">inst_seed_pairs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">incumbent_selection</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;highest_executed_budget&quot;</span><span class="p">,</span>
         <span class="n">num_obj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -514,18 +514,18 @@ style="width: 100%;">
         <span class="p">)</span>
 
         <span class="c1"># We have a pool of instances that yield configurations ot run</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: typing.Dict[int, AbstractRacer]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensifier_instances</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, AbstractRacer]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">print_worker_warning</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="ParallelScheduler.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">challengers</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
+        <span class="n">challengers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]],</span>
         <span class="n">incumbent</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span>
-        <span class="n">chooser</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
+        <span class="n">chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">EPMChooser</span><span class="p">],</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">repeat_configs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">RunInfoIntent</span><span class="p">,</span> <span class="n">RunInfo</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This procedure decides from which instance to pick a config, in order to determine the</span>
 <span class="sd">        next run.</span>
 
@@ -537,7 +537,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        challengers : typing.List[Configuration]</span>
+<span class="sd">        challengers : List[Configuration]</span>
 <span class="sd">            promising configurations</span>
 <span class="sd">        incumbent: Configuration</span>
 <span class="sd">            incumbent configuration</span>
@@ -617,12 +617,12 @@ style="width: 100%;">
 <div class="viewcode-block" id="ParallelScheduler.process_results"><a class="viewcode-back" href="../../../api/smac.intensification.parallel_scheduling.html#smac.intensification.parallel_scheduling.ParallelScheduler.process_results">[docs]</a>    <span class="k">def</span> <span class="nf">process_results</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">run_info</span><span class="p">:</span> <span class="n">RunInfo</span><span class="p">,</span>
-        <span class="n">incumbent</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
+        <span class="n">incumbent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span>
         <span class="n">run_history</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">,</span>
         <span class="n">time_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">result</span><span class="p">:</span> <span class="n">RunValue</span><span class="p">,</span>
         <span class="n">log_traj</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Configuration</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;The intensifier stage will be updated based on the results/status of a configuration</span>
 <span class="sd">        execution.</span>
 
@@ -638,7 +638,7 @@ style="width: 100%;">
 <span class="sd">        ----------</span>
 <span class="sd">        run_info : RunInfo</span>
 <span class="sd">            A RunInfo containing the configuration that was evaluated</span>
-<span class="sd">        incumbent : typing.Optional[Configuration]</span>
+<span class="sd">        incumbent : Optional[Configuration]</span>
 <span class="sd">            Best configuration seen so far</span>
 <span class="sd">        run_history : RunHistory</span>
 <span class="sd">            stores all runs we ran so far</span>
@@ -683,7 +683,7 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_intensifier_ranking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_intensifier_ranking</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">intensifier</span><span class="p">:</span> <span class="n">AbstractRacer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Given a intensifier, returns how advance it is. This metric will be used to determine</span>
 <span class="sd">        what priority to assign to the intensifier.</span>
 
@@ -705,14 +705,14 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_sort_instances_by_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AbstractRacer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_sort_instances_by_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AbstractRacer</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;This procedure dictates what SH to prioritize in launching jobs. It prioritizes resource</span>
 <span class="sd">        allocation to SH instances that have higher stages. In case of tie, we prioritize the SH</span>
 <span class="sd">        instance with more launched configs.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        instances: typing.Dict[int, AbstractRacer]</span>
+<span class="sd">        instances: Dict[int, AbstractRacer]</span>
 <span class="sd">            Dict with the instances to prioritize</span>
 
 <span class="sd">        Returns</span>
