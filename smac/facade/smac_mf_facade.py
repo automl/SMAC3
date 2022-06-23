@@ -1,4 +1,4 @@
-import typing
+from typing import Any
 
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.initial_design.random_configuration_design import RandomConfigurations
@@ -32,7 +32,7 @@ class SMAC4MF(SMAC4HPO):
         List of all incumbents
     """
 
-    def __init__(self, **kwargs: typing.Any):
+    def __init__(self, **kwargs: Any):
         scenario = kwargs["scenario"]
 
         kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)

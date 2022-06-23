@@ -16,20 +16,6 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 
 
 def read_file(filepath: str) -> str:
-    """
-    Read in a files contents
-
-    Parameters
-    ----------
-    filepath : str
-        The name of the file.
-
-    Returns
-    -------
-    str
-        The contents of the file.
-    """
-
     with open(filepath, "r", encoding="utf-8") as fh:
         return fh.read()
 

@@ -1,4 +1,4 @@
-import typing
+from typing import List
 
 import warnings
 
@@ -20,13 +20,13 @@ class SobolDesign(InitialDesign):
 
     Attributes
     ----------
-    configs : typing.List[Configuration]
+    configs : List[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
     """
 
-    def _select_configurations(self) -> typing.List[Configuration]:
+    def _select_configurations(self) -> List[Configuration]:
         """Selects a single configuration to run.
 
         Returns

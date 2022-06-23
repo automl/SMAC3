@@ -1,4 +1,4 @@
-import typing
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import numpy as np
 
@@ -24,11 +24,11 @@ class SimpleIntensifier(AbstractRacer):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
@@ -41,13 +41,13 @@ class SimpleIntensifier(AbstractRacer):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
         num_obj: int = 1,
-        **kwargs: typing.Any,
+        **kwargs: Any,
     ) -> None:
 
         super().__init__(
@@ -69,17 +69,17 @@ class SimpleIntensifier(AbstractRacer):
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs
         # Below variable tracks active runs not processed
-        self.run_tracker = {}  # type: typing.Dict[typing.Tuple[Configuration, str, int, float], bool]
+        self.run_tracker = {}  # type: Dict[Tuple[Configuration, str, int, float], bool]
 
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: typing.Optional[Configuration],
+        incumbent: Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, float]:
+    ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
 
@@ -87,7 +87,7 @@ class SimpleIntensifier(AbstractRacer):
         ----------
         run_info : RunInfo
                A RunInfo containing the configuration that was evaluated
-        incumbent : typing.Optional[Configuration]
+        incumbent : Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
@@ -130,20 +130,20 @@ class SimpleIntensifier(AbstractRacer):
 
     def get_next_run(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
+        challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: typing.Optional[EPMChooser],
+        chooser: Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    ) -> Tuple[RunInfoIntent, RunInfo]:
         """Selects which challenger to be used. As in a traditional BO loop, we sample from the EPM,
         which is the next configuration based on the acquisition function. The input data is read
         from the runhistory.
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         incumbent: Configuration
             incumbent configuration
