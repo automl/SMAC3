@@ -1,5 +1,5 @@
 import abc
-from typing import Dict, List, Mapping, Optional, Tuple
+import typing
 
 import logging
 
@@ -78,14 +78,14 @@ class AbstractRunHistory2EPM(object):
         self,
         scenario: Scenario,
         num_params: int,
-        success_states: List[StatusType],
+        success_states: typing.List[StatusType],
         impute_censored_data: bool = False,
-        impute_state: Optional[List[StatusType]] = None,
-        consider_for_higher_budgets_state: Optional[List[StatusType]] = None,
-        imputor: Optional[BaseImputor] = None,
+        impute_state: typing.Optional[typing.List[StatusType]] = None,
+        consider_for_higher_budgets_state: typing.Optional[typing.List[StatusType]] = None,
+        imputor: typing.Optional[BaseImputor] = None,
         scale_perc: int = 5,
-        rng: Optional[np.random.RandomState] = None,
-        multi_objective_algorithm: Optional[AggregationStrategy] = None,
+        rng: typing.Optional[np.random.RandomState] = None,
+        multi_objective_algorithm: typing.Optional[AggregationStrategy] = None,
     ) -> None:
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
@@ -117,13 +117,13 @@ class AbstractRunHistory2EPM(object):
 
         if impute_state is None:
             # please mypy
-            self.impute_state = []  # type: List[StatusType]
+            self.impute_state = []  # type: typing.List[StatusType]
         else:
             self.impute_state = impute_state
 
         if consider_for_higher_budgets_state is None:
             # please mypy
-            self.consider_for_higher_budgets_state = []  # type: List[StatusType]
+            self.consider_for_higher_budgets_state = []  # type: typing.List[StatusType]
         else:
             self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
 
@@ -160,11 +160,11 @@ class AbstractRunHistory2EPM(object):
     @abc.abstractmethod
     def _build_matrix(
         self,
-        run_dict: Mapping[RunKey, RunValue],
+        run_dict: typing.Mapping[RunKey, RunValue],
         runhistory: RunHistory,
         return_time_as_y: bool = False,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds x,y matrixes from selected runs from runhistory.
 
         Parameters
@@ -188,8 +188,8 @@ class AbstractRunHistory2EPM(object):
     def _get_s_run_dict(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
-    ) -> Dict[RunKey, RunValue]:
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
         # Get only successfully finished runs
         if budget_subset is not None:
             if len(budget_subset) != 1:
@@ -218,8 +218,8 @@ class AbstractRunHistory2EPM(object):
     def _get_t_run_dict(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
-    ) -> Dict[RunKey, RunValue]:
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Dict[RunKey, RunValue]:
         if budget_subset is not None:
             t_run_dict = {
                 run: runhistory.data[run]
@@ -239,7 +239,7 @@ class AbstractRunHistory2EPM(object):
     def get_configurations(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
+        budget_subset: typing.Optional[typing.List] = None,
     ) -> np.ndarray:
         """Returns vector representation of only the configurations. Instance features are not
         appended and cost values are not taken into account.
@@ -266,8 +266,8 @@ class AbstractRunHistory2EPM(object):
     def transform(
         self,
         runhistory: RunHistory,
-        budget_subset: Optional[List] = None,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        budget_subset: typing.Optional[typing.List] = None,
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Returns vector representation of runhistory; if imputation is disabled, censored (TIMEOUT
         with time < cutoff) will be skipped.
 
@@ -381,7 +381,7 @@ class AbstractRunHistory2EPM(object):
         """
         raise NotImplementedError
 
-    def get_X_y(self, runhistory: RunHistory) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def get_X_y(self, runhistory: RunHistory) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """
         Simple interface to obtain all data in runhistory in X, y format.
         Note: This function should not be used as it does not consider all available StatusTypes.
@@ -424,11 +424,11 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
     def _build_matrix(
         self,
-        run_dict: Mapping[RunKey, RunValue],
+        run_dict: typing.Mapping[RunKey, RunValue],
         runhistory: RunHistory,
         return_time_as_y: bool = False,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """Builds X,y matrixes from selected runs from runhistory.
 
         Parameters
@@ -664,11 +664,11 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
 
     def _build_matrix(
         self,
-        run_dict: Mapping[RunKey, RunValue],
+        run_dict: typing.Mapping[RunKey, RunValue],
         runhistory: RunHistory,
         return_time_as_y: bool = False,
         store_statistics: bool = False,
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> typing.Tuple[np.ndarray, np.ndarray]:
         """TODO."""
         if return_time_as_y:
             raise NotImplementedError()

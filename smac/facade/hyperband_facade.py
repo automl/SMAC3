@@ -1,4 +1,4 @@
-from typing import Any
+import typing
 
 from smac.facade.roar_facade import ROAR
 from smac.initial_design.random_configuration_design import RandomConfigurations
@@ -29,7 +29,7 @@ class HB4AC(ROAR):
         List of all incumbents
     """
 
-    def __init__(self, **kwargs: Any):
+    def __init__(self, **kwargs: typing.Any):
         kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
 
         # Intensification parameters

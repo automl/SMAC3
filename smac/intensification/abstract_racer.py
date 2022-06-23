@@ -1,4 +1,4 @@
-from typing import Iterator, List, Mapping, Optional, Tuple
+import typing
 
 import logging
 import time
@@ -14,7 +14,7 @@ from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.logging import format_array
 
-_config_to_run_type = Iterator[Optional[Configuration]]
+_config_to_run_type = typing.Iterator[typing.Optional[Configuration]]
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -53,9 +53,9 @@ class AbstractRacer(object):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : List[str]
+    instances : typing.List[str]
         list of all instance ids
-    instance_specifics : Mapping[str, str]
+    instance_specifics : typing.Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : float
         runtime cutoff of TA runs
@@ -80,9 +80,9 @@ class AbstractRacer(object):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: List[str],
-        instance_specifics: Optional[Mapping[str, str]] = None,
-        cutoff: Optional[float] = None,
+        instances: typing.List[str],
+        instance_specifics: typing.Optional[typing.Mapping[str, str]] = None,
+        cutoff: typing.Optional[float] = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
         minR: int = 1,
@@ -114,7 +114,7 @@ class AbstractRacer(object):
         # removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
         if instance_specifics is None:
-            self.instance_specifics = {}  # type: Mapping[str, str]
+            self.instance_specifics = {}  # type: typing.Mapping[str, str]
         else:
             self.instance_specifics = instance_specifics
 
@@ -137,13 +137,13 @@ class AbstractRacer(object):
 
     def get_next_run(
         self,
-        challengers: Optional[List[Configuration]],
+        challengers: typing.Optional[typing.List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: typing.Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> Tuple[RunInfoIntent, RunInfo]:
+    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
         """Abstract method for choosing the next challenger, to allow for different selections
         across intensifiers uses ``_next_challenger()`` by default.
 
@@ -152,7 +152,7 @@ class AbstractRacer(object):
 
         Parameters
         ----------
-        challengers : List[Configuration]
+        challengers : typing.List[Configuration]
             promising configurations
         incumbent: Configuration
              incumbent configuration
@@ -178,12 +178,12 @@ class AbstractRacer(object):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: Optional[Configuration],
+        incumbent: typing.Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> Tuple[Configuration, float]:
+    ) -> typing.Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
 
@@ -191,7 +191,7 @@ class AbstractRacer(object):
         ----------
         run_info : RunInfo
                A RunInfo containing the configuration that was evaluated
-        incumbent : Optional[Configuration]
+        incumbent : typing.Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
@@ -215,17 +215,17 @@ class AbstractRacer(object):
 
     def _next_challenger(
         self,
-        challengers: Optional[List[Configuration]],
-        chooser: Optional[EPMChooser],
+        challengers: typing.Optional[typing.List[Configuration]],
+        chooser: typing.Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
-    ) -> Optional[Configuration]:
+    ) -> typing.Optional[Configuration]:
         """Retuns the next challenger to use in intensification If challenger is None, then
         optimizer will be used to generate the next challenger.
 
         Parameters
         ----------
-        challengers : List[Configuration]
+        challengers : typing.List[Configuration]
             promising configurations to evaluate next
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             a sampler that generates next configurations to use for racing
@@ -315,7 +315,7 @@ class AbstractRacer(object):
         challenger: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> Optional[Configuration]:
+    ) -> typing.Optional[Configuration]:
         """Compare two configuration wrt the runhistory and return the one which performs better (or
         None if the decision is not safe)
 

@@ -1,4 +1,4 @@
-from typing import Any, Type
+import typing
 
 import numpy as np
 
@@ -52,7 +52,7 @@ class SMAC4BB(SMAC4AC):
         List of all incumbents
     """
 
-    def __init__(self, model_type: str = "gp_mcmc", **kwargs: Any):
+    def __init__(self, model_type: str = "gp_mcmc", **kwargs: typing.Any):
         scenario = kwargs["scenario"]
 
         if len(scenario.cs.get_hyperparameters()) <= 21201:
@@ -126,7 +126,7 @@ class SMAC4BB(SMAC4AC):
                 raise ValueError()
 
             if model_type == "gp":
-                model_class = GaussianProcess  # type: Type[BaseModel]
+                model_class = GaussianProcess  # type: typing.Type[BaseModel]
                 kwargs["model"] = model_class
                 model_kwargs["kernel"] = kernel
                 model_kwargs["normalize_y"] = True

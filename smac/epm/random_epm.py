@@ -83,7 +83,7 @@ class RandomEPM(AbstractEPM):
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
-        cov_return_type: Optional[str]
+        cov_return_type: typing.Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns

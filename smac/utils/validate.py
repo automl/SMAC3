@@ -1,4 +1,5 @@
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, cast
+import typing
+from typing import Union
 
 import logging
 import os
@@ -28,10 +29,10 @@ __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 def _unbound_tae_starter(
     tae: BaseRunner,
-    runhistory: Optional[RunHistory],
+    runhistory: typing.Optional[RunHistory],
     run_info: RunInfo,
-    *args: Any,
-    **kwargs: Any,
+    *args: typing.Any,
+    **kwargs: typing.Any,
 ) -> RunValue:
     """Unbound function to be used by joblibs Parallel, since directly passing the TAE results in
     pickling-problems.
@@ -92,14 +93,14 @@ class Validator(object):
     def __init__(
         self,
         scenario: Scenario,
-        trajectory: Optional[List],
+        trajectory: typing.Optional[typing.List],
         rng: Union[np.random.RandomState, int, None] = None,
     ) -> None:
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.traj = trajectory
         self.scen = scenario
-        self.epm = None  # type: Optional[RandomForestWithInstances]
+        self.epm = None  # type: typing.Optional[RandomForestWithInstances]
 
         if isinstance(rng, np.random.RandomState):
             self.rng = rng
@@ -113,8 +114,8 @@ class Validator(object):
     def _save_results(
         self,
         rh: RunHistory,
-        output_fn: Optional[str],
-        backup_fn: Optional[str] = None,
+        output_fn: typing.Optional[str],
+        backup_fn: typing.Optional[str] = None,
     ) -> None:
         """Helper to save results to file.
 
@@ -149,14 +150,14 @@ class Validator(object):
 
     def validate(
         self,
-        config_mode: Union[str, List[Configuration]] = "def",
-        instance_mode: Union[str, List[str]] = "test",
+        config_mode: Union[str, typing.List[Configuration]] = "def",
+        instance_mode: Union[str, typing.List[str]] = "test",
         repetitions: int = 1,
         n_jobs: int = 1,
         backend: str = "threading",
-        runhistory: Optional[RunHistory] = None,
+        runhistory: typing.Optional[RunHistory] = None,
         tae: BaseRunner = None,
-        output_fn: Optional[str] = None,
+        output_fn: typing.Optional[str] = None,
     ) -> RunHistory:
         """Validate configs on instances and save result in runhistory. If a runhistory is provided
         as input it is important that you run it on the same/comparable hardware.
@@ -254,11 +255,11 @@ class Validator(object):
     def _validate_parallel(
         self,
         tae: BaseRunner,
-        runs: List[_Run],
+        runs: typing.List[_Run],
         n_jobs: int,
         backend: str,
-        runhistory: Optional[RunHistory] = None,
-    ) -> List[RunValue]:
+        runhistory: typing.Optional[RunHistory] = None,
+    ) -> typing.List[RunValue]:
         """Validate runs with joblibs Parallel-interface.
 
         Parameters
@@ -301,11 +302,11 @@ class Validator(object):
 
     def validate_epm(
         self,
-        config_mode: Union[str, List[Configuration]] = "def",
-        instance_mode: Union[str, List[str]] = "test",
+        config_mode: Union[str, typing.List[Configuration]] = "def",
+        instance_mode: Union[str, typing.List[str]] = "test",
         repetitions: int = 1,
-        runhistory: Optional[RunHistory] = None,
-        output_fn: Optional[str] = None,
+        runhistory: typing.Optional[RunHistory] = None,
+        output_fn: typing.Optional[str] = None,
         reuse_epm: bool = True,
     ) -> RunHistory:
         """Use EPM to predict costs/runtimes for unknown config/inst-pairs.
@@ -387,7 +388,7 @@ class Validator(object):
             # Train random forest
             epm.train(X, y)
         else:
-            epm = cast(RandomForestWithInstances, self.epm)
+            epm = typing.cast(RandomForestWithInstances, self.epm)
 
         # Predict desired runs
         runs, rh_epm = self._get_runs(config_mode, instance_mode, repetitions, runhistory)
@@ -430,11 +431,11 @@ class Validator(object):
 
     def _get_runs(
         self,
-        configs: Union[str, List[Configuration]],
-        insts: Union[str, List[str]],
+        configs: Union[str, typing.List[Configuration]],
+        insts: Union[str, typing.List[str]],
         repetitions: int = 1,
         runhistory: RunHistory = None,
-    ) -> Tuple[List[_Run], RunHistory]:
+    ) -> typing.Tuple[typing.List[_Run], RunHistory]:
         """Generate list of SMAC-TAE runs to be executed. This means combinations of configs with
         all instances on a certain number of seeds.
 
@@ -468,7 +469,7 @@ class Validator(object):
         if isinstance(configs, str):
             configs = self._get_configs(configs)
         if isinstance(insts, str):
-            instances = sorted(self._get_instances(insts))  # type: Sequence[Union[str, None]]
+            instances = sorted(self._get_instances(insts))  # type: typing.Sequence[typing.Union[str, None]]
         elif insts is not None:
             instances = sorted(insts)
         else:
@@ -553,10 +554,10 @@ class Validator(object):
 
     def _process_runhistory(
         self,
-        configs: List[Configuration],
-        insts: Sequence[Optional[str]],
-        runhistory: Optional[RunHistory],
-    ) -> Dict[str, List[Tuple[int, List[Configuration]]]]:
+        configs: typing.List[Configuration],
+        insts: typing.Sequence[typing.Optional[str]],
+        runhistory: typing.Optional[RunHistory],
+    ) -> typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]:
         """Processes runhistory from self._get_runs by extracting already evaluated (relevant)
         config-inst-seed tuples.
 
@@ -581,7 +582,7 @@ class Validator(object):
         # Like this we can easily retrieve the most used instance-seed pairs to
         # minimize the number of runs to be evaluated
         if runhistory:
-            inst_seed_config = {}  # type: Dict[str, Dict[int, List[Configuration]]]
+            inst_seed_config = {}  # type: typing.Dict[str, typing.Dict[int, typing.List[Configuration]]]
             relevant = dict()
             for key in runhistory.data:
                 if runhistory.ids_config[key.config_id] in configs and key.instance_id in insts:
@@ -608,10 +609,10 @@ class Validator(object):
                 for i in inst_seed_config
             }
         else:
-            rval = {}  # type: Dict[str, List[Tuple[int, List[Configuration]]]]
+            rval = {}  # type: typing.Dict[str, typing.List[typing.Tuple[int, typing.List[Configuration]]]]
             return rval
 
-    def _get_configs(self, mode: str) -> List[str]:
+    def _get_configs(self, mode: str) -> typing.List[str]:
         """Return desired configs.
 
         Parameters
@@ -663,7 +664,7 @@ class Validator(object):
         self.logger.debug("Gathered %d configurations for mode %s.", len(configs), mode)
         return configs
 
-    def _get_instances(self, mode: str) -> List[str]:
+    def _get_instances(self, mode: str) -> typing.List[str]:
         """Get desired instances.
 
         Parameters
@@ -693,7 +694,7 @@ class Validator(object):
             )
             instance_mode = "train+test"
 
-        instances = []  # type: List[str]
+        instances = []  # type: typing.List[str]
         if (instance_mode == "train" or instance_mode == "train+test") and not self.scen.train_insts == [None]:
             instances.extend(self.scen.train_insts)
         if (instance_mode == "test" or instance_mode == "train+test") and not self.scen.test_insts == [None]:

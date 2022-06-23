@@ -1,4 +1,4 @@
-from typing import Any
+import typing
 
 from smac.epm.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
@@ -32,7 +32,7 @@ class SMAC4HPO(SMAC4AC):
         List of all incumbents
     """
 
-    def __init__(self, **kwargs: Any):
+    def __init__(self, **kwargs: typing.Any):
         scenario = kwargs["scenario"]
 
         kwargs["initial_design"] = kwargs.get("initial_design", SobolDesign)

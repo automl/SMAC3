@@ -1,4 +1,4 @@
-from typing import List
+import typing
 
 from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
@@ -16,13 +16,13 @@ class LHDesign(InitialDesign):
 
     Attributes
     ----------
-    configs : List[Configuration]
+    configs : typing.List[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten
     """
 
-    def _select_configurations(self) -> List[Configuration]:
+    def _select_configurations(self) -> typing.List[Configuration]:
         """Selects a single configuration to run.
 
         Returns

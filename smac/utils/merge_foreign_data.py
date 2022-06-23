@@ -1,4 +1,4 @@
-from typing import List, Tuple
+import typing
 
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import DataOrigin, RunHistory
@@ -11,10 +11,10 @@ __license__ = "3-clause BSD"
 def merge_foreign_data_from_file(
     scenario: Scenario,
     runhistory: RunHistory,
-    in_scenario_fn_list: List[str],
-    in_runhistory_fn_list: List[str],
+    in_scenario_fn_list: typing.List[str],
+    in_runhistory_fn_list: typing.List[str],
     cs: ConfigurationSpace,
-) -> Tuple[Scenario, RunHistory]:
+) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another.
 
     <in_scenario> assuming the same pcs, feature space, but different instances
@@ -25,9 +25,9 @@ def merge_foreign_data_from_file(
         original scenario -- feature dictionary will be extended
     runhistory: RunHistory
         original runhistory -- will be extended by further data points
-    in_scenario_fn_list: List[str]
+    in_scenario_fn_list: typing.List[str]
         input scenario file names
-    in_runhistory_fn_list: List[str]
+    in_runhistory_fn_list: typing.List[str]
         list filenames of runhistory dumps
     cs: ConfigurationSpace
         parameter configuration space to read runhistory from file
@@ -55,9 +55,9 @@ def merge_foreign_data_from_file(
 def merge_foreign_data(
     scenario: Scenario,
     runhistory: RunHistory,
-    in_scenario_list: List[Scenario],
-    in_runhistory_list: List[RunHistory],
-) -> Tuple[Scenario, RunHistory]:
+    in_scenario_list: typing.List[Scenario],
+    in_runhistory_list: typing.List[RunHistory],
+) -> typing.Tuple[Scenario, RunHistory]:
     """Extend <scenario> and <runhistory> with runhistory data from another.
 
     <in_scenario> assuming the same pcs, feature space, but different instances
@@ -68,9 +68,9 @@ def merge_foreign_data(
         original scenario -- feature dictionary will be extended
     runhistory: RunHistory
         original runhistory -- will be extended by further data points
-    in_scenario_list: List[Scenario]
+    in_scenario_list: typing.List[Scenario]
         input scenario
-    in_runhistory_list: List[RunHistory]
+    in_runhistory_list: typing.List[RunHistory]
         list of runhistories wrt <in_scenario>
 
     Returns

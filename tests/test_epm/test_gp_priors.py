@@ -145,7 +145,7 @@ class TestGammaPrior(unittest.TestCase):
 
         # Legal scalar
         x = -1
-        self.assertAlmostEqual(prior.lnprob(x), -0.46155023, 7)
+        self.assertEqual(prior.lnprob(x), -0.46155023498761205)
         self.assertEqual(prior.gradient(x), -1.2357588823428847)
 
     def test_lnprob_and_grad_array(self):

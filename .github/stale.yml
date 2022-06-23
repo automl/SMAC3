@@ -6,16 +6,11 @@ daysUntilClose: 7
 
 # Issues with these labels will never be considered stale
 exemptLabels:
-  - bug
-  - dependency
-  - documentation
-  - enhancement
-  - feature
-  - test
-  - example
+  - pinned
+  - security
 
 # Label to use when marking an issue as stale
-staleLabel: stale
+staleLabel: wontfix
 
 # Comment to post when marking an issue as stale. Set to `false` to disable
 markComment: >

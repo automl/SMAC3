@@ -1,4 +1,4 @@
-from typing import List, Optional
+import typing
 
 import logging
 from collections import OrderedDict
@@ -34,7 +34,7 @@ class InitialDesign:
         design.
     ta_run_limit: int
         Number of iterations allowed for the target algorithm
-    configs: Optional[List[Configuration]]
+    configs: typing.Optional[typing.List[Configuration]]
         List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
         Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
     n_configs_x_params: int
@@ -51,7 +51,7 @@ class InitialDesign:
     Attributes
     ----------
     cs : ConfigurationSpace
-    configs : List[Configuration]
+    configs : typing.List[Configuration]
         List of configurations to be evaluated
     """
 
@@ -61,10 +61,10 @@ class InitialDesign:
         rng: np.random.RandomState,
         traj_logger: TrajLogger,
         ta_run_limit: int,
-        configs: Optional[List[Configuration]] = None,
-        n_configs_x_params: Optional[int] = 10,
+        configs: typing.Optional[typing.List[Configuration]] = None,
+        n_configs_x_params: typing.Optional[int] = 10,
         max_config_fracs: float = 0.25,
-        init_budget: Optional[int] = None,
+        init_budget: typing.Optional[int] = None,
     ):
         self.cs = cs
         self.rng = rng
@@ -96,7 +96,7 @@ class InitialDesign:
             )
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
-    def select_configurations(self) -> List[Configuration]:
+    def select_configurations(self) -> typing.List[Configuration]:
         """Selects the initial configurations."""
         if self.configs is None:
             self.configs = self._select_configurations()
@@ -113,12 +113,12 @@ class InitialDesign:
         self.configs = list(OrderedDict.fromkeys(self.configs))
         return self.configs
 
-    def _select_configurations(self) -> List[Configuration]:
+    def _select_configurations(self) -> typing.List[Configuration]:
         raise NotImplementedError
 
     def _transform_continuous_designs(
         self, design: np.ndarray, origin: str, cs: ConfigurationSpace
-    ) -> List[Configuration]:
+    ) -> typing.List[Configuration]:
 
         params = cs.get_hyperparameters()
         for idx, param in enumerate(params):

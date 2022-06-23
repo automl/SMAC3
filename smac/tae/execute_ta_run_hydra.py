@@ -1,4 +1,4 @@
-from typing import Any, Dict, Mapping, Optional, Tuple, Type
+import typing
 
 from smac.configspace import Configuration
 from smac.tae import StatusType
@@ -17,17 +17,17 @@ class ExecuteTARunHydra(SerialRunner):
 
     Parameters
     ----------
-    cost_oracle: Mapping[str,float]
+    cost_oracle: typing.Mapping[str,float]
         cost of oracle per instance
-    tae: Type[SerialRunner]
+    tae: typing.Type[SerialRunner]
         target algorithm evaluator
     """
 
     def __init__(
         self,
-        cost_oracle: Mapping[str, float],
-        tae: Type[SerialRunner] = ExecuteTARunOld,
-        **kwargs: Any,
+        cost_oracle: typing.Mapping[str, float],
+        tae: typing.Type[SerialRunner] = ExecuteTARunOld,
+        **kwargs: typing.Any,
     ) -> None:
         super().__init__(**kwargs)
         self.cost_oracle = cost_oracle
@@ -46,11 +46,11 @@ class ExecuteTARunHydra(SerialRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        cutoff: typing.Optional[float] = None,
         seed: int = 12345,
-        budget: Optional[float] = None,
+        budget: typing.Optional[float] = None,
         instance_specific: str = "0",
-    ) -> Tuple[StatusType, float, float, Dict]:
+    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
         """See ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring."""
         if cutoff is None:
             raise ValueError("Cutoff of type None is not supported")

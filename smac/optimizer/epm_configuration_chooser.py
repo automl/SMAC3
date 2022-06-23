@@ -1,4 +1,4 @@
-from typing import Iterator, List, Optional, Tuple
+import typing
 
 import logging
 
@@ -64,7 +64,7 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
     ):
@@ -87,7 +87,7 @@ class EPMChooser(object):
             rng,
         )
 
-        self.initial_design_configs = []  # type: List[Configuration]
+        self.initial_design_configs = []  # type: typing.List[Configuration]
 
         self.predict_x_best = predict_x_best
 
@@ -96,7 +96,7 @@ class EPMChooser(object):
             0.0,
         ]
 
-    def _collect_data_to_train_model(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    def _collect_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
         for run_key in self.runhistory.data.keys():
@@ -132,10 +132,10 @@ class EPMChooser(object):
             np.empty(shape=[0, 0]),
         )
 
-    def _get_evaluated_configs(self) -> List[Configuration]:
+    def _get_evaluated_configs(self) -> typing.List[Configuration]:
         return self.runhistory.get_all_configs_per_budget(budget_subset=self.currently_considered_budgets)
 
-    def choose_next(self, incumbent_value: float = None) -> Iterator[Configuration]:
+    def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
         depend on the argument ``acq_optimizer`` to the ``SMBO`` class.
 
@@ -161,7 +161,7 @@ class EPMChooser(object):
 
         if incumbent_value is not None:
             best_observation = incumbent_value
-            x_best_array = None  # type: Optional[np.ndarray]
+            x_best_array = None  # type: typing.Optional[np.ndarray]
         else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
@@ -183,7 +183,7 @@ class EPMChooser(object):
         )
         return challengers
 
-    def _get_x_best(self, predict: bool, X: np.ndarray) -> Tuple[np.ndarray, float]:
+    def _get_x_best(self, predict: bool, X: np.ndarray) -> typing.Tuple[np.ndarray, float]:
         """Get value, configuration, and array representation of the "best" configuration.
 
         The definition of best varies depending on the argument ``predict``. If set to ``True``,
