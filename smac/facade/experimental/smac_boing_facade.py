@@ -20,9 +20,15 @@ class SMAC4BOING(SMAC4HPO):
     SMAC wrapper for  BO inside Grove(BOinG):
         Deng and Lindauer, Searching in the Forest for Local Bayesian Optimization
         https://arxiv.org/abs/2111.05834
+
     BOiNG is a two-stages optimizer: at the first stage, the global optimizer extracts the global optimum with a random
     forest (RF) model. Then in the second stage, the optimizer constructs a local model in the vicinity of the
     configuration suggested by the global surrogate model.
+
+    Its Hyperparameter settings follow the implementation from smac.facade.smac_bb_facade.SMAC4BB:
+    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
+    "Towards Assessing the Impact of Bayesian Optimization's Own Hyperparameters" by Lindauer et al., presented at the
+    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
     """
 
     def __init__(self, **kwargs: Any):
@@ -36,6 +42,7 @@ class SMAC4BOING(SMAC4HPO):
         epm_chooser_kwargs = smbo_kwargs.get("epm_chooser_kwargs", None)
 
         if epm_chooser_kwargs is None or epm_chooser_kwargs.get("model_local") is None:
+            # The lower bound and upper bounds are set to be identical as SMAC4BB
             cont_kernel_kwargs = {
                 "lengthscale_constraint": Interval(
                     np.exp(-6.754111155189306), np.exp(0.0858637988771976), transform=None, initial_value=1.0
