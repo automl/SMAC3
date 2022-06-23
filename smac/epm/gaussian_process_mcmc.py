@@ -1,4 +1,4 @@
-import typing
+from typing import List, Optional, Tuple, Union, cast
 
 import logging
 import warnings
@@ -74,8 +74,8 @@ class GaussianProcessMCMC(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         seed: int,
         kernel: Kernel,
         n_mcmc_walkers: int = 20,
@@ -84,8 +84,8 @@ class GaussianProcessMCMC(BaseModel):
         normalize_y: bool = True,
         mcmc_sampler: str = "emcee",
         average_samples: bool = False,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ):
         super().__init__(
             configspace=configspace,
@@ -101,7 +101,7 @@ class GaussianProcessMCMC(BaseModel):
         self.chain_length = chain_length
         self.burned = False
         self.burnin_steps = burnin_steps
-        self.models = []  # type: typing.List[GaussianProcess]
+        self.models = []  # type: List[GaussianProcess]
         self.normalize_y = normalize_y
         self.mcmc_sampler = mcmc_sampler
         self.average_samples = average_samples
@@ -155,7 +155,7 @@ class GaussianProcessMCMC(BaseModel):
                     # Initialize the walkers by sampling from the prior
                     dim_samples = []
 
-                    prior = None  # type: typing.Optional[typing.Union[typing.List[Prior], Prior]]
+                    prior = None  # type: Optional[Union[List[Prior], Prior]]
                     for dim, prior in enumerate(self._all_priors):
                         # Always sample from the first prior
                         if isinstance(prior, list):
@@ -163,7 +163,7 @@ class GaussianProcessMCMC(BaseModel):
                                 prior = None
                             else:
                                 prior = prior[0]
-                        prior = typing.cast(typing.Optional[Prior], prior)
+                        prior = cast(Optional[Prior], prior)
                         if prior is None:
                             raise NotImplementedError()
                         else:
@@ -325,7 +325,7 @@ class GaussianProcessMCMC(BaseModel):
         else:
             return lml
 
-    def _ll_w_grad(self, theta: np.ndarray) -> typing.Tuple[float, np.ndarray]:
+    def _ll_w_grad(self, theta: np.ndarray) -> Tuple[float, np.ndarray]:
         """Returns the marginal log likelihood (+ the prior) for a hyperparameter configuration
         theta.
 
@@ -375,8 +375,8 @@ class GaussianProcessMCMC(BaseModel):
             return lml, grad
 
     def _predict(
-        self, X_test: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, np.ndarray]:
+        self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, np.ndarray]:
         r"""
         Returns the predictive mean and variance of the objective function
         at X average over all hyperparameter samples.
@@ -389,7 +389,7 @@ class GaussianProcessMCMC(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns

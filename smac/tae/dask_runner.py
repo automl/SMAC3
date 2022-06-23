@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple
 
 import os
 import time
@@ -82,8 +82,8 @@ class DaskParallelRunner(BaseRunner):
         single_worker: BaseRunner,
         n_workers: int,
         patience: int = 5,
-        output_directory: typing.Optional[str] = None,
-        dask_client: typing.Optional[dask.distributed.Client] = None,
+        output_directory: Optional[str] = None,
+        dask_client: Optional[dask.distributed.Client] = None,
     ):
         super(DaskParallelRunner, self).__init__(
             ta=single_worker.ta,
@@ -122,7 +122,7 @@ class DaskParallelRunner(BaseRunner):
         else:
             self.close_client_at_del = False
             self.client = dask_client
-        self.futures = []  # type: typing.List[Future]
+        self.futures = []  # type: List[Future]
 
         self.scheduler_info = self.client._get_scheduler_info()
 
@@ -168,7 +168,7 @@ class DaskParallelRunner(BaseRunner):
         #   http://distributed.dask.org/en/stable/client.html#pure-functions-by-default
         self.futures.append(self.client.submit(self.single_worker.run_wrapper, run_info, pure=False))
 
-    def get_finished_runs(self) -> typing.List[typing.Tuple[RunInfo, RunValue]]:
+    def get_finished_runs(self) -> List[Tuple[RunInfo, RunValue]]:
         """This method returns any finished configuration, and returns a list with the results of
         exercising the configurations. This class keeps populating results to self.results until a
         call to get_finished runs is done. In this case, the self.results list is emptied and all
@@ -233,11 +233,11 @@ class DaskParallelRunner(BaseRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: typing.Optional[float] = None,
+        cutoff: Optional[float] = None,
         seed: int = 12345,
-        budget: typing.Optional[float] = None,
+        budget: Optional[float] = None,
         instance_specific: str = "0",
-    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+    ) -> Tuple[StatusType, float, float, Dict]:
         """This method only complies with the abstract parent class. In the parallel case, we call
         the single worker run() method.
 

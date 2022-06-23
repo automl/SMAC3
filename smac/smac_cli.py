@@ -1,4 +1,4 @@
-import typing
+from typing import List, Optional, Tuple
 
 import logging
 import os
@@ -40,7 +40,7 @@ class SMACCLI(object):
     def __init__(self) -> None:
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-    def main_cli(self, commandline_arguments: typing.Optional[typing.List[str]] = None) -> None:
+    def main_cli(self, commandline_arguments: Optional[List[str]] = None) -> None:
         """Main function of SMAC for CLI interface."""
         self.logger.info("SMAC call: %s" % (" ".join(sys.argv)))
 
@@ -181,7 +181,7 @@ class SMACCLI(object):
         self,
         scen: Scenario,
         restore_state: str,
-    ) -> typing.Tuple[RunHistory, Stats, typing.List, typing.List]:
+    ) -> Tuple[RunHistory, Stats, List, List]:
         """Read in files for state-restoration: runhistory, stats, trajectory."""
         # Check for folder and files
         rh_path = os.path.join(restore_state, "runhistory.json")
@@ -208,8 +208,8 @@ class SMACCLI(object):
         self,
         scen: Scenario,
         stats: Stats,
-        traj_list_aclib: typing.List,
-        traj_list_old: typing.List,
+        traj_list_aclib: List,
+        traj_list_old: List,
     ) -> Configuration:
         """Finish processing files for state-restoration.
 

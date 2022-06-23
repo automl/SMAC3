@@ -1,4 +1,4 @@
-import typing
+from typing import Optional
 
 import json
 import logging
@@ -74,7 +74,7 @@ class Stats(object):
         with open(path, "w") as fh:
             json.dump(data, fh)
 
-    def load(self, fn: typing.Optional[str] = None) -> None:
+    def load(self, fn: Optional[str] = None) -> None:
         """Load all attributes from dictionary in file into stats-object.
 
         Parameters

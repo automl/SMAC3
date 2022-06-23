@@ -1,5 +1,5 @@
-import typing
 from abc import ABC
+from typing import Optional
 
 import numpy as np
 
@@ -10,7 +10,7 @@ class AbstractMultiObjectiveAlgorithm(ABC):
     It can be applied to rh2epm or epmchooser.
     """
 
-    def __init__(self, num_obj: int, rng: typing.Optional[np.random.RandomState] = None):
+    def __init__(self, num_obj: int, rng: Optional[np.random.RandomState] = None):
 
         if rng is None:
             rng = np.random.RandomState(0)
