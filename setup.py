@@ -78,7 +78,7 @@ setuptools.setup(
         "joblib",
         "scikit-learn>=0.22.0",
         "pyrfr>=0.8.0",
-        "dask",
+        "dask<2022.6.0",
         "distributed",
         "emcee>=3.0.0",
     ],
