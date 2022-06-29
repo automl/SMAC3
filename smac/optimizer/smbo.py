@@ -113,8 +113,8 @@ class SMBO(object):
         random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        epm_chooser: typing.Type[EPMChooser] = EPMChooser,
-        epm_chooser_kwargs: typing.Optional[typing.Dict] = None,
+        epm_chooser: Type[EPMChooser] = EPMChooser,
+        epm_chooser_kwargs: Optional[Dict] = None,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
