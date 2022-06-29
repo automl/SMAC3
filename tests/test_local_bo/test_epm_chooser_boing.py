@@ -14,7 +14,7 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.util_funcs import check_points_in_ss, get_types
+from smac.epm.util_funcs import check_subspace_points, get_types
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.optimizer.local_bo.epm_chooser_boing import (
@@ -258,18 +258,18 @@ class TestSubSpaceExtraction(unittest.TestCase):
             num_min=num_min, num_max=np.inf, **ss_extraction_kwargs
         )
         self.assertTrue(num_min <= sum(ss_indices))
-        x_in_ss = check_points_in_ss(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
+        x_in_ss = check_subspace_points(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertTrue(x_in_ss[0])
-        ss_indices_re_exam = check_points_in_ss(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
+        ss_indices_re_exam = check_subspace_points(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertEqual(sum(ss_indices), sum(ss_indices_re_exam))
 
         ss_bounds_cont, ss_bounds_cat, ss_indices = subspace_extraction(
             num_min=num_min, num_max=num_max, **ss_extraction_kwargs
         )
         self.assertTrue(num_min <= sum(ss_indices) <= num_max)
-        x_in_ss = check_points_in_ss(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
+        x_in_ss = check_subspace_points(X_inc, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertTrue(x_in_ss[0])
-        ss_indices_re_exam = check_points_in_ss(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
+        ss_indices_re_exam = check_subspace_points(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertEqual(sum(ss_indices), sum(ss_indices_re_exam))
 
         num_max = 3
@@ -278,5 +278,5 @@ class TestSubSpaceExtraction(unittest.TestCase):
         )
         self.assertTrue(num_min <= sum(ss_indices) <= num_max)
         self.assertTrue(x_in_ss[0])
-        ss_indices_re_exam = check_points_in_ss(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
+        ss_indices_re_exam = check_subspace_points(X, [0], [1], ss_bounds_cont, ss_bounds_cat)
         self.assertEqual(sum(ss_indices), sum(ss_indices_re_exam))

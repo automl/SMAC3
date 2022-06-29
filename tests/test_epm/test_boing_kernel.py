@@ -14,7 +14,7 @@ from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.models.exact_gp import ExactGP
 
 from smac.epm.epm_gpytorch.boing_kernels import FITCKernel, FITCMean
-from smac.epm.util_funcs import check_points_in_ss
+from smac.epm.util_funcs import check_subspace_points
 
 
 class FITC(ExactGP):
@@ -55,7 +55,7 @@ def generate_test_data(
     X = X[data_indices]
     Y = Y[data_indices]
 
-    ss_in = check_points_in_ss(
+    ss_in = check_subspace_points(
         X, cont_dims=np.arange(num_dims), bounds_cont=np.tile([0.0, 1.0], [num_dims, 1]), expand_bound=expand_bound
     )
 

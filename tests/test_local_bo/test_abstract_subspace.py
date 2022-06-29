@@ -14,7 +14,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.epm.util_funcs import check_points_in_ss, get_types
+from smac.epm.util_funcs import check_subspace_points, get_types
 from smac.optimizer.local_bo.abstract_subspace import (
     AbstractSubspace,
     ChallengerListLocal,
@@ -238,7 +238,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         X_samples = np.array([sample.get_array() for sample in samples_global])
         X_normalized = subspace.normalize_input(X_samples)
 
-        ss_indices = check_points_in_ss(
+        ss_indices = check_subspace_points(
             X=X_normalized,
             cont_dims=subspace.activate_dims_cont,
             cat_dims=subspace.activate_dims_cat,
@@ -283,7 +283,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         X_samples = np.array([sample.get_array() for sample in samples_global])
         y_samples = np.ones(np.shape(X_samples)[0])
 
-        ss_indices = check_points_in_ss(
+        ss_indices = check_subspace_points(
             X=X_samples,
             cont_dims=subspace.activate_dims_cont,
             cat_dims=subspace.activate_dims_cat,
