@@ -1,4 +1,4 @@
-import typing
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List
 
 import os
 import shutil
@@ -7,7 +7,7 @@ import warnings
 from smac.configspace import ConfigurationSpace, json, pcs_new
 from smac.utils.logging import PickableLoggerAdapter
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -72,7 +72,7 @@ class OutputWriter(object):
                 if new_value is not None:
                     fh.write("{} = {}\n".format(options_dest2name[key], new_value))
 
-    def _parse_argument(self, scenario: "Scenario", key: str, value: typing.Any) -> typing.Any:
+    def _parse_argument(self, scenario: "Scenario", key: str, value: Any) -> Any:
         """Some values of the scenario-file need to be changed upon writing,
         such as the 'ta' (target algorithm), due to it's callback. Also,
         the configspace, features, train_inst- and test-inst-lists are saved
@@ -152,7 +152,7 @@ class OutputWriter(object):
 
         return value
 
-    def write_inst_file(self, insts: typing.List[str], fn: str) -> None:
+    def write_inst_file(self, insts: List[str], fn: str) -> None:
         """Writes instance-list to file.
 
         Parameters
@@ -168,7 +168,7 @@ class OutputWriter(object):
     def write_inst_features_file(
         self,
         n_features: int,
-        feat_dict: typing.Dict[str, typing.Iterable[float]],
+        feat_dict: Dict[str, Iterable[float]],
         fn: str,
     ) -> None:
         """Writes features to file.

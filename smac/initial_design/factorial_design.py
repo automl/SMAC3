@@ -22,7 +22,7 @@ class FactorialInitialDesign(InitialDesign):
 
     Attributes
     ----------
-    configs : typing.List[Configuration]
+    configs : List[Configuration]
         List of configurations to be evaluated
         Don't pass configs to the constructor;
         otherwise factorial design is overwritten

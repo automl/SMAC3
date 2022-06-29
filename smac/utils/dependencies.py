@@ -1,4 +1,4 @@
-import typing
+from typing import List, Union
 
 import importlib
 import re
@@ -14,12 +14,12 @@ SUBPATTERN = r"((?P<operation%d>==|>=|>|<)(?P<version%d>(\d+)?(\.[a-zA-Z0-9]+)?(
 RE_PATTERN = re.compile(r"^(?P<name>[\w\-]+)%s?(,%s)?$" % (SUBPATTERN % (1, 1), SUBPATTERN % (2, 2)))
 
 
-def verify_packages(packages: typing.Union[typing.List[str], str]) -> None:
+def verify_packages(packages: Union[List[str], str]) -> None:
     """Verifies packages. Calls `_verify_packages` as subroutine.
 
     Parameters
     ----------
-    packages : typing.Union[typing.List[str], str]
+    packages : Union[List[str], str]
         Packages to verify.
 
     Raises

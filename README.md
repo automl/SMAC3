@@ -66,20 +66,10 @@ X_val, y_val = np.random.randint(2, size=(5, 2)), np.random.randint(2, size=5)
 
 
 def train_random_forest(config):
-    """ 
-    Trains a random forest on the given hyperparameters, defined by config, and returns the accuracy
-    on the validation data.
-
-    Input:
-        config (Configuration): Configuration object derived from ConfigurationSpace.
-
-    Return:
-        cost (float): Performance measure on the validation data.
-    """
     model = RandomForestClassifier(max_depth=config["depth"])
     model.fit(X_train, y_train)
 
-    # define the evaluation metric as return
+    # Define the evaluation metric as return
     return 1 - model.score(X_val, y_val)
 
 

@@ -1,4 +1,4 @@
-from typing import Any, Iterator, List, Optional, Tuple, Union
+from typing import Any, Iterator, List, Optional, Tuple
 
 import logging
 
@@ -66,7 +66,7 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: Union[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
         **epm_chooser_kwargs: Any,

@@ -7,6 +7,8 @@ optimizer to focus on the most promising regions.
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.
+* Code more readable since all typings are imported at the beginning of the file.
+* Updated stale bot options.
 
 
 # 1.3.3
