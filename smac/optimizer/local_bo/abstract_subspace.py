@@ -24,10 +24,10 @@ from ConfigSpace.hyperparameters import (
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.epm_gpytorch.boing_kernels import construct_gp_kernel
 from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
 from smac.epm.util_funcs import check_subspace_points
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
-from smac.optimizer.local_bo.utils import construct_gp_kernel
 
 
 class AbstractSubspace(ABC):
