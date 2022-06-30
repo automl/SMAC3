@@ -90,10 +90,10 @@ if __name__ == "__main__":
         rng=np.random.RandomState(42),
         acquisition_function=EI,  # or others like PI, LCB as acquisition functions
         tae_runner=rosenbrock_2d,
-        n_optimizers=2,  # 3 parallel workers
+        n_optimizers=2,  # 2 parallel workers
         n_incs=1,  # return one incumbent
     )
 
     incumbent = smac.optimize()
-
-    # trajectory = smac.get_trajectory()  # TODO fix this. SMAC needs to be fitted before accessing this
+    # Get trajectory of optimization (incumbent over time)
+    trajectory_json = smac.get_trajectory()   # trajectory in json format
