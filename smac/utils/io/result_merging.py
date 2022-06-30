@@ -79,8 +79,18 @@ class ResultMerger:
 
         # Find incumbents
         # Incumbent = cost is lower than alltime cost
-        cost = np.inf
         trajectory = []
+
+        # Inject first trajectory entry from file from first rundir
+        rundir = self.run_dirs[0]
+        traj_fn = Path(rundir) / "traj.json"
+        with open(traj_fn, 'r') as file:
+            line = file.readline()
+        traj_entry = json.loads(line)
+        trajectory.append(traj_entry)
+
+        # Populate from merged runhistory
+        cost = np.inf
         for i, (rk, rv) in enumerate(rhitems):
             if rv.cost < cost:
                 cost = rv.cost
