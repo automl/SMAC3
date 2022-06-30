@@ -90,7 +90,7 @@ if __name__ == "__main__":
         rng=np.random.RandomState(42),
         acquisition_function=EI,  # or others like PI, LCB as acquisition functions
         tae_runner=rosenbrock_2d,
-        n_optimizers=1,  # 3 parallel workers
+        n_optimizers=2,  # 3 parallel workers
         n_incs=1,  # return one incumbent
     )
 
