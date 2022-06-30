@@ -15,18 +15,19 @@ from smac.runhistory.runhistory import RunHistory
 def glob_re(pattern, strings):
     return filter(re.compile(pattern).match, strings)
 
+
 def get_rundirs(pattern, path):
     subdirs = list(glob_re(pattern, os.listdir(path)))
     rundirs = [os.path.join(path, sd) for sd in subdirs]
     return rundirs
 
 
-class ResultMerger():
+class ResultMerger:
     def __init__(
-            self,
-            output_dir: Optional[Union[str, Path]] = None,
-            rundir_pattern: str = r"run_*\d$",
-            rundirs: Optional[List[Union[str, Path]]] = None
+        self,
+        output_dir: Optional[Union[str, Path]] = None,
+        rundir_pattern: str = r"run_*\d$",
+        rundirs: Optional[List[Union[str, Path]]] = None,
     ):
         """
         Merge runhistories from different SMAC runs.
@@ -47,12 +48,11 @@ class ResultMerger():
             self.run_dirs = rundirs
         else:
             if self.output_dir is None:
-                raise ValueError("Please provide either `rundirs` or `output_dir` with"
-                                 "an optional pattern.")
+                raise ValueError("Please provide either `rundirs` or `output_dir` with" "an optional pattern.")
             self.run_dirs = get_rundirs(pattern=rundir_pattern, path=self.output_dir)
 
         cs_fn = Path(self.run_dirs[0]) / "configspace.json"
-        with open(cs_fn, 'r') as fh:
+        with open(cs_fn, "r") as fh:
             json_string = fh.read()
             self.configuration_space = csjson.read(json_string)
 
