@@ -1,13 +1,14 @@
 # type: ignore
 # mypy: ignore-errors
 
-from typing import Dict, List, Optional, Union, Type
+from typing import Dict, List, Optional, Union, Type, Any
 
 import copy
 import datetime
 import logging
 import os
 import time
+from pathlib import Path
 
 import joblib
 import numpy as np
@@ -21,6 +22,8 @@ from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
 from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
+from smac.utils.io.traj_logging import TrajEntry, TrajLogger
+from smac.utils.io.result_merging import ResultMerger
 
 __author__ = "Andre Biedenkapp"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -165,6 +168,7 @@ class PSMAC(object):
         if n_optimizers <= 1:
             self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers)
         self.n_optimizers = max(n_optimizers, 2)
+        self.seeds = np.arange(0, self.n_optimizers, dtype=int)  # seeds for the parallel runs
         self.validate = validate
         self.shared_model = shared_model
         self.n_incs = min(max(1, n_incs), self.n_optimizers)
@@ -172,6 +176,8 @@ class PSMAC(object):
             self.val_set = scenario.train_insts
         else:
             self.val_set = val_set
+
+        self.result_merger: Optional[ResultMerger] = None
 
     def optimize(self) -> Union[Configuration, List[Configuration]]:
         """
@@ -207,12 +213,12 @@ class PSMAC(object):
                 scenario=self.scenario,  # Scenario object
                 tae_runner=self._tae_runner,  # type of tae_runner to run target with
                 tae_runner_kwargs=self._tae_runner_kwargs,
-                rng=p,  # seed for the rng/run_id
+                rng=int(seed),  # seed for the rng/run_id
                 output_dir=self.output_dir,  # directory to create outputs in
                 facade_class=self.facade_class,
                 **self.kwargs,
             )
-            for p in range(self.n_optimizers)
+            for seed in self.seeds
         )
 
         incs_to_return = None
@@ -291,26 +297,6 @@ class PSMAC(object):
         solver = self.facade_class(scenario=self.scenario, rng=self.rng, run_id=None, **self.kwargs)
         return solver
 
-    def __getattr__(self, item):
-        smac4ac_attrs = [
-            "get_tae_runner",
-            "get_runhistory",
-            "get_trajectory",
-            "register_callback",
-            "logger",
-            "output_dir",
-            "runhistory",
-            "scenario",
-            "solver",
-            "stats",
-            "trajectory",
-        ]
-        if item in smac4ac_attrs:
-            solver = self._get_solver()
-            return getattr(solver, item)
-        else:
-            return getattr(self, item)
-
     def validate_incs(self, incs: List[Configuration]):
         """Validation of the incumbents."""
         solver = self._get_solver()
@@ -324,3 +310,29 @@ class PSMAC(object):
             n_jobs=self.n_optimizers,
         )
         return self._get_mean_costs(incs, new_rh)
+
+    def write_run(self):
+        # write runhistory
+        # write configspace file .pcs .json
+        # write trajectory traj.json
+        # write scenario .txt
+        # write stats
+        raise NotImplementedError
+
+    def _check_result_merger(self):
+        if self.result_merger is None:
+            if self.output_dir is None:
+                raise ValueError("Cannot instantiate `ResultMerger` because `output_dir` "
+                                 "is None. In pSMAC `output_dir` is set after "
+                                 "`optimize()` has been called. If you already have "
+                                 "a pSMAC run or rundirs, please directly use "
+                                 "`smac.utils.io.result_merging.ResultMerger`.")
+            self.result_merger = ResultMerger(output_dir=Path(self.output_dir).parent)
+
+    def get_runhistory(self) -> Optional[RunHistory]:
+        self._check_result_merger()
+        return self.result_merger.get_runhistory()
+
+    def get_trajectory(self) -> Optional[List[Dict[str, Any]]]:
+        self._check_result_merger()
+        return self.result_merger.get_trajectory()
