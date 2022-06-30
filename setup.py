@@ -81,6 +81,7 @@ setuptools.setup(
         "dask",
         "distributed",
         "emcee>=3.0.0",
+        "regex"
     ],
     extras_require=extras_require,
     test_suite="pytest",
