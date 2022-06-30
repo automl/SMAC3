@@ -47,7 +47,8 @@ class ResultMerger:
             self.run_dirs = rundirs
         else:
             if self.output_dir is None:
-                raise ValueError("Please provide either `rundirs` or `output_dir` with" "an optional pattern.")
+                raise ValueError("Please provide either `rundirs` or `output_dir` with"
+                                 " an optional pattern.")
             self.run_dirs = get_rundirs(pattern=rundir_pattern, path=self.output_dir)
 
         cs_fn = Path(self.run_dirs[0]) / "configspace.json"
