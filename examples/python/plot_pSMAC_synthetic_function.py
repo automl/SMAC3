@@ -4,9 +4,15 @@ Synthetic Function with few Hyperparameters
 
 An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).
 
-We use the PSMAC facade to demonstrate the parallelization of SMAC.
+We use the pSMAC [1]_ facade to demonstrate the parallelization of SMAC.
 Other than that, we use a :term:`Gaussian Process<GP>` to optimize our black-box
 function.
+
+
+.. [1] Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
+    distributed automated algorithm configuration (T). University of British
+    Columbia. Retrieved from
+    https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.
 """
 import importlib
 

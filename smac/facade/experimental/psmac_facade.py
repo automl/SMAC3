@@ -74,7 +74,7 @@ def optimize(
 
 class PSMAC(object):
     """
-    Facade to use pSMAC
+    Facade to use pSMAC [1]_
 
     With pSMAC you can either run n distinct SMAC optimizations in parallel
     (`shared_model=False`) or you can parallelize the target algorithm evaluations
@@ -87,6 +87,12 @@ class PSMAC(object):
     In addition, you can access the facade's attributes normally (e.g. smac.stats),
     however each time a new SMAC object is built, reading the information from the
     file system.
+
+
+    .. [1] Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
+        distributed automated algorithm configuration (T). University of British
+        Columbia. Retrieved from
+        https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.
 
     Parameters
     ----------
