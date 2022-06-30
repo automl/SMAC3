@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict, Any
 from pathlib import Path
 import numpy as np
 import os
@@ -64,7 +64,7 @@ class ResultMerger:
                 runhistory.update_from_json(fn=fn, cs=self.configuration_space)
         return runhistory
 
-    def get_trajectory(self) -> Optional[List[TrajEntry]]:
+    def get_trajectory(self) -> Optional[List[Dict[str, Any]]]:
         trajectory = None
         if self.run_dirs is None:
             return trajectory
@@ -79,7 +79,6 @@ class ResultMerger:
 
         # Find incumbents
         # Incumbent = cost is lower than alltime cost
-        trajlogger = TrajLogger(output_dir=None, stats=None)
         cost = np.inf
         trajectory = []
         for i, (rk, rv) in enumerate(rhitems):
@@ -123,4 +122,4 @@ class ResultMerger:
         if self.output_dir is not None:
             rh_fn = Path(self.output_dir) / "runhistory.json"
             rh = self.get_runhistory()
-            rh.save_json(fn=rh_fn, save_external=True)
+            rh.save_json(fn=str(rh_fn), save_external=True)
