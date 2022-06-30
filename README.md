@@ -15,8 +15,9 @@ efficiently decide which of two configurations performs better.
 SMAC3 is written in Python3 and continuously tested with Python 3.7, 3.8, 3.9, and 3.10. Its Random
 Forest is written in C++. In further texts, SMAC is representatively mentioned for SMAC3.
 
-[Documention](https://automl.github.io/SMAC3)
-[Roadmap](https://github.com/orgs/automl/projects/5/views/2)
+> [Documention](https://automl.github.io/SMAC3)
+
+> [Roadmap](https://github.com/orgs/automl/projects/5/views/2)
 
 
 ## Installation
