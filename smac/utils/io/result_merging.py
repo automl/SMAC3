@@ -5,7 +5,6 @@ import os
 import json
 import regex as re
 
-from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.read_and_write import json as csjson
 
 from smac.utils.io.traj_logging import TrajEntry, TrajLogger
