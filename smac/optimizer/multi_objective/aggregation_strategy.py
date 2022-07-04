@@ -47,4 +47,4 @@ class MeanAggregationStrategy(AggregationStrategy):
         -------
             cost (float): Combined cost.
         """
-        return np.mean(values, axis=1)
+        return np.mean(values, axis=0)

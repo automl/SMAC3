@@ -35,5 +35,4 @@ class ParEGO(AggregationStrategy):
 
         # Weight the values
         theta_f = theta * values
-
-        return np.max(theta_f, axis=1) + self.rho * np.sum(theta_f, axis=1)
+        return np.max(theta_f, axis=0) + self.rho * np.sum(theta_f, axis=0)

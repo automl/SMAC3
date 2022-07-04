@@ -97,13 +97,14 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
+        for facade in [SMAC4AC]:  # ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
             for kwargs in [self.facade_kwargs, self.parego_facade_kwargs]:
                 smac = facade(**kwargs)
                 incumbent = smac.optimize()
 
                 f1_inc, f2_inc = schaffer(incumbent["x"])
                 f1_opt, f2_opt = get_optimum()
+
                 inc = f1_inc + f2_inc
                 opt = f1_opt + f2_opt
                 diff = abs(inc - opt)

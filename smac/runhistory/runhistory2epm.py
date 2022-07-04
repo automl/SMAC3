@@ -473,7 +473,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
                 y_agg = self.multi_objective_algorithm(y_)
                 y[row] = y_agg
             else:
@@ -698,7 +698,7 @@ class RunHistory2EPM4EIPS(AbstractRunHistory2EPM):
 
                 # Let's normalize y here
                 # We use the objective_bounds calculated by the runhistory
-                y_ = normalize_costs([run.cost], runhistory.objective_bounds)
+                y_ = normalize_costs(run.cost, runhistory.objective_bounds)
                 y_agg = self.multi_objective_algorithm(y_)
                 y[row, 0] = y_agg
             else:
