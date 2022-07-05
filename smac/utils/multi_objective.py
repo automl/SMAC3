@@ -19,13 +19,18 @@ def normalize_costs(values: list[float], bounds: list[tuple[float, float]] | Non
     Returns
     -------
     normalized_costs : list[float]
-        If no bounds were passed or
+        Normalized costs based on the bounds. If no bounds are given, ones are returned.
+        Also, if min and max bounds are the same, the value is set to 1.
     """
     if bounds is None:
         return np.ones(len(values)).tolist()
 
+    if len(values) != len(bounds):
+        raise ValueError("Number of values and bounds must be equal.")
+
     costs = []
     for v, b in zip(values, bounds):
+        assert type(v) != list
         p = v - b[0]
         q = b[1] - b[0]
 

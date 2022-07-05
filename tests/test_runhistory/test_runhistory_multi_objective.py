@@ -580,8 +580,8 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         # SMAC does not overwrite by default
         rh.add(
             config=config1,
-            cost=[50, 100],
-            time=10,
+            cost=[502342352, 23425234],
+            time=11,
             status=StatusType.SUCCESS,
             instance_id=1,
             seed=1,
@@ -611,4 +611,4 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
 
 if __name__ == "__main__":
     t = RunhistoryMultiObjectiveTest()
-    t.test_instances()
+    t.test_budgets()

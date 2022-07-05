@@ -528,6 +528,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
+
+        # Cost is always a single value (Single objective) or a list of values (Multi-objective)
+        # For example, _cost_per_config always holds the value on the highest budget
         cost = self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
 
         if self.num_obj > 1:

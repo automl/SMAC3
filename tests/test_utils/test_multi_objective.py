@@ -1,6 +1,8 @@
+from multiprocessing.sharedctypes import Value
 import unittest
 
 import numpy as np
+import pytest
 
 from smac.utils.multi_objective import normalize_costs
 
@@ -10,61 +12,34 @@ __license__ = "3-clause BSD"
 
 class MultiObjectiveTest(unittest.TestCase):
     def setUp(self):
-        self.bounds_1d = [(0, 1)]
-        self.bounds_2d = [(0, 1), (50, 100)]
+        self.bounds = [(0, 50), (50, 100)]
+        self.bounds_invalid = [(0, 0), (5, 5)]
 
     def test_normalize_costs(self):
+        # If no bounds are passed, we get ones back
+        v = [5, 2]
+        nv = normalize_costs(v)
+        self.assertEqual(nv, [1.0, 1.0])
+
         # Normalize between 0..1 given data only
-        v = np.array([[5, 2], [10, 0]])
-        nv = normalize_costs(v)
-        self.assertEqual(list(nv.flatten()), list(np.array([[0, 1], [1, 0]]).flatten()))
+        v = [25, 50]
+        nv = normalize_costs(v, self.bounds)
+        self.assertEqual(nv, [0.5, 0])
 
-        # Normalize between 0..1 given data only
-        v = np.array([[5, 75], [0.5, 50], [0.75, 60], [0, 100]])
-        nv = normalize_costs(v, self.bounds_2d)
+        # Invalid bounds
+        v = [25, 50]
+        nv = normalize_costs(v, self.bounds_invalid)
+        self.assertEqual(nv, [1, 1])
 
-        self.assertEqual(
-            list(nv.flatten()),
-            list(np.array([[5, 0.5], [0.5, 0], [0.75, 0.2], [0, 1]]).flatten()),
-        )
+        # Invalid input
+        v = [[25], [50]]
+        with pytest.raises(AssertionError):
+            nv = normalize_costs(v, self.bounds)
 
-        # No normalization
-        v = np.array([[5, 2]])
-        nv = normalize_costs(v)
-        self.assertEqual(list(nv.flatten()), list(np.array([[1.0, 1.0]]).flatten()))
-
-        # Normalization with given bounds
-        v = np.array([[500, 150]])
-        nv = normalize_costs(v, self.bounds_2d)
-        self.assertEqual(list(nv.flatten()), list(np.array([[500, 2.0]]).flatten()))
-
-        # Test one-dimensional list
-        v = [500, 150]
-        nv = normalize_costs(v, self.bounds_1d)
-        self.assertEqual(list(nv.flatten()), list(np.array([[500], [150]]).flatten()))
-
-        # Test one-dimensional array without bounds
-        v = np.array([500, 150])
-        nv = normalize_costs(v)
-        self.assertEqual(list(nv.flatten()), list(np.array([[1.0], [0.0]]).flatten()))
-
-        # Test one-dimensional array without bounds
-        v = np.array([1000, 200, 400, 800, 600, 0])
-        nv = normalize_costs(v)
-        self.assertEqual(
-            list(nv.flatten()),
-            list(np.array([[1], [0.2], [0.4], [0.8], [0.6], [0.0]]).flatten()),
-        )
-
-        # Test one-dimensional array with one objective
-        v = np.array([500])
-        nv = normalize_costs(v, self.bounds_1d)
-        self.assertEqual(list(nv.flatten()), list(np.array([[500.0]]).flatten()))
-
-        # Test one-dimensional list with one objective
-        v = [500]
-        nv = normalize_costs(v, self.bounds_1d)
-        self.assertEqual(list(nv.flatten()), list(np.array([[500.0]]).flatten()))
+        # Wrong shape
+        v = [25, 50, 75]
+        with pytest.raises(ValueError):
+            nv = normalize_costs(v, self.bounds)
 
 
 if __name__ == "__main__":
