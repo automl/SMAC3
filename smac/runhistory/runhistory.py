@@ -414,7 +414,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         # Squeeze is important to reduce arrays with one element
         # to scalars.
-        cost = np.asarray(cost).squeeze()
+        cost_array = np.asarray(cost).squeeze()
 
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
@@ -427,15 +427,23 @@ class RunHistory(Mapping[RunKey, RunValue]):
             config_id = cast(int, config_id_tmp)
 
         if self.num_obj == -1:
-            self.num_obj = np.size(cost)
+            self.num_obj = np.size(cost_array)
         else:
-            if np.size(cost) != self.num_obj:
+            if np.size(cost_array) != self.num_obj:
                 raise ValueError(
                     f"Cost is not of the same length ({np.size(cost)}) as the number " f"of objectives ({self.num_obj})"
                 )
 
+        c = cost_array.tolist()
+
+        # Let's always work with floats
+        if self.num_obj == 1:
+            c = float(c)
+        else:
+            c = [float(i) for i in c]
+
         k = RunKey(config_id, instance_id, seed, budget)
-        v = RunValue(cost.tolist(), time, status, starttime, endtime, additional_info)
+        v = RunValue(c, time, status, starttime, endtime, additional_info)
 
         # Construct keys and values for the data dictionary
         for key, value in (
@@ -444,7 +452,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             ("instance_id", instance_id),
             ("seed", seed),
             ("budget", budget),
-            ("cost", cost.tolist()),
+            ("cost", c),
             ("time", time),
             ("status", status),
             ("starttime", starttime),
@@ -461,9 +469,15 @@ class RunHistory(Mapping[RunKey, RunValue]):
         elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
             # overwrite capped runs with uncapped runs
             self._add(k, v, status, origin)
-        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
+        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+            if self.num_obj > 1:
+                raise RuntimeError("Not supported yet.")
+
             # overwrite if censored with a larger cutoff
-            self._add(k, v, status, origin)
+            if cost > self.data[k].cost:
+                self._add(k, v, status, origin)
+        else:
+            raise RuntimeError("Entry could not be added.")
 
     def update_cost(self, config: Configuration) -> None:
         """Stores the performance of a configuration across the instances in self.cost_per_config
@@ -501,7 +515,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
 
-        if self.num_obj > 0:
+        if self.num_obj > 1:
             costs = np.array(cost)
             old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self.num_obj)]))
             old_costs = np.array(old_costs)
