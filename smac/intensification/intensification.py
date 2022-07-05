@@ -144,7 +144,6 @@ class Intensifier(AbstractRacer):
         maxR: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 2,
-        num_obj: int = 1,
     ):
         super().__init__(
             stats=stats,
@@ -159,7 +158,6 @@ class Intensifier(AbstractRacer):
             maxR=maxR,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
-            num_obj=num_obj,
         )
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -795,6 +793,7 @@ class Intensifier(AbstractRacer):
         """
         chal_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_perf = run_history.get_cost(challenger)
+
         # if all <instance, seed> have been run, compare challenger performance
         if not self.to_run:
             new_incumbent = self._compare_configs(

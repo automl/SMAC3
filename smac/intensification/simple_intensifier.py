@@ -46,7 +46,6 @@ class SimpleIntensifier(AbstractRacer):
         cutoff: Optional[float] = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
-        num_obj: int = 1,
         **kwargs: Any,
     ) -> None:
 
@@ -61,10 +60,7 @@ class SimpleIntensifier(AbstractRacer):
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=1.0,
             min_chall=1,
-            num_obj=num_obj,
         )
-        # Simple intensifier does not require comparing run results, thus we could simply ignore num_obj here
-
         # We want to control the number of runs that are sent to
         # the workers. At any time, we want to make sure that if there
         # are just W workers, there should be at max W active runs

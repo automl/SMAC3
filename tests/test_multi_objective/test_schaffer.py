@@ -42,9 +42,13 @@ def get_optimum():
 
 def plot(all_x):
     plt.figure()
+
     for x in all_x:
         f1, f2 = schaffer(x)
-        plt.scatter(f1, f2, c="blue", alpha=0.1)
+        plt.scatter(f1, f2, c="blue", alpha=0.2, zorder=3000)
+
+    plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
+    plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
 
     plt.show()
 
@@ -73,7 +77,7 @@ class SchafferTest(unittest.TestCase):
         self.scenario = Scenario(
             {
                 "run_obj": "quality",  # we optimize quality (alternatively runtime)
-                "runcount-limit": 20,  # max. number of function evaluations
+                "runcount-limit": 25,  # max. number of function evaluations
                 "cs": self.cs,  # configuration space
                 "deterministic": True,
                 "multi_objectives": "metric1, metric2",
@@ -97,7 +101,7 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [SMAC4AC]:  # ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
+        for facade in [ROAR, SMAC4BB, SMAC4HPO, SMAC4AC]:
             for kwargs in [self.facade_kwargs, self.parego_facade_kwargs]:
                 smac = facade(**kwargs)
                 incumbent = smac.optimize()
@@ -109,7 +113,7 @@ class SchafferTest(unittest.TestCase):
                 opt = f1_opt + f2_opt
                 diff = abs(inc - opt)
 
-                assert diff < 0.1
+                assert diff < 0.5
                 results.append(smac)
 
         return results

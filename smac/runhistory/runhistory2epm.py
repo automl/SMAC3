@@ -489,7 +489,6 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
                 self.max_y = np.max(y, axis=0)
 
         y = self.transform_response_values(values=y)
-
         return X, y
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:

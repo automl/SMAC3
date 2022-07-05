@@ -137,7 +137,6 @@ class _SuccessiveHalving(AbstractRacer):
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
-        num_obj: int = 1,
     ) -> None:
         super().__init__(
             stats=stats,
@@ -150,7 +149,6 @@ class _SuccessiveHalving(AbstractRacer):
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
-            num_obj=num_obj,
         )
 
         self.identifier = identifier

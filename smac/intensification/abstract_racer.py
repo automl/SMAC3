@@ -13,6 +13,7 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.logging import format_array
+from smac.utils.multi_objective import normalize_costs
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 
@@ -89,7 +90,6 @@ class AbstractRacer(object):
         maxR: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 1,
-        num_obj: int = 1,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -128,12 +128,6 @@ class AbstractRacer(object):
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
-
-        if num_obj > 1:
-            raise ValueError(
-                "Intensifiers only support single objective optimization. For multi-objective problems,"
-                "please refer to multi-objective intensifiers"
-            )
 
     def get_next_run(
         self,
@@ -350,6 +344,15 @@ class AbstractRacer(object):
         # if it dominates the incumbent
         chal_perf = run_history.average_cost(challenger, to_compare_runs)
         inc_perf = run_history.average_cost(incumbent, to_compare_runs)
+
+        # Multi-Objective setting: We have to normalize the values here
+        if type(chal_perf) == list or type(inc_perf) == list:
+            assert type(chal_perf) == type(inc_perf)
+            chal_perf = run_history.get_cost(challenger)
+            inc_perf = run_history.get_cost(incumbent)
+        else:
+            assert type(chal_perf) == float
+            assert type(inc_perf) == float
 
         # Line 15
         if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:

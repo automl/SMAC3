@@ -1,5 +1,5 @@
-from multiprocessing.sharedctypes import Value
 import unittest
+from multiprocessing.sharedctypes import Value
 
 import numpy as np
 import pytest
