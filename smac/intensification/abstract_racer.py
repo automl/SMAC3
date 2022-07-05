@@ -296,9 +296,10 @@ class AbstractRacer(object):
         # reasons)
         chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_sum_cost = run_history.sum_cost(
-            config=challenger,
-            instance_seed_budget_keys=chall_inst_seeds,
+            config=challenger, instance_seed_budget_keys=chall_inst_seeds, normalize=True
         )
+        assert type(chal_sum_cost) == float
+
         cutoff = min(curr_cutoff, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost)
         return cutoff
 
@@ -341,17 +342,11 @@ class AbstractRacer(object):
 
         # performance on challenger runs, the challenger only becomes incumbent
         # if it dominates the incumbent
-        chal_perf = run_history.average_cost(challenger, to_compare_runs)
-        inc_perf = run_history.average_cost(incumbent, to_compare_runs)
+        chal_perf = run_history.average_cost(challenger, to_compare_runs, normalize=True)
+        inc_perf = run_history.average_cost(incumbent, to_compare_runs, normalize=True)
 
-        # Multi-Objective setting: We have to normalize the values here
-        if type(chal_perf) == list or type(inc_perf) == list:
-            assert type(chal_perf) == type(inc_perf)
-            chal_perf = run_history.get_cost(challenger)
-            inc_perf = run_history.get_cost(incumbent)
-        else:
-            assert type(chal_perf) == float
-            assert type(inc_perf) == float
+        assert type(chal_perf) == float
+        assert type(inc_perf) == float
 
         # Line 15
         if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:

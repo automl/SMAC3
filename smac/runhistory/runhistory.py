@@ -574,6 +574,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         config: Configuration,
         instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
     ) -> float | list[float]:
         """Return the average cost of a configuration. This is the mean of costs of all instance-
         seed pairs.
@@ -585,6 +586,10 @@ class RunHistory(Mapping[RunKey, RunValue]):
         instance_seed_budget_keys : list, optional (default=None)
             List of tuples of instance-seeds-budget keys. If None, the run_history is
             queried for all runs of the given configuration.
+        normalize : bool, optional (default=False)
+            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Only a float is returned if normalize is True. Warning: The value can change
+            over time because the objective bounds are changing.
 
         Returns
         -------
@@ -596,7 +601,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if self.num_obj > 1:
                 # Each objective is averaged separately
                 # [[100, 200], [0, 0]] -> [50, 100]
-                return np.mean(costs, axis=0).tolist()
+                averaged_costs = np.mean(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(averaged_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return averaged_costs
 
             return float(np.mean(costs))
 
@@ -606,6 +617,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         config: Configuration,
         instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
     ) -> float | list[float]:
         """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
         pairs.
@@ -617,6 +629,10 @@ class RunHistory(Mapping[RunKey, RunValue]):
         instance_seed_budget_keys : list, optional (default=None)
             List of tuples of instance-seeds-budget keys. If None, the run_history is
             queried for all runs of the given configuration.
+        normalize : bool, optional (default=False)
+            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Only a float is returned if normalize is True. Warning: The value can change
+            over time because the objective bounds are changing.
 
         Returns
         -------
@@ -629,7 +645,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if self.num_obj > 1:
                 # Each objective is summed separately
                 # [[100, 200], [20, 10]] -> [120, 210]
-                return np.sum(costs, axis=0).tolist()
+                summed_costs = np.sum(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(summed_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return summed_costs
 
         return float(np.sum(costs))
 
@@ -637,6 +659,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         config: Configuration,
         instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
     ) -> float | list[float]:
         """Return the minimum cost of a configuration.
 
@@ -665,7 +688,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if self.num_obj > 1:
                 # Each objective is viewed separately
                 # [[100, 200], [20, 500]] -> [20, 200]
-                return np.min(costs, axis=0).tolist()
+                min_costs = np.min(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(min_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return min_costs
 
             return float(np.min(costs))
 

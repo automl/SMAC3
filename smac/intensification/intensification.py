@@ -24,7 +24,6 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.logging import format_array
-from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -896,16 +895,7 @@ class Intensifier(AbstractRacer):
         # because of efficiency computed here
         inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = run_history.sum_cost(
-            config=incumbent,
-            instance_seed_budget_keys=inst_seed_pairs,
-        )
-
-        # Multi-Objective
-        if type(inc_sum_cost) == list:
-            costs = normalize_costs(inc_sum_cost, run_history.objective_bounds)
-            return to_run, float(np.mean(costs))
-
+        inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
         assert type(inc_sum_cost) == float
         return to_run, inc_sum_cost
 

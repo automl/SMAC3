@@ -14,7 +14,6 @@ from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
-from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -628,21 +627,15 @@ class _SuccessiveHalving(AbstractRacer):
         #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
         if incumbent and incumbent != challenger:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
+            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
+            assert type(inc_sum_cost) == float
         else:
             inc_sum_cost = np.inf
             if self.first_run:
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
 
-        # Multi-Objective
-        if type(inc_sum_cost) == list:
-            costs = normalize_costs(inc_sum_cost, run_history.objective_bounds)
-            inc_sum_cost = float(np.mean(costs))
-        else:
-            assert type(inc_sum_cost) == float
-
-        # selecting instance-seed subset for this budget, depending on the kind of budget
+        # Selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]

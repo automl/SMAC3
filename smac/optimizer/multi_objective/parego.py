@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Optional
 
 import numpy as np
@@ -15,17 +17,19 @@ class ParEGO(AggregationStrategy):
         super(ParEGO, self).__init__(num_obj=num_obj, rng=rng)
         self.rho = rho
 
-    def __call__(self, values: np.ndarray) -> float:
+    def __call__(self, values: list[float]) -> float:
         """
         Transform a multi-objective loss to a single loss.
 
         Parameters
         ----------
-            values (np.ndarray): Normalized values.
+        values : list[float]
+            Normalized values.
 
         Returns
         -------
-            cost (float): Combined cost.
+        cost : float
+            Combined cost.
         """
         # Then we have to compute the weight
         theta = self.rng.rand(self.num_obj)
