@@ -24,7 +24,6 @@ from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 from smac.utils.multi_objective import normalize_costs
-from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
