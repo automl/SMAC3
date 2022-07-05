@@ -415,6 +415,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
         # Squeeze is important to reduce arrays with one element
         # to scalars.
         cost_array = np.asarray(cost).squeeze()
+        num_obj = np.size(cost_array)
 
         # Get the config id
         config_id_tmp = self.config_ids.get(config)
@@ -427,16 +428,14 @@ class RunHistory(Mapping[RunKey, RunValue]):
             config_id = cast(int, config_id_tmp)
 
         if self.num_obj == -1:
-            self.num_obj = np.size(cost_array)
-        else:
-            if np.size(cost_array) != self.num_obj:
-                raise ValueError(
-                    f"Cost is not of the same length ({np.size(cost)}) as the number " f"of objectives ({self.num_obj})"
-                )
+            self.num_obj = num_obj
+        elif num_obj != self.num_obj:
+            raise ValueError(
+                f"Cost is not of the same length ({num_obj}) as the number " f"of objectives ({self.num_obj})"
+            )
 
+        # Let's always work with floats; Makes it easier to deal with later on
         c = cost_array.tolist()
-
-        # Let's always work with floats
         if self.num_obj == 1:
             c = float(c)
         else:
@@ -473,7 +472,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if self.num_obj > 1:
                 raise RuntimeError("Not supported yet.")
 
-            # overwrite if censored with a larger cutoff
+            # Overwrite if censored with a larger cutoff
             if cost > self.data[k].cost:
                 self._add(k, v, status, origin)
         else:

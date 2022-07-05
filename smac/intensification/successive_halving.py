@@ -628,12 +628,13 @@ class _SuccessiveHalving(AbstractRacer):
         if incumbent and incumbent != challenger:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
             inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
-            assert type(inc_sum_cost) == float
         else:
             inc_sum_cost = np.inf
             if self.first_run:
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
+
+        assert type(inc_sum_cost) == float
 
         # Selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
