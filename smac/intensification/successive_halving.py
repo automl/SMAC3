@@ -14,6 +14,7 @@ from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
+from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -633,6 +634,13 @@ class _SuccessiveHalving(AbstractRacer):
             if self.first_run:
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
+
+        # Multi-Objective
+        if type(inc_sum_cost) == list:
+            costs = normalize_costs(inc_sum_cost, run_history.objective_bounds)
+            inc_sum_cost = float(np.mean(costs))
+        else:
+            assert type(inc_sum_cost) == float
 
         # selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:

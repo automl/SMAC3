@@ -24,6 +24,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.logging import format_array
+from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -900,6 +901,12 @@ class Intensifier(AbstractRacer):
             instance_seed_budget_keys=inst_seed_pairs,
         )
 
+        # Multi-Objective
+        if type(inc_sum_cost) == list:
+            costs = normalize_costs(inc_sum_cost, run_history.objective_bounds)
+            return to_run, float(np.mean(costs))
+
+        assert type(inc_sum_cost) == float
         return to_run, inc_sum_cost
 
     def get_next_challenger(

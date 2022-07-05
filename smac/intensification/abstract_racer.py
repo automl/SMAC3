@@ -13,7 +13,6 @@ from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.logging import format_array
-from smac.utils.multi_objective import normalize_costs
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 
