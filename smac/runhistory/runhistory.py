@@ -24,6 +24,7 @@ from smac.configspace import Configuration, ConfigurationSpace
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 from smac.utils.multi_objective import normalize_costs
+from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -31,6 +32,8 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
+
+logger = PickableLoggerAdapter(__name__)
 
 
 # NOTE class instead of collection to have a default value for budget in RunKey
@@ -379,31 +382,31 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         Parameters
         ----------
-            config : dict (or other type -- depending on config space module)
-                Parameter configuration
-            cost: Union[int, float, list, np.ndarray]
-                Cost of TA run (will be minimized)
-            time: float
-                Runtime of TA run
-            status: str
-                Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
-            instance_id: str
-                String representing an instance (default: None)
-            seed: int
-                Random seed used by TA (default: None)
-            budget: float
-                budget (cutoff) used in intensifier to limit TA (default: 0)
-            starttime: float
-                starting timestamp of TA evaluation
-            endtime: float
-                ending timestamp of TA evaluation
-            additional_info: dict
-                Additional run infos (could include further returned
-                information from TA or fields such as start time and host_id)
-            origin: DataOrigin
-                Defines how data will be used.
-            force_update: bool (default: False)
-                Forces the addition of a config to the history
+        config : dict (or other type -- depending on config space module)
+            Parameter configuration
+        cost: Union[int, float, list, np.ndarray]
+            Cost of TA run (will be minimized)
+        time: float
+            Runtime of TA run
+        status: str
+            Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
+        instance_id: str
+            String representing an instance (default: None)
+        seed: int
+            Random seed used by TA (default: None)
+        budget: float
+            budget (cutoff) used in intensifier to limit TA (default: 0)
+        starttime: float
+            starting timestamp of TA evaluation
+        endtime: float
+            ending timestamp of TA evaluation
+        additional_info: dict
+            Additional run infos (could include further returned
+            information from TA or fields such as start time and host_id)
+        origin: DataOrigin
+            Defines how data will be used.
+        force_update: bool (default: False)
+            Forces the addition of a config to the history
         """
         if config is None:
             raise TypeError("Configuration to add to the runhistory must not be None")
@@ -429,12 +432,13 @@ class RunHistory(Mapping[RunKey, RunValue]):
 
         if self.num_obj == -1:
             self.num_obj = num_obj
-        elif num_obj != self.num_obj:
+        elif self.num_obj != num_obj:
             raise ValueError(
                 f"Cost is not of the same length ({num_obj}) as the number " f"of objectives ({self.num_obj})"
             )
 
         # Let's always work with floats; Makes it easier to deal with later on
+        # array.tolist() returns a scalar if the array has one element.
         c = cost_array.tolist()
         if self.num_obj == 1:
             c = float(c)
@@ -476,7 +480,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if cost > self.data[k].cost:
                 self._add(k, v, status, origin)
         else:
-            raise RuntimeError("Entry could not be added.")
+            logger.info("Entry was not added to the runhistory because existing runs will not overwritten.")
 
     def update_cost(self, config: Configuration) -> None:
         """Stores the performance of a configuration across the instances in self.cost_per_config
