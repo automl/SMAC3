@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Type, Union
+from typing import Dict, Iterator, List, Optional, Tuple, Type, Union
 
 import copy
 from itertools import chain
@@ -8,8 +8,8 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gp.augmented import GloballyAugmentedLocalGP
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
@@ -71,7 +71,7 @@ class BOinGChooser(EPMChooser):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: Union[RandomChooser] = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
         model_local: BaseEPM = GloballyAugmentedLocalGP,
