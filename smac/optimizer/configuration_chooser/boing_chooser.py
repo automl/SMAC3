@@ -399,8 +399,8 @@ class BOinGChooser(EPMChooser):
         num_max = MAXINT if num_max_configs <= 2 * self.min_configs_local else num_max_configs
 
         if len(self.config_space.get_conditions()) > 0:
-            challanger_activate_hps = np.isfinite(array_challenger_global_first).astype(np.int)
-            rh_activate_hps = np.isfinite(X).astype(np.int)
+            challanger_activate_hps = np.isfinite(array_challenger_global_first).astype(int)
+            rh_activate_hps = np.isfinite(X).astype(int)
             indices_X_in_same_hierarchy = np.all((challanger_activate_hps - rh_activate_hps) == 0, axis=1)
             num_indices_X_in_same_hierarchy = sum(indices_X_in_same_hierarchy)
 
@@ -587,7 +587,7 @@ def subspace_extraction(
                 # This node split the subspace w.r.t. the categorical hyperparameters
                 cat_feature_idx = np.where(feature_idx == cat_dims)[0][0]
                 split_value = node.get_cat_split()
-                intersect = np.intersect1d(ss_bounds_cat[cat_feature_idx], split_value, assume_unique=True)
+                intersect = intersect1d(ss_bounds_cat[cat_feature_idx], split_value, assume_unique=True)
 
                 if len(intersect) == len(ss_bounds_cat[cat_feature_idx]):
                     # will fall into the left child

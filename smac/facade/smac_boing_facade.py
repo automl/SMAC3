@@ -37,7 +37,7 @@ class SMAC4BOING(SMAC4HPO):
         if smbo_kwargs is None:
             smbo_kwargs = {"epm_chooser", BOinGChooser}
         if not isinstance(smbo_kwargs.get("epm_chooser", BOinGChooser), BOinGChooser):
-            warnings.warn("BOinG must have EPMChooserBOinG as its epm_chooser!")
+            warnings.warn("BOinG must have BOinGChooser as its EPM chooser!")
             smbo_kwargs["epm_chooser"] = BOinGChooser
         epm_chooser_kwargs = smbo_kwargs.get("epm_chooser_kwargs", None)
 
