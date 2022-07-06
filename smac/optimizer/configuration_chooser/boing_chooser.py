@@ -29,7 +29,7 @@ from smac.utils.constants import MAXINT
 
 class BOinGChooser(EPMChooser):
     """
-    Interface to train the EPM and generate next configurations with both global and local models
+    Interface to train the EPM and generate next configurations with both global and local models.
 
     Parameters
     ----------
