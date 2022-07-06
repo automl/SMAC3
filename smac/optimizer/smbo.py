@@ -76,7 +76,7 @@ class SMBO(object):
     min_samples_model: int
         Minimum number of samples to build a model.
     epm_chooser_kwargs: typing.Optional[typing.Dict]
-        Additioanl argumetns passed to epmchooser
+        Additional arguments passed to epmchooser
 
     Attributes
     ----------

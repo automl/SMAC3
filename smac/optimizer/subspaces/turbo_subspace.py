@@ -33,18 +33,18 @@ class TuRBOSubSpace(LocalSubspace):
     length_init: float
         initialized length of subspace
     length_min: float
-        minimal length of subspace, if subspace has length smaller than this value, turbo will restart
+        the minimal length of subspace, if the subspace has a length smaller than this value, turbo will restart
     length_max: float
-        maximal length of subspace
+        the maximal length of subspace
     success_tol: float
        the number of successive successful evaluations required for expanding the subregion
     failure_tol_min: float
-       minimal number of successive successful evaluations required for shrinking the subregion (otherwise
+       the minimal number of successive successful evaluations required for shrinking the subregion (otherwise
        this value is set as number of feature dimensions)
     n_init_x_params: int
         how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace
     n_candidate_max: int
-        Maximal Number of points used as candidates
+        The maximal Number of points used as candidates
     """
 
     def __init__(

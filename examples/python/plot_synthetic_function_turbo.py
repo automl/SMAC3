@@ -8,8 +8,8 @@ synthetic function (2d rosenbrock function).
 Eriksson et al. Scalable Global Optimization via Local {Bayesian} Optimization,
 http://papers.nips.cc/paper/8788-scalable-global-optimization-via-local-bayesian-optimization.pdf
 
-TurBO gradually shrinks its search space to the vicinity of the optimium configuration that is ever optimized.
-TuRBO optimizer requires EPMChooserTurBO to suggest next configuration. Currently, it only supports pure numerical
+TurBO gradually shrinks its search space to the vicinity of the optimum configuration that is ever optimized.
+TuRBO optimizer requires EPMChooserTurBO to suggest the next configuration. Currently, it only supports pure numerical
 hyperparameters.
 """
 

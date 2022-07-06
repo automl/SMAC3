@@ -18,7 +18,7 @@ from smac.optimizer.subspaces import LocalSubspace
 
 class BOinGSubspace(LocalSubspace):
     """
-    Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize for maximizing the
+    Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize to maximize the
     acquisition function inside this subregion.
 
     Parameters
@@ -123,7 +123,7 @@ class BOinGSubspace(LocalSubspace):
 
     def _generate_challengers(self, **optimizer_kwargs: Dict) -> List[Tuple[float, Configuration]]:
         """
-        Generate new challengers list for this subspace, this optimizer is similar to
+        Generate new challengers list for this subspace. This optimizer is similar to
         smac.optimizer.ei_optimization.LocalAndSortedRandomSearch except that we don't read the past evaluated
         information from the runhistory but directly assign new values to the
         """

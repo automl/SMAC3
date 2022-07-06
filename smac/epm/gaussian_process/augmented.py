@@ -37,8 +37,8 @@ class AugmentedLocalGaussianProcess(ExactGP):
         base_covar_kernel: Kernel,
     ):
         """
-        An Augmented Local GP, it is dense inside a given subregion and the impact of all other
-        points are approximated by a sparse GP.
+        An Augmented Local GP, it is trained with the points inside a subregion while its prior is augemented by the
+        points outside the subregion (global configurations)
 
         Parameters
         ----------
@@ -54,8 +54,6 @@ class AugmentedLocalGaussianProcess(ExactGP):
             likelihood of the GP (noise)
         base_covar_kernel: Kernel,
             Covariance Kernel
-        X_inducing: torch.tensor,
-            position of the inducing points
         """
         X_in = X_in.unsqueeze(-1) if X_in.ndimension() == 1 else X_in
         X_out = X_out.unsqueeze(-1) if X_out.ndimension() == 1 else X_out
@@ -72,12 +70,12 @@ class AugmentedLocalGaussianProcess(ExactGP):
 
     def set_augment_module(self, X_inducing: torch.Tensor) -> None:
         """
-        Set an augmention module, which will be used later for inference
+        Set an augmentation module, which will be used later for inference
 
         Parameters
         ----------
         X_inducing: torch.Tensor(N_inducing, D)
-            inducing points, it needs to have the same number of dimension as X_in
+           inducing points, it needs to have the same number of dimensions as X_in
         """
         X_inducing = X_inducing.unsqueeze(-1) if X_inducing.ndimension() == 1 else X_inducing
         # assert X_inducing.shape[-1] == self.X_out.shape[-1]
@@ -89,9 +87,9 @@ class AugmentedLocalGaussianProcess(ExactGP):
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
         """
-        Compute the prior values, if optimize_kernel_hps is set True in the training phases, this model degenerates to
-         a vanilla GP model with ZeroMean and base_covar as covariance matrix, otherwise we apply partial sparse GP
-         mean and kernels here.
+        Compute the prior values. If optimize_kernel_hps is set True in the training phases, this model degenerates to
+        a vanilla GP model with ZeroMean and base_covar as covariance matrix. Otherwise, we apply partial sparse GP
+        mean and kernels here.
         """
         if not self.augmented:
             # we only optimize for kernel hyperparameters
@@ -106,19 +104,19 @@ class AugmentedLocalGaussianProcess(ExactGP):
 class VariationalGaussianProcess(gpytorch.models.ApproximateGP):
     """
     A variational GP to compute the position of the inducing points.
-    We only compute the position of the inducing points w.r.t. the continuous dimensions
+    We only optimize for the position of the continuous dimensions and keep the categorical dimensions constant.
     """
 
     def __init__(self, kernel: Kernel, X_inducing: torch.Tensor):
         """
         Initialize a Variational GP
-        we set the lower bound and upper bounds of indcuing points for numerical hyperparmaters between 0 and 1,
-        that is, we constraint the indcuing points to lay inside the subregion.
+        we set the lower bound and upper bounds of inducing points for numerical hyperparameters between 0 and 1,
+        that is, we constrain the inducing points to lay inside the subregion.
 
         Parameters
         ----------
         kernel: Kernel
-            kernel of the variational GP, its hyperparameter needs to be fixed when it is by PSGP
+            kernel of the variational GP, its hyperparameter needs to be fixed when it is by LGPGA
         X_inducing: torch.tensor (N_inducing, D)
             inducing points
         """
@@ -146,7 +144,7 @@ class VariationalGaussianProcess(gpytorch.models.ApproximateGP):
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
         """
-        Pass compute the posterior mean and varaince given input X
+        Pass the posterior mean and variance given input X
 
         Parameters
         ----------
@@ -178,32 +176,29 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         pca_components: Optional[int] = None,
     ):
         """
-        Local GP with global augmentation. It is composed of two models: an Exact GP to descirbe the data
-        distribution inside a subregion and an Approximate GP to approxiamte the data distribution outside a
-        subregion.
-
-        The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood and optimize with botorch
-        We train a PSGP in two stages:
+        The GP hyperparameters are obtained by optimizing the marginal log-likelihood and optimized with botorch
+        We train an LGPGA in two stages:
         In the first stage, we only train the kernel hyperparameter and thus deactivate the gradient w.r.t the position
-        of hte inducing points.
+        of the inducing points.
         In the second stage, we use the kernel hyperparameter acquired in the first stage to initialize a new
-        variational gaussian process and only optimize its inducing points position with natural gradients.
-        Finally we update the position of the indcuing points and use it for evaluating
+        variational Gaussian process and only optimize its inducing points' position with natural gradients.
+        Finally, we update the position of the inducing points and use it for evaluation.
+
 
         Parameters
         ----------
         bounds_cont: np.ndarray(N_cont, 2),
-            bounds of the continuous hyperparameters, store as [[0,1] * N_cont]
+           bounds of the continuous hyperparameters, store as [[0,1] * N_cont]
         bounds_cat: List[Tuple],
-            bounds of categorical hyperparameters
+           bounds of categorical hyperparameters
         kernel : gpytorch kernel object
-            Specifies the kernel that is used for all Gaussian Process
+           Specifies the kernel that is used for all Gaussian Process
         num_inducing_points: int
-            Number of inducing points
+           Number of inducing points
         likelihood: Optional[GaussianLikelihood]
-            Likelihood values
+           Likelihood values
         normalize_y : bool
-            Zero mean unit variance normalization of the output values, when the model is a partial sparse GP model,
+           Zero mean unit variance normalization of the output values when the model is a partial sparse GP model.
         """
         super(GloballyAugmentedLocalGaussianProcess, self).__init__(
             configspace=configspace,
@@ -235,7 +230,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
     ) -> Union[AugmentedLocalGaussianProcess, GPyTorchGaussianProcess]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
-        outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
+        outside the subregion, we initialize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
 
         Parameters
         ----------
@@ -245,8 +240,8 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         y: np.ndarray (N,)
             The corresponding target values.
         do_optimize: boolean
-            If set to true the hyperparameters are optimized otherwise
-            the default hyperparameters of the kernel are used.
+                If set to true, the hyperparameters are optimized otherwise,
+                the default hyperparameters of the kernel are used.
         """
         X = self._impute_inactive(X)
         if len(y.shape) == 1:
@@ -458,8 +453,8 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         y_out: Optional[np.ndarray] = None,
     ) -> Optional[ExactMarginalLogLikelihood]:
         """
-        Construction a new GP model based on the inputs
-        If both in and out are None: return an empty models
+        Construct a new GP model based on the inputs
+        If both in and out are None: return an empty model
         If only in_x and in_y are given: return a vanilla GP model
         If in_x, in_y, out_x, out_y are given: return a partial sparse GP model.
 
@@ -472,7 +467,7 @@ class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
         y_in: Optional[np.ndarray (N_in,)]
             The corresponding target values inside the subregion.
         X_out: Optional[np.ndarray (N_out, D).
-            Input data points ouside the subregion. The dimensionality of X_out is (N_out, D), if it is not given, this
+            Input data points outside the subregion. The dimensionality of X_out is (N_out, D). If it is not given, this
         function will return a vanilla Gaussian Process
         y_out: Optional[np.ndarray (N_out)]
             The corresponding target values outside the subregion.

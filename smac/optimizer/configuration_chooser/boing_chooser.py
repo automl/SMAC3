@@ -53,8 +53,8 @@ class BOinGChooser(EPMChooser):
     acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
         parameters for the optimizer of acquisition function of local models
     max_configs_local_fracs : float
-        Maximal number of fractions of samples to be included in the  subapce. If the number of samples in the
-        subsapce is beyond this value and n_min_config_inner, the subspace will be cropped to fit the requirement
+        The maximal number of fractions of samples to be included in the subapce. If the number of samples in the
+        subsapce is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
     min_configs_local: int,
         Minimum number of samples included in the inner loop model
     do_switching: bool

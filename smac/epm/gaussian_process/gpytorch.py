@@ -52,7 +52,7 @@ class ExactGPModel(ExactGP):
         self.covar_module = base_covar_kernel
 
     def forward(self, x: torch.Tensor) -> MultivariateNormal:
-        """Compute the posterior mean and varainces"""
+        """Compute the posterior mean and variance"""
         mean_x = self.mean_module(x)
         covar_x = self.covar_module(x)
         return MultivariateNormal(mean_x, covar_x)
@@ -81,11 +81,11 @@ class GPyTorchGaussianProcess(BaseModel):
         configspace: ConfigurationSpace
             Configuration space
         types : List[int]
-            Specifies the number of categorical values of an input dimension where
-            the i-th entry corresponds to the i-th input dimension. Let's say we
-            have 2 dimension where the first dimension consists of 3 different
-            categorical choices and the second dimension is continuous than we
-            have to pass [3, 0]. Note that we count starting from 0.
+             Specifies the number of categorical values of an input dimension where
+             the i-th entry corresponds to the i-th input dimension. Let's say we
+             have 2 dimensions where the first dimension consists of 3 different
+             categorical choices, and the second dimension is continuous than we
+             have to pass [3, 0]. Note that we count starting from 0.
         bounds : List[Tuple[float, float]]
             bounds of input dimensions: (lower, uppper) for continuous dims; (n_cat, np.nan) for categorical dims
         seed : int
@@ -101,7 +101,7 @@ class GPyTorchGaussianProcess(BaseModel):
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features of the I different instances
         pca_components : float
-            Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
+            The number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
         super(GPyTorchGaussianProcess, self).__init__(
@@ -146,7 +146,7 @@ class GPyTorchGaussianProcess(BaseModel):
         y: np.ndarray (N,)
             The corresponding target values, N as the number of points
         do_optimize: boolean
-            If set to true the hyperparameters are optimized otherwise
+            If set to true, the hyperparameters are optimized otherwise
             the default hyperparameters of the kernel are used.
         """
         X = self._impute_inactive(X)
@@ -182,13 +182,13 @@ class GPyTorchGaussianProcess(BaseModel):
         self, X: Optional[np.ndarray] = None, y: Optional[np.ndarray] = None
     ) -> Optional[ExactMarginalLogLikelihood]:
         """
-        Get the GP model with the given X and y values, as GPyTorch requires the input data to initialize a new
-        model, we also pass X and y here. X and y are set optional to ensure compatible
+        Get the GP model with the given X and y values. As GPyTorch requires the input data to initialize a new
+        model, we also pass X and y here. X and y are set optional to ensure compatibility.
 
         Parameters
         ----------
         X: Optional[np.ndarray(N, D)]
-            input feature vectors, N is number of data points and D is number of feature dimensions
+            input feature vectors, N is number of data points, and D is number of feature dimensions
         y: Optional[np.ndarray(N,)]
             input observations, N is number of data points
         Returns
@@ -340,7 +340,7 @@ class GPyTorchGaussianProcess(BaseModel):
         X_test: np.ndarray (N, D)
             Input test points
         n_funcs: int
-            Number of function values that are drawn at each test point.
+            The number of function values that are drawn at each test point.
 
         Returns
         -------

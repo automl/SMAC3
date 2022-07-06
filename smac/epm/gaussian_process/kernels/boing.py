@@ -26,8 +26,8 @@ from smac.epm.gaussian_process.kernels import ConstantKernel, WhiteKernel
 class MixedKernel(ProductKernel):
     """
     A special form of ProductKernel. It is composed of a cont_kernel and a cat_kernel that work with continuous and
-    categorical parameters respectively. Its forward pass allows an additional parameter to determine if only
-    cont_kernel is used
+    categorical parameters, respectively. Its forward pass allows an additional parameter to determine if only
+    cont_kernel is applied to the input.
     """
 
     def __init__(self, cont_kernel: Kernel, cat_kernel: Kernel):
@@ -40,7 +40,7 @@ class MixedKernel(ProductKernel):
     def forward(
         self, x1: torch.Tensor, x2: torch.Tensor, diag: bool = False, cont_only: bool = False, **params: Any
     ) -> gpytorch.lazy.LazyTensor:
-        """Compute kernel values, if cont_only is True, then teh categorical kernel is omitted"""
+        """Compute kernel values, if cont_only is True, then the categorical kernel is omitted"""
         if not cont_only:
             return super().forward(x1, x2, diag, **params)
         else:
@@ -51,15 +51,14 @@ def construct_gp_kernel(
     kernel_kwargs: Dict[str, Any], cont_dims: np.ndarray, cat_dims: np.ndarray
 ) -> Union[Kernel, SKLKernels]:
     """
-    Construct a GP kernel with the given kernel init kwargs and the cont_dims and cat_dims. Since the subspace might
-    not have the same number of dimensions as the global search space. We need to reconstruct the kernel everytime a
-    new subspace is generated.
+    Construct a GP kernel with the given kernel init argument, the cont_dims, and cat_dims of the problem. Since the
+    subspace might not have the same number of dimensions as the global search space.
+    We need to reconstruct the kernel every time when a new subspace is generated.
 
     Parameters
     ----------
     kernel_kwargs: Dict[str, Any]
-        kernel kwargs. It needs to contain the type of each individual kernels and their initial arguments, including
-        constraints and priors. It needs to contain the following items:
+        kernel kwargs. Arguments to initialize the kernels. It needs to contain the following items:
             cont_kernel: type of continuous kernels
             cont_kernel_kwargs: additional arguments for continuous kernels, for instance, length constraints and prior
             cat_kernel: type of categorical kernels
@@ -128,11 +127,11 @@ class FITCKernel(Kernel):
         y_out: torch.Tensor,
         active_dims: Optional[Tuple[int]] = None,
     ):
-        r"""A reimplementation of FITC Kernel that computes the posterior explictly for globally augmented local GP.
+        r"""A reimplementation of FITC Kernel that computes the posterior explicitly for globally augmented local GP.
         This should work exactly the same as a gpytorch.kernel.InducingPointKernel.
          However, it takes much less time when combined with LGPGA.
          References: Edward Snelson and Zoubin Ghahramani. Sparse Gaussian processes using pseudo-inputs. Advances in
-         Neural Information Processing Systems 18, Cambridge, Massachussetts, 2006. The MIT Press.
+         Neural Information Processing Systems 18, Cambridge, Massachusetts, 2006. The MIT Press.
          https://papers.nips.cc/paper/2005/hash/4491777b1aa8b5b32c2e8666dbe1a495-Abstract.html
 
         Mean value is computed with:
@@ -145,12 +144,12 @@ class FITCKernel(Kernel):
         base_kernel: Kernel
             base kernel function
         X_inducing: torch.Tensor (N_inducing, D)
-            inducing points, should be of size (N_inducing, D), N_inducing is the number of the inducing points
+            inducing points, a torch tensor with shape (N_inducing, D), N_inducing is the number of the inducing points
         likelihood: GaussianLikelihood
             GP likelihood
         X_out: torch.Tensor (N_out,D)
-            data features outside the subregion, needs to be of size (N_out, D), N_out is the number of points outside
-            the subspace
+            data features outside the subregion, it needs to be of size (N_out, D), N_out is the number of points
+            outside the subspace
         y_out: torch.Tensor
             data observations outside the subregion
         active_dims: typing.Optional[typing.Tuple[int]] = None
@@ -247,7 +246,7 @@ class FITCKernel(Kernel):
 
     @property
     def _lambda_diag_inv(self) -> torch.Tensor:
-        r"""Computes the inverse of lambda matrix, is computed by
+        r"""Computes the inverse of lambda matrix, it is computed by
         \Lambda = diag[\mathbf{K_{X_out,X_out}-Q_{X_out,X_out}} + \sigma^2_{noise}\idenmat] and
         Q{X_out, X_out} = K(X_out, X_inducing) K^{-1}(X_inducing,X_inducing) K(X_inducing, X_out)
 
@@ -278,7 +277,7 @@ class FITCKernel(Kernel):
 
     @property
     def _inducing_sigma(self) -> torch.Tensor:
-        r"""Computes the inverse of lambda matrix, is computed by
+        r"""Computes the inverse of lambda matrix, it is computed by
         \mathbf{\Sigma} = (\mathbf{K_{X_inducing,X_inducing}} +
          \mathbf{K_{X_inducing, X_out} \Lambda}^{-1}\mathbf{K_{X_out,X_inducing}})
 
@@ -304,6 +303,7 @@ class FITCKernel(Kernel):
     @property
     def _inducing_sigma_inv_root(self) -> torch.Tensor:
         r"""Inverse of Sigma matrix:
+
         Returns
         -------
         res: torch.Tensor (N_inducing, N_inducing)
@@ -323,11 +323,13 @@ class FITCKernel(Kernel):
 
     @property
     def _poster_mean_mat(self) -> torch.Tensor:
-        r"""A cached value for computing posterior mean of a sparse kernel:
+        r"""A cached value for computing the posterior mean of a sparse kernel it is defined by
+        \Sigma K_{u, 1} \Lambda}^{-1}\mathbf{y_out}
+
         Returns
         -------
         res: torch.Tensor (N_inducing, 1)
-            a cached value for computing the posterior mean, is defined by  \Sigma K_{u, 1} \Lambda}^{-1}\mathbf{y_out}
+            cached posterior mean
         """
         if not self.training and hasattr(self, "_cached_poster_mean_mat"):
             return self._cached_poster_mean_mat
@@ -347,15 +349,14 @@ class FITCKernel(Kernel):
             return res
 
     def _get_covariance(self, x1: torch.Tensor, x2: torch.Tensor) -> gpytorch.lazy.LazyTensor:
-        r"""Compute the posterior covariance matrix of the sparse kernel (will serve as the prior for the GP
-        kernel in the second stage)
+        r"""Compute the posterior covariance matrix of a sparse kernel explicitly
 
         Parameters
         ----------
         x1: torch.Tensor(N_x1, D)
-            first input of the partial sparse kernel
+            first input of the FITC kernel
         x2: torch.Tensor(N_x2, D)
-            second input of the partial sparse kernel
+            second input of the FITC kernel
 
         Returns
         -------
@@ -402,15 +403,17 @@ class FITCKernel(Kernel):
 
     def posterior_mean(self, inputs: torch.Tensor) -> torch.Tensor:
         """
-        Posterior mean of the sparse kernel, will serve as the prior mean of the dense kernel
+        The posterior mean of the FITC kernel, will serve as the prior mean of the dense kernel.
+
         Parameters
         ----------
         inputs: torch.Tensor(N_inputs, D)
-        input of the partial sparse kernel
+            input of the FITC kernel
+
         Returns
         -------
         res: Torch.Tensor (N_inputs, 1)
-        posterior mean of sparse Kernel
+            The posterior mean of the FITC Kernel
         """
         if self.training and hasattr(self, "_train_cached_posterior_mean"):
             return self._train_cached_posterior_mean
@@ -439,17 +442,19 @@ class FITCKernel(Kernel):
     def num_outputs_per_input(self, x1: torch.Tensor, x2: torch.Tensor) -> int:
         """
         Number of outputs given the inputs
-        if x1 is size `n x d` and x2 is size `m x d`, then the size of the kernel
+        if x1 is of size `n x d` and x2 is size `m x d`, then the size of the kernel
         will be `(n * num_outputs_per_input) x (m * num_outputs_per_input)`
+
         Parameters
         ----------
         x1: torch.Tensor
-        input of the partial sparse kernel
+            the first input of the kernel
         x2: torch.Tensor
+            the second input of the kernel
         Returns
         -------
         res: int
-        for base kernels such as matern or RBF kernels, this value needs to be 1.
+            for base kernels such as matern or RBF kernels, this value needs to be 1.
         """
         return self.base_kernel.num_outputs_per_input(x1, x2)
 
@@ -522,12 +527,13 @@ class FITCMean(Mean):
         """
         Read the posterior mean value of the given fitc kernel and serve as a prior mean value for the
         second stage
+
         Parameters
         ----------
-        covar_module: PartialSparseKernel
-        a partial sparse kernel
+        covar_module: FITCKernel
+            a FITC  kernel
         batch_shape: torch.size
-        batch size
+            batch size
         """
         super(FITCMean, self).__init__()
         self.covar_module = covar_module
@@ -536,15 +542,17 @@ class FITCMean(Mean):
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         """
-        Compute the posterior mean from the cached value of partial sparse kernel
+        Compute the posterior mean from the cached value of FITC kernels
+
         Parameters
         ----------
         input: torch.Tensor(N_xin, D)
-        input torch Tensor
+            input torch Tensor
+
         Returns
         -------
         res: torch.Tensor(N_xin)
-        posterior mean value of sparse GP model
+            posterior mean value of FITC GP model
         """
         # detach is applied here to avoid updating the same parameter twice in the same iteration
         # which might result in an error

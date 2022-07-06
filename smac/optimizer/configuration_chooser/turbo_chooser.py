@@ -32,11 +32,11 @@ class TurBOChooser(EPMChooser):
     length_min: float
         If the subspace length is smaller than length_min, TurBO will restart
     length_max: float
-        Maximum length of subspace
+        The maximum length of subspace
     success_tol: int
         Number of successful suggestions (suggested points become incumbent) required for expanding subspace
     failure_tol_min: int
-        Minimum number of failure suggestions (suggested points fails to become incumbent) required for shrinking
+        The minimum number of failure suggestions (suggested points fails to become incumbent) required for shrinking
         subspace
     n_init_x_params: int
         how many configurations will be used at most in the initial design (X*D). Used for restarting the subspace

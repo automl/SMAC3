@@ -384,7 +384,7 @@ class LocalSubspace(ABC):
     ) -> Optional[AbstractForbiddenComponent]:
         """
         Fit the forbidden to subspaces. If the target forbidden can be added to subspace, we return a new forbidden
-        with exactly the same type of the input forbidden. Otherwise, we return None.
+        with exactly the same type of the input forbidden. Otherwise, None is returned.
 
         Parameters
         ----------
@@ -443,9 +443,9 @@ class LocalSubspace(ABC):
         Parameters
         ----------
         predict_x_best: bool,
-            if the incumbent is acquired by the prediceted mean of a surrogate model
+            if the incumbent is acquired by the predicted mean of a surrogate model
         update_incumbent_array: bool
-            if the incumbent_array of this subspaced is replace with the newly updated incumbent
+            if the incumbent_array of this subspace is replaced with the newly updated incumbent
         """
         acq_func_kwargs = {"model": self.model, "num_data": len(self.ss_x)}
 
@@ -512,17 +512,18 @@ class LocalSubspace(ABC):
 
     def update_incumbent_array(self, new_incumbent: np.ndarray) -> None:
         """
-        Update a new incumbent array, the array is generated from global configuration
+        Update a new incumbent array. The array is generated from the global configuration
+
         Parameters
         ----------
         new_incumbent: np.ndarray(D)
-            new incumbent, which correspondences to global configuration
+            new incumbent, which correspondences to the global configuration
         """
         self.incumbent_array = self.normalize_input(X=new_incumbent)
 
     def generate_challengers(self, **optimizer_kwargs: Any) -> Iterator:
         """
-        Generate a list of challengers that will be transformed to the global configuration space
+        Generate a list of challengers that will be transformed into the global configuration space
 
         Parameters
         ----------
@@ -592,7 +593,9 @@ class ChallengerListLocal(Iterator):
         incumbent_array: Optional[np.ndarray] = None,
     ):
         """
-        A Challenger list to convert the configuration from local configuration space to global configuration space
+        A Challenger list to convert the configuration from the local configuration space to the global configuration
+         space
+
         Parameters
         ----------
         cs_local: ConfigurationSpace
