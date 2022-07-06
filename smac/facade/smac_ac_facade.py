@@ -29,6 +29,13 @@ from smac.intensification.hyperband import Hyperband
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
+from smac.multi_objective.aggregation_strategy import (
+    AggregationStrategy,
+    MeanAggregationStrategy,
+)
 from smac.optimizer.acquisition import (
     EI,
     EIPS,
@@ -45,13 +52,6 @@ from smac.optimizer.acquisition.maximizer import (
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserProb,
     RandomChooser,
-)
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
-from smac.optimizer.multi_objective.aggregation_strategy import (
-    AggregationStrategy,
-    MeanAggregationStrategy,
 )
 
 # optimizer

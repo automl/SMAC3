@@ -2,7 +2,7 @@ from typing import Optional
 
 import numpy as np
 
-from smac.optimizer.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.multi_objective.aggregation_strategy import AggregationStrategy
 
 
 class ParEGO(AggregationStrategy):

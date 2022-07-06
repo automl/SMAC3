@@ -10,12 +10,12 @@ from smac.epm.random_epm import RandomEPM
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,
     RandomSearch,
-)
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (

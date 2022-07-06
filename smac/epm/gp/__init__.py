@@ -8,6 +8,7 @@ from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 import smac.epm.gp.utils.prior
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
+from smac.epm.gp.gp import GaussianProcess
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -157,3 +158,6 @@ class BaseModel(AbstractEPM):
         X = X.copy()
         X[~np.isfinite(X)] = -1
         return X
+
+
+__all__ = ["BaseModel", "GaussianProcess"]
