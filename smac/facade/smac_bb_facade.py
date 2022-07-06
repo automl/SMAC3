@@ -3,7 +3,7 @@ from typing import Any, Type
 import numpy as np
 
 from smac.epm.gp import BaseModel, GaussianProcess
-from smac.epm.gp.kernels.gp import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.gp.kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
 from smac.epm.gp.mcmc import MCMCGaussianProcess
 from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.util_funcs import get_rng, get_types

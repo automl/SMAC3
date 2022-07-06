@@ -10,7 +10,6 @@ from smac.configspace import (
     UniformIntegerHyperparameter,
 )
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -64,6 +63,8 @@ class BaseModel(AbstractEPM):
 
         return X
 
+
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances  # noqa
 
 __all__ = [
     "BaseModel",

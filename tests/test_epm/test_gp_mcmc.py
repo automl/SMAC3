@@ -13,7 +13,7 @@ __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
-    from smac.epm.gp.kernels.gp import ConstantKernel, Matern, WhiteKernel
+    from smac.epm.gp.kernels import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,

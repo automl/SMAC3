@@ -11,8 +11,8 @@ from smac.epm.base_epm import AbstractEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
-from smac.optimizer.acquisitions import EI, TS, AbstractAcquisitionFunction
-from smac.optimizer.acquisitions.maximizer import AcquisitionFunctionMaximizer
+from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
+from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
 from smac.optimizer.configuration_chooser import EPMChooser
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,

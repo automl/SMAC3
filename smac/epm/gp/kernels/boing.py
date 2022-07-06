@@ -20,7 +20,7 @@ from gpytorch.means.mean import Mean
 from gpytorch.utils.cholesky import psd_safe_cholesky
 from sklearn.gaussian_process.kernels import Kernel as SKLKernels
 
-from smac.epm.gp.kernels.gp import ConstantKernel, WhiteKernel
+from smac.epm.gp.kernels import ConstantKernel, WhiteKernel
 
 
 class MixedKernel(ProductKernel):

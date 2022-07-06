@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.epm.gp import GaussianProcess
-from smac.epm.gp.kernels.gp import ConstantKernel, Matern, WhiteKernel
+from smac.epm.gp.kernels import ConstantKernel, Matern, WhiteKernel
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import TS
 from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
