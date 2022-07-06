@@ -120,7 +120,7 @@ class BaseEPM:
 
         Returns
         -------
-        self : AbstractEPM
+        self : BaseEPM
         """
         if len(X.shape) != 2:
             raise ValueError("Expected 2d array, got %dd array!" % len(X.shape))

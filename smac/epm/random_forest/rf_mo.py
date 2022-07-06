@@ -43,7 +43,7 @@ class MultiObjectiveRandomForest(MultiObjectiveEPM):
             model kwargs for initializing models
         Returns
         -------
-        estimators: List[AbstractEPM]
+        estimators: List[BaseEPM]
             A list of Random Forests
         """
         return [RandomForestWithInstances(configspace, types, bounds, **model_kwargs) for _ in range(self.num_targets)]

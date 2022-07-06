@@ -135,7 +135,7 @@ class SMAC4AC(object):
         Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
     acquisition_function_optimizer_kwargs: Optional[dict]
         Arguments passed to constructor of `~acquisition_function_optimizer`
-    model : AbstractEPM
+    model : BaseEPM
         Model that implements train() and predict(). Will use a
         :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
     model_kwargs : Optional[dict]
@@ -343,7 +343,7 @@ class SMAC4AC(object):
                     model_def_kwargs[key] = value
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
             model_instance = RandomForestWithInstances(
-                **model_def_kwargs  # type: ignore[arg-type] # noqa F821  # type: AbstractEPM
+                **model_def_kwargs  # type: ignore[arg-type] # noqa F821  # type: BaseEPM
             )
         elif inspect.isclass(model):
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821

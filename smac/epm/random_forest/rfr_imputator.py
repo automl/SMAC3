@@ -32,7 +32,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         Cutoff value for this scenario (upper runnning time limit)
     threshold : float
         Highest possible values (e.g. cutoff * parX).
-    model : AbstractEPM
+    model : BaseEPM
         Predictive model (i.e. RandomForestWithInstances)
     change_threshold : float
         Stop imputation if change is less than this.
@@ -49,7 +49,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
     threshold : float
     seed : int
         Created by drawing random int from rng
-    model : AbstractEPM
+    model : BaseEPM
         Predictive model (i.e. RandomForestWithInstances)
     var_threshold: float
     """

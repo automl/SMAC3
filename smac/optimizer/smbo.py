@@ -55,7 +55,7 @@ class SMBO(object):
         (probably with some kind of racing on the instances)
     num_run: int
         id of this run (used for pSMAC)
-    model: AbstractEPM
+    model: BaseEPM
         empirical performance model
     acq_optimizer: AcquisitionFunctionMaximizer
         Optimizer of acquisition function.

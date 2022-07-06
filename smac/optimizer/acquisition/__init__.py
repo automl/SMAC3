@@ -23,7 +23,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     Parameters
     ----------
-    model : AbstractEPM
+    model : BaseEPM
         Models the objective function.
 
     Attributes
@@ -118,7 +118,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             The model needs to implement an additional attribute ``models`` which contains the different models to
             integrate over.
         kwargs
@@ -141,7 +141,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             The model needs to implement an additional attribute ``models`` which contains the different models to
             integrate over.
         kwargs
@@ -196,7 +196,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             Models the objective function.
         decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
             otherwise.
@@ -355,7 +355,7 @@ class EI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -427,7 +427,7 @@ class EIPS(EI):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X) returning a tuples of
                    predicted cost and running time
@@ -507,7 +507,7 @@ class LogEI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -582,7 +582,7 @@ class PI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -633,7 +633,7 @@ class LCB(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=1.0
@@ -690,7 +690,7 @@ class TS(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0

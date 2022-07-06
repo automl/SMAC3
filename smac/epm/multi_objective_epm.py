@@ -46,7 +46,7 @@ class MultiObjectiveEPM(BaseEPM):
         target names
     num_targets: int
         number of targets
-    estimators: List[AbstractEPM]
+    estimators: List[BaseEPM]
         a list of estimators predicting different target values
     """
 
@@ -101,7 +101,7 @@ class MultiObjectiveEPM(BaseEPM):
             model kwargs for initializing models
         Returns
         -------
-        estimators: List[AbstractEPM]
+        estimators: List[BaseEPM]
             A list of estimators
         """
         raise NotImplementedError

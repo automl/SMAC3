@@ -40,7 +40,7 @@ class BOinGChooser(EPMChooser):
         empirical performance model (right now, we support only RandomForestWithInstances) as a global model
     acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
         Optimizer of acquisition function of global models
-    model_local: AbstractEPM,
+    model_local: BaseEPM,
         local empirical performance model, used in subspace
     model_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local model
