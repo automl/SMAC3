@@ -25,7 +25,10 @@ from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.configuration_chooser.random_chooser import ChooserNoCoolDown, ChooserProb
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserNoCoolDown,
+    ChooserProb,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4Cost,

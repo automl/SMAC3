@@ -17,7 +17,10 @@ from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import check_subspace_points, get_types
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.optimizer.configuration_chooser.boing_chooser import BOinGChooser, subspace_extraction
+from smac.optimizer.configuration_chooser.boing_chooser import (
+    BOinGChooser,
+    subspace_extraction,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 from smac.scenario.scenario import Scenario

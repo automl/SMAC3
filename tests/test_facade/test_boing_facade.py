@@ -14,7 +14,7 @@ from ConfigSpace.hyperparameters import (
     UniformFloatHyperparameter,
 )
 
-from smac.facade.experimental.smac_boing_facade import SMAC4BOING
+from smac.facade.smac_boing_facade import SMAC4BOING
 from smac.optimizer.configuration_chooser.boing_chooser import BOinGChooser
 from smac.scenario.scenario import Scenario
 

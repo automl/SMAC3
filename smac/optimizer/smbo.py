@@ -15,7 +15,10 @@ from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
-from smac.optimizer.configuration_chooser.random_chooser import ChooserNoCoolDown, RandomChooser
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserNoCoolDown,
+    RandomChooser,
+)
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario

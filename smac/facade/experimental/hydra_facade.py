@@ -15,7 +15,7 @@ import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
 from smac.epm.utils import get_rng
-from smac.facade.experimental.psmac_facade import PSMAC
+from smac.facade.psmac_facade import PSMAC
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory

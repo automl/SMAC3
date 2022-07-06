@@ -17,7 +17,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-from smac.facade.experimental.smac_boing_facade import SMAC4BOING
+from smac.facade.smac_boing_facade import SMAC4BOING
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario

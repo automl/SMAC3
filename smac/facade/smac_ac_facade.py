@@ -49,7 +49,10 @@ from smac.optimizer.acquisition.maximizer import (
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
 )
-from smac.optimizer.configuration_chooser.random_chooser import ChooserProb, RandomChooser
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserProb,
+    RandomChooser,
+)
 
 # optimizer
 from smac.optimizer.smbo import SMBO

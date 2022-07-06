@@ -11,6 +11,7 @@ epm/gaussian_process and epm/random_forest now.
 * Also, we restructured the optimizer folder and therefore the location of the acquisition functions
 and configuration chooser.
 * Multi-objective functions are located in the folder `multi_objective`.
+* pSMAC facade was moved to the facade directory.
 
 
 # 1.3.4
