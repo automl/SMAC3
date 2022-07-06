@@ -9,7 +9,7 @@ import scipy.spatial.distance
 import scipy.special
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.epm.gp_base_prior import Prior
+from smac.epm.gp.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

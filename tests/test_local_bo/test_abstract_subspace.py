@@ -15,7 +15,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.epm.util_funcs import check_subspace_points, get_types
-from smac.optimizer.local_bo.abstract_subspace import ChallengerListLocal, LocalSubspace
+from smac.optimizer.subspaces import ChallengerListLocal, LocalSubspace
 
 
 def generate_cont_hps():

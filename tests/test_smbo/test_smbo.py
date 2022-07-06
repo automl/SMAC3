@@ -9,7 +9,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 import smac.facade.smac_ac_facade
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent

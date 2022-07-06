@@ -1,12 +1,12 @@
 import numpy as np
 
-from smac.optimizer.local_bo.rh2epm_boing import (
-    RunHistory2EPM4CostWithRaw,
-    RunHistory2EPM4ScaledLogCostWithRaw,
-)
 from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4Cost,
     RunHistory2EPM4LogScaledCost,
+)
+from smac.runhistory.runhistory2epm_boing import (
+    RunHistory2EPM4CostWithRaw,
+    RunHistory2EPM4ScaledLogCostWithRaw,
 )
 from smac.tae import StatusType
 

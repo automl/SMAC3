@@ -37,11 +37,14 @@ from smac.optimizer.acquisition import (
     LogEI,
     PriorAcquisitionFunction,
 )
-from smac.optimizer.chooser.random_chooser import ChooserProb, RandomChooser
-from smac.optimizer.ei_optimization import (
+from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
+)
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserProb,
+    RandomChooser,
 )
 from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,

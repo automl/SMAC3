@@ -21,7 +21,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.optimizer.local_bo.epm_chooser_turbo import EPMChooserTurBO
+from smac.optimizer.configuration_chooser.epm_chooser_turbo import EPMChooserTurBO
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario

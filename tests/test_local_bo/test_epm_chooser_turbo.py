@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.optimizer.local_bo.epm_chooser_turbo import EPMChooserTurBO
+from smac.optimizer.configuration_chooser.epm_chooser_turbo import EPMChooserTurBO
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.tae import StatusType

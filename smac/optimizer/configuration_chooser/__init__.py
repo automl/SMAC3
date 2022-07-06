@@ -8,8 +8,14 @@ from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
+from smac.optimizer.acquisition.maximizer import (
+    AcquisitionFunctionMaximizer,
+    RandomSearch,
+)
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserNoCoolDown,
+    RandomChooser,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario

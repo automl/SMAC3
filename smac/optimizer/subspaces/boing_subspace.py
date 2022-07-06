@@ -8,8 +8,8 @@ from ConfigSpace import ConfigurationSpace
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
-from smac.optimizer.acquisition_functions import EI, AbstractAcquisitionFunction
-from smac.optimizer.acquisition_maximizer import (
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedRandomSearch,
 )

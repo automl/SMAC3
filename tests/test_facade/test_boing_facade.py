@@ -15,7 +15,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.facade.experimental.smac_boing_facade import SMAC4BOING
-from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG
+from smac.optimizer.configuration_chooser.epm_chooser_boing import EPMChooserBOinG
 from smac.scenario.scenario import Scenario
 
 

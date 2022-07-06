@@ -6,10 +6,13 @@ from smac.configspace import Configuration
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
-from smac.optimizer.chooser.epm_chooser import EPMChooser
-from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
+from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
+from smac.optimizer.configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserNoCoolDown,
+    RandomChooser,
+)
+from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario

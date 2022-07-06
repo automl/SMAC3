@@ -27,7 +27,7 @@ from smac.epm.base_epm import AbstractEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.gp.kernels.boing import construct_gp_kernel
 from smac.epm.util_funcs import check_subspace_points
-from smac.optimizer.acquisition_functions import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 
 
 class LocalSubspace(ABC):

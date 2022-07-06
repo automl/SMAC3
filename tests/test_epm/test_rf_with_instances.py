@@ -12,7 +12,7 @@ from ConfigSpace import (
 
 import smac
 import smac.configspace
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

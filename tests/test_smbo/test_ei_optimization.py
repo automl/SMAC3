@@ -14,7 +14,7 @@ from scipy.spatial.distance import euclidean
 
 from smac.configspace import ConfigurationSpace, pcs
 from smac.optimizer.acquisition import EI
-from smac.optimizer.ei_optimization import (
+from smac.optimizer.acquisition.maximizer import (
     LocalAndSortedPriorRandomSearch,
     LocalSearch,
     RandomSearch,

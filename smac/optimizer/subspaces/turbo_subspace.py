@@ -14,7 +14,7 @@ from smac.epm.gp import GaussianProcess
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.gp.gpytorch import GPyTorchGaussianProcess
 from smac.epm.gp.mcmc import MCMCGaussianProcess
-from smac.optimizer.acquisition_functions import TS, AbstractAcquisitionFunction
+from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
 from smac.optimizer.subspaces import LocalSubspace
 
 warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require" " n to be a power of 2.")

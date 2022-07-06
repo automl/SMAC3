@@ -9,10 +9,10 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.optimizer.local_bo.epm_chooser_boing import EPMChooserBOinG
-from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
+from smac.optimizer.configuration_chooser.epm_chooser_boing import EPMChooserBOinG
+from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 
 
 class SMAC4BOING(SMAC4HPO):

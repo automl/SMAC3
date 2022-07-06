@@ -5,7 +5,7 @@ import sklearn.gaussian_process
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
-import smac.epm.gp_base_prior
+import smac.epm.gp.utils.prior
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
 
@@ -91,7 +91,7 @@ class BaseModel(AbstractEPM):
         self,
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
-    ) -> List[List[smac.epm.gp_base_prior.Prior]]:
+    ) -> List[List[smac.epm.gp.utils.prior.Prior]]:
         """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
@@ -118,7 +118,7 @@ class BaseModel(AbstractEPM):
                     if add_bound_priors:
                         if add_soft_bounds:
                             priors_for_hp.append(
-                                smac.epm.gp_base_prior.SoftTopHatPrior(
+                                smac.epm.gp.utils.prior.SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,
@@ -127,7 +127,7 @@ class BaseModel(AbstractEPM):
                             )
                         else:
                             priors_for_hp.append(
-                                smac.epm.gp_base_prior.TophatPrior(
+                                smac.epm.gp.utils.prior.TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,

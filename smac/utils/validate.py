@@ -8,8 +8,8 @@ import numpy as np
 from joblib import Parallel, delayed
 
 from smac.configspace import Configuration, convert_configurations_to_array
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rfr_imputator import RFRImputator
 from smac.epm.util_funcs import get_types
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
