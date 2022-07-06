@@ -24,7 +24,7 @@ from ConfigSpace.hyperparameters import (
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.gaussian_process.kernels.boing import construct_gp_kernel
 from smac.epm.utils import check_subspace_points
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
@@ -51,7 +51,7 @@ class LocalSubspace(ABC):
         subspaces bounds of categorical hyperparameters, its length is the number of categorical hyperparameters
     rng: np.random.RandomState
         random state
-    model_local: ~smac.epm.base_epm.AbstractEPM
+    model_local: ~smac.epm.base_epm.BaseEPM
         model in subspace
     model_local_kwargs: Optional[Dict]
         argument for subspace model
@@ -73,7 +73,7 @@ class LocalSubspace(ABC):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: BaseEPM = GloballyAugmentedLocalGP,
+        model_local: BaseEPM = GloballyAugmentedLocalGaussianProcess,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         acq_func_local_kwargs: Optional[Dict] = None,

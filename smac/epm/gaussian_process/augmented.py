@@ -103,7 +103,7 @@ class AugmentedLocalGaussianProcess(ExactGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class VariationalGPModel(gpytorch.models.ApproximateGP):
+class VariationalGaussianProcess(gpytorch.models.ApproximateGP):
     """
     A variational GP to compute the position of the inducing points.
     We only compute the position of the inducing points w.r.t. the continuous dimensions
@@ -126,7 +126,7 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
         variational_strategy = gpytorch.variational.VariationalStrategy(
             self, X_inducing, variational_distribution, learn_inducing_locations=True
         )
-        super(VariationalGPModel, self).__init__(variational_strategy)
+        super(VariationalGaussianProcess, self).__init__(variational_strategy)
         self.mean_module = gpytorch.means.ZeroMean()
         self.covar_module = kernel
 
@@ -160,7 +160,7 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
+class GloballyAugmentedLocalGaussianProcess(GPyTorchGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -205,7 +205,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
         normalize_y : bool
             Zero mean unit variance normalization of the output values, when the model is a partial sparse GP model,
         """
-        super(GloballyAugmentedLocalGP, self).__init__(
+        super(GloballyAugmentedLocalGaussianProcess, self).__init__(
             configspace=configspace,
             types=types,
             bounds=bounds,
@@ -304,7 +304,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
                 inducing_points = torch.from_numpy(lhd.random(n=self.num_inducing_points))
 
                 kernel = self.gp.model.base_covar
-                var_gp = VariationalGPModel(kernel, X_inducing=inducing_points)
+                var_gp = VariationalGaussianProcess(kernel, X_inducing=inducing_points)
 
                 X_out_ = torch.from_numpy(X_out)
                 y_out_ = torch.from_numpy(y_out)

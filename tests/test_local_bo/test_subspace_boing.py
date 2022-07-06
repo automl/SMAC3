@@ -5,7 +5,7 @@ from ConfigSpace import ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from gpytorch.kernels import MaternKernel, ScaleKernel
 
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI
 from smac.optimizer.acquisition.maximizer import LocalAndSortedRandomSearch
@@ -24,7 +24,7 @@ class TestBOinGSubspace(unittest.TestCase):
         self.cs = ConfigurationSpace()
         self.cs.add_hyperparameter(UniformFloatHyperparameter("x0", 0, 1, 0.5))
 
-        self.model_local = GloballyAugmentedLocalGP
+        self.model_local = GloballyAugmentedLocalGaussianProcess
         cont_dims = [0]
         exp_kernel = MaternKernel(2.5, ard_num_dims=1, active_dims=tuple(cont_dims)).double()
 

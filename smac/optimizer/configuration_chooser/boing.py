@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
@@ -74,7 +74,7 @@ class BOinGChooser(EPMChooser):
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: BaseEPM = GloballyAugmentedLocalGP,
+        model_local: BaseEPM = GloballyAugmentedLocalGaussianProcess,
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,

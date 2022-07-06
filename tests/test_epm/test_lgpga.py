@@ -13,7 +13,7 @@ from gpytorch.priors import HorseshoePrior
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
 from smac.epm.gaussian_process.augmented import (
     AugmentedLocalGaussianProcess,
-    GloballyAugmentedLocalGP,
+    GloballyAugmentedLocalGaussianProcess,
 )
 from smac.epm.gaussian_process.gpytorch import ExactGPModel
 
@@ -26,7 +26,7 @@ pyro.set_rng_seed(0)
 
 def generate_lgpga(
     kernel, n_dimensions, rs, noise=None, num_inducing=2, normalize_y=True
-) -> Tuple[GloballyAugmentedLocalGP, ConfigurationSpace]:
+) -> Tuple[GloballyAugmentedLocalGaussianProcess, ConfigurationSpace]:
     if noise is None:
         likelihood = None
     else:
@@ -43,7 +43,7 @@ def generate_lgpga(
     for i in range(n_dimensions):
         configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
-    model = GloballyAugmentedLocalGP(
+    model = GloballyAugmentedLocalGaussianProcess(
         configspace=configspace,
         bounds=bounds,
         types=types,

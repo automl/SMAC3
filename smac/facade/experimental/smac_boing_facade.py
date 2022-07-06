@@ -9,7 +9,7 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing import BOinGChooser
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
@@ -75,13 +75,13 @@ class SMAC4BOING(SMAC4HPO):
 
             if epm_chooser_kwargs is None:
                 smbo_kwargs["epm_chooser_kwargs"] = {
-                    "model_local": GloballyAugmentedLocalGP,
+                    "model_local": GloballyAugmentedLocalGaussianProcess,
                     "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
                 }
             else:
                 smbo_kwargs["epm_chooser_kwargs"].update(
                     {
-                        "model_local": GloballyAugmentedLocalGP,
+                        "model_local": GloballyAugmentedLocalGaussianProcess,
                         "model_local_kwargs": dict(kernel_kwargs=kernel_kwargs, likelihood=likelihood),
                     }
                 )

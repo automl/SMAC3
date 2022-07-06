@@ -11,7 +11,7 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.gaussian_process.gpytorch import GPyTorchGaussianProcess
 from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
@@ -25,7 +25,9 @@ class TuRBOSubSpace(LocalSubspace):
     Subspace designed for TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
         https://proceedings.neurips.cc/paper/2019/hash/6c990b7aca7bc7058f5e98ea909e924b-Abstract.html
-    The hyperparameters follow the illustration under supplementary D, `TuRBO details`
+
+    The hyperparameters follow the illustration under supplementary D, `TuRBO details`.
+
     Parameters
     ----------
     length_init: float
@@ -203,13 +205,14 @@ class TuRBOSubSpace(LocalSubspace):
 
         # adjust length according to kernel length
         if isinstance(
-            self.model, (GaussianProcess, MCMCGaussianProcess, GloballyAugmentedLocalGP, GPyTorchGaussianProcess)
+            self.model,
+            (GaussianProcess, MCMCGaussianProcess, GloballyAugmentedLocalGaussianProcess, GPyTorchGaussianProcess),
         ):
             if isinstance(self.model, GaussianProcess):
                 kernel_length = np.exp(self.model.hypers[1:-1])
             elif isinstance(self.model, MCMCGaussianProcess):
                 kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))
-            elif isinstance(self.model, (GPyTorchGaussianProcess, GloballyAugmentedLocalGP)):
+            elif isinstance(self.model, (GPyTorchGaussianProcess, GloballyAugmentedLocalGaussianProcess)):
                 kernel_length = self.model.kernel.base_kernel.lengthscale.cpu().detach().numpy()
 
             # See section 'Trust regions' of section 2

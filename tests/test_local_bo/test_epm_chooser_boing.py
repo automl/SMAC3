@@ -12,7 +12,7 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
-from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import check_subspace_points, get_types
 from smac.facade.smac_bb_facade import SMAC4BB
@@ -65,7 +65,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
         epm_chooser_kwargs = {
-            "model_local": GloballyAugmentedLocalGP,
+            "model_local": GloballyAugmentedLocalGaussianProcess,
             "model_local_kwargs": self.model_kwargs,
         }
 
@@ -117,7 +117,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
         epm_chooser_kwargs = {
-            "model_local": GloballyAugmentedLocalGP,
+            "model_local": GloballyAugmentedLocalGaussianProcess,
             "model_local_kwargs": self.model_kwargs,
         }
 
@@ -161,7 +161,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
         epm_chooser_kwargs = {
-            "model_local": GloballyAugmentedLocalGP,
+            "model_local": GloballyAugmentedLocalGaussianProcess,
             "model_local_kwargs": self.model_kwargs,
             "do_switching": True,
         }
