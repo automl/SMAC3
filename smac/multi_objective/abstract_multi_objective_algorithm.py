@@ -11,7 +11,6 @@ class AbstractMultiObjectiveAlgorithm(ABC):
     """
 
     def __init__(self, num_obj: int, rng: Optional[np.random.RandomState] = None):
-
         if rng is None:
             rng = np.random.RandomState(0)
 

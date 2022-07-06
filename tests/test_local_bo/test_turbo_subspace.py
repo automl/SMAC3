@@ -13,7 +13,7 @@ from smac.epm.gaussian_process import GaussianProcess
 from smac.epm.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import TS
-from smac.optimizer.subspaces.turbo import TuRBOSubSpace
+from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 
 
 class TestTurBoSubspace(unittest.TestCase):

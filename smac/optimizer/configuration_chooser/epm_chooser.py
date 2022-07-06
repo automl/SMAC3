@@ -12,7 +12,7 @@ from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,
     RandomSearch,
 )
-from smac.optimizer.configuration_chooser.random import ChooserNoCoolDown, RandomChooser
+from smac.optimizer.configuration_chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario

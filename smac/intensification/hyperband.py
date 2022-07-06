@@ -8,7 +8,7 @@ from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.optimizer.configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (  # noqa: F401
     RunHistory,
     RunInfo,

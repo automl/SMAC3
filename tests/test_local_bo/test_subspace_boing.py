@@ -10,7 +10,7 @@ from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI
 from smac.optimizer.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.optimizer.subspaces import ChallengerListLocal
-from smac.optimizer.subspaces.boing import BOinGSubspace
+from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
 
 
 def generate_data(num_data, rs: np.random.RandomState):
