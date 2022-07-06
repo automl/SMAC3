@@ -16,10 +16,7 @@ from smac.configspace import (
     get_one_exchange_neighbourhood,
 )
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.configuration_chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
-)
+from smac.optimizer.configuration_chooser.random import ChooserNoCoolDown, RandomChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 

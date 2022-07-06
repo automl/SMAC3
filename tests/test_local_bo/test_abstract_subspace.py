@@ -14,7 +14,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.epm.util_funcs import check_subspace_points, get_types
+from smac.epm.utils import check_subspace_points, get_types
 from smac.optimizer.subspaces import ChallengerListLocal, LocalSubspace
 
 

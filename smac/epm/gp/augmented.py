@@ -21,7 +21,7 @@ from scipy.stats.qmc import LatinHypercube
 from smac.configspace import ConfigurationSpace
 from smac.epm.gp.gpytorch import ExactGPModel, GPyTorchGaussianProcess
 from smac.epm.gp.kernels.boing import FITCKernel, FITCMean
-from smac.epm.util_funcs import check_subspace_points
+from smac.epm.utils import check_subspace_points
 
 gpytorch.settings.debug.off()
 

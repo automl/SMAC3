@@ -14,13 +14,10 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
-from smac.epm.util_funcs import check_subspace_points, get_types
+from smac.epm.utils import check_subspace_points, get_types
 from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.optimizer.configuration_chooser.epm_chooser_boing import (
-    EPMChooserBOinG,
-    subspace_extraction,
-)
+from smac.optimizer.configuration_chooser.boing import BOinGChooser, subspace_extraction
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 from smac.scenario.scenario import Scenario
@@ -72,7 +69,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
             "model_local_kwargs": self.model_kwargs,
         }
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": BOinGChooser, "epm_chooser_kwargs": epm_chooser_kwargs}
 
         self.assertRaisesRegex(
             ValueError,
@@ -124,7 +121,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
             "model_local_kwargs": self.model_kwargs,
         }
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": BOinGChooser, "epm_chooser_kwargs": epm_chooser_kwargs}
 
         epm_chooser = SMAC4HPO(
             scenario=self.scenario,
@@ -171,7 +168,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
         turbo_kwargs = {"failure_tol_min": 1, "length_min": 0.6}
         epm_chooser_kwargs.update({"turbo_kwargs": turbo_kwargs})
 
-        smbo_kwargs = {"epm_chooser": EPMChooserBOinG, "epm_chooser_kwargs": epm_chooser_kwargs}
+        smbo_kwargs = {"epm_chooser": BOinGChooser, "epm_chooser_kwargs": epm_chooser_kwargs}
 
         epm_chooser = SMAC4HPO(
             scenario=self.scenario,

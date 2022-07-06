@@ -15,7 +15,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.facade.experimental.smac_boing_facade import SMAC4BOING
-from smac.optimizer.configuration_chooser.epm_chooser_boing import EPMChooserBOinG
+from smac.optimizer.configuration_chooser.boing import BOinGChooser
 from smac.scenario.scenario import Scenario
 
 
@@ -57,5 +57,5 @@ class TestSMAC4BOinGFacade(unittest.TestCase):
             tae_runner=rosenbrock_2d,
         )
         smac.optimize()
-        self.assertIsInstance(smac.solver.epm_chooser, EPMChooserBOinG)
+        self.assertIsInstance(smac.solver.epm_chooser, BOinGChooser)
         self.output_dirs.append(smac.scenario.output_dir)

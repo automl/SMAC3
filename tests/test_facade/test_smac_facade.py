@@ -13,7 +13,7 @@ from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.epm.rf.rf_mo import MultiObjectiveRandomForest
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
-from smac.epm.util_funcs import get_rng
+from smac.epm.utils import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
@@ -25,10 +25,7 @@ from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.configuration_chooser.random_chooser import (
-    ChooserNoCoolDown,
-    ChooserProb,
-)
+from smac.optimizer.configuration_chooser.random import ChooserNoCoolDown, ChooserProb
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4Cost,

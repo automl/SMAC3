@@ -21,7 +21,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.optimizer.configuration_chooser.epm_chooser_turbo import EPMChooserTurBO
+from smac.optimizer.configuration_chooser.turbo import TurBOChooser
 
 # Import SMAC-utilities
 from smac.scenario.scenario import Scenario
@@ -72,7 +72,7 @@ if __name__ == "__main__":
         scenario=scenario,
         rng=np.random.RandomState(42),
         model_type="gp",
-        smbo_kwargs={"epm_chooser": EPMChooserTurBO},
+        smbo_kwargs={"epm_chooser": TurBOChooser},
         initial_design_kwargs={"init_budget": 0},
         tae_runner=rosenbrock_2d,
     )

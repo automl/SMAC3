@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.epm.util_funcs import check_subspace_points, get_types
+from smac.epm.utils import check_subspace_points, get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

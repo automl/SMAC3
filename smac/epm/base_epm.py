@@ -20,7 +20,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class AbstractEPM(object):
+class BaseEPM:
     """Abstract implementation of the EPM API.
 
     **Note:** The input dimensionality of Y for training and the output dimensions
@@ -107,7 +107,7 @@ class AbstractEPM(object):
 
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
-    def train(self, X: np.ndarray, Y: np.ndarray) -> "AbstractEPM":
+    def train(self, X: np.ndarray, Y: np.ndarray) -> "BaseEPM":
         """Trains the EPM on X and Y.
 
         Parameters
@@ -154,7 +154,7 @@ class AbstractEPM(object):
 
         return self._train(X, Y)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "AbstractEPM":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "BaseEPM":
         """Trains the random forest on X and y.
 
         Parameters

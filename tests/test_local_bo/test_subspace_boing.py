@@ -6,11 +6,11 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from gpytorch.kernels import MaternKernel, ScaleKernel
 
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
-from smac.epm.util_funcs import get_types
+from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI
 from smac.optimizer.acquisition.maximizer import LocalAndSortedRandomSearch
 from smac.optimizer.subspaces import ChallengerListLocal
-from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
+from smac.optimizer.subspaces.boing import BOinGSubspace
 
 
 def generate_data(num_data, rs: np.random.RandomState):

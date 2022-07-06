@@ -23,19 +23,20 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.gp.kernels.boing import construct_gp_kernel
-from smac.epm.util_funcs import check_subspace_points
+from smac.epm.utils import check_subspace_points
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 
 
 class LocalSubspace(ABC):
     """
-    A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
+    A subspace that is designed for local Bayesian Optimization. If bounds_ss_cont and bounds_ss_cat are not given,
     this subspace is equivalent to the original configuration space. Additionally, this subspace
     supports local BO that only works with a subset of the dimensions, where the missing values are filled by the
-    corresponding values from incumbent_array
+    corresponding values from incumbent_array.
+
     Parameters
     ----------
     config_space: ConfigurationSpace
@@ -72,7 +73,7 @@ class LocalSubspace(ABC):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: AbstractEPM = GloballyAugmentedLocalGP,
+        model_local: BaseEPM = GloballyAugmentedLocalGP,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         acq_func_local_kwargs: Optional[Dict] = None,

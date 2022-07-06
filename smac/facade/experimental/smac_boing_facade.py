@@ -11,7 +11,7 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.optimizer.configuration_chooser.epm_chooser_boing import EPMChooserBOinG
+from smac.optimizer.configuration_chooser.boing import BOinGChooser
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 
 
@@ -35,10 +35,10 @@ class SMAC4BOING(SMAC4HPO):
         kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4ScaledLogCostWithRaw)
         smbo_kwargs = kwargs.get("smbo_kwargs", {})
         if smbo_kwargs is None:
-            smbo_kwargs = {"epm_chooser", EPMChooserBOinG}
-        if not isinstance(smbo_kwargs.get("epm_chooser", EPMChooserBOinG), EPMChooserBOinG):
+            smbo_kwargs = {"epm_chooser", BOinGChooser}
+        if not isinstance(smbo_kwargs.get("epm_chooser", BOinGChooser), BOinGChooser):
             warnings.warn("BOinG must have EPMChooserBOinG as its epm_chooser!")
-            smbo_kwargs["epm_chooser"] = EPMChooserBOinG
+            smbo_kwargs["epm_chooser"] = BOinGChooser
         epm_chooser_kwargs = smbo_kwargs.get("epm_chooser_kwargs", None)
 
         if epm_chooser_kwargs is None or epm_chooser_kwargs.get("model_local") is None:

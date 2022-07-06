@@ -4,13 +4,13 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class MultiObjectiveEPM(AbstractEPM):
+class MultiObjectiveEPM(BaseEPM):
     """Wrapper for the surrogate models to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -73,7 +73,7 @@ class MultiObjectiveEPM(AbstractEPM):
             model_kwargs = {}
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators: List[AbstractEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
+        self.estimators: List[BaseEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
 
     @abstractmethod
     def construct_estimators(
@@ -82,7 +82,7 @@ class MultiObjectiveEPM(AbstractEPM):
         types: List[int],
         bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[AbstractEPM]:
+    ) -> List[BaseEPM]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters

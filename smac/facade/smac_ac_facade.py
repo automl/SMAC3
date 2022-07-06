@@ -8,13 +8,13 @@ import joblib  # type: ignore
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.mo_epm import MultiObjectiveEPM
+from smac.epm.base_epm import BaseEPM
+from smac.epm.multi_objective_epm import MultiObjectiveEPM
 
 # epm
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.rf.rfr_imputator import RFRImputator
-from smac.epm.util_funcs import get_rng, get_types
+from smac.epm.utils import get_rng, get_types
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
@@ -49,10 +49,7 @@ from smac.optimizer.acquisition.maximizer import (
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
 )
-from smac.optimizer.configuration_chooser.random_chooser import (
-    ChooserProb,
-    RandomChooser,
-)
+from smac.optimizer.configuration_chooser.random import ChooserProb, RandomChooser
 
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -214,7 +211,7 @@ class SMAC4AC(object):
         user_prior_kwargs: Optional[Dict] = None,
         acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[Dict] = None,
-        model: Optional[Type[AbstractEPM]] = None,
+        model: Optional[Type[BaseEPM]] = None,
         model_kwargs: Optional[Dict] = None,
         runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
         runhistory2epm_kwargs: Optional[Dict] = None,

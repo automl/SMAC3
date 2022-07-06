@@ -14,7 +14,7 @@ from gpytorch.means.zero_mean import ZeroMean
 from gpytorch.models.exact_gp import ExactGP
 
 from smac.epm.gp.kernels.boing import FITCKernel, FITCMean
-from smac.epm.util_funcs import check_subspace_points
+from smac.epm.utils import check_subspace_points
 
 
 class FITC(ExactGP):

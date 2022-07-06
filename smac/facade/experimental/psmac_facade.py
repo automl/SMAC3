@@ -13,7 +13,7 @@ import joblib
 import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
-from smac.epm.util_funcs import get_rng
+from smac.epm.utils import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario

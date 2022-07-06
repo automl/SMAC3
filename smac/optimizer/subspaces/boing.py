@@ -6,7 +6,7 @@ import numpy as np
 from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import Configuration
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
@@ -38,7 +38,7 @@ class BOinGSubspace(LocalSubspace):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: AbstractEPM = GloballyAugmentedLocalGP,
+        model_local: BaseEPM = GloballyAugmentedLocalGP,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         acq_func_local_kwargs: Optional[Dict] = None,

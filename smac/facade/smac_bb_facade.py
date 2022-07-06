@@ -6,7 +6,7 @@ from smac.epm.gp import BaseModel, GaussianProcess
 from smac.epm.gp.kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
 from smac.epm.gp.mcmc import MCMCGaussianProcess
 from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
-from smac.epm.util_funcs import get_rng, get_types
+from smac.epm.utils import get_rng, get_types
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost

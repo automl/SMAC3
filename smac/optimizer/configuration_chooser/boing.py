@@ -7,19 +7,16 @@ import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 from smac.epm.gp.augmented import GloballyAugmentedLocalGP
 from smac.epm.rf.rf_with_instances import RandomForestWithInstances
-from smac.epm.util_funcs import get_types
+from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
 from smac.optimizer.configuration_chooser import EPMChooser
-from smac.optimizer.configuration_chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
-)
-from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
-from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
+from smac.optimizer.configuration_chooser.random import ChooserNoCoolDown, RandomChooser
+from smac.optimizer.subspaces.boing import BOinGSubspace
+from smac.optimizer.subspaces.turbo import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.scenario.scenario import Scenario
@@ -27,7 +24,7 @@ from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
 
 
-class EPMChooserBOinG(EPMChooser):
+class BOinGChooser(EPMChooser):
     """
     Interface to train the EPM and generate next configurations with both global and local models
 
@@ -77,7 +74,7 @@ class EPMChooserBOinG(EPMChooser):
         random_configuration_chooser: Union[RandomChooser] = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: AbstractEPM = GloballyAugmentedLocalGP,
+        model_local: BaseEPM = GloballyAugmentedLocalGP,
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,
@@ -89,7 +86,7 @@ class EPMChooserBOinG(EPMChooser):
         turbo_kwargs: Optional[Dict] = None,
     ):
         # initialize the original EPM_Chooser
-        super(EPMChooserBOinG, self).__init__(
+        super(BOinGChooser, self).__init__(
             scenario=scenario,
             stats=stats,
             runhistory=runhistory,

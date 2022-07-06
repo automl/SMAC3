@@ -11,9 +11,9 @@ from ConfigSpace.hyperparameters import (
 
 from smac.epm.gp import GaussianProcess
 from smac.epm.gp.kernels import ConstantKernel, Matern, WhiteKernel
-from smac.epm.util_funcs import get_types
+from smac.epm.utils import get_types
 from smac.optimizer.acquisition import TS
-from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
+from smac.optimizer.subspaces.turbo import TuRBOSubSpace
 
 
 class TestTurBoSubspace(unittest.TestCase):

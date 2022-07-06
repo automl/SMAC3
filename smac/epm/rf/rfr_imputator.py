@@ -7,7 +7,7 @@ import numpy as np
 from scipy.stats import truncnorm
 
 import smac.epm.base_imputor
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -59,7 +59,7 @@ class RFRImputator(smac.epm.base_imputor.BaseImputor):
         rng: np.random.RandomState,
         cutoff: float,
         threshold: float,
-        model: AbstractEPM,
+        model: BaseEPM,
         change_threshold: float = 0.01,
         max_iter: int = 2,
     ):

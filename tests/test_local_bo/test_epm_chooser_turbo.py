@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from smac.facade.smac_bb_facade import SMAC4BB
-from smac.optimizer.configuration_chooser.epm_chooser_turbo import EPMChooserTurBO
+from smac.optimizer.configuration_chooser.turbo import TurBOChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
@@ -26,7 +26,7 @@ class TestEPMChooserTuRBO(unittest.TestCase):
             scenario=self.scenario,
             rng=np.random.RandomState(42),
             model_type="gp",
-            smbo_kwargs={"epm_chooser": EPMChooserTurBO},
+            smbo_kwargs={"epm_chooser": TurBOChooser},
             initial_design_kwargs={"init_budget": 0},
             runhistory=rh,
         ).solver
