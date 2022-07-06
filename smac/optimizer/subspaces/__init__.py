@@ -24,8 +24,8 @@ from ConfigSpace.hyperparameters import (
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gp.augmented import GloballyAugmentedLocalGP
-from smac.epm.gp.kernels.boing import construct_gp_kernel
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.kernels.boing import construct_gp_kernel
 from smac.epm.utils import check_subspace_points
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 

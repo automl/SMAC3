@@ -10,8 +10,8 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.epm.rf import rfr_imputator
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest import rfr_imputator
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario import scenario

@@ -5,15 +5,15 @@ import sklearn.datasets
 import sklearn.model_selection
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.epm.gp.mcmc import MCMCGaussianProcess
-from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
+from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
+from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
-    from smac.epm.gp.kernels import ConstantKernel, Matern, WhiteKernel
+    from smac.epm.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,

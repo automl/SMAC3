@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple, Union
 
 from collections import OrderedDict
 
@@ -19,8 +19,8 @@ from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.gp.gpytorch import ExactGPModel, GPyTorchGaussianProcess
-from smac.epm.gp.kernels.boing import FITCKernel, FITCMean
+from smac.epm.gaussian_process.gpytorch import ExactGPModel, GPyTorchGaussianProcess
+from smac.epm.gaussian_process.kernels.boing import FITCKernel, FITCMean
 from smac.epm.utils import check_subspace_points
 
 gpytorch.settings.debug.off()
@@ -164,18 +164,18 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         bounds_cont: np.ndarray,
-        bounds_cat: typing.List[typing.Tuple],
+        bounds_cat: List[Tuple],
         seed: int,
         kernel: Kernel,
         num_inducing_points: int = 2,
-        likelihood: typing.Optional[GaussianLikelihood] = None,
+        likelihood: Optional[GaussianLikelihood] = None,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ):
         """
         Local GP with global augmentation. It is composed of two models: an Exact GP to descirbe the data
@@ -194,7 +194,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
         ----------
         bounds_cont: np.ndarray(N_cont, 2),
             bounds of the continuous hyperparameters, store as [[0,1] * N_cont]
-        bounds_cat: typing.List[typing.Tuple],
+        bounds_cat: List[Tuple],
             bounds of categorical hyperparameters
         kernel : gpytorch kernel object
             Specifies the kernel that is used for all Gaussian Process
@@ -223,7 +223,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
         self.bounds_cat = bounds_cat
         self.num_inducing_points = num_inducing_points
 
-    def update_attribute(self, **kwargs: typing.Dict) -> None:
+    def update_attribute(self, **kwargs: Dict) -> None:
         """We update the class attribute (for instance, number of inducing points)"""
         for key in kwargs:
             if not hasattr(self, key):
@@ -232,7 +232,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
 
     def _train(
         self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True
-    ) -> typing.Union[AugmentedLocalGaussianProcess, GPyTorchGaussianProcess]:
+    ) -> Union[AugmentedLocalGaussianProcess, GPyTorchGaussianProcess]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -352,10 +352,10 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
                 def sci_opi_wrapper(
                     x: np.ndarray,
                     mll: gpytorch.module,
-                    property_dict: typing.Dict,
+                    property_dict: Dict,
                     train_inputs: torch.Tensor,
                     train_targets: torch.Tensor,
-                ) -> typing.Tuple[float, np.ndarray]:
+                ) -> Tuple[float, np.ndarray]:
                     """
                     A modification of from botorch.optim.utils._scipy_objective_and_grad, the key difference is that
                     we do an additional natural gradient update before computing the gradient values
@@ -365,7 +365,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
                         optimizer input
                     mll: gpytorch.module
                         a gpytorch module whose hyperparameters are defined by x
-                    property_dict: typing.Dict
+                    property_dict: Dict
                         a dict describing how x is mapped to initialize mll
                     train_inputs: torch.Tensor (N_input, D)
                         input points of the GP model
@@ -452,11 +452,11 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
 
     def _get_gp(
         self,
-        X_in: typing.Optional[np.ndarray] = None,
-        y_in: typing.Optional[np.ndarray] = None,
-        X_out: typing.Optional[np.ndarray] = None,
-        y_out: typing.Optional[np.ndarray] = None,
-    ) -> typing.Optional[ExactMarginalLogLikelihood]:
+        X_in: Optional[np.ndarray] = None,
+        y_in: Optional[np.ndarray] = None,
+        X_out: Optional[np.ndarray] = None,
+        y_out: Optional[np.ndarray] = None,
+    ) -> Optional[ExactMarginalLogLikelihood]:
         """
         Construction a new GP model based on the inputs
         If both in and out are None: return an empty models
@@ -474,7 +474,7 @@ class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
         X_out: Optional[np.ndarray (N_out, D).
             Input data points ouside the subregion. The dimensionality of X_out is (N_out, D), if it is not given, this
         function will return a vanilla Gaussian Process
-        y_out: typing.Optional[np.ndarray (N_out)]
+        y_out: Optional[np.ndarray (N_out)]
             The corresponding target values outside the subregion.
 
         Returns

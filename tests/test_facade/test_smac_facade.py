@@ -11,8 +11,8 @@ from ConfigSpace.util import get_one_exchange_neighbourhood
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
-from smac.epm.rf.rf_mo import MultiObjectiveRandomForest
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration

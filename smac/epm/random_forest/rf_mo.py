@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Tuple
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
 from smac.epm.multi_objective_epm import MultiObjectiveEPM
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

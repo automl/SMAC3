@@ -17,7 +17,7 @@ from smac.configspace import (
     ConfigurationSpace,
     UniformFloatHyperparameter,
 )
-from smac.epm.gp.gpytorch import GPyTorchGaussianProcess
+from smac.epm.gaussian_process.gpytorch import GPyTorchGaussianProcess
 
 from .test_gp import TestGP, get_cat_data, get_cont_data
 

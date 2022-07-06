@@ -4,8 +4,8 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
-from smac.epm.rf.rfr_imputator import RFRImputator
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rfr_imputator import RFRImputator
 from smac.epm.utils import get_types
 from smac.runhistory import runhistory, runhistory2epm
 from smac.scenario.scenario import Scenario

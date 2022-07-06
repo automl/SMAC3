@@ -21,7 +21,7 @@ from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.rf.rf_mo import MultiObjectiveRandomForest
+from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
 from smac.facade.smac_ac_facade import SMAC4AC
 
 # EIPS related

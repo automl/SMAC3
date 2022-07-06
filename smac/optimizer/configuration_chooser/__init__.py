@@ -6,7 +6,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,

@@ -64,7 +64,7 @@ class BaseModel(BaseEPM):
         return X
 
 
-from smac.epm.rf.rf_with_instances import RandomForestWithInstances  # noqa
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances  # noqa
 
 __all__ = [
     "BaseModel",

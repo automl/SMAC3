@@ -7,7 +7,7 @@ from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gp.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,

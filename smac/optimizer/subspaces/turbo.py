@@ -10,10 +10,10 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gp import GaussianProcess
-from smac.epm.gp.augmented import GloballyAugmentedLocalGP
-from smac.epm.gp.gpytorch import GPyTorchGaussianProcess
-from smac.epm.gp.mcmc import MCMCGaussianProcess
+from smac.epm.gaussian_process import GaussianProcess
+from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGP
+from smac.epm.gaussian_process.gpytorch import GPyTorchGaussianProcess
+from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
 from smac.optimizer.subspaces import LocalSubspace
 

@@ -1,4 +1,4 @@
-import typing
+from typing import List, Optional, Tuple
 
 import warnings
 from collections import OrderedDict
@@ -20,7 +20,7 @@ from gpytorch.utils.errors import NotPSDError
 from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.gp import BaseModel
+from smac.epm.gaussian_process import BaseModel
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 warnings.filterwarnings("ignore", module="gpytorch")
@@ -62,15 +62,15 @@ class GPyTorchGaussianProcess(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
-        types: typing.List[int],
-        bounds: typing.List[typing.Tuple[float, float]],
+        types: List[int],
+        bounds: List[Tuple[float, float]],
         seed: int,
         kernel: Kernel,
         normalize_y: bool = True,
         n_opt_restarts: int = 10,
-        likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
-        instance_features: typing.Optional[np.ndarray] = None,
-        pca_components: typing.Optional[int] = None,
+        likelihood: Optional[FixedNoiseGaussianLikelihood] = None,
+        instance_features: Optional[np.ndarray] = None,
+        pca_components: Optional[int] = None,
     ):
         """
         A Gaussian Process written with GPyTorch, its interface is written to be compatible with partial sparse gaussian
@@ -96,7 +96,7 @@ class GPyTorchGaussianProcess(BaseModel):
             Zero mean unit variance normalization of the output values
         n_opt_restarts : int
             Number of restarts for GP hyperparameter optimization
-        likelihood: typing.Optional[FixedNoiseGaussianLikelihood] = None,
+        likelihood: Optional[FixedNoiseGaussianLikelihood] = None,
             Gaussian Likelihood (or noise)
         instance_features : np.ndarray (I, K)
             Contains the K dimensional instance features of the I different instances
@@ -179,21 +179,21 @@ class GPyTorchGaussianProcess(BaseModel):
         return self
 
     def _get_gp(
-        self, X: typing.Optional[np.ndarray] = None, y: typing.Optional[np.ndarray] = None
-    ) -> typing.Optional[ExactMarginalLogLikelihood]:
+        self, X: Optional[np.ndarray] = None, y: Optional[np.ndarray] = None
+    ) -> Optional[ExactMarginalLogLikelihood]:
         """
         Get the GP model with the given X and y values, as GPyTorch requires the input data to initialize a new
         model, we also pass X and y here. X and y are set optional to ensure compatible
 
         Parameters
         ----------
-        X: typing.Optional[np.ndarray(N, D)]
+        X: Optional[np.ndarray(N, D)]
             input feature vectors, N is number of data points and D is number of feature dimensions
-        y: typing.Optional[np.ndarray(N,)]
+        y: Optional[np.ndarray(N,)]
             input observations, N is number of data points
         Returns
         -------
-        mll : typing.Optional[ExactMarginalLogLikelihood]
+        mll : Optional[ExactMarginalLogLikelihood]
             a GPyTorch model with Zero Mean and user specified covariance
         """
         if X is None:
@@ -271,8 +271,8 @@ class GPyTorchGaussianProcess(BaseModel):
         return theta_star
 
     def _predict(
-        self, X_test: np.ndarray, cov_return_type: typing.Optional[str] = "diagonal_cov"
-    ) -> typing.Tuple[np.ndarray, typing.Optional[np.ndarray]]:
+        self, X_test: np.ndarray, cov_return_type: Optional[str] = "diagonal_cov"
+    ) -> Tuple[np.ndarray, Optional[np.ndarray]]:
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -281,7 +281,7 @@ class GPyTorchGaussianProcess(BaseModel):
         ----------
         X_test: np.ndarray (N, D)
             Input test points
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns

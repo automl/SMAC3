@@ -5,10 +5,10 @@ import sklearn.gaussian_process
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
-import smac.epm.gp.utils.prior
+import smac.epm.gaussian_process.utils.prior
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import BaseEPM
-from smac.epm.gp.utils.prior import Prior
+from smac.epm.gaussian_process.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -119,7 +119,7 @@ class BaseModel(BaseEPM):
                     if add_bound_priors:
                         if add_soft_bounds:
                             priors_for_hp.append(
-                                smac.epm.gp.utils.prior.SoftTopHatPrior(
+                                smac.epm.gaussian_process.utils.prior.SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,
@@ -128,7 +128,7 @@ class BaseModel(BaseEPM):
                             )
                         else:
                             priors_for_hp.append(
-                                smac.epm.gp.utils.prior.TophatPrior(
+                                smac.epm.gaussian_process.utils.prior.TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,
@@ -160,6 +160,6 @@ class BaseModel(BaseEPM):
         return X
 
 
-from smac.epm.gp.gp import GaussianProcess  # noqa
+from smac.epm.gaussian_process.gp import GaussianProcess  # noqa
 
 __all__ = ["BaseModel", "GaussianProcess"]

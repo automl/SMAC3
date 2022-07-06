@@ -11,11 +11,11 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.epm.gp.augmented import (
+from smac.epm.gaussian_process.augmented import (
     AugmentedLocalGaussianProcess,
     GloballyAugmentedLocalGP,
 )
-from smac.epm.gp.gpytorch import ExactGPModel
+from smac.epm.gaussian_process.gpytorch import ExactGPModel
 
 from .test_boing_kernel import generate_kernel, generate_test_data
 from .test_gp_gpytorch import TestGPGPyTorch

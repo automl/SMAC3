@@ -2,10 +2,15 @@ from typing import Any, Type
 
 import numpy as np
 
-from smac.epm.gp import BaseModel, GaussianProcess
-from smac.epm.gp.kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
-from smac.epm.gp.mcmc import MCMCGaussianProcess
-from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
+from smac.epm.gaussian_process import BaseModel, GaussianProcess
+from smac.epm.gaussian_process.kernels import (
+    ConstantKernel,
+    HammingKernel,
+    Matern,
+    WhiteKernel,
+)
+from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
+from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.utils import get_rng, get_types
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
