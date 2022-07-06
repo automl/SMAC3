@@ -9,11 +9,11 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
+from smac.epm.mo_epm import MultiObjectiveEPM
 
 # epm
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.rfr_imputator import RFRImputator
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rfr_imputator import RFRImputator
 from smac.epm.util_funcs import get_rng, get_types
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
@@ -37,6 +37,7 @@ from smac.optimizer.acquisition import (
     LogEI,
     PriorAcquisitionFunction,
 )
+from smac.optimizer.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.optimizer.ei_optimization import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedPriorRandomSearch,
@@ -48,10 +49,6 @@ from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
 from smac.optimizer.multi_objective.aggregation_strategy import (
     AggregationStrategy,
     MeanAggregationStrategy,
-)
-from smac.optimizer.random_configuration_chooser import (
-    ChooserProb,
-    RandomConfigurationChooser,
 )
 
 # optimizer
@@ -229,7 +226,7 @@ class SMAC4AC(object):
         smbo_class: Optional[Type[SMBO]] = None,
         smbo_kwargs: Optional[Dict] = None,
         run_id: Optional[int] = None,
-        random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
+        random_configuration_chooser: Optional[Type[RandomChooser]] = None,
         random_configuration_chooser_kwargs: Optional[Dict] = None,
         dask_client: Optional[dask.distributed.Client] = None,
         n_jobs: Optional[int] = 1,
@@ -306,7 +303,7 @@ class SMAC4AC(object):
             random_configuration_chooser_instance = random_configuration_chooser(  # type: ignore # noqa F821
                 **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821
             )
-        elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
+        elif not isinstance(random_configuration_chooser, RandomChooser):
             raise ValueError(
                 "random_configuration_chooser has to be" " a class or object of RandomConfigurationChooser"
             )
@@ -369,9 +366,7 @@ class SMAC4AC(object):
                 "Argument acquisition_function must be None or an object implementing the "
                 "AbstractAcquisitionFunction, not %s." % type(acquisition_function)
             )
-        if isinstance(acquisition_function_instance, EIPS) and not isinstance(
-            model_instance, UncorrelatedMultiObjectiveModel
-        ):
+        if isinstance(acquisition_function_instance, EIPS) and not isinstance(model_instance, MultiObjectiveEPM):
             raise TypeError(
                 "If the acquisition function is EIPS, the surrogate model must support multi-objective prediction!"
             )

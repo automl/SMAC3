@@ -17,7 +17,7 @@ from smac.configspace import (
     ConfigurationSpace,
     UniformFloatHyperparameter,
 )
-from smac.epm.epm_gpytorch.gaussian_process_gpytorch import GaussianProcessGPyTorch
+from smac.epm.gp.gpytorch import GPyTorchGaussianProcess
 
 from .test_gp import TestGP, get_cat_data, get_cont_data
 
@@ -25,7 +25,7 @@ torch.manual_seed(0)
 pyro.set_rng_seed(0)
 
 
-def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GaussianProcessGPyTorch:
+def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GPyTorchGaussianProcess:
     exp_kernel = MaternKernel(
         2.5,
         lengthscale_constraint=Interval(
@@ -60,7 +60,7 @@ def get_gp(n_dimensions, rs, noise=None, normalize_y=True) -> GaussianProcessGPy
     for i in range(n_dimensions):
         configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
-    model = GaussianProcessGPyTorch(
+    model = GPyTorchGaussianProcess(
         configspace=configspace,
         bounds=bounds,
         types=types,
@@ -124,7 +124,7 @@ def get_mixed_gp(cat_dims, cont_dims, rs, normalize_y=True):
     for c in cat_dims:
         cs.add_hyperparameter(CategoricalHyperparameter("X%d" % c, [0, 1, 2, 3]))
 
-    model = GaussianProcessGPyTorch(
+    model = GPyTorchGaussianProcess(
         configspace=cs,
         bounds=bounds,
         types=types,

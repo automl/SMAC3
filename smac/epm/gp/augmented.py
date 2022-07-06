@@ -19,17 +19,14 @@ from scipy import optimize
 from scipy.stats.qmc import LatinHypercube
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.epm_gpytorch.boing_kernels import FITCKernel, FITCMean
-from smac.epm.epm_gpytorch.gaussian_process_gpytorch import (
-    ExactGPModel,
-    GaussianProcessGPyTorch,
-)
+from smac.epm.gp.gpytorch import ExactGPModel, GPyTorchGaussianProcess
+from smac.epm.gp.kernels.boing import FITCKernel, FITCMean
 from smac.epm.util_funcs import check_subspace_points
 
 gpytorch.settings.debug.off()
 
 
-class AugmentedLocalGP(ExactGP):
+class AugmentedLocalGaussianProcess(ExactGP):
     def __init__(
         self,
         X_in: torch.Tensor,
@@ -64,7 +61,7 @@ class AugmentedLocalGP(ExactGP):
         X_out = X_out.unsqueeze(-1) if X_out.ndimension() == 1 else X_out
         assert X_in.shape[-1] == X_out.shape[-1]
 
-        super(AugmentedLocalGP, self).__init__(X_in, y_in, likelihood)
+        super(AugmentedLocalGaussianProcess, self).__init__(X_in, y_in, likelihood)
 
         self._mean_module = ZeroMean()
         self.base_covar = base_covar_kernel
@@ -163,7 +160,7 @@ class VariationalGPModel(gpytorch.models.ApproximateGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
+class GloballyAugmentedLocalGP(GPyTorchGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -235,7 +232,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
 
     def _train(
         self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True
-    ) -> typing.Union[AugmentedLocalGP, GaussianProcessGPyTorch]:
+    ) -> typing.Union[AugmentedLocalGaussianProcess, GPyTorchGaussianProcess]:
         """
         Update the hyperparameters of the partial sparse kernel. Depending on the number of inputs inside and
         outside the subregion, we initalize a  PartialSparseGaussianProcess or a GaussianProcessGPyTorch
@@ -299,7 +296,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
         if do_optimize:
             self.hypers = self._optimize()
             self.gp = set_params_with_array(self.gp, self.hypers, self.property_dict)
-            if isinstance(self.gp.model, AugmentedLocalGP):
+            if isinstance(self.gp.model, AugmentedLocalGaussianProcess):
                 # we optimize the position of the inducing points and thus needs to deactivate the gradient of kernel
                 # hyperparameters
                 lhd = LatinHypercube(d=X.shape[-1], seed=self.rng.randint(0, 1000000))
@@ -496,7 +493,7 @@ class GloballyAugmentedLocalGP(GaussianProcessGPyTorch):
             X_out = torch.from_numpy(X_out)
             y_out = torch.from_numpy(y_out)
 
-            self.gp_model = AugmentedLocalGP(
+            self.gp_model = AugmentedLocalGaussianProcess(
                 X_in, y_in, X_out, y_out, likelihood=self.likelihood, base_covar_kernel=self.kernel  # type:ignore
             ).double()
         mll = ExactMarginalLogLikelihood(self.likelihood, self.gp_model)

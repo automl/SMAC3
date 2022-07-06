@@ -20,7 +20,7 @@ from gpytorch.utils.errors import NotPSDError
 from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_gp import BaseModel
+from smac.epm.gp import BaseModel
 from smac.utils.constants import VERY_SMALL_NUMBER
 
 warnings.filterwarnings("ignore", module="gpytorch")
@@ -58,7 +58,7 @@ class ExactGPModel(ExactGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class GaussianProcessGPyTorch(BaseModel):
+class GPyTorchGaussianProcess(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -104,7 +104,7 @@ class GaussianProcessGPyTorch(BaseModel):
             Number of components to keep when using PCA to reduce dimensionality of instance features. Requires to
             set n_feats (> pca_dims).
         """
-        super(GaussianProcessGPyTorch, self).__init__(
+        super(GPyTorchGaussianProcess, self).__init__(
             configspace,
             types,
             bounds,
@@ -131,7 +131,7 @@ class GaussianProcessGPyTorch(BaseModel):
         self.property_dict = OrderedDict()  # type: OrderedDict
         self.is_trained = False
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcessGPyTorch":
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GPyTorchGaussianProcess":
         """
         Computes the Cholesky decomposition of the covariance of X and
         estimates the GP hyperparameters by optimizing the marginal

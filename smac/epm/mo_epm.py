@@ -10,7 +10,7 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class UncorrelatedMultiObjectiveModel(AbstractEPM):
+class MultiObjectiveEPM(AbstractEPM):
     """Wrapper for the surrogate models to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -106,7 +106,7 @@ class UncorrelatedMultiObjectiveModel(AbstractEPM):
         """
         raise NotImplementedError
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "UncorrelatedMultiObjectiveModel":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "MultiObjectiveEPM":
         """Trains the models on X and y.
 
         Parameters

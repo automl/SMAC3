@@ -13,12 +13,9 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.chooser.epm_chooser import EPMChooser
+from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.optimizer.random_configuration_chooser import (
-    ChooserNoCoolDown,
-    RandomConfigurationChooser,
-)
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -110,7 +107,7 @@ class SMBO(object):
         rng: np.random.RandomState,
         tae_runner: BaseRunner,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
         epm_chooser: Type[EPMChooser] = EPMChooser,

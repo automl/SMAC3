@@ -3,16 +3,13 @@ import typing
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
+from smac.optimizer.chooser.epm_chooser import EPMChooser
+from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
 from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
-from smac.optimizer.random_configuration_chooser import (
-    ChooserNoCoolDown,
-    RandomConfigurationChooser,
-)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -55,7 +52,7 @@ class EPMChooserTurBO(EPMChooser):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: typing.Union[RandomChooser] = ChooserNoCoolDown(2.0),
         predict_x_best: bool = False,
         min_samples_model: int = 1,
         length_init: float = 0.8,

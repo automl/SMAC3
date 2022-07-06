@@ -2,14 +2,14 @@ from typing import Any, Dict, List, Tuple
 
 from smac.configspace import ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.mo_epm import MultiObjectiveEPM
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjectiveModel):
+class MultiObjectiveRandomForest(MultiObjectiveEPM):
     """Wrapper for the random forest to predict multiple targets.
 
     Only a list with the target names and the types array for the

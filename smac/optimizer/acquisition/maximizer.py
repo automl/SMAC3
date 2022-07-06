@@ -16,10 +16,7 @@ from smac.configspace import (
     get_one_exchange_neighbourhood,
 )
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.random_configuration_chooser import (
-    ChooserNoCoolDown,
-    RandomConfigurationChooser,
-)
+from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 
@@ -69,7 +66,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         runhistory: RunHistory,
         stats: Stats,
         num_points: int,
-        random_configuration_chooser: Optional[RandomConfigurationChooser] = None,
+        random_configuration_chooser: Optional[RandomChooser] = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
 
@@ -831,7 +828,7 @@ class ChallengerList(Iterator):
         self,
         challenger_callback: Callable,
         configuration_space: ConfigurationSpace,
-        random_configuration_chooser: Optional[RandomConfigurationChooser] = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: Optional[RandomChooser] = ChooserNoCoolDown(modulus=2.0),
     ):
         self.challengers_callback = challenger_callback
         self.challengers = None  # type: Optional[List[Configuration]]

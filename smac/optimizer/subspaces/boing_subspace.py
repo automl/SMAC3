@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import inspect
 
@@ -7,23 +7,23 @@ from ConfigSpace import ConfigurationSpace
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import (
+from smac.epm.gp.augmented import GloballyAugmentedLocalGP
+from smac.optimizer.acquisition_functions import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition_maximizer import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedRandomSearch,
 )
-from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
+from smac.optimizer.subspaces import LocalSubspace
 
 
-class BOinGSubspace(AbstractSubspace):
+class BOinGSubspace(LocalSubspace):
     """
     Subspace for BOinG optimizer. Each time we create a new epm model for the subspace and optimize for maximizing the
     acquisition function inside this subregion.
 
     Parameters
     ----------
-    acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer]
+    acq_optimizer_local: Optional[AcquisitionFunctionMaximizer]
         Subspace optimizer, used to give a set of suggested points. Unlike the optimizer implemented in epm_chooser,
         this optimizer does not require runhistory objects.
     acq_optimizer_local_kwargs
@@ -34,20 +34,20 @@ class BOinGSubspace(AbstractSubspace):
     def __init__(
         self,
         config_space: ConfigurationSpace,
-        bounds: typing.List[typing.Tuple[float, float]],
-        hps_types: typing.List[int],
-        bounds_ss_cont: typing.Optional[np.ndarray] = None,
-        bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-        model_local: typing.Union[typing.Union[AbstractEPM], typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
-        model_local_kwargs: typing.Dict = {},
-        acq_func_local: typing.Union[AbstractAcquisitionFunction, typing.Type[AbstractAcquisitionFunction]] = EI,
-        acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
-        rng: typing.Optional[np.random.RandomState] = None,
-        initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
-        activate_dims: typing.Optional[np.ndarray] = None,
-        incumbent_array: typing.Optional[np.ndarray] = None,
-        acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
-        acq_optimizer_local_kwargs: typing.Optional[dict] = None,
+        bounds: List[Tuple[float, float]],
+        hps_types: List[int],
+        bounds_ss_cont: Optional[np.ndarray] = None,
+        bounds_ss_cat: Optional[List[Tuple]] = None,
+        model_local: AbstractEPM = GloballyAugmentedLocalGP,
+        model_local_kwargs: Dict = {},
+        acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
+        acq_func_local_kwargs: Optional[Dict] = None,
+        rng: Optional[np.random.RandomState] = None,
+        initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+        activate_dims: Optional[np.ndarray] = None,
+        incumbent_array: Optional[np.ndarray] = None,
+        acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
+        acq_optimizer_local_kwargs: Optional[dict] = None,
     ):
         super(BOinGSubspace, self).__init__(
             config_space=config_space,
@@ -122,7 +122,7 @@ class BOinGSubspace(AbstractSubspace):
 
             self.acq_optimizer_local = acq_optimizer_local(**subspace_acq_func_opt_kwargs)  # type: ignore
 
-    def _generate_challengers(self, **optimizer_kwargs: typing.Dict) -> typing.List[typing.Tuple[float, Configuration]]:
+    def _generate_challengers(self, **optimizer_kwargs: Dict) -> List[Tuple[float, Configuration]]:
         """
         Generate new challengers list for this subspace, this optimizer is similar to
         smac.optimizer.ei_optimization.LocalAndSortedRandomSearch except that we don't read the past evaluated

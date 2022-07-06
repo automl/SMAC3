@@ -24,13 +24,13 @@ from ConfigSpace.hyperparameters import (
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.epm_gpytorch.boing_kernels import construct_gp_kernel
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
+from smac.epm.gp.augmented import GloballyAugmentedLocalGP
+from smac.epm.gp.kernels.boing import construct_gp_kernel
 from smac.epm.util_funcs import check_subspace_points
-from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
+from smac.optimizer.acquisition_functions import EI, AbstractAcquisitionFunction
 
 
-class AbstractSubspace(ABC):
+class LocalSubspace(ABC):
     """
     A subspace that is designed for local Bayesian Optimization, if bounds_ss_cont and bounds_ss_cat are not given,
     this subspace is equivalent to the original configuration space. Additionally, this subspace
@@ -72,7 +72,7 @@ class AbstractSubspace(ABC):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: Union[Union[AbstractEPM], Type[AbstractEPM]] = GloballyAugmentedLocalGP,
+        model_local: AbstractEPM = GloballyAugmentedLocalGP,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         acq_func_local_kwargs: Optional[Dict] = None,
@@ -401,7 +401,7 @@ class AbstractSubspace(ABC):
             forbidden_ss_components = []
             for forbid in forbidden.components:
                 # If any of the AndConjunction is not supported by the subspace, we simply ignore them
-                forbid_ss = AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid)
+                forbid_ss = LocalSubspace.fit_forbidden_to_ss(cs_local, forbid)
                 if forbid_ss is None:
                     return None
                 forbidden_ss_components.append(forbid_ss)

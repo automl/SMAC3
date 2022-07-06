@@ -11,11 +11,11 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.epm.epm_gpytorch.gaussian_process_gpytorch import ExactGPModel
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import (
-    AugmentedLocalGP,
+from smac.epm.gp.augmented import (
+    AugmentedLocalGaussianProcess,
     GloballyAugmentedLocalGP,
 )
+from smac.epm.gp.gpytorch import ExactGPModel
 
 from .test_boing_kernel import generate_kernel, generate_test_data
 from .test_gp_gpytorch import TestGPGPyTorch
@@ -99,14 +99,14 @@ class TestLGPGA(TestGPGPyTorch):
         self.assertIsInstance(self.gp_model.gp_model, ExactGPModel)
 
         self.gp_model._get_gp(self.X_in, self.Y_in, self.X_out, self.Y_out)
-        self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGP)
+        self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGaussianProcess)
 
         # num_outer is not enough, we return to a vanilla GP model
         self.gp_model._train(self.X_in, self.Y_in, do_optimize=False)
         self.assertIsInstance(self.gp_model.gp_model, ExactGPModel)
 
         self.gp_model._train(self.X_all, self.Y_all, do_optimize=False)
-        self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGP)
+        self.assertIsInstance(self.gp_model.gp_model, AugmentedLocalGaussianProcess)
         self.assertFalse(self.gp_model.gp_model.augmented)
         self.assertFalse(hasattr(self.gp_model.gp_model, "covar_module"))
 
@@ -127,7 +127,9 @@ class TestLGPGA(TestGPGPyTorch):
         X_out = torch.from_numpy(self.X_out)
         Y_out = torch.from_numpy(self.Y_out)
 
-        augmented_gp = AugmentedLocalGP(X_in, Y_in, X_out, Y_out, self.gp_model.likelihood, self.kernel).double()
+        augmented_gp = AugmentedLocalGaussianProcess(
+            X_in, Y_in, X_out, Y_out, self.gp_model.likelihood, self.kernel
+        ).double()
         exact_gp = ExactGPModel(X_in, Y_in, self.kernel, self.gp_model.likelihood).double()
 
         # if augmented_gp.augmented is false, it should behave the same as an exact gp

@@ -6,13 +6,10 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
+from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
-from smac.optimizer.random_configuration_chooser import (
-    ChooserNoCoolDown,
-    RandomConfigurationChooser,
-)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
 from smac.scenario.scenario import Scenario
@@ -22,8 +19,8 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class EPMChooser(object):
-    """Interface to train the EPM and generate next configurations.
+class EPMChooser:
+    """Interface to train the EPM and generate/choose next configurations.
 
     Parameters
     ----------
@@ -66,7 +63,7 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
         **epm_chooser_kwargs: Any,

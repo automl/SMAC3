@@ -1,7 +1,8 @@
 """
 Synthetic Function with TuRBO as optimizer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-An example of applying SMAC with trust region BO(TuRBO) to optimize a
+
+An example of applying SMAC with trust region BO (TuRBO) to optimize a
 synthetic function (2d rosenbrock function).
 
 Eriksson et al. Scalable Global Optimization via Local {Bayesian} Optimization,

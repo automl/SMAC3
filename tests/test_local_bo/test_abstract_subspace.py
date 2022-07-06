@@ -15,10 +15,7 @@ from ConfigSpace.hyperparameters import (
 )
 
 from smac.epm.util_funcs import check_subspace_points, get_types
-from smac.optimizer.local_bo.abstract_subspace import (
-    AbstractSubspace,
-    ChallengerListLocal,
-)
+from smac.optimizer.local_bo.abstract_subspace import ChallengerListLocal, LocalSubspace
 
 
 def generate_cont_hps():
@@ -56,7 +53,7 @@ def generate_ss_bounds(cs):
     return bounds_ss_cont
 
 
-@unittest.mock.patch.multiple(AbstractSubspace, __abstractmethods__=set())
+@unittest.mock.patch.multiple(LocalSubspace, __abstractmethods__=set())
 class TestAbstachSubSpace(unittest.TestCase):
     def test_cs_subspace_1(self):
         cs = ConfigurationSpace()
@@ -69,7 +66,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         bounds_ss_cont = np.array(generate_ss_bounds(cs))
 
         bounds_ss_cat = [(1, 3)]
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs,
             bounds=bounds,
             hps_types=types,
@@ -142,7 +139,7 @@ class TestAbstachSubSpace(unittest.TestCase):
 
         activ_dims = [0, 2, 6]
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs,
             bounds=bounds,
             hps_types=types,
@@ -176,7 +173,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         bounds_ss_cat = [(1, 3), (0, 2)]
         hps_global = cs.get_hyperparameters()
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs,
             bounds=bounds,
             hps_types=types,
@@ -191,7 +188,7 @@ class TestAbstachSubSpace(unittest.TestCase):
             else:
                 self.assertTrue(hp_local == hp_global)
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs,
             bounds=bounds,
             hps_types=types,
@@ -206,7 +203,7 @@ class TestAbstachSubSpace(unittest.TestCase):
             else:
                 self.assertTrue(hp_local != hp_global)
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs, bounds=bounds, hps_types=types, bounds_ss_cont=None, bounds_ss_cat=None, model_local=None
         )
         hps_local = subspace.cs_local.get_hyperparameters()
@@ -224,7 +221,7 @@ class TestAbstachSubSpace(unittest.TestCase):
 
         bounds_ss_cat = [(1, 3)]
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs_global,
             bounds=bounds,
             hps_types=types,
@@ -270,7 +267,7 @@ class TestAbstachSubSpace(unittest.TestCase):
 
         bounds_ss_cat = [(1, 3)]
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs_global,
             bounds=bounds,
             hps_types=types,
@@ -299,7 +296,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         self.assertEqual(len(y_samples), len(subspace.model_y))
 
         # test if initialization works
-        subspace_1 = AbstractSubspace(
+        subspace_1 = LocalSubspace(
             config_space=cs_global,
             bounds=bounds,
             hps_types=types,
@@ -315,7 +312,7 @@ class TestAbstachSubSpace(unittest.TestCase):
         np.testing.assert_allclose(subspace.model_y, subspace_1.model_y)
 
 
-@unittest.mock.patch.multiple(AbstractSubspace, __abstractmethods__=set())
+@unittest.mock.patch.multiple(LocalSubspace, __abstractmethods__=set())
 class TestChallengerListLocal(unittest.TestCase):
     def test_challenger_list_local_full(self):
         # check act_dims
@@ -333,7 +330,7 @@ class TestChallengerListLocal(unittest.TestCase):
 
         bounds_ss_cat = [(1, 3), (0, 2)]
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs_global,
             bounds=bounds,
             hps_types=types,
@@ -383,7 +380,7 @@ class TestChallengerListLocal(unittest.TestCase):
 
         activ_dims = [0, 2, 6]
 
-        subspace = AbstractSubspace(
+        subspace = LocalSubspace(
             config_space=cs_global,
             bounds=bounds,
             hps_types=types,
@@ -461,13 +458,13 @@ class TestChallengerListLocal(unittest.TestCase):
         o0_ss = OrdinalHyperparameter("o0", [1, 2, 3])
         cs_local.add_hyperparameters([f0_ss, c0_ss, o0_ss])
 
-        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_1))
-        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_2))
+        self.assertIsNotNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_1))
+        self.assertIsNotNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_2))
 
-        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_3))
-        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_4))
+        self.assertIsNotNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_3))
+        self.assertIsNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_4))
 
-        self.assertIsNotNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_5))
-        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_6))
+        self.assertIsNotNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_5))
+        self.assertIsNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_6))
 
-        self.assertIsNone(AbstractSubspace.fit_forbidden_to_ss(cs_local, forbid_7))
+        self.assertIsNone(LocalSubspace.fit_forbidden_to_ss(cs_local, forbid_7))

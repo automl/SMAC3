@@ -10,9 +10,8 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_gp import BaseModel
-from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gp_base_prior import Prior
+from smac.epm.gp import BaseModel, GaussianProcess
+from smac.epm.gp.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -21,11 +20,11 @@ __license__ = "3-clause BSD"
 logger = logging.getLogger(__name__)
 
 
-class GaussianProcessMCMC(BaseModel):
+class MCMCGaussianProcess(BaseModel):
     """Gaussian process model.
 
-    The GP hyperparameters are integrated out by MCMC. If you use this class
-    make sure that you also use an integrated acquisition function to
+    The GP hyperparameters are integrated out by Markow-Chain-Monte-Carlo (MCMC) you use this class
+    to make sure that you also use an integrated acquisition function to
     integrate over the GP's hyperparameter as proposed by Snoek et al.
 
     This code is based on the implementation of RoBO:
@@ -113,7 +112,7 @@ class GaussianProcessMCMC(BaseModel):
         # Internal statistics
         self._n_ll_evals = 0
 
-    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "GaussianProcessMCMC":
+    def _train(self, X: np.ndarray, y: np.ndarray, do_optimize: bool = True) -> "MCMCGaussianProcess":
         """Performs MCMC sampling to sample hyperparameter configurations from the likelihood and
         trains for each sample a GP on X and y.
 

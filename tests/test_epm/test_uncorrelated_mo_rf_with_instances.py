@@ -4,10 +4,8 @@ from unittest import mock
 import numpy as np
 
 import smac.configspace
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.uncorrelated_mo_rf_with_instances import (
-    UncorrelatedMultiObjectiveRandomForestWithInstances,
-)
+from smac.epm.rf.rf_mo import MultiObjectiveRandomForest
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -24,7 +22,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 2)
-        model = UncorrelatedMultiObjectiveRandomForestWithInstances(
+        model = MultiObjectiveRandomForest(
             configspace=self._get_cs(10),
             target_names=["cost", "ln(runtime)"],
             types=np.zeros((10,), dtype=np.uint),
@@ -74,7 +72,7 @@ class TestUncorrelatedMultiObjectiveWrapper(unittest.TestCase):
         rs = np.random.RandomState(1)
         X = rs.rand(20, 10)
         Y = rs.rand(10, 3)
-        model = UncorrelatedMultiObjectiveRandomForestWithInstances(
+        model = MultiObjectiveRandomForest(
             target_names=["cost", "ln(runtime)", "foo"],
             configspace=self._get_cs(10),
             types=np.zeros((10,), dtype=np.uint),

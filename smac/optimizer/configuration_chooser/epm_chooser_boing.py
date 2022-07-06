@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, Optional, Type, Union
 
 import copy
 from itertools import chain
@@ -8,20 +8,17 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.gp.augmented import GloballyAugmentedLocalGP
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_types
-from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.optimizer.local_bo.boing_subspace import BOinGSubspace
-from smac.optimizer.local_bo.rh2epm_boing import RunHistory2EPM4CostWithRaw
-from smac.optimizer.local_bo.turbo_subspace import TuRBOSubSpace
-from smac.optimizer.random_configuration_chooser import (
-    ChooserNoCoolDown,
-    RandomConfigurationChooser,
-)
+from smac.optimizer.acquisition_optimization import AcquisitionFunctionMaximizer
+from smac.optimizer.acquisitions import EI, TS, AbstractAcquisitionFunction
+from smac.optimizer.chooser import EPMChooser
+from smac.optimizer.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
+from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
+from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
+from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.utils.constants import MAXINT
@@ -42,15 +39,15 @@ class EPMChooserBOinG(EPMChooser):
         Optimizer of acquisition function of global models
     model_local: AbstractEPM,
         local empirical performance model, used in subspace
-    model_local_kwargs: typing.Optional[typing.Dict] = None,
+    model_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local model
     acquisition_func_local: AbstractAcquisitionFunction,
         local acquisition function,  used in subspace
-    acquisition_func_local_kwargs: typing.Optional[typing.Dict] = None,
+    acquisition_func_local_kwargs: Optional[Dict] = None,
         parameters for initializing a local acquisition function optimizer
-    acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
+    acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
         Optimizer of acquisition function of local models
-    acq_optimizer_local_kwargs: typing: typing.Optional[typing.Dict] = None,
+    acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
         parameters for the optimizer of acquisition function of local models
     max_configs_local_fracs : float
         Maximal number of fractions of samples to be included in the  subapce. If the number of samples in the
@@ -59,7 +56,7 @@ class EPMChooserBOinG(EPMChooser):
         Minimum number of samples included in the inner loop model
     do_switching: bool
        if we want to switch between turbo and boing or do a pure BOinG search
-    turbo_kwargs: typing.Optional[typing.Dict] = None
+    turbo_kwargs: Optional[Dict] = None
        parameters for building a turbo optimizer
     """
 
@@ -74,21 +71,19 @@ class EPMChooserBOinG(EPMChooser):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: typing.Union[RandomConfigurationChooser] = ChooserNoCoolDown(2.0),
+        random_configuration_chooser: Union[RandomChooser] = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: typing.Union[AbstractEPM, typing.Type[AbstractEPM]] = GloballyAugmentedLocalGP,
-        acquisition_func_local: typing.Union[
-            AbstractAcquisitionFunction, typing.Type[AbstractAcquisitionFunction]
-        ] = EI,
-        model_local_kwargs: typing.Optional[typing.Dict] = None,
-        acquisition_func_local_kwargs: typing.Optional[typing.Dict] = None,
-        acq_optimizer_local: typing.Optional[AcquisitionFunctionMaximizer] = None,
-        acq_optimizer_local_kwargs: typing.Optional[typing.Dict] = None,
+        model_local: AbstractEPM = GloballyAugmentedLocalGP,
+        acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
+        model_local_kwargs: Optional[Dict] = None,
+        acquisition_func_local_kwargs: Optional[Dict] = None,
+        acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
+        acq_optimizer_local_kwargs: Optional[Dict] = None,
         max_configs_local_fracs: float = 0.5,
-        min_configs_local: typing.Optional[int] = None,
+        min_configs_local: Optional[int] = None,
         do_switching: bool = False,
-        turbo_kwargs: typing.Optional[typing.Dict] = None,
+        turbo_kwargs: Optional[Dict] = None,
     ):
         # initialize the original EPM_Chooser
         super(EPMChooserBOinG, self).__init__(
@@ -216,7 +211,7 @@ class EPMChooserBOinG(EPMChooser):
         )
         self.turbo_optimizer.add_new_observations(X[ss_data_indices], Y_raw[ss_data_indices])
 
-    def choose_next(self, incumbent_value: float = None) -> typing.Iterator[Configuration]:
+    def choose_next(self, incumbent_value: float = None) -> Iterator[Configuration]:
         """
         Choose next candidate solution with Bayesian optimization. We use TurBO optimizer or BOinG to suggest
          the next configuration.
@@ -329,7 +324,7 @@ class EPMChooserBOinG(EPMChooser):
 
         if incumbent_value is not None:
             best_observation = incumbent_value
-            x_best_array = None  # type: typing.Optional[np.ndarray]
+            x_best_array = None  # type: Optional[np.ndarray]
         else:
             if self.runhistory.empty():
                 raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
@@ -457,7 +452,7 @@ class EPMChooserBOinG(EPMChooser):
         )
         return ss.generate_challengers()
 
-    def _collect_all_data_to_train_model(self) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    def _collect_all_data_to_train_model(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
         """Similar to the implementaiton of EPMChooser, however, we also return the raw values here."""
         # if we use a float value as a budget, we want to train the model only on the highest budget
         available_budgets = []
@@ -506,10 +501,10 @@ def subspace_extraction(
     model: RandomForestWithInstances,
     num_min: int,
     num_max: int,
-    bounds: typing.Union[np.ndarray, typing.List[typing.Tuple]],
+    bounds: Union[np.ndarray, List[Tuple]],
     cat_dims: np.ndarray,
     cont_dims: np.ndarray,
-) -> typing.Tuple[np.ndarray, typing.List[typing.Tuple], np.ndarray]:
+) -> Tuple[np.ndarray, List[Tuple], np.ndarray]:
     """
     Extract a subspace that contains at least num_min but no more than num_max
 

@@ -2,10 +2,10 @@ from typing import Any, Type
 
 import numpy as np
 
-from smac.epm.base_gp import BaseModel
-from smac.epm.gaussian_process_mcmc import GaussianProcess, GaussianProcessMCMC
-from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
-from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.gp import BaseModel
+from smac.epm.gp.kernels.gp import ConstantKernel, HammingKernel, Matern, WhiteKernel
+from smac.epm.gp.mcmc import GaussianProcess, MCMCGaussianProcess
+from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.util_funcs import get_rng, get_types
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
@@ -132,7 +132,7 @@ class SMAC4BB(SMAC4AC):
                 model_kwargs["normalize_y"] = True
                 model_kwargs["seed"] = rng.randint(0, 2**20)
             elif model_type == "gp_mcmc":
-                model_class = GaussianProcessMCMC
+                model_class = MCMCGaussianProcess
                 kwargs["model"] = model_class
                 kwargs["integrate_acquisition_function"] = True
 

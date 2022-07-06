@@ -11,10 +11,8 @@ from ConfigSpace.util import get_one_exchange_neighbourhood
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.uncorrelated_mo_rf_with_instances import (
-    UncorrelatedMultiObjectiveRandomForestWithInstances,
-)
+from smac.epm.rf.rf_mo import MultiObjectiveRandomForest
+from smac.epm.rf.rf_with_instances import RandomForestWithInstances
 from smac.epm.util_funcs import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
@@ -316,19 +314,19 @@ class TestSMACFacade(unittest.TestCase):
             self.scenario.run_obj = objective
             smbo = SMAC4AC(
                 self.scenario,
-                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+                model=MultiObjectiveRandomForest,
                 model_kwargs={"target_names": ["a", "b"], "model_kwargs": {"seed": 1}},
                 acquisition_function=EIPS,
                 runhistory2epm=RunHistory2EPM4EIPS,
             ).solver
             self.assertIsInstance(
                 smbo.epm_chooser.model,
-                UncorrelatedMultiObjectiveRandomForestWithInstances,
+                MultiObjectiveRandomForest,
             )
             self.assertIsInstance(smbo.epm_chooser.acquisition_func, EIPS)
             self.assertIsInstance(
                 smbo.epm_chooser.acquisition_func.model,
-                UncorrelatedMultiObjectiveRandomForestWithInstances,
+                MultiObjectiveRandomForest,
             )
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 

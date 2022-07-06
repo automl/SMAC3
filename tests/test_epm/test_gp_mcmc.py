@@ -5,15 +5,15 @@ import sklearn.datasets
 import sklearn.model_selection
 
 from smac.configspace import ConfigurationSpace, UniformFloatHyperparameter
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
+from smac.epm.gp.mcmc import MCMCGaussianProcess
+from smac.epm.gp.utils.prior import HorseshoePrior, LognormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False, n_iter=50):
-    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+    from smac.epm.gp.kernels.gp import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,
@@ -44,7 +44,7 @@ def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True, average_samples=False
     for i in range(n_dimensions):
         configspace.add_hyperparameter(UniformFloatHyperparameter("x%d" % i, 0, 1))
 
-    model = GaussianProcessMCMC(
+    model = MCMCGaussianProcess(
         configspace=configspace,
         types=types,
         bounds=bounds,
@@ -124,7 +124,7 @@ class TestGPMCMC(unittest.TestCase):
         self.assertEqual(m_hat.shape, (10, 1))
         self.assertEqual(v_hat.shape, (10, 1))
 
-    @unittest.mock.patch.object(GaussianProcessMCMC, "predict")
+    @unittest.mock.patch.object(MCMCGaussianProcess, "predict")
     def test_predict_marginalized_over_instances_no_features(self, rf_mock):
         """The GP should fall back to the regular predict() method."""
 

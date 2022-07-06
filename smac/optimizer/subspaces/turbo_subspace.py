@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import math
 import warnings
@@ -10,17 +10,17 @@ from scipy.stats.qmc import LatinHypercube, Sobol
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.epm.base_epm import AbstractEPM
-from smac.epm.epm_gpytorch.gaussian_process_gpytorch import GaussianProcessGPyTorch
-from smac.epm.epm_gpytorch.globally_augmented_local_gp import GloballyAugmentedLocalGP
-from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gaussian_process_mcmc import GaussianProcessMCMC
-from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
-from smac.optimizer.local_bo.abstract_subspace import AbstractSubspace
+from smac.epm.gp import GaussianProcess
+from smac.epm.gp.augmented import GloballyAugmentedLocalGP
+from smac.epm.gp.gpytorch import GPyTorchGaussianProcess
+from smac.epm.gp.mcmc import MCMCGaussianProcess
+from smac.optimizer.acquisition_functions import TS, AbstractAcquisitionFunction
+from smac.optimizer.subspaces import LocalSubspace
 
 warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require" " n to be a power of 2.")
 
 
-class TuRBOSubSpace(AbstractSubspace):
+class TuRBOSubSpace(LocalSubspace):
     """
     Subspace designed for TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization
@@ -48,18 +48,18 @@ class TuRBOSubSpace(AbstractSubspace):
     def __init__(
         self,
         config_space: ConfigurationSpace,
-        bounds: typing.List[typing.Tuple[float, float]],
-        hps_types: typing.List[int],
-        bounds_ss_cont: typing.Optional[np.ndarray] = None,
-        bounds_ss_cat: typing.Optional[typing.List[typing.Tuple]] = None,
-        model_local: typing.Union[AbstractEPM, typing.Type[AbstractEPM]] = GaussianProcessGPyTorch,
-        model_local_kwargs: typing.Dict = {},
-        acq_func_local: typing.Union[AbstractAcquisitionFunction, typing.Type[AbstractAcquisitionFunction]] = TS,
-        acq_func_local_kwargs: typing.Optional[typing.Dict] = None,
-        rng: typing.Optional[np.random.RandomState] = None,
-        initial_data: typing.Optional[typing.Tuple[np.ndarray, np.ndarray]] = None,
-        activate_dims: typing.Optional[np.ndarray] = None,
-        incumbent_array: typing.Optional[np.ndarray] = None,
+        bounds: List[Tuple[float, float]],
+        hps_types: List[int],
+        bounds_ss_cont: Optional[np.ndarray] = None,
+        bounds_ss_cat: Optional[List[Tuple]] = None,
+        model_local: AbstractEPM = GPyTorchGaussianProcess,
+        model_local_kwargs: Dict = {},
+        acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = TS,
+        acq_func_local_kwargs: Optional[Dict] = None,
+        rng: Optional[np.random.RandomState] = None,
+        initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+        activate_dims: Optional[np.ndarray] = None,
+        incumbent_array: Optional[np.ndarray] = None,
         length_init: float = 0.8,
         length_min: float = 0.5**7,
         length_max: float = 1.6,
@@ -106,7 +106,7 @@ class TuRBOSubSpace(AbstractSubspace):
 
         if initial_data is not None:
             self.add_new_observations(initial_data[0], initial_data[1])
-            self.init_configs = []  # type: typing.List[Configuration]
+            self.init_configs = []  # type: List[Configuration]
 
         self.lb = np.zeros(self.n_dims)
         self.ub = np.ones(self.n_dims)
@@ -140,12 +140,12 @@ class TuRBOSubSpace(AbstractSubspace):
 
         self.init_configs = [Configuration(self.cs_local, vector=init_vector) for init_vector in init_vectors]
 
-    def adjust_length(self, new_observation: typing.Union[float, np.ndarray]) -> None:
+    def adjust_length(self, new_observation: Union[float, np.ndarray]) -> None:
         """
         Adjust the subspace length according to the performance of the latest suggested values
         Parameters
         ----------
-        new_observation: typing.Union[float, np.ndarray]
+        new_observation: Union[float, np.ndarray]
             new observations
         """
         # see Section 2: 'Trust regions'
@@ -177,7 +177,7 @@ class TuRBOSubSpace(AbstractSubspace):
 
     def _generate_challengers(  # type: ignore[override]
         self, _sorted: bool = True
-    ) -> typing.List[typing.Tuple[float, Configuration]]:
+    ) -> List[Tuple[float, Configuration]]:
         """
         Generate new challengers list for this subspace
 
@@ -203,13 +203,13 @@ class TuRBOSubSpace(AbstractSubspace):
 
         # adjust length according to kernel length
         if isinstance(
-            self.model, (GaussianProcess, GaussianProcessMCMC, GloballyAugmentedLocalGP, GaussianProcessGPyTorch)
+            self.model, (GaussianProcess, MCMCGaussianProcess, GloballyAugmentedLocalGP, GPyTorchGaussianProcess)
         ):
             if isinstance(self.model, GaussianProcess):
                 kernel_length = np.exp(self.model.hypers[1:-1])
-            elif isinstance(self.model, GaussianProcessMCMC):
+            elif isinstance(self.model, MCMCGaussianProcess):
                 kernel_length = np.exp(np.mean((np.array(self.model.hypers)[:, 1:-1]), axis=0))
-            elif isinstance(self.model, (GaussianProcessGPyTorch, GloballyAugmentedLocalGP)):
+            elif isinstance(self.model, (GPyTorchGaussianProcess, GloballyAugmentedLocalGP)):
                 kernel_length = self.model.kernel.base_kernel.lengthscale.cpu().detach().numpy()
 
             # See section 'Trust regions' of section 2
@@ -290,9 +290,7 @@ class TuRBOSubSpace(AbstractSubspace):
         super(TuRBOSubSpace, self).add_new_observations(X, y)
         self.num_valid_observations += len(y)
 
-    def _sort_configs_by_acq_value(
-        self, configs: typing.List[Configuration]
-    ) -> typing.List[typing.Tuple[float, Configuration]]:
+    def _sort_configs_by_acq_value(self, configs: List[Configuration]) -> List[Tuple[float, Configuration]]:
         """Sort the given configurations by acquisition value
         comes from smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
 

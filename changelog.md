@@ -2,7 +2,16 @@
 ## Features
 * [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
 optimizer to focus on the most promising regions.
-* [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm
+* [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm.
+
+
+## Interface
+* We changed the location of gaussian processes and random forests. They are in the folders epm/gp
+and epm/rf now.
+* Also, we restructured the optimizer folder and therefore the location of the acquisition functions
+and configuration chooser.
+* Multi-objective functions are located in the folder `multi_objective`.
+
 
 # 1.3.4
 * Added reference to JMLR paper.
