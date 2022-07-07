@@ -54,7 +54,7 @@ class TuRBOSubSpace(LocalSubspace):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: BaseEPM = GPyTorchGaussianProcess,
+        model_local: Union[BaseEPM, Type[BaseEPM]] = GPyTorchGaussianProcess,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = TS,
         acq_func_local_kwargs: Optional[Dict] = None,

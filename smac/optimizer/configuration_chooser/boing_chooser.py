@@ -77,7 +77,7 @@ class BOinGChooser(EPMChooser):
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: BaseEPM = GloballyAugmentedLocalGaussianProcess,
+        model_local: Union[BaseEPM, Type[BaseEPM]] = GloballyAugmentedLocalGaussianProcess,
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,
