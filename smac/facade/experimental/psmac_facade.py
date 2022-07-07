@@ -251,36 +251,6 @@ class PSMAC(object):
 
         return inc
 
-    def get_best_incumbents_ids(self, incs: List[Configuration]):
-        """
-        Determines the IDs and costs of the best configurations
-
-        Parameters
-        ----------
-        incs : List[Configuration]
-            incumbents determined by all parallel SMAC runs
-
-        Returns
-        -------
-        Dict(Config -> Dict(inst_id (str) -> cost (float)))  (if real validation runs are performed)
-        List(ints) (indices of best configurations if validation runs are performed)
-        Dict(Config -> Dict(inst_id (str) -> cost (float)))  (if performance is estimated)
-        List(ints) (indices of best configurations if performance is estimated)
-
-        """
-        if self.validate is True:
-            mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
-            val_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[
-                : self.n_incs
-            ]
-        else:
-            cost_per_config_valid = val_ids = None
-        mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
-        est_ids = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[
-            : self.n_incs
-        ]
-        return cost_per_config_valid, val_ids, cost_per_config_estimate, est_ids
-
     def _get_mean_costs(self, incs: List[Configuration], new_rh: RunHistory):
         """
         Compute mean cost per instance
