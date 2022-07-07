@@ -27,7 +27,7 @@ class MockPSMAC(PSMAC):
         MOCKCALLS += 1
 
     def optimize(self):
-        return np.array(self.scenario.cs.sample_configuration(self.n_optimizers))
+        return np.array(self.scenario.cs.sample_configuration(self.n_workers))
 
     def get_best_incumbents_ids(self, incs):
         cost_per_conf_v = cost_per_conf_e = {}
