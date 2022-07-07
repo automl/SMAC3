@@ -46,7 +46,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
  .. code-block:: none
 
     Value for default configuration: 0.1970
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/smac/intensification/parallel_scheduling.py:156: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/smac/intensification/parallel_scheduling.py:154: UserWarning: Hyperband is executed with 1 workers only. Consider to use pynisher to use all available workers.
       warnings.warn(
     /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/sklearn/utils/extmath.py:152: RuntimeWarning: overflow encountered in matmul
       ret = a @ b
@@ -232,7 +232,7 @@ is chosen to optimize the average accuracy on 5-fold cross validation.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  45.232 seconds)
+   **Total running time of the script:** ( 1 minutes  42.626 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_mlp_mf.py:

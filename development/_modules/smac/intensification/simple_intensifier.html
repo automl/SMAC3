@@ -110,7 +110,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
@@ -453,7 +453,6 @@ style="width: 100%;">
         <span class="n">cutoff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">deterministic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">run_obj_time</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">num_obj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
@@ -468,10 +467,7 @@ style="width: 100%;">
             <span class="n">run_obj_time</span><span class="o">=</span><span class="n">run_obj_time</span><span class="p">,</span>
             <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
             <span class="n">min_chall</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">num_obj</span><span class="o">=</span><span class="n">num_obj</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="c1"># Simple intensifier does not require comparing run results, thus we could simply ignore num_obj here</span>
-
         <span class="c1"># We want to control the number of runs that are sent to</span>
         <span class="c1"># the workers. At any time, we want to make sure that if there</span>
         <span class="c1"># are just W workers, there should be at max W active runs</span>

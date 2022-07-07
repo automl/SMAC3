@@ -27,7 +27,10 @@ def plot(all_x):
     plt.figure()
     for x in all_x:
         f1, f2 = schaffer(x)
-        plt.scatter(f1, f2, c="blue", alpha=0.1)
+        plt.scatter(f1, f2, c="blue", alpha=0.1, zorder=3000)
+
+    plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
+    plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
 
     plt.show()
 

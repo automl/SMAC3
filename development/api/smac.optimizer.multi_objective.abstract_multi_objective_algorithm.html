@@ -113,7 +113,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
@@ -430,14 +430,14 @@ style="width: 100%;">
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>(num_obj[, rng])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractMultiObjectiveAlgorithm</span></code></a>([rng])</p></td>
 <td><p>A general interface for multi-objective optimizer, depending on different strategies.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.multi_objective.abstract_multi_objective_algorithm.</span></span><span class="sig-name descname"><span class="pre">AbstractMultiObjectiveAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/multi_objective/abstract_multi_objective_algorithm.html#AbstractMultiObjectiveAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.optimizer.multi_objective.abstract_multi_objective_algorithm.</span></span><span class="sig-name descname"><span class="pre">AbstractMultiObjectiveAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/optimizer/multi_objective/abstract_multi_objective_algorithm.html#AbstractMultiObjectiveAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.optimizer.multi_objective.abstract_multi_objective_algorithm.AbstractMultiObjectiveAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>A general interface for multi-objective optimizer, depending on different strategies.
 It can be applied to rh2epm or epmchooser.</p>

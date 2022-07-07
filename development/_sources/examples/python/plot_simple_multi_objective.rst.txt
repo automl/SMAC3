@@ -21,7 +21,7 @@
 Simple Multi-Objective
 ^^^^^^^^^^^^^^^^^^^^^^
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-78
+.. GENERATED FROM PYTHON SOURCE LINES 6-81
 
 
 
@@ -60,7 +60,10 @@ Simple Multi-Objective
         plt.figure()
         for x in all_x:
             f1, f2 = schaffer(x)
-            plt.scatter(f1, f2, c="blue", alpha=0.1)
+            plt.scatter(f1, f2, c="blue", alpha=0.1, zorder=3000)
+
+        plt.vlines([1], 0, 4, linestyles="dashed", colors=["red"])
+        plt.hlines([1], 0, 4, linestyles="dashed", colors=["red"])
 
         plt.show()
 
@@ -112,7 +115,7 @@ Simple Multi-Objective
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  41.322 seconds)
+   **Total running time of the script:** ( 0 minutes  36.350 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_simple_multi_objective.py:

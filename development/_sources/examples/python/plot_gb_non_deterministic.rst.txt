@@ -177,7 +177,7 @@ Additional to the configuration, the function should make use of the seed parame
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  59.655 seconds)
+   **Total running time of the script:** ( 3 minutes  11.716 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_gb_non_deterministic.py:

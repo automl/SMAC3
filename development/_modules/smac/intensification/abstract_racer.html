@@ -110,7 +110,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
@@ -496,7 +496,6 @@ style="width: 100%;">
         <span class="n">maxR</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
         <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
         <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">num_obj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -535,12 +534,6 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">repeat_configs</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="c1"># to mark the end of an iteration</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iteration_done</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">if</span> <span class="n">num_obj</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Intensifiers only support single objective optimization. For multi-objective problems,&quot;</span>
-                <span class="s2">&quot;please refer to multi-objective intensifiers&quot;</span>
-            <span class="p">)</span>
 
 <div class="viewcode-block" id="AbstractRacer.get_next_run"><a class="viewcode-back" href="../../../api/smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer.get_next_run">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_run</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -710,9 +703,10 @@ style="width: 100%;">
         <span class="c1"># reasons)</span>
         <span class="n">chall_inst_seeds</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">chal_sum_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">sum_cost</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span>
-            <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">chall_inst_seeds</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">challenger</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">chall_inst_seeds</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">chal_sum_cost</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
+
         <span class="n">cutoff</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">curr_cutoff</span><span class="p">,</span> <span class="n">inc_sum_cost</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptive_capping_slackfactor</span> <span class="o">-</span> <span class="n">chal_sum_cost</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cutoff</span>
 
@@ -755,8 +749,11 @@ style="width: 100%;">
 
         <span class="c1"># performance on challenger runs, the challenger only becomes incumbent</span>
         <span class="c1"># if it dominates the incumbent</span>
-        <span class="n">chal_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">to_compare_runs</span><span class="p">)</span>
-        <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">to_compare_runs</span><span class="p">)</span>
+        <span class="n">chal_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">to_compare_runs</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">inc_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">average_cost</span><span class="p">(</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">to_compare_runs</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">chal_perf</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">inc_perf</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
 
         <span class="c1"># Line 15</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">chal_perf</span> <span class="o">&gt;</span> <span class="n">inc_perf</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">chall_runs</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minR</span><span class="p">:</span>

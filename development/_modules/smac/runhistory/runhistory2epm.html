@@ -110,7 +110,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
@@ -880,7 +880,7 @@ style="width: 100%;">
 
                 <span class="c1"># Let&#39;s normalize y here</span>
                 <span class="c1"># We use the objective_bounds calculated by the runhistory</span>
-                <span class="n">y_</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">([</span><span class="n">run</span><span class="o">.</span><span class="n">cost</span><span class="p">],</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">)</span>
+                <span class="n">y_</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">)</span>
                 <span class="n">y_agg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">y_</span><span class="p">)</span>
                 <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_agg</span>
             <span class="k">else</span><span class="p">:</span>
@@ -896,7 +896,6 @@ style="width: 100%;">
                 <span class="bp">self</span><span class="o">.</span><span class="n">max_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_response_values</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
 
 <div class="viewcode-block" id="RunHistory2EPM4Cost.transform_response_values"><a class="viewcode-back" href="../../../api/smac.runhistory.runhistory2epm.html#smac.runhistory.runhistory2epm.RunHistory2EPM4Cost.transform_response_values">[docs]</a>    <span class="k">def</span> <span class="nf">transform_response_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1105,7 +1104,7 @@ style="width: 100%;">
 
                 <span class="c1"># Let&#39;s normalize y here</span>
                 <span class="c1"># We use the objective_bounds calculated by the runhistory</span>
-                <span class="n">y_</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">([</span><span class="n">run</span><span class="o">.</span><span class="n">cost</span><span class="p">],</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">)</span>
+                <span class="n">y_</span> <span class="o">=</span> <span class="n">normalize_costs</span><span class="p">(</span><span class="n">run</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">runhistory</span><span class="o">.</span><span class="n">objective_bounds</span><span class="p">)</span>
                 <span class="n">y_agg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">multi_objective_algorithm</span><span class="p">(</span><span class="n">y_</span><span class="p">)</span>
                 <span class="n">y</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_agg</span>
             <span class="k">else</span><span class="p">:</span>

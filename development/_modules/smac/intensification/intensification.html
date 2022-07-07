@@ -110,7 +110,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
@@ -551,7 +551,6 @@ style="width: 100%;">
         <span class="n">maxR</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
         <span class="n">adaptive_capping_slackfactor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.2</span><span class="p">,</span>
         <span class="n">min_chall</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="n">num_obj</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">stats</span><span class="o">=</span><span class="n">stats</span><span class="p">,</span>
@@ -566,7 +565,6 @@ style="width: 100%;">
             <span class="n">maxR</span><span class="o">=</span><span class="n">maxR</span><span class="p">,</span>
             <span class="n">adaptive_capping_slackfactor</span><span class="o">=</span><span class="n">adaptive_capping_slackfactor</span><span class="p">,</span>
             <span class="n">min_chall</span><span class="o">=</span><span class="n">min_chall</span><span class="p">,</span>
-            <span class="n">num_obj</span><span class="o">=</span><span class="n">num_obj</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -1202,6 +1200,7 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">chal_runs</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_runs_for_config</span><span class="p">(</span><span class="n">challenger</span><span class="p">,</span> <span class="n">only_max_observed_budget</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">chal_perf</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">get_cost</span><span class="p">(</span><span class="n">challenger</span><span class="p">)</span>
+
         <span class="c1"># if all &lt;instance, seed&gt; have been run, compare challenger performance</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_run</span><span class="p">:</span>
             <span class="n">new_incumbent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_configs</span><span class="p">(</span>
@@ -1303,11 +1302,8 @@ style="width: 100%;">
         <span class="c1"># because of efficiency computed here</span>
         <span class="n">inst_seed_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inc_inst_seeds</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">missing_runs</span><span class="p">))</span>
         <span class="c1"># cost used by incumbent for going over all runs in inst_seed_pairs</span>
-        <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">sum_cost</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span>
-            <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span>
-        <span class="p">)</span>
-
+        <span class="n">inc_sum_cost</span> <span class="o">=</span> <span class="n">run_history</span><span class="o">.</span><span class="n">sum_cost</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">incumbent</span><span class="p">,</span> <span class="n">instance_seed_budget_keys</span><span class="o">=</span><span class="n">inst_seed_pairs</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">inc_sum_cost</span><span class="p">)</span> <span class="o">==</span> <span class="nb">float</span>
         <span class="k">return</span> <span class="n">to_run</span><span class="p">,</span> <span class="n">inc_sum_cost</span>
 
 <div class="viewcode-block" id="Intensifier.get_next_challenger"><a class="viewcode-back" href="../../../api/smac.intensification.intensification.html#smac.intensification.intensification.Intensifier.get_next_challenger">[docs]</a>    <span class="k">def</span> <span class="nf">get_next_challenger</span><span class="p">(</span>

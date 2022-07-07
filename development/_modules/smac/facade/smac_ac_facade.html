@@ -110,7 +110,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
@@ -937,7 +937,7 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">multi_objectives</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">num_obj</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="c1"># define any defaults here</span>
-            <span class="n">_multi_objective_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span> <span class="s2">&quot;num_obj&quot;</span><span class="p">:</span> <span class="n">num_obj</span><span class="p">}</span>
+            <span class="n">_multi_objective_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="p">}</span>
 
             <span class="k">if</span> <span class="n">multi_objective_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">_multi_objective_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">multi_objective_kwargs</span><span class="p">)</span>

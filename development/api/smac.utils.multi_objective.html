@@ -113,7 +113,7 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
 <div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
@@ -431,33 +431,28 @@ style="width: 100%;">
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.utils.multi_objective.normalize_costs" title="smac.utils.multi_objective.normalize_costs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normalize_costs</span></code></a>(values[, bounds])</p></td>
-<td><p>Normalizes the costs to be between 0 and 1 if no bounds are given.</p></td>
+<td><p>Normalizes a list of floats with corresponding bounds.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.utils.multi_objective.normalize_costs">
 <span class="sig-prename descclassname"><span class="pre">smac.utils.multi_objective.</span></span><span class="sig-name descname"><span class="pre">normalize_costs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/utils/multi_objective.html#normalize_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.utils.multi_objective.normalize_costs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalizes the costs to be between 0 and 1 if no bounds are given. Otherwise, the costs are
-normalized according to the bounds.</p>
-<p class="rubric">Example</p>
-<p>[0, 10, 5] -&gt; [[0], [1], [0.5]]
-[[0], [10], [5]] -&gt; [[0], [1], [0.5]]
-[[0, 0], [10, 50], [5, 200]] -&gt; [[0, 0], [1, 0.25], [0.5, 1]]</p>
+<dd><p>Normalizes a list of floats with corresponding bounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>List</em><em>, </em><em>List</em><em>[</em><em>List</em><em>]</em><em>]</em>) – Cost values which should be normalized.
-If array/list is one-dimensional, it is expanded by one dimension.</p></li>
-<li><p><strong>bounds</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Min and max bounds which should be applied to the values, by default None.
-If bounds are None the min and max values from the data are used.</p></li>
+<li><p><strong>values</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of costs to be normalized.</p></li>
+<li><p><strong>bounds</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – List of tuple of bounds. By default None. If no bounds are passed, the values are returned
+unnormalized.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Normalized costs.</p>
+<dd class="field-even"><p><strong>normalized_costs</strong> – Normalized costs based on the bounds. If no bounds are given, the values are returned unnormalized.
+Also, if min and max bounds are the same, the value of the corresponding objective is set to 1.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.ndarray</p>
+<dd class="field-odd"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
