@@ -1,3 +1,7 @@
+# 1.4.0
+* Updated pSMAC: Can pass arbitrary SMAC facades now, added example and fixed tests.
+
+
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.
