@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import numpy as np
-
 
 def normalize_costs(values: list[float], bounds: list[tuple[float, float]] | None = None) -> list[float]:
     """
