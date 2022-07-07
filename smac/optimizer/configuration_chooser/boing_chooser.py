@@ -53,8 +53,8 @@ class BOinGChooser(EPMChooser):
     acq_optimizer_local_kwargs: typing: Optional[Dict] = None,
         parameters for the optimizer of acquisition function of local models
     max_configs_local_fracs : float
-        The maximal number of fractions of samples to be included in the subapce. If the number of samples in the
-        subsapce is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
+        The maximal number of fractions of samples to be included in the subspace. If the number of samples in the
+        subspace is greater than this value and n_min_config_inner, the subspace will be cropped to fit the requirement
     min_configs_local: int,
         Minimum number of samples included in the inner loop model
     do_switching: bool
@@ -509,7 +509,7 @@ def subspace_extraction(
     cont_dims: np.ndarray,
 ) -> Tuple[np.ndarray, List[Tuple], np.ndarray]:
     """
-    Extract a subspace that contains at least num_min but no more than num_max
+    Extract a subspace that contains at least num_min points but no more than num_max points
 
     Parameters
     ----------
@@ -587,7 +587,7 @@ def subspace_extraction(
                 # This node split the subspace w.r.t. the categorical hyperparameters
                 cat_feature_idx = np.where(feature_idx == cat_dims)[0][0]
                 split_value = node.get_cat_split()
-                intersect = intersect1d(ss_bounds_cat[cat_feature_idx], split_value, assume_unique=True)
+                intersect = np.intersect1d(ss_bounds_cat[cat_feature_idx], split_value, assume_unique=True)
 
                 if len(intersect) == len(ss_bounds_cat[cat_feature_idx]):
                     # will fall into the left child

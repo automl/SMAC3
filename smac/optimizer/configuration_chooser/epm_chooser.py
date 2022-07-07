@@ -55,7 +55,7 @@ class EPMChooser:
     min_samples_model: int
         Minimum number of samples to build a model
     epm_chooser_kwargs: Any:
-        additioal argumetns passed to EPMChooser (Might be used by its subclasses)
+        additional arguments passed to EPMChooser (Might be used by its subclasses)
     """
 
     def __init__(
