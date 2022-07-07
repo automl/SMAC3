@@ -11,7 +11,7 @@ from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
 
 class AggregationStrategy(AbstractMultiObjectiveAlgorithm):
     """
-    An abstract class to aggregate multi-objective losses to a single objective losses,
+    An abstract class to aggregate multi-objective losses to a single objective loss,
     which can then be utilized by the single-objective optimizer.
     """
 
