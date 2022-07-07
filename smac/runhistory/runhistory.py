@@ -555,7 +555,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             costs = normalize_costs(cost, self.objective_bounds)
             return float(np.mean(costs))
 
-        assert type(cost) == float or type(cost) == int
+        assert type(cost) == float
         return float(cost)
 
     def get_min_cost(self, config: Configuration) -> float:
@@ -583,7 +583,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             # Note: We have to mean here because we already got the min cost
             return float(np.mean(costs))
 
-        assert type(cost) == float or type(cost) == int
+        assert type(cost) == float
         return float(cost)
 
     def average_cost(
