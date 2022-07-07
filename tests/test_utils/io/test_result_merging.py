@@ -44,7 +44,7 @@ class ResultMergerTest(unittest.TestCase):
         traj_fn = os.path.join(outdir, "traj.json")
         with open(traj_fn, "r") as file:
             lines = file.readlines()
-        traj_from_file = [json.loads(l) for l in lines]
+        traj_from_file = [json.loads(line) for line in lines]
         self.assertEqual(len(traj_from_file), len(traj))
 
 
