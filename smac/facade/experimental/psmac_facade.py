@@ -84,7 +84,7 @@ class PSMAC(object):
     (`shared_model=True`).
     In the latter case all SMAC workers share one file directory and communicate via
     the logfiles. You can specify the number of SMAC workers/optimizers with the
-    argument `n_optimizers`.
+    argument `n_workers`.
 
     You can pass all other kwargs for the SMAC4AC facade.
     In addition, you can access the facade's attributes normally (e.g. smac.stats),
@@ -101,7 +101,7 @@ class PSMAC(object):
     ----------
     scenario : ~smac.scenario.scenario.Scenario
         Scenario object
-    n_optimizers: int
+    n_workers: int
         Number of optimizers to run in parallel per round
     rng: int/np.random.RandomState
         The randomState/seed to pass to each smac run
@@ -146,7 +146,7 @@ class PSMAC(object):
         shared_model: bool = True,
         facade_class: Optional[Type[SMAC4AC]] = None,
         validate: bool = True,
-        n_optimizers: int = 2,  # TODO rename
+        n_workers: int = 2,
         val_set: Union[List[str], None] = None,
         **kwargs,
     ):
@@ -162,10 +162,10 @@ class PSMAC(object):
         self.rh = RunHistory()
         self._tae_runner = tae_runner
         self._tae_runner_kwargs = tae_runner_kwargs
-        if n_optimizers <= 1:
-            self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_optimizers", n_optimizers)
-        self.n_optimizers = max(n_optimizers, 2)
-        self.seeds = np.arange(0, self.n_optimizers, dtype=int)  # seeds for the parallel runs
+        if n_workers <= 1:
+            self.logger.warning("Invalid value in %s: %d. Setting to 2", "n_workers", n_workers)
+        self.n_workers = max(n_workers, 2)
+        self.seeds = np.arange(0, self.n_workers, dtype=int)  # seeds for the parallel runs
         self.validate = validate
         self.shared_model = shared_model
         if val_set is None:
@@ -203,7 +203,7 @@ class PSMAC(object):
         self.logger.info("+" * 120)
         self.logger.info("PSMAC run")
 
-        incs = joblib.Parallel(n_jobs=self.n_optimizers)(
+        incs = joblib.Parallel(n_jobs=self.n_workers)(
             joblib.delayed(optimize)(
                 scenario=self.scenario,  # Scenario object
                 tae_runner=self._tae_runner,  # type of tae_runner to run target with
@@ -323,7 +323,7 @@ class PSMAC(object):
             instance_mode=self.val_set,
             repetitions=1,
             use_epm=False,
-            n_jobs=self.n_optimizers,
+            n_jobs=self.n_workers,
         )
         return self._get_mean_costs(incs, new_rh)
 
