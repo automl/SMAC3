@@ -5,15 +5,16 @@ import sklearn.gaussian_process
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
-import smac.epm.gp_base_prior
+import smac.epm.gaussian_process.utils.prior
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
+from smac.epm.gaussian_process.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class BaseModel(AbstractEPM):
+class BaseModel(BaseEPM):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -91,7 +92,7 @@ class BaseModel(AbstractEPM):
         self,
         add_bound_priors: bool = True,
         add_soft_bounds: bool = False,
-    ) -> List[List[smac.epm.gp_base_prior.Prior]]:
+    ) -> List[List[Prior]]:
         """Returns all priors."""
         # Obtain a list of all priors for each tunable hyperparameter of the kernel
         all_priors = []
@@ -118,7 +119,7 @@ class BaseModel(AbstractEPM):
                     if add_bound_priors:
                         if add_soft_bounds:
                             priors_for_hp.append(
-                                smac.epm.gp_base_prior.SoftTopHatPrior(
+                                smac.epm.gaussian_process.utils.prior.SoftTopHatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,
@@ -127,7 +128,7 @@ class BaseModel(AbstractEPM):
                             )
                         else:
                             priors_for_hp.append(
-                                smac.epm.gp_base_prior.TophatPrior(
+                                smac.epm.gaussian_process.utils.prior.TophatPrior(
                                     lower_bound=bounds[i][0],
                                     upper_bound=bounds[i][1],
                                     rng=self.rng,
@@ -157,3 +158,8 @@ class BaseModel(AbstractEPM):
         X = X.copy()
         X[~np.isfinite(X)] = -1
         return X
+
+
+from smac.epm.gaussian_process.gp import GaussianProcess  # noqa
+
+__all__ = ["BaseModel", "GaussianProcess"]

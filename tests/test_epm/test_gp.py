@@ -13,14 +13,14 @@ from smac.configspace import (
     convert_configurations_to_array,
 )
 from smac.epm.gaussian_process import GaussianProcess
-from smac.epm.gp_base_prior import HorseshoePrior, LognormalPrior
+from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
 def get_gp(n_dimensions, rs, noise=1e-3, normalize_y=True) -> GaussianProcess:
-    from smac.epm.gp_kernels import ConstantKernel, Matern, WhiteKernel
+    from smac.epm.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
 
     cov_amp = ConstantKernel(
         2.0,
@@ -76,7 +76,12 @@ def get_cat_data(rs):
 
 
 def get_mixed_gp(cat_dims, cont_dims, rs, noise=1e-3, normalize_y=True):
-    from smac.epm.gp_kernels import ConstantKernel, HammingKernel, Matern, WhiteKernel
+    from smac.epm.gaussian_process.kernels import (
+        ConstantKernel,
+        HammingKernel,
+        Matern,
+        WhiteKernel,
+    )
 
     cat_dims = np.array(cat_dims, dtype=np.int)
     cont_dims = np.array(cont_dims, dtype=np.int)

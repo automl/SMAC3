@@ -12,8 +12,8 @@ from ConfigSpace import (
 
 import smac
 import smac.configspace
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.util_funcs import get_types
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.epm.utils import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

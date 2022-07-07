@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -13,7 +13,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEPM(AbstractEPM):
+class RandomEPM(BaseEPM):
     """EPM which returns random values on a call to ``fit``.
 
     Parameters

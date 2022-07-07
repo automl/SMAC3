@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 import scipy.optimize
 
-from smac.epm.gp_base_prior import (
+from smac.epm.gaussian_process.utils.prior import (
     GammaPrior,
     HorseshoePrior,
     LognormalPrior,

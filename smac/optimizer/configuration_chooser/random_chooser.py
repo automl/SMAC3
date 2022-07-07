@@ -13,7 +13,7 @@ __email__ = "kimmiga@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomConfigurationChooser(ABC):
+class RandomChooser(ABC):
     """Abstract base of helper classes to configure interleaving of random configurations in a list
     of challengers.
     """
@@ -32,7 +32,7 @@ class RandomConfigurationChooser(ABC):
         pass
 
 
-class ChooserNoCoolDown(RandomConfigurationChooser):
+class ChooserNoCoolDown(RandomChooser):
     """Interleave a random configuration after a constant number of configurations found by Bayesian
     optimization.
 
@@ -59,7 +59,7 @@ class ChooserNoCoolDown(RandomConfigurationChooser):
         return iteration % self.modulus < 1
 
 
-class ChooserLinearCoolDown(RandomConfigurationChooser):
+class ChooserLinearCoolDown(RandomChooser):
     """Interleave a random configuration, decreasing the fraction of random configurations over
     time.
 
@@ -107,7 +107,7 @@ class ChooserLinearCoolDown(RandomConfigurationChooser):
             return False
 
 
-class ChooserProb(RandomConfigurationChooser):
+class ChooserProb(RandomChooser):
     """Interleave a random configuration according to a given probability.
 
     Parameters
@@ -134,7 +134,7 @@ class ChooserProb(RandomConfigurationChooser):
             return False
 
 
-class ChooserProbCoolDown(RandomConfigurationChooser):
+class ChooserProbCoolDown(RandomChooser):
     """Interleave a random configuration according to a given probability which is decreased over
     time.
 
@@ -165,7 +165,7 @@ class ChooserProbCoolDown(RandomConfigurationChooser):
             return False
 
 
-class ChooserCosineAnnealing(RandomConfigurationChooser):
+class ChooserCosineAnnealing(RandomChooser):
     """Interleave a random configuration according to a given probability which is decreased
     according to a cosine annealing schedule.
 

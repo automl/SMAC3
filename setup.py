@@ -21,6 +21,12 @@ def read_file(filepath: str) -> str:
 
 
 extras_require = {
+    "gpytorch": [
+        "torch>=1.9.0",
+        "gpytorch>=1.5.0",
+        "pyro-ppl>=1.7.0",
+        "botorch>=0.5.0"
+    ],
     "dev": [
         "setuptools",
         "types-setuptools",
@@ -63,7 +69,7 @@ setuptools.setup(
         "ConfigSpace>=0.5.0",
         "joblib",
         "scikit-learn>=0.22.0",
-        "pyrfr>=0.8.0",
+        "pyrfr>=0.8.3",
         "dask",
         "distributed",
         "emcee>=3.0.0",

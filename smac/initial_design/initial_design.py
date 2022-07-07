@@ -98,6 +98,8 @@ class InitialDesign:
 
     def select_configurations(self) -> List[Configuration]:
         """Selects the initial configurations."""
+        if self.init_budget == 0:
+            return []
         if self.configs is None:
             self.configs = self._select_configurations()
 

@@ -21,9 +21,9 @@ from enum import Enum
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
+from smac.multi_objective.utils import normalize_costs
 from smac.tae import StatusType
 from smac.utils.logging import PickableLoggerAdapter
-from smac.utils.multi_objective import normalize_costs
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"

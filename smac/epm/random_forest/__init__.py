@@ -9,13 +9,13 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class BaseModel(AbstractEPM):
+class BaseModel(BaseEPM):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -62,3 +62,11 @@ class BaseModel(AbstractEPM):
                 X[nonfinite_mask, idx] = self.impute_values[idx]
 
         return X
+
+
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances  # noqa
+
+__all__ = [
+    "BaseModel",
+    "RandomForestWithInstances",
+]

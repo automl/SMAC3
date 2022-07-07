@@ -6,8 +6,8 @@ from ConfigSpace import UniformFloatHyperparameter
 
 import smac
 import smac.configspace
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.util_funcs import get_types
+from smac.epm.base_epm import BaseEPM
+from smac.epm.utils import get_types
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -33,12 +33,12 @@ class TestRFWithInstances(unittest.TestCase):
             y = np.random.rand(num_samples)
             return X, y
 
-        with unittest.mock.patch.object(AbstractEPM, "_train"):
-            with unittest.mock.patch.object(AbstractEPM, "_predict") as predict_mock:
+        with unittest.mock.patch.object(BaseEPM, "_train"):
+            with unittest.mock.patch.object(BaseEPM, "_predict") as predict_mock:
 
                 predict_mock.side_effect = lambda x, _: (x, x)
 
-                epm = AbstractEPM(
+                epm = BaseEPM(
                     configspace=cs,
                     types=types,
                     bounds=bounds,

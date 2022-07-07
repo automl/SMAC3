@@ -10,7 +10,7 @@ from scipy.stats import norm
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -23,7 +23,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
 
     Parameters
     ----------
-    model : AbstractEPM
+    model : BaseEPM
         Models the objective function.
 
     Attributes
@@ -32,7 +32,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     logger
     """
 
-    def __init__(self, model: AbstractEPM):
+    def __init__(self, model: BaseEPM):
         self.model = model
         self._required_updates = ("model",)  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
@@ -113,12 +113,12 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     for further details.
     """
 
-    def __init__(self, model: AbstractEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
+    def __init__(self, model: BaseEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
         """Constructor.
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             The model needs to implement an additional attribute ``models`` which contains the different models to
             integrate over.
         kwargs
@@ -141,7 +141,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             The model needs to implement an additional attribute ``models`` which contains the different models to
             integrate over.
         kwargs
@@ -184,7 +184,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
     def __init__(
         self,
-        model: AbstractEPM,
+        model: BaseEPM,
         acquisition_function: AbstractAcquisitionFunction,
         decay_beta: float,
         prior_floor: float = 1e-12,
@@ -196,7 +196,7 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             Models the objective function.
         decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
             otherwise.
@@ -350,12 +350,12 @@ class EI(AbstractAcquisitionFunction):
     with :math:`f(X^+)` as the best location.
     """
 
-    def __init__(self, model: AbstractEPM, par: float = 0.0):
+    def __init__(self, model: BaseEPM, par: float = 0.0):
         """Constructor.
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -419,7 +419,7 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    def __init__(self, model: AbstractEPM, par: float = 0.0):
+    def __init__(self, model: BaseEPM, par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
@@ -427,7 +427,7 @@ class EIPS(EI):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X) returning a tuples of
                    predicted cost and running time
@@ -501,13 +501,13 @@ class EIPS(EI):
 
 
 class LogEI(AbstractAcquisitionFunction):
-    def __init__(self, model: AbstractEPM, par: float = 0.0):
+    def __init__(self, model: BaseEPM, par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -574,7 +574,7 @@ class LogEI(AbstractAcquisitionFunction):
 
 
 class PI(AbstractAcquisitionFunction):
-    def __init__(self, model: AbstractEPM, par: float = 0.0):
+    def __init__(self, model: BaseEPM, par: float = 0.0):
         r"""Computes the probability of improvement for a given x over the best so far value as acquisition value.
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
@@ -582,7 +582,7 @@ class PI(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0
@@ -623,7 +623,7 @@ class PI(AbstractAcquisitionFunction):
 
 
 class LCB(AbstractAcquisitionFunction):
-    def __init__(self, model: AbstractEPM, par: float = 1.0):
+    def __init__(self, model: BaseEPM, par: float = 1.0):
         r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
@@ -633,7 +633,7 @@ class LCB(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=1.0
@@ -674,7 +674,7 @@ class LCB(AbstractAcquisitionFunction):
 
 
 class TS(AbstractAcquisitionFunction):
-    def __init__(self, model: AbstractEPM, par: float = 0.0):
+    def __init__(self, model: BaseEPM, par: float = 0.0):
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
 
@@ -690,7 +690,7 @@ class TS(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : AbstractEPM
+        model : BaseEPM
             A model that implements at least
                  - predict_marginalized_over_instances(X)
         par : float, default=0.0

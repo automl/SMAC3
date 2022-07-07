@@ -1,15 +1,15 @@
 from typing import Any, Dict, List, Tuple
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.base_epm import BaseEPM
+from smac.epm.multi_objective_epm import MultiObjectiveEPM
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjectiveModel):
+class MultiObjectiveRandomForest(MultiObjectiveEPM):
     """Wrapper for the random forest to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -24,7 +24,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjec
         types: List[int],
         bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[AbstractEPM]:
+    ) -> List[BaseEPM]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters
@@ -43,7 +43,7 @@ class UncorrelatedMultiObjectiveRandomForestWithInstances(UncorrelatedMultiObjec
             model kwargs for initializing models
         Returns
         -------
-        estimators: List[AbstractEPM]
+        estimators: List[BaseEPM]
             A list of Random Forests
         """
         return [RandomForestWithInstances(configspace, types, bounds, **model_kwargs) for _ in range(self.num_targets)]

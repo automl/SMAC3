@@ -8,7 +8,7 @@ from enum import Enum
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger

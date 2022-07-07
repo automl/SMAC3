@@ -137,3 +137,6 @@ dmypy.json
 
 # macOS files
 .DS_Store
+
+# Remove docker files
+docker

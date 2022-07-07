@@ -1,9 +1,24 @@
 # 1.4.0
 
+## Features
+* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
+optimizer to focus on the most promising regions.
+* [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm.
+
+
 ## Improvements
 * Enabled caching for multi-objectives (#872). Costs are now normalized in `get_cost` 
 or optionally in `average_cost`/`sum_cost`/`min_cost` to receive a single float value. Therefore,
 the cached cost values do not need to be updated everytime a new entry to the runhistory was added.
+
+
+## Interface changes
+* We changed the location of gaussian processes and random forests. They are in the folders
+epm/gaussian_process and epm/random_forest now.
+* Also, we restructured the optimizer folder and therefore the location of the acquisition functions
+and configuration chooser.
+* Multi-objective functions are located in the folder `multi_objective`.
+* pSMAC facade was moved to the facade directory.
 
 
 # 1.3.4

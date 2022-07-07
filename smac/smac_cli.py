@@ -10,9 +10,7 @@ from smac.configspace import Configuration
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
 )
-from smac.facade.experimental.psmac_facade import (  # type: ignore[attr-defined] # noqa F821
-    PSMAC,
-)
+from smac.facade.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.roar_facade import ROAR
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.facade.smac_bb_facade import SMAC4BB

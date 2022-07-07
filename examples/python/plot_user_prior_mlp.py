@@ -20,7 +20,6 @@ logging.basicConfig(level=logging.INFO)
 
 import warnings
 
-import ConfigSpace as CS
 import numpy as np
 from ConfigSpace.hyperparameters import (
     BetaIntegerHyperparameter,
@@ -34,7 +33,6 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bb_facade import SMAC4BB
 from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.scenario.scenario import Scenario

@@ -4,7 +4,7 @@ from multiprocessing.sharedctypes import Value
 import numpy as np
 import pytest
 
-from smac.utils.multi_objective import normalize_costs
+from smac.multi_objective.utils import normalize_costs
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

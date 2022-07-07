@@ -1,4 +1,4 @@
-from typing import Iterator, List, Optional, Tuple
+from typing import Any, Iterator, List, Optional, Tuple
 
 import logging
 
@@ -6,12 +6,15 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.epm.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer, RandomSearch
-from smac.optimizer.random_configuration_chooser import (
+from smac.optimizer.acquisition.maximizer import (
+    AcquisitionFunctionMaximizer,
+    RandomSearch,
+)
+from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
-    RandomConfigurationChooser,
+    RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
@@ -22,8 +25,8 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class EPMChooser(object):
-    """Interface to train the EPM and generate next configurations.
+class EPMChooser:
+    """Interface to train the EPM and generate/choose next configurations.
 
     Parameters
     ----------
@@ -51,6 +54,8 @@ class EPMChooser(object):
         Choose x_best for computing the acquisition function via the model instead of via the observations.
     min_samples_model: int
         Minimum number of samples to build a model
+    epm_chooser_kwargs: Any:
+        additional arguments passed to EPMChooser (Might be used by its subclasses)
     """
 
     def __init__(
@@ -64,9 +69,10 @@ class EPMChooser(object):
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
+        **epm_chooser_kwargs: Any,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent

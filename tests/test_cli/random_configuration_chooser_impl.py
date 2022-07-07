@@ -1,4 +1,4 @@
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown
+from smac.optimizer.configuration_chooser.random_chooser import ChooserNoCoolDown
 
 __author__ = "Aaron Kimmig"
 __copyright__ = "Copyright 2015, ML4AAD"
