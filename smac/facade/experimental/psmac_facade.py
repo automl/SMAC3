@@ -100,7 +100,9 @@ class PSMAC(object):
     Parameters
     ----------
     scenario : ~smac.scenario.scenario.Scenario
-        Scenario object
+        Scenario object. Note that the budget/number of evaluations (runcount-limit) is
+        used for each worker. So if you specify 40 evaluations and 3 workers, 120
+        configurations will be evaluated in total.
     n_workers: int
         Number of optimizers to run in parallel per round
     rng: int/np.random.RandomState
