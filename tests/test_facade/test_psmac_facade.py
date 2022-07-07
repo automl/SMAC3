@@ -1,3 +1,4 @@
+import os
 import glob
 import shutil
 import unittest
@@ -22,9 +23,12 @@ class MockSMBO(SMBO):
 
 class TestPSMACFacade(unittest.TestCase):
     def setUp(self):
+        base_directory = os.path.split(__file__)[0]
+        base_directory = os.path.abspath(os.path.join(base_directory, "../../tests", ".."))
+        os.chdir(base_directory)
         self.output_dirs = []
         fn = "tests/test_files/spear_hydra_test_scenario.txt"
-        # fn = "tests/test_files/test_deterministic_scenario.txt"
+        fn = "tests/test_files/test_deterministic_scenario.txt"
         self.scenario = Scenario(fn)
         self.scenario.limit_resources = True
 
@@ -40,14 +44,15 @@ class TestPSMACFacade(unittest.TestCase):
         facades = [None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]
         n_facades = len(facades)
+        target = {'x1': 7.290709845323256, 'x2': 10.285684762665337}
         for i, facade in enumerate(facades):
             for j, n_workers in enumerate(n_workers_list):
                 idx = n_facades * i + j
                 with self.subTest(i=idx):
-                    with joblib.parallel_backend("multiprocessing", n_jobs=3):
+                    with joblib.parallel_backend("multiprocessing", n_jobs=1):
                         optimizer = PSMAC(self.scenario, facade_class=facade, n_workers=n_workers, validate=False)
                         inc = optimizer.optimize()
-                        self.assertEqual(inc, inc)
+                        self.assertDictEqual(target, dict(inc))
 
     def tearDown(self):
         hydras = glob.glob1(".", "psmac*")
