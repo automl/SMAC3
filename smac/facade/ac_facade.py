@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
 
 import inspect
@@ -6,6 +7,7 @@ import logging
 import dask.distributed  # type: ignore
 import joblib  # type: ignore
 import numpy as np
+from smac.config import Config
 
 from smac.configspace import Configuration
 from smac.epm.base_epm import BaseEPM
@@ -66,7 +68,7 @@ from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4LogCost,
     RunHistory2EPM4LogScaledCost,
 )
-from smac.scenario.scenario import Scenario
+from smac.cli.scenario import Scenario
 
 # stats and options
 from smac.stats.stats import Stats
@@ -77,9 +79,9 @@ from smac.tae.base import BaseRunner
 from smac.tae.dask_runner import DaskParallelRunner
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.utils.constants import MAXINT
-from smac.utils.io.output_directory import create_output_directory
-from smac.utils.io.traj_logging import TrajEntry, TrajLogger
+from smac.constants import MAXINT
+from smac.cli.output_directory import create_output_directory
+from smac.cli.traj_logging import TrajEntry, TrajLogger
 
 # utils
 from smac.utils.logging import format_array
@@ -200,40 +202,58 @@ class SMAC4AC(object):
 
     def __init__(
         self,
-        scenario: Scenario,
-        tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
-        tae_runner_kwargs: Optional[Dict] = None,
-        runhistory: Optional[Union[Type[RunHistory], RunHistory]] = None,
-        runhistory_kwargs: Optional[Dict] = None,
-        intensifier: Optional[Type[AbstractRacer]] = None,
-        intensifier_kwargs: Optional[Dict] = None,
-        acquisition_function: Optional[Type[AbstractAcquisitionFunction]] = None,
-        acquisition_function_kwargs: Optional[Dict] = None,
-        integrate_acquisition_function: bool = False,
-        user_priors: bool = False,
-        user_prior_kwargs: Optional[Dict] = None,
-        acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
-        acquisition_function_optimizer_kwargs: Optional[Dict] = None,
-        model: Optional[Type[BaseEPM]] = None,
-        model_kwargs: Optional[Dict] = None,
-        runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
-        runhistory2epm_kwargs: Optional[Dict] = None,
-        multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
-        multi_objective_kwargs: Optional[Dict] = None,
-        initial_design: Optional[Type[InitialDesign]] = None,
-        initial_design_kwargs: Optional[Dict] = None,
-        initial_configurations: Optional[List[Configuration]] = None,
-        stats: Optional[Stats] = None,
-        restore_incumbent: Optional[Configuration] = None,
-        rng: Optional[Union[np.random.RandomState, int]] = None,
-        smbo_class: Optional[Type[SMBO]] = None,
-        smbo_kwargs: Optional[Dict] = None,
+        config: Config,
+        algorithm: BaseRunner | Callable,
+        model: BaseEPM = None,  # Optimizer model
+        acquisition_function: AbstractAcquisitionFunction | None = None,
+        acquisition_function_optimizer: AcquisitionFunctionMaximizer | None = None,
+        initial_design: InitialDesign = None,
+        initial_configurations: list[Configuration] | None = None,
+        intensifier: AbstractRacer | None = None,
+        runhistory2epm: AbstractRunHistory2EPM | None = None,
+        multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
+        # stats: Optional[Stats] = None,
+        # restore_incumbent: Optional[Configuration] = None,
+        # rng: Optional[Union[np.random.RandomState, int]] = None,
+        # smbo_class: Optional[Type[SMBO]] = None,
         run_id: Optional[int] = None,
-        random_configuration_chooser: Optional[Type[RandomChooser]] = None,
-        random_configuration_chooser_kwargs: Optional[Dict] = None,
-        dask_client: Optional[dask.distributed.Client] = None,
-        n_jobs: Optional[int] = 1,
+        random_configuration_chooser: RandomChooser | None = None,
+        # dask_client: Optional[dask.distributed.Client] = None,
+        # n_jobs: Optional[int] = 1,
     ):
+        if model is None:
+            model = self.get_model()
+
+    @staticmethod
+    def model(
+        config: Config,
+        num_trees: int,
+        bootstrapping: bool,
+        ratio_features: float,
+        min_samples_split: float,
+        min_samples_leaf: int,
+        max_depth: int,
+        **kwargs,
+    ) -> RandomForestWithInstances:
+        model_kwargs = {
+            "log_y": config.transform_y == "log",
+            "num_trees": num_trees,
+            "do_bootstrapping": bootstrapping,
+            "ratio_features": ratio_features,
+            "min_samples_split": min_samples_split,
+            "min_samples_leaf": min_samples_leaf,
+            "max_depth": max_depth,
+            "configspace": config.configspace,
+        }
+        model_kwargs.update(kwargs)
+
+        return RandomForestWithInstances(**model_kwargs)
+
+    @staticmethod
+    def acquisition_function(integrated: bool = False, priors: bool = False) -> AbstractAcquisitionFunction:
+        pass
+
+    def blub(self):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         self.scenario = scenario
@@ -660,11 +680,7 @@ class SMAC4AC(object):
         if runhistory2epm_kwargs is not None:
             r2e_def_kwargs.update(runhistory2epm_kwargs)
         if runhistory2epm is None:
-            if scenario.run_obj == "runtime":
-                rh2epm = RunHistory2EPM4LogCost(
-                    **r2e_def_kwargs  # type: ignore
-                )  # type: ignore[arg-type] # noqa F821  # type: AbstractRunHistory2EPM
-            elif scenario.run_obj == "quality":
+            if scenario.run_obj == "quality":
                 if scenario.transform_y == "NONE":  # type: ignore[attr-defined] # noqa F821
                     rh2epm = RunHistory2EPM4Cost(**r2e_def_kwargs)  # type: ignore # noqa F821
                 elif scenario.transform_y == "LOG":  # type: ignore[attr-defined] # noqa F821
