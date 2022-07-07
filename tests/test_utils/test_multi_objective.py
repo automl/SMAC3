@@ -16,10 +16,10 @@ class MultiObjectiveTest(unittest.TestCase):
         self.bounds_invalid = [(0, 0), (5, 5)]
 
     def test_normalize_costs(self):
-        # If no bounds are passed, we get ones back
+        # If no bounds are passed, we get the same result back
         v = [5, 2]
         nv = normalize_costs(v)
-        self.assertEqual(nv, [1.0, 1.0])
+        self.assertEqual(nv, [5, 2])
 
         # Normalize between 0..1 given data only
         v = [25, 50]
