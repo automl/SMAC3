@@ -67,7 +67,7 @@ if __name__ == "__main__":
     scenario = Scenario(
         {
             "run_obj": "quality",  # we optimize quality (alternatively runtime)
-            "runcount-limit": 20,  # max. number of function evaluations
+            "runcount-limit": 20,  # max. number of function evaluations PER WORKER
             "cs": cs,  # configuration space
             "deterministic": True,
         }
@@ -90,10 +90,19 @@ if __name__ == "__main__":
         rng=np.random.RandomState(42),
         acquisition_function=EI,  # or others like PI, LCB as acquisition functions
         tae_runner=rosenbrock_2d,
-        n_optimizers=2,  # 2 parallel workers
-        n_incs=1,  # return one incumbent
+        n_workers=2,  # 2 parallel workers
     )
 
     incumbent = smac.optimize()
     # Get trajectory of optimization (incumbent over time)
     trajectory_json = smac.get_trajectory()   # trajectory in json format
+
+    # Plot trajectory: cost of incumbent against number of evaluations
+    # import matplotlib.pyplot as plt
+    # X = [t["evaluations"] for t in trajectory_json]
+    # Y = [t["cost"] for t in trajectory_json]
+    # plt.plot(X, Y)
+    # plt.yscale("log")
+    # plt.xlabel("Number of Evaluations")
+    # plt.ylabel("Cost of Incumbent")
+    # plt.show()
