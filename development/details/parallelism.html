@@ -200,6 +200,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_svm_eips.html">
      SVM with EIPS as acquisition functions
     </a>
@@ -449,7 +454,7 @@ style="width: 100%;">
   <section id="parallelism">
 <h1>Parallelism<a class="headerlink" href="#parallelism" title="Permalink to this headline">¶</a></h1>
 <p>SMAC also provides a parallel mode to use several parallel computational resources (such as CPU cores).
-This variant of SMAC is called pSMAC (parallel SMAC).
+This variant of SMAC is called pSMAC (parallel SMAC) <a class="footnote-reference brackets" href="#id2" id="id1">1</a>.
 The general idea is that all target algorithm run evaluations are shared between the individual SMAC runs
 such that all SMAC runs are better informed and can work together.</p>
 <div class="admonition warning">
@@ -463,6 +468,14 @@ So, a requirement for pSMAC is that it can write to a shared file space.</p>
 <p class="admonition-title">Note</p>
 <p>SMAC also supports DASH. The documentation is in progress.</p>
 </div>
+<dl class="footnote brackets">
+<dt class="label" id="id2"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
+distributed automated algorithm configuration (T). University of British
+Columbia. Retrieved from
+<a class="reference external" href="https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184">https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184</a>.</p>
+</dd>
+</dl>
 <section id="commandline">
 <h2>Commandline<a class="headerlink" href="#commandline" title="Permalink to this headline">¶</a></h2>
 <p>To use pSMAC via the commandline interface, please specify the following two arguments:</p>

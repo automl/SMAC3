@@ -197,6 +197,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="examples/python/plot_synthetic_function_parallel.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="examples/python/plot_svm_eips.html">
      SVM with EIPS as acquisition functions
     </a>
@@ -812,7 +817,7 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_all_configs_per_budget">get_all_configs_per_budget() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
-      <li><a href="api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_best_incumbents_ids">get_best_incumbents_ids() (smac.facade.psmac_facade.PSMAC method)</a>
+      <li><a href="api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_best_incumbent">get_best_incumbent() (smac.facade.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="api/smac.utils.test_helpers.html#smac.utils.test_helpers.get_branin_config_space">get_branin_config_space() (in module smac.utils.test_helpers)</a>
 </li>
@@ -856,17 +861,29 @@ style="width: 100%;">
 </li>
       <li><a href="api/smac.epm.utils.html#smac.epm.utils.get_rng">get_rng() (in module smac.epm.utils)</a>
 </li>
-      <li><a href="api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">get_runhistory() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
+      <li><a href="api/smac.utils.io.result_merging.html#smac.utils.io.result_merging.get_rundirs">get_rundirs() (in module smac.utils.io.result_merging)</a>
 </li>
+      <li><a href="api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_runhistory">get_runhistory() (smac.facade.psmac_facade.PSMAC method)</a>
+
+      <ul>
+        <li><a href="api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_runhistory">(smac.facade.smac_ac_facade.SMAC4AC method)</a>
+</li>
+      </ul></li>
       <li><a href="api/smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory.get_runs_for_config">get_runs_for_config() (smac.runhistory.runhistory.RunHistory method)</a>
 </li>
       <li><a href="api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_tae_runner">get_tae_runner() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
 </li>
-      <li><a href="api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">get_trajectory() (smac.facade.smac_ac_facade.SMAC4AC method)</a>
+      <li><a href="api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_trajectory">get_trajectory() (smac.facade.psmac_facade.PSMAC method)</a>
+
+      <ul>
+        <li><a href="api/smac.facade.smac_ac_facade.html#smac.facade.smac_ac_facade.SMAC4AC.get_trajectory">(smac.facade.smac_ac_facade.SMAC4AC method)</a>
 </li>
+      </ul></li>
       <li><a href="api/smac.epm.utils.html#smac.epm.utils.get_types">get_types() (in module smac.epm.utils)</a>
 </li>
       <li><a href="api/smac.stats.stats.html#smac.stats.stats.Stats.get_used_wallclock_time">get_used_wallclock_time() (smac.stats.stats.Stats method)</a>
+</li>
+      <li><a href="api/smac.utils.io.result_merging.html#smac.utils.io.result_merging.glob_re">glob_re() (in module smac.utils.io.result_merging)</a>
 </li>
       <li><a href="api/smac.epm.gaussian_process.augmented.html#smac.epm.gaussian_process.augmented.GloballyAugmentedLocalGaussianProcess">GloballyAugmentedLocalGaussianProcess (class in smac.epm.gaussian_process.augmented)</a>
 </li>
@@ -1249,6 +1266,8 @@ style="width: 100%;">
         <li><a href="api/smac.utils.io.output_directory.html#module-smac.utils.io.output_directory">smac.utils.io.output_directory</a>
 </li>
         <li><a href="api/smac.utils.io.output_writer.html#module-smac.utils.io.output_writer">smac.utils.io.output_writer</a>
+</li>
+        <li><a href="api/smac.utils.io.result_merging.html#module-smac.utils.io.result_merging">smac.utils.io.result_merging</a>
 </li>
         <li><a href="api/smac.utils.io.traj_logging.html#module-smac.utils.io.traj_logging">smac.utils.io.traj_logging</a>
 </li>
@@ -2017,8 +2036,6 @@ style="width: 100%;">
         <li><a href="api/smac.optimizer.configuration_chooser.html#module-smac.optimizer.configuration_chooser">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.configuration_chooser.boing_chooser
 
@@ -2026,6 +2043,8 @@ style="width: 100%;">
         <li><a href="api/smac.optimizer.configuration_chooser.boing_chooser.html#module-smac.optimizer.configuration_chooser.boing_chooser">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     smac.optimizer.configuration_chooser.epm_chooser
 
@@ -2255,6 +2274,13 @@ style="width: 100%;">
 
       <ul>
         <li><a href="api/smac.utils.io.output_writer.html#module-smac.utils.io.output_writer">module</a>
+</li>
+      </ul></li>
+      <li>
+    smac.utils.io.result_merging
+
+      <ul>
+        <li><a href="api/smac.utils.io.result_merging.html#module-smac.utils.io.result_merging">module</a>
 </li>
       </ul></li>
       <li>
@@ -2591,6 +2617,8 @@ style="width: 100%;">
       <li><a href="api/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_inst_file">write_inst_file() (smac.utils.io.output_writer.OutputWriter method)</a>
 </li>
       <li><a href="api/smac.utils.io.cmd_reader.html#smac.utils.io.cmd_reader.CMDReader.write_main_options_to_doc">write_main_options_to_doc() (smac.utils.io.cmd_reader.CMDReader method)</a>
+</li>
+      <li><a href="api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.write_run">write_run() (smac.facade.psmac_facade.PSMAC method)</a>
 </li>
       <li><a href="api/smac.utils.io.output_writer.html#smac.utils.io.output_writer.OutputWriter.write_scenario_file">write_scenario_file() (smac.utils.io.output_writer.OutputWriter method)</a>
 </li>

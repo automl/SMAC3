@@ -203,6 +203,27 @@ Python
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).">
+
+.. only:: html
+
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_synthetic_function_parallel_thumb.png
+     :alt: Synthetic Function with few Hyperparameters
+
+     :ref:`sphx_glr_examples_python_plot_synthetic_function_parallel.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/python/plot_synthetic_function_parallel
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="An example to optimize a simple SVM on the IRIS-benchmark with EIPS (EI per seconds) acquisitio...">
 
 .. only:: html

@@ -200,6 +200,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_parallel.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_svm_eips.html">
      SVM with EIPS as acquisition functions
     </a>
@@ -445,7 +450,7 @@ In the first stage, BOinG constructs an RF to capture the global loss landscape.
 optimizes inside a subregion near the candidate suggested by the RF model with a GP model to focus only on the most
 promising region.</p>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-07_09:13:36_578669
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-07_12:53:03_161182
 Default Value: 16916.00
 Optimizing! Depending on your machine, this might take a few minutes.
 INFO:smac.facade.smac_boing_facade.SMAC4BOING:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -519,28 +524,20 @@ X = torch.linalg.solve_triangular(A, B). (Triggered internally at  ../aten/src/A
   warnings.warn(
 /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
   warnings.warn(
-INFO:smac.intensification.intensification.Intensifier:Challenger (1.481) is better than incumbent (13.7271) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x0 : 0.21284371614456177 -&gt; 0.7909313158447677
-INFO:smac.intensification.intensification.Intensifier:  x1 : -0.31674057245254517 -&gt; 0.7454611678672745
-INFO:smac.intensification.intensification.Intensifier:Challenger (1.1212) is better than incumbent (1.481) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x0 : 0.7909313158447677 -&gt; 0.7905192074727623
-INFO:smac.intensification.intensification.Intensifier:  x1 : 0.7454611678672745 -&gt; 0.728715506922935
 INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-INFO:smac.stats.stats.Stats:Incumbent changed: 3
+INFO:smac.stats.stats.Stats:Incumbent changed: 1
 INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 20 / 20.0
 INFO:smac.stats.stats.Stats:Finished target algorithm runs: 20 / 20.0
 INFO:smac.stats.stats.Stats:Configurations: 20
-INFO:smac.stats.stats.Stats:Used wallclock time: 23.25 / inf sec
+INFO:smac.stats.stats.Stats:Used wallclock time: 22.03 / inf sec
 INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
 INFO:smac.stats.stats.Stats:----------------------------------------------------
 INFO:smac.facade.smac_boing_facade.SMAC4BOING:Final Incumbent: Configuration(values={
-  &#39;x0&#39;: 0.7905192074727623,
-  &#39;x1&#39;: 0.728715506922935,
+  &#39;x0&#39;: 0.21284371614456177,
+  &#39;x1&#39;: -0.31674057245254517,
 })
 
-INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 1.1212
+INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 13.7271
 </pre></div>
 </div>
 <div class="line-block">
@@ -609,7 +606,7 @@ INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 1.121
     <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  23.263 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  22.037 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-synthetic-function-boing-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/958a0856bed84ea419fceb9fa6f9ccb2/plot_synthetic_function_boing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_synthetic_function_boing.py</span></code></a></p>

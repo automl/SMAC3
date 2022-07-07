@@ -31,5 +31,6 @@ smac.utils.io
    smac.utils.io.input_reader
    smac.utils.io.output_directory
    smac.utils.io.output_writer
+   smac.utils.io.result_merging
    smac.utils.io.traj_logging
 

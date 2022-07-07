@@ -40,7 +40,7 @@ promising region.
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-07_09:13:36_578669
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-07_12:53:03_161182
     Default Value: 16916.00
     Optimizing! Depending on your machine, this might take a few minutes.
     INFO:smac.facade.smac_boing_facade.SMAC4BOING:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -114,28 +114,20 @@ promising region.
       warnings.warn(
     /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
       warnings.warn(
-    INFO:smac.intensification.intensification.Intensifier:Challenger (1.481) is better than incumbent (13.7271) on 1 runs.
-    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-    INFO:smac.intensification.intensification.Intensifier:  x0 : 0.21284371614456177 -> 0.7909313158447677
-    INFO:smac.intensification.intensification.Intensifier:  x1 : -0.31674057245254517 -> 0.7454611678672745
-    INFO:smac.intensification.intensification.Intensifier:Challenger (1.1212) is better than incumbent (1.481) on 1 runs.
-    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-    INFO:smac.intensification.intensification.Intensifier:  x0 : 0.7909313158447677 -> 0.7905192074727623
-    INFO:smac.intensification.intensification.Intensifier:  x1 : 0.7454611678672745 -> 0.728715506922935
     INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-    INFO:smac.stats.stats.Stats:Incumbent changed: 3
+    INFO:smac.stats.stats.Stats:Incumbent changed: 1
     INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 20 / 20.0
     INFO:smac.stats.stats.Stats:Finished target algorithm runs: 20 / 20.0
     INFO:smac.stats.stats.Stats:Configurations: 20
-    INFO:smac.stats.stats.Stats:Used wallclock time: 23.25 / inf sec 
+    INFO:smac.stats.stats.Stats:Used wallclock time: 22.03 / inf sec 
     INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
     INFO:smac.stats.stats.Stats:----------------------------------------------------
     INFO:smac.facade.smac_boing_facade.SMAC4BOING:Final Incumbent: Configuration(values={
-      'x0': 0.7905192074727623,
-      'x1': 0.728715506922935,
+      'x0': 0.21284371614456177,
+      'x1': -0.31674057245254517,
     })
 
-    INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 1.1212
+    INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 13.7271
 
 
 
@@ -212,7 +204,7 @@ promising region.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  23.263 seconds)
+   **Total running time of the script:** ( 0 minutes  22.037 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function_boing.py:

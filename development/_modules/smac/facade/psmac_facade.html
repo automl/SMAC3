@@ -197,6 +197,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_parallel.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../examples/python/plot_svm_eips.html">
      SVM with EIPS as acquisition functions
     </a>
@@ -418,13 +423,14 @@ style="width: 100%;">
 <span></span><span class="c1"># type: ignore</span>
 <span class="c1"># mypy: ignore-errors</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">joblib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -436,8 +442,8 @@ style="width: 100%;">
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
 <span class="kn">from</span> <span class="nn">smac.tae.base</span> <span class="kn">import</span> <span class="n">BaseRunner</span>
 <span class="kn">from</span> <span class="nn">smac.tae.execute_ta_run_hydra</span> <span class="kn">import</span> <span class="n">ExecuteTARunOld</span>
-<span class="kn">from</span> <span class="nn">smac.utils.constants</span> <span class="kn">import</span> <span class="n">MAXINT</span>
 <span class="kn">from</span> <span class="nn">smac.utils.io.output_directory</span> <span class="kn">import</span> <span class="n">create_output_directory</span>
+<span class="kn">from</span> <span class="nn">smac.utils.io.result_merging</span> <span class="kn">import</span> <span class="n">ResultMerger</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Andre Biedenkapp&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright 2018, ML4AAD&quot;</span>
@@ -445,11 +451,12 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="optimize"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.optimize">[docs]</a><span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span>
-    <span class="n">scenario</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
-    <span class="n">tae</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">],</span>
-    <span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
+    <span class="n">tae_runner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">],</span>
+    <span class="n">tae_runner_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
     <span class="n">rng</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
     <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">facade_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SMAC4AC</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -459,14 +466,14 @@ style="width: 100%;">
 <span class="sd">    ----------</span>
 <span class="sd">    scenario: Scenario</span>
 <span class="sd">        smac.Scenario to initialize SMAC</span>
-<span class="sd">    tae: BaseRunner</span>
+<span class="sd">    tae_runner: BaseRunner</span>
 <span class="sd">        Target Algorithm Runner (supports old and aclib format)</span>
 <span class="sd">    tae_runner_kwargs: Optional[dict]</span>
 <span class="sd">        arguments passed to constructor of &#39;~tae&#39;</span>
 <span class="sd">    rng: int/np.random.RandomState</span>
 <span class="sd">        The randomState/seed to pass to each smac run</span>
 <span class="sd">    output_dir: str</span>
-<span class="sd">        The directory in which each smac run should write it&#39;s results</span>
+<span class="sd">        The directory in which each smac run should write its results</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -474,7 +481,11 @@ style="width: 100%;">
 <span class="sd">        The incumbent configuration of this run</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">solver</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae</span><span class="p">,</span> <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="n">tae_kwargs</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">facade_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">facade_class</span> <span class="o">=</span> <span class="n">SMAC4AC</span>
+    <span class="n">solver</span> <span class="o">=</span> <span class="n">facade_class</span><span class="p">(</span>
+        <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">tae_runner</span><span class="o">=</span><span class="n">tae_runner</span><span class="p">,</span> <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="n">tae_runner_kwargs</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
     <span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">start_timing</span><span class="p">()</span>
     <span class="n">solver</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
 
@@ -488,34 +499,55 @@ style="width: 100%;">
 
 <div class="viewcode-block" id="PSMAC"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC">[docs]</a><span class="k">class</span> <span class="nc">PSMAC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Facade to use PSMAC</span>
+<span class="sd">    Facade to use pSMAC [1]_</span>
+
+<span class="sd">    With pSMAC you can either run n distinct SMAC optimizations in parallel</span>
+<span class="sd">    (`shared_model=False`) or you can parallelize the target algorithm evaluations</span>
+<span class="sd">    (`shared_model=True`).</span>
+<span class="sd">    In the latter case all SMAC workers share one file directory and communicate via</span>
+<span class="sd">    the logfiles. You can specify the number of SMAC workers/optimizers with the</span>
+<span class="sd">    argument `n_workers`.</span>
+
+<span class="sd">    You can pass all other kwargs for the SMAC4AC facade.</span>
+<span class="sd">    In addition, you can access the facade&#39;s attributes normally (e.g. smac.stats),</span>
+<span class="sd">    however each time a new SMAC object is built, reading the information from the</span>
+<span class="sd">    file system.</span>
+
+
+<span class="sd">    .. [1] Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for</span>
+<span class="sd">        distributed automated algorithm configuration (T). University of British</span>
+<span class="sd">        Columbia. Retrieved from</span>
+<span class="sd">        https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    scenario : ~smac.scenario.scenario.Scenario</span>
-<span class="sd">        Scenario object</span>
-<span class="sd">    n_optimizers: int</span>
+<span class="sd">        Scenario object. Note that the budget/number of evaluations (runcount-limit) is</span>
+<span class="sd">        used for each worker. So if you specify 40 evaluations and 3 workers, 120</span>
+<span class="sd">        configurations will be evaluated in total.</span>
+<span class="sd">    n_workers: int</span>
 <span class="sd">        Number of optimizers to run in parallel per round</span>
 <span class="sd">    rng: int/np.random.RandomState</span>
 <span class="sd">        The randomState/seed to pass to each smac run</span>
 <span class="sd">    run_id: int</span>
 <span class="sd">        run_id for this hydra run</span>
-<span class="sd">    tae: BaseRunner</span>
+<span class="sd">    tae_runner: BaseRunner</span>
 <span class="sd">        Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</span>
-<span class="sd">    tae_kwargs: Optional[dict]</span>
-<span class="sd">        arguments passed to constructor of &#39;~tae&#39;</span>
+<span class="sd">    tae_runner_kwargs: Optional[dict]</span>
+<span class="sd">        arguments passed to constructor of &#39;~tae_runner&#39;</span>
 <span class="sd">    shared_model: bool</span>
 <span class="sd">        Flag to indicate whether information is shared between SMAC runs or not</span>
 <span class="sd">    validate: bool / None</span>
 <span class="sd">        Flag to indicate whether to validate the found configurations or to use the SMAC estimates</span>
 <span class="sd">        None =&gt; neither and return the full portfolio</span>
-<span class="sd">    n_incs: int</span>
-<span class="sd">        Number of incumbents to return (n_incs &lt;= 0 ==&gt; all found configurations)</span>
 <span class="sd">    val_set: List[str]</span>
 <span class="sd">        List of instance-ids to validate on</span>
+<span class="sd">    **kwargs</span>
+<span class="sd">        Keyword arguments for the SMAC4AC facade</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
+<span class="sd">    # TODO update attributes</span>
 <span class="sd">    logger</span>
 <span class="sd">    stats : Stats</span>
 <span class="sd">        loggs information about used resources</span>
@@ -530,16 +562,16 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">scenario</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">Scenario</span><span class="p">],</span>
+        <span class="n">scenario</span><span class="p">:</span> <span class="n">Scenario</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">run_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">tae</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
-        <span class="n">tae_kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">tae_runner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseRunner</span><span class="p">]</span> <span class="o">=</span> <span class="n">ExecuteTARunOld</span><span class="p">,</span>
+        <span class="n">tae_runner_kwargs</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">shared_model</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">facade_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SMAC4AC</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">n_optimizers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">val_set</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">n_incs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -548,30 +580,34 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">get_rng</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">facade_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">facade_class</span> <span class="o">=</span> <span class="n">SMAC4AC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">facade_class</span> <span class="o">=</span> <span class="n">facade_class</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rh</span> <span class="o">=</span> <span class="n">RunHistory</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tae</span> <span class="o">=</span> <span class="n">tae</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tae_kwargs</span> <span class="o">=</span> <span class="n">tae_kwargs</span>
-        <span class="k">if</span> <span class="n">n_optimizers</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Invalid value in </span><span class="si">%s</span><span class="s2">: </span><span class="si">%d</span><span class="s2">. Setting to 2&quot;</span><span class="p">,</span> <span class="s2">&quot;n_optimizers&quot;</span><span class="p">,</span> <span class="n">n_optimizers</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_optimizers</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tae_runner</span> <span class="o">=</span> <span class="n">tae_runner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tae_runner_kwargs</span> <span class="o">=</span> <span class="n">tae_runner_kwargs</span>
+        <span class="k">if</span> <span class="n">n_workers</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Invalid value in </span><span class="si">%s</span><span class="s2">: </span><span class="si">%d</span><span class="s2">. Setting to 2&quot;</span><span class="p">,</span> <span class="s2">&quot;n_workers&quot;</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">n_workers</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># seeds for the parallel runs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="o">=</span> <span class="n">validate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shared_model</span> <span class="o">=</span> <span class="n">shared_model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_incs</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_incs</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">val_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">val_set</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">train_insts</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">val_set</span> <span class="o">=</span> <span class="n">val_set</span>
 
-<div class="viewcode-block" id="PSMAC.optimize"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_merger</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ResultMerger</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_incs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="PSMAC.optimize"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.optimize">[docs]</a>    <span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimizes the algorithm provided in scenario (given in constructor)</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        incumbent(s) : Configuration / List[Configuration] / ndarray[Configuration]</span>
-<span class="sd">            Incumbent / Portfolio of incumbents</span>
-<span class="sd">        pid(s) : int / ndarray[ints]</span>
-<span class="sd">            Process ID(s) from which the configuration stems</span>
+<span class="sd">        incumbent : Configuration</span>
+<span class="sd">            Best configuration across all workers.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Setup output directory</span>
@@ -591,55 +627,47 @@ style="width: 100%;">
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;+&quot;</span> <span class="o">*</span> <span class="mi">120</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;PSMAC run&quot;</span><span class="p">)</span>
 
-        <span class="n">incs</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span><span class="p">)(</span>
+        <span class="n">incs</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">)(</span>
             <span class="n">joblib</span><span class="o">.</span><span class="n">delayed</span><span class="p">(</span><span class="n">optimize</span><span class="p">)(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">,</span>  <span class="c1"># Scenario object</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_tae</span><span class="p">,</span>  <span class="c1"># type of tae to run target with</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_tae_kwargs</span><span class="p">,</span>
-                <span class="n">p</span><span class="p">,</span>  <span class="c1"># seed for the rng/run_id</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>  <span class="c1"># directory to create outputs in</span>
+                <span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">,</span>  <span class="c1"># Scenario object</span>
+                <span class="n">tae_runner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tae_runner</span><span class="p">,</span>  <span class="c1"># type of tae_runner to run target with</span>
+                <span class="n">tae_runner_kwargs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tae_runner_kwargs</span><span class="p">,</span>
+                <span class="n">rng</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span>  <span class="c1"># seed for the rng/run_id</span>
+                <span class="n">output_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span>  <span class="c1"># directory to create outputs in</span>
+                <span class="n">facade_class</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">facade_class</span><span class="p">,</span>
                 <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seeds</span>
         <span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_incs</span><span class="p">:</span>  <span class="c1"># no validation necessary just return all incumbents</span>
-            <span class="k">return</span> <span class="n">incs</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">_</span><span class="p">,</span> <span class="n">val_ids</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">est_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_best_incumbents_ids</span><span class="p">(</span><span class="n">incs</span><span class="p">)</span>  <span class="c1"># determine the best incumbents</span>
-            <span class="k">if</span> <span class="n">val_ids</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">[</span><span class="n">inc</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">incs</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">val_ids</span><span class="p">]</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">inc</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">incs</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">est_ids</span><span class="p">]</span></div>
+        <span class="n">inc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_best_incumbent</span><span class="p">(</span><span class="n">incs</span><span class="o">=</span><span class="n">incs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">inc</span></div>
 
-<div class="viewcode-block" id="PSMAC.get_best_incumbents_ids"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_best_incumbents_ids">[docs]</a>    <span class="k">def</span> <span class="nf">get_best_incumbents_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]):</span>
+<div class="viewcode-block" id="PSMAC.get_best_incumbent"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_best_incumbent">[docs]</a>    <span class="k">def</span> <span class="nf">get_best_incumbent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Configuration</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Determines the IDs and costs of the best configurations</span>
+<span class="sd">        Determine ID and cost of best configuration (incumbent).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        incs : List[Configuration]</span>
-<span class="sd">            incumbents determined by all parallel SMAC runs</span>
+<span class="sd">            List of incumbents from the workers.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        Dict(Config -&gt; Dict(inst_id (str) -&gt; cost (float)))  (if real validation runs are performed)</span>
-<span class="sd">        List(ints) (indices of best configurations if validation runs are performed)</span>
-<span class="sd">        Dict(Config -&gt; Dict(inst_id (str) -&gt; cost (float)))  (if performance is estimated)</span>
-<span class="sd">        List(ints) (indices of best configurations if performance is estimated)</span>
+<span class="sd">        Configuration</span>
+<span class="sd">            Best incumbent from all workers.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">mean_costs_conf_valid</span><span class="p">,</span> <span class="n">cost_per_config_valid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_incs</span><span class="p">(</span><span class="n">incs</span><span class="p">)</span>
-            <span class="n">val_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_costs_conf_valid</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])))[</span>
-                <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_incs</span>
-            <span class="p">]</span>
+            <span class="n">val_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_costs_conf_valid</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">inc</span> <span class="o">=</span> <span class="n">incs</span><span class="p">[</span><span class="n">val_id</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cost_per_config_valid</span> <span class="o">=</span> <span class="n">val_ids</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">mean_costs_conf_estimate</span><span class="p">,</span> <span class="n">cost_per_config_estimate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mean_costs</span><span class="p">(</span><span class="n">incs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh</span><span class="p">)</span>
-        <span class="n">est_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_costs_conf_estimate</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])))[</span>
-            <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_incs</span>
-        <span class="p">]</span>
-        <span class="k">return</span> <span class="n">cost_per_config_valid</span><span class="p">,</span> <span class="n">val_ids</span><span class="p">,</span> <span class="n">cost_per_config_estimate</span><span class="p">,</span> <span class="n">est_ids</span></div>
+            <span class="n">mean_costs_conf_estimate</span><span class="p">,</span> <span class="n">cost_per_config_estimate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mean_costs</span><span class="p">(</span><span class="n">incs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rh</span><span class="p">)</span>
+            <span class="n">est_id</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">mean_costs_conf_estimate</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">])))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">inc</span> <span class="o">=</span> <span class="n">incs</span><span class="p">[</span><span class="n">est_id</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">inc</span></div>
 
     <span class="k">def</span> <span class="nf">_get_mean_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">],</span> <span class="n">new_rh</span><span class="p">:</span> <span class="n">RunHistory</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -670,9 +698,14 @@ style="width: 100%;">
                 <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">results</span><span class="p">,</span> <span class="n">config_cost_per_inst</span>
 
+    <span class="k">def</span> <span class="nf">_get_solver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: specify one output dir or no output dir</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facade_class</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">solver</span>
+
 <div class="viewcode-block" id="PSMAC.validate_incs"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.validate_incs">[docs]</a>    <span class="k">def</span> <span class="nf">validate_incs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Validation of the incumbents.&quot;&quot;&quot;</span>
-        <span class="n">solver</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span><span class="n">scenario</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span> <span class="n">run_id</span><span class="o">=</span><span class="n">MAXINT</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">solver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_solver</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">120</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating&quot;</span><span class="p">)</span>
         <span class="n">new_rh</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span>
@@ -680,9 +713,61 @@ style="width: 100%;">
             <span class="n">instance_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_set</span><span class="p">,</span>
             <span class="n">repetitions</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
             <span class="n">use_epm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_optimizers</span><span class="p">,</span>
+            <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_workers</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mean_costs</span><span class="p">(</span><span class="n">incs</span><span class="p">,</span> <span class="n">new_rh</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mean_costs</span><span class="p">(</span><span class="n">incs</span><span class="p">,</span> <span class="n">new_rh</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PSMAC.write_run"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.write_run">[docs]</a>    <span class="k">def</span> <span class="nf">write_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write all SMAC files to pSMAC dir</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># write runhistory</span>
+        <span class="c1"># write configspace file .pcs .json</span>
+        <span class="c1"># write trajectory traj.json</span>
+        <span class="c1"># write scenario .txt</span>
+        <span class="c1"># write stats</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">_check_result_merger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_merger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Cannot instantiate `ResultMerger` because `output_dir` &quot;</span>
+                    <span class="s2">&quot;is None. In pSMAC `output_dir` is set after &quot;</span>
+                    <span class="s2">&quot;`optimize()` has been called. If you already have &quot;</span>
+                    <span class="s2">&quot;a pSMAC run or rundirs, please directly use &quot;</span>
+                    <span class="s2">&quot;`smac.utils.io.result_merging.ResultMerger`.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_merger</span> <span class="o">=</span> <span class="n">ResultMerger</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PSMAC.get_runhistory"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_runhistory">[docs]</a>    <span class="k">def</span> <span class="nf">get_runhistory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RunHistory</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get merged runhistory from pSMAC workers</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[RunHistory]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_result_merger</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_merger</span><span class="o">.</span><span class="n">get_runhistory</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PSMAC.get_trajectory"><a class="viewcode-back" href="../../../api/smac.facade.psmac_facade.html#smac.facade.psmac_facade.PSMAC.get_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">get_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get trajectory from merged runhistory</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[List[Dict[str, Any]]]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_result_merger</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_merger</span><span class="o">.</span><span class="n">get_trajectory</span><span class="p">()</span></div></div>
 </pre></div>
 
               </div>

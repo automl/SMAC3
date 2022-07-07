@@ -200,6 +200,11 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_svm_eips.html">
      SVM with EIPS as acquisition functions
     </a>
@@ -440,7 +445,7 @@ style="width: 100%;">
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.psmac_facade.optimize" title="smac.facade.psmac_facade.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimize</span></code></a>(scenario, tae, tae_kwargs, rng, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.psmac_facade.optimize" title="smac.facade.psmac_facade.optimize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">optimize</span></code></a>(scenario, tae_runner, ...[, ...])</p></td>
 <td><p>Unbound method to be called in a subprocess</p></td>
 </tr>
 </tbody>
@@ -452,33 +457,58 @@ style="width: 100%;">
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.psmac_facade.PSMAC" title="smac.facade.psmac_facade.PSMAC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PSMAC</span></code></a>(scenario[, rng, run_id, tae, ...])</p></td>
-<td><p>Facade to use PSMAC</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.facade.psmac_facade.PSMAC" title="smac.facade.psmac_facade.PSMAC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PSMAC</span></code></a>(scenario[, rng, run_id, tae_runner, ...])</p></td>
+<td><p>Facade to use pSMAC <a class="footnote-reference brackets" href="#id3" id="id1">1</a></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">PSMAC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae=&lt;class</span> <span class="pre">'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_model=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_optimizers=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_set=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_incs=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.facade.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">PSMAC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_id=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_runner=&lt;class</span> <span class="pre">'smac.tae.execute_ta_run_old.ExecuteTARunOld'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_runner_kwargs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shared_model=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facade_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers=2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_set=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Facade to use PSMAC</p>
+<p>Facade to use pSMAC <a class="footnote-reference brackets" href="#id3" id="id2">1</a></p>
+<p>With pSMAC you can either run n distinct SMAC optimizations in parallel
+(<cite>shared_model=False</cite>) or you can parallelize the target algorithm evaluations
+(<cite>shared_model=True</cite>).
+In the latter case all SMAC workers share one file directory and communicate via
+the logfiles. You can specify the number of SMAC workers/optimizers with the
+argument <cite>n_workers</cite>.</p>
+<p>You can pass all other kwargs for the SMAC4AC facade.
+In addition, you can access the facade’s attributes normally (e.g. smac.stats),
+however each time a new SMAC object is built, reading the information from the
+file system.</p>
+<dl class="footnote brackets">
+<dt class="label" id="id3"><span class="brackets">1</span><span class="fn-backref">(<a href="#id1">1</a>,<a href="#id2">2</a>)</span></dt>
+<dd><p>Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
+distributed automated algorithm configuration (T). University of British
+Columbia. Retrieved from
+<a class="reference external" href="https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184">https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184</a>.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object</p></li>
-<li><p><strong>n_optimizers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
+<li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – Scenario object. Note that the budget/number of evaluations (runcount-limit) is
+used for each worker. So if you specify 40 evaluations and 3 workers, 120
+configurations will be evaluated in total.</p></li>
+<li><p><strong>n_workers</strong> (<em>int</em>) – Number of optimizers to run in parallel per round</p></li>
 <li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
 <li><p><strong>run_id</strong> (<em>int</em>) – run_id for this hydra run</p></li>
-<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
-<li><p><strong>tae_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
+<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format as well as AbstractTAFunc)</p></li>
+<li><p><strong>tae_runner_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae_runner’</p></li>
 <li><p><strong>shared_model</strong> (<em>bool</em>) – Flag to indicate whether information is shared between SMAC runs or not</p></li>
 <li><p><strong>validate</strong> (<em>bool / None</em>) – Flag to indicate whether to validate the found configurations or to use the SMAC estimates
 None =&gt; neither and return the full portfolio</p></li>
-<li><p><strong>n_incs</strong> (<em>int</em>) – Number of incumbents to return (n_incs &lt;= 0 ==&gt; all found configurations)</p></li>
 <li><p><strong>val_set</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of instance-ids to validate on</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the SMAC4AC facade</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">#</span> <span class="pre">TODO</span> <span class="pre">update</span> <span class="pre">attributes</span></span></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.logger">
 <span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.logger" title="Permalink to this definition">¶</a></dt>
@@ -529,21 +559,40 @@ None =&gt; neither and return the full portfolio</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.get_best_incumbents_ids">
-<span class="sig-name descname"><span class="pre">get_best_incumbents_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC.get_best_incumbents_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.get_best_incumbents_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines the IDs and costs of the best configurations</p>
+<dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.get_best_incumbent">
+<span class="sig-name descname"><span class="pre">get_best_incumbent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">incs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC.get_best_incumbent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.get_best_incumbent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine ID and cost of best configuration (incumbent).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>incs</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – incumbents determined by all parallel SMAC runs</p>
+<dd class="field-odd"><p><strong>incs</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – List of incumbents from the workers.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>Dict(Config -&gt; Dict(inst_id (str) -&gt; cost (float)))  (if real validation runs are performed)</em></p></li>
-<li><p><em>List(ints) (indices of best configurations if validation runs are performed)</em></p></li>
-<li><p><em>Dict(Config -&gt; Dict(inst_id (str) -&gt; cost (float)))  (if performance is estimated)</em></p></li>
-<li><p><em>List(ints) (indices of best configurations if performance is estimated)</em></p></li>
-</ul>
-</p>
+<dd class="field-even"><p>Best incumbent from all workers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Configuration</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.get_runhistory">
+<span class="sig-name descname"><span class="pre">get_runhistory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC.get_runhistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.get_runhistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get merged runhistory from pSMAC workers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory">RunHistory</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.get_trajectory">
+<span class="sig-name descname"><span class="pre">get_trajectory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC.get_trajectory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.get_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get trajectory from merged runhistory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[List[Dict[str, Any]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -554,11 +603,10 @@ None =&gt; neither and return the full portfolio</p></li>
 <dd><p>Optimizes the algorithm provided in scenario (given in constructor)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>incumbent(s)</strong> (<em>Configuration / List[Configuration] / ndarray[Configuration]</em>) – Incumbent / Portfolio of incumbents</p></li>
-<li><p><strong>pid(s)</strong> (<em>int / ndarray[ints]</em>) – Process ID(s) from which the configuration stems</p></li>
-</ul>
-</p>
+<dd class="field-odd"><p><strong>incumbent</strong> – Best configuration across all workers.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Configuration</p>
 </dd>
 </dl>
 </dd></dl>
@@ -569,20 +617,31 @@ None =&gt; neither and return the full portfolio</p></li>
 <dd><p>Validation of the incumbents.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="smac.facade.psmac_facade.PSMAC.write_run">
+<span class="sig-name descname"><span class="pre">write_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#PSMAC.write_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.PSMAC.write_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all SMAC files to pSMAC dir</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.facade.psmac_facade.optimize">
-<span class="sig-prename descclassname"><span class="pre">smac.facade.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">smac.facade.psmac_facade.</span></span><span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tae_runner_kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facade_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/facade/psmac_facade.html#optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.facade.psmac_facade.optimize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unbound method to be called in a subprocess</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>scenario</strong> (<a class="reference internal" href="smac.scenario.scenario.html#smac.scenario.scenario.Scenario" title="smac.scenario.scenario.Scenario"><em>Scenario</em></a>) – smac.Scenario to initialize SMAC</p></li>
-<li><p><strong>tae</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format)</p></li>
+<li><p><strong>tae_runner</strong> (<a class="reference internal" href="smac.tae.base.html#smac.tae.base.BaseRunner" title="smac.tae.base.BaseRunner"><em>BaseRunner</em></a>) – Target Algorithm Runner (supports old and aclib format)</p></li>
 <li><p><strong>tae_runner_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – arguments passed to constructor of ‘~tae’</p></li>
 <li><p><strong>rng</strong> (<em>int/np.random.RandomState</em>) – The randomState/seed to pass to each smac run</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em>) – The directory in which each smac run should write it’s results</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – The directory in which each smac run should write its results</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
