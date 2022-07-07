@@ -1,7 +1,7 @@
 # type: ignore
 # mypy: ignore-errors
 
-from typing import Dict, List, Optional, Union, Type, Any
+from typing import Any, Dict, List, Optional, Type, Union
 
 import copy
 import datetime
@@ -20,9 +20,7 @@ from smac.runhistory.runhistory import RunHistory
 from smac.scenario.scenario import Scenario
 from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
-from smac.utils.constants import MAXINT
 from smac.utils.io.output_directory import create_output_directory
-from smac.utils.io.traj_logging import TrajEntry, TrajLogger
 from smac.utils.io.result_merging import ResultMerger
 
 __author__ = "Andre Biedenkapp"
@@ -297,7 +295,15 @@ class PSMAC(object):
         )
         return self._get_mean_costs(incs, new_rh)
 
-    def write_run(self):
+    def write_run(self) -> None:
+        """
+        Write all SMAC files to pSMAC dir
+
+        Returns
+        -------
+        None
+
+        """
         # write runhistory
         # write configspace file .pcs .json
         # write trajectory traj.json
@@ -318,9 +324,25 @@ class PSMAC(object):
             self.result_merger = ResultMerger(output_dir=Path(self.output_dir).parent)
 
     def get_runhistory(self) -> Optional[RunHistory]:
+        """
+        Get merged runhistory from pSMAC workers
+
+        Returns
+        -------
+        Optional[RunHistory]
+
+        """
         self._check_result_merger()
         return self.result_merger.get_runhistory()
 
     def get_trajectory(self) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get trajectory from merged runhistory
+
+        Returns
+        -------
+        Optional[List[Dict[str, Any]]]
+
+        """
         self._check_result_merger()
         return self.result_merger.get_trajectory()

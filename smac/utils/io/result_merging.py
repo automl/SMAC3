@@ -1,21 +1,51 @@
-from typing import Optional, List, Union, Dict, Any
-from pathlib import Path
-import numpy as np
-import os
-import json
-import regex as re
+from typing import Any, Dict, List, Optional, Sequence, Union
 
+import json
+import os
+from pathlib import Path
+
+import numpy as np
+import regex as re
 from ConfigSpace.read_and_write import json as csjson
 
-from smac.utils.io.traj_logging import TrajEntry, TrajLogger
 from smac.runhistory.runhistory import RunHistory
 
 
-def glob_re(pattern, strings):
+def glob_re(pattern: str, strings: List[str]) -> filter:
+    """
+    Filter strings according to pattern.
+
+    Parameters
+    ----------
+    pattern: str
+        Regex pattern
+    strings: List[str]
+        List of strings to filter.
+
+    Returns
+    -------
+    filter[str]
+    """
     return filter(re.compile(pattern).match, strings)
 
 
-def get_rundirs(pattern, path):
+def get_rundirs(pattern: str, path: Union[str, Path]) -> Sequence[str]:
+    """
+    Get SMAC run dirs, often starting with `run_`.
+
+    Parameters
+    ----------
+    pattern: str
+        Regex expresssion.
+    path: Union[str, Path]
+        Path to folder containing single SMAC rundirs
+
+    Returns
+    -------
+    Sequence[str]
+        Single SMAC rundirs
+
+    """
     subdirs = list(glob_re(pattern, os.listdir(path)))
     rundirs = [os.path.join(path, sd) for sd in subdirs]
     return rundirs
@@ -43,6 +73,7 @@ class ResultMerger:
             If not specified, please specify `output_dir`.
         """
         self.output_dir = output_dir
+        self.run_dirs: Sequence[Union[str, Path]]
         if rundirs:
             self.run_dirs = rundirs
         else:
@@ -55,16 +86,40 @@ class ResultMerger:
             json_string = fh.read()
             self.configuration_space = csjson.read(json_string)
 
-    def get_runhistory(self) -> Optional[RunHistory]:
-        runhistory = None
+    def get_runhistory(self) -> RunHistory:
+        """
+        Get runhistory
+
+        For this, merge all runhistories in pSMAC subfolders.
+
+        Returns
+        -------
+        RunHistory
+            Empty, if `self.run_dirs` is None.
+
+        """
+        runhistory = RunHistory()
         if self.run_dirs:
             runhistory_filenames = [os.path.join(d, "runhistory.json") for d in self.run_dirs]
-            runhistory = RunHistory()
             for fn in runhistory_filenames:
                 runhistory.update_from_json(fn=fn, cs=self.configuration_space)
         return runhistory
 
     def get_trajectory(self) -> Optional[List[Dict[str, Any]]]:
+        """
+        Get trajectory
+
+        For this, extract trajectory from merged runhistories.
+        Return trajectories in json format.
+
+        Returns
+        -------
+        Optional[List[Dict[str, Any]]
+            - None, if `self.run_dirs` is None.
+            - List of trajectory entries. Each trajectory entry is a dict with keys
+                ['cpu_time', 'wallclock_time', 'evaluations', 'cost', 'incumbent', 'budget', 'origin'].
+
+        """
         trajectory = None
         if self.run_dirs is None:
             return trajectory
@@ -117,18 +172,35 @@ class ResultMerger:
 
         return trajectory
 
-    def write_trajectory(self):
+    def write_trajectory(self) -> None:
+        """
+        Write trajectory to traj.json
+
+        Returns
+        -------
+        None
+
+        """
         if self.output_dir is not None:
             traj_fn = Path(self.output_dir) / "traj.json"
             traj = self.get_trajectory()
 
             traj_fn.open("w")
-            for traj_entry in traj:
-                with open(traj_fn, "a") as fp:  # TODO: write or append?
-                    json.dump(traj_entry, fp)
-                    fp.write("\n")
+            if traj is not None:
+                for traj_entry in traj:
+                    with open(traj_fn, "a") as fp:  # TODO: write or append?
+                        json.dump(traj_entry, fp)
+                        fp.write("\n")
 
-    def write_runhistory(self):
+    def write_runhistory(self) -> None:
+        """
+        Write runhistory to runhistory.json
+
+        Returns
+        -------
+        None
+
+        """
         if self.output_dir is not None:
             rh_fn = Path(self.output_dir) / "runhistory.json"
             rh = self.get_runhistory()
