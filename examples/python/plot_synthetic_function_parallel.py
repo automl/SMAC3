@@ -15,7 +15,6 @@ function.
     https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.
 """
 import importlib
-
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -23,19 +22,18 @@ logging.basicConfig(level=logging.INFO)
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-# Import ConfigSpace and different types of parameters
-from smac.configspace import ConfigurationSpace
-from smac.facade.psmac_facade import PSMAC
-from smac.facade.smac_bb_facade import SMAC4BB
 import smac
 
-importlib.reload(smac.facade.psmac_facade)
+# Import ConfigSpace and different types of parameters
+from smac.configspace import ConfigurationSpace
+from smac.facade.bb_facade import SMAC4BB
 from smac.facade.psmac_facade import PSMAC
 
-from smac.optimizer.acquisition import EI
-
+importlib.reload(smac.facade.psmac_facade)
 # Import SMAC-utilities
-from smac.scenario.scenario import Scenario
+from smac.cli.scenario import Scenario
+from smac.facade.psmac_facade import PSMAC
+from smac.optimizer.acquisition import EI
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

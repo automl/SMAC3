@@ -4,6 +4,7 @@ from functools import partial
 import numpy as np
 import scipy.optimize
 
+from smac.constants import VERY_SMALL_NUMBER
 from smac.epm.gaussian_process.utils.prior import (
     GammaPrior,
     HorseshoePrior,
@@ -11,7 +12,6 @@ from smac.epm.gaussian_process.utils.prior import (
     SoftTopHatPrior,
     TophatPrior,
 )
-from smac.utils.constants import VERY_SMALL_NUMBER
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

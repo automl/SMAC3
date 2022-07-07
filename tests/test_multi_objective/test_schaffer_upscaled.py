@@ -7,9 +7,9 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from matplotlib import pyplot as plt
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.scenario.scenario import Scenario
+from smac.facade.ac_facade import SMAC4AC
 
 MIN_V = -2
 MAX_V = 2

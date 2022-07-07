@@ -4,14 +4,14 @@ import unittest.mock
 import numpy as np
 from ConfigSpace import Configuration, UniformFloatHyperparameter
 
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.initial_design import InitialDesign
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.utils.io.traj_logging import TrajLogger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -18,13 +18,13 @@ import logging
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+# Import SMAC-utilities
+from smac.cli.scenario import Scenario
+
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.bb_facade import SMAC4BB
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 
 
 def rosenbrock_2d(x):

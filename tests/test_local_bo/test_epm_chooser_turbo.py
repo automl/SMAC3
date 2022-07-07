@@ -2,10 +2,10 @@ import unittest
 
 import numpy as np
 
-from smac.facade.smac_bb_facade import SMAC4BB
+from smac.cli.scenario import Scenario
+from smac.facade.bb_facade import SMAC4BB
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
 from smac.utils import test_helpers
 

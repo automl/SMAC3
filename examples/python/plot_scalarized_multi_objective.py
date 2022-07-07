@@ -26,10 +26,10 @@ from ConfigSpace.hyperparameters import (
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.scenario.scenario import Scenario
-from smac.utils.constants import MAXINT
+from smac.constants import MAXINT
+from smac.facade.hpo_facade import SMAC4HPO
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

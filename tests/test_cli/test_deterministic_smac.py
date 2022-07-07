@@ -6,7 +6,7 @@ from unittest import mock
 
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
-from smac.smac_cli import SMACCLI
+from smac.cli.smac_cli import SMACCLI
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

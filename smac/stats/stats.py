@@ -7,7 +7,7 @@ import time
 
 import numpy as np
 
-from smac.scenario.scenario import Scenario
+from smac.cli.scenario import Scenario
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"

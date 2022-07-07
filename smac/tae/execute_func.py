@@ -9,10 +9,10 @@ import numpy as np
 import pynisher
 
 from smac.configspace import Configuration
+from smac.constants import MAX_CUTOFF, MAXINT
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.serial_runner import SerialRunner
-from smac.utils.constants import MAX_CUTOFF, MAXINT
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer, Matthias Feurer"

@@ -12,7 +12,7 @@ from smac.epm.gaussian_process.kernels import (
 from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.utils import get_rng, get_types
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.ac_facade import SMAC4AC
 from smac.initial_design.sobol_design import SobolDesign
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
 

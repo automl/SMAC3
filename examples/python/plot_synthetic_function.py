@@ -18,13 +18,13 @@ logging.basicConfig(level=logging.INFO)
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+# Import SMAC-utilities
+from smac.cli.scenario import Scenario
+
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bb_facade import SMAC4BB
+from smac.facade.bb_facade import SMAC4BB
 from smac.optimizer.acquisition import EI
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

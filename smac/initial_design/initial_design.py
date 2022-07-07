@@ -13,7 +13,7 @@ from ConfigSpace.hyperparameters import (
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
 
-from smac.utils.io.traj_logging import TrajLogger
+from smac.cli.traj_logging import TrajLogger
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2019, AutoML"

@@ -4,9 +4,9 @@ import unittest
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from smac.cli.input_reader import InputReader
+from smac.cli.output_writer import OutputWriter
 from smac.configspace import ConfigurationSpace, pcs
-from smac.utils.io.input_reader import InputReader
-from smac.utils.io.output_writer import OutputWriter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

@@ -2,7 +2,7 @@ import logging
 import os
 import unittest
 
-from smac.utils.io.cmd_reader import CMDReader
+from smac.cli.cmd_reader import CMDReader
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

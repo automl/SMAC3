@@ -10,7 +10,7 @@ from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.hpo_facade import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing_chooser import BOinGChooser
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 

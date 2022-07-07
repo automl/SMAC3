@@ -8,9 +8,9 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
+from smac.constants import VERY_SMALL_NUMBER
 from smac.epm.gaussian_process import BaseModel
 from smac.epm.gaussian_process.utils.prior import Prior
-from smac.utils.constants import VERY_SMALL_NUMBER
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

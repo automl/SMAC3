@@ -5,9 +5,10 @@ import logging
 import dask.distributed  # type: ignore
 import numpy as np
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.epm.random_epm import RandomEPM
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.ac_facade import SMAC4AC
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.multi_objective.abstract_multi_objective_algorithm import (
@@ -23,7 +24,6 @@ from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4Cost,
     RunHistory2EPM4LogCost,
 )
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae.base import BaseRunner
 

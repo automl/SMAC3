@@ -4,7 +4,7 @@ import warnings
 import numpy as np
 import scipy.stats as sps
 
-from smac.utils.constants import VERY_SMALL_NUMBER
+from smac.constants import VERY_SMALL_NUMBER
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

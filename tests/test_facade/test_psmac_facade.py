@@ -1,12 +1,12 @@
-import os
 import glob
+import os
 import shutil
 import unittest
 from contextlib import suppress
 from unittest.mock import patch
 
+from smac.cli.scenario import Scenario
 from smac.optimizer.smbo import SMBO
-from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -35,11 +35,12 @@ class TestPSMACFacade(unittest.TestCase):
     @patch("smac.facade.smac_ac_facade.SMBO", new=MockSMBO)
     def test_psmac(self):
         import joblib
+
+        from smac.facade.ac_facade import SMAC4AC
+        from smac.facade.bb_facade import SMAC4BB
+        from smac.facade.hpo_facade import SMAC4HPO
+        from smac.facade.mf_facade import SMAC4MF
         from smac.facade.psmac_facade import PSMAC
-        from smac.facade.smac_ac_facade import SMAC4AC
-        from smac.facade.smac_bb_facade import SMAC4BB
-        from smac.facade.smac_hpo_facade import SMAC4HPO
-        from smac.facade.smac_mf_facade import SMAC4MF
 
         facades = [None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]

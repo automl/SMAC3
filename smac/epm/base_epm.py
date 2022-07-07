@@ -9,7 +9,7 @@ from sklearn.exceptions import NotFittedError
 from sklearn.preprocessing import MinMaxScaler
 
 from smac.configspace import ConfigurationSpace
-from smac.utils.constants import VERY_SMALL_NUMBER
+from smac.constants import VERY_SMALL_NUMBER
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"

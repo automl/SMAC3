@@ -6,13 +6,13 @@ from unittest import mock
 
 import numpy as np
 
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator, _Run
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

@@ -11,9 +11,9 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from matplotlib import pyplot as plt
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_bb_facade import SMAC4BB
-from smac.scenario.scenario import Scenario
+from smac.facade.bb_facade import SMAC4BB
 
 
 def schaffer(x):

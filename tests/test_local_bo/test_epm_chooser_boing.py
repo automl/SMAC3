@@ -12,18 +12,18 @@ from gpytorch.kernels import MaternKernel, ScaleKernel
 from gpytorch.likelihoods.gaussian_likelihood import GaussianLikelihood
 from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
+from smac.cli.scenario import Scenario
 from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import check_subspace_points, get_types
-from smac.facade.smac_bb_facade import SMAC4BB
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.bb_facade import SMAC4BB
+from smac.facade.hpo_facade import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing_chooser import (
     BOinGChooser,
     subspace_extraction,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
 from smac.utils import test_helpers
 
@@ -196,8 +196,9 @@ class TestEPMChooserBOinG(unittest.TestCase):
 
         epm_chooser.failcount_BOinG = 19
         # in this case, prob_to_TurBO becomes 1
-        with unittest.mock.patch("smac.optimizer.configuration_chooser.boing_chooser.BOinGChooser."
-                                 "restart_TuRBOinG") as mk:
+        with unittest.mock.patch(
+            "smac.optimizer.configuration_chooser.boing_chooser.BOinGChooser." "restart_TuRBOinG"
+        ) as mk:
             next(epm_chooser.choose_next())
             self.assertTrue(epm_chooser.run_TuRBO)
             self.assertTrue(mk.called)

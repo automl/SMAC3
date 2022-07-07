@@ -9,12 +9,12 @@ import numpy as np
 from ConfigSpace import Configuration
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
+from smac.cli.cmd_reader import truthy as _is_truthy
+from smac.cli.input_reader import InputReader
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
-from smac.utils.io.cmd_reader import truthy as _is_truthy
-from smac.utils.io.input_reader import InputReader
 from smac.utils.merge_foreign_data import merge_foreign_data
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

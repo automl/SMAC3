@@ -1,7 +1,7 @@
 import automl_sphinx_theme
 
 from smac import copyright, author, version, name
-from smac.utils.io.cmd_reader import CMDReader
+from smac.cli.cmd_reader import CMDReader
 
 
 options = {

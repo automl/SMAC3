@@ -7,9 +7,9 @@ from unittest.mock import patch
 
 import numpy as np
 
+from smac.cli.output_writer import OutputWriter
+from smac.cli.scenario import Scenario
 from smac.facade.experimental.hydra_facade import PSMAC, Hydra
-from smac.scenario.scenario import Scenario
-from smac.utils.io.output_writer import OutputWriter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

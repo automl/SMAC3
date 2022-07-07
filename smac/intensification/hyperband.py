@@ -4,6 +4,7 @@ import logging
 
 import numpy as np
 
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
@@ -16,7 +17,6 @@ from smac.runhistory.runhistory import (  # noqa: F401
     StatusType,
 )
 from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"

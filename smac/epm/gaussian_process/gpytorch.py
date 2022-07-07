@@ -20,8 +20,8 @@ from gpytorch.utils.errors import NotPSDError
 from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
+from smac.constants import VERY_SMALL_NUMBER
 from smac.epm.gaussian_process import BaseModel
-from smac.utils.constants import VERY_SMALL_NUMBER
 
 warnings.filterwarnings("ignore", module="gpytorch")
 

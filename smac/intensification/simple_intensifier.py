@@ -2,13 +2,13 @@ from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import numpy as np
 
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
+from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
-from smac.utils.io.traj_logging import TrajLogger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

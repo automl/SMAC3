@@ -8,13 +8,14 @@ import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from ConfigSpace.util import get_one_exchange_neighbourhood
 
-from smac.callbacks import IncorporateRunResultCallback
+from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_rng
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.initial_design import InitialDesign
@@ -35,7 +36,6 @@ from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4EIPS,
     RunHistory2EPM4LogCost,
 )
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
 

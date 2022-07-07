@@ -5,10 +5,10 @@ import unittest
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from smac.cli.scenario import Scenario
+from smac.cli.smac_cli import SMACCLI
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.scenario.scenario import Scenario
-from smac.smac_cli import SMACCLI
+from smac.facade.ac_facade import SMAC4AC
 from smac.stats.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

@@ -1,8 +1,8 @@
 from typing import List, Tuple
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import DataOrigin, RunHistory
-from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

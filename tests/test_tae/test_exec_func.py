@@ -6,8 +6,8 @@ import unittest.mock
 
 import numpy as np
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray, ExecuteTAFuncDict

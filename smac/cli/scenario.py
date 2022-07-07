@@ -5,9 +5,9 @@ import logging
 
 import numpy as np
 
-from smac.utils.io.cmd_reader import CMDReader
-from smac.utils.io.input_reader import InputReader
-from smac.utils.io.output_writer import OutputWriter
+from smac.cli.cmd_reader import CMDReader
+from smac.cli.input_reader import InputReader
+from smac.cli.output_writer import OutputWriter
 
 __author__ = "Marius Lindauer, Matthias Feurer, Aaron Kimmig"
 __copyright__ = "Copyright 2016, ML4AAD"

@@ -14,16 +14,16 @@ from collections import defaultdict
 import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
+from smac.cli.output_directory import create_output_directory
+from smac.cli.scenario import Scenario
+from smac.constants import MAXINT
 from smac.epm.utils import get_rng
+from smac.facade.ac_facade import SMAC4AC
 from smac.facade.psmac_facade import PSMAC
-from smac.facade.smac_ac_facade import SMAC4AC
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
-from smac.utils.constants import MAXINT
-from smac.utils.io.output_directory import create_output_directory
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"

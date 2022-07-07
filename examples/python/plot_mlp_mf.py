@@ -34,9 +34,9 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.neural_network import MLPClassifier
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_mf_facade import SMAC4MF
-from smac.scenario.scenario import Scenario
+from smac.facade.mf_facade import SMAC4MF
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

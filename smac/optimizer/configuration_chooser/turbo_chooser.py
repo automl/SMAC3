@@ -2,6 +2,7 @@ import typing
 
 import numpy as np
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
@@ -15,7 +16,6 @@ from smac.optimizer.configuration_chooser.random_chooser import (
 from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
 

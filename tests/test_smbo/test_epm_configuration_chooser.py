@@ -5,10 +5,10 @@ from unittest import mock
 import numpy as np
 from ConfigSpace import Configuration
 
+from smac.cli.scenario import Scenario
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
 from smac.utils import test_helpers
 

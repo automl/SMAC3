@@ -1,6 +1,6 @@
 from typing import Any
 
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.hpo_facade import SMAC4HPO
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.intensification.hyperband import Hyperband
 from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost

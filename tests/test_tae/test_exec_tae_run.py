@@ -4,9 +4,9 @@ import unittest
 
 import numpy as np
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.serial_runner import SerialRunner

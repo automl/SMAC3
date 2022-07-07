@@ -12,11 +12,11 @@ if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
 
 from smac.runhistory.runhistory import RunHistory  # noqa: E402
-from smac.scenario.scenario import Scenario  # noqa: E402
+from smac.cli.scenario import Scenario  # noqa: E402
 from smac.stats.stats import Stats  # noqa: E402
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib  # noqa: E402
 from smac.tae.execute_ta_run_old import ExecuteTARunOld  # noqa: E402
-from smac.utils.io.traj_logging import TrajLogger  # noqa: E402
+from smac.cli.traj_logging import TrajLogger  # noqa: E402
 from smac.utils.validate import Validator  # noqa: E402
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

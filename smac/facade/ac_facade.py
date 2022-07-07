@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Any, Callable, Dict, List, Optional, Type, Union, cast
 
 import inspect
@@ -7,9 +8,13 @@ import logging
 import dask.distributed  # type: ignore
 import joblib  # type: ignore
 import numpy as np
-from smac.config import Config
 
+from smac.cli.output_directory import create_output_directory
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajEntry, TrajLogger
+from smac.config import Config
 from smac.configspace import Configuration
+from smac.constants import MAXINT
 from smac.epm.base_epm import BaseEPM
 from smac.epm.multi_objective_epm import MultiObjectiveEPM
 
@@ -68,7 +73,6 @@ from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4LogCost,
     RunHistory2EPM4LogScaledCost,
 )
-from smac.cli.scenario import Scenario
 
 # stats and options
 from smac.stats.stats import Stats
@@ -79,9 +83,6 @@ from smac.tae.base import BaseRunner
 from smac.tae.dask_runner import DaskParallelRunner
 from smac.tae.execute_func import ExecuteTAFuncDict
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
-from smac.constants import MAXINT
-from smac.cli.output_directory import create_output_directory
-from smac.cli.traj_logging import TrajEntry, TrajLogger
 
 # utils
 from smac.utils.logging import format_array

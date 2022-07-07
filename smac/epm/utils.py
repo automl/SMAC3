@@ -16,7 +16,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.utils.constants import MAXINT
+from smac.constants import MAXINT
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

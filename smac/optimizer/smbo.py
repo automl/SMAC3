@@ -6,8 +6,11 @@ import time
 
 import numpy as np
 
-from smac.callbacks import IncorporateRunResultCallback
+from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
+from smac.constants import MAXINT
 from smac.epm.base_epm import BaseEPM
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
@@ -21,12 +24,9 @@ from smac.optimizer.configuration_chooser.random_chooser import (
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import FirstRunCrashedException, StatusType, TAEAbortException
 from smac.tae.base import BaseRunner
-from smac.utils.constants import MAXINT
-from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"

@@ -5,10 +5,10 @@ import logging
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.hpo_facade import SMAC4HPO
 from smac.runhistory.runhistory import RunKey
-from smac.scenario.scenario import Scenario
 from smac.tae.execute_func import ExecuteTAFuncArray
 
 __author__ = "Marius Lindauer, Matthias Feurer"

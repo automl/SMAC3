@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-from smac.utils.io.traj_logging import TrajLogger
-from smac.scenario.scenario import Scenario
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.cli.traj_logging import TrajLogger
+from smac.cli.scenario import Scenario
+from smac.facade.ac_facade import SMAC4AC
 from smac.configspace import convert_configurations_to_array
 
 __author__ = "Marius Lindauer"

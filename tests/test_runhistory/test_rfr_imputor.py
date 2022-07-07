@@ -10,11 +10,11 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
+from smac.cli import scenario
 from smac.epm.random_forest import rfr_imputator
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.runhistory import runhistory, runhistory2epm
-from smac.scenario import scenario
 from smac.tae import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

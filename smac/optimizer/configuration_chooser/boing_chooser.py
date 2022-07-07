@@ -6,7 +6,9 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
+from smac.constants import MAXINT
 from smac.epm.base_epm import BaseEPM
 from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
@@ -22,9 +24,7 @@ from smac.optimizer.subspaces.boing_subspace import BOinGSubspace
 from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.constants import MAXINT
 
 
 class BOinGChooser(EPMChooser):

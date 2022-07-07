@@ -4,6 +4,7 @@ import logging
 
 import numpy as np
 
+from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
@@ -18,7 +19,6 @@ from smac.optimizer.configuration_chooser.random_chooser import (
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

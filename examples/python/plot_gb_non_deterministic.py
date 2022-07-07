@@ -24,9 +24,9 @@ from sklearn.datasets import make_hastie_10_2
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import KFold, cross_val_score
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_hpo_facade import SMAC4HPO
-from smac.scenario.scenario import Scenario
+from smac.facade.hpo_facade import SMAC4HPO
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

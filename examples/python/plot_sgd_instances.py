@@ -30,12 +30,12 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 
+# Import SMAC-utilities
+from smac.cli.scenario import Scenario
+
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.smac_mf_facade import SMAC4MF
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
+from smac.facade.mf_facade import SMAC4MF
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

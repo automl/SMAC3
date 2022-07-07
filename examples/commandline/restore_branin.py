@@ -9,11 +9,11 @@ budget. This will also work for SMAC runs that have crashed and are continued.
 import logging
 import os
 
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
+from smac.facade.ac_facade import SMAC4AC
 from smac.runhistory.runhistory import RunHistory
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajLogger
 
 logging.basicConfig(level=logging.INFO)
 

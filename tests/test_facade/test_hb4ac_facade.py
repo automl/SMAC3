@@ -4,12 +4,12 @@ import unittest.mock
 
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.facade.hyperband_facade import HB4AC
 from smac.initial_design.random_configuration_design import RandomConfigurations
 from smac.intensification.hyperband import Hyperband
-from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

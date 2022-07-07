@@ -20,16 +20,15 @@ from ConfigSpace.hyperparameters import (
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
+# Import SMAC-utilities
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
-from smac.facade.smac_ac_facade import SMAC4AC
+from smac.facade.ac_facade import SMAC4AC
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

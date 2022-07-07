@@ -7,17 +7,17 @@ import numpy as np
 from ConfigSpace import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.successive_halving import (
     SuccessiveHalving,
     _SuccessiveHalving,
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.execute_func import ExecuteTAFuncDict
-from smac.utils.io.traj_logging import TrajLogger
 
 from .test_eval_utils import eval_challenger
 

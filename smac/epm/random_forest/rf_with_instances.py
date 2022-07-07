@@ -4,8 +4,8 @@ import numpy as np
 from pyrfr import regression
 
 from smac.configspace import ConfigurationSpace
+from smac.constants import N_TREES, VERY_SMALL_NUMBER
 from smac.epm.random_forest import BaseModel
-from smac.utils.constants import N_TREES, VERY_SMALL_NUMBER
 
 __author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"

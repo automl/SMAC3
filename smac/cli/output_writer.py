@@ -8,7 +8,7 @@ from smac.configspace import ConfigurationSpace, json, pcs_new
 from smac.utils.logging import PickableLoggerAdapter
 
 if TYPE_CHECKING:
-    from smac.scenario.scenario import Scenario
+    from smac.cli.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

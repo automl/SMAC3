@@ -2,7 +2,7 @@ import os
 import shutil
 from logging import Logger
 
-from smac.scenario.scenario import Scenario
+from smac.cli.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

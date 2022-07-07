@@ -32,12 +32,8 @@ from argparse import (
 
 import numpy as np
 
-from smac.utils.constants import MAXINT, N_TREES
-from smac.utils.io.input_reader import (
-    INSTANCE_FEATURES_TYPE,
-    INSTANCE_TYPE,
-    InputReader,
-)
+from smac.cli.input_reader import INSTANCE_FEATURES_TYPE, INSTANCE_TYPE, InputReader
+from smac.constants import MAXINT, N_TREES
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"

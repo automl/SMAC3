@@ -10,9 +10,9 @@ import unittest.mock
 import dask  # noqa
 from dask.distributed import Client
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.dask_runner import DaskParallelRunner

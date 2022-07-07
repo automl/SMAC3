@@ -6,21 +6,21 @@ from unittest import mock
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
-import smac.facade.smac_ac_facade
-from smac.callbacks import IncorporateRunResultCallback
+import smac.facade.ac_facade
+from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.smac_ac_facade import SMAC4AC
-from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.ac_facade import SMAC4AC
+from smac.facade.hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
-from smac.scenario.scenario import Scenario
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.utils import test_helpers
-from smac.utils.io.traj_logging import TrajLogger
 from smac.utils.validate import Validator
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -469,7 +469,7 @@ class TestSMBO(unittest.TestCase):
             X, Y, X_config = smbo.epm_chooser._collect_data_to_train_model()
             self.assertEqual(X.shape[0], len(all_configs))
 
-    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, "process_results")
+    @unittest.mock.patch.object(smac.facade.ac_facade.Intensifier, "process_results")
     def test_incorporate_run_results_callback(self, process_results_mock):
 
         process_results_mock.return_value = None, None
@@ -510,7 +510,7 @@ class TestSMBO(unittest.TestCase):
         self.assertEqual(callback.num_call, 1)
         self.assertEqual(callback.config, config)
 
-    @unittest.mock.patch.object(smac.facade.smac_ac_facade.Intensifier, "process_results")
+    @unittest.mock.patch.object(smac.facade.ac_facade.Intensifier, "process_results")
     def test_incorporate_run_results_callback_stop_loop(self, process_results_mock):
         def target(x):
             return 5

@@ -2,8 +2,8 @@ import os
 import shlex
 import unittest
 
+from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
 from smac.tae import StatusType
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib

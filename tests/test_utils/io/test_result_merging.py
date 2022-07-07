@@ -3,9 +3,10 @@ import logging
 import os
 import tempfile
 import unittest.mock
-import json
 from unittest.mock import patch
 
+from smac.cli.scenario import Scenario
+from smac.cli.traj_logging import TrajEntry, TrajLogger
 from smac.configspace import (
     CategoricalHyperparameter,
     Configuration,
@@ -14,11 +15,8 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.scenario.scenario import Scenario
 from smac.stats.stats import Stats
-from smac.utils.io.traj_logging import TrajEntry, TrajLogger
-
-from smac.utils.io.result_merging import ResultMerger
+from smac.utils.result_merging import ResultMerger
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

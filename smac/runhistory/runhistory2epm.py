@@ -5,14 +5,14 @@ import logging
 
 import numpy as np
 
+from smac import constants
+from smac.cli.scenario import Scenario
 from smac.configspace import convert_configurations_to_array
 from smac.epm.base_imputor import BaseImputor
 from smac.multi_objective.aggregation_strategy import AggregationStrategy
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.scenario.scenario import Scenario
 from smac.tae import StatusType
-from smac.utils import constants
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
