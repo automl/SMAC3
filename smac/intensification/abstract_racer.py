@@ -89,7 +89,6 @@ class AbstractRacer(object):
         maxR: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 1,
-        num_obj: int = 1,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -128,12 +127,6 @@ class AbstractRacer(object):
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
-
-        if num_obj > 1:
-            raise ValueError(
-                "Intensifiers only support single objective optimization. For multi-objective problems,"
-                "please refer to multi-objective intensifiers"
-            )
 
     def get_next_run(
         self,
@@ -303,9 +296,10 @@ class AbstractRacer(object):
         # reasons)
         chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_sum_cost = run_history.sum_cost(
-            config=challenger,
-            instance_seed_budget_keys=chall_inst_seeds,
+            config=challenger, instance_seed_budget_keys=chall_inst_seeds, normalize=True
         )
+        assert type(chal_sum_cost) == float
+
         cutoff = min(curr_cutoff, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost)
         return cutoff
 
@@ -348,8 +342,11 @@ class AbstractRacer(object):
 
         # performance on challenger runs, the challenger only becomes incumbent
         # if it dominates the incumbent
-        chal_perf = run_history.average_cost(challenger, to_compare_runs)
-        inc_perf = run_history.average_cost(incumbent, to_compare_runs)
+        chal_perf = run_history.average_cost(challenger, to_compare_runs, normalize=True)
+        inc_perf = run_history.average_cost(incumbent, to_compare_runs, normalize=True)
+
+        assert type(chal_perf) == float
+        assert type(inc_perf) == float
 
         # Line 15
         if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:

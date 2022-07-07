@@ -1,3 +1,11 @@
+# 1.4.0
+
+## Improvements
+* Enabled caching for multi-objectives (#872). Costs are now normalized in `get_cost` 
+or optionally in `average_cost`/`sum_cost`/`min_cost` to receive a single float value. Therefore,
+the cached cost values do not need to be updated everytime a new entry to the runhistory was added.
+
+
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.

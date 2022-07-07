@@ -530,7 +530,7 @@ class SMAC4AC(object):
 
         if scenario.multi_objectives is not None and num_obj > 1:  # type: ignore[attr-defined] # noqa F821
             # define any defaults here
-            _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
+            _multi_objective_kwargs = {"rng": rng}
 
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)

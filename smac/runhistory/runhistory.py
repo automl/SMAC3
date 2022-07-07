@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import (
     Any,
     Dict,
@@ -29,6 +31,8 @@ __license__ = "3-clause BSD"
 __maintainer__ = "Marius Lindauer"
 __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
+
+logger = PickableLoggerAdapter(__name__)
 
 
 # NOTE class instead of collection to have a default value for budget in RunKey
@@ -192,9 +196,9 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self._n_id = 0
 
         # Stores cost for each configuration ID
-        self._cost_per_config = {}  # type: Dict[int, float]
+        self._cost_per_config = {}  # type: Dict[int, float | list[float]]
         # Stores min cost across all budgets for each configuration ID
-        self._min_cost_per_config = {}  # type: Dict[int, float]
+        self._min_cost_per_config = {}  # type: Dict[int, float | list[float]]
         # runs_per_config maps the configuration ID to the number of runs for that configuration
         # and is necessary for computing the moving average
         self.num_runs_per_config = {}  # type: Dict[int, int]
@@ -207,111 +211,35 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self.num_obj = -1  # type: int
         self.objective_bounds = []  # type: List[Tuple[float, float]]
 
-    def add(
-        self,
-        config: Configuration,
-        cost: Union[int, float, list, np.ndarray],
-        time: float,
-        status: StatusType,
-        instance_id: Optional[str] = None,
-        seed: Optional[int] = None,
-        budget: float = 0.0,
-        starttime: float = 0.0,
-        endtime: float = 0.0,
-        additional_info: Optional[Dict] = None,
-        origin: DataOrigin = DataOrigin.INTERNAL,
-        force_update: bool = False,
-    ) -> None:
-        """Adds a data of a new target algorithm (TA) run; it will update data if the same key
-        values are used (config, instance_id, seed)
+    def __contains__(self, k: object) -> bool:
+        """Dictionary semantics for `k in runhistory`"""
+        return k in self.data
 
-        Parameters
-        ----------
-            config : dict (or other type -- depending on config space module)
-                Parameter configuration
-            cost: Union[int, float, list, np.ndarray]
-                Cost of TA run (will be minimized)
-            time: float
-                Runtime of TA run
-            status: str
-                Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
-            instance_id: str
-                String representing an instance (default: None)
-            seed: int
-                Random seed used by TA (default: None)
-            budget: float
-                budget (cutoff) used in intensifier to limit TA (default: 0)
-            starttime: float
-                starting timestamp of TA evaluation
-            endtime: float
-                ending timestamp of TA evaluation
-            additional_info: dict
-                Additional run infos (could include further returned
-                information from TA or fields such as start time and host_id)
-            origin: DataOrigin
-                Defines how data will be used.
-            force_update: bool (default: False)
-                Forces the addition of a config to the history
+    def __getitem__(self, k: RunKey) -> RunValue:
+        """Dictionary semantics for `v = runhistory[k]`"""
+        return self.data[k]
+
+    def __iter__(self) -> Iterator[RunKey]:
+        """Dictionary semantics for `for k in runhistory.keys()`, enables.
+
+        .items()
         """
-        if config is None:
-            raise TypeError("Configuration to add to the runhistory must not be None")
-        elif not isinstance(config, Configuration):
-            raise TypeError(
-                "Configuration to add to the runhistory is not of type Configuration, but %s" % type(config)
-            )
+        return iter(self.data.keys())
 
-        # Squeeze is important to reduce arrays with one element
-        # to scalars.
-        cost = np.asarray(cost).squeeze()
+    def __len__(self) -> int:
+        """Enables the `len(runhistory)`"""
+        return len(self.data)
 
-        # Get the config id
-        config_id_tmp = self.config_ids.get(config)
-        if config_id_tmp is None:
-            self._n_id += 1
-            self.config_ids[config] = self._n_id
-            config_id = cast(int, self.config_ids.get(config))
-            self.ids_config[self._n_id] = config
-        else:
-            config_id = cast(int, config_id_tmp)
+    def empty(self) -> bool:
+        """Check whether or not the RunHistory is empty.
 
-        if self.num_obj == -1:
-            self.num_obj = np.size(cost)
-        else:
-            if np.size(cost) != self.num_obj:
-                raise ValueError(
-                    f"Cost is not of the same length ({np.size(cost)}) as the number " f"of objectives ({self.num_obj})"
-                )
-
-        k = RunKey(config_id, instance_id, seed, budget)
-        v = RunValue(cost.tolist(), time, status, starttime, endtime, additional_info)
-
-        # Construct keys and values for the data dictionary
-        for key, value in (
-            ("config", config.get_dictionary()),
-            ("config_id", config_id),
-            ("instance_id", instance_id),
-            ("seed", seed),
-            ("budget", budget),
-            ("cost", cost.tolist()),
-            ("time", time),
-            ("status", status),
-            ("starttime", starttime),
-            ("endtime", endtime),
-            ("additional_info", additional_info),
-            ("origin", config.origin),
-        ):
-            self._check_json_serializable(key, value, EnumEncoder, k, v)
-
-        # Each runkey is supposed to be used only once. Repeated tries to add
-        # the same runkey will be ignored silently if not capped.
-        if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
-            self._add(k, v, status, origin)
-        elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
-            # overwrite capped runs with uncapped runs
-            self._add(k, v, status, origin)
-        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED and cost > self.data[k].cost:
-            # overwrite if censored with a larger cutoff
-            self._add(k, v, status, origin)
+        Returns
+        -------
+        emptiness: bool
+            True if runs have been added to the RunHistory,
+            False otherwise
+        """
+        return len(self.data) == 0
 
     def _check_json_serializable(
         self,
@@ -384,24 +312,174 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 # append new budget to existing inst-seed-key dict
                 self._configid_to_inst_seed_budget[k.config_id][is_k].append(k.budget)
 
-            # Update costs in multi-objective setting s.t. all costs are
-            # normalized the same.
-            # TODO: This is only a temporary solution because the caching is not used.
-            if self.num_obj > 1:
-                self.update_all_costs()
+            # if budget is used, then update cost instead of incremental updates
+            if not self.overwrite_existing_runs and k.budget == 0:
+                # assumes an average across runs as cost function aggregation, this is used for
+                # algorithm configuration (incremental updates are used to save time as getting the
+                # cost for > 100 instances is high)
+                self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
             else:
-                # if budget is used, then update cost instead of incremental updates
-                if not self.overwrite_existing_runs and k.budget == 0:
-                    # assumes an average across runs as cost function aggregation, this is used for
-                    # algorithm configuration (incremental updates are used to save time as getting the
-                    # cost for > 100 instances is high)
-                    self.incremental_update_cost(self.ids_config[k.config_id], v.cost)
-                else:
-                    # this is when budget > 0 (only successive halving and hyperband so far)
-                    self.update_cost(config=self.ids_config[k.config_id])
-                    if k.budget > 0:
-                        if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
-                            raise ValueError("This should not happen!")
+                # this is when budget > 0 (only successive halving and hyperband so far)
+                self.update_cost(config=self.ids_config[k.config_id])
+                if k.budget > 0:
+                    if self.num_runs_per_config[k.config_id] != 1:  # This is updated in update_cost
+                        raise ValueError("This should not happen!")
+
+    def _cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+    ) -> list[list[float] | list[list[float]]]:
+        """Returns a list of all costs for the given config for further calculations.
+        The costs are directly taken from the runhistory data.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for.
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
+
+        Returns
+        -------
+        Costs: list[list[float] | list[list[float]]]
+            List of all found costs. In case of multi-objective, the list contains lists.
+        """
+        try:
+            id_ = self.config_ids[config]
+        except KeyError:  # challenger was not running so far
+            return []
+
+        if instance_seed_budget_keys is None:
+            instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
+
+        costs = []
+        for i, r, b in instance_seed_budget_keys:
+            k = RunKey(id_, i, r, b)
+            costs.append(self.data[k].cost)
+
+        return costs
+
+    def add(
+        self,
+        config: Configuration,
+        cost: Union[int, float, list, np.ndarray],
+        time: float,
+        status: StatusType,
+        instance_id: Optional[str] = None,
+        seed: Optional[int] = None,
+        budget: float = 0.0,
+        starttime: float = 0.0,
+        endtime: float = 0.0,
+        additional_info: Optional[Dict] = None,
+        origin: DataOrigin = DataOrigin.INTERNAL,
+        force_update: bool = False,
+    ) -> None:
+        """Adds a data of a new target algorithm (TA) run; it will update data if the same key
+        values are used (config, instance_id, seed)
+
+        Parameters
+        ----------
+        config : dict (or other type -- depending on config space module)
+            Parameter configuration
+        cost: Union[int, float, list, np.ndarray]
+            Cost of TA run (will be minimized)
+        time: float
+            Runtime of TA run
+        status: str
+            Status in {SUCCESS, TIMEOUT, CRASHED, ABORT, MEMOUT}
+        instance_id: str
+            String representing an instance (default: None)
+        seed: int
+            Random seed used by TA (default: None)
+        budget: float
+            budget (cutoff) used in intensifier to limit TA (default: 0)
+        starttime: float
+            starting timestamp of TA evaluation
+        endtime: float
+            ending timestamp of TA evaluation
+        additional_info: dict
+            Additional run infos (could include further returned
+            information from TA or fields such as start time and host_id)
+        origin: DataOrigin
+            Defines how data will be used.
+        force_update: bool (default: False)
+            Forces the addition of a config to the history
+        """
+        if config is None:
+            raise TypeError("Configuration to add to the runhistory must not be None")
+        elif not isinstance(config, Configuration):
+            raise TypeError(
+                "Configuration to add to the runhistory is not of type Configuration, but %s" % type(config)
+            )
+
+        # Squeeze is important to reduce arrays with one element
+        # to scalars.
+        cost_array = np.asarray(cost).squeeze()
+        num_obj = np.size(cost_array)
+
+        # Get the config id
+        config_id_tmp = self.config_ids.get(config)
+        if config_id_tmp is None:
+            self._n_id += 1
+            self.config_ids[config] = self._n_id
+            config_id = cast(int, self.config_ids.get(config))
+            self.ids_config[self._n_id] = config
+        else:
+            config_id = cast(int, config_id_tmp)
+
+        if self.num_obj == -1:
+            self.num_obj = num_obj
+        elif self.num_obj != num_obj:
+            raise ValueError(
+                f"Cost is not of the same length ({num_obj}) as the number " f"of objectives ({self.num_obj})"
+            )
+
+        # Let's always work with floats; Makes it easier to deal with later on
+        # array.tolist() returns a scalar if the array has one element.
+        c = cost_array.tolist()
+        if self.num_obj == 1:
+            c = float(c)
+        else:
+            c = [float(i) for i in c]
+
+        k = RunKey(config_id, instance_id, seed, budget)
+        v = RunValue(c, time, status, starttime, endtime, additional_info)
+
+        # Construct keys and values for the data dictionary
+        for key, value in (
+            ("config", config.get_dictionary()),
+            ("config_id", config_id),
+            ("instance_id", instance_id),
+            ("seed", seed),
+            ("budget", budget),
+            ("cost", c),
+            ("time", time),
+            ("status", status),
+            ("starttime", starttime),
+            ("endtime", endtime),
+            ("additional_info", additional_info),
+            ("origin", config.origin),
+        ):
+            self._check_json_serializable(key, value, EnumEncoder, k, v)
+
+        # Each runkey is supposed to be used only once. Repeated tries to add
+        # the same runkey will be ignored silently if not capped.
+        if self.overwrite_existing_runs or force_update or self.data.get(k) is None:
+            self._add(k, v, status, origin)
+        elif status != StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+            # overwrite capped runs with uncapped runs
+            self._add(k, v, status, origin)
+        elif status == StatusType.CAPPED and self.data[k].status == StatusType.CAPPED:
+            if self.num_obj > 1:
+                raise RuntimeError("Not supported yet.")
+
+            # Overwrite if censored with a larger cutoff
+            if cost > self.data[k].cost:
+                self._add(k, v, status, origin)
+        else:
+            logger.info("Entry was not added to the runhistory because existing runs will not overwritten.")
 
     def update_cost(self, config: Configuration) -> None:
         """Stores the performance of a configuration across the instances in self.cost_per_config
@@ -417,18 +495,14 @@ class RunHistory(Mapping[RunKey, RunValue]):
             configuration to update cost based on all runs in runhistory
         """
         config_id = self.config_ids[config]
-        # removing duplicates while keeping the order
+
+        # Removing duplicates while keeping the order
         inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
         self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
         self.num_runs_per_config[config_id] = len(inst_seed_budgets)
 
         all_inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=False)))
         self._min_cost_per_config[config_id] = self.min_cost(config, all_inst_seed_budgets)
-
-    def update_all_costs(self) -> None:
-        """Update all costs in the runhistory."""
-        for config in self.ids_config.values():
-            self.update_cost(config)
 
     def incremental_update_cost(self, config: Configuration, cost: Union[np.ndarray, list, float, int]) -> None:
         """Incrementally updates the performance of a configuration by using a moving average.
@@ -442,12 +516,18 @@ class RunHistory(Mapping[RunKey, RunValue]):
         """
         config_id = self.config_ids[config]
         n_runs = self.num_runs_per_config.get(config_id, 0)
-        old_cost = self._cost_per_config.get(config_id, 0.0)
 
         if self.num_obj > 1:
-            cost = self.average_cost(config)
+            costs = np.array(cost)
+            old_costs = self._cost_per_config.get(config_id, np.array([0.0 for _ in range(self.num_obj)]))
+            old_costs = np.array(old_costs)
 
-        self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)  # type: ignore
+            new_costs = ((old_costs * n_runs) + costs) / (n_runs + 1)  # type: ignore
+            self._cost_per_config[config_id] = new_costs.tolist()
+        else:
+            old_cost = self._cost_per_config.get(config_id, 0.0)
+            self._cost_per_config[config_id] = ((old_cost * n_runs) + cost) / (n_runs + 1)  # type: ignore
+
         self.num_runs_per_config[config_id] = n_runs + 1
 
     def get_cost(self, config: Configuration) -> float:
@@ -464,7 +544,230 @@ class RunHistory(Mapping[RunKey, RunValue]):
             Computed cost for configuration
         """
         config_id = self.config_ids.get(config)
-        return self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
+
+        # Cost is always a single value (Single objective) or a list of values (Multi-objective)
+        # For example, _cost_per_config always holds the value on the highest budget
+        cost = self._cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
+
+        if self.num_obj > 1:
+            assert type(cost) == list
+            # We have to normalize the costs here
+            costs = normalize_costs(cost, self.objective_bounds)
+            return float(np.mean(costs))
+
+        assert type(cost) == float
+        return float(cost)
+
+    def get_min_cost(self, config: Configuration) -> float:
+        """Returns the lowest empirical cost for a configuration, across all runs (budgets)
+
+        See the class docstring for how the costs are computed. The costs are not re-computed,
+        but are read from cache.
+
+        Parameters
+        ----------
+        config: Configuration
+
+        Returns
+        -------
+        min_cost: float
+            Computed cost for configuration
+        """
+        config_id = self.config_ids.get(config)
+        cost = self._min_cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
+
+        if self.num_obj > 1:
+            assert type(cost) == list
+            costs = normalize_costs(cost, self.objective_bounds)
+
+            # Note: We have to mean here because we already got the min cost
+            return float(np.mean(costs))
+
+        assert type(cost) == float
+        return float(cost)
+
+    def average_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
+    ) -> float | list[float]:
+        """Return the average cost of a configuration. This is the mean of costs of all instance-
+        seed pairs.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for.
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
+        normalize : bool, optional (default=False)
+            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Only a float is returned if normalize is True. Warning: The value can change
+            over time because the objective bounds are changing.
+
+        Returns
+        -------
+        Cost: float | list[float]
+            Average cost. In case of multiple objectives, the mean of each objective is returned.
+        """
+        costs = self._cost(config, instance_seed_budget_keys)
+        if costs:
+            if self.num_obj > 1:
+                # Each objective is averaged separately
+                # [[100, 200], [0, 0]] -> [50, 100]
+                averaged_costs = np.mean(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(averaged_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return averaged_costs
+
+            return float(np.mean(costs))
+
+        return np.nan
+
+    def sum_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
+    ) -> float | list[float]:
+        """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
+        pairs.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for.
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
+        normalize : bool, optional (default=False)
+            Normalizes the costs wrt objective bounds in the multi-objective setting.
+            Only a float is returned if normalize is True. Warning: The value can change
+            over time because the objective bounds are changing.
+
+        Returns
+        -------
+        sum_cost: float | list[float]
+            Sum of costs of config. In case of multiple objectives, the costs are summed up for each
+            objective individually.
+        """
+        costs = self._cost(config, instance_seed_budget_keys)
+        if costs:
+            if self.num_obj > 1:
+                # Each objective is summed separately
+                # [[100, 200], [20, 10]] -> [120, 210]
+                summed_costs = np.sum(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(summed_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return summed_costs
+
+        return float(np.sum(costs))
+
+    def min_cost(
+        self,
+        config: Configuration,
+        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
+        normalize: bool = False,
+    ) -> float | list[float]:
+        """Return the minimum cost of a configuration.
+
+        This is the minimum cost of all instance-seed pairs.
+
+        Warning
+        -------
+        In the case of multi-fidelity, the minimum cost per objectives is returned.
+
+        Parameters
+        ----------
+        config : Configuration
+            Configuration to calculate objective for.
+        instance_seed_budget_keys : list, optional (default=None)
+            List of tuples of instance-seeds-budget keys. If None, the run_history is
+            queried for all runs of the given configuration.
+
+        Returns
+        -------
+        min_cost: float | list[float]
+            Minimum cost of the config. In case of multi-objective, the minimum cost per objective
+            is returned.
+        """
+        costs = self._cost(config, instance_seed_budget_keys)
+        if costs:
+            if self.num_obj > 1:
+                # Each objective is viewed separately
+                # [[100, 200], [20, 500]] -> [20, 200]
+                min_costs = np.min(costs, axis=0).tolist()
+
+                if normalize:
+                    normalized_costs = normalize_costs(min_costs, self.objective_bounds)
+                    return float(np.mean(normalized_costs))
+                else:
+                    return min_costs
+
+            return float(np.min(costs))
+
+        return np.nan
+
+    def compute_all_costs(self, instances: Optional[List[str]] = None) -> None:
+        """Computes the cost of all configurations from scratch and overwrites self.cost_perf_config
+        and self.runs_per_config accordingly.
+
+        Note
+        ----
+        This method is only used for ``merge_foreign_data`` and should be removed.
+
+        Parameters
+        ----------
+        instances: List[str]
+            List of instances; if given, cost is only computed wrt to this instance set.
+        """
+        self._cost_per_config = {}
+        self.num_runs_per_config = {}
+        for config, config_id in self.config_ids.items():
+            # removing duplicates while keeping the order
+            inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
+            if instances is not None:
+                inst_seed_budgets = list(filter(lambda x: x.instance in cast(List, instances), inst_seed_budgets))
+
+            if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
+                self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
+                self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
+                self.num_runs_per_config[config_id] = len(inst_seed_budgets)
+
+    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, List[float]]:
+        """Returns the average cost per instance (across seeds) for a configuration. If the
+        runhistory contains budgets, only the highest budget for a configuration is returned.
+
+        Note
+        ----
+        This is used by the pSMAC facade to determine the incumbent after the evaluation.
+
+        Parameters
+        ----------
+        config : Configuration from ConfigSpace
+            Parameter configuration
+
+        Returns
+        -------
+        cost_per_inst: Dict<instance name<str>, cost<float>>
+        """
+        runs_ = self.get_runs_for_config(config, only_max_observed_budget=True)
+        cost_per_inst = {}  # type: Dict[str, List[float]]
+        for inst, seed, budget in runs_:
+            cost_per_inst[inst] = cost_per_inst.get(inst, [])
+            rkey = RunKey(self.config_ids[config], inst, seed, budget)
+            vkey = self.data[rkey]
+            cost_per_inst[inst].append(vkey.cost)
+        cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
+        return cost_per_inst
 
     def get_runs_for_config(self, config: Configuration, only_max_observed_budget: bool) -> List[InstSeedBudgetKey]:
         """Return all runs (instance seed pairs) for a configuration.
@@ -525,35 +828,6 @@ class RunHistory(Mapping[RunKey, RunValue]):
             if b in budget_subset:
                 configs.append(self.ids_config[c])
         return configs
-
-    def get_min_cost(self, config: Configuration) -> float:
-        """Returns the lowest empirical cost for a configuration, across all runs (budgets)
-
-        See the class docstring for how the costs are computed. The costs are not re-computed,
-        but are read from cache.
-
-        Parameters
-        ----------
-        config: Configuration
-
-        Returns
-        -------
-        min_cost: float
-            Computed cost for configuration
-        """
-        config_id = self.config_ids.get(config)
-        return self._min_cost_per_config.get(config_id, np.nan)  # type: ignore[arg-type] # noqa F821
-
-    def empty(self) -> bool:
-        """Check whether or not the RunHistory is empty.
-
-        Returns
-        -------
-        emptiness: bool
-            True if runs have been added to the RunHistory,
-            False otherwise
-        """
-        return len(self.data) == 0
 
     def save_json(self, fn: str = "runhistory.json", save_external: bool = False) -> None:
         """Saves runhistory on disk.
@@ -716,205 +990,3 @@ class RunHistory(Mapping[RunKey, RunValue]):
                 additional_info=additional_info,
                 origin=origin,
             )
-
-    def _cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
-    ) -> List[np.ndarray]:
-        """Return array of all costs for the given config for further calculations.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the run_history is
-            queried for all runs of the given configuration.
-
-        Returns
-        -------
-        Costs: list
-            Array of all costs.
-        """
-        try:
-            id_ = self.config_ids[config]
-        except KeyError:  # challenger was not running so far
-            return []
-
-        if instance_seed_budget_keys is None:
-            instance_seed_budget_keys = self.get_runs_for_config(config, only_max_observed_budget=True)
-
-        costs = []
-        for i, r, b in instance_seed_budget_keys:
-            k = RunKey(id_, i, r, b)
-            costs.append(self.data[k].cost)
-
-        return costs
-
-    def average_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
-        """Return the average cost of a configuration. This is the mean of costs of all instance-
-        seed pairs.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the run_history is
-            queried for all runs of the given configuration.
-
-        Returns
-        -------
-        Cost: float
-            Average cost
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self.num_obj > 1:
-                # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
-
-            return float(np.mean(costs))
-
-        return np.nan
-
-    def sum_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
-        """Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
-        pairs.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the run_history is
-            queried for all runs of the given configuration.
-
-        Returns
-        -------
-        sum_cost: float
-            Sum of costs of config.
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self.num_obj > 1:
-                # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
-                costs = np.mean(costs, axis=1)
-
-        return float(np.sum(costs))
-
-    def min_cost(
-        self,
-        config: Configuration,
-        instance_seed_budget_keys: Optional[Iterable[InstSeedBudgetKey]] = None,
-    ) -> float:
-        """Return the minimum cost of a configuration.
-
-        This is the minimum cost of all instance-seed pairs.
-        Warning: In the case of multi-fidelity, the minimum cost per objectives is returned.
-
-        Parameters
-        ----------
-        config : Configuration
-            Configuration to calculate objective for.
-        instance_seed_budget_keys : list, optional (default=None)
-            List of tuples of instance-seeds-budget keys. If None, the run_history is
-            queried for all runs of the given configuration.
-
-        Returns
-        -------
-        min_cost: float
-            minimum cost of config.
-        """
-        costs = self._cost(config, instance_seed_budget_keys)
-        if costs:
-            if self.num_obj > 1:
-                # Normalize costs
-                costs = normalize_costs(costs, self.objective_bounds)  # type: ignore[assignment]
-                costs = np.mean(costs, axis=1)
-
-            return float(np.min(costs))
-
-        return np.nan
-
-    def compute_all_costs(self, instances: Optional[List[str]] = None) -> None:
-        """Computes the cost of all configurations from scratch and overwrites self.cost_perf_config
-        and self.runs_per_config accordingly.
-
-        Note
-        ----
-        This method is only used for ``merge_foreign_data`` and should be removed.
-
-        Parameters
-        ----------
-        instances: List[str]
-            List of instances; if given, cost is only computed wrt to this instance set.
-        """
-        self._cost_per_config = {}
-        self.num_runs_per_config = {}
-        for config, config_id in self.config_ids.items():
-            # removing duplicates while keeping the order
-            inst_seed_budgets = list(dict.fromkeys(self.get_runs_for_config(config, only_max_observed_budget=True)))
-            if instances is not None:
-                inst_seed_budgets = list(filter(lambda x: x.instance in cast(List, instances), inst_seed_budgets))
-
-            if inst_seed_budgets:  # can be empty if never saw any runs on <instances>
-                self._cost_per_config[config_id] = self.average_cost(config, inst_seed_budgets)
-                self._min_cost_per_config[config_id] = self.min_cost(config, inst_seed_budgets)
-                self.num_runs_per_config[config_id] = len(inst_seed_budgets)
-
-    def get_instance_costs_for_config(self, config: Configuration) -> Dict[str, List[float]]:
-        """Returns the average cost per instance (across seeds) for a configuration. If the
-        runhistory contains budgets, only the highest budget for a configuration is returned.
-
-        Note
-        ----
-        This is used by the pSMAC facade to determine the incumbent after the evaluation.
-
-        Parameters
-        ----------
-        config : Configuration from ConfigSpace
-            Parameter configuration
-
-        Returns
-        -------
-        cost_per_inst: Dict<instance name<str>, cost<float>>
-        """
-        runs_ = self.get_runs_for_config(config, only_max_observed_budget=True)
-        cost_per_inst = {}  # type: Dict[str, List[float]]
-        for inst, seed, budget in runs_:
-            cost_per_inst[inst] = cost_per_inst.get(inst, [])
-            rkey = RunKey(self.config_ids[config], inst, seed, budget)
-            vkey = self.data[rkey]
-            cost_per_inst[inst].append(vkey.cost)
-        cost_per_inst = dict([(inst, np.mean(costs)) for inst, costs in cost_per_inst.items()])
-        return cost_per_inst
-
-    def __contains__(self, k: object) -> bool:
-        """Dictionary semantics for `k in runhistory`"""
-        return k in self.data
-
-    def __getitem__(self, k: RunKey) -> RunValue:
-        """Dictionary semantics for `v = runhistory[k]`"""
-        return self.data[k]
-
-    def __iter__(self) -> Iterator[RunKey]:
-        """Dictionary semantics for `for k in runhistory.keys()`, enables.
-
-        .items()
-        """
-        return iter(self.data.keys())
-
-    def __len__(self) -> int:
-        """Enables the `len(runhistory)`"""
-        return len(self.data)
