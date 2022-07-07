@@ -116,8 +116,6 @@ class PSMAC(object):
     validate: bool / None
         Flag to indicate whether to validate the found configurations or to use the SMAC estimates
         None => neither and return the full portfolio
-    n_incs: int
-        Number of incumbents to return (n_incs <= 0 ==> all found configurations)
     val_set: List[str]
         List of instance-ids to validate on
     **kwargs
@@ -148,9 +146,8 @@ class PSMAC(object):
         shared_model: bool = True,
         facade_class: Optional[Type[SMAC4AC]] = None,
         validate: bool = True,
-        n_optimizers: int = 2,
+        n_optimizers: int = 2,  # TODO rename
         val_set: Union[List[str], None] = None,
-        n_incs: int = 1,
         **kwargs,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -171,24 +168,22 @@ class PSMAC(object):
         self.seeds = np.arange(0, self.n_optimizers, dtype=int)  # seeds for the parallel runs
         self.validate = validate
         self.shared_model = shared_model
-        self.n_incs = min(max(1, n_incs), self.n_optimizers)
         if val_set is None:
             self.val_set = scenario.train_insts
         else:
             self.val_set = val_set
 
         self.result_merger: Optional[ResultMerger] = None
+        self.n_incs: int = 1
 
-    def optimize(self) -> List[Configuration]:
+    def optimize(self) -> Configuration:
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
         -------
-        incumbent(s) : List[Configuration] / ndarray[Configuration]
-            Incumbent / Portfolio of incumbents
-        pid(s) : int / ndarray[ints]
-            Process ID(s) from which the configuration stems
+        incumbent : Configuration
+            Best configuration across all workers.
 
         """
         # Setup output directory
@@ -221,16 +216,38 @@ class PSMAC(object):
             for seed in self.seeds
         )
 
-        incs_to_return = None
-        if self.n_optimizers == self.n_incs:  # no validation necessary just return all incumbents
-            incs_to_return = incs  # type: List[Configuration]
+        inc = self.get_best_incumbent(incs=incs)
+        return inc
+
+    def get_best_incumbent(self, incs: List[Configuration]) -> Configuration:
+        """
+        Determine ID and cost of best configuration (incumbent).
+
+        Parameters
+        ----------
+        incs : List[Configuration]
+            List of incumbents from the workers.
+
+        Returns
+        -------
+        Configuration
+            Best incumbent from all workers.
+
+        """
+        if self.validate is True:
+            mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
+            val_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[
+                0
+            ]
+            inc = incs[val_id]
         else:
-            _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
-            if val_ids:
-                incs_to_return = [inc for i, inc in enumerate(incs) if i in val_ids]
-            else:
-                incs_to_return = [inc for i, inc in enumerate(incs) if i in est_ids]
-        return incs_to_return
+            mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
+            est_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[
+                0
+              ]
+            inc = incs[est_id]
+
+        return inc
 
     def get_best_incumbents_ids(self, incs: List[Configuration]):
         """
