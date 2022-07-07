@@ -182,6 +182,16 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../examples/python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
@@ -417,7 +427,7 @@ style="width: 100%;">
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">smac.configspace.util</span> <span class="kn">import</span> <span class="n">convert_configurations_to_array</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">BaseEPM</span>
 <span class="kn">from</span> <span class="nn">smac.utils.logging</span> <span class="kn">import</span> <span class="n">PickableLoggerAdapter</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Aaron Klein, Marius Lindauer&quot;</span>
@@ -430,7 +440,7 @@ style="width: 100%;">
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    model : AbstractEPM</span>
+<span class="sd">    model : BaseEPM</span>
 <span class="sd">        Models the objective function.</span>
 
 <span class="sd">    Attributes</span>
@@ -439,7 +449,7 @@ style="width: 100%;">
 <span class="sd">    logger</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_required_updates</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;model&quot;</span><span class="p">,)</span>  <span class="c1"># type: Tuple[str, ...]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
@@ -520,12 +530,12 @@ style="width: 100%;">
 <span class="sd">    for further details.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            The model needs to implement an additional attribute ``models`` which contains the different models to</span>
 <span class="sd">            integrate over.</span>
 <span class="sd">        kwargs</span>
@@ -548,7 +558,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            The model needs to implement an additional attribute ``models`` which contains the different models to</span>
 <span class="sd">            integrate over.</span>
 <span class="sd">        kwargs</span>
@@ -591,7 +601,7 @@ style="width: 100%;">
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span>
         <span class="n">acquisition_function</span><span class="p">:</span> <span class="n">AbstractAcquisitionFunction</span><span class="p">,</span>
         <span class="n">decay_beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">prior_floor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span>
@@ -603,7 +613,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            Models the objective function.</span>
 <span class="sd">        decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed</span>
 <span class="sd">            otherwise.</span>
@@ -757,12 +767,12 @@ style="width: 100%;">
 <span class="sd">    with :math:`f(X^+)` as the best location.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
 <span class="sd">        par : float, default=0.0</span>
@@ -826,7 +836,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="EIPS"><a class="viewcode-back" href="../../../api/smac.optimizer.acquisition.html#smac.optimizer.acquisition.EIPS">[docs]</a><span class="k">class</span> <span class="nc">EIPS</span><span class="p">(</span><span class="n">EI</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes for a given x the expected improvement as</span>
 <span class="sd">        acquisition value.</span>
 <span class="sd">        :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,</span>
@@ -834,7 +844,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X) returning a tuples of</span>
 <span class="sd">                   predicted cost and running time</span>
@@ -908,13 +918,13 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="LogEI"><a class="viewcode-back" href="../../../api/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LogEI">[docs]</a><span class="k">class</span> <span class="nc">LogEI</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes for a given x the logarithm expected improvement as</span>
 <span class="sd">        acquisition value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
 <span class="sd">        par : float, default=0.0</span>
@@ -981,7 +991,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="PI"><a class="viewcode-back" href="../../../api/smac.optimizer.acquisition.html#smac.optimizer.acquisition.PI">[docs]</a><span class="k">class</span> <span class="nc">PI</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the probability of improvement for a given x over the best so far value as acquisition value.</span>
 
 <span class="sd">        :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }</span>
@@ -989,7 +999,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
 <span class="sd">        par : float, default=0.0</span>
@@ -1030,7 +1040,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="LCB"><a class="viewcode-back" href="../../../api/smac.optimizer.acquisition.html#smac.optimizer.acquisition.LCB">[docs]</a><span class="k">class</span> <span class="nc">LCB</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the lower confidence bound for a given x over the best so far value as</span>
 <span class="sd">        acquisition value.</span>
 
@@ -1040,7 +1050,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
 <span class="sd">        par : float, default=1.0</span>
@@ -1081,7 +1091,7 @@ style="width: 100%;">
 
 
 <div class="viewcode-block" id="TS"><a class="viewcode-back" href="../../../api/smac.optimizer.acquisition.html#smac.optimizer.acquisition.TS">[docs]</a><span class="k">class</span> <span class="nc">TS</span><span class="p">(</span><span class="n">AbstractAcquisitionFunction</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">AbstractEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseEPM</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Do a Thompson Sampling for a given x over the best so far value as</span>
 <span class="sd">        acquisition value.</span>
 
@@ -1097,7 +1107,7 @@ style="width: 100%;">
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        model : AbstractEPM</span>
+<span class="sd">        model : BaseEPM</span>
 <span class="sd">            A model that implements at least</span>
 <span class="sd">                 - predict_marginalized_over_instances(X)</span>
 <span class="sd">        par : float, default=0.0</span>

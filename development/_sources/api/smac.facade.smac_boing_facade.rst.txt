@@ -1,0 +1,29 @@
+smac.facade.smac\_boing\_facade
+===============================
+
+.. automodule:: smac.facade.smac_boing_facade
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SMAC4BOING
+   
+   
+
+   
+   
+   
+
+
+

@@ -185,6 +185,16 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
@@ -489,7 +499,7 @@ objects need to wait for more data, this procedure sends a wait request to smbo.
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
 <li><p><strong>incumbent</strong> (<em>Configuration</em>) – incumbent configuration</p></li>
-<li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
+<li><p><strong>chooser</strong> (<em>smac.optimizer.epm_configuration_chooser.EPMChooser</em>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
 <li><p><strong>num_workers</strong> (<em>int</em>) – the maximum number of workers available

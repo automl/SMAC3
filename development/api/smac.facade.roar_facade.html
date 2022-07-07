@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="smac.facade.smac_ac_facade" href="smac.facade.smac_ac_facade.html" />
-    <link rel="prev" title="smac.facade.hyperband_facade" href="smac.facade.hyperband_facade.html" />
+    <link rel="prev" title="smac.facade.psmac_facade" href="smac.facade.psmac_facade.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -182,6 +182,16 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_simple_multi_objective.html">
      Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
     </a>
    </li>
    <li class="toctree-l2">
@@ -454,8 +464,8 @@ If not set, it will be initialized with the
 <li><p><strong>runhistory</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>RunHistory</em></a>) – Runhistory to store all algorithm runs</p></li>
 <li><p><strong>intensifier</strong> (<a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><em>AbstractRacer</em></a>) – intensification object to issue a racing to decide the current incumbent</p></li>
 <li><p><strong>intensifier_kwargs</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – arguments passed to the constructor of ‘~intensifier’</p></li>
-<li><p><strong>acquisition_function_optimizer</strong> (<a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><em>AcquisitionFunctionMaximizer</em></a>) – Object that implements the <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer" title="smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">AcquisitionFunctionMaximizer</span></code></a>.
-Will use <a class="reference internal" href="smac.optimizer.ei_optimization.html#smac.optimizer.ei_optimization.RandomSearch" title="smac.optimizer.ei_optimization.RandomSearch"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.RandomSearch</span></code></a> if not set. Can be used
+<li><p><strong>acquisition_function_optimizer</strong> (<em>AcquisitionFunctionMaximizer</em>) – Object that implements the <code class="xref py py-class docutils literal notranslate"><span class="pre">AcquisitionFunctionMaximizer</span></code>.
+Will use <code class="xref py py-class docutils literal notranslate"><span class="pre">smac.optimizer.ei_optimization.RandomSearch</span></code> if not set. Can be used
 to perform random search over a fixed set of configurations.</p></li>
 <li><p><strong>acquisition_function_optimizer_kwargs</strong> (<em>Optional</em><em>[</em><em>dict</em><em>]</em>) – Arguments passed to constructor of <cite>~acquisition_function_optimizer</cite></p></li>
 <li><p><strong>multi_objective_algorithm</strong> (<em>Optional</em><em>[</em><em>Type</em><em>[</em><em>&quot;AbstractMultiObjectiveAlgorithm&quot;</em><em>]</em><em>]</em>) – Class that implements multi objective logic. If None, will use:</p></li>
@@ -495,11 +505,11 @@ If <code class="docutils literal notranslate"><span class="pre">None</span></cod
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.facade.hyperband_facade.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.facade.psmac_facade.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.facade.hyperband_facade</p>
+            <p class="prev-next-title">smac.facade.psmac_facade</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="smac.facade.smac_ac_facade.html" title="next page">

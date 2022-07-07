@@ -185,6 +185,16 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
@@ -454,9 +464,7 @@ Optimized Value: 0.01
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.epm.uncorrelated_mo_rf_with_instances</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">UncorrelatedMultiObjectiveRandomForestWithInstances</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.epm.random_forest.rf_mo</span> <span class="kn">import</span> <span class="n">MultiObjectiveRandomForest</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_ac_facade</span> <span class="kn">import</span> <span class="n">SMAC4AC</span>
 
 <span class="c1"># EIPS related</span>
@@ -537,7 +545,7 @@ Optimized Value: 0.01
     <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;target_names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">],</span> <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
     <span class="n">smac</span> <span class="o">=</span> <span class="n">SMAC4AC</span><span class="p">(</span>
         <span class="n">scenario</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span>
-        <span class="n">model</span><span class="o">=</span><span class="n">UncorrelatedMultiObjectiveRandomForestWithInstances</span><span class="p">,</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">MultiObjectiveRandomForest</span><span class="p">,</span>
         <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
         <span class="n">model_kwargs</span><span class="o">=</span><span class="n">model_kwargs</span><span class="p">,</span>
         <span class="n">tae_runner</span><span class="o">=</span><span class="n">svm_from_cfg</span><span class="p">,</span>
@@ -559,7 +567,7 @@ Optimized Value: 0.01
     <span class="p">)</span>  <span class="c1"># How many cores to use in parallel for optimization</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  4.243 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  5.192 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-svm-eips-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/ae03d4cb874589f82f258d7b161d3009/plot_svm_eips.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_svm_eips.py</span></code></a></p>

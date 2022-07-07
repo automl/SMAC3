@@ -17,7 +17,7 @@ smac.epm.gaussian\_process
 
    .. autosummary::
    
-      GaussianProcess
+      BaseModel
    
    
 
@@ -26,4 +26,17 @@ smac.epm.gaussian\_process
    
 
 
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.epm.gaussian_process.augmented
+   smac.epm.gaussian_process.gp
+   smac.epm.gaussian_process.gpytorch
+   smac.epm.gaussian_process.kernels
+   smac.epm.gaussian_process.mcmc
+   smac.epm.gaussian_process.utils
 

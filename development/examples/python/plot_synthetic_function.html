@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="SVM with EIPS as acquisition functions" href="plot_svm_eips.html" />
-    <link rel="prev" title="Simple Multi-Objective" href="plot_simple_multi_objective.html" />
+    <link rel="prev" title="Synthetic Function with TuRBO as optimizer" href="plot_synthetic_function_turbo.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -182,6 +182,16 @@ style="width: 100%;">
    <li class="toctree-l2">
     <a class="reference internal" href="plot_simple_multi_objective.html">
      Simple Multi-Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
     </a>
    </li>
    <li class="toctree-l2 current active">
@@ -435,42 +445,8 @@ hyperparameters are integrated by Markov-Chain Monte-Carlo as its surrogate mode
 SMAC4BB works best on numerical hyperparameter configuration space and should not
 be applied to the problems with large evaluation budgets (up to 1000 evaluations).</p>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-07_09:05:30_413521
-Default Value: 16916.00
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Default Value: 16916.00
 Optimizing! Depending on your machine, this might take a few minutes.
-INFO:smac.facade.smac_bb_facade.SMAC4BB:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
-INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
-INFO:smac.facade.smac_bb_facade.SMAC4BB:&lt;class &#39;smac.facade.smac_bb_facade.SMAC4BB&#39;&gt;
-INFO:smac.optimizer.smbo.SMBO:Running initial design
-INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-INFO:smac.intensification.intensification.Intensifier:Updated estimated cost of incumbent on 1 runs: 5311.5619
-INFO:smac.intensification.intensification.Intensifier:Challenger (4744.681) is better than incumbent (5311.5619) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x0 : -0.21980144549161196 -&gt; 0.666692873028599
-INFO:smac.intensification.intensification.Intensifier:  x1 : 7.335338136181235 -&gt; 7.332563252406933
-INFO:smac.intensification.intensification.Intensifier:Challenger (939.3255) is better than incumbent (4744.681) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x0 : 0.666692873028599 -&gt; 2.263660637291685
-INFO:smac.intensification.intensification.Intensifier:  x1 : 7.332563252406933 -&gt; 8.186395068270798
-INFO:smac.intensification.intensification.Intensifier:Challenger (920.0862) is better than incumbent (939.3255) on 1 runs.
-INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-INFO:smac.intensification.intensification.Intensifier:  x0 : 2.263660637291685 -&gt; 2.2708123182821804
-INFO:smac.intensification.intensification.Intensifier:  x1 : 8.186395068270798 -&gt; 8.187217627538942
-INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-INFO:smac.stats.stats.Stats:Incumbent changed: 3
-INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 10 / 10.0
-INFO:smac.stats.stats.Stats:Finished target algorithm runs: 10 / 10.0
-INFO:smac.stats.stats.Stats:Configurations: 10
-INFO:smac.stats.stats.Stats:Used wallclock time: 1.47 / inf sec
-INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
-INFO:smac.stats.stats.Stats:----------------------------------------------------
-INFO:smac.facade.smac_bb_facade.SMAC4BB:Final Incumbent: Configuration(values={
-  &#39;x0&#39;: 2.2708123182821804,
-  &#39;x1&#39;: 8.187217627538942,
-})
-
-INFO:smac.facade.smac_bb_facade.SMAC4BB:Estimated cost of incumbent: 920.0862
 </pre></div>
 </div>
 <div class="line-block">
@@ -549,7 +525,7 @@ INFO:smac.facade.smac_bb_facade.SMAC4BB:Estimated cost of incumbent: 920.0862
     <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.476 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.750 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-synthetic-function-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9f4cd4d381360f2d1010b93455cb1b9b/plot_synthetic_function.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_synthetic_function.py</span></code></a></p>
@@ -567,11 +543,11 @@ INFO:smac.facade.smac_bb_facade.SMAC4BB:Estimated cost of incumbent: 920.0862
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="plot_simple_multi_objective.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="plot_synthetic_function_turbo.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Simple Multi-Objective</p>
+            <p class="prev-next-title">Synthetic Function with TuRBO as optimizer</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="plot_svm_eips.html" title="next page">

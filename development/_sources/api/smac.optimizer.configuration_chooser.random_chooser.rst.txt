@@ -1,0 +1,34 @@
+smac.optimizer.configuration\_chooser.random\_chooser
+=====================================================
+
+.. automodule:: smac.optimizer.configuration_chooser.random_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ChooserCosineAnnealing
+      ChooserLinearCoolDown
+      ChooserNoCoolDown
+      ChooserProb
+      ChooserProbCoolDown
+      RandomChooser
+   
+   
+
+   
+   
+   
+
+
+

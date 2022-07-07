@@ -182,6 +182,16 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../examples/python/plot_synthetic_function.html">
      Synthetic Function with few Hyperparameters
     </a>
@@ -427,7 +437,7 @@ style="width: 100%;">
 <span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.0.1&quot;</span>
 
 
-<div class="viewcode-block" id="AbstractEPM"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM">[docs]</a><span class="k">class</span> <span class="nc">AbstractEPM</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseEPM"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM">[docs]</a><span class="k">class</span> <span class="nc">BaseEPM</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Abstract implementation of the EPM API.</span>
 
 <span class="sd">    **Note:** The input dimensionality of Y for training and the output dimensions</span>
@@ -514,7 +524,7 @@ style="width: 100%;">
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">PickableLoggerAdapter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractEPM.train"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEPM&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseEPM.train"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseEPM&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Trains the EPM on X and Y.</span>
 
 <span class="sd">        Parameters</span>
@@ -527,7 +537,7 @@ style="width: 100%;">
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        self : AbstractEPM</span>
+<span class="sd">        self : BaseEPM</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Expected 2d array, got </span><span class="si">%d</span><span class="s2">d array!&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
@@ -561,7 +571,7 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;AbstractEPM&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseEPM&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Trains the random forest on X and y.</span>
 
 <span class="sd">        Parameters</span>
@@ -578,7 +588,7 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-<div class="viewcode-block" id="AbstractEPM.predict"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
+<div class="viewcode-block" id="BaseEPM.predict"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cov_return_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;diagonal_cov&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
         <span class="sd">&quot;&quot;&quot;Predict means and variances for given X.</span>
@@ -653,7 +663,7 @@ style="width: 100%;">
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractEPM.predict_marginalized_over_instances"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.predict_marginalized_over_instances">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized_over_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<div class="viewcode-block" id="BaseEPM.predict_marginalized_over_instances"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM.predict_marginalized_over_instances">[docs]</a>    <span class="k">def</span> <span class="nf">predict_marginalized_over_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Predict mean and variance marginalized over all instances.</span>
 
 <span class="sd">        Returns the predictive mean and variance marginalised over all</span>
@@ -709,7 +719,7 @@ style="width: 100%;">
 
         <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">var</span></div>
 
-<div class="viewcode-block" id="AbstractEPM.get_configspace"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.AbstractEPM.get_configspace">[docs]</a>    <span class="k">def</span> <span class="nf">get_configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseEPM.get_configspace"><a class="viewcode-back" href="../../../api/smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM.get_configspace">[docs]</a>    <span class="k">def</span> <span class="nf">get_configspace</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigurationSpace</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the ConfigurationSpace used for the model.</span>
 
