@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -13,7 +13,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEPM(AbstractEPM):
+class RandomEPM(BaseEPM):
     """EPM which returns random values on a call to ``fit``.
 
     Parameters
@@ -83,7 +83,7 @@ class RandomEPM(AbstractEPM):
         Parameters
         ----------
         X : np.ndarray of shape = [n_samples, n_features (config + instance features)]
-        cov_return_type: typing.Optional[str]
+        cov_return_type: Optional[str]
             Specifies what to return along with the mean. Refer ``predict()`` for more information.
 
         Returns

@@ -1,10 +1,30 @@
 # 1.4.0
-* Updated pSMAC: Can pass arbitrary SMAC facades now, added example and fixed tests.
+
+## Features
+* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
+optimizer to focus on the most promising regions.
+* [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm.
+* Updated pSMAC: Can pass arbitrary SMAC facades now. Added example and fixed tests.
+
+## Improvements
+* Enabled caching for multi-objectives (#872). Costs are now normalized in `get_cost` 
+or optionally in `average_cost`/`sum_cost`/`min_cost` to receive a single float value. Therefore,
+the cached cost values do not need to be updated everytime a new entry to the runhistory was added.
+
+## Interface changes
+* We changed the location of gaussian processes and random forests. They are in the folders
+epm/gaussian_process and epm/random_forest now.
+* Also, we restructured the optimizer folder and therefore the location of the acquisition functions
+and configuration chooser.
+* Multi-objective functions are located in the folder `multi_objective`.
+* pSMAC facade was moved to the facade directory.
 
 
 # 1.3.4
 * Added reference to JMLR paper.
 * Typos in documentations.
+* Code more readable since all typings are imported at the beginning of the file.
+* Updated stale bot options.
 
 
 # 1.3.3

@@ -1,4 +1,4 @@
-import typing
+from typing import List, Mapping, Optional, Tuple, cast
 
 import logging
 from collections import Counter
@@ -12,7 +12,7 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (
     InstSeedBudgetKey,
     RunHistory,
@@ -96,9 +96,9 @@ class Intensifier(AbstractRacer):
     traj_logger: TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
     cutoff : int
         runtime cutoff of TA runs
@@ -132,8 +132,8 @@ class Intensifier(AbstractRacer):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
         cutoff: int = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
@@ -144,7 +144,6 @@ class Intensifier(AbstractRacer):
         maxR: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 2,
-        num_obj: int = 1,
     ):
         super().__init__(
             stats=stats,
@@ -159,7 +158,6 @@ class Intensifier(AbstractRacer):
             maxR=maxR,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
-            num_obj=num_obj,
         )
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -192,19 +190,19 @@ class Intensifier(AbstractRacer):
         self.update_configs_to_run = True
 
         # racing related variables
-        self.to_run = []  # type: typing.List[InstSeedBudgetKey]
+        self.to_run = []  # type: List[InstSeedBudgetKey]
         self.inc_sum_cost = np.inf
         self.N = -1
 
     def get_next_run(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
+        challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: typing.Optional[EPMChooser],
+        chooser: Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    ) -> Tuple[RunInfoIntent, RunInfo]:
         """This procedure is in charge of generating a RunInfo object to comply with lines 7 (in
         case stage is stage==RUN_INCUMBENT) or line 12 (In case of stage==RUN_CHALLENGER)
 
@@ -221,7 +219,7 @@ class Intensifier(AbstractRacer):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         incumbent: Configuration
             incumbent configuration
@@ -451,12 +449,12 @@ class Intensifier(AbstractRacer):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: typing.Optional[Configuration],
+        incumbent: Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, float]:
+    ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution.
 
@@ -476,7 +474,7 @@ class Intensifier(AbstractRacer):
         ----------
         run_info : RunInfo
                A RunInfo containing the configuration that was evaluated
-        incumbent : typing.Optional[Configuration]
+        incumbent : Optional[Configuration]
             best configuration so far, None in 1st run
         run_history : RunHistory
             stores all runs we ran so far
@@ -567,13 +565,13 @@ class Intensifier(AbstractRacer):
 
     def _get_next_inc_run(
         self,
-        available_insts: typing.List[str],
-    ) -> typing.Tuple[str, int, typing.Optional[float]]:
+        available_insts: List[str],
+    ) -> Tuple[str, int, Optional[float]]:
         """Method to extract the next seed/instance in which a incumbent run most be evaluated.
 
         Parameters
         ----------
-        available_insts : typing.List[str]
+        available_insts : List[str]
             A list of instances from which to extract the next incumbent run
 
         Returns
@@ -609,7 +607,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> typing.List[str]:
+    ) -> List[str]:
         """Implementation of line 4 of Intensification.
 
         This method queries the inc runs in the run history
@@ -692,7 +690,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, str, int, typing.Optional[float]]:
+    ) -> Tuple[Configuration, str, int, Optional[float]]:
         """Method to return the next config setting to aggressively race challenger against
         incumbent.
 
@@ -775,7 +773,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         run_history: RunHistory,
         log_traj: bool = True,
-    ) -> typing.Optional[Configuration]:
+    ) -> Optional[Configuration]:
         """Process the result of a racing configuration against the current incumbent. Might propose
         a new incumbent.
 
@@ -790,11 +788,12 @@ class Intensifier(AbstractRacer):
 
         Returns
         -------
-        new_incumbent: typing.Optional[Configuration]
+        new_incumbent: Optional[Configuration]
             Either challenger or incumbent
         """
         chal_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
         chal_perf = run_history.get_cost(challenger)
+
         # if all <instance, seed> have been run, compare challenger performance
         if not self.to_run:
             new_incumbent = self._compare_configs(
@@ -856,7 +855,7 @@ class Intensifier(AbstractRacer):
         incumbent: Configuration,
         N: int,
         run_history: RunHistory,
-    ) -> typing.Tuple[typing.List[InstSeedBudgetKey], float]:
+    ) -> Tuple[List[InstSeedBudgetKey], float]:
         """Returns the minimum list of <instance, seed> pairs to run the challenger on before
         comparing it with the incumbent.
 
@@ -873,7 +872,7 @@ class Intensifier(AbstractRacer):
 
         Returns
         -------
-        typing.List[InstSeedBudgetKey]
+        List[InstSeedBudgetKey]
             list of <instance, seed, budget> tuples to run
         float
             total (runtime) cost of running the incumbent on the instances (used for adaptive capping while racing)
@@ -896,18 +895,15 @@ class Intensifier(AbstractRacer):
         # because of efficiency computed here
         inst_seed_pairs = list(inc_inst_seeds - set(missing_runs))
         # cost used by incumbent for going over all runs in inst_seed_pairs
-        inc_sum_cost = run_history.sum_cost(
-            config=incumbent,
-            instance_seed_budget_keys=inst_seed_pairs,
-        )
-
+        inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inst_seed_pairs, normalize=True)
+        assert type(inc_sum_cost) == float
         return to_run, inc_sum_cost
 
     def get_next_challenger(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
-        chooser: typing.Optional[EPMChooser],
-    ) -> typing.Tuple[typing.Optional[Configuration], bool]:
+        challengers: Optional[List[Configuration]],
+        chooser: Optional[EPMChooser],
+    ) -> Tuple[Optional[Configuration], bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
         It does so by populating configs_to_run, which is a pool of configuration
@@ -925,14 +921,14 @@ class Intensifier(AbstractRacer):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
 
         Returns
         -------
-        typing.Optional[Configuration]
+        Optional[Configuration]
             next configuration to evaluate
         bool
             flag telling if the configuration is newly sampled or one currently being tracked
@@ -944,7 +940,7 @@ class Intensifier(AbstractRacer):
             # this is a new intensification run, get the next list of configurations to run
             if self.update_configs_to_run:
                 configs_to_run = self._generate_challengers(challengers=challengers, chooser=chooser)
-                self.configs_to_run = typing.cast(_config_to_run_type, configs_to_run)
+                self.configs_to_run = cast(_config_to_run_type, configs_to_run)
                 self.update_configs_to_run = False
 
             # pick next configuration from the generator
@@ -969,22 +965,22 @@ class Intensifier(AbstractRacer):
 
     def _generate_challengers(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
-        chooser: typing.Optional[EPMChooser],
+        challengers: Optional[List[Configuration]],
+        chooser: Optional[EPMChooser],
     ) -> _config_to_run_type:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations to evaluate next
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             a sampler that generates next configurations to use for racing
 
         Returns
         -------
-        typing.Optional[typing.Generator[Configuration]]
+        Optional[Generator[Configuration]]
             A generator containing the next challengers to use
         """
         if challengers:

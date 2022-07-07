@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 import scipy.optimize
 
-from smac.epm.gp_base_prior import (
+from smac.epm.gaussian_process.utils.prior import (
     GammaPrior,
     HorseshoePrior,
     LognormalPrior,
@@ -145,7 +145,7 @@ class TestGammaPrior(unittest.TestCase):
 
         # Legal scalar
         x = -1
-        self.assertEqual(prior.lnprob(x), -0.46155023498761205)
+        self.assertAlmostEqual(prior.lnprob(x), -0.46155023, 7)
         self.assertEqual(prior.gradient(x), -1.2357588823428847)
 
     def test_lnprob_and_grad_array(self):

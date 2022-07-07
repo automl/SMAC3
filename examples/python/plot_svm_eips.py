@@ -13,21 +13,23 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 import numpy as np
+from ConfigSpace.hyperparameters import (
+    CategoricalHyperparameter,
+    UniformFloatHyperparameter,
+)
 from sklearn import datasets, svm
 from sklearn.model_selection import cross_val_score
 
-from ConfigSpace.hyperparameters import UniformFloatHyperparameter, CategoricalHyperparameter
-
 from smac.configspace import ConfigurationSpace
+from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
 from smac.facade.smac_ac_facade import SMAC4AC
-
-# Import SMAC-utilities
-from smac.scenario.scenario import Scenario
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS
 from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
-from smac.epm.uncorrelated_mo_rf_with_instances import UncorrelatedMultiObjectiveRandomForestWithInstances
+
+# Import SMAC-utilities
+from smac.scenario.scenario import Scenario
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -100,7 +102,7 @@ if __name__ == "__main__":
     model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
     smac = SMAC4AC(
         scenario=scenario,
-        model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+        model=MultiObjectiveRandomForest,
         rng=np.random.RandomState(42),
         model_kwargs=model_kwargs,
         tae_runner=svm_from_cfg,

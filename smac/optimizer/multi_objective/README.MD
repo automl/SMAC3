@@ -1,1 +1,0 @@
-Intensifiers for multi-objective tasks

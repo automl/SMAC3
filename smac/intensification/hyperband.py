@@ -1,4 +1,4 @@
-import typing
+from typing import List, Mapping, Optional, Tuple
 
 import logging
 
@@ -8,7 +8,7 @@ from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (  # noqa: F401
     RunHistory,
     RunInfo,
@@ -41,25 +41,25 @@ class _Hyperband(_SuccessiveHalving):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
+    initial_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
+    max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
+    n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
+    instance_order : Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
@@ -84,21 +84,20 @@ class _Hyperband(_SuccessiveHalving):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
+        initial_budget: Optional[float] = None,
+        max_budget: Optional[float] = None,
         eta: float = 3,
         run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
+        n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
-        num_obj: int = 1,
     ) -> None:
 
         super().__init__(
@@ -119,7 +118,6 @@ class _Hyperband(_SuccessiveHalving):
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
             incumbent_selection=incumbent_selection,
-            num_obj=num_obj,
         )
 
         self.identifier = identifier
@@ -133,12 +131,12 @@ class _Hyperband(_SuccessiveHalving):
     def process_results(
         self,
         run_info: RunInfo,
-        incumbent: typing.Optional[Configuration],
+        incumbent: Optional[Configuration],
         run_history: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
-    ) -> typing.Tuple[Configuration, float]:
+    ) -> Tuple[Configuration, float]:
         """The intensifier stage will be updated based on the results/status of a configuration
         execution. Also, a incumbent will be determined.
 
@@ -146,7 +144,7 @@ class _Hyperband(_SuccessiveHalving):
         ----------
         run_info : RunInfo
                A RunInfo containing the configuration that was evaluated
-        incumbent : typing.Optional[Configuration]
+        incumbent : Optional[Configuration]
             Best configuration seen so far
         run_history : RunHistory
             stores all runs we ran so far
@@ -185,13 +183,13 @@ class _Hyperband(_SuccessiveHalving):
 
     def get_next_run(
         self,
-        challengers: typing.Optional[typing.List[Configuration]],
+        challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: typing.Optional[EPMChooser],
+        chooser: Optional[EPMChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
-    ) -> typing.Tuple[RunInfoIntent, RunInfo]:
+    ) -> Tuple[RunInfoIntent, RunInfo]:
         """Selects which challenger to use based on the iteration stage and set the iteration
         parameters. First iteration will choose configurations from the ``chooser`` or input
         challengers, while the later iterations pick top configurations from the previously selected
@@ -201,7 +199,7 @@ class _Hyperband(_SuccessiveHalving):
 
         Parameters
         ----------
-        challengers : typing.List[Configuration]
+        challengers : List[Configuration]
             promising configurations
         incumbent: Configuration
                incumbent configuration
@@ -331,25 +329,25 @@ class Hyperband(ParallelScheduler):
     traj_logger: smac.utils.io.traj_logging.TrajLogger
         TrajLogger object to log all new incumbents
     rng : np.random.RandomState
-    instances : typing.List[str]
+    instances : List[str]
         list of all instance ids
-    instance_specifics : typing.Mapping[str, str]
+    instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : typing.Optional[int]
+    cutoff : Optional[int]
         runtime cutoff of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    initial_budget : typing.Optional[float]
+    initial_budget : Optional[float]
         minimum budget allowed for 1 run of successive halving
-    max_budget : typing.Optional[float]
+    max_budget : Optional[float]
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     run_obj_time : bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    n_seeds : typing.Optional[int]
+    n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
-    instance_order : typing.Optional[str]
+    instance_order : Optional[str]
         how to order instances. Can be set to: [None, shuffle_once, shuffle]
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
@@ -372,15 +370,15 @@ class Hyperband(ParallelScheduler):
         stats: Stats,
         traj_logger: TrajLogger,
         rng: np.random.RandomState,
-        instances: typing.List[str],
-        instance_specifics: typing.Mapping[str, str] = None,
-        cutoff: typing.Optional[float] = None,
+        instances: List[str],
+        instance_specifics: Mapping[str, str] = None,
+        cutoff: Optional[float] = None,
         deterministic: bool = False,
-        initial_budget: typing.Optional[float] = None,
-        max_budget: typing.Optional[float] = None,
+        initial_budget: Optional[float] = None,
+        max_budget: Optional[float] = None,
         eta: float = 3,
         run_obj_time: bool = True,
-        n_seeds: typing.Optional[int] = None,
+        n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
         min_chall: int = 1,
@@ -412,7 +410,7 @@ class Hyperband(ParallelScheduler):
         self.max_budget = max_budget
         self.eta = eta
 
-    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> typing.Tuple[int, int]:
+    def _get_intensifier_ranking(self, intensifier: AbstractRacer) -> Tuple[int, int]:
         """Given a intensifier, returns how advance it is. This metric will be used to determine
         what priority to assign to the intensifier.
 

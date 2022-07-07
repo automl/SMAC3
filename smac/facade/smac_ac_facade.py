@@ -8,13 +8,13 @@ import joblib  # type: ignore
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.epm.base_epm import AbstractEPM
-from smac.epm.base_uncorrelated_mo_model import UncorrelatedMultiObjectiveModel
+from smac.epm.base_epm import BaseEPM
+from smac.epm.multi_objective_epm import MultiObjectiveEPM
 
 # epm
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.rfr_imputator import RFRImputator
-from smac.epm.util_funcs import get_rng, get_types
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.epm.random_forest.rfr_imputator import RFRImputator
+from smac.epm.utils import get_rng, get_types
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
 
@@ -29,6 +29,13 @@ from smac.intensification.hyperband import Hyperband
 # intensification
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
+from smac.multi_objective.aggregation_strategy import (
+    AggregationStrategy,
+    MeanAggregationStrategy,
+)
 from smac.optimizer.acquisition import (
     EI,
     EIPS,
@@ -37,21 +44,14 @@ from smac.optimizer.acquisition import (
     LogEI,
     PriorAcquisitionFunction,
 )
-from smac.optimizer.ei_optimization import (
+from smac.optimizer.acquisition.maximizer import (
     AcquisitionFunctionMaximizer,
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
 )
-from smac.optimizer.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
-from smac.optimizer.multi_objective.aggregation_strategy import (
-    AggregationStrategy,
-    MeanAggregationStrategy,
-)
-from smac.optimizer.random_configuration_chooser import (
+from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserProb,
-    RandomConfigurationChooser,
+    RandomChooser,
 )
 
 # optimizer
@@ -135,7 +135,7 @@ class SMAC4AC(object):
         Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.
     acquisition_function_optimizer_kwargs: Optional[dict]
         Arguments passed to constructor of `~acquisition_function_optimizer`
-    model : AbstractEPM
+    model : BaseEPM
         Model that implements train() and predict(). Will use a
         :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.
     model_kwargs : Optional[dict]
@@ -171,6 +171,8 @@ class SMAC4AC(object):
     smbo_class : ~smac.optimizer.smbo.SMBO
         Class implementing the SMBO interface which will be used to
         instantiate the optimizer class.
+    smbo_kwargs : ~ Optional[Dict]
+        Arguments passed to the constructor of '~smbo'
     run_id : int (optional)
         Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be
         chosen.
@@ -212,7 +214,7 @@ class SMAC4AC(object):
         user_prior_kwargs: Optional[Dict] = None,
         acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[Dict] = None,
-        model: Optional[Type[AbstractEPM]] = None,
+        model: Optional[Type[BaseEPM]] = None,
         model_kwargs: Optional[Dict] = None,
         runhistory2epm: Optional[Type[AbstractRunHistory2EPM]] = None,
         runhistory2epm_kwargs: Optional[Dict] = None,
@@ -225,8 +227,9 @@ class SMAC4AC(object):
         restore_incumbent: Optional[Configuration] = None,
         rng: Optional[Union[np.random.RandomState, int]] = None,
         smbo_class: Optional[Type[SMBO]] = None,
+        smbo_kwargs: Optional[Dict] = None,
         run_id: Optional[int] = None,
-        random_configuration_chooser: Optional[Type[RandomConfigurationChooser]] = None,
+        random_configuration_chooser: Optional[Type[RandomChooser]] = None,
         random_configuration_chooser_kwargs: Optional[Dict] = None,
         dask_client: Optional[dask.distributed.Client] = None,
         n_jobs: Optional[int] = 1,
@@ -303,7 +306,7 @@ class SMAC4AC(object):
             random_configuration_chooser_instance = random_configuration_chooser(  # type: ignore # noqa F821
                 **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821
             )
-        elif not isinstance(random_configuration_chooser, RandomConfigurationChooser):
+        elif not isinstance(random_configuration_chooser, RandomChooser):
             raise ValueError(
                 "random_configuration_chooser has to be" " a class or object of RandomConfigurationChooser"
             )
@@ -340,7 +343,7 @@ class SMAC4AC(object):
                     model_def_kwargs[key] = value
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
             model_instance = RandomForestWithInstances(
-                **model_def_kwargs  # type: ignore[arg-type] # noqa F821  # type: AbstractEPM
+                **model_def_kwargs  # type: ignore[arg-type] # noqa F821  # type: BaseEPM
             )
         elif inspect.isclass(model):
             model_def_kwargs["configspace"] = self.scenario.cs  # type: ignore[attr-defined] # noqa F821
@@ -366,9 +369,7 @@ class SMAC4AC(object):
                 "Argument acquisition_function must be None or an object implementing the "
                 "AbstractAcquisitionFunction, not %s." % type(acquisition_function)
             )
-        if isinstance(acquisition_function_instance, EIPS) and not isinstance(
-            model_instance, UncorrelatedMultiObjectiveModel
-        ):
+        if isinstance(acquisition_function_instance, EIPS) and not isinstance(model_instance, MultiObjectiveEPM):
             raise TypeError(
                 "If the acquisition function is EIPS, the surrogate model must support multi-objective prediction!"
             )
@@ -530,7 +531,7 @@ class SMAC4AC(object):
 
         if scenario.multi_objectives is not None and num_obj > 1:  # type: ignore[attr-defined] # noqa F821
             # define any defaults here
-            _multi_objective_kwargs = {"rng": rng, "num_obj": num_obj}
+            _multi_objective_kwargs = {"rng": rng}
 
             if multi_objective_kwargs is not None:
                 _multi_objective_kwargs.update(multi_objective_kwargs)
@@ -701,6 +702,8 @@ class SMAC4AC(object):
             "random_configuration_chooser": random_configuration_chooser_instance,
             "tae_runner": tae_runner_instance,
         }  # type: Dict[str, Any]
+        if smbo_kwargs is not None:
+            smbo_args.update(smbo_kwargs)
 
         if smbo_class is None:
             self.solver = SMBO(**smbo_args)  # type: ignore[arg-type] # noqa F821

@@ -35,7 +35,7 @@ class TestPSMACFacade(unittest.TestCase):
     @patch("smac.facade.smac_ac_facade.SMBO", new=MockSMBO)
     def test_psmac(self):
         import joblib
-        from smac.facade.experimental.psmac_facade import PSMAC
+        from smac.facade.psmac_facade import PSMAC
         from smac.facade.smac_ac_facade import SMAC4AC
         from smac.facade.smac_bb_facade import SMAC4BB
         from smac.facade.smac_hpo_facade import SMAC4HPO
@@ -44,7 +44,7 @@ class TestPSMACFacade(unittest.TestCase):
         facades = [None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]
         n_facades = len(facades)
-        target = {'x1': 7.290709845323256, 'x2': 10.285684762665337}
+        target = {"x1": 7.290709845323256, "x2": 10.285684762665337}
         for i, facade in enumerate(facades):
             for j, n_workers in enumerate(n_workers_list):
                 idx = n_facades * i + j

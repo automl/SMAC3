@@ -1,4 +1,4 @@
-import typing
+from typing import Dict, List, Optional, Tuple
 
 import json
 from subprocess import PIPE, Popen
@@ -26,11 +26,11 @@ class ExecuteTARunAClib(SerialRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: typing.Optional[float] = None,
+        cutoff: Optional[float] = None,
         seed: int = 12345,
-        budget: typing.Optional[float] = None,
+        budget: Optional[float] = None,
         instance_specific: str = "0",
-    ) -> typing.Tuple[StatusType, float, float, typing.Dict]:
+    ) -> Tuple[StatusType, float, float, Dict]:
         """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
         instance specifics.
 
@@ -138,11 +138,11 @@ class ExecuteTARunAClib(SerialRunner):
         instance_specific: str,
         cutoff: float,
         seed: int,
-    ) -> typing.Tuple[typing.Dict, str, str]:
+    ) -> Tuple[Dict, str, str]:
 
         # TODO: maybe replace fixed instance specific and cutoff_length (0) to
         # other value
-        cmd = []  # type: typing.List[str]
+        cmd = []  # type: List[str]
         if not isinstance(self.ta, (list, tuple)):
             raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
