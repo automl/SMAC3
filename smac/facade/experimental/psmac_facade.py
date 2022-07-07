@@ -179,13 +179,13 @@ class PSMAC(object):
 
         self.result_merger: Optional[ResultMerger] = None
 
-    def optimize(self) -> Union[Configuration, List[Configuration]]:
+    def optimize(self) -> List[Configuration]:
         """
         Optimizes the algorithm provided in scenario (given in constructor)
 
         Returns
         -------
-        incumbent(s) : Configuration / List[Configuration] / ndarray[Configuration]
+        incumbent(s) : List[Configuration] / ndarray[Configuration]
             Incumbent / Portfolio of incumbents
         pid(s) : int / ndarray[ints]
             Process ID(s) from which the configuration stems
@@ -228,9 +228,8 @@ class PSMAC(object):
             _, val_ids, _, est_ids = self.get_best_incumbents_ids(incs)  # determine the best incumbents
             if val_ids:
                 incs_to_return = [inc for i, inc in enumerate(incs) if i in val_ids]
-            incs_to_return = [inc for i, inc in enumerate(incs) if i in est_ids]
-        if len(incs_to_return) == 1:
-            incs_to_return = incs_to_return[0]
+            else:
+                incs_to_return = [inc for i, inc in enumerate(incs) if i in est_ids]
         return incs_to_return
 
     def get_best_incumbents_ids(self, incs: List[Configuration]):
