@@ -28,6 +28,7 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.experimental.psmac_facade import PSMAC
 from smac.facade.smac_bb_facade import SMAC4BB
 import smac
+
 importlib.reload(smac.facade.experimental.psmac_facade)
 from smac.facade.experimental.psmac_facade import PSMAC
 
@@ -95,7 +96,7 @@ if __name__ == "__main__":
 
     incumbent = smac.optimize()
     # Get trajectory of optimization (incumbent over time)
-    trajectory_json = smac.get_trajectory()   # trajectory in json format
+    trajectory_json = smac.get_trajectory()  # trajectory in json format
 
     # Plot trajectory: cost of incumbent against number of evaluations
     # import matplotlib.pyplot as plt

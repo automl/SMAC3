@@ -332,7 +332,7 @@ class TestSMACFacade(unittest.TestCase):
             )
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
-            with self.assertRaisesRegex(TypeError,  "the surrogate model must support multi-objective prediction!"):
+            with self.assertRaisesRegex(TypeError, "the surrogate model must support multi-objective prediction!"):
                 SMAC4AC(self.scenario, acquisition_function=EIPS, runhistory2epm=RunHistory2EPM4EIPS)
 
     ####################################################################################################################

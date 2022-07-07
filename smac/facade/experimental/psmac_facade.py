@@ -63,7 +63,9 @@ def optimize(
     """
     if facade_class is None:
         facade_class = SMAC4AC
-    solver = facade_class(scenario=scenario, tae_runner=tae_runner, tae_runner_kwargs=tae_runner_kwargs, rng=rng, **kwargs)
+    solver = facade_class(
+        scenario=scenario, tae_runner=tae_runner, tae_runner_kwargs=tae_runner_kwargs, rng=rng, **kwargs
+    )
     solver.stats.start_timing()
     solver.stats.print_stats()
 
@@ -238,15 +240,11 @@ class PSMAC(object):
         """
         if self.validate is True:
             mean_costs_conf_valid, cost_per_config_valid = self.validate_incs(incs)
-            val_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[
-                0
-            ]
+            val_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_valid), key=lambda y: y[1])))[0]
             inc = incs[val_id]
         else:
             mean_costs_conf_estimate, cost_per_config_estimate = self._get_mean_costs(incs, self.rh)
-            est_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[
-                0
-              ]
+            est_id = list(map(lambda x: x[0], sorted(enumerate(mean_costs_conf_estimate), key=lambda y: y[1])))[0]
             inc = incs[est_id]
 
         return inc
@@ -310,11 +308,13 @@ class PSMAC(object):
     def _check_result_merger(self):
         if self.result_merger is None:
             if self.output_dir is None:
-                raise ValueError("Cannot instantiate `ResultMerger` because `output_dir` "
-                                 "is None. In pSMAC `output_dir` is set after "
-                                 "`optimize()` has been called. If you already have "
-                                 "a pSMAC run or rundirs, please directly use "
-                                 "`smac.utils.io.result_merging.ResultMerger`.")
+                raise ValueError(
+                    "Cannot instantiate `ResultMerger` because `output_dir` "
+                    "is None. In pSMAC `output_dir` is set after "
+                    "`optimize()` has been called. If you already have "
+                    "a pSMAC run or rundirs, please directly use "
+                    "`smac.utils.io.result_merging.ResultMerger`."
+                )
             self.result_merger = ResultMerger(output_dir=Path(self.output_dir).parent)
 
     def get_runhistory(self) -> Optional[RunHistory]:

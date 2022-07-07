@@ -37,9 +37,7 @@ class TestPSMACFacade(unittest.TestCase):
         from smac.facade.smac_hpo_facade import SMAC4HPO
         from smac.facade.smac_mf_facade import SMAC4MF
 
-        facades = [
-            None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF
-        ]
+        facades = [None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]
         n_facades = len(facades)
         for i, facade in enumerate(facades):
@@ -62,5 +60,3 @@ class TestPSMACFacade(unittest.TestCase):
         for output_dir in self.output_dirs:
             if output_dir:
                 shutil.rmtree(output_dir, ignore_errors=True)
-
-

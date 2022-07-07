@@ -91,10 +91,10 @@ if __name__ == "__main__":
     # It returns: Status, Cost, Runtime, Additional Infos
     def_value = svm_from_cfg(cs.get_default_configuration())
     print("Default Value: %.2f" % def_value)
-    
+
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    
+
     # Besides the kwargs used for initializing UncorrelatedMultiObjectiveRandomForestWithInstances,
     # we also need kwargs for initializing the model insides UncorrelatedMultiObjectiveModel
     model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         model_kwargs=model_kwargs,
         tae_runner=svm_from_cfg,
         acquisition_function=EIPS,
-        runhistory2epm=RunHistory2EPM4EIPS
+        runhistory2epm=RunHistory2EPM4EIPS,
     )
 
     incumbent = smac.optimize()
