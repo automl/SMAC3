@@ -46,5 +46,3 @@ class ResultMergerTest(unittest.TestCase):
             lines = file.readlines()
         traj_from_file = [json.loads(line) for line in lines]
         self.assertEqual(len(traj_from_file), len(traj))
-
-
