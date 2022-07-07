@@ -405,7 +405,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(run_id, 2505)
         self.assertIs(rng_1, rs)
 
-    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    @unittest.mock.patch("smac.optimizer.acquisition.maximizer.get_one_exchange_neighbourhood")
     def test_check_deterministic_rosenbrock(self, patch):
 
         # Make SMAC a bit faster

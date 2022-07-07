@@ -344,8 +344,11 @@ class LocalSubspace(ABC):
 
             if model_local_kwargs is not None:
                 model_kwargs.update(model_local_kwargs_copy)
-            if model_local.__name__ not in ("GaussianProcessGPyTorch", "GloballyAugmentedLocalGP"):  # type: ignore
+
+            all_arguments = inspect.signature(model_local).parameters.keys()
+            if "bounds_cont" not in all_arguments:
                 del model_kwargs["bounds_cont"]
+            if "bounds_cat" not in all_arguments:
                 del model_kwargs["bounds_cat"]
             model = model_local(**model_kwargs)  # type: ignore
         else:
