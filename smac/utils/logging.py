@@ -104,3 +104,7 @@ def format_array(
         return formatted_list[0]
 
     return formatted_list
+
+
+def get_logger(name: str) -> PickableLoggerAdapter:
+    return PickableLoggerAdapter(name)

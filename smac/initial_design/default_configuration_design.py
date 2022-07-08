@@ -9,7 +9,7 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class DefaultConfiguration(InitialDesign):
+class DefaultInitialDesign(InitialDesign):
     """Initial design that evaluates default configuration."""
 
     def _select_configurations(self) -> List[Configuration]:

@@ -419,7 +419,7 @@ class AbstractRunHistory2EPM(object):
         return np.array(X), np.array(y), np.array(cen)
 
 
-class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
+class RunhistoryTransformer(AbstractRunHistory2EPM):
     """TODO."""
 
     def _build_matrix(
@@ -506,7 +506,7 @@ class RunHistory2EPM4Cost(AbstractRunHistory2EPM):
         return values
 
 
-class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
+class RunhistoryLogTransformer(RunhistoryTransformer):
     """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
@@ -533,7 +533,7 @@ class RunHistory2EPM4LogCost(RunHistory2EPM4Cost):
         return values
 
 
-class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
+class RunHistory2EPM4ScaledCost(RunhistoryTransformer):
     """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:
@@ -559,7 +559,7 @@ class RunHistory2EPM4ScaledCost(RunHistory2EPM4Cost):
         return values
 
 
-class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
+class RunhistoryInverseScaledTransformer(RunhistoryTransformer):
     """TODO."""
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def] # noqa F723
@@ -593,7 +593,7 @@ class RunHistory2EPM4InvScaledCost(RunHistory2EPM4Cost):
         return values
 
 
-class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
+class RunHistory2EPM4SqrtScaledCost(RunhistoryTransformer):
     """TODO."""
 
     def __init__(self, **kwargs):  # type: ignore[no-untyped-def]  # noqa F723
@@ -627,7 +627,7 @@ class RunHistory2EPM4SqrtScaledCost(RunHistory2EPM4Cost):
         return values
 
 
-class RunHistory2EPM4LogScaledCost(RunHistory2EPM4Cost):
+class RunhistoryLogScaledTransformer(RunhistoryTransformer):
     """TODO."""
 
     def transform_response_values(self, values: np.ndarray) -> np.ndarray:

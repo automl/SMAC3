@@ -36,13 +36,13 @@ class TestPSMACFacade(unittest.TestCase):
     def test_psmac(self):
         import joblib
 
-        from smac.facade.ac_facade import SMAC4AC
+        from smac.facade.ac_facade import AlgorithmConfiguration
         from smac.facade.bb_facade import SMAC4BB
         from smac.facade.hpo_facade import SMAC4HPO
         from smac.facade.mf_facade import SMAC4MF
         from smac.facade.psmac_facade import PSMAC
 
-        facades = [None, SMAC4AC, SMAC4BB, SMAC4HPO, SMAC4MF]
+        facades = [None, AlgorithmConfiguration, SMAC4BB, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]
         n_facades = len(facades)
         target = {"x1": 7.290709845323256, "x2": 10.285684762665337}

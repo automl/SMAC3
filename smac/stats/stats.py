@@ -168,7 +168,7 @@ class Stats:
                 1 - self._EMA_ALPHA
             ) * self._ema_n_configs_per_intensifiy + self._EMA_ALPHA * n_configs
 
-    def print_stats(self, debug_out: bool = False) -> None:
+    def print(self, debug_out: bool = False) -> None:
         """Prints all statistics.
 
         Parameters

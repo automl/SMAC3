@@ -10,7 +10,7 @@ from ConfigSpace import (
     UniformFloatHyperparameter,
 )
 
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -55,4 +55,4 @@ class TestRandomConfigurationDesign(unittest.TestCase):
             max_config_fracs=0.25,
             init_budget=1,
         )
-        RandomConfigurations(cs=self.cs, **kwargs).select_configurations()
+        RandomInitialDesign(cs=self.cs, **kwargs).select_configurations()

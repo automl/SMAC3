@@ -18,7 +18,7 @@ from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.constants import MAXINT
 from smac.epm.utils import get_rng
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.facade.psmac_facade import PSMAC
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory
@@ -175,7 +175,7 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = SMAC4AC(
+        self.solver = AlgorithmConfiguration(
             scenario=scen,
             tae_runner=self._tae,
             rng=self.rng,

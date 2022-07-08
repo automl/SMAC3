@@ -13,7 +13,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 from smac.cli.scenario import Scenario
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.intensification.successive_halving import SuccessiveHalving
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "min_chall": 1,  # because successive halving cannot handle min_chall > 1
     }
 
-    smac = SMAC4AC(
+    smac = AlgorithmConfiguration(
         scenario=scenario,  # scenario object
         intensifier_kwargs=intensifier_kwargs,  # arguments for Successive Halving
         # change intensifier to successive halving by passing the class.

@@ -4,7 +4,7 @@ import unittest.mock
 import numpy as np
 from ConfigSpace import ConfigurationSpace, UniformFloatHyperparameter
 
-from smac.initial_design.sobol_design import SobolDesign
+from smac.initial_design.sobol_design import SobolInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -25,11 +25,11 @@ class TestSobol(unittest.TestCase):
             max_config_fracs=0.25,
             init_budget=1,
         )
-        SobolDesign(cs=cs, **sobol_kwargs).select_configurations()
+        SobolInitialDesign(cs=cs, **sobol_kwargs).select_configurations()
 
         cs.add_hyperparameter(UniformFloatHyperparameter("x21202", 0, 1))
         with self.assertRaisesRegex(
             Exception,
             "Maximum supported dimensionality is 21201.",
         ):
-            SobolDesign(cs=cs, **sobol_kwargs).select_configurations()
+            SobolInitialDesign(cs=cs, **sobol_kwargs).select_configurations()

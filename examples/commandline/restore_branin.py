@@ -11,7 +11,7 @@ import os
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
 
@@ -35,7 +35,7 @@ if "__main__" == __name__:
     }
     original_scenario = Scenario(original_scenario_dict)
 
-    smac = SMAC4AC(scenario=original_scenario, run_id=1)
+    smac = AlgorithmConfiguration(scenario=original_scenario, run_id=1)
     smac.optimize()
 
     print("\nBudget exhausted! Starting restoring optimization ...\n")
@@ -78,7 +78,7 @@ if "__main__" == __name__:
     # Now we can initialize SMAC with the recovered objects and restore the
     # state where we left off. By providing stats and a restore_incumbent, SMAC
     # automatically detects the intention of restoring a state.
-    smac = SMAC4AC(
+    smac = AlgorithmConfiguration(
         scenario=new_scenario,
         runhistory=runhistory,
         stats=stats,

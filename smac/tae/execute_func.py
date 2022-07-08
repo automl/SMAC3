@@ -23,7 +23,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.2"
 
 
-class AbstractTAFunc(SerialRunner):
+class AbstractAlgorithmExecuter(SerialRunner):
     """Baseclass to execute target algorithms which are python functions.
 
     **Note:*** Do not use directly
@@ -271,7 +271,7 @@ class AbstractTAFunc(SerialRunner):
         raise NotImplementedError()
 
 
-class ExecuteTAFuncDict(AbstractTAFunc):
+class AlgorithmExecuter(AbstractAlgorithmExecuter):
     """Evaluate function for given configuration and resource limit.
 
     Passes the configuration as a dictionary to the target algorithm. The
@@ -314,7 +314,7 @@ class ExecuteTAFuncDict(AbstractTAFunc):
         return obj(config, **obj_kwargs)
 
 
-class ExecuteTAFuncArray(AbstractTAFunc):
+class ExecuteTAFuncArray(AbstractAlgorithmExecuter):
     """Evaluate function for given configuration and resource limit.
 
     Passes the configuration as an array-like to the target algorithm. The

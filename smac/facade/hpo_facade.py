@@ -1,17 +1,17 @@
 from typing import Any
 
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.ac_facade import SMAC4AC
-from smac.initial_design.sobol_design import SobolDesign
+from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.optimizer.acquisition import LogEI
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
+from smac.runhistory.runhistory2epm import RunhistoryLogScaledTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4HPO(SMAC4AC):
+class SMAC4HPO(AlgorithmConfiguration):
     """Facade to use SMAC for hyperparameter optimization.
 
     see smac.facade.smac_Facade for API
@@ -35,8 +35,8 @@ class SMAC4HPO(SMAC4AC):
     def __init__(self, **kwargs: Any):
         scenario = kwargs["scenario"]
 
-        kwargs["initial_design"] = kwargs.get("initial_design", SobolDesign)
-        if len(scenario.cs.get_hyperparameters()) > 21201 and kwargs["initial_design"] is SobolDesign:
+        kwargs["initial_design"] = kwargs.get("initial_design", SobolInitialDesign)
+        if len(scenario.cs.get_hyperparameters()) > 21201 and kwargs["initial_design"] is SobolInitialDesign:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
@@ -69,7 +69,7 @@ class SMAC4HPO(SMAC4AC):
 
         # == Acquisition function
         kwargs["acquisition_function"] = kwargs.get("acquisition_function", LogEI)
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunhistoryLogScaledTransformer)
 
         # assumes random chooser for random configs
         random_config_chooser_kwargs = kwargs.get("random_configuration_chooser_kwargs", dict())

@@ -59,7 +59,7 @@ class RunhistoryTest(unittest.TestCase):
             ),
         )
 
-        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(
+        rh2epm = runhistory2epm.RunhistoryLogTransformer(
             num_params=2,
             scenario=self.scen,
             impute_censored_data=True,
@@ -122,7 +122,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata to RunHistory2EPM4LogCost
         """
 
-        rh2epm = runhistory2epm.RunHistory2EPM4LogCost(
+        rh2epm = runhistory2epm.RunhistoryLogTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,
@@ -196,7 +196,7 @@ class RunhistoryTest(unittest.TestCase):
             ),
         )
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             scenario=self.scen,
             impute_censored_data=True,
@@ -255,7 +255,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata to RunHistory2EPM4Cost without imputation
         """
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -313,7 +313,7 @@ class RunhistoryTest(unittest.TestCase):
         """
         self.scen = Scenario({"cutoff_time": 20, "cs": self.cs, "run_obj": "quality", "output_dir": ""})
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -367,7 +367,7 @@ class RunhistoryTest(unittest.TestCase):
             }
         )
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,
@@ -435,7 +435,7 @@ class RunhistoryTest(unittest.TestCase):
         adding some rundata and check budget selection
         """
 
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             success_states=[StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             impute_censored_data=False,
@@ -532,7 +532,7 @@ class RunhistoryTest(unittest.TestCase):
             (StatusType.MEMOUT, 3),
             (StatusType.DONOTADVANCE, 4),
         ]:
-            rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+            rh2epm = runhistory2epm.RunhistoryTransformer(
                 num_params=2,
                 success_states=[
                     s,
@@ -555,7 +555,7 @@ class RunhistoryTest(unittest.TestCase):
             (StatusType.DONOTADVANCE, []),
             (StatusType.TIMEOUT, []),
         ]:
-            rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+            rh2epm = runhistory2epm.RunhistoryTransformer(
                 num_params=2,
                 success_states=[
                     s,
@@ -567,7 +567,7 @@ class RunhistoryTest(unittest.TestCase):
             self.assertSetEqual(set(y.flatten()), set(v))
 
         # Test defaults set in SMAC facade
-        rh2epm = runhistory2epm.RunHistory2EPM4Cost(
+        rh2epm = runhistory2epm.RunhistoryTransformer(
             num_params=2,
             success_states=[
                 StatusType.SUCCESS,

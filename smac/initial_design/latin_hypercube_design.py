@@ -11,7 +11,7 @@ __copyright__ = "Copyright 2019, AutoML"
 __license__ = "3-clause BSD"
 
 
-class LHDesign(InitialDesign):
+class LatinHypercubeInitialDesign(InitialDesign):
     """Latin Hypercube design.
 
     Attributes

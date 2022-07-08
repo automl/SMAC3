@@ -8,7 +8,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
 from smac.facade.hyperband_facade import HB4AC
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -38,7 +38,7 @@ class TestHBFacade(unittest.TestCase):
         hb_kwargs = {"initial_budget": 1, "max_budget": 3}
         facade = HB4AC(scenario=scenario, intensifier_kwargs=hb_kwargs)
 
-        self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
+        self.assertIsInstance(facade.solver.initial_design, RandomInitialDesign)
         self.assertIsInstance(facade.solver.epm_chooser.model, RandomEPM)
         self.assertIsInstance(facade.solver.intensifier, Hyperband)
         self.assertEqual(facade.solver.intensifier.min_chall, 1)

@@ -7,7 +7,7 @@ from ConfigSpace import Configuration
 
 from smac.cli.scenario import Scenario
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae import StatusType
 from smac.utils import test_helpers
@@ -55,7 +55,7 @@ class TestEPMChooser(unittest.TestCase):
         rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
 
-        smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=seed, runhistory=rh).solver
 
         x = next(smbo.epm_chooser.choose_next()).get_array()
         self.assertEqual(x.shape, (2,))
@@ -75,7 +75,7 @@ class TestEPMChooser(unittest.TestCase):
             status=StatusType.SUCCESS,
         )
 
-        smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=seed, runhistory=rh).solver
         smbo.epm_chooser.min_samples_model = 2
 
         # There is no model, so it returns a single random configuration
@@ -128,7 +128,7 @@ class TestEPMChooser(unittest.TestCase):
             status=StatusType.SUCCESS,
         )
 
-        smbo = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=seed, runhistory=rh).solver
         smbo.epm_chooser.min_samples_model = 2
 
         # Return two configurations evaluated with budget==2
@@ -139,7 +139,7 @@ class TestEPMChooser(unittest.TestCase):
 
     def test_choose_next_w_empty_rh(self):
         seed = 42
-        smbo = SMAC4AC(self.scenario, rng=seed).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=seed).solver
         smbo.runhistory = RunHistory()
 
         # should return random search configuration
@@ -150,7 +150,7 @@ class TestEPMChooser(unittest.TestCase):
         self.assertEqual(next_one.origin, "Random Search")
 
     def test_choose_next_empty_X(self):
-        epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
+        epm_chooser = AlgorithmConfiguration(self.scenario, rng=1).solver.epm_chooser
         epm_chooser.acquisition_func._compute = mock.Mock(spec=RandomForestWithInstances)
         epm_chooser._random_search.maximize = mock.Mock(spec=epm_chooser._random_search.maximize)
         epm_chooser._random_search.maximize.return_value = [0, 1, 2]
@@ -161,7 +161,7 @@ class TestEPMChooser(unittest.TestCase):
         self.assertEqual(epm_chooser.acquisition_func._compute.call_count, 0)
 
     def test_choose_next_empty_X_2(self):
-        epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
+        epm_chooser = AlgorithmConfiguration(self.scenario, rng=1).solver.epm_chooser
 
         challengers = epm_chooser.choose_next()
         x = [c for c in challengers]
@@ -181,7 +181,7 @@ class TestEPMChooser(unittest.TestCase):
         incumbent = self.scenario.cs.get_default_configuration()
         rh = RunHistory()
         rh.add(incumbent, 10, 10, StatusType.SUCCESS)
-        epm_chooser = SMAC4AC(self.scenario, rng=seed, runhistory=rh).solver.epm_chooser
+        epm_chooser = AlgorithmConfiguration(self.scenario, rng=seed, runhistory=rh).solver.epm_chooser
 
         epm_chooser.model = mock.Mock(spec=RandomForestWithInstances)
         epm_chooser.model.predict_marginalized_over_instances.side_effect = side_effect_predict
@@ -233,7 +233,7 @@ class TestEPMChooser(unittest.TestCase):
             m, v = np.ones((X.shape[0], 1)), None
             return m, v
 
-        epm_chooser = SMAC4AC(self.scenario, rng=1).solver.epm_chooser
+        epm_chooser = AlgorithmConfiguration(self.scenario, rng=1).solver.epm_chooser
         epm_chooser.incumbent = self.scenario.cs.sample_configuration()
         previous_configs = [epm_chooser.incumbent] + [self.scenario.cs.sample_configuration() for _ in range(0, 20)]
         epm_chooser.runhistory = RunHistory()

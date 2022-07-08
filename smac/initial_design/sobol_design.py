@@ -13,7 +13,7 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SobolDesign(InitialDesign):
+class SobolInitialDesign(InitialDesign):
     """Sobol sequence design with a scrambled Sobol sequence.
 
     See https://scipy.github.io/devdocs/reference/generated/scipy.stats.qmc.Sobol.html for further information

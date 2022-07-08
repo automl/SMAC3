@@ -44,12 +44,20 @@ class Config:
 
     # Algorithm Configuration
     instance_features: np.array | None = None
+    train_instances: np.array | None = None
 
     # Others
     seed: int = 0
 
     def __post_init__(self) -> None:
         """Checks whether the config is valid."""
-        available_objectives = ["time", "performance"]
-        if self.objective not in available_objectives:
-            raise RuntimeError(f"Objective must be one of {available_objectives}")
+        transform_y_options = [None, "log", "log_scaled", "inverse_scaled"]
+        if self.transform_y not in transform_y_options:
+            raise RuntimeError(f"`transform_y` must be one of `{transform_y_options}`")
+
+    def write(self) -> None:
+        pass
+
+    @staticmethod
+    def read() -> Config:
+        pass

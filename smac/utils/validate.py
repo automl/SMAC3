@@ -14,7 +14,7 @@ from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.random_forest.rfr_imputator import RFRImputator
 from smac.epm.utils import get_types
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
+from smac.runhistory.runhistory2epm import RunhistoryTransformer
 from smac.stats.stats import Stats
 from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
@@ -372,7 +372,7 @@ class Validator(object):
                 success_states = [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT]
 
             # Transform training data (from given rh)
-            rh2epm = RunHistory2EPM4Cost(
+            rh2epm = RunhistoryTransformer(
                 num_params=len(self.scen.cs.get_hyperparameters()),  # type: ignore[attr-defined] # noqa F821
                 scenario=self.scen,
                 rng=self.rng,

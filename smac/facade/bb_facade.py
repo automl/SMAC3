@@ -12,16 +12,16 @@ from smac.epm.gaussian_process.kernels import (
 from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.utils import get_rng, get_types
-from smac.facade.ac_facade import SMAC4AC
-from smac.initial_design.sobol_design import SobolDesign
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost
+from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.initial_design.sobol_design import SobolInitialDesign
+from smac.runhistory.runhistory2epm import RunhistoryTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BB(SMAC4AC):
+class SMAC4BB(AlgorithmConfiguration):
     """Facade to use SMAC for Black-Box optimization using a GP.
 
     see smac.facade.smac_Facade for API
@@ -61,13 +61,13 @@ class SMAC4BB(SMAC4AC):
         scenario = kwargs["scenario"]
 
         if len(scenario.cs.get_hyperparameters()) <= 21201:
-            kwargs["initial_design"] = kwargs.get("initial_design", SobolDesign)
+            kwargs["initial_design"] = kwargs.get("initial_design", SobolInitialDesign)
         else:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
                 'Please use a different initial design, such as "the Latin Hypercube design".',
             )
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4Cost)
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunhistoryTransformer)
 
         init_kwargs = kwargs.get("initial_design_kwargs", dict()) or dict()
         init_kwargs["n_configs_x_params"] = init_kwargs.get("n_configs_x_params", 8)

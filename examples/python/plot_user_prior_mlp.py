@@ -35,7 +35,7 @@ from sklearn.neural_network import MLPClassifier
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.facade.hpo_facade import SMAC4HPO
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -146,7 +146,7 @@ if __name__ == "__main__":
         user_priors=True,
         user_prior_kwargs=user_prior_kwargs,
         # Using random configurations will cause the initialization to be samples drawn from the prior
-        initial_design=RandomConfigurations,
+        initial_design=RandomInitialDesign,
     )
 
     # Example call of the function with default values

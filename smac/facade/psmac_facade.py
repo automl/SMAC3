@@ -17,7 +17,7 @@ from ConfigSpace.configuration_space import Configuration
 from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.epm.utils import get_rng
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.runhistory.runhistory import RunHistory
 from smac.tae.base import BaseRunner
 from smac.tae.execute_ta_run_hydra import ExecuteTARunOld
@@ -34,7 +34,7 @@ def optimize(
     tae_runner_kwargs: Dict,
     rng: Union[np.random.RandomState, int],
     output_dir: str,
-    facade_class: Optional[Type[SMAC4AC]] = None,
+    facade_class: Optional[Type[AlgorithmConfiguration]] = None,
     **kwargs,
 ) -> Configuration:
     """
@@ -60,7 +60,7 @@ def optimize(
 
     """
     if facade_class is None:
-        facade_class = SMAC4AC
+        facade_class = AlgorithmConfiguration
     solver = facade_class(
         scenario=scenario, tae_runner=tae_runner, tae_runner_kwargs=tae_runner_kwargs, rng=rng, **kwargs
     )
@@ -146,7 +146,7 @@ class PSMAC(object):
         tae_runner: Type[BaseRunner] = ExecuteTARunOld,
         tae_runner_kwargs: Union[dict, None] = None,
         shared_model: bool = True,
-        facade_class: Optional[Type[SMAC4AC]] = None,
+        facade_class: Optional[Type[AlgorithmConfiguration]] = None,
         validate: bool = True,
         n_workers: int = 2,
         val_set: Union[List[str], None] = None,
@@ -159,7 +159,7 @@ class PSMAC(object):
         self.kwargs = kwargs
         self.output_dir = None
         if facade_class is None:
-            facade_class = SMAC4AC
+            facade_class = AlgorithmConfiguration
         self.facade_class = facade_class
         self.rh = RunHistory()
         self._tae_runner = tae_runner

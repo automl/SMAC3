@@ -9,18 +9,18 @@ from ConfigSpace.hyperparameters import UniformIntegerHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.stats.stats import Stats
 from smac.tae import StatusType
-from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_func import AlgorithmExecuter
 
 
 def eval_challenger(
     run_info: RunInfo,
-    taf: ExecuteTAFuncDict,
+    taf: AlgorithmExecuter,
     stats: Stats,
     runhistory: RunHistory,
     force_update=False,
@@ -98,7 +98,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -158,7 +158,7 @@ class TestIntensify(unittest.TestCase):
             time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -218,7 +218,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(0.6)
             return (config["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(
+        taf = AlgorithmExecuter(
             use_pynisher=False,
             ta=target,
             stats=self.stats,
@@ -353,7 +353,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -429,7 +429,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats)
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -507,7 +507,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -574,7 +574,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
 
         intensifier = Intensifier(
             stats=self.stats,
@@ -715,7 +715,7 @@ class TestIntensify(unittest.TestCase):
             instances=[1],
             deterministic=True,
         )
-        chooser = SMAC4AC(self.scen, rng=1).solver.epm_chooser
+        chooser = AlgorithmConfiguration(self.scen, rng=1).solver.epm_chooser
 
         gen = intensifier._generate_challengers(challengers=None, chooser=chooser)
 
@@ -738,7 +738,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(1)
             return x["a"]
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -916,7 +916,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1073,7 +1073,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return x["a"]
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1131,7 +1131,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = ExecuteTAFuncDict(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(

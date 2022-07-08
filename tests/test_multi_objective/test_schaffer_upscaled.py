@@ -9,7 +9,7 @@ from matplotlib import pyplot as plt
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 
 MIN_V = -2
 MAX_V = 2
@@ -95,7 +95,7 @@ class SchafferTest(unittest.TestCase):
         }
 
     def test_AC(self):
-        smac = SMAC4AC(**self.facade_kwargs)
+        smac = AlgorithmConfiguration(**self.facade_kwargs)
         incumbent = smac.optimize()
 
         f1_inc, f2_inc = schaffer(incumbent["x"])

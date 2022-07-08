@@ -1,8 +1,8 @@
 import numpy as np
 
 from smac.runhistory.runhistory2epm import (
-    RunHistory2EPM4Cost,
-    RunHistory2EPM4LogScaledCost,
+    RunhistoryTransformer,
+    RunhistoryLogScaledTransformer,
 )
 from smac.runhistory.runhistory2epm_boing import (
     RunHistory2EPM4CostWithRaw,
@@ -21,8 +21,8 @@ class TestRH2EPMBOinG(RunhistoryTest):
             impute_censored_data=False,
             scenario=self.scen,
         )
-        rh2epm = RunHistory2EPM4Cost(**rh2epm_kwargs)
-        rh2epm_log = RunHistory2EPM4LogScaledCost(**rh2epm_kwargs)
+        rh2epm = RunhistoryTransformer(**rh2epm_kwargs)
+        rh2epm_log = RunhistoryLogScaledTransformer(**rh2epm_kwargs)
 
         rh2epm_with_raw = RunHistory2EPM4CostWithRaw(**rh2epm_kwargs)
 

@@ -2,7 +2,7 @@ from typing import Any, Dict, Mapping, Optional, Tuple, Type
 
 from smac.configspace import Configuration
 from smac.tae import StatusType
-from smac.tae.execute_func import ExecuteTAFuncArray, ExecuteTAFuncDict
+from smac.tae.execute_func import ExecuteTAFuncArray, AlgorithmExecuter
 from smac.tae.execute_ta_run_aclib import ExecuteTARunAClib
 from smac.tae.execute_ta_run_old import ExecuteTARunOld
 from smac.tae.serial_runner import SerialRunner
@@ -35,8 +35,8 @@ class ExecuteTARunHydra(SerialRunner):
             self.runner = ExecuteTARunAClib(**kwargs)  # type: SerialRunner
         elif tae is ExecuteTARunOld:
             self.runner = ExecuteTARunOld(**kwargs)
-        elif tae is ExecuteTAFuncDict:
-            self.runner = ExecuteTAFuncDict(**kwargs)
+        elif tae is AlgorithmExecuter:
+            self.runner = AlgorithmExecuter(**kwargs)
         elif tae is ExecuteTAFuncArray:
             self.runner = ExecuteTAFuncArray(**kwargs)
         else:

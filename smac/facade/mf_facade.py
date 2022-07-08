@@ -1,9 +1,9 @@
 from typing import Any
 
 from smac.facade.hpo_facade import SMAC4HPO
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
-from smac.runhistory.runhistory2epm import RunHistory2EPM4LogScaledCost
+from smac.runhistory.runhistory2epm import RunhistoryLogScaledTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -35,8 +35,8 @@ class SMAC4MF(SMAC4HPO):
     def __init__(self, **kwargs: Any):
         scenario = kwargs["scenario"]
 
-        kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunHistory2EPM4LogScaledCost)
+        kwargs["initial_design"] = kwargs.get("initial_design", RandomInitialDesign)
+        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunhistoryLogScaledTransformer)
 
         # Intensification parameters
         # select Hyperband as the intensifier ensure respective parameters are provided

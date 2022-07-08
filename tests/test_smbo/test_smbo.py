@@ -12,12 +12,12 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.facade.hpo_facade import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.runhistory.runhistory2epm import RunHistory2EPM4Cost, RunHistory2EPM4LogCost
+from smac.runhistory.runhistory2epm import RunhistoryTransformer, RunhistoryLogTransformer
 from smac.tae import FirstRunCrashedException, StatusType
 from smac.tae.execute_func import ExecuteTAFuncArray
 from smac.utils import test_helpers
@@ -73,26 +73,26 @@ class TestSMBO(unittest.TestCase):
     def test_init_only_scenario_runtime(self):
         self.scenario.run_obj = "runtime"
         self.scenario.cutoff = 300
-        smbo = SMAC4AC(self.scenario).solver
+        smbo = AlgorithmConfiguration(self.scenario).solver
         self.assertIsInstance(smbo.epm_chooser.model, RandomForestWithInstances)
-        self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4LogCost)
+        self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunhistoryLogTransformer)
         self.assertIsInstance(smbo.epm_chooser.acquisition_func, LogEI)
 
     def test_init_only_scenario_quality(self):
-        smbo = SMAC4AC(self.scenario).solver
+        smbo = AlgorithmConfiguration(self.scenario).solver
         self.assertIsInstance(smbo.epm_chooser.model, RandomForestWithInstances)
-        self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4Cost)
+        self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunhistoryTransformer)
         self.assertIsInstance(smbo.epm_chooser.acquisition_func, EI)
 
     def test_rng(self):
-        smbo = SMAC4AC(self.scenario, rng=None).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=None).solver
         self.assertIsInstance(smbo.rng, np.random.RandomState)
         self.assertIsInstance(smbo.num_run, int)
-        smbo = SMAC4AC(self.scenario, rng=1).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=1).solver
         rng = np.random.RandomState(1)
         self.assertEqual(smbo.num_run, 1)
         self.assertIsInstance(smbo.rng, np.random.RandomState)
-        smbo = SMAC4AC(self.scenario, rng=rng).solver
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng).solver
         self.assertIsInstance(smbo.num_run, int)
         self.assertIs(smbo.rng, rng)
         # ML: I don't understand the following line and it throws an error
@@ -100,7 +100,7 @@ class TestSMBO(unittest.TestCase):
             TypeError,
             "Argument rng accepts only arguments of type None, int or np.random.RandomState, you provided "
             "<class 'str'>.",
-            SMAC4AC,
+            AlgorithmConfiguration,
             self.scenario,
             rng="BLA",
         )
@@ -123,7 +123,7 @@ class TestSMBO(unittest.TestCase):
             }
         )
         self.output_dirs.append(scen.output_dir)
-        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        smbo = AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
         with self.assertRaisesRegex(FirstRunCrashedException, "in _mock_call"):
             smbo.run()
 
@@ -141,7 +141,7 @@ class TestSMBO(unittest.TestCase):
             }
         )
         self.output_dirs.append(scen.output_dir)
-        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        smbo = AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
 
         try:
             smbo.start()
@@ -167,7 +167,7 @@ class TestSMBO(unittest.TestCase):
             }
         )
         self.output_dirs.append(scen.output_dir)
-        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        smbo = AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
         self.assertRaises(FirstRunCrashedException, smbo.run)
 
         # should not raise an error if abort_on_first_run_crash is False
@@ -184,7 +184,7 @@ class TestSMBO(unittest.TestCase):
             }
         )
         self.output_dirs.append(scen.output_dir)
-        smbo = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        smbo = AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
 
         try:
             smbo.start()
@@ -210,7 +210,7 @@ class TestSMBO(unittest.TestCase):
             }
         )
         self.output_dirs.append(scen.output_dir)
-        smbo = SMAC4AC(scen, tae_runner=target, rng=1)
+        smbo = AlgorithmConfiguration(scen, tae_runner=target, rng=1)
         self.assertFalse(smbo.solver._stop)
         smbo.optimize()
         self.assertEqual(len(smbo.runhistory.data), 1)
@@ -235,7 +235,7 @@ class TestSMBO(unittest.TestCase):
                 }
             )
             self.output_dirs.append(scen.output_dir)
-            return SMAC4AC(scen, tae_runner=target, rng=1).solver
+            return AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
 
         # Test for valid values
         smbo = get_smbo(0.3)
@@ -275,7 +275,7 @@ class TestSMBO(unittest.TestCase):
             },
         )
         self.output_dirs.append(scen.output_dir)
-        solver = SMAC4AC(scen, tae_runner=target, rng=1).solver
+        solver = AlgorithmConfiguration(scen, tae_runner=target, rng=1).solver
 
         solver.stats.is_budget_exhausted = unittest.mock.Mock()
         solver.stats.is_budget_exhausted.side_effect = tuple(([False] * 10) + [True] * 8)
@@ -329,7 +329,7 @@ class TestSMBO(unittest.TestCase):
     def test_validation(self):
         with mock.patch.object(TrajLogger, "read_traj_aclib_format", return_value=None):
             self.scenario.output_dir = "test"
-            smac = SMAC4AC(self.scenario)
+            smac = AlgorithmConfiguration(self.scenario)
             self.output_dirs.append(smac.output_dir)
             smbo = smac.solver
             with mock.patch.object(Validator, "validate", return_value=None) as validation_mock:
@@ -355,7 +355,7 @@ class TestSMBO(unittest.TestCase):
 
     def test_no_initial_design(self):
         self.scenario.output_dir = "test"
-        smac = SMAC4AC(self.scenario)
+        smac = AlgorithmConfiguration(self.scenario)
         self.output_dirs.append(smac.output_dir)
         smbo = smac.solver
         # SMBO should have the default configuration as the 1st config if no initial design is given
@@ -485,7 +485,7 @@ class TestSMBO(unittest.TestCase):
         callback = TestCallback()
 
         self.scenario.output_dir = None
-        smac = SMAC4AC(self.scenario)
+        smac = AlgorithmConfiguration(self.scenario)
         smac.register_callback(callback)
 
         self.output_dirs.append(smac.output_dir)
@@ -529,7 +529,7 @@ class TestSMBO(unittest.TestCase):
         callback = TestCallback()
 
         self.scenario.output_dir = None
-        smac = SMAC4AC(self.scenario, tae_runner=target, rng=1)
+        smac = AlgorithmConfiguration(self.scenario, tae_runner=target, rng=1)
         smac.register_callback(callback)
 
         self.output_dirs.append(smac.output_dir)

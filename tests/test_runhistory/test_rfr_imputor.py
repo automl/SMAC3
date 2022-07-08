@@ -195,7 +195,7 @@ class ImputorTest(unittest.TestCase):
             model=model,
         )
 
-        r2e = runhistory2epm.RunHistory2EPM4LogCost(
+        r2e = runhistory2epm.RunhistoryLogTransformer(
             scenario=scen,
             num_params=3,
             success_states=[
@@ -224,7 +224,7 @@ class ImputorTest(unittest.TestCase):
                 max_iter=10,
                 model=model,
             )
-            r2e = runhistory2epm.RunHistory2EPM4LogCost(
+            r2e = runhistory2epm.RunhistoryLogTransformer(
                 scenario=scen,
                 num_params=3,
                 success_states=[

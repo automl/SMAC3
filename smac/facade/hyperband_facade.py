@@ -1,7 +1,7 @@
 from typing import Any
 
 from smac.facade.roar_facade import ROAR
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 
 __author__ = "Ashwin Raaghav Narayanan"
@@ -30,7 +30,7 @@ class HB4AC(ROAR):
     """
 
     def __init__(self, **kwargs: Any):
-        kwargs["initial_design"] = kwargs.get("initial_design", RandomConfigurations)
+        kwargs["initial_design"] = kwargs.get("initial_design", RandomInitialDesign)
 
         # Intensification parameters
         # select Hyperband as the intensifier ensure respective parameters are provided

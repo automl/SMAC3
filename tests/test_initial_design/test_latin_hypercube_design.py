@@ -11,7 +11,7 @@ from ConfigSpace import (
     UniformFloatHyperparameter,
 )
 
-from smac.initial_design.latin_hypercube_design import LHDesign
+from smac.initial_design.latin_hypercube_design import LatinHypercubeInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -60,4 +60,4 @@ class TestLHDesign(unittest.TestCase):
             max_config_fracs=0.25,
             init_budget=1000,
         )
-        LHDesign(cs=self.cs, **kwargs).select_configurations()
+        LatinHypercubeInitialDesign(cs=self.cs, **kwargs).select_configurations()

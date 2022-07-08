@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.facade.mf_facade import SMAC4MF
-from smac.initial_design.random_configuration_design import RandomConfigurations
+from smac.initial_design.random_configuration_design import RandomInitialDesign
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -36,7 +36,7 @@ class TestSMAC4MFFacade(unittest.TestCase):
         hb_kwargs = {"initial_budget": 1, "max_budget": 3}
         facade = SMAC4MF(scenario=scenario, intensifier_kwargs=hb_kwargs)
 
-        self.assertIsInstance(facade.solver.initial_design, RandomConfigurations)
+        self.assertIsInstance(facade.solver.initial_design, RandomInitialDesign)
         # ensure number of samples required is D+1
         self.assertEqual(facade.solver.epm_chooser.min_samples_model, 41)
         self.assertEqual(facade.solver.intensifier.min_chall, 1)

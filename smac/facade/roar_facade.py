@@ -8,7 +8,7 @@ import numpy as np
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.epm.random_epm import RandomEPM
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.multi_objective.abstract_multi_objective_algorithm import (
@@ -21,8 +21,8 @@ from smac.optimizer.acquisition.maximizer import (
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     AbstractRunHistory2EPM,
-    RunHistory2EPM4Cost,
-    RunHistory2EPM4LogCost,
+    RunhistoryTransformer,
+    RunhistoryLogTransformer,
 )
 from smac.stats.stats import Stats
 from smac.tae.base import BaseRunner
@@ -32,7 +32,7 @@ __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class ROAR(SMAC4AC):
+class ROAR(AlgorithmConfiguration):
     """Facade to use ROAR mode.
 
     Parameters
@@ -126,9 +126,9 @@ class ROAR(SMAC4AC):
 
         if scenario.run_obj == "runtime":
             # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
-            runhistory2epm = RunHistory2EPM4LogCost  # type: Type[AbstractRunHistory2EPM]
+            runhistory2epm = RunhistoryLogTransformer  # type: Type[AbstractRunHistory2EPM]
         else:
-            runhistory2epm = RunHistory2EPM4Cost
+            runhistory2epm = RunhistoryTransformer
 
         # use SMAC facade
         super().__init__(

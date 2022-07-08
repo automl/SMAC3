@@ -7,11 +7,11 @@ from ConfigSpace import Configuration, UniformFloatHyperparameter
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
-from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.initial_design.default_configuration_design import DefaultInitialDesign
 from smac.initial_design.initial_design import InitialDesign
 from smac.runhistory.runhistory import RunHistory
 from smac.stats.stats import Stats
-from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_func import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -31,13 +31,13 @@ class TestSingleInitialDesign(unittest.TestCase):
         )
         self.stats = Stats(scenario=self.scenario)
         self.rh = RunHistory()
-        self.ta = ExecuteTAFuncDict(lambda x: x["x1"] ** 2, stats=self.stats)
+        self.ta = AlgorithmExecuter(lambda x: x["x1"] ** 2, stats=self.stats)
 
     def test_single_default_config_design(self):
         self.stats.start_timing()
         tj = TrajLogger(output_dir=None, stats=self.stats)
 
-        dc = DefaultConfiguration(
+        dc = DefaultInitialDesign(
             cs=self.cs,
             traj_logger=tj,
             rng=np.random.RandomState(seed=12345),

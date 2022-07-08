@@ -8,7 +8,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.cli.scenario import Scenario
 from smac.cli.smac_cli import SMACCLI
 from smac.configspace import ConfigurationSpace
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.stats.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -90,12 +90,12 @@ class TestSMACCLI(unittest.TestCase):
         stats = Stats(scen)
         # Recorded runs but no incumbent.
         stats.submitted_ta_runs = 10
-        smac = SMAC4AC(scen, stats=stats, rng=np.random.RandomState(42))
+        smac = AlgorithmConfiguration(scen, stats=stats, rng=np.random.RandomState(42))
         self.output_dirs.append(scen.output_dir)
         self.assertRaises(ValueError, smac.optimize)
         # Incumbent but no recoreded runs.
         incumbent = cs.get_default_configuration()
-        smac = SMAC4AC(scen, restore_incumbent=incumbent, rng=np.random.RandomState(42))
+        smac = AlgorithmConfiguration(scen, restore_incumbent=incumbent, rng=np.random.RandomState(42))
         self.assertRaises(ValueError, smac.optimize)
 
     def test_same_dir(self):

@@ -11,7 +11,7 @@ from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
-from smac.facade.ac_facade import SMAC4AC
+from smac.facade.ac_facade import AlgorithmConfiguration
 from smac.facade.bb_facade import SMAC4BB
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
@@ -108,7 +108,7 @@ class SMACCLI(object):
                 initial_configs.append(trajectory[-1]["incumbent"])
 
         if main_args_.mode == "SMAC4AC":
-            optimizer = SMAC4AC(
+            optimizer = AlgorithmConfiguration(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,

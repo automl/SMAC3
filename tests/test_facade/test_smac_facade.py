@@ -15,13 +15,13 @@ from smac.epm.random_epm import RandomEPM
 from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_rng
-from smac.facade.ac_facade import SMAC4AC
-from smac.initial_design.default_configuration_design import DefaultConfiguration
+from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.initial_design.default_configuration_design import DefaultInitialDesign
 from smac.initial_design.factorial_design import FactorialInitialDesign
 from smac.initial_design.initial_design import InitialDesign
-from smac.initial_design.latin_hypercube_design import LHDesign
-from smac.initial_design.random_configuration_design import RandomConfigurations
-from smac.initial_design.sobol_design import SobolDesign
+from smac.initial_design.latin_hypercube_design import LatinHypercubeInitialDesign
+from smac.initial_design.random_configuration_design import RandomInitialDesign
+from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
@@ -32,12 +32,12 @@ from smac.optimizer.configuration_chooser.random_chooser import (
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
-    RunHistory2EPM4Cost,
+    RunhistoryTransformer,
     RunHistory2EPM4EIPS,
-    RunHistory2EPM4LogCost,
+    RunhistoryLogTransformer,
 )
 from smac.tae import StatusType
-from smac.tae.execute_func import ExecuteTAFuncDict
+from smac.tae.execute_func import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -81,8 +81,8 @@ class TestSMACFacade(unittest.TestCase):
         def target_algorithm(conf, inst):
             return 5
 
-        smac = SMAC4AC(tae_runner=target_algorithm, scenario=self.scenario)
-        self.assertIsInstance(smac.solver.tae_runner, ExecuteTAFuncDict)
+        smac = AlgorithmConfiguration(tae_runner=target_algorithm, scenario=self.scenario)
+        self.assertIsInstance(smac.solver.tae_runner, AlgorithmExecuter)
         self.assertIs(smac.solver.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):
@@ -90,7 +90,7 @@ class TestSMACFacade(unittest.TestCase):
             TypeError,
             "Argument 'tae_runner' is <class 'int'>, but must be either None, a callable or an "
             "object implementing BaseRunner.",
-            SMAC4AC,
+            AlgorithmConfiguration,
             tae_runner=1,
             scenario=self.scenario,
         )
@@ -100,7 +100,7 @@ class TestSMACFacade(unittest.TestCase):
             ValueError,
             "Objective for the target algorithm runner and the scenario must be the same, but are 'runtime' and "
             "'quality'",
-            SMAC4AC,
+            AlgorithmConfiguration,
             tae_runner=lambda: 1,
             tae_runner_kwargs={"run_obj": "runtime"},
             scenario=self.scenario,
@@ -108,8 +108,8 @@ class TestSMACFacade(unittest.TestCase):
 
     def test_construct_runhistory2epm(self):
         """Check default setup up for consistency"""
-        smbo = SMAC4AC(self.scenario)
-        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
+        smbo = AlgorithmConfiguration(self.scenario)
+        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunhistoryTransformer)
         self.assertSetEqual(
             set(smbo.solver.epm_chooser.rh2EPM.success_states),
             {StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT},
@@ -118,12 +118,12 @@ class TestSMACFacade(unittest.TestCase):
         self.assertSetEqual(set(smbo.solver.epm_chooser.rh2EPM.consider_for_higher_budgets_state), set())
 
         for intensifier in (SuccessiveHalving, Hyperband):
-            smbo = SMAC4AC(
+            smbo = AlgorithmConfiguration(
                 self.scenario,
                 intensifier=intensifier,
                 intensifier_kwargs=self.sh_intensifier_kwargs,
             )
-            self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4Cost)
+            self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunhistoryTransformer)
             self.assertSetEqual(
                 set(smbo.solver.epm_chooser.rh2EPM.success_states),
                 {
@@ -147,8 +147,8 @@ class TestSMACFacade(unittest.TestCase):
             )
 
         self.scenario.run_obj = "runtime"
-        smbo = SMAC4AC(self.scenario)
-        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunHistory2EPM4LogCost)
+        smbo = AlgorithmConfiguration(self.scenario)
+        self.assertTrue(type(smbo.solver.epm_chooser.rh2EPM) == RunhistoryLogTransformer)
         self.assertSetEqual(
             set(smbo.solver.epm_chooser.rh2EPM.success_states),
             {
@@ -165,30 +165,30 @@ class TestSMACFacade(unittest.TestCase):
 
     def test_construct_runhistory(self):
 
-        smbo = SMAC4AC(self.scenario)
+        smbo = AlgorithmConfiguration(self.scenario)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
         self.assertFalse(smbo.solver.runhistory.overwrite_existing_runs)
-        smbo = SMAC4AC(self.scenario, runhistory_kwargs={"overwrite_existing_runs": True})
+        smbo = AlgorithmConfiguration(self.scenario, runhistory_kwargs={"overwrite_existing_runs": True})
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
         self.assertTrue(smbo.solver.runhistory.overwrite_existing_runs)
-        smbo = SMAC4AC(self.scenario, runhistory=RunHistory)
+        smbo = AlgorithmConfiguration(self.scenario, runhistory=RunHistory)
         self.assertIsInstance(smbo.solver.runhistory, RunHistory)
 
     def test_construct_random_configuration_chooser(self):
         rng = np.random.RandomState(42)
-        smbo = SMAC4AC(self.scenario)
+        smbo = AlgorithmConfiguration(self.scenario)
         self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIsNot(smbo.solver.epm_chooser.random_configuration_chooser, rng)
-        smbo = SMAC4AC(self.scenario, rng=rng)
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng)
         self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
-        smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"rng": rng})
+        smbo = AlgorithmConfiguration(self.scenario, random_configuration_chooser_kwargs={"rng": rng})
         self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertIs(smbo.solver.epm_chooser.random_configuration_chooser.rng, rng)
-        smbo = SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"prob": 0.1})
+        smbo = AlgorithmConfiguration(self.scenario, random_configuration_chooser_kwargs={"prob": 0.1})
         self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserProb)
         self.assertEqual(smbo.solver.epm_chooser.random_configuration_chooser.prob, 0.1)
-        smbo = SMAC4AC(
+        smbo = AlgorithmConfiguration(
             self.scenario,
             random_configuration_chooser=ChooserNoCoolDown,
             random_configuration_chooser_kwargs={"modulus": 10},
@@ -196,39 +196,39 @@ class TestSMACFacade(unittest.TestCase):
         self.assertIsInstance(smbo.solver.epm_chooser.random_configuration_chooser, ChooserNoCoolDown)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, "got an unexpected keyword argument"):
-            SMAC4AC(self.scenario, random_configuration_chooser_kwargs={"dummy": 0.1})
+            AlgorithmConfiguration(self.scenario, random_configuration_chooser_kwargs={"dummy": 0.1})
 
     def test_construct_epm(self):
         rng = np.random.RandomState(42)
-        smbo = SMAC4AC(self.scenario)
+        smbo = AlgorithmConfiguration(self.scenario)
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
-        smbo = SMAC4AC(self.scenario, rng=rng)
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng)
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 1935803228)
-        smbo = SMAC4AC(self.scenario, model_kwargs={"seed": 2})
+        smbo = AlgorithmConfiguration(self.scenario, model_kwargs={"seed": 2})
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
-        smbo = SMAC4AC(self.scenario, model_kwargs={"num_trees": 20})
+        smbo = AlgorithmConfiguration(self.scenario, model_kwargs={"num_trees": 20})
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.model.rf_opts.num_trees, 20)
-        smbo = SMAC4AC(self.scenario, model=RandomEPM, model_kwargs={"seed": 2})
+        smbo = AlgorithmConfiguration(self.scenario, model=RandomEPM, model_kwargs={"seed": 2})
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomEPM)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, "got an unexpected keyword argument"):
-            SMAC4AC(self.scenario, model_kwargs={"dummy": 0.1})
+            AlgorithmConfiguration(self.scenario, model_kwargs={"dummy": 0.1})
 
     def test_construct_acquisition_function(self):
         rng = np.random.RandomState(42)
-        smbo = SMAC4AC(self.scenario)
+        smbo = AlgorithmConfiguration(self.scenario)
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
-        smbo = SMAC4AC(self.scenario, rng=rng)
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng)
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.model.seed, 1935803228)
-        smbo = SMAC4AC(self.scenario, acquisition_function_kwargs={"par": 17})
+        smbo = AlgorithmConfiguration(self.scenario, acquisition_function_kwargs={"par": 17})
         self.assertIsInstance(smbo.solver.epm_chooser.acquisition_func, EI)
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 17)
-        smbo = SMAC4AC(
+        smbo = AlgorithmConfiguration(
             self.scenario,
             acquisition_function=LCB,
             acquisition_function_kwargs={"par": 19},
@@ -237,22 +237,22 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.epm_chooser.acquisition_func.par, 19)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, "got an unexpected keyword argument"):
-            SMAC4AC(self.scenario, acquisition_function_kwargs={"dummy": 0.1})
+            AlgorithmConfiguration(self.scenario, acquisition_function_kwargs={"dummy": 0.1})
 
     def test_construct_intensifier(self):
         class DummyIntensifier(Intensifier):
             pass
 
         rng = np.random.RandomState(42)
-        smbo = SMAC4AC(self.scenario)
+        smbo = AlgorithmConfiguration(self.scenario)
         self.assertIsInstance(smbo.solver.intensifier, Intensifier)
         self.assertIsNot(smbo.solver.intensifier.rs, rng)
-        smbo = SMAC4AC(self.scenario, rng=rng)
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng)
         self.assertIsInstance(smbo.solver.intensifier, Intensifier)
         self.assertIs(smbo.solver.intensifier.rs, rng)
-        smbo = SMAC4AC(self.scenario, intensifier_kwargs={"maxR": 987})
+        smbo = AlgorithmConfiguration(self.scenario, intensifier_kwargs={"maxR": 987})
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
-        smbo = SMAC4AC(
+        smbo = AlgorithmConfiguration(
             self.scenario,
             intensifier=DummyIntensifier,
             intensifier_kwargs={"maxR": 987},
@@ -261,7 +261,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
 
         dummy_intensifier = DummyIntensifier(stats=None, traj_logger=None, rng=rng, instances=self.scenario.train_insts)
-        smbo = SMAC4AC(self.scenario, intensifier=dummy_intensifier)
+        smbo = AlgorithmConfiguration(self.scenario, intensifier=dummy_intensifier)
         self.assertEqual(smbo.solver.intensifier, dummy_intensifier)
 
         # Assert that minR, maxR and use_ta_time propagate from scenario to the default intensifier.
@@ -277,7 +277,7 @@ class TestSMACFacade(unittest.TestCase):
                 if k not in scenario_dict:
                     scenario_dict[k] = v
             scenario = Scenario(scenario_dict)
-            smac = SMAC4AC(scenario=scenario)
+            smac = AlgorithmConfiguration(scenario=scenario)
             self.assertEqual(scenario.minR, smac.solver.intensifier.minR)
             self.assertEqual(scenario.maxR, smac.solver.intensifier.maxR)
             self.assertEqual(scenario.use_ta_time, smac.solver.intensifier.use_ta_time_bound)
@@ -285,15 +285,15 @@ class TestSMACFacade(unittest.TestCase):
     def test_construct_initial_design(self):
 
         rng = np.random.RandomState(42)
-        smbo = SMAC4AC(self.scenario)
-        self.assertIsInstance(smbo.solver.initial_design, DefaultConfiguration)
+        smbo = AlgorithmConfiguration(self.scenario)
+        self.assertIsInstance(smbo.solver.initial_design, DefaultInitialDesign)
         self.assertIsNot(smbo.solver.intensifier.rs, rng)
-        smbo = SMAC4AC(self.scenario, rng=rng)
+        smbo = AlgorithmConfiguration(self.scenario, rng=rng)
         self.assertIsInstance(smbo.solver.intensifier, Intensifier)
         self.assertIs(smbo.solver.intensifier.rs, rng)
-        smbo = SMAC4AC(self.scenario, intensifier_kwargs={"maxR": 987})
+        smbo = AlgorithmConfiguration(self.scenario, intensifier_kwargs={"maxR": 987})
         self.assertEqual(smbo.solver.intensifier.maxR, 987)
-        smbo = SMAC4AC(
+        smbo = AlgorithmConfiguration(
             self.scenario,
             initial_design=InitialDesign,
             initial_design_kwargs={"configs": "dummy"},
@@ -302,20 +302,20 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(smbo.solver.initial_design.configs, "dummy")
 
         for initial_incumbent_string, expected_instance in (
-            ("DEFAULT", DefaultConfiguration),
-            ("RANDOM", RandomConfigurations),
-            ("LHD", LHDesign),
+            ("DEFAULT", DefaultInitialDesign),
+            ("RANDOM", RandomInitialDesign),
+            ("LHD", LatinHypercubeInitialDesign),
             ("FACTORIAL", FactorialInitialDesign),
-            ("SOBOL", SobolDesign),
+            ("SOBOL", SobolInitialDesign),
         ):
             self.scenario.initial_incumbent = initial_incumbent_string
-            smbo = SMAC4AC(self.scenario)
+            smbo = AlgorithmConfiguration(self.scenario)
             self.assertIsInstance(smbo.solver.initial_design, expected_instance)
 
     def test_init_EIPS_as_arguments(self):
         for objective in ["runtime", "quality"]:
             self.scenario.run_obj = objective
-            smbo = SMAC4AC(
+            smbo = AlgorithmConfiguration(
                 self.scenario,
                 model=MultiObjectiveRandomForest,
                 model_kwargs={"target_names": ["a", "b"], "model_kwargs": {"seed": 1}},
@@ -334,15 +334,15 @@ class TestSMACFacade(unittest.TestCase):
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
             with self.assertRaisesRegex(TypeError, "the surrogate model must support multi-objective prediction!"):
-                SMAC4AC(self.scenario, acquisition_function=EIPS, runhistory2epm=RunHistory2EPM4EIPS)
+                AlgorithmConfiguration(self.scenario, acquisition_function=EIPS, runhistory2epm=RunHistory2EPM4EIPS)
 
     ####################################################################################################################
     # Other tests...
 
-    @unittest.mock.patch.object(SMAC4AC, "__init__")
+    @unittest.mock.patch.object(AlgorithmConfiguration, "__init__")
     def test_check_random_states(self, patch):
         patch.return_value = None
-        smac = SMAC4AC()
+        smac = AlgorithmConfiguration()
         smac.logger = unittest.mock.MagicMock()
 
         # Check some properties
@@ -439,7 +439,7 @@ class TestSMACFacade(unittest.TestCase):
                 }
             )
 
-            smac = SMAC4AC(
+            smac = AlgorithmConfiguration(
                 scenario=scenario,
                 rng=np.random.RandomState(42),
                 tae_runner=rosenbrock_2d,
@@ -462,7 +462,7 @@ class TestSMACFacade(unittest.TestCase):
         def func(x):
             return x**2
 
-        smac = SMAC4AC(tae_runner=func, scenario=self.scenario)
+        smac = AlgorithmConfiguration(tae_runner=func, scenario=self.scenario)
         self.assertRaises(ValueError, smac.get_runhistory)
         self.assertRaises(ValueError, smac.get_trajectory)
         smac.trajectory = "dummy"
@@ -480,18 +480,18 @@ class TestSMACFacade(unittest.TestCase):
         }
         scen1 = Scenario(test_scenario_dict)
         self.output_dirs.append(scen1.output_dir)
-        smac = SMAC4AC(scenario=scen1, run_id=1)
+        smac = AlgorithmConfiguration(scenario=scen1, run_id=1)
 
         self.assertEqual(smac.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_1"))
         self.assertTrue(os.path.isdir(smac.output_dir))
 
-        smac2 = SMAC4AC(scenario=scen1, run_id=1)
+        smac2 = AlgorithmConfiguration(scenario=scen1, run_id=1)
         self.assertTrue(os.path.isdir(smac2.output_dir + ".OLD"))
 
-        smac3 = SMAC4AC(scenario=scen1, run_id=1)
+        smac3 = AlgorithmConfiguration(scenario=scen1, run_id=1)
         self.assertTrue(os.path.isdir(smac3.output_dir + ".OLD.OLD"))
 
-        smac4 = SMAC4AC(scenario=scen1, run_id=2)
+        smac4 = AlgorithmConfiguration(scenario=scen1, run_id=2)
         self.assertEqual(smac4.output_dir, os.path.join(test_scenario_dict["output_dir"], "run_2"))
         self.assertTrue(os.path.isdir(smac4.output_dir))
         self.assertFalse(os.path.isdir(smac4.output_dir + ".OLD.OLD.OLD"))
@@ -512,11 +512,11 @@ class TestSMACFacade(unittest.TestCase):
             "cs": ConfigurationSpace(),
         }
         scen1 = Scenario(test_scenario_dict)
-        smac = SMAC4AC(scenario=scen1, run_id=1)
+        smac = AlgorithmConfiguration(scenario=scen1, run_id=1)
         self.assertFalse(os.path.isdir(smac.output_dir))
 
     def test_register_callback(self):
-        smac = SMAC4AC(scenario=self.scenario, run_id=1)
+        smac = AlgorithmConfiguration(scenario=self.scenario, run_id=1)
 
         with self.assertRaisesRegex(ValueError, "Cannot register callback of type <class 'function'>"):
             smac.register_callback(lambda: 1)
@@ -546,7 +546,7 @@ class TestSMACFacade(unittest.TestCase):
                 "limit_resources": True,
             }
         )
-        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        smac = AlgorithmConfiguration(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertTrue(smac.solver.tae_runner.use_pynisher)
         self.assertIsNone(smac.solver.tae_runner.memory_limit)
 
@@ -559,7 +559,7 @@ class TestSMACFacade(unittest.TestCase):
                 "limit_resources": True,
             }
         )
-        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        smac = AlgorithmConfiguration(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertTrue(smac.solver.tae_runner.use_pynisher)
         self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
 
@@ -572,6 +572,6 @@ class TestSMACFacade(unittest.TestCase):
                 "limit_resources": False,
             }
         )
-        smac = SMAC4AC(scenario=scenario, tae_runner=tmp, rng=1)
+        smac = AlgorithmConfiguration(scenario=scenario, tae_runner=tmp, rng=1)
         self.assertFalse(smac.solver.tae_runner.use_pynisher)
         self.assertEqual(smac.solver.tae_runner.memory_limit, 333)
