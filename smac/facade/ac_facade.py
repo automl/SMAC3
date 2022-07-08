@@ -100,6 +100,7 @@ class AlgorithmConfiguration:
         self,
         config: Config,
         algorithm: BaseRunner | Callable,
+        *,
         model: BaseEPM | None = None,  # Optimizer model
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_function_optimizer: AbstractAcquisitionFunctionOptimizer | None = None,
@@ -171,7 +172,7 @@ class AlgorithmConfiguration:
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
         self.runhistory = RunHistory()
-        self.runhistory_transformer = self.get_runhistory_transformer()
+        self.runhistory_transformer = self.get_runhistory_transformer(config, model)
         self.stats = Stats(config)
         self.seed = config.seed
 
@@ -198,6 +199,7 @@ class AlgorithmConfiguration:
     @staticmethod
     def get_model(
         config: Config,
+        *,
         n_trees: int,
         bootstrapping: bool,
         ratio_features: float,
@@ -227,7 +229,7 @@ class AlgorithmConfiguration:
 
     @staticmethod
     def get_acquisition(
-        config: Config, model: BaseEPM, integrated: bool = False, priors: bool = False
+        config: Config, model: BaseEPM, *, integrated: bool = False, priors: bool = False
     ) -> tuple[AbstractAcquisitionFunction, AbstractAcquisitionFunctionOptimizer]:
         """Integrate max_steps_local_search/n_steps_plateau_walk/?"""
         if "log" in config.transform_y:
@@ -271,6 +273,7 @@ class AlgorithmConfiguration:
     def get_intensifier(
         config: Config,
         method="default",
+        *,
         intensification_percentage: float = 0.5,
         adaptive_capping_slackfactor: float = 1.2,
         min_challenger=1,
@@ -278,6 +281,10 @@ class AlgorithmConfiguration:
         max_config_calls=2000,
     ) -> Intensifier:
         # TODO: Potentially add all intensifier here?
+        # Nah, I guess going for one single intensifier is more than sufficient.
+        # Other facade can define other intensifiers there.
+        # And if the user needs even more flexibility, he can select another intensifier
+        # directly.
 
         if config.determinstic:
             min_challenger = 1
@@ -299,8 +306,13 @@ class AlgorithmConfiguration:
 
     @staticmethod
     def get_initial_design(
-        config: Config, method: str = "default", initial_configs: List[Configuration] | None = None
+        config: Config, method: str = "default", *, initial_configs: List[Configuration] | None = None
     ) -> InitialDesign:
+        # TODO: Remove `method` and only use defaultinitialdesign? Each facade can
+        # design its own initial design.
+        # The idea is more like to give the user the possibility to change default parameters
+        # for the chosen class for a facade.
+
         classes = {
             "default": DefaultInitialDesign,
             "random": RandomInitialDesign,
@@ -330,7 +342,7 @@ class AlgorithmConfiguration:
         return initial_design
 
     @staticmethod
-    def get_random_configuration_chooser(config: Config, random_probability: float = 0.5) -> RandomChooser:
+    def get_random_configuration_chooser(config: Config, *, random_probability: float = 0.5) -> RandomChooser:
         return ChooserProb(config.seed, random_probability)
 
     @staticmethod
@@ -340,37 +352,39 @@ class AlgorithmConfiguration:
 
         return MeanAggregationStrategy(config.seed)
 
-    def get_runhistory_transformer(self):
+    @staticmethod
+    def get_runhistory_transformer(config: Config, model: BaseEPM):
         imputer = None
-        if inspect.isclass(self.model) == RandomForestWithInstances:
+        if inspect.isclass(model) == RandomForestWithInstances:
             # If we log the performance data, the RFRImputator will already get log transform data from the runhistory.
-            if "log" in self.config.transform_y:
-                cutoff = np.log(np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)]))
-                threshold = cutoff + np.log(self.config.par_factor)
+            if "log" in config.transform_y:
+                cutoff = np.log(np.nanmin([np.inf, np.float_(config.algorithm_walltime_limit)]))
+                threshold = cutoff + np.log(config.par_factor)
             else:
-                cutoff = np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)])
-                threshold = cutoff * self.config.par_factor
+                cutoff = np.nanmin([np.inf, np.float_(config.algorithm_walltime_limit)])
+                threshold = cutoff * config.par_factor
 
             imputer = RFRImputator(
-                model=self.model,
-                algorithm_walltime_limit=self.config.algorithm_walltime_limit,
+                model=model,
+                algorithm_walltime_limit=config.algorithm_walltime_limit,
                 max_iter=2,
                 threshold=threshold,
                 change_threshold=0.01,
-                seed=self.seed,
+                seed=config.seed,
             )
 
         kwargs = {
-            "config": self.config,
-            "n_params": len(self.configspace.get_hyperparameters()),
+            "config": config,
+            "n_params": len(config.configspace.get_hyperparameters()),
             "success_states": [StatusType.SUCCESS, StatusType.CRASHED, StatusType.MEMOUT],
             "imputor": imputer,
             "impute_state": None,
             "impute_censored_data": False,
             "scale_perc": 5,
-            "multi_objective_algorithm": self.multi_objective_algorithm,
+            # "multi_objective_algorithm": self.multi_objective_algorithm,
         }
 
+        # TODO: Do we really need that?
         if isinstance(self.intensifier, (SuccessiveHalving, Hyperband)):
             kwargs.update(
                 {
@@ -389,13 +403,13 @@ class AlgorithmConfiguration:
                 }
             )
 
-        if self.config.transform_y is None:
+        if config.transform_y is None:
             transformer = RunhistoryTransformer(**kwargs)
-        elif self.config.transform_y == "log":
+        elif config.transform_y == "log":
             transformer = RunhistoryLogTransformer(**kwargs)
-        elif self.config.transform_y == "log_scaled":
+        elif config.transform_y == "log_scaled":
             transformer = RunhistoryLogScaledTransformer(**kwargs)
-        elif self.config.transform_y == "inverse_scaled":
+        elif config.transform_y == "inverse_scaled":
             transformer = RunhistoryInverseScaledTransformer(**kwargs)
 
         return transformer
@@ -407,7 +421,7 @@ class AlgorithmConfiguration:
         Returns
         -------
         incumbent : Configuration
-            Best found configuration
+            Best found configuration.
         """
         incumbent = None
         try:
