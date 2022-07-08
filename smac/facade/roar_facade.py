@@ -15,7 +15,7 @@ from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
 from smac.optimizer.acquisition.maximizer import (
-    AcquisitionFunctionMaximizer,
+    AbstractAcquisitionFunctionOptimizer,
     RandomSearch,
 )
 from smac.runhistory.runhistory import RunHistory
@@ -104,7 +104,7 @@ class ROAR(SMAC4AC):
         runhistory: RunHistory = None,
         intensifier: Optional[Type[AbstractRacer]] = None,
         intensifier_kwargs: Optional[Dict] = None,
-        acquisition_function_optimizer: Optional[Type[AcquisitionFunctionMaximizer]] = None,
+        acquisition_function_optimizer: Optional[Type[AbstractAcquisitionFunctionOptimizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[dict] = None,
         multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
         multi_objective_kwargs: Optional[Dict] = None,

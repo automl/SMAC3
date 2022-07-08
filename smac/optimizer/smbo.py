@@ -16,7 +16,7 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
+from smac.optimizer.acquisition.maximizer import AbstractAcquisitionFunctionOptimizer
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
@@ -105,7 +105,7 @@ class SMBO(object):
         intensifier: AbstractRacer,
         num_run: int,
         model: BaseEPM,
-        acq_optimizer: AcquisitionFunctionMaximizer,
+        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         tae_runner: BaseRunner,

@@ -35,12 +35,15 @@ class Config:
     cputime_limit: float | None = None
     memory_limit: float | None = None
     algorithm_walltime_limit: float | None = None
-    n_runs: int | None = 200
+    n_runs: int = 200
 
     # always_race_default
     # How to deal with instances? Have them here too? It's not really a config, rather data
     # So they probably should go to the cli directory.
     # However, we need an interface to accept instances/test instances in the main python code.
+
+    # Algorithm Configuration
+    instance_features: np.array | None = None
 
     # Others
     seed: int = 0

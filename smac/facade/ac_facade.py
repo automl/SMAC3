@@ -52,7 +52,7 @@ from smac.optimizer.acquisition import (
     PriorAcquisitionFunction,
 )
 from smac.optimizer.acquisition.maximizer import (
-    AcquisitionFunctionMaximizer,
+    AbstractAcquisitionFunctionOptimizer,
     LocalAndSortedPriorRandomSearch,
     LocalAndSortedRandomSearch,
 )
@@ -205,9 +205,9 @@ class SMAC4AC(object):
         self,
         config: Config,
         algorithm: BaseRunner | Callable,
-        model: BaseEPM = None,  # Optimizer model
+        model: BaseEPM | None = None,  # Optimizer model
         acquisition_function: AbstractAcquisitionFunction | None = None,
-        acquisition_function_optimizer: AcquisitionFunctionMaximizer | None = None,
+        acquisition_function_optimizer: AbstractAcquisitionFunctionOptimizer | None = None,
         initial_design: InitialDesign = None,
         initial_configurations: list[Configuration] | None = None,
         intensifier: AbstractRacer | None = None,
@@ -223,36 +223,109 @@ class SMAC4AC(object):
         # n_jobs: Optional[int] = 1,
     ):
         if model is None:
-            model = self.get_model()
+            model = self.get_model(config)
+
+        if acquisition_function is None or acquisition_function_optimizer is None:
+            if acquisition_function is not None:
+                logger.info("Passed acquistion function is overwritten.")
+            if acquisition_function_optimizer is not None:
+                logger.info("Passed acquisition function optimizer is overwritten.")
+
+            acquisition_function, acquisition_function_optimizer = self.get_acquisition(config, model)
+
+        if random_configuration_chooser is None:
+            random_configuration_chooser = self.get_random_configuration_chooser(config)
+
+        # Set variables globally
+        self.model = model
+        self.acquisition_function = acquisition_function
+        self.acquisition_function_optimizer = acquisition_function_optimizer
+        self.random_configuration_chooser = random_configuration_chooser
+
+        # Create new runhistory
+        self.runhistory = RunHistory()
+
+        # Create stats object
+        self.stats = Stats(config)
+
+        # Set the seed for configuration space
+        config.configspace.seed(seed)
 
     @staticmethod
-    def model(
+    def get_model(
         config: Config,
-        num_trees: int,
+        n_trees: int,
         bootstrapping: bool,
         ratio_features: float,
         min_samples_split: float,
         min_samples_leaf: int,
         max_depth: int,
-        **kwargs,
+        pca_components: int = 4,
     ) -> RandomForestWithInstances:
-        model_kwargs = {
-            "log_y": config.transform_y == "log",
-            "num_trees": num_trees,
-            "do_bootstrapping": bootstrapping,
-            "ratio_features": ratio_features,
-            "min_samples_split": min_samples_split,
-            "min_samples_leaf": min_samples_leaf,
-            "max_depth": max_depth,
-            "configspace": config.configspace,
-        }
-        model_kwargs.update(kwargs)
+        types, bounds = get_types(config.configspace, config.instance_features)
+        log_y = config.transform_y == "log"
 
-        return RandomForestWithInstances(**model_kwargs)
+        return RandomForestWithInstances(
+            types=types,
+            bounds=bounds,
+            log_y=log_y,
+            num_trees=n_trees,
+            do_bootstrapping=bootstrapping,
+            ratio_features=ratio_features,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
+            max_depth=max_depth,
+            configspace=config.configspace,
+            instance_features=config.instance_features,
+            pca_components=pca_components,
+            seed=config.seed,
+        )
 
     @staticmethod
-    def acquisition_function(integrated: bool = False, priors: bool = False) -> AbstractAcquisitionFunction:
-        pass
+    def get_acquisition(
+        config: Config, model: BaseEPM, integrated: bool = False, priors: bool = False
+    ) -> tuple[AbstractAcquisitionFunction, AbstractAcquisitionFunctionOptimizer]:
+        """Integrate max_steps_local_search/n_steps_plateau_walk/?"""
+        if config.transform_y == "log":
+            acquisition_function: AbstractAcquisitionFunction = LogEI(model)
+        else:
+            acquisition_function = EI(model)
+
+        if integrated:
+            acquisition_function = IntegratedAcquisitionFunction(
+                model,
+                acquisition_function,
+            )
+
+        if priors:
+            # A solid default value for decay_beta (empirically founded).
+            default_beta = config.n_runs / 10
+            discretize = isinstance(model, (RandomForestWithInstances, RFRImputator))
+
+            acquisition_function = PriorAcquisitionFunction(
+                model,
+                acquisition_function,
+                decay_beta=default_beta,
+                discretize=discretize,
+            )
+            acquisition_function_optimizer = LocalAndSortedPriorRandomSearch(
+                acquisition_function,
+                configspace=config.configspace,
+                uniform_configspace=config.configspace.remove_hyperparameter_priors(),
+                seed=config.seed,
+            )
+        else:
+            acquisition_function_optimizer = LocalAndSortedRandomSearch(
+                acquisition_function,
+                config.configspace,
+                seed=config.seed,
+            )
+
+        return acquisition_function, acquisition_function_optimizer
+
+    @staticmethod
+    def get_random_configuration_chooser(config: Config, random_probability: float = 0.5) -> RandomChooser:
+        return ChooserProb(config.seed, random_probability)
 
     def blub(self):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -313,24 +386,6 @@ class SMAC4AC(object):
             pass
         else:
             raise ValueError("runhistory has to be a class or an object of RunHistory")
-
-        rand_conf_chooser_kwargs = {"rng": rng}
-        if random_configuration_chooser_kwargs is not None:
-            rand_conf_chooser_kwargs.update(random_configuration_chooser_kwargs)
-        if random_configuration_chooser is None:
-            if "prob" not in rand_conf_chooser_kwargs:
-                rand_conf_chooser_kwargs["prob"] = scenario.rand_prob  # type: ignore[attr-defined] # noqa F821
-            random_configuration_chooser_instance = ChooserProb(
-                **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821  # type: RandomConfigurationChooser
-            )
-        elif inspect.isclass(random_configuration_chooser):
-            random_configuration_chooser_instance = random_configuration_chooser(  # type: ignore # noqa F821
-                **rand_conf_chooser_kwargs  # type: ignore[arg-type] # noqa F821
-            )
-        elif not isinstance(random_configuration_chooser, RandomChooser):
-            raise ValueError(
-                "random_configuration_chooser has to be" " a class or object of RandomConfigurationChooser"
-            )
 
         # reset random number generator in config space to draw different
         # random configurations with each seed given to SMAC

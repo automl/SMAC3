@@ -10,7 +10,7 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
-    AcquisitionFunctionMaximizer,
+    AbstractAcquisitionFunctionOptimizer,
     RandomSearch,
 )
 from smac.optimizer.configuration_chooser.random_chooser import (
@@ -65,7 +65,7 @@ class EPMChooser:
         runhistory: RunHistory,
         runhistory2epm: AbstractRunHistory2EPM,
         model: RandomForestWithInstances,
-        acq_optimizer: AcquisitionFunctionMaximizer,
+        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,

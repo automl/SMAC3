@@ -17,7 +17,7 @@ __email__ = "lindauer@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class Stats(object):
+class Stats:
     """All statistics collected during configuration run. Written to output- directory to be
     restored.
 

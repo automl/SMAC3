@@ -14,7 +14,7 @@ from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianPr
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import EI, TS, AbstractAcquisitionFunction
-from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
+from smac.optimizer.acquisition.maximizer import AbstractAcquisitionFunctionOptimizer
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
@@ -70,7 +70,7 @@ class BOinGChooser(EPMChooser):
         runhistory: RunHistory,
         runhistory2epm: RunHistory2EPM4CostWithRaw,
         model: RandomForestWithInstances,
-        acq_optimizer: AcquisitionFunctionMaximizer,
+        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,
@@ -81,7 +81,7 @@ class BOinGChooser(EPMChooser):
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,
-        acq_optimizer_local: Optional[AcquisitionFunctionMaximizer] = None,
+        acq_optimizer_local: Optional[AbstractAcquisitionFunctionOptimizer] = None,
         acq_optimizer_local_kwargs: Optional[Dict] = None,
         max_configs_local_fracs: float = 0.5,
         min_configs_local: Optional[int] = None,

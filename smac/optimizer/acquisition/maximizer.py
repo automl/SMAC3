@@ -31,7 +31,7 @@ __email__ = "kleinaa@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
+class AbstractAcquisitionFunctionOptimizer(object, metaclass=abc.ABCMeta):
     """Abstract class for acquisition maximization.
 
     In order to use this class it has to be subclassed and the method
@@ -158,7 +158,7 @@ class AcquisitionFunctionMaximizer(object, metaclass=abc.ABCMeta):
         return [(acq_values[ind][0], configs[ind]) for ind in indices[::-1]]
 
 
-class LocalSearch(AcquisitionFunctionMaximizer):
+class LocalSearch(AbstractAcquisitionFunctionOptimizer):
     """Implementation of SMAC's local search.
 
     Parameters
@@ -485,7 +485,7 @@ class LocalSearch(AcquisitionFunctionMaximizer):
         return [(a, i) for a, i in zip(acq_val_candidates, candidates)]
 
 
-class DiffOpt(AcquisitionFunctionMaximizer):
+class DiffOpt(AbstractAcquisitionFunctionOptimizer):
     """Get candidate solutions via DifferentialEvolutionSolvers.
 
     Parameters
@@ -559,7 +559,7 @@ class DiffOpt(AcquisitionFunctionMaximizer):
         return configs
 
 
-class RandomSearch(AcquisitionFunctionMaximizer):
+class RandomSearch(AbstractAcquisitionFunctionOptimizer):
     """Get candidate solutions via random sampling of configurations.
 
     Parameters
@@ -611,7 +611,7 @@ class RandomSearch(AcquisitionFunctionMaximizer):
             return [(0, rand_configs[i]) for i in range(len(rand_configs))]
 
 
-class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
+class LocalAndSortedRandomSearch(AbstractAcquisitionFunctionOptimizer):
     """Implements SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points
@@ -694,7 +694,7 @@ class LocalAndSortedRandomSearch(AcquisitionFunctionMaximizer):
         return next_configs_by_acq_value
 
 
-class LocalAndSortedPriorRandomSearch(AcquisitionFunctionMaximizer):
+class LocalAndSortedPriorRandomSearch(AbstractAcquisitionFunctionOptimizer):
     """Implements SMAC's default acquisition function optimization.
 
     This optimizer performs local search from the previous best points
@@ -867,7 +867,7 @@ class ChallengerList(Iterator):
         return len(self.challengers) - self._index
 
 
-class FixedSet(AcquisitionFunctionMaximizer):
+class FixedSet(AbstractAcquisitionFunctionOptimizer):
     def __init__(
         self,
         configurations: List[Configuration],
