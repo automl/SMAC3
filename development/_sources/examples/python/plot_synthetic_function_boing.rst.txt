@@ -40,7 +40,7 @@ promising region.
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-11_09:05:56_713447
+    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-11_09:14:27_278782
     Default Value: 16916.00
     Optimizing! Depending on your machine, this might take a few minutes.
     INFO:smac.facade.smac_boing_facade.SMAC4BOING:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -114,20 +114,36 @@ promising region.
       warnings.warn(
     /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
       warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+      warnings.warn(
+    INFO:smac.intensification.intensification.Intensifier:Challenger (8.4782) is better than incumbent (13.7271) on 1 runs.
+    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
+    INFO:smac.intensification.intensification.Intensifier:  x0 : 0.21284371614456177 -> -1.1002127669216932
+    INFO:smac.intensification.intensification.Intensifier:  x1 : -0.31674057245254517 -> 1.0087919420488038
     INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-    INFO:smac.stats.stats.Stats:Incumbent changed: 1
+    INFO:smac.stats.stats.Stats:Incumbent changed: 2
     INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 20 / 20.0
     INFO:smac.stats.stats.Stats:Finished target algorithm runs: 20 / 20.0
     INFO:smac.stats.stats.Stats:Configurations: 20
-    INFO:smac.stats.stats.Stats:Used wallclock time: 32.70 / inf sec 
+    INFO:smac.stats.stats.Stats:Used wallclock time: 23.26 / inf sec 
     INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
     INFO:smac.stats.stats.Stats:----------------------------------------------------
     INFO:smac.facade.smac_boing_facade.SMAC4BOING:Final Incumbent: Configuration(values={
-      'x0': 0.21284371614456177,
-      'x1': -0.31674057245254517,
+      'x0': -1.1002127669216932,
+      'x1': 1.0087919420488038,
     })
 
-    INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 13.7271
+    INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 8.4782
 
 
 
@@ -204,7 +220,7 @@ promising region.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  32.711 seconds)
+   **Total running time of the script:** ( 0 minutes  23.267 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function_boing.py:

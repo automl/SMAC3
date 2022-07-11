@@ -450,7 +450,7 @@ In the first stage, BOinG constructs an RF to capture the global loss landscape.
 optimizes inside a subregion near the candidate suggested by the RF model with a GP model to focus only on the most
 promising region.</p>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-11_09:05:56_713447
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-07-11_09:14:27_278782
 Default Value: 16916.00
 Optimizing! Depending on your machine, this might take a few minutes.
 INFO:smac.facade.smac_boing_facade.SMAC4BOING:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
@@ -524,20 +524,36 @@ X = torch.linalg.solve_triangular(A, B). (Triggered internally at  ../aten/src/A
   warnings.warn(
 /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
   warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+/opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/gpytorch/models/exact_gp.py:273: GPInputWarning: The input matches the stored training data. Did you forget to call model.train()?
+  warnings.warn(
+INFO:smac.intensification.intensification.Intensifier:Challenger (8.4782) is better than incumbent (13.7271) on 1 runs.
+INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
+INFO:smac.intensification.intensification.Intensifier:  x0 : 0.21284371614456177 -&gt; -1.1002127669216932
+INFO:smac.intensification.intensification.Intensifier:  x1 : -0.31674057245254517 -&gt; 1.0087919420488038
 INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-INFO:smac.stats.stats.Stats:Incumbent changed: 1
+INFO:smac.stats.stats.Stats:Incumbent changed: 2
 INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 20 / 20.0
 INFO:smac.stats.stats.Stats:Finished target algorithm runs: 20 / 20.0
 INFO:smac.stats.stats.Stats:Configurations: 20
-INFO:smac.stats.stats.Stats:Used wallclock time: 32.70 / inf sec
+INFO:smac.stats.stats.Stats:Used wallclock time: 23.26 / inf sec
 INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
 INFO:smac.stats.stats.Stats:----------------------------------------------------
 INFO:smac.facade.smac_boing_facade.SMAC4BOING:Final Incumbent: Configuration(values={
-  &#39;x0&#39;: 0.21284371614456177,
-  &#39;x1&#39;: -0.31674057245254517,
+  &#39;x0&#39;: -1.1002127669216932,
+  &#39;x1&#39;: 1.0087919420488038,
 })
 
-INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 13.7271
+INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 8.4782
 </pre></div>
 </div>
 <div class="line-block">
@@ -606,7 +622,7 @@ INFO:smac.facade.smac_boing_facade.SMAC4BOING:Estimated cost of incumbent: 13.72
     <span class="n">smac</span><span class="o">.</span><span class="n">optimize</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.711 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  23.267 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-synthetic-function-boing-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/958a0856bed84ea419fceb9fa6f9ccb2/plot_synthetic_function_boing.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_synthetic_function_boing.py</span></code></a></p>
