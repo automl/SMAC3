@@ -446,7 +446,7 @@ style="width: 100%;">
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#smac.epm.utils.check_subspace_points" title="smac.epm.utils.check_subspace_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_subspace_points</span></code></a>(X[, cont_dims, ...])</p></td>
-<td><p>Check which points are place inside a given subspace :type X: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code> :param X: points to be checked, where D = D_cont + D_cat :type X: typing.Optional[np.ndarray(N,D)], :type cont_dims: <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>] :param cont_dims: which dimensions represent continuous hyperparameters :type cont_dims: typing.Union[np.ndarray(D_cont), typing.List] :type cat_dims: <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>] :param cat_dims: which dimensions represent categorical hyperparameters :type cat_dims: typing.Union[np.ndarray(D_cat), typing.List] :type bounds_cont: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>] :param bounds_cont: subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters :type bounds_cont: typing.optional[typing.List[typing.Tuple]] :type bounds_cat: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>]] :param bounds_cat: subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters :type bounds_cat: typing.Optional[typing.List[typing.Tuple]] :type expand_bound: <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code> :param expand_bound: if the bound needs to be expanded to contain more points rather than the points inside the subregion :type expand_bound: bool</p></td>
+<td><p>Check which points are placed inside a given subspace</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#smac.epm.utils.get_rng" title="smac.epm.utils.get_rng"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rng</span></code></a>([rng, run_id, logger])</p></td>
 <td><p>Initialize random number generator and set run_id.</p></td>
@@ -459,31 +459,23 @@ style="width: 100%;">
 <dl class="py function">
 <dt class="sig sig-object py" id="smac.epm.utils.check_subspace_points">
 <span class="sig-prename descclassname"><span class="pre">smac.epm.utils.</span></span><span class="sig-name descname"><span class="pre">check_subspace_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cont_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cat_dims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_cont</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_cat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/utils.html#check_subspace_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.utils.check_subspace_points" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check which points are place inside a given subspace
-:type X: <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>
-:param X: points to be checked, where D = D_cont + D_cat
-:type X: typing.Optional[np.ndarray(N,D)],
-:type cont_dims: <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>]
-:param cont_dims: which dimensions represent continuous hyperparameters
-:type cont_dims: typing.Union[np.ndarray(D_cont), typing.List]
-:type cat_dims: <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>]
-:param cat_dims: which dimensions represent categorical hyperparameters
-:type cat_dims: typing.Union[np.ndarray(D_cat), typing.List]
-:type bounds_cont: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]
-:param bounds_cont: subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters
-:type bounds_cont: typing.optional[typing.List[typing.Tuple]]
-:type bounds_cat: <code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>]]
-:param bounds_cat: subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
-:type bounds_cat: typing.Optional[typing.List[typing.Tuple]]
-:type expand_bound: <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>
-:param expand_bound: if the bound needs to be expanded to contain more points rather than the points inside the subregion
-:type expand_bound: bool</p>
+<dd><p>Check which points are placed inside a given subspace</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>indices_in_ss</strong> – indices of data that included in subspaces</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>Optional</em><em>[</em><em>np.ndarray</em><em>(</em><em>N</em><em>,</em><em>D</em><em>)</em><em>]</em><em>,</em>) – points to be checked, where D = D_cont + D_cat</p></li>
+<li><p><strong>cont_dims</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>(</em><em>D_cont</em><em>)</em><em>, </em><em>List</em><em>]</em>) – which dimensions represent continuous hyperparameters</p></li>
+<li><p><strong>cat_dims</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>(</em><em>D_cat</em><em>)</em><em>, </em><em>List</em><em>]</em>) – which dimensions represent categorical hyperparameters</p></li>
+<li><p><strong>bounds_cont</strong> (<em>optional</em><em>[</em><em>List</em><em>[</em><em>Tuple</em><em>]</em><em>]</em>) – subspaces bounds of categorical hyperparameters, its length is the number of continuous hyperparameters</p></li>
+<li><p><strong>bounds_cat</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>Tuple</em><em>]</em><em>]</em>) – subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters</p></li>
+<li><p><strong>expand_bound</strong> (<em>bool</em>) – if the bound needs to be expanded to contain more points rather than the points inside the subregion</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>np.ndarray(N)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>indices_in_ss</strong> – indices of data that included in subspaces</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray(N)</p>
 </dd>
 </dl>
 </dd></dl>

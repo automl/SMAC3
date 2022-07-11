@@ -613,7 +613,8 @@ style="width: 100%;">
     <span class="n">expand_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Check which points are place inside a given subspace</span>
+<span class="sd">    Check which points are placed inside a given subspace</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    X: typing.Optional[np.ndarray(N,D)],</span>
@@ -628,6 +629,7 @@ style="width: 100%;">
 <span class="sd">        subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters</span>
 <span class="sd">    expand_bound: bool</span>
 <span class="sd">        if the bound needs to be expanded to contain more points rather than the points inside the subregion</span>
+<span class="sd">        </span>
 <span class="sd">    Return</span>
 <span class="sd">    ----------</span>
 <span class="sd">    indices_in_ss:np.ndarray(N)</span>
