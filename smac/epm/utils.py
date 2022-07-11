@@ -192,7 +192,7 @@ def check_subspace_points(
 ) -> np.ndarray:
     """
     Check which points are placed inside a given subspace
-    
+
     Parameters
     ----------
     X: typing.Optional[np.ndarray(N,D)],
@@ -207,7 +207,7 @@ def check_subspace_points(
         subspaces bounds of continuous hyperparameters, its length is the number of categorical hyperparameters
     expand_bound: bool
         if the bound needs to be expanded to contain more points rather than the points inside the subregion
-        
+
     Return
     ----------
     indices_in_ss:np.ndarray(N)
