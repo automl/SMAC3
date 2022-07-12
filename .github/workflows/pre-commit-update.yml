@@ -16,6 +16,11 @@ jobs:
       - uses: actions/setup-python@v2
 
       - uses: browniebroke/pre-commit-autoupdate-action@main
+      
+                
+      - name: Run updated pre-commit
+        run: |
+            pre-commit run --all-files
 
       - uses: peter-evans/create-pull-request@v3
         with:
@@ -24,7 +29,3 @@ jobs:
           title: Update pre-commit hooks
           commit-message: "chore: update pre-commit hooks"
           body: Update versions of pre-commit hooks to latest version.
-          
-      - name: Run updated pre-commit
-        run: |
-            pre-commit run --all-files
