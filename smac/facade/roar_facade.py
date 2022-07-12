@@ -8,31 +8,31 @@ import numpy as np
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.epm.random_epm import RandomEPM
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
 from smac.optimizer.acquisition.maximizer import (
-    AbstractAcquisitionFunctionOptimizer,
+    AbstractAcquisitionOptimizer,
     RandomSearch,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import (
-    AbstractRunHistory2EPM,
+from smac.runhistory.runhistory_transformer import (
+    AbstractRunhistoryTransformer,
     RunhistoryTransformer,
     RunhistoryLogTransformer,
 )
 from smac.stats.stats import Stats
-from smac.tae.base import BaseRunner
+from smac.algorithm.base import BaseRunner
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class ROAR(AlgorithmConfiguration):
+class ROAR(AlgorithmConfigurationFacade):
     """Facade to use ROAR mode.
 
     Parameters
@@ -104,7 +104,7 @@ class ROAR(AlgorithmConfiguration):
         runhistory: RunHistory = None,
         intensifier: Optional[Type[AbstractRacer]] = None,
         intensifier_kwargs: Optional[Dict] = None,
-        acquisition_function_optimizer: Optional[Type[AbstractAcquisitionFunctionOptimizer]] = None,
+        acquisition_function_optimizer: Optional[Type[AbstractAcquisitionOptimizer]] = None,
         acquisition_function_optimizer_kwargs: Optional[dict] = None,
         multi_objective_algorithm: Optional[Type[AbstractMultiObjectiveAlgorithm]] = None,
         multi_objective_kwargs: Optional[Dict] = None,
@@ -126,7 +126,7 @@ class ROAR(AlgorithmConfiguration):
 
         if scenario.run_obj == "runtime":
             # We need to do this to be on the same scale for imputation (although we only impute with a Random EPM)
-            runhistory2epm = RunhistoryLogTransformer  # type: Type[AbstractRunHistory2EPM]
+            runhistory2epm = RunhistoryLogTransformer  # type: Type[AbstractRunhistoryTransformer]
         else:
             runhistory2epm = RunhistoryTransformer
 

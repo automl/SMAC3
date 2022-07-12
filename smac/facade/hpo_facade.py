@@ -1,17 +1,17 @@
 from typing import Any
 
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.optimizer.acquisition import LogEI
-from smac.runhistory.runhistory2epm import RunhistoryLogScaledTransformer
+from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4HPO(AlgorithmConfiguration):
+class SMAC4HPO(AlgorithmConfigurationFacade):
     """Facade to use SMAC for hyperparameter optimization.
 
     see smac.facade.smac_Facade for API

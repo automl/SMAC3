@@ -24,11 +24,11 @@ from sklearn.model_selection import cross_val_score
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 
 # EIPS related
 from smac.optimizer.acquisition import EIPS
-from smac.runhistory.runhistory2epm import RunHistory2EPM4EIPS
+from smac.runhistory.runhistory_transformer import RunHistory2EPM4EIPS
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     # Besides the kwargs used for initializing UncorrelatedMultiObjectiveRandomForestWithInstances,
     # we also need kwargs for initializing the model insides UncorrelatedMultiObjectiveModel
     model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
-    smac = AlgorithmConfiguration(
+    smac = AlgorithmConfigurationFacade(
         scenario=scenario,
         model=MultiObjectiveRandomForest,
         rng=np.random.RandomState(42),

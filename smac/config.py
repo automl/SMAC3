@@ -26,9 +26,9 @@ class Config:
     # But we should get rid of time
     objective: str = "performance"
     objectives: str | list[str] = "cost"
-    save_instantly: bool = False
+    # save_instantly: bool = False
     crash_cost: float = np.inf
-    transform_y: str | None = None  # Whether y should be transformed (different runhistory2epm)
+    # transform_y: str | None = None  # Whether y should be transformed (different runhistory2epm)
 
     # Limitations
     walltime_limit: float | None = None

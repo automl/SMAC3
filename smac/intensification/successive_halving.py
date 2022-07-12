@@ -13,7 +13,7 @@ from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
-from smac.tae import StatusType
+from smac.algorithm import StatusType
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"

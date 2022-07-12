@@ -7,7 +7,7 @@ from smac.configspace import Configuration
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.epm.utils import get_types
 from smac.optimizer.acquisition import TS, AbstractAcquisitionFunction
-from smac.optimizer.acquisition.maximizer import AbstractAcquisitionFunctionOptimizer
+from smac.optimizer.acquisition.maximizer import AbstractAcquisitionOptimizer
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
@@ -15,7 +15,7 @@ from smac.optimizer.configuration_chooser.random_chooser import (
 )
 from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.stats.stats import Stats
 
 
@@ -49,9 +49,9 @@ class TurBOChooser(EPMChooser):
         scenario: Scenario,
         stats: Stats,
         runhistory: RunHistory,
-        runhistory2epm: AbstractRunHistory2EPM,
+        runhistory2epm: AbstractRunhistoryTransformer,
         model: RandomForestWithInstances,
-        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
+        acq_optimizer: AbstractAcquisitionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,

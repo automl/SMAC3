@@ -16,17 +16,17 @@ from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.acquisition.maximizer import AbstractAcquisitionFunctionOptimizer
+from smac.optimizer.acquisition.maximizer import AbstractAcquisitionOptimizer
 from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.stats.stats import Stats
-from smac.tae import FirstRunCrashedException, StatusType, TAEAbortException
-from smac.tae.base import BaseRunner
+from smac.algorithm import FirstRunCrashedException, StatusType, TAEAbortException
+from smac.algorithm.base import BaseRunner
 from smac.utils.validate import Validator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -34,7 +34,7 @@ __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMBO(object):
+class SMBO:
     """Interface that contains the main Bayesian optimization loop.
 
     Parameters
@@ -101,11 +101,11 @@ class SMBO(object):
         stats: Stats,
         initial_design: InitialDesign,
         runhistory: RunHistory,
-        runhistory2epm: AbstractRunHistory2EPM,
+        runhistory2epm: AbstractRunhistoryTransformer,
         intensifier: AbstractRacer,
         num_run: int,
         model: BaseEPM,
-        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
+        acq_optimizer: AbstractAcquisitionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         tae_runner: BaseRunner,

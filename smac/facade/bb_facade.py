@@ -12,16 +12,16 @@ from smac.epm.gaussian_process.kernels import (
 from smac.epm.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.epm.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.epm.utils import get_rng, get_types
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
-from smac.runhistory.runhistory2epm import RunhistoryTransformer
+from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BB(AlgorithmConfiguration):
+class SMAC4BB(AlgorithmConfigurationFacade):
     """Facade to use SMAC for Black-Box optimization using a GP.
 
     see smac.facade.smac_Facade for API

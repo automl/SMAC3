@@ -9,7 +9,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.facade.hpo_facade import SMAC4HPO
 from smac.runhistory.runhistory import RunKey
-from smac.tae.execute_func import ExecuteTAFuncArray
+from smac.algorithm.algorithm_executer import ExecuteTAFuncArray
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"

@@ -10,7 +10,7 @@ from smac.epm.base_epm import BaseEPM
 from smac.epm.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.optimizer.acquisition import EI, AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
-    AbstractAcquisitionFunctionOptimizer,
+    AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )
 from smac.optimizer.subspaces import LocalSubspace
@@ -45,7 +45,7 @@ class BOinGSubspace(LocalSubspace):
         initial_data: Optional[Tuple[np.ndarray, np.ndarray]] = None,
         activate_dims: Optional[np.ndarray] = None,
         incumbent_array: Optional[np.ndarray] = None,
-        acq_optimizer_local: Optional[AbstractAcquisitionFunctionOptimizer] = None,
+        acq_optimizer_local: Optional[AbstractAcquisitionOptimizer] = None,
         acq_optimizer_local_kwargs: Optional[dict] = None,
     ):
         super(BOinGSubspace, self).__init__(
@@ -77,7 +77,7 @@ class BOinGSubspace(LocalSubspace):
             "rng": np.random.RandomState(self.rng.randint(1, 2**20)),
         }
 
-        if isinstance(acq_optimizer_local, AbstractAcquisitionFunctionOptimizer):
+        if isinstance(acq_optimizer_local, AbstractAcquisitionOptimizer):
             # we copy the attribute of the local acquisition function optimizer but replace it with our local model
             # setting. This helps a better exploration in the beginning.
             for key in inspect.signature(acq_optimizer_local.__init__).parameters.keys():  # type: ignore[misc]
@@ -111,7 +111,7 @@ class BOinGSubspace(LocalSubspace):
                         {"n_steps_plateau_walk": 5, "n_sls_iterations": n_sls_iterations}
                     )
 
-            elif inspect.isclass(acq_optimizer_local, AbstractAcquisitionFunctionOptimizer):
+            elif inspect.isclass(acq_optimizer_local, AbstractAcquisitionOptimizer):
                 subspace_acq_func_opt_kwargs.update(acq_optimizer_local_kwargs)
             else:
                 raise TypeError(

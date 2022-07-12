@@ -105,6 +105,7 @@ class RandomForestWithInstances(BaseModel):
         )
 
         self.log_y = log_y
+        self.seed = seed
         self.rng = regression.default_random_engine(seed)
 
         self.rf_opts = regression.forest_opts()
@@ -331,3 +332,20 @@ class RandomForestWithInstances(BaseModel):
             var = var.reshape((-1, 1))
 
         return mean_, var
+
+    def get_imputer(self) -> BaseImputer:
+        if self.log_y:
+            cutoff = np.log(np.nanmin([np.inf, np.float_(config.algorithm_walltime_limit)]))
+            threshold = cutoff + np.log(config.par_factor)
+        else:
+            cutoff = np.nanmin([np.inf, np.float_(config.algorithm_walltime_limit)])
+            threshold = cutoff * config.par_factor
+
+        imputer = RFRImputator(
+            model=self,
+            algorithm_walltime_limit=config.algorithm_walltime_limit,
+            max_iter=2,
+            threshold=threshold,
+            change_threshold=0.01,
+            seed=self.seed,
+        )

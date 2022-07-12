@@ -10,7 +10,7 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
 from smac.optimizer.acquisition.maximizer import (
-    AbstractAcquisitionFunctionOptimizer,
+    AbstractAcquisitionOptimizer,
     RandomSearch,
 )
 from smac.optimizer.configuration_chooser.random_chooser import (
@@ -18,7 +18,7 @@ from smac.optimizer.configuration_chooser.random_chooser import (
     RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
+from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.stats.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -63,9 +63,9 @@ class EPMChooser:
         scenario: Scenario,
         stats: Stats,
         runhistory: RunHistory,
-        runhistory2epm: AbstractRunHistory2EPM,
+        runhistory2epm: AbstractRunhistoryTransformer,
         model: RandomForestWithInstances,
-        acq_optimizer: AbstractAcquisitionFunctionOptimizer,
+        acq_optimizer: AbstractAcquisitionOptimizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         restore_incumbent: Configuration = None,

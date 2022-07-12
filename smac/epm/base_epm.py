@@ -10,6 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
+from smac.epm.base_imputor import BaseImputor
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"
@@ -311,3 +312,6 @@ class BaseEPM:
             self.configspace: The ConfigurationSpace of the model
         """
         return self.configspace
+
+    def get_imputer(self) -> BaseImputor | None:
+        return None

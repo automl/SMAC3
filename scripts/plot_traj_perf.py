@@ -11,7 +11,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from smac.cli.traj_logging import TrajLogger
 from smac.cli.scenario import Scenario
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.configspace import convert_configurations_to_array
 
 __author__ = "Marius Lindauer"
@@ -44,7 +44,7 @@ def setup_SMAC_from_file(smac_out_dn: str, add_dn: typing.List[str]):
 
     scenario_fn = os.path.join(smac_out_dn, "scenario.txt")
     scenario = Scenario(scenario_fn, {"output_dir": ""})
-    smac = AlgorithmConfiguration(scenario=scenario)
+    smac = AlgorithmConfigurationFacade(scenario=scenario)
 
     rh = smac.solver.runhistory
     rh.load_json(os.path.join(smac_out_dn, "runhistory.json"), cs=scenario.cs)
@@ -61,7 +61,7 @@ def setup_SMAC_from_file(smac_out_dn: str, add_dn: typing.List[str]):
     return smac, traj
 
 
-def predict_perf_of_traj(traj, smac: AlgorithmConfiguration):
+def predict_perf_of_traj(traj, smac: AlgorithmConfigurationFacade):
     """
     predict the performance of all entries in the trajectory
     marginalized across all instances

@@ -22,7 +22,7 @@ import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
-from smac.tae import StatusType
+from smac.algorithm import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"

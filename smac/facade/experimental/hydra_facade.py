@@ -18,12 +18,12 @@ from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.constants import MAXINT
 from smac.epm.utils import get_rng
-from smac.facade.ac_facade import AlgorithmConfiguration
+from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
 from smac.facade.psmac_facade import PSMAC
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory
-from smac.tae.base import BaseRunner
-from smac.tae.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
+from smac.algorithm.base import BaseRunner
+from smac.algorithm.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -175,7 +175,7 @@ class Hydra(object):
         scen.output_dir_for_this_run = None
         scen.output_dir = None
         # parent process SMAC only used for validation purposes
-        self.solver = AlgorithmConfiguration(
+        self.solver = AlgorithmConfigurationFacade(
             scenario=scen,
             tae_runner=self._tae,
             rng=self.rng,

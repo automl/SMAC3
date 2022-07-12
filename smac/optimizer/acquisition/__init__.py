@@ -32,10 +32,13 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     logger
     """
 
-    def __init__(self, model: BaseEPM):
-        self.model = model
+    def __init__(self):
+        self.model: BaseEPM | None = None
         self._required_updates = ("model",)  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
+        
+    def set_model(self, model) -> None:
+        self.model = model
 
     def update(self, **kwargs: Any) -> None:
         """Update the acquisition function attributes required for calculation.
@@ -113,7 +116,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
     for further details.
     """
 
-    def __init__(self, model: BaseEPM, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
+    def __init__(self, acquisition_function: AbstractAcquisitionFunction, **kwargs: Any):
         """Constructor.
 
         Parameters
@@ -124,7 +127,7 @@ class IntegratedAcquisitionFunction(AbstractAcquisitionFunction):
         kwargs
             Additional keyword arguments
         """
-        super().__init__(model)
+        super().__init__()
         self.long_name = "Integrated Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
@@ -184,7 +187,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
     def __init__(
         self,
-        model: BaseEPM,
         acquisition_function: AbstractAcquisitionFunction,
         decay_beta: float,
         prior_floor: float = 1e-12,
@@ -196,8 +198,6 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
 
         Parameters
         ----------
-        model : BaseEPM
-            Models the objective function.
         decay_beta: Decay factor on the user prior - defaults to n_iterations / 10 if not specifed
             otherwise.
         prior_floor : Lowest possible value of the prior, to ensure non-negativity for all values
@@ -212,11 +212,15 @@ class PriorAcquisitionFunction(AbstractAcquisitionFunction):
         kwargs
             Additional keyword arguments
         """
-        super().__init__(model)
+        super().__init__()
         self.long_name = "Prior Acquisition Function (%s)" % acquisition_function.__class__.__name__
         self.acq = acquisition_function
         self._functions = []  # type: List[AbstractAcquisitionFunction]
         self.eta = None
+        
+        # Problem here: We don't have our model at the init rn
+        raise RuntimeError(":(")
+        
         self.hyperparameters = self.model.get_configspace().get_hyperparameters_dict()
         self.decay_beta = decay_beta
         self.prior_floor = prior_floor
@@ -350,7 +354,7 @@ class EI(AbstractAcquisitionFunction):
     with :math:`f(X^+)` as the best location.
     """
 
-    def __init__(self, model: BaseEPM, par: float = 0.0):
+    def __init__(self, par: float = 0.0):
         """Constructor.
 
         Parameters
@@ -362,7 +366,7 @@ class EI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        super(EI, self).__init__(model)
+        super(EI, self).__init__()
         self.long_name = "Expected Improvement"
         self.par = par
         self.eta = None
@@ -419,7 +423,7 @@ class EI(AbstractAcquisitionFunction):
 
 
 class EIPS(EI):
-    def __init__(self, model: BaseEPM, par: float = 0.0):
+    def __init__(self, par: float = 0.0):
         r"""Computes for a given x the expected improvement as
         acquisition value.
         :math:`EI(X) := \frac{\mathbb{E}\left[\max\{0,f(\mathbf{X^+})-f_{t+1}(\mathbf{X})-\xi\right]\}]}{np.log(r(x))}`,
@@ -435,7 +439,7 @@ class EIPS(EI):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        super(EIPS, self).__init__(model, par=par)
+        super(EIPS, self).__init__(par=par)
         self.long_name = "Expected Improvement per Second"
 
     def _compute(self, X: np.ndarray) -> np.ndarray:
@@ -501,7 +505,7 @@ class EIPS(EI):
 
 
 class LogEI(AbstractAcquisitionFunction):
-    def __init__(self, model: BaseEPM, par: float = 0.0):
+    def __init__(self, par: float = 0.0):
         r"""Computes for a given x the logarithm expected improvement as
         acquisition value.
 
@@ -514,7 +518,7 @@ class LogEI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        super(LogEI, self).__init__(model)
+        super(LogEI, self).__init__()
         self.long_name = "Expected Improvement"
         self.par = par
         self.eta = None
@@ -574,7 +578,7 @@ class LogEI(AbstractAcquisitionFunction):
 
 
 class PI(AbstractAcquisitionFunction):
-    def __init__(self, model: BaseEPM, par: float = 0.0):
+    def __init__(self, par: float = 0.0):
         r"""Computes the probability of improvement for a given x over the best so far value as acquisition value.
 
         :math:`P(f_{t+1}(\mathbf{X})\geq f(\mathbf{X^+}))` :math:`:= \Phi(\\frac{ \mu(\mathbf{X})-f(\mathbf{X^+}) }
@@ -589,7 +593,7 @@ class PI(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        super(PI, self).__init__(model)
+        super(PI, self).__init__()
         self.long_name = "Probability of Improvement"
         self.par = par
         self.eta = None
@@ -623,7 +627,7 @@ class PI(AbstractAcquisitionFunction):
 
 
 class LCB(AbstractAcquisitionFunction):
-    def __init__(self, model: BaseEPM, par: float = 1.0):
+    def __init__(self, par: float = 1.0):
         r"""Computes the lower confidence bound for a given x over the best so far value as
         acquisition value.
 
@@ -640,7 +644,7 @@ class LCB(AbstractAcquisitionFunction):
             Controls the balance between exploration and exploitation of the
             acquisition function.
         """
-        super(LCB, self).__init__(model)
+        super(LCB, self).__init__()
         self.long_name = "Lower Confidence Bound"
         self.par = par
         self.num_data = None
@@ -674,7 +678,7 @@ class LCB(AbstractAcquisitionFunction):
 
 
 class TS(AbstractAcquisitionFunction):
-    def __init__(self, model: BaseEPM, par: float = 0.0):
+    def __init__(self, par: float = 0.0):
         r"""Do a Thompson Sampling for a given x over the best so far value as
         acquisition value.
 
@@ -697,7 +701,7 @@ class TS(AbstractAcquisitionFunction):
             TS does not require par here, we only wants to make it consistent with
             other acquisition functions.
         """
-        super(TS, self).__init__(model)
+        super(TS, self).__init__()
         self.long_name = "Thompson Sampling"
         self.par = par
         self.num_data = None

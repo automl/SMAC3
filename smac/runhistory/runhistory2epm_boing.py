@@ -5,7 +5,7 @@ import copy
 import numpy as np
 
 from smac.runhistory.runhistory import RunHistory
-from smac.runhistory.runhistory2epm import (
+from smac.runhistory.runhistory_transformer import (
     RunhistoryTransformer,
     RunhistoryLogScaledTransformer,
 )

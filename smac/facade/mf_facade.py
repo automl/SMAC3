@@ -3,7 +3,7 @@ from typing import Any
 from smac.facade.hpo_facade import SMAC4HPO
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
-from smac.runhistory.runhistory2epm import RunhistoryLogScaledTransformer
+from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
