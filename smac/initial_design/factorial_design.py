@@ -36,7 +36,7 @@ class FactorialInitialDesign(InitialDesign):
         config: Configuration
             initial incumbent configuration
         """
-        params = self.cs.get_hyperparameters()
+        params = self.configspace.get_hyperparameters()
 
         values = []
         mid = []
@@ -59,16 +59,16 @@ class FactorialInitialDesign(InitialDesign):
         factorial_design = itertools.product(*values)
 
         self.logger.debug("Initial Design")
-        configs = [self.cs.get_default_configuration()]
+        configs = [self.configspace.get_default_configuration()]
         # add middle point in space
         conf_dict = dict([(p.name, v) for p, v in zip(params, mid)])
-        middle_conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
+        middle_conf = deactivate_inactive_hyperparameters(conf_dict, self.configspace)
         configs.append(middle_conf)
 
         # add corner points
         for design in factorial_design:
             conf_dict = dict([(p.name, v) for p, v in zip(params, design)])
-            conf = deactivate_inactive_hyperparameters(conf_dict, self.cs)
+            conf = deactivate_inactive_hyperparameters(conf_dict, self.configspace)
             conf.origin = "Factorial Design"
             configs.append(conf)
             self.logger.debug(conf)

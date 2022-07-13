@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Iterator, List, Mapping, Optional, Tuple
 
 import logging
@@ -7,11 +8,10 @@ from enum import Enum
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.stats.stats import Stats
+from smac.utils.stats import Stats
 from smac.utils.logging import format_array
 
 _config_to_run_type = Iterator[Optional[Configuration]]
@@ -50,62 +50,58 @@ class AbstractRacer(object):
     ----------
     stats: Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : float
-        runtime cutoff of TA runs
+    algorithm_walltime_limit : float
+        runtime algorithm_walltime_limit of TA runs
     deterministic: bool
         whether the TA is deterministic or not
     run_obj_time: bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    minR : int
+    min_config_calls : int
         Minimum number of run per config (summed over all calls to
         intensify).
-    maxR : int
+    max_config_calls : int
         Maximum number of runs per config (summed over all calls to
         intensifiy).
     adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
+        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Optional[Mapping[str, str]] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
-        run_obj_time: bool = True,
-        minR: int = 1,
-        maxR: int = 2000,
+        run_obj_time: bool = False,  # TODO: Remove this
+        min_config_calls: int = 1,
+        max_config_calls: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
-        min_chall: int = 1,
+        min_challenger: int = 1,
+        seed: int = 0,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        self.stats = stats
-        self.traj_logger = traj_logger
-        self.rs = rng
+        self.stats: Stats | None = None
+        self.seed = seed
+        self.rng = np.random.RandomState(seed)
 
         # scenario info
-        self.cutoff = cutoff
+        self.algorithm_walltime_limit = algorithm_walltime_limit
         self.deterministic = deterministic
         self.run_obj_time = run_obj_time
 
-        self.minR = minR
-        self.maxR = maxR
+        self.min_config_calls = min_config_calls
+        self.max_config_calls = max_config_calls
         self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
-        self.min_chall = min_chall
+        self.min_challenger = min_challenger
 
         # instances
         if instances is None:
@@ -127,6 +123,9 @@ class AbstractRacer(object):
         self.repeat_configs = False
         # to mark the end of an iteration
         self.iteration_done = False
+
+    def set_stats(self, stats: Stats) -> None:
+        self.stats = stats
 
     def get_next_run(
         self,
@@ -263,9 +262,11 @@ class AbstractRacer(object):
         self.logger.debug("No valid challenger was generated!")
         return None
 
-    def _adapt_cutoff(self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float) -> float:
-        """Adaptive capping: Compute cutoff based on time so far used for incumbent and reduce
-        cutoff for next run of challenger accordingly.
+    def _adapt_algorithm_walltime_limit(
+        self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float
+    ) -> float:
+        """Adaptive capping: Compute algorithm_walltime_limit based on time so far used for incumbent and reduce
+        algorithm_walltime_limit for next run of challenger accordingly.
 
         !Only applicable if self.run_obj_time
 
@@ -283,13 +284,15 @@ class AbstractRacer(object):
 
         Returns
         -------
-        cutoff: float
-            Adapted cutoff
+        algorithm_walltime_limit: float
+            Adapted algorithm_walltime_limit
         """
         if not self.run_obj_time:
             raise ValueError("This method only works when the run objective is time")
 
-        curr_cutoff = self.cutoff if self.cutoff is not None else np.inf
+        curr_algorithm_walltime_limit = (
+            self.algorithm_walltime_limit if self.algorithm_walltime_limit is not None else np.inf
+        )
 
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
@@ -300,8 +303,10 @@ class AbstractRacer(object):
         )
         assert type(chal_sum_cost) == float
 
-        cutoff = min(curr_cutoff, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost)
-        return cutoff
+        algorithm_walltime_limit = min(
+            curr_algorithm_walltime_limit, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
+        )
+        return algorithm_walltime_limit
 
     def _compare_configs(
         self,
@@ -349,7 +354,7 @@ class AbstractRacer(object):
         assert type(inc_perf) == float
 
         # Line 15
-        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.minR:
+        if np.any(chal_perf > inc_perf) and len(chall_runs) >= self.min_config_calls:
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
@@ -370,6 +375,7 @@ class AbstractRacer(object):
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
+                assert self.stats
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent

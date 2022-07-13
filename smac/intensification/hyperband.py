@@ -4,19 +4,18 @@ import logging
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (  # noqa: F401
     RunHistory,
     RunInfo,
     RunValue,
     StatusType,
 )
-from smac.stats.stats import Stats
+from smac.utils.stats import Stats
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -38,15 +37,13 @@ class _Hyperband(_SuccessiveHalving):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        runtime cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        runtime algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : Optional[float]
@@ -65,8 +62,8 @@ class _Hyperband(_SuccessiveHalving):
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
+        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
     incumbent_selection: str
@@ -81,12 +78,9 @@ class _Hyperband(_SuccessiveHalving):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
@@ -95,18 +89,16 @@ class _Hyperband(_SuccessiveHalving):
         n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
-        min_chall: int = 1,
+        min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
+        seed: int = 0,
     ) -> None:
 
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             initial_budget=initial_budget,
             max_budget=max_budget,
@@ -116,8 +108,9 @@ class _Hyperband(_SuccessiveHalving):
             n_seeds=n_seeds,
             instance_order=instance_order,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
             incumbent_selection=incumbent_selection,
+            seed=seed,
         )
 
         self.identifier = identifier
@@ -288,12 +281,9 @@ class _Hyperband(_SuccessiveHalving):
 
         # creating a new Successive Halving intensifier with the current running budget
         self.sh_intensifier = _SuccessiveHalving(
-            stats=self.stats,
-            traj_logger=self.traj_logger,
-            rng=self.rs,
             instances=self.instances,
             instance_specifics=self.instance_specifics,
-            cutoff=self.cutoff,
+            algorithm_walltime_limit=self.algorithm_walltime_limit,
             deterministic=self.deterministic,
             initial_budget=sh_initial_budget,
             max_budget=self.max_budget,
@@ -307,6 +297,7 @@ class _Hyperband(_SuccessiveHalving):
             adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
             inst_seed_pairs=self.inst_seed_pairs,  # additional argument to avoid
             identifier=self.identifier,
+            seed=self.seed,
         )  # processing instances & seeds again
 
 
@@ -326,15 +317,13 @@ class Hyperband(ParallelScheduler):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        runtime cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        runtime algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : Optional[float]
@@ -353,8 +342,8 @@ class Hyperband(ParallelScheduler):
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
+        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
     incumbent_selection: str
@@ -367,12 +356,9 @@ class Hyperband(ParallelScheduler):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
@@ -381,21 +367,20 @@ class Hyperband(ParallelScheduler):
         n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
-        min_chall: int = 1,
+        min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
+        seed: int = 0,
     ) -> None:
 
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
+            seed=seed,
         )
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -458,12 +443,9 @@ class Hyperband(ParallelScheduler):
             return False
 
         self.intensifier_instances[len(self.intensifier_instances)] = _Hyperband(
-            stats=self.stats,
-            traj_logger=self.traj_logger,
-            rng=self.rs,
             instances=self._instances,
             instance_specifics=self._instance_specifics,
-            cutoff=self.cutoff,
+            algorithm_walltime_limit=self.algorithm_walltime_limit,
             deterministic=self.deterministic,
             initial_budget=self.initial_budget,
             max_budget=self.max_budget,
@@ -472,9 +454,10 @@ class Hyperband(ParallelScheduler):
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
             adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
-            min_chall=self.min_chall,
+            min_challenger=self.min_challenger,
             incumbent_selection=self.incumbent_selection,
             identifier=len(self.intensifier_instances),
+            seed=self.seed,
         )
 
         return True

@@ -6,7 +6,6 @@ from enum import Enum
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import (
@@ -14,7 +13,7 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (
     InstSeedBudgetKey,
     RunHistory,
@@ -22,7 +21,6 @@ from smac.runhistory.runhistory import (
     RunValue,
     StatusType,
 )
-from smac.stats.stats import Stats
 from smac.utils.logging import format_array
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"
@@ -57,7 +55,7 @@ class Intensifier(AbstractRacer):
 
     Procedure 2: Intensify(Θ_new, θ_inc, M, R, t_intensify, Π, cˆ)
     cˆ(θ, Π') denotes the empirical cost of θ on the subset of instances
-    Π' ⊆ Π, based on the runs in R; maxR is a parameter
+    Π' ⊆ Π, based on the runs in R; max_config_calls is a parameter
     where:
     Θ_new: Sequence of parameter settings to evaluate, challengers in this class.
     θ_inc: incumbent parameter setting, incumbent in this class.
@@ -67,7 +65,7 @@ class Intensifier(AbstractRacer):
 
                             STAGE-->RUN_INCUMBENT
 
-    3     if R contains less than maxR runs with configuration θ_inc then
+    3     if R contains less than max_config_calls runs with configuration θ_inc then
     4         Π' ← {π'∈ Π | R contains less than or equal number of runs using θ_inc and π'
     0         than using θ_inc and any other π''∈ Π}
     5         π ← instance sampled uniformly at random from Π'
@@ -91,22 +89,18 @@ class Intensifier(AbstractRacer):
 
     Parameters
     ----------
-    stats: Stats
-        stats object
-    traj_logger: TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : int
-        runtime cutoff of TA runs
+    algorithm_walltime_limit : int
+        runtime algorithm_walltime_limit of TA runs
     deterministic: bool
         whether the TA is deterministic or not
     run_obj_time: bool
         whether the run objective is runtime or not (if true, apply adaptive capping)
-    always_race_against: Configuration
+    race_against: Configuration
         if incumbent changes race this configuration always against new incumbent;
         can sometimes prevent over-tuning
     use_ta_time_bound: bool,
@@ -114,57 +108,53 @@ class Intensifier(AbstractRacer):
         measuring the wallclock time for limiting the time of intensification
     run_limit : int
         Maximum number of target algorithm runs per call to intensify.
-    maxR : int
+    max_config_calls : int
         Maximum number of runs per config (summed over all calls to
         intensifiy).
-    minR : int
+    min_config_calls : int
         Minimum number of run per config (summed over all calls to
         intensify).
     adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative cutoff)
-    min_chall: int
+        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
+    min_challenger: int
         minimal number of challengers to be considered
         (even if time_bound is exhausted earlier)
     """
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: int = None,
+        algorithm_walltime_limit: int = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
-        always_race_against: Configuration = None,
+        race_against: Configuration = None,
         run_limit: int = MAXINT,
         use_ta_time_bound: bool = False,
-        minR: int = 1,
-        maxR: int = 2000,
+        min_config_calls: int = 1,
+        max_config_calls: int = 2000,
         adaptive_capping_slackfactor: float = 1.2,
-        min_chall: int = 2,
+        min_challenger: int = 2,
+        seed: int = 0,
     ):
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
-            minR=minR,
-            maxR=maxR,
+            min_config_calls=min_config_calls,
+            max_config_calls=max_config_calls,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
+            seed=seed,
         )
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # general attributes
         self.run_limit = run_limit
-        self.always_race_against = always_race_against
+        self.race_against = race_against
 
         if self.run_limit < 1:
             raise ValueError("run_limit must be > 1")
@@ -282,16 +272,16 @@ class Intensifier(AbstractRacer):
         if self.stage in [IntensifierStage.RUN_FIRST_CONFIG, IntensifierStage.RUN_INCUMBENT]:
 
             # Line 3
-            # A modified version, that not only checks for maxR
+            # A modified version, that not only checks for max_config_calls
             # but also makes sure that there are runnable instances,
             # that is, instances has not been exhausted
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
 
             # Line 4
             available_insts = self._get_inc_available_inst(incumbent, run_history)
-            if available_insts and len(inc_runs) < self.maxR:
+            if available_insts and len(inc_runs) < self.max_config_calls:
                 # Lines 5-6-7
-                instance, seed, cutoff = self._get_next_inc_run(available_insts)
+                instance, seed, algorithm_walltime_limit = self._get_next_inc_run(available_insts)
 
                 instance_specific = "0"
                 if instance is not None:
@@ -302,7 +292,7 @@ class Intensifier(AbstractRacer):
                     instance=instance,
                     instance_specific=instance_specific,
                     seed=seed,
-                    cutoff=cutoff,
+                    algorithm_walltime_limit=algorithm_walltime_limit,
                     capped=False,
                     budget=0.0,
                 )
@@ -317,9 +307,9 @@ class Intensifier(AbstractRacer):
         # Understand who is the active challenger.
         if self.stage == IntensifierStage.RUN_BASIS:
             # if in RUN_BASIS stage,
-            # return the basis configuration (i.e., `always_race_against`)
+            # return the basis configuration (i.e., `race_against`)
             self.logger.debug("Race against basis configuration after incumbent change.")
-            challenger = self.always_race_against
+            challenger = self.race_against
         elif self.current_challenger and self.continue_challenger:
             # if the current challenger could not be rejected,
             # it is run again on more instances
@@ -343,7 +333,7 @@ class Intensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                cutoff=self.cutoff,
+                algorithm_walltime_limit=self.algorithm_walltime_limit,
                 capped=False,
                 budget=0.0,
             )
@@ -357,7 +347,7 @@ class Intensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                cutoff=self.cutoff,
+                algorithm_walltime_limit=self.algorithm_walltime_limit,
                 capped=False,
                 budget=0.0,
             )
@@ -412,21 +402,21 @@ class Intensifier(AbstractRacer):
                     instance=None,
                     instance_specific="0",
                     seed=0,
-                    cutoff=self.cutoff,
+                    algorithm_walltime_limit=self.algorithm_walltime_limit,
                     capped=False,
                     budget=0.0,
                 )
 
             else:
                 # Lines 8-11
-                incumbent, instance, seed, cutoff = self._get_next_racer(
+                incumbent, instance, seed, algorithm_walltime_limit = self._get_next_racer(
                     challenger=challenger,
                     incumbent=incumbent,
                     run_history=run_history,
                 )
 
                 capped = False
-                if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
+                if (self.algorithm_walltime_limit is not None) and (algorithm_walltime_limit < self.algorithm_walltime_limit):  # type: ignore[operator] # noqa F821
                     capped = True
 
                 instance_specific = "0"
@@ -439,7 +429,7 @@ class Intensifier(AbstractRacer):
                     instance=instance,
                     instance_specific=instance_specific,
                     seed=seed,
-                    cutoff=cutoff,
+                    algorithm_walltime_limit=algorithm_walltime_limit,
                     capped=capped,
                     budget=0.0,
                 )
@@ -534,7 +524,7 @@ class Intensifier(AbstractRacer):
         # which is necessary to work on a fixed grid of configurations.
         if (
             self.stage == IntensifierStage.RUN_INCUMBENT
-            and self._chall_indx >= self.min_chall
+            and self._chall_indx >= self.min_challenger
             and self.num_chall_run > 0
         ):
             if self.num_run > self.run_limit:
@@ -580,18 +570,18 @@ class Intensifier(AbstractRacer):
             Next instance to evaluate
         seed: float
             Seed in which to evaluate the instance
-        cutoff: Optional[float]
+        algorithm_walltime_limit: Optional[float]
             Max time for a given instance/seed pair
         """
         # Line 5 - and avoid https://github.com/numpy/numpy/issues/10791
-        _idx = self.rs.choice(len(available_insts))
+        _idx = self.rng.choice(len(available_insts))
         next_instance = available_insts[_idx]
 
         # Line 6
         if self.deterministic:
             next_seed = 0
         else:
-            next_seed = int(self.rs.randint(low=0, high=MAXINT, size=1)[0])
+            next_seed = int(self.rng.randint(low=0, high=MAXINT, size=1)[0])
 
         # Line 7
         self.logger.debug("Add run of incumbent for instance={}".format(next_instance))
@@ -600,7 +590,7 @@ class Intensifier(AbstractRacer):
         else:
             self.stage = IntensifierStage.PROCESS_INCUMBENT_RUN
 
-        return next_instance, next_seed, self.cutoff
+        return next_instance, next_seed, self.algorithm_walltime_limit
 
     def _get_inc_available_inst(
         self,
@@ -676,8 +666,8 @@ class Intensifier(AbstractRacer):
             self._next_iteration()
         else:
             # Termination condition; after each run, this checks
-            # whether further runs are necessary due to minR
-            if len(inc_runs) >= self.minR or len(inc_runs) >= self.maxR:
+            # whether further runs are necessary due to min_config_calls
+            if len(inc_runs) >= self.min_config_calls or len(inc_runs) >= self.max_config_calls:
                 self.stage = IntensifierStage.RUN_CHALLENGER
             else:
                 self.stage = IntensifierStage.RUN_INCUMBENT
@@ -713,7 +703,7 @@ class Intensifier(AbstractRacer):
             Next instance to evaluate
         seed: int
             Seed in which to evaluate the instance
-        cutoff: Optional[float]
+        algorithm_walltime_limit: Optional[float]
             Max time for a given instance/seed pair
         """
         # By the time this function is called, the run history might
@@ -727,16 +717,18 @@ class Intensifier(AbstractRacer):
         # Run challenger on all <instance, seed> to run
         instance, seed, _ = self.to_run.pop()
 
-        cutoff = self.cutoff
+        algorithm_walltime_limit = self.algorithm_walltime_limit
         if self.run_obj_time:
-            cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost)
+            algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
+                challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost
+            )
 
-        self.logger.debug("Cutoff for challenger: %s" % str(cutoff))
+        self.logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
 
         self.logger.debug("Add run of challenger")
 
         # Line 12
-        return incumbent, instance, seed, cutoff
+        return incumbent, instance, seed, algorithm_walltime_limit
 
     def _is_there_time_due_to_adaptive_cap(
         self,
@@ -761,8 +753,10 @@ class Intensifier(AbstractRacer):
         if not self.run_obj_time:
             return True
 
-        cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost)
-        if cutoff is not None and cutoff <= 0:
+        algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
+            challenger=challenger, run_history=run_history, inc_sum_cost=self.inc_sum_cost
+        )
+        if algorithm_walltime_limit is not None and algorithm_walltime_limit <= 0:
             return False
         else:
             return True
@@ -819,7 +813,7 @@ class Intensifier(AbstractRacer):
                 incumbent = challenger
                 self.continue_challenger = False
                 # compare against basis configuration if provided, else go to next iteration
-                if self.always_race_against and self.always_race_against != challenger:
+                if self.race_against and self.race_against != challenger:
                     self.stage = IntensifierStage.RUN_BASIS
                 else:
                     self.stage = IntensifierStage.RUN_INCUMBENT
@@ -885,7 +879,7 @@ class Intensifier(AbstractRacer):
         missing_runs = sorted(inc_inst_seeds - chall_inst_seeds)
 
         # Line 11
-        self.rs.shuffle(missing_runs)
+        self.rng.shuffle(missing_runs)
         if N < 0:
             raise ValueError("Argument N must not be smaller than zero, but is %s" % str(N))
         to_run = missing_runs[: min(N, len(missing_runs))]
@@ -955,7 +949,7 @@ class Intensifier(AbstractRacer):
                 # reset instance index for the new challenger
                 self._chall_indx += 1
                 self.current_challenger = challenger
-                self.N = max(1, self.minR)
+                self.N = max(1, self.min_config_calls)
                 self.to_run = []
 
             return challenger, True

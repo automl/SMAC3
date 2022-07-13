@@ -11,17 +11,17 @@ from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
-from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
-from smac.facade.bb_facade import SMAC4BB
+from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.black_box import SMAC4BB
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
 )
-from smac.facade.hpo_facade import SMAC4HPO
+from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.facade.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa F821
-from smac.facade.roar_facade import ROAR
+from smac.facade.random import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.stats.stats import Stats
-from smac.algorithm import FirstRunCrashedException, TAEAbortException
+from smac.utils.stats import Stats
+from smac.algorithm_executer import FirstRunCrashedException, TAEAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 
 __author__ = "Marius Lindauer"

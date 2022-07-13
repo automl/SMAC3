@@ -2,13 +2,12 @@ from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.stats.stats import Stats
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -21,15 +20,13 @@ class SimpleIntensifier(AbstractRacer):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     run_obj_time : bool
@@ -38,28 +35,24 @@ class SimpleIntensifier(AbstractRacer):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
+        seed: int = 0,
         **kwargs: Any,
     ) -> None:
 
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=1.0,
-            min_chall=1,
+            min_challenger=1,
+            seed=seed,
         )
         # We want to control the number of runs that are sent to
         # the workers. At any time, we want to make sure that if there
@@ -180,7 +173,7 @@ class SimpleIntensifier(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                cutoff=self.cutoff,
+                algorithm_walltime_limit=self.algorithm_walltime_limit,
                 capped=False,
                 budget=0.0,
             )
@@ -189,8 +182,8 @@ class SimpleIntensifier(AbstractRacer):
             config=challenger,
             instance=self.instances[-1],
             instance_specific="0",
-            seed=0 if self.deterministic else int(self.rs.randint(low=0, high=MAXINT, size=1)[0]),
-            cutoff=self.cutoff,
+            seed=0 if self.deterministic else int(self.rng.randint(low=0, high=MAXINT, size=1)[0]),
+            algorithm_walltime_limit=self.algorithm_walltime_limit,
             capped=False,
             budget=0.0,
         )

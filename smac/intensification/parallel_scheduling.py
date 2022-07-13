@@ -4,12 +4,11 @@ import warnings
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.stats.stats import Stats
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -26,15 +25,13 @@ class ParallelScheduler(AbstractRacer):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : Optional[float]
@@ -55,10 +52,10 @@ class ParallelScheduler(AbstractRacer):
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive cutoff)
+        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
-    min_chall: int
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
     incumbent_selection: str
@@ -71,12 +68,9 @@ class ParallelScheduler(AbstractRacer):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
@@ -87,21 +81,20 @@ class ParallelScheduler(AbstractRacer):
         instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
-        min_chall: int = 1,
+        min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
+        seed: int = 0,
     ) -> None:
 
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
+            seed=seed,
         )
 
         # We have a pool of instances that yield configurations ot run
@@ -200,7 +193,7 @@ class ParallelScheduler(AbstractRacer):
             instance="0",
             instance_specific="0",
             seed=0,
-            cutoff=None,
+            algorithm_walltime_limit=None,
             capped=False,
             budget=0.0,
         )

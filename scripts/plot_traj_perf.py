@@ -11,7 +11,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 from smac.cli.traj_logging import TrajLogger
 from smac.cli.scenario import Scenario
-from smac.facade.algorithm_configuration_facade import AlgorithmConfigurationFacade
+from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.configspace import convert_configurations_to_array
 
 __author__ = "Marius Lindauer"

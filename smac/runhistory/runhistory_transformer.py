@@ -6,13 +6,14 @@ import logging
 import numpy as np
 
 from smac import constants
-from smac.cli.scenario import Scenario
+from smac.algorithm_executer import StatusType
+from smac.config import Config
 from smac.configspace import convert_configurations_to_array
-from smac.epm.base_imputor import BaseImputor
-from smac.multi_objective.aggregation_strategy import AggregationStrategy
+from smac.model.base_imputor import BaseImputor
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
-from smac.algorithm import StatusType
+from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.utils.logging import get_logger
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -22,6 +23,9 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
+logger = get_logger(__name__)
+
+
 class AbstractRunhistoryTransformer(object):
     __metaclass__ = abc.ABCMeta
 
@@ -29,9 +33,9 @@ class AbstractRunhistoryTransformer(object):
 
     Parameters
     ----------
-    scenario: Scenario Object
-        Algorithm Configuration Scenario
-    num_params : int
+    config: config Object
+        Algorithm Configuration config
+    n_params : int
         number of parameters in config space
     success_states: list, optional
         List of states considered as successful (such as StatusType.SUCCESS).
@@ -40,14 +44,14 @@ class AbstractRunhistoryTransformer(object):
         Should we impute data?
     consider_for_higher_budgets_state: list, optional
         Additionally consider all runs with these states for budget < current budget
-    imputor: epm.base_imputor Instance
+    imputer: epm.base_imputer Instance
         Object to impute censored data
     impute_state: list, optional
         List of states that mark censored data (such as StatusType.TIMEOUT)
         in combination with runtime < cutoff_time
         If None, set to empty list [].
         If None and impute_censored_data is True, raise TypeError.
-    scale_perc: int
+    scale_percentage: int
         scaled y-transformation use a percentile to estimate distance to optimum;
         only used by some subclasses of AbstractRunHistory2EPM
     rng : numpy.random.RandomState
@@ -60,24 +64,24 @@ class AbstractRunhistoryTransformer(object):
     Attributes
     ----------
     logger
-    scenario
+    config
     rng
-    num_params
+    n_params
 
     success_states
     impute_censored_data
     impute_state
     cutoff_time
-    imputor
+    imputer
     instance_features
     n_feats
-    num_params
+    n_params
     """
 
     def __init__(
         self,
-        # scenario: Scenario,
-        num_params: int,
+        config: Config,
+        n_params: int,
         success_states: List[StatusType] = [
             StatusType.SUCCESS,
             StatusType.CRASHED,
@@ -92,30 +96,22 @@ class AbstractRunhistoryTransformer(object):
             StatusType.CRASHED,
             StatusType.MEMOUT,
         ],  # TODO: Before it was None; I don't know if we can do that here...
-        imputor: Optional[BaseImputor] = None,
-        scale_perc: int = 5,
-        rng: Optional[np.random.RandomState] = None,
+        scale_percentage: int = 5,
+        seed: int = 0,
     ) -> None:
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         # General arguments
-        self.scenario = scenario
-        self.rng = rng
-        self.num_params = num_params
+        self.config = config
+        self.rng = np.random.RandomState(seed)
+        self.n_params = n_params
 
-        self.scale_perc = scale_perc
-        self.num_obj = 1  # type: int
-        if scenario.multi_objectives is not None:  # type: ignore[attr-defined] # noqa F821
-            self.num_obj = len(scenario.multi_objectives)  # type: ignore[attr-defined] # noqa F821
+        self.scale_percentage = scale_percentage
+        self.num_obj = config.count_objectives()
 
         # Configuration
         self.impute_censored_data = impute_censored_data
-        self.cutoff_time = self.scenario.cutoff  # type: ignore[attr-defined] # noqa F821
-        self.imputor = imputor
-
-        # Fill with some default values
-        if rng is None:
-            self.rng = np.random.RandomState(seed=1)
+        self.algorithm_walltime_limit = self.config.algorithm_walltime_limit  # type: ignore[attr-defined] # noqa F821
 
         if impute_state is None and impute_censored_data:
             raise TypeError("impute_state not given")
@@ -137,24 +133,27 @@ class AbstractRunhistoryTransformer(object):
 
         self.success_states = success_states
 
-        self.instance_features = scenario.feature_dict
-        self.n_feats = scenario.n_features
+        self.instance_features = config.instance_features
 
-        self.num_params = num_params
+        logger.error("FIX ME: REMOVE RUN_OBJ; HOW TO HANDLE CENSORED DATA?")
+        return
+        self.n_feats = config.n_features  # PCA components?
+
+        self.n_params = n_params
 
         # Sanity checks
-        if impute_censored_data and scenario.run_obj != "runtime":
+        if impute_censored_data and config.run_obj != "runtime":
             # So far we don't know how to handle censored quality data
             self.logger.critical("Cannot impute censored data when not " "optimizing runtime")
             raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
 
-        # Check imputor stuff
-        if impute_censored_data and self.imputor is None:
-            self.logger.critical("You want me to impute censored data, but " "I don't know how. Imputor is None")
-            raise ValueError("impute_censored data, but no imputor given")
-        elif impute_censored_data and not isinstance(self.imputor, BaseImputor):
+        # Check imputer stuff
+        if impute_censored_data and self.imputer is None:
+            self.logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
+            raise ValueError("impute_censored data, but no imputer given")
+        elif impute_censored_data and not isinstance(self.imputer, Baseimputer):
             raise ValueError(
-                "Given imputor is not an instance of " "smac.epm.base_imputor.BaseImputor, but %s" % type(self.imputor)
+                "Given imputer is not an instance of " "smac.epm.base_imputer.Baseimputer, but %s" % type(self.imputer)
             )
 
         # Learned statistics
@@ -162,7 +161,10 @@ class AbstractRunhistoryTransformer(object):
         self.max_y = np.array([np.NaN] * self.num_obj)
         self.perc = np.array([np.NaN] * self.num_obj)
 
-    def set_multi_objective_algorithm(self, multi_objective_algorithm: MultiObjectiveAlgorithm) -> None:
+    def set_imputer(self, imputer: BaseImputor) -> None:
+        self.imputer = imputer
+
+    def set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm) -> None:
         self.multi_objective_algorithm = multi_objective_algorithm
 
     @abc.abstractmethod
@@ -233,14 +235,15 @@ class AbstractRunhistoryTransformer(object):
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
                 if runhistory.data[run].status == StatusType.TIMEOUT
-                and runhistory.data[run].time >= self.cutoff_time
+                and runhistory.data[run].time >= self.algorithm_walltime_limit
                 and run.budget in budget_subset
             }
         else:
             t_run_dict = {
                 run: runhistory.data[run]
                 for run in runhistory.data.keys()
-                if runhistory.data[run].status == StatusType.TIMEOUT and runhistory.data[run].time >= self.cutoff_time
+                if runhistory.data[run].status == StatusType.TIMEOUT
+                and runhistory.data[run].time >= self.algorithm_walltime_limit
             }
         return t_run_dict
 
@@ -319,14 +322,15 @@ class AbstractRunhistoryTransformer(object):
                     run: runhistory.data[run]
                     for run in runhistory.data.keys()
                     if runhistory.data[run].status in self.impute_state
-                    and runhistory.data[run].time < self.cutoff_time
+                    and runhistory.data[run].time < self.algorithm_walltime_limit
                     and run.budget in budget_subset
                 }
             else:
                 c_run_dict = {
                     run: runhistory.data[run]
                     for run in runhistory.data.keys()
-                    if runhistory.data[run].status in self.impute_state and runhistory.data[run].time < self.cutoff_time
+                    if runhistory.data[run].status in self.impute_state
+                    and runhistory.data[run].time < self.algorithm_walltime_limit
                 }
 
             if len(c_run_dict) == 0:
@@ -356,9 +360,9 @@ class AbstractRunhistoryTransformer(object):
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
 
-                # return imp_Y in PAR depending on the used threshold in imputor
-                assert isinstance(self.imputor, BaseImputor)  # please mypy
-                imp_Y = self.imputor.impute(censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y)
+                # return imp_Y in PAR depending on the used threshold in imputer
+                assert isinstance(self.imputer, Baseimputer)  # please mypy
+                imp_Y = self.imputer.impute(censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y)
 
                 # Shuffle data to mix censored and imputed data
                 X = np.vstack((X, cen_X))
@@ -412,8 +416,8 @@ class AbstractRunhistoryTransformer(object):
         X = []
         y = []
         cen = []
-        feature_dict = self.scenario.feature_dict
-        params = self.scenario.cs.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
+        feature_dict = self.config.feature_dict
+        params = self.config.cs.get_hyperparameters()  # type: ignore[attr-defined] # noqa F821
         for k, v in runhistory.data.items():
             config = runhistory.ids_config[k.config_id]
             x = [config.get(p.name) for p in params]
@@ -457,7 +461,7 @@ class RunhistoryTransformer(AbstractRunhistoryTransformer):
         """
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
-        n_cols = self.num_params
+        n_cols = self.n_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
 
         # For now we keep it as 1
@@ -492,7 +496,7 @@ class RunhistoryTransformer(AbstractRunhistoryTransformer):
 
         if y.size > 0:
             if store_statistics:
-                self.perc = np.percentile(y, self.scale_perc, axis=0)
+                self.perc = np.percentile(y, self.scale_percentage, axis=0)
                 self.min_y = np.min(y, axis=0)
                 self.max_y = np.max(y, axis=0)
 
@@ -685,7 +689,7 @@ class RunHistory2EPM4EIPS(AbstractRunhistoryTransformer):
 
         # First build nan-matrix of size #configs x #params+1
         n_rows = len(run_dict)
-        n_cols = self.num_params
+        n_cols = self.n_params
         X = np.ones([n_rows, n_cols + self.n_feats]) * np.nan
         y = np.ones([n_rows, 2])
 

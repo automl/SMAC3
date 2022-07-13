@@ -1,6 +1,6 @@
 from typing import Any
 
-from smac.facade.roar_facade import ROAR
+from smac.facade.random import ROAR
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 

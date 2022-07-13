@@ -20,6 +20,6 @@ class DefaultInitialDesign(InitialDesign):
         config: Configuration
             Initial incumbent configuration.
         """
-        config = self.cs.get_default_configuration()
+        config = self.configspace.get_default_configuration()
         config.origin = "Default"
         return [config]

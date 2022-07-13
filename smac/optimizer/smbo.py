@@ -11,22 +11,22 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.epm.base_epm import BaseEPM
+from smac.model.base_epm import BaseEPM
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
-from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
-from smac.optimizer.configuration_chooser.random_chooser import (
+from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
-from smac.stats.stats import Stats
-from smac.algorithm import FirstRunCrashedException, StatusType, TAEAbortException
-from smac.algorithm.base import BaseRunner
+from smac.utils.stats import Stats
+from smac.algorithm_executer import FirstRunCrashedException, StatusType, TAEAbortException
+from smac.algorithm_executer.base import BaseRunner
 from smac.utils.validate import Validator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"

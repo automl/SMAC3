@@ -10,14 +10,14 @@ from joblib import Parallel, delayed
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, convert_configurations_to_array
 from smac.constants import MAXINT
-from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.epm.random_forest.rfr_imputator import RFRImputator
-from smac.epm.utils import get_types
+from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.random_forest.rfr_imputator import RFRImputator
+from smac.model.utils import get_types
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.stats.stats import Stats
-from smac.algorithm.base import BaseRunner
-from smac.algorithm.execute_ta_run_old import ExecuteTARunOld
+from smac.utils.stats import Stats
+from smac.algorithm_executer.base import BaseRunner
+from smac.algorithm_executer.execute_ta_run_old import ExecuteTARunOld
 
 __author__ = "Joshua Marben"
 __copyright__ = "Copyright 2017, ML4AAD"

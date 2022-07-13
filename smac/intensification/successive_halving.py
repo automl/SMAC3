@@ -5,15 +5,14 @@ import warnings
 
 import numpy as np
 
-from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.model.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.stats.stats import Stats
-from smac.algorithm import StatusType
+from smac.utils.stats import Stats
+from smac.algorithm_executer import StatusType
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -61,15 +60,13 @@ class _SuccessiveHalving(AbstractRacer):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : Optional[float]
@@ -96,10 +93,10 @@ class _SuccessiveHalving(AbstractRacer):
         * shuffle - shuffle before every SH run
 
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive cutoff)
+        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
-    min_chall: int
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
     incumbent_selection: str
@@ -116,12 +113,9 @@ class _SuccessiveHalving(AbstractRacer):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
@@ -134,28 +128,27 @@ class _SuccessiveHalving(AbstractRacer):
         instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
-        min_chall: int = 1,
+        min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
+        seed: int = 0,
     ) -> None:
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
+            seed=seed,
         )
 
         self.identifier = identifier
         self.logger = logging.getLogger(self.__module__ + "." + str(self.identifier) + "." + self.__class__.__name__)
 
-        if self.min_chall > 1:
-            raise ValueError("Successive Halving cannot handle argument `min_chall` > 1.")
+        if self.min_challenger > 1:
+            raise ValueError("Successive Halving cannot handle argument `min_challenger` > 1.")
         self.first_run = True
 
         # INSTANCES
@@ -175,7 +168,7 @@ class _SuccessiveHalving(AbstractRacer):
             if self.deterministic:
                 seeds = [0]
             else:
-                seeds = [int(s) for s in self.rs.randint(low=0, high=MAXINT, size=self.n_seeds)]
+                seeds = [int(s) for s in self.rng.randint(low=0, high=MAXINT, size=self.n_seeds)]
                 if self.n_seeds == 1:
                     self.logger.warning(
                         "The target algorithm is specified to be non deterministic, "
@@ -189,7 +182,7 @@ class _SuccessiveHalving(AbstractRacer):
             # determine instance-seed pair order
             if self.instance_order == "shuffle_once":
                 # randomize once
-                self.rs.shuffle(self.inst_seed_pairs)  # type: ignore
+                self.rng.shuffle(self.inst_seed_pairs)  # type: ignore
         else:
             self.inst_seed_pairs = inst_seed_pairs
 
@@ -283,10 +276,10 @@ class _SuccessiveHalving(AbstractRacer):
         if max_budget is not None and initial_budget is not None and max_budget < initial_budget:
             raise ValueError("Max budget has to be larger than min budget")
 
-        # - if only 1 instance was provided & quality objective, then use cutoff as budget
+        # - if only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
         # - else, use instances as budget
         if not self.run_obj_time and len(self.inst_seed_pairs) <= 1:
-            # budget with cutoff
+            # budget with algorithm_walltime_limit
             if initial_budget is None or max_budget is None:
                 raise ValueError(
                     "Successive Halving with real-valued budget (i.e., only 1 instance) "
@@ -535,7 +528,7 @@ class _SuccessiveHalving(AbstractRacer):
                 instance=None,
                 instance_specific="0",
                 seed=0,
-                cutoff=self.cutoff,
+                algorithm_walltime_limit=self.algorithm_walltime_limit,
                 capped=False,
                 budget=0.0,
                 source_id=self.identifier,
@@ -585,7 +578,7 @@ class _SuccessiveHalving(AbstractRacer):
                         instance=None,
                         instance_specific="0",
                         seed=0,
-                        cutoff=self.cutoff,
+                        algorithm_walltime_limit=self.algorithm_walltime_limit,
                         capped=False,
                         budget=0.0,
                         source_id=self.identifier,
@@ -607,7 +600,7 @@ class _SuccessiveHalving(AbstractRacer):
                         instance=None,
                         instance_specific="0",
                         seed=0,
-                        cutoff=self.cutoff,
+                        algorithm_walltime_limit=self.algorithm_walltime_limit,
                         capped=False,
                         budget=0.0,
                         source_id=self.identifier,
@@ -650,16 +643,18 @@ class _SuccessiveHalving(AbstractRacer):
         # At this point self.curr_inst_idx[challenger] will still be an integer and might
         # be marked LATER with np.inf, so ignore mypy error.
 
-        # selecting cutoff if running adaptive capping
-        cutoff = self.cutoff
+        # selecting algorithm_walltime_limit if running adaptive capping
+        algorithm_walltime_limit = self.algorithm_walltime_limit
         if self.run_obj_time:
-            cutoff = self._adapt_cutoff(challenger=challenger, run_history=run_history, inc_sum_cost=inc_sum_cost)
-            if cutoff is not None and cutoff <= 0:
+            algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
+                challenger=challenger, run_history=run_history, inc_sum_cost=inc_sum_cost
+            )
+            if algorithm_walltime_limit is not None and algorithm_walltime_limit <= 0:
                 # ran out of time to validate challenger
                 self.logger.debug("Stop challenger intensification due to adaptive capping.")
                 self.curr_inst_idx[challenger] = np.inf
 
-        self.logger.debug("Cutoff for challenger: %s" % str(cutoff))
+        self.logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
 
         # For testing purposes, this attribute highlights whether a
         # new challenger is proposed or not. Not required from a functional
@@ -667,7 +662,7 @@ class _SuccessiveHalving(AbstractRacer):
         self.new_challenger = new_challenger
 
         capped = False
-        if (self.cutoff is not None) and (cutoff < self.cutoff):  # type: ignore[operator] # noqa F821
+        if (self.algorithm_walltime_limit is not None) and (algorithm_walltime_limit < self.algorithm_walltime_limit):  # type: ignore[operator] # noqa F821
             capped = True
 
         budget = 0.0 if self.instance_as_budget else curr_budget
@@ -684,7 +679,7 @@ class _SuccessiveHalving(AbstractRacer):
             instance=instance,
             instance_specific=self.instance_specifics.get(instance, "0"),
             seed=seed,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             capped=capped,
             budget=budget,
             source_id=self.identifier,
@@ -776,7 +771,7 @@ class _SuccessiveHalving(AbstractRacer):
 
                 # randomize instance-seed pairs per successive halving run, if user specifies
                 if self.instance_order == "shuffle":
-                    self.rs.shuffle(self.inst_seed_pairs)  # type: ignore
+                    self.rng.shuffle(self.inst_seed_pairs)  # type: ignore
 
         # to track configurations for the next stage
         self.success_challengers = set()  # successful configs
@@ -1159,15 +1154,13 @@ class SuccessiveHalving(ParallelScheduler):
     ----------
     stats: smac.stats.stats.Stats
         stats object
-    traj_logger: smac.utils.io.traj_logging.TrajLogger
-        TrajLogger object to log all new incumbents
     rng : np.random.RandomState
     instances : List[str]
         list of all instance ids
     instance_specifics : Mapping[str, str]
         mapping from instance name to instance specific string
-    cutoff : Optional[int]
-        cutoff of TA runs
+    algorithm_walltime_limit : Optional[int]
+        algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
     initial_budget : Optional[float]
@@ -1188,10 +1181,10 @@ class SuccessiveHalving(ParallelScheduler):
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
     adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive cutoff)
+        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
-    min_chall: int
+    min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
     incumbent_selection: str
@@ -1204,12 +1197,9 @@ class SuccessiveHalving(ParallelScheduler):
 
     def __init__(
         self,
-        stats: Stats,
-        traj_logger: TrajLogger,
-        rng: np.random.RandomState,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
@@ -1220,21 +1210,20 @@ class SuccessiveHalving(ParallelScheduler):
         instance_order: Optional[str] = "shuffle_once",
         adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
-        min_chall: int = 1,
+        min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
+        seed: int = 0,
     ) -> None:
 
         super().__init__(
-            stats=stats,
-            traj_logger=traj_logger,
-            rng=rng,
             instances=instances,
             instance_specifics=instance_specifics,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
-            min_chall=min_chall,
+            min_challenger=min_challenger,
+            seed=seed,
         )
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -1302,12 +1291,9 @@ class SuccessiveHalving(ParallelScheduler):
             return False
 
         self.intensifier_instances[len(self.intensifier_instances)] = _SuccessiveHalving(
-            stats=self.stats,
-            traj_logger=self.traj_logger,
-            rng=self.rs,
             instances=self._instances,
             instance_specifics=self._instance_specifics,
-            cutoff=self.cutoff,
+            algorithm_walltime_limit=self.algorithm_walltime_limit,
             deterministic=self.deterministic,
             initial_budget=self.initial_budget,
             max_budget=self.max_budget,
@@ -1318,9 +1304,10 @@ class SuccessiveHalving(ParallelScheduler):
             instance_order=self.instance_order,
             adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
             inst_seed_pairs=self.inst_seed_pairs,
-            min_chall=self.min_chall,
+            min_challenger=self.min_challenger,
             incumbent_selection=self.incumbent_selection,
             identifier=len(self.intensifier_instances),
+            seed=self.seed,
         )
 
         return True

@@ -34,7 +34,7 @@ class SobolInitialDesign(InitialDesign):
         config: Configuration
             initial incumbent configuration
         """
-        params = self.cs.get_hyperparameters()
+        params = self.configspace.get_hyperparameters()
 
         constants = 0
         for p in params:
@@ -48,4 +48,4 @@ class SobolInitialDesign(InitialDesign):
             warnings.simplefilter("ignore")
             sobol = sobol_gen.random(self.init_budget)
 
-        return self._transform_continuous_designs(design=sobol, origin="Sobol", cs=self.cs)
+        return self._transform_continuous_designs(design=sobol, origin="Sobol", configspace=self.configspace)

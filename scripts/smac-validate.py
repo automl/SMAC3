@@ -13,9 +13,9 @@ if cmd_folder not in sys.path:
 
 from smac.runhistory.runhistory import RunHistory  # noqa: E402
 from smac.cli.scenario import Scenario  # noqa: E402
-from smac.stats.stats import Stats  # noqa: E402
-from smac.algorithm.execute_ta_run_aclib import ExecuteTARunAClib  # noqa: E402
-from smac.algorithm.execute_ta_run_old import ExecuteTARunOld  # noqa: E402
+from smac.utils.stats import Stats  # noqa: E402
+from smac.algorithm_executer.execute_ta_run_aclib import ExecuteTARunAClib  # noqa: E402
+from smac.algorithm_executer.execute_ta_run_old import ExecuteTARunOld  # noqa: E402
 from smac.cli.traj_logging import TrajLogger  # noqa: E402
 from smac.utils.validate import Validator  # noqa: E402
 

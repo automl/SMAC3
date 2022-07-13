@@ -30,7 +30,7 @@ class LatinHypercubeInitialDesign(InitialDesign):
         config: Configuration
             initial incumbent configuration
         """
-        params = self.cs.get_hyperparameters()
+        params = self.configspace.get_hyperparameters()
 
         constants = 0
         for p in params:
@@ -39,4 +39,4 @@ class LatinHypercubeInitialDesign(InitialDesign):
 
         lhd = LatinHypercube(d=len(params) - constants, seed=self.rng.randint(0, 1000000)).random(n=self.init_budget)
 
-        return self._transform_continuous_designs(design=lhd, origin="LHD", cs=self.cs)
+        return self._transform_continuous_designs(design=lhd, origin="LHD", configspace=self.configspace)

@@ -25,75 +25,68 @@ class InitialDesign:
 
     Parameters
     ----------
-    cs: ConfigurationSpace
+    configspace: ConfigurationSpace
         configuration space object
     rng: np.random.RandomState
         Random state
-    traj_logger: TrajLogger
-        Trajectory logging to add new incumbents found by the initial
-        design.
-    ta_run_limit: int
+    n_runs: int
         Number of iterations allowed for the target algorithm
     configs: Optional[List[Configuration]]
-        List of initial configurations. Disables the arguments ``n_configs_x_params`` if given.
-        Either this, or ``n_configs_x_params`` or ``init_budget`` must be provided.
-    n_configs_x_params: int
+        List of initial configurations. Disables the arguments ``n_configs_per_hyperparameter`` if given.
+        Either this, or ``n_configs_per_hyperparameter`` or ``init_budget`` must be provided.
+    n_configs_per_hyperparameter: int
         how many configurations will be used at most in the initial design (X*D). Either
         this, or ``init_budget`` or ``configs`` must be provided. Disables the argument
-        ``n_configs_x_params`` if given.
+        ``n_configs_per_hyperparameter`` if given.
     max_config_fracs: float
         use at most X*budget in the initial design. Not active if a time limit is given.
     init_budget : int, optional
-        Maximal initial budget (disables the arguments ``n_configs_x_params`` and ``configs``
-        if both are given). Either this, or ``n_configs_x_params`` or ``configs`` must be
+        Maximal initial budget (disables the arguments ``n_configs_per_hyperparameter`` and ``configs``
+        if both are given). Either this, or ``n_configs_per_hyperparameter`` or ``configs`` must be
         provided.
 
     Attributes
     ----------
-    cs : ConfigurationSpace
+    configspace : ConfigurationSpace
     configs : List[Configuration]
         List of configurations to be evaluated
     """
 
     def __init__(
         self,
-        cs: ConfigurationSpace,
-        rng: np.random.RandomState,
-        traj_logger: TrajLogger,
-        ta_run_limit: int,
+        configspace: ConfigurationSpace,
+        n_runs: int,
         configs: Optional[List[Configuration]] = None,
-        n_configs_x_params: Optional[int] = 10,
+        n_configs_per_hyperparameter: Optional[int] = 10,
         max_config_fracs: float = 0.25,
         init_budget: Optional[int] = None,
+        seed: int = 0,
     ):
-        self.cs = cs
-        self.rng = rng
-        self.traj_logger = traj_logger
+        self.configspace = configspace
+        self.rng = np.random.RandomState(seed)
         self.configs = configs
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
-        n_params = len(self.cs.get_hyperparameters())
+        n_params = len(self.configspace.get_hyperparameters())
         if init_budget is not None:
             self.init_budget = init_budget
-            if n_configs_x_params is not None:
+            if n_configs_per_hyperparameter is not None:
                 self.logger.debug(
-                    "Ignoring argument `n_configs_x_params` (value %d).",
-                    n_configs_x_params,
+                    "Ignoring argument `n_configs_per_hyperparameter` (value %d).",
+                    n_configs_per_hyperparameter,
                 )
         elif configs is not None:
             self.init_budget = len(configs)
-        elif n_configs_x_params is not None:
-            self.init_budget = int(max(1, min(n_configs_x_params * n_params, (max_config_fracs * ta_run_limit))))
+        elif n_configs_per_hyperparameter is not None:
+            self.init_budget = int(max(1, min(n_configs_per_hyperparameter * n_params, (max_config_fracs * n_runs))))
         else:
             raise ValueError(
                 "Need to provide either argument `init_budget`, `configs` or "
-                "`n_configs_x_params`, but provided none of them."
+                "`n_configs_per_hyperparameter`, but provided none of them."
             )
-        if self.init_budget > ta_run_limit:
-            raise ValueError(
-                "Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, ta_run_limit)
-            )
+        if self.init_budget > n_runs:
+            raise ValueError("Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, n_runs))
         self.logger.info("Running initial design for %d configurations" % self.init_budget)
 
     def select_configurations(self) -> List[Configuration]:
@@ -108,7 +101,7 @@ class InitialDesign:
                 config.origin = "Initial design"
 
         # add this incumbent right away to have an entry to time point 0
-        self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
+        # self.traj_logger.add_entry(train_perf=2**31, incumbent_id=1, incumbent=self.configs[0])
 
         # removing duplicates
         # (Reference: https://stackoverflow.com/questions/7961363/removing-duplicates-in-lists)
@@ -119,10 +112,10 @@ class InitialDesign:
         raise NotImplementedError
 
     def _transform_continuous_designs(
-        self, design: np.ndarray, origin: str, cs: ConfigurationSpace
+        self, design: np.ndarray, origin: str, configspace: ConfigurationSpace
     ) -> List[Configuration]:
 
-        params = cs.get_hyperparameters()
+        params = configspace.get_hyperparameters()
         for idx, param in enumerate(params):
             if isinstance(param, NumericalHyperparameter):
                 continue
@@ -147,7 +140,7 @@ class InitialDesign:
         configs = []
         for vector in design:
             try:
-                conf = deactivate_inactive_hyperparameters(configuration=None, configuration_space=cs, vector=vector)
+                conf = deactivate_inactive_hyperparameters(configuration=None, configspace=configspace, vector=vector)
             except ForbiddenValueError:
                 continue
             conf.origin = origin

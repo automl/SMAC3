@@ -14,7 +14,7 @@ from ConfigSpace.hyperparameters import (
     IntegerHyperparameter,
 )
 
-from smac.stats.stats import Stats
+from smac.utils.stats import Stats
 from smac.utils.logging import format_array
 
 __author__ = "Marius Lindauer"
