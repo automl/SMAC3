@@ -354,6 +354,7 @@ class EI(AbstractAcquisitionFunction):
     with :math:`f(X^+)` as the best location.
     """
 
+    # TODO rename par (exploration / exploitation parameter)
     def __init__(self, par: float = 0.0):
         """Constructor.
 
