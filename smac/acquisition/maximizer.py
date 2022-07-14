@@ -634,7 +634,7 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
     def __init__(
         self,
         acquisition_function: AbstractAcquisitionFunction,
-        config_space: ConfigurationSpace,
+        config_space: ConfigurationSpace,  # TODO rename config_space -> configspace
         max_steps: Optional[int] = None,
         n_steps_plateau_walk: int = 10,
         n_sls_iterations: int = 10,
