@@ -81,6 +81,11 @@ class SMAC4BB(Facade):
         if len(self.config.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
+        if not isinstance(self.model, BaseModel):
+            raise ValueError("The Black-Box facade only works with Gaussian Process-"
+                             "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
+                             f"got type {type(self.model)}.")
+
     @staticmethod
     def get_model(config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None) -> BaseModel:
         available_model_types = ["gp", "gp_mcmc"]
