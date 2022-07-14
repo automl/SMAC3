@@ -27,6 +27,11 @@ from smac.model.gaussian_process.kernels import (
 from smac.model.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.model.utils import get_types
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 
 __author__ = "Marius Lindauer"  # TODO leave author as is?
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -82,9 +87,11 @@ class SMAC4BB(Facade):
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self.model, BaseModel):
-            raise ValueError("The Black-Box facade only works with Gaussian Process-"
-                             "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
-                             f"got type {type(self.model)}.")
+            raise ValueError(
+                "The Black-Box facade only works with Gaussian Process-"
+                "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
+                f"got type {type(self.model)}."
+            )
 
     @staticmethod
     def get_model(config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None) -> BaseModel:
