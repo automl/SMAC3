@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smac.facade.smac_ac_facade &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>smac.facade.smac_ac_facade &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../../../_static/css/theme.css" rel="stylesheet">
   <link href="../../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -110,8 +110,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -182,7 +182,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../../../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -415,13 +430,13 @@ style="width: 100%;">
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">AbstractEPM</span>
-<span class="kn">from</span> <span class="nn">smac.epm.base_uncorrelated_mo_model</span> <span class="kn">import</span> <span class="n">UncorrelatedMultiObjectiveModel</span>
+<span class="kn">from</span> <span class="nn">smac.epm.base_epm</span> <span class="kn">import</span> <span class="n">BaseEPM</span>
+<span class="kn">from</span> <span class="nn">smac.epm.multi_objective_epm</span> <span class="kn">import</span> <span class="n">MultiObjectiveEPM</span>
 
 <span class="c1"># epm</span>
-<span class="kn">from</span> <span class="nn">smac.epm.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
-<span class="kn">from</span> <span class="nn">smac.epm.rfr_imputator</span> <span class="kn">import</span> <span class="n">RFRImputator</span>
-<span class="kn">from</span> <span class="nn">smac.epm.util_funcs</span> <span class="kn">import</span> <span class="n">get_rng</span><span class="p">,</span> <span class="n">get_types</span>
+<span class="kn">from</span> <span class="nn">smac.epm.random_forest.rf_with_instances</span> <span class="kn">import</span> <span class="n">RandomForestWithInstances</span>
+<span class="kn">from</span> <span class="nn">smac.epm.random_forest.rfr_imputator</span> <span class="kn">import</span> <span class="n">RFRImputator</span>
+<span class="kn">from</span> <span class="nn">smac.epm.utils</span> <span class="kn">import</span> <span class="n">get_rng</span><span class="p">,</span> <span class="n">get_types</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.default_configuration_design</span> <span class="kn">import</span> <span class="n">DefaultConfiguration</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.factorial_design</span> <span class="kn">import</span> <span class="n">FactorialInitialDesign</span>
 
@@ -436,6 +451,13 @@ style="width: 100%;">
 <span class="c1"># intensification</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.intensification</span> <span class="kn">import</span> <span class="n">Intensifier</span>
 <span class="kn">from</span> <span class="nn">smac.intensification.successive_halving</span> <span class="kn">import</span> <span class="n">SuccessiveHalving</span>
+<span class="kn">from</span> <span class="nn">smac.multi_objective.abstract_multi_objective_algorithm</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">smac.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AggregationStrategy</span><span class="p">,</span>
+    <span class="n">MeanAggregationStrategy</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">smac.optimizer.acquisition</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">EI</span><span class="p">,</span>
     <span class="n">EIPS</span><span class="p">,</span>
@@ -444,21 +466,14 @@ style="width: 100%;">
     <span class="n">LogEI</span><span class="p">,</span>
     <span class="n">PriorAcquisitionFunction</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.ei_optimization</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.acquisition.maximizer</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AcquisitionFunctionMaximizer</span><span class="p">,</span>
     <span class="n">LocalAndSortedPriorRandomSearch</span><span class="p">,</span>
     <span class="n">LocalAndSortedRandomSearch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.multi_objective.abstract_multi_objective_algorithm</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AbstractMultiObjectiveAlgorithm</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.multi_objective.aggregation_strategy</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">AggregationStrategy</span><span class="p">,</span>
-    <span class="n">MeanAggregationStrategy</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">smac.optimizer.random_configuration_chooser</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">smac.optimizer.configuration_chooser.random_chooser</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ChooserProb</span><span class="p">,</span>
-    <span class="n">RandomConfigurationChooser</span><span class="p">,</span>
+    <span class="n">RandomChooser</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># optimizer</span>
@@ -542,7 +557,7 @@ style="width: 100%;">
 <span class="sd">        Will use :class:`smac.optimizer.ei_optimization.InterleavedLocalAndRandomSearch` if not set.</span>
 <span class="sd">    acquisition_function_optimizer_kwargs: Optional[dict]</span>
 <span class="sd">        Arguments passed to constructor of `~acquisition_function_optimizer`</span>
-<span class="sd">    model : AbstractEPM</span>
+<span class="sd">    model : BaseEPM</span>
 <span class="sd">        Model that implements train() and predict(). Will use a</span>
 <span class="sd">        :class:`~smac.epm.rf_with_instances.RandomForestWithInstances` if not set.</span>
 <span class="sd">    model_kwargs : Optional[dict]</span>
@@ -578,6 +593,8 @@ style="width: 100%;">
 <span class="sd">    smbo_class : ~smac.optimizer.smbo.SMBO</span>
 <span class="sd">        Class implementing the SMBO interface which will be used to</span>
 <span class="sd">        instantiate the optimizer class.</span>
+<span class="sd">    smbo_kwargs : ~ Optional[Dict]</span>
+<span class="sd">        Arguments passed to the constructor of &#39;~smbo&#39;</span>
 <span class="sd">    run_id : int (optional)</span>
 <span class="sd">        Run ID will be used as subfolder for output_dir. If no ``run_id`` is given, a random ``run_id`` will be</span>
 <span class="sd">        chosen.</span>
@@ -619,7 +636,7 @@ style="width: 100%;">
         <span class="n">user_prior_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">acquisition_function_optimizer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">AcquisitionFunctionMaximizer</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">acquisition_function_optimizer_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">AbstractEPM</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">BaseEPM</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory2epm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">AbstractRunHistory2EPM</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">runhistory2epm_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -632,8 +649,9 @@ style="width: 100%;">
         <span class="n">restore_incumbent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Configuration</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">smbo_class</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">SMBO</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">smbo_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">run_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">RandomConfigurationChooser</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">random_configuration_chooser</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">RandomChooser</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">random_configuration_chooser_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dask_client</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">dask</span><span class="o">.</span><span class="n">distributed</span><span class="o">.</span><span class="n">Client</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -710,7 +728,7 @@ style="width: 100%;">
             <span class="n">random_configuration_chooser_instance</span> <span class="o">=</span> <span class="n">random_configuration_chooser</span><span class="p">(</span>  <span class="c1"># type: ignore # noqa F821</span>
                 <span class="o">**</span><span class="n">rand_conf_chooser_kwargs</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">,</span> <span class="n">RandomConfigurationChooser</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">random_configuration_chooser</span><span class="p">,</span> <span class="n">RandomChooser</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;random_configuration_chooser has to be&quot;</span> <span class="s2">&quot; a class or object of RandomConfigurationChooser&quot;</span>
             <span class="p">)</span>
@@ -747,7 +765,7 @@ style="width: 100%;">
                     <span class="n">model_def_kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s2">&quot;configspace&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="n">model_instance</span> <span class="o">=</span> <span class="n">RandomForestWithInstances</span><span class="p">(</span>
-                <span class="o">**</span><span class="n">model_def_kwargs</span>  <span class="c1"># type: ignore[arg-type] # noqa F821  # type: AbstractEPM</span>
+                <span class="o">**</span><span class="n">model_def_kwargs</span>  <span class="c1"># type: ignore[arg-type] # noqa F821  # type: BaseEPM</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
             <span class="n">model_def_kwargs</span><span class="p">[</span><span class="s2">&quot;configspace&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">cs</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
@@ -773,9 +791,7 @@ style="width: 100%;">
                 <span class="s2">&quot;Argument acquisition_function must be None or an object implementing the &quot;</span>
                 <span class="s2">&quot;AbstractAcquisitionFunction, not </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">acquisition_function</span><span class="p">)</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acquisition_function_instance</span><span class="p">,</span> <span class="n">EIPS</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="n">model_instance</span><span class="p">,</span> <span class="n">UncorrelatedMultiObjectiveModel</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acquisition_function_instance</span><span class="p">,</span> <span class="n">EIPS</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_instance</span><span class="p">,</span> <span class="n">MultiObjectiveEPM</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="s2">&quot;If the acquisition function is EIPS, the surrogate model must support multi-objective prediction!&quot;</span>
             <span class="p">)</span>
@@ -937,7 +953,7 @@ style="width: 100%;">
 
         <span class="k">if</span> <span class="n">scenario</span><span class="o">.</span><span class="n">multi_objectives</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">num_obj</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># type: ignore[attr-defined] # noqa F821</span>
             <span class="c1"># define any defaults here</span>
-            <span class="n">_multi_objective_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="p">,</span> <span class="s2">&quot;num_obj&quot;</span><span class="p">:</span> <span class="n">num_obj</span><span class="p">}</span>
+            <span class="n">_multi_objective_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="p">}</span>
 
             <span class="k">if</span> <span class="n">multi_objective_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">_multi_objective_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">multi_objective_kwargs</span><span class="p">)</span>
@@ -1108,6 +1124,8 @@ style="width: 100%;">
             <span class="s2">&quot;random_configuration_chooser&quot;</span><span class="p">:</span> <span class="n">random_configuration_chooser_instance</span><span class="p">,</span>
             <span class="s2">&quot;tae_runner&quot;</span><span class="p">:</span> <span class="n">tae_runner_instance</span><span class="p">,</span>
         <span class="p">}</span>  <span class="c1"># type: Dict[str, Any]</span>
+        <span class="k">if</span> <span class="n">smbo_kwargs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">smbo_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">smbo_kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">smbo_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">SMBO</span><span class="p">(</span><span class="o">**</span><span class="n">smbo_args</span><span class="p">)</span>  <span class="c1"># type: ignore[arg-type] # noqa F821</span>

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.epm.gaussian_process &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>smac.epm.gaussian_process &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="smac.epm.gaussian_process_mcmc" href="smac.epm.gaussian_process_mcmc.html" />
-    <link rel="prev" title="smac.epm.base_uncorrelated_mo_model" href="smac.epm.base_uncorrelated_mo_model.html" />
+    <link rel="next" title="smac.epm.multi_objective_epm" href="smac.epm.multi_objective_epm.html" />
+    <link rel="prev" title="smac.epm.base_imputor" href="smac.epm.base_imputor.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -113,8 +113,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -185,7 +185,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -430,15 +445,21 @@ style="width: 100%;">
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#smac.epm.gaussian_process.GaussianProcess" title="smac.epm.gaussian_process.GaussianProcess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GaussianProcess</span></code></a>(configspace, types, bounds, ...)</p></td>
-<td><p>Gaussian process model.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#smac.epm.gaussian_process.BaseModel" title="smac.epm.gaussian_process.BaseModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseModel</span></code></a>(configspace, types, bounds, seed, ...)</p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
+<dt class="sig sig-object py" id="smac.epm.gaussian_process.BaseModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.epm.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#BaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gaussian_process.BaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="smac.epm.base_epm.html#smac.epm.base_epm.BaseEPM" title="smac.epm.base_epm.BaseEPM"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_epm.BaseEPM</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="smac.epm.gaussian_process.GaussianProcess">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.epm.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">GaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_opt_restarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="smac.epm.base_gp.html#smac.epm.base_gp.BaseModel" title="smac.epm.base_gp.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.base_gp.BaseModel</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.epm.gaussian_process.</span></span><span class="sig-name descname"><span class="pre">GaussianProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configspace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_opt_restarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pca_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process/gp.html#GaussianProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#smac.epm.gaussian_process.BaseModel" title="smac.epm.gaussian_process.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.BaseModel</span></code></a></p>
 <p>Gaussian process model.</p>
 <p>The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.</p>
 <p>This code is based on the implementation of RoBO:</p>
@@ -468,7 +489,7 @@ set n_feats (&gt; pca_dims).</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.epm.gaussian_process.GaussianProcess.sample_functions">
-<span class="sig-name descname"><span class="pre">sample_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_funcs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process.html#GaussianProcess.sample_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess.sample_functions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sample_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_funcs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/epm/gaussian_process/gp.html#GaussianProcess.sample_functions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.epm.gaussian_process.GaussianProcess.sample_functions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Samples F function values from the current posterior at the N specified test points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -488,6 +509,33 @@ set n_feats (&gt; pca_dims).</p></li>
 
 </dd></dl>
 
+<p class="rubric">Modules</p>
+<table class="autosummary longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.augmented</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.gp</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.gpytorch</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.kernels</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.mcmc</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">smac.epm.gaussian_process.utils</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 
@@ -496,17 +544,17 @@ set n_feats (&gt; pca_dims).</p></li>
               
               <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="smac.epm.base_uncorrelated_mo_model.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="smac.epm.base_imputor.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">smac.epm.base_uncorrelated_mo_model</p>
+            <p class="prev-next-title">smac.epm.base_imputor</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="smac.epm.gaussian_process_mcmc.html" title="next page">
+    <a class='right-next' id="next-link" href="smac.epm.multi_objective_epm.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">smac.epm.gaussian_process_mcmc</p>
+        <p class="prev-next-title">smac.epm.multi_objective_epm</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

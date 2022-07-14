@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Python Module Index &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>Python Module Index &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="_static/css/theme.css" rel="stylesheet">
   <link href="_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,8 +113,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -185,7 +185,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -442,22 +457,7 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.base_gp.html#module-smac.epm.base_gp"><code class="xref">smac.epm.base_gp</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
        <a href="api/smac.epm.base_imputor.html#module-smac.epm.base_imputor"><code class="xref">smac.epm.base_imputor</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.base_rf.html#module-smac.epm.base_rf"><code class="xref">smac.epm.base_rf</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.base_uncorrelated_mo_model.html#module-smac.epm.base_uncorrelated_mo_model"><code class="xref">smac.epm.base_uncorrelated_mo_model</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -467,17 +467,47 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.gaussian_process_mcmc.html#module-smac.epm.gaussian_process_mcmc"><code class="xref">smac.epm.gaussian_process_mcmc</code></a></td><td>
+       <a href="api/smac.epm.gaussian_process.augmented.html#module-smac.epm.gaussian_process.augmented"><code class="xref">smac.epm.gaussian_process.augmented</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.gp_base_prior.html#module-smac.epm.gp_base_prior"><code class="xref">smac.epm.gp_base_prior</code></a></td><td>
+       <a href="api/smac.epm.gaussian_process.gp.html#module-smac.epm.gaussian_process.gp"><code class="xref">smac.epm.gaussian_process.gp</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.gp_kernels.html#module-smac.epm.gp_kernels"><code class="xref">smac.epm.gp_kernels</code></a></td><td>
+       <a href="api/smac.epm.gaussian_process.gpytorch.html#module-smac.epm.gaussian_process.gpytorch"><code class="xref">smac.epm.gaussian_process.gpytorch</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.gaussian_process.kernels.html#module-smac.epm.gaussian_process.kernels"><code class="xref">smac.epm.gaussian_process.kernels</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.gaussian_process.kernels.boing.html#module-smac.epm.gaussian_process.kernels.boing"><code class="xref">smac.epm.gaussian_process.kernels.boing</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.gaussian_process.mcmc.html#module-smac.epm.gaussian_process.mcmc"><code class="xref">smac.epm.gaussian_process.mcmc</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.gaussian_process.utils.html#module-smac.epm.gaussian_process.utils"><code class="xref">smac.epm.gaussian_process.utils</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.gaussian_process.utils.prior.html#module-smac.epm.gaussian_process.utils.prior"><code class="xref">smac.epm.gaussian_process.utils.prior</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.multi_objective_epm.html#module-smac.epm.multi_objective_epm"><code class="xref">smac.epm.multi_objective_epm</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -487,22 +517,27 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.rf_with_instances.html#module-smac.epm.rf_with_instances"><code class="xref">smac.epm.rf_with_instances</code></a></td><td>
+       <a href="api/smac.epm.random_forest.html#module-smac.epm.random_forest"><code class="xref">smac.epm.random_forest</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.rfr_imputator.html#module-smac.epm.rfr_imputator"><code class="xref">smac.epm.rfr_imputator</code></a></td><td>
+       <a href="api/smac.epm.random_forest.rf_mo.html#module-smac.epm.random_forest.rf_mo"><code class="xref">smac.epm.random_forest.rf_mo</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.uncorrelated_mo_rf_with_instances.html#module-smac.epm.uncorrelated_mo_rf_with_instances"><code class="xref">smac.epm.uncorrelated_mo_rf_with_instances</code></a></td><td>
+       <a href="api/smac.epm.random_forest.rf_with_instances.html#module-smac.epm.random_forest.rf_with_instances"><code class="xref">smac.epm.random_forest.rf_with_instances</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.epm.util_funcs.html#module-smac.epm.util_funcs"><code class="xref">smac.epm.util_funcs</code></a></td><td>
+       <a href="api/smac.epm.random_forest.rfr_imputator.html#module-smac.epm.random_forest.rfr_imputator"><code class="xref">smac.epm.random_forest.rfr_imputator</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.epm.utils.html#module-smac.epm.utils"><code class="xref">smac.epm.utils</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -522,17 +557,17 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.facade.experimental.psmac_facade.html#module-smac.facade.experimental.psmac_facade"><code class="xref">smac.facade.experimental.psmac_facade</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
        <a href="api/smac.facade.func_facade.html#module-smac.facade.func_facade"><code class="xref">smac.facade.func_facade</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="api/smac.facade.hyperband_facade.html#module-smac.facade.hyperband_facade"><code class="xref">smac.facade.hyperband_facade</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.facade.psmac_facade.html#module-smac.facade.psmac_facade"><code class="xref">smac.facade.psmac_facade</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -548,6 +583,11 @@ style="width: 100%;">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="api/smac.facade.smac_bb_facade.html#module-smac.facade.smac_bb_facade"><code class="xref">smac.facade.smac_bb_facade</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.facade.smac_boing_facade.html#module-smac.facade.smac_boing_facade"><code class="xref">smac.facade.smac_boing_facade</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -642,32 +682,32 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.ei_optimization.html#module-smac.optimizer.ei_optimization"><code class="xref">smac.optimizer.ei_optimization</code></a></td><td>
+       <a href="api/smac.optimizer.acquisition.maximizer.html#module-smac.optimizer.acquisition.maximizer"><code class="xref">smac.optimizer.acquisition.maximizer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.epm_configuration_chooser.html#module-smac.optimizer.epm_configuration_chooser"><code class="xref">smac.optimizer.epm_configuration_chooser</code></a></td><td>
+       <a href="api/smac.optimizer.configuration_chooser.html#module-smac.optimizer.configuration_chooser"><code class="xref">smac.optimizer.configuration_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.multi_objective.html#module-smac.optimizer.multi_objective"><code class="xref">smac.optimizer.multi_objective</code></a></td><td>
+       <a href="api/smac.optimizer.configuration_chooser.boing_chooser.html#module-smac.optimizer.configuration_chooser.boing_chooser"><code class="xref">smac.optimizer.configuration_chooser.boing_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.multi_objective.abstract_multi_objective_algorithm.html#module-smac.optimizer.multi_objective.abstract_multi_objective_algorithm"><code class="xref">smac.optimizer.multi_objective.abstract_multi_objective_algorithm</code></a></td><td>
+       <a href="api/smac.optimizer.configuration_chooser.epm_chooser.html#module-smac.optimizer.configuration_chooser.epm_chooser"><code class="xref">smac.optimizer.configuration_chooser.epm_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.multi_objective.aggregation_strategy.html#module-smac.optimizer.multi_objective.aggregation_strategy"><code class="xref">smac.optimizer.multi_objective.aggregation_strategy</code></a></td><td>
+       <a href="api/smac.optimizer.configuration_chooser.random_chooser.html#module-smac.optimizer.configuration_chooser.random_chooser"><code class="xref">smac.optimizer.configuration_chooser.random_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.multi_objective.parego.html#module-smac.optimizer.multi_objective.parego"><code class="xref">smac.optimizer.multi_objective.parego</code></a></td><td>
+       <a href="api/smac.optimizer.configuration_chooser.turbo_chooser.html#module-smac.optimizer.configuration_chooser.turbo_chooser"><code class="xref">smac.optimizer.configuration_chooser.turbo_chooser</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -677,12 +717,22 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.random_configuration_chooser.html#module-smac.optimizer.random_configuration_chooser"><code class="xref">smac.optimizer.random_configuration_chooser</code></a></td><td>
+       <a href="api/smac.optimizer.smbo.html#module-smac.optimizer.smbo"><code class="xref">smac.optimizer.smbo</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="api/smac.optimizer.smbo.html#module-smac.optimizer.smbo"><code class="xref">smac.optimizer.smbo</code></a></td><td>
+       <a href="api/smac.optimizer.subspaces.html#module-smac.optimizer.subspaces"><code class="xref">smac.optimizer.subspaces</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.optimizer.subspaces.boing_subspace.html#module-smac.optimizer.subspaces.boing_subspace"><code class="xref">smac.optimizer.subspaces.boing_subspace</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.optimizer.subspaces.turbo_subspace.html#module-smac.optimizer.subspaces.turbo_subspace"><code class="xref">smac.optimizer.subspaces.turbo_subspace</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -698,6 +748,11 @@ style="width: 100%;">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="api/smac.runhistory.runhistory2epm.html#module-smac.runhistory.runhistory2epm"><code class="xref">smac.runhistory.runhistory2epm</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="api/smac.runhistory.runhistory2epm_boing.html#module-smac.runhistory.runhistory2epm_boing"><code class="xref">smac.runhistory.runhistory2epm_boing</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
@@ -807,6 +862,11 @@ style="width: 100%;">
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
+       <a href="api/smac.utils.io.result_merging.html#module-smac.utils.io.result_merging"><code class="xref">smac.utils.io.result_merging</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
        <a href="api/smac.utils.io.traj_logging.html#module-smac.utils.io.traj_logging"><code class="xref">smac.utils.io.traj_logging</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
@@ -818,11 +878,6 @@ style="width: 100%;">
        <td></td>
        <td>&#160;&#160;&#160;
        <a href="api/smac.utils.merge_foreign_data.html#module-smac.utils.merge_foreign_data"><code class="xref">smac.utils.merge_foreign_data</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="api/smac.utils.multi_objective.html#module-smac.utils.multi_objective"><code class="xref">smac.utils.multi_objective</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>

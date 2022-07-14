@@ -35,3 +35,11 @@ smac.optimizer.acquisition
 
 
 
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.optimizer.acquisition.maximizer
+

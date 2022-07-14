@@ -32,7 +32,7 @@ but we stick with SMAC4HPO here. To incorporate user priors into the optimizatio
 MLP is used as the deep neural network.
 The digits datasetis chosen to optimize the average accuracy on 5-fold cross validation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-169
+.. GENERATED FROM PYTHON SOURCE LINES 16-167
 
 
 
@@ -64,7 +64,6 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
 
     import warnings
 
-    import ConfigSpace as CS
     import numpy as np
     from ConfigSpace.hyperparameters import (
         BetaIntegerHyperparameter,
@@ -78,7 +77,6 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
     from sklearn.neural_network import MLPClassifier
 
     from smac.configspace import ConfigurationSpace
-    from smac.facade.smac_bb_facade import SMAC4BB
     from smac.facade.smac_hpo_facade import SMAC4HPO
     from smac.initial_design.random_configuration_design import RandomConfigurations
     from smac.scenario.scenario import Scenario
@@ -214,7 +212,7 @@ The digits datasetis chosen to optimize the average accuracy on 5-fold cross val
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 4 minutes  47.186 seconds)
+   **Total running time of the script:** ( 5 minutes  33.845 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_user_prior_mlp.py:

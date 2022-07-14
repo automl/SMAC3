@@ -1,0 +1,31 @@
+smac.epm.gaussian\_process.utils
+================================
+
+.. automodule:: smac.epm.gaussian_process.utils
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.epm.gaussian_process.utils.prior
+

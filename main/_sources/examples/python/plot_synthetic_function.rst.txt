@@ -40,42 +40,8 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
  .. code-block:: none
 
-    INFO:smac.utils.io.cmd_reader.CMDReader:Output to smac3-output_2022-06-23_10:19:09_176862
     Default Value: 16916.00
     Optimizing! Depending on your machine, this might take a few minutes.
-    INFO:smac.facade.smac_bb_facade.SMAC4BB:Optimizing a deterministic scenario for quality without a tuner timeout - will make SMAC deterministic and only evaluate one configuration per iteration!
-    INFO:smac.initial_design.sobol_design.SobolDesign:Running initial design for 2 configurations
-    INFO:smac.facade.smac_bb_facade.SMAC4BB:<class 'smac.facade.smac_bb_facade.SMAC4BB'>
-    INFO:smac.optimizer.smbo.SMBO:Running initial design
-    INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-    INFO:smac.intensification.intensification.Intensifier:First run, no incumbent provided; challenger is assumed to be the incumbent
-    INFO:smac.intensification.intensification.Intensifier:Updated estimated cost of incumbent on 1 runs: 5311.5619
-    INFO:smac.intensification.intensification.Intensifier:Challenger (4744.681) is better than incumbent (5311.5619) on 1 runs.
-    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-    INFO:smac.intensification.intensification.Intensifier:  x0 : -0.21980144549161196 -> 0.666692873028599
-    INFO:smac.intensification.intensification.Intensifier:  x1 : 7.335338136181235 -> 7.332563252406933
-    INFO:smac.intensification.intensification.Intensifier:Challenger (939.3255) is better than incumbent (4744.681) on 1 runs.
-    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-    INFO:smac.intensification.intensification.Intensifier:  x0 : 0.666692873028599 -> 2.263660637291685
-    INFO:smac.intensification.intensification.Intensifier:  x1 : 7.332563252406933 -> 8.186395068270798
-    INFO:smac.intensification.intensification.Intensifier:Challenger (920.0862) is better than incumbent (939.3255) on 1 runs.
-    INFO:smac.intensification.intensification.Intensifier:Changes in incumbent:
-    INFO:smac.intensification.intensification.Intensifier:  x0 : 2.263660637291685 -> 2.2708123182821804
-    INFO:smac.intensification.intensification.Intensifier:  x1 : 8.186395068270798 -> 8.187217627538942
-    INFO:smac.stats.stats.Stats:---------------------STATISTICS---------------------
-    INFO:smac.stats.stats.Stats:Incumbent changed: 3
-    INFO:smac.stats.stats.Stats:Submitted target algorithm runs: 10 / 10.0
-    INFO:smac.stats.stats.Stats:Finished target algorithm runs: 10 / 10.0
-    INFO:smac.stats.stats.Stats:Configurations: 10
-    INFO:smac.stats.stats.Stats:Used wallclock time: 1.37 / inf sec 
-    INFO:smac.stats.stats.Stats:Used target algorithm runtime: 0.00 / inf sec
-    INFO:smac.stats.stats.Stats:----------------------------------------------------
-    INFO:smac.facade.smac_bb_facade.SMAC4BB:Final Incumbent: Configuration(values={
-      'x0': 2.2708123182821804,
-      'x1': 8.187217627538942,
-    })
-
-    INFO:smac.facade.smac_bb_facade.SMAC4BB:Estimated cost of incumbent: 920.0862
 
 
 
@@ -162,7 +128,7 @@ be applied to the problems with large evaluation budgets (up to 1000 evaluations
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.380 seconds)
+   **Total running time of the script:** ( 0 minutes  1.503 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function.py:

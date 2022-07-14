@@ -1,0 +1,29 @@
+smac.optimizer.subspaces.boing\_subspace
+========================================
+
+.. automodule:: smac.optimizer.subspaces.boing_subspace
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BOinGSubspace
+   
+   
+
+   
+   
+   
+
+
+

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.intensification.simple_intensifier &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>smac.intensification.simple_intensifier &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,8 +113,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -185,7 +185,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -437,7 +452,7 @@ style="width: 100%;">
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="smac.intensification.simple_intensifier.SimpleIntensifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.simple_intensifier.</span></span><span class="sig-name descname"><span class="pre">SimpleIntensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specifics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_obj_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/simple_intensifier.html#SimpleIntensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.simple_intensifier.SimpleIntensifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">smac.intensification.simple_intensifier.</span></span><span class="sig-name descname"><span class="pre">SimpleIntensifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">traj_logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_specifics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_obj_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/intensification/simple_intensifier.html#SimpleIntensifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.intensification.simple_intensifier.SimpleIntensifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="smac.intensification.abstract_racer.html#smac.intensification.abstract_racer.AbstractRacer" title="smac.intensification.abstract_racer.AbstractRacer"><code class="xref py py-class docutils literal notranslate"><span class="pre">smac.intensification.abstract_racer.AbstractRacer</span></code></a></p>
 <p>Performs the traditional Bayesian Optimization loop, without instance/seed intensification.</p>
 <dl class="field-list simple">
@@ -465,7 +480,7 @@ from the runhistory.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>challengers</strong> (<em>List</em><em>[</em><em>Configuration</em><em>]</em>) – promising configurations</p></li>
 <li><p><strong>incumbent</strong> (<em>Configuration</em>) – incumbent configuration</p></li>
-<li><p><strong>chooser</strong> (<a class="reference internal" href="smac.optimizer.epm_configuration_chooser.html#smac.optimizer.epm_configuration_chooser.EPMChooser" title="smac.optimizer.epm_configuration_chooser.EPMChooser"><em>smac.optimizer.epm_configuration_chooser.EPMChooser</em></a>) – optimizer that generates next configurations to use for racing</p></li>
+<li><p><strong>chooser</strong> (<em>smac.optimizer.epm_configuration_chooser.EPMChooser</em>) – optimizer that generates next configurations to use for racing</p></li>
 <li><p><strong>run_history</strong> (<a class="reference internal" href="smac.runhistory.runhistory.html#smac.runhistory.runhistory.RunHistory" title="smac.runhistory.runhistory.RunHistory"><em>smac.runhistory.runhistory.RunHistory</em></a>) – stores all runs we ran so far</p></li>
 <li><p><strong>repeat_configs</strong> (<em>bool</em>) – if False, an evaluated configuration will not be generated again</p></li>
 <li><p><strong>num_workers</strong> (<em>int</em>) – the maximum number of workers available

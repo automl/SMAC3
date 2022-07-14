@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>HPO with User Priors over the Optimum &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>HPO with User Priors over the Optimum &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../../_static/css/theme.css" rel="stylesheet">
   <link href="../../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,8 +113,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -185,7 +185,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -453,7 +468,6 @@ Optimized Value: 0.0156
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">ConfigSpace</span> <span class="k">as</span> <span class="nn">CS</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">ConfigSpace.hyperparameters</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BetaIntegerHyperparameter</span><span class="p">,</span>
@@ -467,7 +481,6 @@ Optimized Value: 0.0156
 <span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
 
 <span class="kn">from</span> <span class="nn">smac.configspace</span> <span class="kn">import</span> <span class="n">ConfigurationSpace</span>
-<span class="kn">from</span> <span class="nn">smac.facade.smac_bb_facade</span> <span class="kn">import</span> <span class="n">SMAC4BB</span>
 <span class="kn">from</span> <span class="nn">smac.facade.smac_hpo_facade</span> <span class="kn">import</span> <span class="n">SMAC4HPO</span>
 <span class="kn">from</span> <span class="nn">smac.initial_design.random_configuration_design</span> <span class="kn">import</span> <span class="n">RandomConfigurations</span>
 <span class="kn">from</span> <span class="nn">smac.scenario.scenario</span> <span class="kn">import</span> <span class="n">Scenario</span>
@@ -601,7 +614,7 @@ Optimized Value: 0.0156
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimized Value: </span><span class="si">%.4f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">inc_value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  47.186 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 5 minutes  33.845 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-python-plot-user-prior-mlp-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/6c57c542f65fe6852fad2324112fbf77/plot_user_prior_mlp.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_user_prior_mlp.py</span></code></a></p>

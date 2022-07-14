@@ -28,17 +28,10 @@
    :recursive:
 
    smac.epm.base_epm
-   smac.epm.base_gp
    smac.epm.base_imputor
-   smac.epm.base_rf
-   smac.epm.base_uncorrelated_mo_model
    smac.epm.gaussian_process
-   smac.epm.gaussian_process_mcmc
-   smac.epm.gp_base_prior
-   smac.epm.gp_kernels
+   smac.epm.multi_objective_epm
    smac.epm.random_epm
-   smac.epm.rf_with_instances
-   smac.epm.rfr_imputator
-   smac.epm.uncorrelated_mo_rf_with_instances
-   smac.epm.util_funcs
+   smac.epm.random_forest
+   smac.epm.utils
 

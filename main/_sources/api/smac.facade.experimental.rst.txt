@@ -28,5 +28,4 @@ smac.facade.experimental
    :recursive:
 
    smac.facade.experimental.hydra_facade
-   smac.facade.experimental.psmac_facade
 

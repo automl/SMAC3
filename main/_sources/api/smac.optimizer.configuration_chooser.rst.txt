@@ -1,0 +1,34 @@
+smac.optimizer.configuration\_chooser
+=====================================
+
+.. automodule:: smac.optimizer.configuration_chooser
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   smac.optimizer.configuration_chooser.boing_chooser
+   smac.optimizer.configuration_chooser.epm_chooser
+   smac.optimizer.configuration_chooser.random_chooser
+   smac.optimizer.configuration_chooser.turbo_chooser
+

@@ -140,6 +140,48 @@ Python
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC with BO inside Grove (BOinG) to optimize a synthetic function (2d r...">
+
+.. only:: html
+
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_synthetic_function_boing_thumb.png
+     :alt: Synthetic Function with BOinG as optimizer
+
+     :ref:`sphx_glr_examples_python_plot_synthetic_function_boing.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/python/plot_synthetic_function_boing
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC with trust region BO (TuRBO) to optimize a synthetic function (2d r...">
+
+.. only:: html
+
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_synthetic_function_turbo_thumb.png
+     :alt: Synthetic Function with TuRBO as optimizer
+
+     :ref:`sphx_glr_examples_python_plot_synthetic_function_turbo.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/python/plot_synthetic_function_turbo
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).">
 
 .. only:: html
@@ -158,6 +200,27 @@ Python
    :hidden:
 
    /examples/python/plot_synthetic_function
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="An example of applying SMAC to optimize a synthetic function (2d rosenbrock function).">
+
+.. only:: html
+
+ .. figure:: /examples/python/images/thumb/sphx_glr_plot_synthetic_function_parallel_thumb.png
+     :alt: Synthetic Function with few Hyperparameters
+
+     :ref:`sphx_glr_examples_python_plot_synthetic_function_parallel.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/python/plot_synthetic_function_parallel
 
 .. raw:: html
 

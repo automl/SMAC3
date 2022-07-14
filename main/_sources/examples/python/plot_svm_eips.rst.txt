@@ -26,7 +26,7 @@ acquisition function. Since EIPS requires two types of objections: EI values and
 time used for the configurations. We need to fit the data
 with a multi-objective model
 
-.. GENERATED FROM PYTHON SOURCE LINES 10-127
+.. GENERATED FROM PYTHON SOURCE LINES 10-125
 
 
 
@@ -64,9 +64,7 @@ with a multi-objective model
     from sklearn.model_selection import cross_val_score
 
     from smac.configspace import ConfigurationSpace
-    from smac.epm.uncorrelated_mo_rf_with_instances import (
-        UncorrelatedMultiObjectiveRandomForestWithInstances,
-    )
+    from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
     from smac.facade.smac_ac_facade import SMAC4AC
 
     # EIPS related
@@ -147,7 +145,7 @@ with a multi-objective model
         model_kwargs = {"target_names": ["loss", "time"], "model_kwargs": {"seed": 1}}
         smac = SMAC4AC(
             scenario=scenario,
-            model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+            model=MultiObjectiveRandomForest,
             rng=np.random.RandomState(42),
             model_kwargs=model_kwargs,
             tae_runner=svm_from_cfg,
@@ -171,7 +169,7 @@ with a multi-objective model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.655 seconds)
+   **Total running time of the script:** ( 0 minutes  5.081 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_svm_eips.py:

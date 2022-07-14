@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Overview: module code &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>Overview: module code &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -110,8 +110,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -182,7 +182,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -407,26 +422,30 @@ style="width: 100%;">
   <h1>All modules for which code is available</h1>
 <ul><li><a href="smac/callbacks.html">smac.callbacks</a></li>
 <li><a href="smac/epm/base_epm.html">smac.epm.base_epm</a></li>
-<li><a href="smac/epm/base_gp.html">smac.epm.base_gp</a></li>
 <li><a href="smac/epm/base_imputor.html">smac.epm.base_imputor</a></li>
-<li><a href="smac/epm/base_rf.html">smac.epm.base_rf</a></li>
-<li><a href="smac/epm/base_uncorrelated_mo_model.html">smac.epm.base_uncorrelated_mo_model</a></li>
 <li><a href="smac/epm/gaussian_process.html">smac.epm.gaussian_process</a></li>
-<li><a href="smac/epm/gaussian_process_mcmc.html">smac.epm.gaussian_process_mcmc</a></li>
-<li><a href="smac/epm/gp_base_prior.html">smac.epm.gp_base_prior</a></li>
-<li><a href="smac/epm/gp_kernels.html">smac.epm.gp_kernels</a></li>
+<ul><li><a href="smac/epm/gaussian_process/augmented.html">smac.epm.gaussian_process.augmented</a></li>
+<li><a href="smac/epm/gaussian_process/gp.html">smac.epm.gaussian_process.gp</a></li>
+<li><a href="smac/epm/gaussian_process/gpytorch.html">smac.epm.gaussian_process.gpytorch</a></li>
+<li><a href="smac/epm/gaussian_process/kernels.html">smac.epm.gaussian_process.kernels</a></li>
+<ul><li><a href="smac/epm/gaussian_process/kernels/boing.html">smac.epm.gaussian_process.kernels.boing</a></li>
+</ul><li><a href="smac/epm/gaussian_process/mcmc.html">smac.epm.gaussian_process.mcmc</a></li>
+<li><a href="smac/epm/gaussian_process/utils/prior.html">smac.epm.gaussian_process.utils.prior</a></li>
+</ul><li><a href="smac/epm/multi_objective_epm.html">smac.epm.multi_objective_epm</a></li>
 <li><a href="smac/epm/random_epm.html">smac.epm.random_epm</a></li>
-<li><a href="smac/epm/rf_with_instances.html">smac.epm.rf_with_instances</a></li>
-<li><a href="smac/epm/rfr_imputator.html">smac.epm.rfr_imputator</a></li>
-<li><a href="smac/epm/uncorrelated_mo_rf_with_instances.html">smac.epm.uncorrelated_mo_rf_with_instances</a></li>
-<li><a href="smac/epm/util_funcs.html">smac.epm.util_funcs</a></li>
+<li><a href="smac/epm/random_forest.html">smac.epm.random_forest</a></li>
+<ul><li><a href="smac/epm/random_forest/rf_mo.html">smac.epm.random_forest.rf_mo</a></li>
+<li><a href="smac/epm/random_forest/rf_with_instances.html">smac.epm.random_forest.rf_with_instances</a></li>
+<li><a href="smac/epm/random_forest/rfr_imputator.html">smac.epm.random_forest.rfr_imputator</a></li>
+</ul><li><a href="smac/epm/utils.html">smac.epm.utils</a></li>
 <li><a href="smac/facade/experimental/hydra_facade.html">smac.facade.experimental.hydra_facade</a></li>
-<li><a href="smac/facade/experimental/psmac_facade.html">smac.facade.experimental.psmac_facade</a></li>
 <li><a href="smac/facade/func_facade.html">smac.facade.func_facade</a></li>
 <li><a href="smac/facade/hyperband_facade.html">smac.facade.hyperband_facade</a></li>
+<li><a href="smac/facade/psmac_facade.html">smac.facade.psmac_facade</a></li>
 <li><a href="smac/facade/roar_facade.html">smac.facade.roar_facade</a></li>
 <li><a href="smac/facade/smac_ac_facade.html">smac.facade.smac_ac_facade</a></li>
 <li><a href="smac/facade/smac_bb_facade.html">smac.facade.smac_bb_facade</a></li>
+<li><a href="smac/facade/smac_boing_facade.html">smac.facade.smac_boing_facade</a></li>
 <li><a href="smac/facade/smac_hpo_facade.html">smac.facade.smac_hpo_facade</a></li>
 <li><a href="smac/facade/smac_mf_facade.html">smac.facade.smac_mf_facade</a></li>
 <li><a href="smac/initial_design/default_configuration_design.html">smac.initial_design.default_configuration_design</a></li>
@@ -442,16 +461,19 @@ style="width: 100%;">
 <li><a href="smac/intensification/simple_intensifier.html">smac.intensification.simple_intensifier</a></li>
 <li><a href="smac/intensification/successive_halving.html">smac.intensification.successive_halving</a></li>
 <li><a href="smac/optimizer/acquisition.html">smac.optimizer.acquisition</a></li>
-<li><a href="smac/optimizer/ei_optimization.html">smac.optimizer.ei_optimization</a></li>
-<li><a href="smac/optimizer/epm_configuration_chooser.html">smac.optimizer.epm_configuration_chooser</a></li>
-<li><a href="smac/optimizer/multi_objective/abstract_multi_objective_algorithm.html">smac.optimizer.multi_objective.abstract_multi_objective_algorithm</a></li>
-<li><a href="smac/optimizer/multi_objective/aggregation_strategy.html">smac.optimizer.multi_objective.aggregation_strategy</a></li>
-<li><a href="smac/optimizer/multi_objective/parego.html">smac.optimizer.multi_objective.parego</a></li>
+<ul><li><a href="smac/optimizer/acquisition/maximizer.html">smac.optimizer.acquisition.maximizer</a></li>
+</ul><li><a href="smac/optimizer/configuration_chooser/boing_chooser.html">smac.optimizer.configuration_chooser.boing_chooser</a></li>
+<li><a href="smac/optimizer/configuration_chooser/epm_chooser.html">smac.optimizer.configuration_chooser.epm_chooser</a></li>
+<li><a href="smac/optimizer/configuration_chooser/random_chooser.html">smac.optimizer.configuration_chooser.random_chooser</a></li>
+<li><a href="smac/optimizer/configuration_chooser/turbo_chooser.html">smac.optimizer.configuration_chooser.turbo_chooser</a></li>
 <li><a href="smac/optimizer/pSMAC.html">smac.optimizer.pSMAC</a></li>
-<li><a href="smac/optimizer/random_configuration_chooser.html">smac.optimizer.random_configuration_chooser</a></li>
 <li><a href="smac/optimizer/smbo.html">smac.optimizer.smbo</a></li>
-<li><a href="smac/runhistory/runhistory.html">smac.runhistory.runhistory</a></li>
+<li><a href="smac/optimizer/subspaces.html">smac.optimizer.subspaces</a></li>
+<ul><li><a href="smac/optimizer/subspaces/boing_subspace.html">smac.optimizer.subspaces.boing_subspace</a></li>
+<li><a href="smac/optimizer/subspaces/turbo_subspace.html">smac.optimizer.subspaces.turbo_subspace</a></li>
+</ul><li><a href="smac/runhistory/runhistory.html">smac.runhistory.runhistory</a></li>
 <li><a href="smac/runhistory/runhistory2epm.html">smac.runhistory.runhistory2epm</a></li>
+<li><a href="smac/runhistory/runhistory2epm_boing.html">smac.runhistory.runhistory2epm_boing</a></li>
 <li><a href="smac/scenario/scenario.html">smac.scenario.scenario</a></li>
 <li><a href="smac/smac_cli.html">smac.smac_cli</a></li>
 <li><a href="smac/stats/stats.html">smac.stats.stats</a></li>
@@ -468,10 +490,10 @@ style="width: 100%;">
 <li><a href="smac/utils/io/input_reader.html">smac.utils.io.input_reader</a></li>
 <li><a href="smac/utils/io/output_directory.html">smac.utils.io.output_directory</a></li>
 <li><a href="smac/utils/io/output_writer.html">smac.utils.io.output_writer</a></li>
+<li><a href="smac/utils/io/result_merging.html">smac.utils.io.result_merging</a></li>
 <li><a href="smac/utils/io/traj_logging.html">smac.utils.io.traj_logging</a></li>
 <li><a href="smac/utils/logging.html">smac.utils.logging</a></li>
 <li><a href="smac/utils/merge_foreign_data.html">smac.utils.merge_foreign_data</a></li>
-<li><a href="smac/utils/multi_objective.html">smac.utils.multi_objective</a></li>
 <li><a href="smac/utils/test_helpers.html">smac.utils.test_helpers</a></li>
 <li><a href="smac/utils/validate.html">smac.utils.validate</a></li>
 </ul>

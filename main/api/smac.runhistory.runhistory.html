@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>smac.runhistory.runhistory &#8212; SMAC3 Documentation 1.3.4 documentation</title>
+    <title>smac.runhistory.runhistory &#8212; SMAC3 Documentation 1.4.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ac9c05f7c49ca1e1f876c6e36360ea26.css" rel="stylesheet">
@@ -113,8 +113,8 @@ style="width: 100%;">
           
             
             <!-- Only show if we have sidebars configured, else just a small margin  -->
-            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0">SMAC3 Documentation</h4>
-<div class="mb-3">v1.3.4</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+            <div class="col-12 col-md-3 bd-sidebar"><h4 class="mt-0 mb-0"><a href="../index.html">SMAC3 Documentation</a></h4>
+<div class="mb-3">v1.4.0</div><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
   <div class="bd-toc-item active">
     <ul class="current nav bd-sidenav">
  <li class="toctree-l1 has-children">
@@ -185,7 +185,22 @@ style="width: 100%;">
     </a>
    </li>
    <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_boing.html">
+     Synthetic Function with BOinG as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_turbo.html">
+     Synthetic Function with TuRBO as optimizer
+    </a>
+   </li>
+   <li class="toctree-l2">
     <a class="reference internal" href="../examples/python/plot_synthetic_function.html">
+     Synthetic Function with few Hyperparameters
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/python/plot_synthetic_function_parallel.html">
      Synthetic Function with few Hyperparameters
     </a>
    </li>
@@ -689,7 +704,7 @@ information from TA or fields such as start time and host_id)</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.average_cost">
-<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">average_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.average_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.average_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the average cost of a configuration. This is the mean of costs of all instance-
 seed pairs.</p>
 <dl class="field-list simple">
@@ -698,13 +713,16 @@ seed pairs.</p>
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Normalizes the costs wrt objective bounds in the multi-objective setting.
+Only a float is returned if normalize is True. Warning: The value can change
+over time because the objective bounds are changing.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>Cost</strong> – Average cost</p>
+<dd class="field-even"><p><strong>Cost</strong> – Average cost. In case of multiple objectives, the mean of each objective is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -897,10 +915,13 @@ but are read from cache.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.min_cost">
-<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.min_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">min_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.min_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.min_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the minimum cost of a configuration.</p>
-<p>This is the minimum cost of all instance-seed pairs.
-Warning: In the case of multi-fidelity, the minimum cost per objectives is returned.</p>
+<p>This is the minimum cost of all instance-seed pairs.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>In the case of multi-fidelity, the minimum cost per objectives is returned.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -910,10 +931,11 @@ queried for all runs of the given configuration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>min_cost</strong> – minimum cost of config.</p>
+<dd class="field-even"><p><strong>min_cost</strong> – Minimum cost of the config. In case of multi-objective, the minimum cost per objective
+is returned.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -937,7 +959,7 @@ queried for all runs of the given configuration.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.sum_cost">
-<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sum_cost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance_seed_budget_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.sum_cost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.sum_cost" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sum of costs of a configuration. This is the sum of costs of all instance-seed
 pairs.</p>
 <dl class="field-list simple">
@@ -946,13 +968,17 @@ pairs.</p>
 <li><p><strong>config</strong> (<em>Configuration</em>) – Configuration to calculate objective for.</p></li>
 <li><p><strong>instance_seed_budget_keys</strong> (<em>list</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – List of tuples of instance-seeds-budget keys. If None, the run_history is
 queried for all runs of the given configuration.</p></li>
+<li><p><strong>normalize</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=False</em><em>)</em>) – Normalizes the costs wrt objective bounds in the multi-objective setting.
+Only a float is returned if normalize is True. Warning: The value can change
+over time because the objective bounds are changing.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>sum_cost</strong> – Sum of costs of config.</p>
+<dd class="field-even"><p><strong>sum_cost</strong> – Sum of costs of config. In case of multiple objectives, the costs are summed up for each
+objective individually.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>float | list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -972,17 +998,6 @@ and be available <code class="xref py py-meth docutils literal notranslate"><spa
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="smac.runhistory.runhistory.RunHistory.update_all_costs">
-<span class="sig-name descname"><span class="pre">update_all_costs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/smac/runhistory/runhistory.html#RunHistory.update_all_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#smac.runhistory.runhistory.RunHistory.update_all_costs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update all costs in the runhistory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>

@@ -1,0 +1,30 @@
+smac.runhistory.runhistory2epm\_boing
+=====================================
+
+.. automodule:: smac.runhistory.runhistory2epm_boing
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      RunHistory2EPM4CostWithRaw
+      RunHistory2EPM4ScaledLogCostWithRaw
+   
+   
+
+   
+   
+   
+
+
+
