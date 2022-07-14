@@ -72,13 +72,14 @@ class SMAC4BB(Facade):
     def __init__(self, **kwargs: Any):
         super().__init__(**kwargs)
 
-        if len(self.config.instance_features) > 0:
-            raise NotImplementedError("The Black-Box GP cannot handle instances.")
-
         # TODO what about these? vvv
         # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
         # # activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
+
+    def _validate(self):
+        if len(self.config.instance_features) > 0:
+            raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
     @staticmethod
     def get_model(config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None) -> BaseModel:
