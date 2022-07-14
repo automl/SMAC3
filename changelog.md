@@ -1,7 +1,7 @@
 # 1.4.0
 
 ## Features
-* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage bayesian optimization approach to allow the 
+* [BOinG](https://arxiv.org/abs/2111.05834): A two-stage Bayesian optimization approach to allow the 
 optimizer to focus on the most promising regions.
 * [TurBO](https://arxiv.org/abs/1910.01739): Reimplementaion of TurBO-1 algorithm.
 * Updated pSMAC: Can pass arbitrary SMAC facades now. Added example and fixed tests.
@@ -12,8 +12,8 @@ or optionally in `average_cost`/`sum_cost`/`min_cost` to receive a single float 
 the cached cost values do not need to be updated everytime a new entry to the runhistory was added.
 
 ## Interface changes
-* We changed the location of gaussian processes and random forests. They are in the folders
-epm/gaussian_process and epm/random_forest now.
+* We changed the location of Gaussian processes and random forests. They are in the folders
+`epm/gaussian_process` and `epm/random_forest` now.
 * Also, we restructured the optimizer folder and therefore the location of the acquisition functions
 and configuration chooser.
 * Multi-objective functions are located in the folder `multi_objective`.
