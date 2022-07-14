@@ -151,7 +151,7 @@ class AlgorithmConfigurationFacade(Facade):
 
     @staticmethod
     def get_random_configuration_chooser(config: Config, *, random_probability: float = 0.5) -> RandomChooser:
-        return ChooserProb(config.seed, random_probability)
+        return ChooserProb(rng=np.default_rng(seed=config.seed), prob=random_probability)
 
     @staticmethod
     def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
