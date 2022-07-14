@@ -12,7 +12,7 @@ from smac.acquisition.maximizer import (
 )
 from smac.config import Config
 from smac.configspace import Configuration
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade import Facade
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
@@ -33,7 +33,7 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BB(AlgorithmConfigurationFacade):
+class SMAC4BB(Facade):
     """Facade to use SMAC for Black-Box optimization using a GP.
 
     see smac.facade.smac_Facade for API
