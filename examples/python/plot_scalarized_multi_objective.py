@@ -9,7 +9,7 @@ Optimize both the final performance and the time used for training.
 
 import logging
 
-from smac.optimizer.multi_objective.parego import ParEGO
+from smac.multi_objective.parego import ParEGO
 
 logging.basicConfig(level=logging.INFO)
 

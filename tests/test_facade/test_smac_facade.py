@@ -11,11 +11,9 @@ from ConfigSpace.util import get_one_exchange_neighbourhood
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import ConfigurationSpace
 from smac.epm.random_epm import RandomEPM
-from smac.epm.rf_with_instances import RandomForestWithInstances
-from smac.epm.uncorrelated_mo_rf_with_instances import (
-    UncorrelatedMultiObjectiveRandomForestWithInstances,
-)
-from smac.epm.util_funcs import get_rng
+from smac.epm.random_forest.rf_mo import MultiObjectiveRandomForest
+from smac.epm.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.epm.utils import get_rng
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.initial_design.default_configuration_design import DefaultConfiguration
 from smac.initial_design.factorial_design import FactorialInitialDesign
@@ -27,7 +25,10 @@ from smac.intensification.hyperband import Hyperband
 from smac.intensification.intensification import Intensifier
 from smac.intensification.successive_halving import SuccessiveHalving
 from smac.optimizer.acquisition import EI, EIPS, LCB
-from smac.optimizer.random_configuration_chooser import ChooserNoCoolDown, ChooserProb
+from smac.optimizer.configuration_chooser.random_chooser import (
+    ChooserNoCoolDown,
+    ChooserProb,
+)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm import (
     RunHistory2EPM4Cost,
@@ -316,19 +317,19 @@ class TestSMACFacade(unittest.TestCase):
             self.scenario.run_obj = objective
             smbo = SMAC4AC(
                 self.scenario,
-                model=UncorrelatedMultiObjectiveRandomForestWithInstances,
+                model=MultiObjectiveRandomForest,
                 model_kwargs={"target_names": ["a", "b"], "model_kwargs": {"seed": 1}},
                 acquisition_function=EIPS,
                 runhistory2epm=RunHistory2EPM4EIPS,
             ).solver
             self.assertIsInstance(
                 smbo.epm_chooser.model,
-                UncorrelatedMultiObjectiveRandomForestWithInstances,
+                MultiObjectiveRandomForest,
             )
             self.assertIsInstance(smbo.epm_chooser.acquisition_func, EIPS)
             self.assertIsInstance(
                 smbo.epm_chooser.acquisition_func.model,
-                UncorrelatedMultiObjectiveRandomForestWithInstances,
+                MultiObjectiveRandomForest,
             )
             self.assertIsInstance(smbo.epm_chooser.rh2EPM, RunHistory2EPM4EIPS)
 
@@ -404,7 +405,7 @@ class TestSMACFacade(unittest.TestCase):
         self.assertEqual(run_id, 2505)
         self.assertIs(rng_1, rs)
 
-    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    @unittest.mock.patch("smac.optimizer.acquisition.maximizer.get_one_exchange_neighbourhood")
     def test_check_deterministic_rosenbrock(self, patch):
 
         # Make SMAC a bit faster

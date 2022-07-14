@@ -8,16 +8,16 @@ import numpy as np
 
 from smac.callbacks import IncorporateRunResultCallback
 from smac.configspace import Configuration
-from smac.epm.base_epm import AbstractEPM
+from smac.epm.base_epm import BaseEPM
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.optimizer import pSMAC
 from smac.optimizer.acquisition import AbstractAcquisitionFunction
-from smac.optimizer.ei_optimization import AcquisitionFunctionMaximizer
-from smac.optimizer.epm_configuration_chooser import EPMChooser
-from smac.optimizer.random_configuration_chooser import (
+from smac.optimizer.acquisition.maximizer import AcquisitionFunctionMaximizer
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.random_chooser import (
     ChooserNoCoolDown,
-    RandomConfigurationChooser,
+    RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory2epm import AbstractRunHistory2EPM
@@ -55,7 +55,7 @@ class SMBO(object):
         (probably with some kind of racing on the instances)
     num_run: int
         id of this run (used for pSMAC)
-    model: AbstractEPM
+    model: BaseEPM
         empirical performance model
     acq_optimizer: AcquisitionFunctionMaximizer
         Optimizer of acquisition function.
@@ -75,6 +75,8 @@ class SMBO(object):
         Choose x_best for computing the acquisition function via the model instead of via the observations.
     min_samples_model: int
         Minimum number of samples to build a model.
+    epm_chooser_kwargs: typing.Optional[typing.Dict]
+        Additional arguments passed to epmchooser
 
     Attributes
     ----------
@@ -102,15 +104,17 @@ class SMBO(object):
         runhistory2epm: AbstractRunHistory2EPM,
         intensifier: AbstractRacer,
         num_run: int,
-        model: AbstractEPM,
+        model: BaseEPM,
         acq_optimizer: AcquisitionFunctionMaximizer,
         acquisition_func: AbstractAcquisitionFunction,
         rng: np.random.RandomState,
         tae_runner: BaseRunner,
         restore_incumbent: Configuration = None,
-        random_configuration_chooser: RandomConfigurationChooser = ChooserNoCoolDown(modulus=2.0),
+        random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
+        epm_chooser: Type[EPMChooser] = EPMChooser,
+        epm_chooser_kwargs: Optional[Dict] = None,
     ):
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
@@ -129,8 +133,10 @@ class SMBO(object):
 
         self.initial_design_configs = []  # type: List[Configuration]
 
+        if epm_chooser_kwargs is None:
+            epm_chooser_kwargs = {}
         # TODO: consider if we need an additional EPMChooser for multi-objective optimization
-        self.epm_chooser = EPMChooser(
+        self.epm_chooser = epm_chooser(
             scenario=scenario,
             stats=stats,
             runhistory=runhistory,
@@ -143,6 +149,7 @@ class SMBO(object):
             random_configuration_chooser=random_configuration_chooser,
             predict_x_best=predict_x_best,
             min_samples_model=min_samples_model,
+            **epm_chooser_kwargs,
         )
 
         # Internal variable - if this is set to True it will gracefully stop SMAC
@@ -295,7 +302,6 @@ class SMBO(object):
 
             # Check if there is any result, or else continue
             for run_info, result in self.tae_runner.get_finished_runs():
-
                 # Add the results of the run to the run history
                 # Additionally check for new incumbent
                 self._incorporate_run_results(run_info, result, time_left)

@@ -8,7 +8,7 @@ from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import (  # noqa: F401
     RunHistory,
     RunInfo,
@@ -98,7 +98,6 @@ class _Hyperband(_SuccessiveHalving):
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
-        num_obj: int = 1,
     ) -> None:
 
         super().__init__(
@@ -119,7 +118,6 @@ class _Hyperband(_SuccessiveHalving):
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
             incumbent_selection=incumbent_selection,
-            num_obj=num_obj,
         )
 
         self.identifier = identifier

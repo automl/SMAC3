@@ -6,7 +6,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.utils.io.traj_logging import TrajLogger
@@ -89,7 +89,6 @@ class ParallelScheduler(AbstractRacer):
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
-        num_obj: int = 1,
     ) -> None:
 
         super().__init__(
@@ -103,7 +102,6 @@ class ParallelScheduler(AbstractRacer):
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
-            num_obj=num_obj,
         )
 
         # We have a pool of instances that yield configurations ot run

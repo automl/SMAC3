@@ -2,7 +2,7 @@ Parallelism
 ===========
 
 SMAC also provides a parallel mode to use several parallel computational resources (such as CPU cores).
-This variant of SMAC is called pSMAC (parallel SMAC).
+This variant of SMAC is called pSMAC (parallel SMAC) [1]_.
 The general idea is that all target algorithm run evaluations are shared between the individual SMAC runs
 such that all SMAC runs are better informed and can work together.
 
@@ -17,6 +17,12 @@ such that all SMAC runs are better informed and can work together.
 .. note::
 
 	SMAC also supports DASH. The documentation is in progress.
+
+
+.. [1] Ramage, S. E. A. (2015). Advances in meta-algorithmic software libraries for
+        distributed automated algorithm configuration (T). University of British
+        Columbia. Retrieved from
+        https://open.library.ubc.ca/collections/ubctheses/24/items/1.0167184.
 
 
 Commandline 

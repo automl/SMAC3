@@ -148,8 +148,6 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
             status=StatusType.SUCCESS,
         )
 
-        print(rh._cost_per_config)
-
         # Only one value: Normalization goes to 1.0
         self.assertEqual(rh.get_cost(config1), 1.0)
 
@@ -550,8 +548,8 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         self.assertEqual(rh.objective_bounds[1], (10, 30))
 
         # Average cost returns us the cost of the latest budget
-        self.assertEqual(rh.average_cost(config1), 0.375)
-        self.assertEqual(rh.average_cost(config2), 0.75)
+        self.assertEqual(rh.get_cost(config1), 0.375)
+        self.assertEqual(rh.get_cost(config2), 0.75)
 
     def test_budgets(self):
         rh = RunHistory()
@@ -582,8 +580,8 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         # SMAC does not overwrite by default
         rh.add(
             config=config1,
-            cost=[50, 100],
-            time=10,
+            cost=[502342352, 23425234],
+            time=11,
             status=StatusType.SUCCESS,
             instance_id=1,
             seed=1,
@@ -604,9 +602,13 @@ class RunhistoryMultiObjectiveTest(unittest.TestCase):
         self.assertEqual(rh.objective_bounds[1], (50, 150))
 
         # Average cost returns us the cost of the latest budget
-        self.assertEqual(rh.average_cost(config1), 0.75)
-        self.assertEqual(rh.average_cost(config2), 0.5)
+        self.assertEqual(rh.get_cost(config1), 0.75)
+        self.assertEqual(rh.average_cost(config1), [40.0, 100.0])
+
+        self.assertEqual(rh.get_cost(config2), 0.5)
+        self.assertEqual(rh.average_cost(config2), [0, 150])
 
 
 if __name__ == "__main__":
     t = RunhistoryMultiObjectiveTest()
+    t.test_budgets()

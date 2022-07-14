@@ -38,7 +38,7 @@ class TestDeterministicSMAC(unittest.TestCase):
             rh["data"][i][1] = [v for j, v in enumerate(val) if j not in [3, 4]]  # 3, 4 are start and end timestamps
         return rh
 
-    @unittest.mock.patch("smac.optimizer.ei_optimization.get_one_exchange_neighbourhood")
+    @unittest.mock.patch("smac.optimizer.acquisition.maximizer.get_one_exchange_neighbourhood")
     def test_deterministic(self, patch):
         """
         Testing deterministic behaviour.

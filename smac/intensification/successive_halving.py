@@ -8,7 +8,7 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.optimizer.epm_configuration_chooser import EPMChooser
+from smac.optimizer.configuration_chooser.epm_chooser import EPMChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.stats.stats import Stats
 from smac.tae import StatusType
@@ -137,7 +137,6 @@ class _SuccessiveHalving(AbstractRacer):
         min_chall: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
-        num_obj: int = 1,
     ) -> None:
         super().__init__(
             stats=stats,
@@ -150,7 +149,6 @@ class _SuccessiveHalving(AbstractRacer):
             run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_chall=min_chall,
-            num_obj=num_obj,
         )
 
         self.identifier = identifier
@@ -629,14 +627,16 @@ class _SuccessiveHalving(AbstractRacer):
         #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
         if incumbent and incumbent != challenger:
             inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs)
+            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
         else:
             inc_sum_cost = np.inf
             if self.first_run:
                 self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
                 incumbent = challenger
 
-        # selecting instance-seed subset for this budget, depending on the kind of budget
+        assert type(inc_sum_cost) == float
+
+        # Selecting instance-seed subset for this budget, depending on the kind of budget
         if self.instance_as_budget:
             prev_budget = int(self.all_budgets[self.stage - 1]) if self.stage > 0 else 0
             curr_insts = self.inst_seed_pairs[int(prev_budget) : int(curr_budget)]

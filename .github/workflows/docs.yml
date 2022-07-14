@@ -35,7 +35,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install ".[dev]"
+        pip install ".[gpytorch,dev]"
 
     - name: Make docs
       run: |
