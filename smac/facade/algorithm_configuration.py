@@ -115,7 +115,6 @@ class AlgorithmConfigurationFacade(Facade):
     def get_intensifier(
         config: Config,
         *,
-        intensification_percentage: float = 0.5,
         adaptive_capping_slackfactor: float = 1.2,
         min_challenger=1,
         min_config_calls=1,

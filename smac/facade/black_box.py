@@ -209,14 +209,12 @@ class SMAC4BB(AlgorithmConfigurationFacade):
     def get_intensifier(
         config: Config,
         *,
-        intensification_percentage: float = 0.5,
         adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
     ) -> Intensifier:
         # only 1 configuration per SMBO iteration
-        # intensification_percentage = 1e-10  # TODO what is that argument?
         if config.deterministic:
             min_challenger = 1
 
@@ -242,7 +240,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         initial_configs: list[Configuration] | None = None,
         n_configs_per_hyperparameter: int = 8,
         max_config_fracs: float = 0.25,
-    ) -> InitialDesign:  # TODO should we put all args from the class in signature?
+    ) -> InitialDesign:
         if len(config.configspace.get_hyperparameters()) > 21201:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '

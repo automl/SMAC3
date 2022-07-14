@@ -51,7 +51,6 @@ class SMAC4HPO(AlgorithmConfigurationFacade):
         intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
         intensifier_kwargs["min_chall"] = 1
         kwargs["intensifier_kwargs"] = intensifier_kwargs
-        scenario.intensification_percentage = 1e-10
 
         if kwargs.get("model") is None:
             model_class = RandomForestWithInstances
