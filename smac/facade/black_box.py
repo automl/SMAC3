@@ -1,9 +1,22 @@
 from __future__ import annotations
-from typing import Any, Type
+
+from typing import Any
 
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
+from smac.acquisition import EI, AbstractAcquisitionFunction
+from smac.acquisition.maximizer import (
+    AbstractAcquisitionOptimizer,
+    LocalAndSortedRandomSearch,
+)
+from smac.config import Config
+from smac.configspace import Configuration
+from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design.sobol_design import SobolInitialDesign
+from smac.intensification.intensification import Intensifier
+from smac.model.configuration_chooser.random_chooser import ChooserProb, RandomChooser
 from smac.model.gaussian_process import BaseModel, GaussianProcess
 from smac.model.gaussian_process.kernels import (
     ConstantKernel,
@@ -13,27 +26,7 @@ from smac.model.gaussian_process.kernels import (
 )
 from smac.model.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
-from smac.model.utils import get_rng, get_types
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.initial_design.sobol_design import SobolInitialDesign
-from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.config import Config
-from smac.model.configuration_chooser.random_chooser import (
-    ChooserProb,
-    RandomChooser,
-)
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
-    LocalAndSortedRandomSearch,
-)
-from smac.acquisition import EI, AbstractAcquisitionFunction
-from smac.configspace import Configuration
-from smac.intensification.intensification import Intensifier
-from smac.initial_design.initial_design import InitialDesign
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
-from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
+from smac.model.utils import get_types
 
 __author__ = "Marius Lindauer"  # TODO leave author as is?
 __copyright__ = "Copyright 2018, ML4AAD"
@@ -88,12 +81,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         # self.solver.epm_chooser.predict_x_best = True
 
     @staticmethod
-    def get_model(
-        config: Config,
-        *,
-        model_type: str = "gp",
-        kernel: kernels.Kernel | None = None
-    ) -> BaseModel:
+    def get_model(config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None) -> BaseModel:
         available_model_types = ["gp", "gp_mcmc"]
         if model_type not in available_model_types:
             raise ValueError(f"model_type {model_type} not in available model types")
@@ -110,7 +98,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
                 bounds=bounds,
                 kernel=kernel,
                 normalize_y=True,
-                seed=rng.integers(low=0, high=2 ** 20),
+                seed=rng.integers(low=0, high=2**20),
             )
         elif model_type == "gp_mcmc":
             n_mcmc_walkers = 3 * len(kernel.theta)
@@ -127,7 +115,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
                 chain_length=250,
                 burnin_steps=250,
                 normalize_y=True,
-                seed=rng.integers(low=0, high=2 ** 20),
+                seed=rng.integers(low=0, high=2**20),
             )
         else:
             raise ValueError("Unknown model type %s" % model_type)
@@ -143,9 +131,11 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         cat_dims = np.where(np.array(types) != 0)[0]
 
         if (len(cont_dims) + len(cat_dims)) != len(config.configspace.get_hyperparameters()):
-            raise ValueError("The inferred number of continuous and categorical hyperparameters "
-                             "must equal the total number of hyperparameters. Got "
-                             f"{(len(cont_dims) + len(cat_dims))} != {len(config.configspace.get_hyperparameters())}.")
+            raise ValueError(
+                "The inferred number of continuous and categorical hyperparameters "
+                "must equal the total number of hyperparameters. Got "
+                f"{(len(cont_dims) + len(cat_dims))} != {len(config.configspace.get_hyperparameters())}."
+            )
 
         # Constant Kernel
         cov_amp = ConstantKernel(
@@ -155,7 +145,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         )
 
         # Continuous / Categorical Kernels
-        exp_kernel, ham_kernel = 0., 0.
+        exp_kernel, ham_kernel = 0.0, 0.0
         if len(cont_dims) > 0:
             exp_kernel = Matern(
                 np.ones([len(cont_dims)]),
@@ -190,8 +180,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
             kernel = cov_amp * ham_kernel + noise_kernel
 
         else:
-            raise ValueError("The number of continuous and categorical hyperparameters "
-                             "must be greater than zero.")
+            raise ValueError("The number of continuous and categorical hyperparameters " "must be greater than zero.")
 
         return kernel
 
@@ -201,9 +190,11 @@ class SMAC4BB(AlgorithmConfigurationFacade):
 
     @staticmethod
     def get_acquisition_optimizer(
-        config: Config, acquisition_function: AbstractAcquisitionFunction, *,
-            n_steps_plateau_walk: int = 10,
-            n_sls_iterations: int = 10,
+        config: Config,
+        acquisition_function: AbstractAcquisitionFunction,
+        *,
+        n_steps_plateau_walk: int = 10,
+        n_sls_iterations: int = 10,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             acquisition_function,
@@ -245,10 +236,13 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         return intensifier
 
     @staticmethod
-    def get_initial_design(config: Config, *, initial_configs: list[Configuration] | None = None,
-                           n_configs_per_hyperparameter: int = 8,
-                           max_config_fracs: float = 0.25
-                           ) -> InitialDesign:  # TODO should we put all args from the class in signature?
+    def get_initial_design(
+        config: Config,
+        *,
+        initial_configs: list[Configuration] | None = None,
+        n_configs_per_hyperparameter: int = 8,
+        max_config_fracs: float = 0.25,
+    ) -> InitialDesign:  # TODO should we put all args from the class in signature?
         if len(config.configspace.get_hyperparameters()) > 21201:
             raise ValueError(
                 'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
@@ -265,5 +259,7 @@ class SMAC4BB(AlgorithmConfigurationFacade):
         return initial_design
 
     @staticmethod
-    def get_random_configuration_chooser(config: Config, *, random_probability: float = 0.08447232371720552) -> RandomChooser:
+    def get_random_configuration_chooser(
+        config: Config, *, random_probability: float = 0.08447232371720552
+    ) -> RandomChooser:
         return ChooserProb(rng=np.default_rng(seed=config.seed), prob=random_probability)
