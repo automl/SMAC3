@@ -112,7 +112,6 @@ class SMAC4BB(Facade):
                 bounds=bounds,
                 kernel=kernel,
                 n_mcmc_walkers=n_mcmc_walkers,
-                # integrate_acquisition_function=True,  # TODO what happened to this argument?
                 chain_length=250,
                 burnin_steps=250,
                 normalize_y=True,
@@ -194,14 +193,12 @@ class SMAC4BB(Facade):
         config: Config,
         acquisition_function: AbstractAcquisitionFunction,
         *,
-        n_steps_plateau_walk: int = 10,
         n_sls_iterations: int = 10,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             acquisition_function,
             config_space=config.configspace,
             n_sls_iterations=n_sls_iterations,
-            n_steps_plateau_walk=n_steps_plateau_walk,
             seed=config.seed,
         )
         return optimizer
@@ -262,3 +259,21 @@ class SMAC4BB(Facade):
         config: Config, *, random_probability: float = 0.08447232371720552
     ) -> RandomChooser:
         return ChooserProb(rng=np.default_rng(seed=config.seed), prob=random_probability)
+
+    @staticmethod
+    def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
+        if len(config.objectives) <= 1:
+            return None
+
+        return MeanAggregationStrategy(config.seed)
+
+    @staticmethod
+    def get_runhistory_transformer(config: Config):
+        transformer = RunhistoryTransformer(
+            config=config,
+            n_params=len(config.configspace.get_hyperparameters()),
+            scale_percentage=5,
+            seed=config.seed,
+        )
+
+        return transformer
