@@ -8,8 +8,8 @@ from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.acquisition import TS, AbstractAcquisitionFunction
 from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
-from smac.model.configuration_chooser.random_chooser import (
+from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )
@@ -19,7 +19,7 @@ from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.utils.stats import Stats
 
 
-class TurBOChooser(EPMChooser):
+class TurBOChooser(ConfigurationChooser):
     """
     Interface to train the EPM and generate next configurations with TurBO:
         D. Eriksson et al. Scalable Global Optimization via Local Bayesian Optimization

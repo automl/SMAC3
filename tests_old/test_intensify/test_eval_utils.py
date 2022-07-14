@@ -1,6 +1,6 @@
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.utils.stats import Stats
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner.algorithm_executer import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

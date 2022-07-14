@@ -5,7 +5,7 @@ import logging
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 
-from smac.algorithm_executer.algorithm_executer import ExecuteTAFuncArray
+from smac.runner.algorithm_executer import ExecuteTAFuncArray
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.facade.hyperparameter_optimization import SMAC4HPO

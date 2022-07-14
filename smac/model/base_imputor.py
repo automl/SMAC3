@@ -11,7 +11,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class BaseImputor(object):
+class BaseImputor:
     """Abstract implementation of the Imputation API."""
 
     def __init__(self) -> None:

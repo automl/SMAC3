@@ -9,13 +9,13 @@ from smac.configspace import (
     UniformFloatHyperparameter,
     UniformIntegerHyperparameter,
 )
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class BaseModel(BaseEPM):
+class BaseRandomForest(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -67,6 +67,6 @@ class BaseModel(BaseEPM):
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances  # noqa
 
 __all__ = [
-    "BaseModel",
+    "BaseRandomForest",
     "RandomForestWithInstances",
 ]

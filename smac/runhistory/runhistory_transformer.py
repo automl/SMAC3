@@ -1,3 +1,4 @@
+from __future__ import annotations
 import abc
 from typing import Dict, List, Mapping, Optional, Tuple
 
@@ -6,7 +7,7 @@ import logging
 import numpy as np
 
 from smac import constants
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 from smac.config import Config
 from smac.configspace import convert_configurations_to_array
 from smac.model.base_imputor import BaseImputor
@@ -161,10 +162,10 @@ class AbstractRunhistoryTransformer(object):
         self.max_y = np.array([np.NaN] * self.num_obj)
         self.perc = np.array([np.NaN] * self.num_obj)
 
-    def set_imputer(self, imputer: BaseImputor) -> None:
+    def set_imputer(self, imputer: BaseImputor | None) -> None:
         self.imputer = imputer
 
-    def set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm) -> None:
+    def set_multi_objective_algorithm(self, multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None) -> None:
         self.multi_objective_algorithm = multi_objective_algorithm
 
     @abc.abstractmethod
@@ -361,7 +362,7 @@ class AbstractRunhistoryTransformer(object):
                 cen_Y = np.concatenate((cen_Y, tY))
 
                 # return imp_Y in PAR depending on the used threshold in imputer
-                assert isinstance(self.imputer, Baseimputer)  # please mypy
+                assert isinstance(self.imputer, BaseImputor)  # please mypy
                 imp_Y = self.imputer.impute(censored_X=cen_X, censored_y=cen_Y, uncensored_X=X, uncensored_y=Y)
 
                 # Shuffle data to mix censored and imputed data

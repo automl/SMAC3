@@ -2,7 +2,6 @@ We removed run_obj == runtime COMPLETELY
 => no adaptive capping
 
 
-
 cutoff/cutoff-time/cutoff_time => algorithm_walltime_limit
 algo_runs_timelimit/tuner-timout/tuner_timout => cputime_limit
 tae/ta/target_algorithm => target_algorithm
@@ -13,7 +12,6 @@ num_trees => n_trees
 output_dir => output_directory
 ta_run_limit/ta-run-limit/runcount-limit/runcount_limit => n_runs
 cs/configspace/config_space => configspace
-
 
 AbstractTAFunc => AbstractAlgorithmExecuter
 ExecuteTAFuncArray/ExecuteTAFuncDict => AlgorithmExecuter

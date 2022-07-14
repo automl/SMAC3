@@ -11,7 +11,7 @@ from smac.initial_design.default_configuration_design import DefaultInitialDesig
 from smac.initial_design.initial_design import InitialDesign
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner.algorithm_executer import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

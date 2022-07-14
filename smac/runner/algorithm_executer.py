@@ -11,8 +11,8 @@ import pynisher
 from smac.configspace import Configuration
 from smac.constants import MAX_CUTOFF, MAXINT
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.serial_runner import SerialRunner
+from smac.runner import StatusType
+from smac.runner.serial_runner import SerialRunner
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer, Matthias Feurer"

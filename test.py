@@ -26,5 +26,4 @@ if __name__ == "__main__":
     # Scenario object
     config = Config(cs)
     smac = AlgorithmConfigurationFacade(config, rosenbrock_2d)
-
     smac.optimize()

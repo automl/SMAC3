@@ -11,8 +11,8 @@ from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.execute_ta_run_old import ExecuteTARunOld
+from smac.runner import StatusType
+from smac.runner.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.validate import Validator, _Run
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

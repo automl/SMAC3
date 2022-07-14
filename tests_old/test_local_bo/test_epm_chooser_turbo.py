@@ -6,7 +6,7 @@ from smac.cli.scenario import Scenario
 from smac.facade.black_box import SMAC4BB
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 from smac.runhistory.runhistory import RunHistory
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 from smac.utils import test_helpers
 
 

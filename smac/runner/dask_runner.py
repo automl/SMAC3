@@ -7,8 +7,8 @@ import warnings
 import dask
 from dask.distributed import Client, Future, wait
 
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.base import BaseRunner
+from smac.runner import StatusType
+from smac.runner.base import BaseRunner
 from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunInfo, RunValue
 

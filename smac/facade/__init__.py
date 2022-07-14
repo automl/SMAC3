@@ -5,20 +5,21 @@ import dask
 import joblib
 
 import numpy as np
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner.algorithm_executer import AlgorithmExecuter
 from smac.configspace import Configuration
 from smac.acquisition import AbstractAcquisitionFunction
 from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.algorithm_executer.base import BaseRunner
+from smac.runner.base import BaseRunner
 from smac.config import Config
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.model.base_imputor import BaseImputor
-from smac.model.configuration_chooser.random_chooser import RandomChooser
+from smac.chooser.random_chooser import RandomChooser
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.utils.logging import get_logger
@@ -34,15 +35,13 @@ class Facade:
         config: Config,
         target_algorithm: BaseRunner | Callable,
         *,
-        model: BaseEPM | None = None,  # Optimizer model
+        model: BaseModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
         acquisition_optimizer: AbstractAcquisitionOptimizer | None = None,
         initial_design: InitialDesign | None = None,
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractRacer | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
-        dask_client: dask.distributed.Client | None = None,
-        stats: Stats | None = None,
         run_id: int | None = None,
     ):
         # TODO: How to integrate `restore_incumbent`?
@@ -54,7 +53,7 @@ class Facade:
             acquisition_function = self.get_acquisition_function(config)
 
         if acquisition_optimizer is None:
-            acquisition_function_optimizer = self.get_acquisition_optimizer(config, acquisition_function)
+            acquisition_optimizer = self.get_acquisition_optimizer(config, acquisition_function)
 
         if initial_design is None:
             initial_design = self.get_initial_design(config)
@@ -68,8 +67,7 @@ class Facade:
         if multi_objective_algorithm is None:
             multi_objective_algorithm = self.get_multi_objective_algorithm(config)
 
-        if stats is None:
-            stats = Stats(config)
+        stats = Stats(config)
 
         # Set the seed for configuration space
         config.configspace.seed(config.seed)
@@ -78,29 +76,33 @@ class Facade:
         if callable(target_algorithm):
             # We wrap our algorithm with the AlgorithmExecuter to use pynisher
             # and to catch exceptions
-            algorithm = AlgorithmExecuter(target_algorithm, stats=stats)
+            runner = AlgorithmExecuter(target_algorithm, stats=stats)
+        elif isinstance(target_algorithm, BaseRunner):
+            runner = target_algorithm
         else:
             # TODO: Integrate ExecuteTARunOld again
             raise NotImplementedError
 
         # In case of multiple jobs, we need to pass the algorithm to the dask client
+        logger.info("FIXME: Parallelization is not working yet.")
         if config.n_workers == -1:
             n_workers = joblib.cpu_count()
         elif config.n_workers > 1:
-            algorithm = DaskParallelRunner(  # type: ignore
-                algorithm,
-                n_workers=n_workers,
-                output_directory=config.output_directory,
-                dask_client=dask_client,
-            )
+            pass
+            # algorithm = DaskParallelRunner(  # type: ignore
+            #    algorithm,
+            #    n_workers=n_workers,
+            #    output_directory=config.output_directory,
+            #    dask_client=dask_client,
+            # )
 
         # Set variables globally
         self.config = config
         self.configspace = config.configspace
-        self.algorithm = algorithm
+        self.runner = runner
         self.model = model
         self.acquisition_function = acquisition_function
-        self.acquisition_function_optimizer = acquisition_function_optimizer
+        self.acquisition_optimizer = acquisition_optimizer
         self.initial_design = initial_design
         self.random_configuration_chooser = random_configuration_chooser
         self.intensifier = intensifier
@@ -123,13 +125,15 @@ class Facade:
         # Unfortunately, we can't use the update method
         # here as update might incorporate increasing steps or else
         self.acquisition_function.set_model(model)
-        exit()
+
+        if run_id is None:
+            run_id = 0
 
         # Create optimizer
         self.optimizer = SMBO(
             config=config,
             stats=stats,
-            algorithm=algorithm,
+            runner=runner,
             initial_design=initial_design,
             runhistory=self.runhistory,
             runhistory_transformer=self.runhistory_transformer,
@@ -144,7 +148,7 @@ class Facade:
 
     def _validate(self) -> None:
         # Make sure the same acquisition function is used
-        assert self.acquisition_function == self.acquisition_function_optimizer.acquisition_function
+        assert self.acquisition_function == self.acquisition_optimizer.acquisition_function
 
         # We have to check that if we use transform_y it's done everywhere
         # For example, if we have LogEI, we also need to transform the data inside RunhistoryTransformer
@@ -152,7 +156,7 @@ class Facade:
     def _get_imputer(self) -> BaseImputor | None:
         assert self.model is not None
 
-        logger.error("FIX IMPUTOR: HOW TO TRANSFORM Y?")
+        logger.error("FIX ME: HOW TO TRANSFORM Y?")
         return None
 
         if isinstance(self.model, RandomForestWithInstances):
@@ -203,7 +207,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_model(config: Config) -> BaseEPM:
+    def get_model(config: Config) -> BaseModel:
         raise NotImplementedError
 
     @staticmethod

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Mapping
 
 import ConfigSpace
@@ -14,7 +15,7 @@ class Config:
     """
 
     configspace: ConfigSpace
-    output_directory: str | None = None
+    output_directory: Path | None = None
     deterministic: bool = True  # Whether the algorithm is determinstic or not
 
     # Original: "run_obj"
@@ -30,8 +31,8 @@ class Config:
     # transform_y: str | None = None  # Whether y should be transformed (different runhistory2epm)
 
     # Limitations
-    walltime_limit: float | None = None
-    cputime_limit: float | None = None
+    walltime_limit: float = np.inf
+    cputime_limit: float = np.inf
     memory_limit: float | None = None
     algorithm_walltime_limit: float | None = None
     n_runs: int = 200
@@ -55,7 +56,14 @@ class Config:
         # transform_y_options = [None, "log", "log_scaled", "inverse_scaled"]
         # if self.transform_y not in transform_y_options:
         #    raise RuntimeError(f"`transform_y` must be one of `{transform_y_options}`")
-        pass
+
+        if self.output_directory is None:
+            # Since the dataclass is frozen, we have to hack around this.
+            object.__setattr__(self, "output_directory", Path("smac3_output"))
+
+        # Create folder
+        assert self.output_directory
+        self.output_directory.mkdir(parents=True, exist_ok=True)
 
     def count_objectives(self) -> int:
         if isinstance(self.objectives, list):

@@ -14,9 +14,9 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.dask_runner import DaskParallelRunner
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner import StatusType
+from smac.runner.dask_runner import DaskParallelRunner
+from smac.runner.algorithm_executer import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

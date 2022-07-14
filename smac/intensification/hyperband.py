@@ -8,7 +8,7 @@ from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import (  # noqa: F401
     RunHistory,
     RunInfo,
@@ -166,7 +166,7 @@ class _Hyperband(_SuccessiveHalving):
             result=result,
             log_traj=log_traj,
         )
-        self.num_run += 1
+        self.run_id += 1
 
         # reset if SH iteration is over, else update for next iteration
         if self.sh_intensifier.iteration_done:
@@ -178,7 +178,7 @@ class _Hyperband(_SuccessiveHalving):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -260,7 +260,7 @@ class _Hyperband(_SuccessiveHalving):
             self.s = self.s_max
             self.hb_iters += 1
             self.iteration_done = True
-            self.num_run = 0
+            self.run_id = 0
         else:
             # update for next iteration
             self.s -= 1

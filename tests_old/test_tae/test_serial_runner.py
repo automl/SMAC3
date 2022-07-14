@@ -6,9 +6,9 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
-from smac.algorithm_executer.serial_runner import SerialRunner
+from smac.runner import StatusType
+from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.serial_runner import SerialRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

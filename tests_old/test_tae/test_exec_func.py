@@ -9,8 +9,8 @@ import numpy as np
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.algorithm_executer import ExecuteTAFuncArray, AlgorithmExecuter
+from smac.runner import StatusType
+from smac.runner.algorithm_executer import ExecuteTAFuncArray, AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

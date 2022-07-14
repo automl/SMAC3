@@ -4,13 +4,13 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class MultiObjectiveEPM(BaseEPM):
+class MultiObjectiveModel(BaseModel):
     """Wrapper for the surrogate models to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -73,7 +73,7 @@ class MultiObjectiveEPM(BaseEPM):
             model_kwargs = {}
         self.target_names = target_names
         self.num_targets = len(self.target_names)
-        self.estimators: List[BaseEPM] = self.construct_estimators(configspace, types, bounds, model_kwargs)
+        self.estimators: List[BaseModel] = self.construct_estimators(configspace, types, bounds, model_kwargs)
 
     @abstractmethod
     def construct_estimators(
@@ -82,7 +82,7 @@ class MultiObjectiveEPM(BaseEPM):
         types: List[int],
         bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[BaseEPM]:
+    ) -> List[BaseModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters
@@ -106,7 +106,7 @@ class MultiObjectiveEPM(BaseEPM):
         """
         raise NotImplementedError
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "MultiObjectiveEPM":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "MultiObjectiveModel":
         """Trains the models on X and y.
 
         Parameters

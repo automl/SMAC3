@@ -4,8 +4,8 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.base import BaseRunner
+from smac.runner import StatusType
+from smac.runner.base import BaseRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

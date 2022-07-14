@@ -7,14 +7,14 @@ from sklearn.gaussian_process.kernels import Kernel, KernelOperator
 
 import smac.model.gaussian_process.utils.prior
 from smac.configspace import ConfigurationSpace
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class BaseModel(BaseEPM):
+class BaseGaussianProcess(BaseModel):
     def __init__(
         self,
         configspace: ConfigurationSpace,
@@ -162,4 +162,4 @@ class BaseModel(BaseEPM):
 
 from smac.model.gaussian_process.gp import GaussianProcess  # noqa
 
-__all__ = ["BaseModel", "GaussianProcess"]
+__all__ = ["BaseGaussianProcess", "GaussianProcess"]

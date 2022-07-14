@@ -9,14 +9,14 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.acquisition import EI, TS, AbstractAcquisitionFunction
 from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
-from smac.model.configuration_chooser.random_chooser import (
+from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )
@@ -27,7 +27,7 @@ from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4CostWithRaw
 from smac.utils.stats import Stats
 
 
-class BOinGChooser(EPMChooser):
+class BOinGChooser(ConfigurationChooser):
     """
     Interface to train the EPM and generate next configurations with both global and local models.
 
@@ -77,7 +77,7 @@ class BOinGChooser(EPMChooser):
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
-        model_local: Union[BaseEPM, Type[BaseEPM]] = GloballyAugmentedLocalGaussianProcess,
+        model_local: Union[BaseModel, Type[BaseModel]] = GloballyAugmentedLocalGaussianProcess,
         acquisition_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = EI,
         model_local_kwargs: Optional[Dict] = None,
         acquisition_func_local_kwargs: Optional[Dict] = None,

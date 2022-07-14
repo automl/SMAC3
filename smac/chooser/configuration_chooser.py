@@ -4,7 +4,7 @@ import logging
 
 import numpy as np
 
-from smac.cli.scenario import Scenario
+from smac.config import Config
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
@@ -13,7 +13,7 @@ from smac.acquisition.maximizer import (
     AbstractAcquisitionOptimizer,
     RandomSearch,
 )
-from smac.model.configuration_chooser.random_chooser import (
+from smac.chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )
@@ -25,13 +25,13 @@ __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class EPMChooser:
+class ConfigurationChooser:
     """Interface to train the EPM and generate/choose next configurations.
 
     Parameters
     ----------
-    scenario: smac.scenario.scenario.Scenario
-        Scenario object
+    config: smac.config.config.config
+        config object
     stats: smac.stats.stats.Stats
         statistics object with configuration budgets
     runhistory: smac.runhistory.runhistory.RunHistory
@@ -39,7 +39,7 @@ class EPMChooser:
     model: smac.epm.rf_with_instances.RandomForestWithInstances
         empirical performance model (right now, we support only
         RandomForestWithInstances)
-    acq_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
+    acquisition_optimizer: smac.optimizer.ei_optimization.AcquisitionFunctionMaximizer
         Optimizer of acquisition function.
     restore_incumbent: Configuration
         incumbent to be used from the start. ONLY used to restore states.
@@ -60,37 +60,37 @@ class EPMChooser:
 
     def __init__(
         self,
-        scenario: Scenario,
+        config: Config,
         stats: Stats,
         runhistory: RunHistory,
-        runhistory2epm: AbstractRunhistoryTransformer,
+        runhistory_transformer: AbstractRunhistoryTransformer,
         model: RandomForestWithInstances,
-        acq_optimizer: AbstractAcquisitionOptimizer,
-        acquisition_func: AbstractAcquisitionFunction,
-        rng: np.random.RandomState,
+        acquisition_optimizer: AbstractAcquisitionOptimizer,
+        acquisition_function: AbstractAcquisitionFunction,
         restore_incumbent: Configuration = None,
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
+        seed: int = 0,
         **epm_chooser_kwargs: Any,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.incumbent = restore_incumbent
 
-        self.scenario = scenario
+        self.config = config
         self.stats = stats
         self.runhistory = runhistory
-        self.rh2EPM = runhistory2epm
+        self.rh2EPM = runhistory_transformer
         self.model = model
-        self.acq_optimizer = acq_optimizer
-        self.acquisition_func = acquisition_func
-        self.rng = rng
+        self.acquisition_optimizer = acquisition_optimizer
+        self.acquisition_function = acquisition_function
+        self.rng = np.random.RandomState(seed)
         self.random_configuration_chooser = random_configuration_chooser
 
         self._random_search = RandomSearch(
-            acquisition_func,
-            self.scenario.cs,  # type: ignore[attr-defined] # noqa F821
-            rng,
+            acquisition_function,
+            self.config.configspace,  # type: ignore[attr-defined] # noqa F821
+            seed=seed,
         )
 
         self.initial_design_configs = []  # type: List[Configuration]
@@ -143,7 +143,7 @@ class EPMChooser:
 
     def choose_next(self, incumbent_value: float = None) -> Iterator[Configuration]:
         """Choose next candidate solution with Bayesian optimization. The suggested configurations
-        depend on the argument ``acq_optimizer`` to the ``SMBO`` class.
+        depend on the argument ``acquisition_optimizer`` to the ``SMBO`` class.
 
         Parameters
         ----------
@@ -173,7 +173,7 @@ class EPMChooser:
                 raise ValueError("Runhistory is empty and the cost value of " "the incumbent is unknown.")
             x_best_array, best_observation = self._get_x_best(self.predict_x_best, X_configurations)
 
-        self.acquisition_func.update(
+        self.acquisition_function.update(
             model=self.model,
             eta=best_observation,
             incumbent_array=x_best_array,
@@ -181,10 +181,10 @@ class EPMChooser:
             X=X_configurations,
         )
 
-        challengers = self.acq_optimizer.maximize(
+        challengers = self.acquisition_optimizer.maximize(
             runhistory=self.runhistory,
             stats=self.stats,
-            num_points=self.scenario.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
+            num_points=self.config.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser=self.random_configuration_chooser,
         )
         return challengers

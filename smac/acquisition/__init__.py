@@ -10,7 +10,7 @@ from scipy.stats import norm
 
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Aaron Klein, Marius Lindauer"
@@ -33,7 +33,7 @@ class AbstractAcquisitionFunction(object, metaclass=abc.ABCMeta):
     """
 
     def __init__(self):
-        self.model: BaseEPM | None = None
+        self.model: BaseModel | None = None
         self._required_updates = ("model",)  # type: Tuple[str, ...]
         self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 

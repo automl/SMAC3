@@ -6,7 +6,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.model.random_epm import RandomEPM
+from smac.model.random_model import RandomModel
 from smac.facade.hyperband_facade import HB4AC
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
@@ -39,7 +39,7 @@ class TestHBFacade(unittest.TestCase):
         facade = HB4AC(scenario=scenario, intensifier_kwargs=hb_kwargs)
 
         self.assertIsInstance(facade.solver.initial_design, RandomInitialDesign)
-        self.assertIsInstance(facade.solver.epm_chooser.model, RandomEPM)
+        self.assertIsInstance(facade.solver.epm_chooser.model, RandomModel)
         self.assertIsInstance(facade.solver.intensifier, Hyperband)
         self.assertEqual(facade.solver.intensifier.min_chall, 1)
         self.output_dirs.append(scenario.output_dir)

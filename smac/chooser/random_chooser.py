@@ -18,8 +18,8 @@ class RandomChooser(ABC):
     of challengers.
     """
 
-    def __init__(self, rng: Optional[np.random.RandomState] = None):
-        self.rng = rng or np.random.RandomState(seed=0)
+    def __init__(self, seed: int = 0):
+        self.rng = np.random.RandomState(seed=seed)
 
     @abstractmethod
     def next_smbo_iteration(self) -> None:
@@ -42,8 +42,8 @@ class ChooserNoCoolDown(RandomChooser):
         Every modulus-th configuration will be at random.
     """
 
-    def __init__(self, rng: Optional[np.random.RandomState] = None, modulus: float = 2.0):
-        super().__init__(rng)
+    def __init__(self, modulus: float = 2.0, seed: int = 0):
+        super().__init__(seed)
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if modulus <= 1.0:
@@ -77,12 +77,12 @@ class ChooserLinearCoolDown(RandomChooser):
 
     def __init__(
         self,
-        rng: Optional[np.random.RandomState] = None,
         start_modulus: float = 2.0,
         modulus_increment: float = 0.3,
         end_modulus: float = np.inf,
+        seed: int = 0,
     ):
-        super().__init__(rng)
+        super().__init__(seed)
 
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         if start_modulus <= 1.0 and modulus_increment <= 0.0:
@@ -118,8 +118,8 @@ class ChooserProb(RandomChooser):
         Random state
     """
 
-    def __init__(self, rng: Optional[np.random.RandomState], prob: float):
-        super().__init__(rng)
+    def __init__(self, prob: float, seed: int = 0):
+        super().__init__(seed)
         self.prob = prob
 
     def next_smbo_iteration(self) -> None:
@@ -148,8 +148,8 @@ class ChooserProbCoolDown(RandomChooser):
         Random state
     """
 
-    def __init__(self, rng: Optional[np.random.RandomState], prob: float, cool_down_fac: float):
-        super().__init__(rng)
+    def __init__(self, prob: float, cool_down_fac: float, seed: int = 0):
+        super().__init__(seed)
         self.prob = prob
         self.cool_down_fac = cool_down_fac
 
@@ -183,12 +183,12 @@ class ChooserCosineAnnealing(RandomChooser):
 
     def __init__(
         self,
-        rng: Optional[np.random.RandomState],
         prob_max: float,
         prob_min: float,
         restart_iteration: int,
+        seed: int = 0,
     ):
-        super().__init__(rng)
+        super().__init__(seed)
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.prob_max = prob_max
         self.prob_min = prob_min

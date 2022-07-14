@@ -6,7 +6,7 @@ import numpy as np
 
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
 
@@ -105,7 +105,7 @@ class ParallelScheduler(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = False,
         num_workers: int = 1,

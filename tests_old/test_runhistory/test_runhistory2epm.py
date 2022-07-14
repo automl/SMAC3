@@ -9,7 +9,7 @@ from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.model.utils import get_types
 from smac.runhistory import runhistory, runhistory_transformer
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"

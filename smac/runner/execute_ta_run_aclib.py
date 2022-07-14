@@ -3,8 +3,8 @@ from typing import Dict, List, Optional, Tuple
 import json
 from subprocess import PIPE, Popen
 
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.serial_runner import SerialRunner
+from smac.runner import StatusType
+from smac.runner.serial_runner import SerialRunner
 from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"

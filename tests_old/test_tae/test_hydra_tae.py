@@ -5,9 +5,9 @@ import unittest
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.algorithm_executer.execute_ta_run_hydra import ExecuteTARunHydra
+from smac.runner import StatusType
+from smac.runner.execute_ta_run_aclib import ExecuteTARunAClib
+from smac.runner.execute_ta_run_hydra import ExecuteTARunHydra
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

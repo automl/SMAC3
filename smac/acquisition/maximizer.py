@@ -17,7 +17,7 @@ from smac.configspace import (
     get_one_exchange_neighbourhood,
 )
 from smac.acquisition import AbstractAcquisitionFunction
-from smac.model.configuration_chooser.random_chooser import (
+from smac.chooser.random_chooser import (
     ChooserNoCoolDown,
     RandomChooser,
 )

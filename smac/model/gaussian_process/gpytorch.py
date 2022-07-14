@@ -21,7 +21,7 @@ from scipy import optimize
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process import BaseModel
+from smac.model.gaussian_process import BaseGaussianProcess
 
 warnings.filterwarnings("ignore", module="gpytorch")
 
@@ -58,7 +58,7 @@ class ExactGPModel(ExactGP):
         return MultivariateNormal(mean_x, covar_x)
 
 
-class GPyTorchGaussianProcess(BaseModel):
+class GPyTorchGaussianProcess(BaseGaussianProcess):
     def __init__(
         self,
         configspace: ConfigurationSpace,

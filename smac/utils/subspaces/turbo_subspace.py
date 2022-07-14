@@ -9,7 +9,7 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 from scipy.stats.qmc import LatinHypercube, Sobol
 
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.model.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
@@ -54,7 +54,7 @@ class TuRBOSubSpace(LocalSubspace):
         hps_types: List[int],
         bounds_ss_cont: Optional[np.ndarray] = None,
         bounds_ss_cat: Optional[List[Tuple]] = None,
-        model_local: Union[BaseEPM, Type[BaseEPM]] = GPyTorchGaussianProcess,
+        model_local: Union[BaseModel, Type[BaseModel]] = GPyTorchGaussianProcess,
         model_local_kwargs: Dict = {},
         acq_func_local: Union[AbstractAcquisitionFunction, Type[AbstractAcquisitionFunction]] = TS,
         acq_func_local_kwargs: Optional[Dict] = None,

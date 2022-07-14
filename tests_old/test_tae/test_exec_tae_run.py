@@ -8,8 +8,8 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.serial_runner import SerialRunner
+from smac.runner import StatusType
+from smac.runner.serial_runner import SerialRunner
 
 if sys.version_info[0] == 2:
     import mock

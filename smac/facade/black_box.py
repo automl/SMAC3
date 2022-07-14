@@ -16,8 +16,8 @@ from smac.facade import Facade
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.configuration_chooser.random_chooser import ChooserProb, RandomChooser
-from smac.model.gaussian_process import BaseModel, GaussianProcess
+from smac.chooser.random_chooser import ChooserProb, RandomChooser
+from smac.model.gaussian_process import BaseGaussianProcess, GaussianProcess
 from smac.model.gaussian_process.kernels import (
     ConstantKernel,
     HammingKernel,
@@ -86,7 +86,7 @@ class SMAC4BB(Facade):
         if len(self.config.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
-        if not isinstance(self.model, BaseModel):
+        if not isinstance(self.model, BaseGaussianProcess):
             raise ValueError(
                 "The Black-Box facade only works with Gaussian Process-"
                 "like surrogate models (inheriting from smac.model.gaussian_process.BaseModel, "
@@ -94,7 +94,9 @@ class SMAC4BB(Facade):
             )
 
     @staticmethod
-    def get_model(config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None) -> BaseModel:
+    def get_model(
+        config: Config, *, model_type: str = "gp", kernel: kernels.Kernel | None = None
+    ) -> BaseGaussianProcess:
         available_model_types = ["gp", "gp_mcmc"]
         if model_type not in available_model_types:
             raise ValueError(f"model_type {model_type} not in available model types")

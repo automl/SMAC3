@@ -20,7 +20,7 @@ from smac.optimizer.acquisition.maximizer import (
     RandomSearch,
 )
 from smac.runhistory.runhistory import RunHistory
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 from smac.utils import test_helpers
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

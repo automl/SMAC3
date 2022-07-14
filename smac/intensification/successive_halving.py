@@ -9,10 +9,10 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -390,9 +390,9 @@ class _SuccessiveHalving(AbstractRacer):
             self.curr_inst_idx[run_info.config] = np.inf
         else:
             self._ta_time = self._ta_time  # type: float # make mypy happy
-            self.num_run = self.num_run  # type: int # make mypy happy
+            self.run_id = self.run_id  # type: int # make mypy happy
             self._ta_time += result.time
-            self.num_run += 1
+            self.run_id += 1
 
         # 0: Before moving to a new stage, we have to complete M x N tasks, where M is the
         # total number of configurations evaluated in N instance/seed pairs.
@@ -473,7 +473,7 @@ class _SuccessiveHalving(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -760,7 +760,7 @@ class _SuccessiveHalving(AbstractRacer):
                 # reset stats for the new iteration
                 self._ta_time = 0
                 self._chall_indx = 0
-                self.num_run = 0
+                self.run_id = 0
 
                 self.iteration_done = True
                 self.sh_iters += 1

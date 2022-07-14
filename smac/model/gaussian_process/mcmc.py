@@ -10,7 +10,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
-from smac.model.gaussian_process import BaseModel, GaussianProcess
+from smac.model.gaussian_process import BaseGaussianProcess, GaussianProcess
 from smac.model.gaussian_process.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -20,7 +20,7 @@ __license__ = "3-clause BSD"
 logger = logging.getLogger(__name__)
 
 
-class MCMCGaussianProcess(BaseModel):
+class MCMCGaussianProcess(BaseGaussianProcess):
     """Gaussian process model.
 
     The GP hyperparameters are integrated out by Markow-Chain-Monte-Carlo (MCMC) you use this class

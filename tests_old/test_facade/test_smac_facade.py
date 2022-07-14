@@ -11,7 +11,7 @@ from ConfigSpace.util import get_one_exchange_neighbourhood
 from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.model.random_epm import RandomEPM
+from smac.model.random_model import RandomModel
 from smac.model.random_forest.rf_mo import MultiObjectiveRandomForest
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_rng
@@ -36,8 +36,8 @@ from smac.runhistory.runhistory_transformer import (
     RunHistory2EPM4EIPS,
     RunhistoryLogTransformer,
 )
-from smac.algorithm_executer import StatusType
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner import StatusType
+from smac.runner.algorithm_executer import AlgorithmExecuter
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -211,8 +211,8 @@ class TestSMACFacade(unittest.TestCase):
         smbo = AlgorithmConfigurationFacade(self.scenario, model_kwargs={"num_trees": 20})
         self.assertIsInstance(smbo.solver.epm_chooser.model, RandomForestWithInstances)
         self.assertEqual(smbo.solver.epm_chooser.model.rf_opts.num_trees, 20)
-        smbo = AlgorithmConfigurationFacade(self.scenario, model=RandomEPM, model_kwargs={"seed": 2})
-        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomEPM)
+        smbo = AlgorithmConfigurationFacade(self.scenario, model=RandomModel, model_kwargs={"seed": 2})
+        self.assertIsInstance(smbo.solver.epm_chooser.model, RandomModel)
         self.assertEqual(smbo.solver.epm_chooser.model.seed, 2)
         # Check for construction failure on wrong argument
         with self.assertRaisesRegex(Exception, "got an unexpected keyword argument"):

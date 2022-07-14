@@ -11,7 +11,7 @@ from gpytorch.priors import HorseshoePrior, LogNormalPrior
 
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.facade.hyperparameter_optimization import SMAC4HPO
-from smac.model.configuration_chooser.boing_chooser import BOinGChooser
+from smac.chooser.boing_chooser import BOinGChooser
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
 
 

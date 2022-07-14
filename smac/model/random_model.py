@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 from smac.configspace import ConfigurationSpace
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 
 __author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
@@ -13,7 +13,7 @@ __email__ = "eggenspk@cs.uni-freiburg.de"
 __version__ = "0.0.1"
 
 
-class RandomEPM(BaseEPM):
+class RandomModel(BaseModel):
     """EPM which returns random values on a call to ``fit``.
 
     Parameters
@@ -58,7 +58,7 @@ class RandomEPM(BaseEPM):
         )
         self.rng = np.random.RandomState(self.seed)
 
-    def _train(self, X: np.ndarray, Y: np.ndarray) -> "RandomEPM":
+    def _train(self, X: np.ndarray, Y: np.ndarray) -> "RandomModel":
         """Pseudo training on X and Y.
 
         Parameters

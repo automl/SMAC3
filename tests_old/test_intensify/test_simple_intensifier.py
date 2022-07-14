@@ -11,7 +11,7 @@ from smac.intensification.abstract_racer import RunInfoIntent
 from smac.intensification.simple_intensifier import SimpleIntensifier
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

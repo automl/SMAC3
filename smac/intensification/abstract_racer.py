@@ -9,7 +9,7 @@ from enum import Enum
 import numpy as np
 
 from smac.configspace import Configuration
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.utils.logging import format_array
@@ -114,7 +114,7 @@ class AbstractRacer(object):
             self.instance_specifics = instance_specifics
 
         # general attributes
-        self.num_run = 0  # Number of runs done in an iteration so far
+        self.run_id = 0  # Number of runs done in an iteration so far
         self._chall_indx = 0
         self._ta_time = 0.0
 
@@ -131,7 +131,7 @@ class AbstractRacer(object):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -208,7 +208,7 @@ class AbstractRacer(object):
     def _next_challenger(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:

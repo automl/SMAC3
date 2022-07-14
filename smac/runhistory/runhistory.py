@@ -20,7 +20,7 @@ from enum import Enum
 
 import numpy as np
 
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
 from smac.utils.logging import PickableLoggerAdapter
@@ -60,7 +60,7 @@ class RunInfo(
             "instance",
             "instance_specific",
             "seed",
-            "cutoff",
+            "algorithm_walltime_limit",
             "capped",
             "budget",
             "source_id",
@@ -76,7 +76,7 @@ class RunInfo(
         instance: Optional[str],
         instance_specific: str,
         seed: int,
-        cutoff: Optional[float],
+        algorithm_walltime_limit: Optional[float],
         capped: bool,
         budget: float = 0.0,
         # In the context of parallel runs, one will have multiple suppliers of
@@ -91,7 +91,7 @@ class RunInfo(
             instance,
             instance_specific,
             seed,
-            cutoff,
+            algorithm_walltime_limit,
             capped,
             budget,
             source_id,

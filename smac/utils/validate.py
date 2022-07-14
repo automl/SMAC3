@@ -16,8 +16,8 @@ from smac.model.utils import get_types
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.utils.stats import Stats
-from smac.algorithm_executer.base import BaseRunner
-from smac.algorithm_executer.execute_ta_run_old import ExecuteTARunOld
+from smac.runner.base import BaseRunner
+from smac.runner.execute_ta_run_old import ExecuteTARunOld
 
 __author__ = "Joshua Marben"
 __copyright__ = "Copyright 2017, ML4AAD"

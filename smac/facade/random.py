@@ -7,7 +7,7 @@ import numpy as np
 
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
-from smac.model.random_epm import RandomEPM
+from smac.model.random_model import RandomModel
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
@@ -25,7 +25,7 @@ from smac.runhistory.runhistory_transformer import (
     RunhistoryLogTransformer,
 )
 from smac.utils.stats import Stats
-from smac.algorithm_executer.base import BaseRunner
+from smac.runner.base import BaseRunner
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
@@ -147,7 +147,7 @@ class ROAR(AlgorithmConfigurationFacade):
             run_id=run_id,
             acquisition_function_optimizer=acquisition_function_optimizer,
             acquisition_function_optimizer_kwargs=acquisition_function_optimizer_kwargs,
-            model=RandomEPM,
+            model=RandomModel,
             rng=rng,
             stats=stats,
             dask_client=dask_client,

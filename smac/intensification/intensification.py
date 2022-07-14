@@ -13,7 +13,7 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import (
     InstSeedBudgetKey,
     RunHistory,
@@ -188,7 +188,7 @@ class Intensifier(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
@@ -494,7 +494,7 @@ class Intensifier(AbstractRacer):
             IntensifierStage.PROCESS_FIRST_CONFIG_RUN,
         ]:
             self._ta_time += result.time
-            self.num_run += 1
+            self.run_id += 1
             self._process_inc_run(
                 incumbent=incumbent,
                 run_history=run_history,
@@ -502,7 +502,7 @@ class Intensifier(AbstractRacer):
             )
 
         else:
-            self.num_run += 1
+            self.run_id += 1
             self.num_chall_run += 1
             if result.status == StatusType.CAPPED:
                 # move on to the next iteration
@@ -527,7 +527,7 @@ class Intensifier(AbstractRacer):
             and self._chall_indx >= self.min_challenger
             and self.num_chall_run > 0
         ):
-            if self.num_run > self.run_limit:
+            if self.run_id > self.run_limit:
                 self.logger.debug("Maximum #runs for intensification reached")
                 self._next_iteration()
 
@@ -896,7 +896,7 @@ class Intensifier(AbstractRacer):
     def get_next_challenger(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
     ) -> Tuple[Optional[Configuration], bool]:
         """This function returns the next challenger, that should be exercised though lines 8-17.
 
@@ -960,7 +960,7 @@ class Intensifier(AbstractRacer):
     def _generate_challengers(
         self,
         challengers: Optional[List[Configuration]],
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
     ) -> _config_to_run_type:
         """Retuns a sequence of challengers to use in intensification If challengers are not
         provided, then optimizer will be used to generate the challenger list.
@@ -999,7 +999,7 @@ class Intensifier(AbstractRacer):
         self.update_configs_to_run = True
 
         # reset for a new iteration
-        self.num_run = 0
+        self.run_id = 0
         self.num_chall_run = 0
         self._chall_indx = 0
         self.elapsed_time = 0

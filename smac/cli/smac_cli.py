@@ -21,7 +21,7 @@ from smac.facade.psmac_facade import PSMAC  # type: ignore[attr-defined] # noqa 
 from smac.facade.random import ROAR
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats
-from smac.algorithm_executer import FirstRunCrashedException, TAEAbortException
+from smac.runner import FirstRunCrashedException, TAEAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 
 __author__ = "Marius Lindauer"

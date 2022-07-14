@@ -9,7 +9,7 @@ from sklearn.gaussian_process.kernels import Kernel
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.gaussian_process import BaseModel
+from smac.model.gaussian_process import BaseGaussianProcess
 from smac.model.gaussian_process.utils.prior import Prior
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -19,7 +19,7 @@ __license__ = "3-clause BSD"
 logger = logging.getLogger(__name__)
 
 
-class GaussianProcess(BaseModel):
+class GaussianProcess(BaseGaussianProcess):
     """Gaussian process model.
 
     The GP hyperparameterŝ are obtained by optimizing the marginal log likelihood.

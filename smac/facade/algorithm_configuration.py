@@ -6,15 +6,15 @@ import dask.distributed  # type: ignore
 import joblib
 import numpy as np  # type: ignore
 
-from smac.algorithm_executer.algorithm_executer import AlgorithmExecuter
+from smac.runner.algorithm_executer import AlgorithmExecuter
 
 # tae
-from smac.algorithm_executer.base import BaseRunner
-from smac.algorithm_executer.dask_runner import DaskParallelRunner
+from smac.runner.base import BaseRunner
+from smac.runner.dask_runner import DaskParallelRunner
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.model.base_epm import BaseEPM
+from smac.model.base_model import BaseModel
 from smac.model.base_imputor import BaseImputor
 
 # epm
@@ -38,7 +38,7 @@ from smac.acquisition.maximizer import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )
-from smac.model.configuration_chooser.random_chooser import (
+from smac.chooser.random_chooser import (
     ChooserProb,
     RandomChooser,
 )
@@ -150,7 +150,7 @@ class AlgorithmConfigurationFacade(Facade):
 
     @staticmethod
     def get_random_configuration_chooser(config: Config, *, random_probability: float = 0.5) -> RandomChooser:
-        return ChooserProb(rng=np.default_rng(seed=config.seed), prob=random_probability)
+        return ChooserProb(prob=random_probability, seed=config.seed)
 
     @staticmethod
     def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:

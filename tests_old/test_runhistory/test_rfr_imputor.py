@@ -15,7 +15,7 @@ from smac.model.random_forest import rfr_imputator
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
 from smac.runhistory import runhistory, runhistory_transformer
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

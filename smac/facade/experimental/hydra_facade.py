@@ -14,8 +14,8 @@ from collections import defaultdict
 import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
-from smac.algorithm_executer.base import BaseRunner
-from smac.algorithm_executer.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
+from smac.runner.base import BaseRunner
+from smac.runner.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
 from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
 from smac.constants import MAXINT

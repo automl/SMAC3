@@ -1,15 +1,15 @@
 from typing import Any, Dict, List, Tuple
 
 from smac.configspace import ConfigurationSpace
-from smac.model.base_epm import BaseEPM
-from smac.model.multi_objective_epm import MultiObjectiveEPM
+from smac.model.base_model import BaseModel
+from smac.model.multi_objective_model import MultiObjectiveModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class MultiObjectiveRandomForest(MultiObjectiveEPM):
+class MultiObjectiveRandomForest(MultiObjectiveModel):
     """Wrapper for the random forest to predict multiple targets.
 
     Only a list with the target names and the types array for the
@@ -24,7 +24,7 @@ class MultiObjectiveRandomForest(MultiObjectiveEPM):
         types: List[int],
         bounds: List[Tuple[float, float]],
         model_kwargs: Dict[str, Any],
-    ) -> List[BaseEPM]:
+    ) -> List[BaseModel]:
         """
         Construct a list of estimators. The number of the estimators equals 'self.num_targets'
         Parameters

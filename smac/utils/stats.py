@@ -56,19 +56,18 @@ class Stats:
 
     def save(self) -> None:
         """Save all relevant attributes to json-dictionary."""
-        if not self.config.output_dir_for_this_run:
+        if not self.config.output_directory:
             self._logger.debug("No scenario.output_dir: not saving stats!")
             return
         # Set used_wallclock_time
         self.wallclock_time_used = self.get_used_wallclock_time()
 
         data = {}
-
         for v in vars(self):
-            if v not in ["_Statsconfig", "_logger", "_start_time"]:
+            if v not in ["_Statsconfig", "_logger", "_start_time", "config"]:
                 data[v] = getattr(self, v)
 
-        path = os.path.join(self.config.output_dir_for_this_run, "stats.json")
+        path = self.config.output_directory / "stats.json"
         self._logger.debug("Saving stats to %s", path)
         with open(path, "w") as fh:
             json.dump(data, fh)
@@ -83,8 +82,8 @@ class Stats:
             in the current scenario is used.
         """
         if not fn:
-            assert self.config.output_dir_for_this_run is not None  # please mypy
-            fn = os.path.join(self.config.output_dir_for_this_run, "stats.json")
+            assert self.config.output_directory is not None  # please mypy
+            fn = os.path.join(self.config.output_directory, "stats.json")
         with open(fn, "r") as fh:
             data = json.load(fh)
 

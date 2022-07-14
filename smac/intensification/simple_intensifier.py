@@ -5,7 +5,7 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.model.configuration_chooser.epm_chooser import EPMChooser
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
 
@@ -104,7 +104,7 @@ class SimpleIntensifier(AbstractRacer):
             self.logger.info("First run, no incumbent provided; challenger is assumed to be the incumbent")
             incumbent = run_info.config
 
-        self.num_run += 1
+        self.run_id += 1
 
         incumbent = self._compare_configs(
             challenger=run_info.config,
@@ -121,7 +121,7 @@ class SimpleIntensifier(AbstractRacer):
         self,
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
-        chooser: Optional[EPMChooser],
+        chooser: Optional[ConfigurationChooser],
         run_history: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,

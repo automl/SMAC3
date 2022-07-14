@@ -24,7 +24,7 @@ from smac.optimizer.configuration_chooser.boing_chooser import (
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory2epm_boing import RunHistory2EPM4ScaledLogCostWithRaw
-from smac.algorithm_executer import StatusType
+from smac.runner import StatusType
 from smac.utils import test_helpers
 
 
