@@ -13,12 +13,16 @@ from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.utils.logging import format_array
+from smac.utils.logging import get_logger
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
+
+
+logger = get_logger(__name__)
 
 
 class RunInfoIntent(Enum):
@@ -86,9 +90,6 @@ class AbstractRacer(object):
         min_challenger: int = 1,
         seed: int = 0,
     ):
-
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
         self.stats: Stats | None = None
         self.seed = seed
         self.rng = np.random.RandomState(seed)
@@ -237,16 +238,16 @@ class AbstractRacer(object):
 
         if challengers:
             # iterate over challengers provided
-            self.logger.debug("Using challengers provided")
+            logger.debug("Using challengers provided")
             chall_gen = (c for c in challengers)  # type: _config_to_run_type
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
-            self.logger.debug("Generating new challenger from optimizer")
+            logger.debug("Generating new challenger from optimizer")
             chall_gen = chooser.choose_next()
         else:
             raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
 
-        self.logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
+        logger.debug("Time to select next challenger: %.4f" % (time.time() - start_time))
 
         # select challenger from the generators
         assert chall_gen is not None
@@ -259,7 +260,7 @@ class AbstractRacer(object):
             if challenger not in used_configs:
                 return challenger
 
-        self.logger.debug("No valid challenger was generated!")
+        logger.debug("No valid challenger was generated!")
         return None
 
     def _adapt_algorithm_walltime_limit(
@@ -358,7 +359,7 @@ class AbstractRacer(object):
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
             # Incumbent beats challenger
-            self.logger.debug(
+            logger.debug(
                 f"Incumbent ({inc_perf_format}) is better than challenger "
                 f"({chal_perf_format}) on {len(chall_runs)} runs."
             )
@@ -371,7 +372,7 @@ class AbstractRacer(object):
                 chal_perf_format = format_array(chal_perf)
                 inc_perf_format = format_array(inc_perf)
 
-                self.logger.debug(
+                logger.debug(
                     f"Incumbent ({inc_perf_format}) is at least as good as the "
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
@@ -379,11 +380,13 @@ class AbstractRacer(object):
                 if log_traj and self.stats.inc_changed == 0:
                     # adding incumbent entry
                     self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(
-                        train_perf=chal_perf,
-                        incumbent_id=self.stats.inc_changed,
-                        incumbent=incumbent,
-                    )
+
+                    logger.info("FIX ME: ADD TRAJ_LOGGER TO STATS")
+                    # self.traj_logger.add_entry(
+                    #    train_perf=chal_perf,
+                    #    incumbent_id=self.stats.inc_changed,
+                    #    incumbent=incumbent,
+                    # )
                 return incumbent
 
             # Challenger is better than incumbent
@@ -393,16 +396,18 @@ class AbstractRacer(object):
             chal_perf_format = format_array(chal_perf)
             inc_perf_format = format_array(inc_perf)
 
-            self.logger.info(
+            logger.info(
                 f"Challenger ({chal_perf_format}) is better than incumbent ({inc_perf_format}) " f"on {n_samples} runs."
             )
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
                 self.stats.inc_changed += 1
-                self.traj_logger.add_entry(
-                    train_perf=chal_perf, incumbent_id=self.stats.inc_changed, incumbent=challenger
-                )
+
+                logger.info("FIX ME: ADD TRAJ_LOGGER TO STATS")
+                # self.traj_logger.add_entry(
+                #    train_perf=chal_perf, incumbent_id=self.stats.inc_changed, incumbent=challenger
+                # )
             return challenger
 
         # undecided
@@ -414,9 +419,9 @@ class AbstractRacer(object):
         challenger: Configuration,
     ) -> None:
         params = sorted([(param, incumbent[param], challenger[param]) for param in challenger.keys()])
-        self.logger.info("Changes in incumbent:")
+        logger.info("Changes in incumbent:")
         for param in params:
             if param[1] != param[2]:
-                self.logger.info("  %s : %r -> %r" % param)
+                logger.info("  %s : %r -> %r" % param)
             else:
-                self.logger.debug("  %s remains unchanged: %r", param[0], param[1])
+                logger.debug("  %s remains unchanged: %r", param[0], param[1])

@@ -23,7 +23,7 @@ from smac.cli.scenario import Scenario
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4BB(
+    smac = BlackBoxFacade(
         scenario=scenario,
         rng=np.random.RandomState(42),
         model_type="gp",

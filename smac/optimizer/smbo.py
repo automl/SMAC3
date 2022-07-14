@@ -223,8 +223,7 @@ class SMBO:
                         configuration_space=self.config_space,
                         logger=logger,
                     )
-            else:
-                logger.info("FIX ME: shared model?")
+            logger.error("FIX ME: shared model?")
 
             start_time = time.time()
 

@@ -74,6 +74,7 @@ setuptools.setup(
         "distributed",
         "emcee>=3.0.0",
         "regex",
+        "pyyaml"
     ],
     extras_require=extras_require,
     test_suite="pytest",

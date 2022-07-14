@@ -5,7 +5,7 @@ from smac.config import Config
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.facade.black_box import BlackBoxFacade
 
 
 def rosenbrock_2d(x):
@@ -25,5 +25,5 @@ if __name__ == "__main__":
 
     # Scenario object
     config = Config(cs)
-    smac = AlgorithmConfigurationFacade(config, rosenbrock_2d)
+    smac = BlackBoxFacade(config, rosenbrock_2d)
     smac.optimize()

@@ -3,9 +3,22 @@ from typing import Any, Dict, Iterable, List, Union
 import logging
 
 import numpy as np
+import logging.config
+from pathlib import Path
+
+import yaml
+import smac
+
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
+
+
+path = Path() / smac.__file__
+with (path.parent / "utils" / "logging.yml").open("r") as stream:
+    config = yaml.load(stream, Loader=yaml.FullLoader)
+
+logging.config.dictConfig(config)
 
 
 class PickableLoggerAdapter(object):
@@ -106,5 +119,11 @@ def format_array(
     return formatted_list
 
 
-def get_logger(name: str) -> PickableLoggerAdapter:
-    return PickableLoggerAdapter(name)
+# def get_logger(name: str) -> PickableLoggerAdapter:
+#    return PickableLoggerAdapter(name)
+
+
+def get_logger(logger_name: str) -> logging.Logger:
+    logger = logging.getLogger(logger_name)
+    
+    return logger

@@ -140,7 +140,9 @@ class InitialDesign:
         configs = []
         for vector in design:
             try:
-                conf = deactivate_inactive_hyperparameters(configuration=None, configspace=configspace, vector=vector)
+                conf = deactivate_inactive_hyperparameters(
+                    configuration=None, configuration_space=configspace, vector=vector
+                )
             except ForbiddenValueError:
                 continue
             conf.origin = origin

@@ -23,7 +23,7 @@ from smac.cli.scenario import Scenario
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.optimizer.acquisition import EI
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     # Optimize, using a SMAC-object
     print("Optimizing! Depending on your machine, this might take a few minutes.")
-    smac = SMAC4BB(
+    smac = BlackBoxFacade(
         scenario=scenario,
         model_type=model_type,
         rng=np.random.RandomState(42),

@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 
 from smac.cli.scenario import Scenario
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.optimizer.configuration_chooser.turbo_chooser import TurBOChooser
 from smac.runhistory.runhistory import RunHistory
 from smac.runner import StatusType
@@ -22,7 +22,7 @@ class TestEPMChooserTuRBO(unittest.TestCase):
         config = self.scenario.cs.sample_configuration()
         rh = RunHistory()
         rh.add(config, 10, 10, StatusType.SUCCESS)
-        smbo = SMAC4BB(
+        smbo = BlackBoxFacade(
             scenario=self.scenario,
             rng=np.random.RandomState(42),
             model_type="gp",

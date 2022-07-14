@@ -1,0 +1,20 @@
+version: 1
+formatters:
+  simple:
+    # format: '\x1b[33;20m %(levelname)s: %(message)s (in %(name)s)\x1b[0m'
+    # format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)'
+    format: '%(asctime)s - %(message)s (%(filename)s:%(lineno)d)'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+loggers:
+  werkzeug:
+    level: ERROR
+    handlers: [ console ]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console]

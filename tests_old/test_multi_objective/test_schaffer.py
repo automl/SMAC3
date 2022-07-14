@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.facade.random import ROAR
 from smac.multi_objective.parego import ParEGO
@@ -101,7 +101,7 @@ class SchafferTest(unittest.TestCase):
 
     def test_facades(self):
         results = []
-        for facade in [ROAR, SMAC4BB, SMAC4HPO, AlgorithmConfigurationFacade]:
+        for facade in [ROAR, BlackBoxFacade, SMAC4HPO, AlgorithmConfigurationFacade]:
             for kwargs in [self.facade_kwargs, self.parego_facade_kwargs]:
                 smac = facade(**kwargs)
                 incumbent = smac.optimize()

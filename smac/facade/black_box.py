@@ -38,52 +38,14 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4BB(Facade):
-    """Facade to use SMAC for Black-Box optimization using a GP.
-
-    see smac.facade.smac_Facade for API
-    This facade overwrites options available via the SMAC facade
-
-    Hyperparameters are chosen according to the best configuration for Gaussian process maximum likelihood found in
-    "Towards Assessing the Impact of Bayesian Optimization's Own Hyperparameters" by Lindauer et al., presented at the
-    DSO workshop 2019 (https://arxiv.org/abs/1908.06674).
-
-    Changes are:
-
-    * Instead of having an initial design of size 10*D as suggested by Jones et al. 1998 (actually, they suggested
-      10*D+1), we use an initial design of 8*D.
-    * More restrictive lower and upper bounds on the length scale for the Matern and Hamming Kernel than the ones
-      suggested by Klein et al. 2017 in the RoBO package. In practice, they are ``np.exp(-6.754111155189306)``
-      instead of ``np.exp(-10)`` for the lower bound and ``np.exp(0.0858637988771976)`` instead of
-      ``np.exp(2)`` for the upper bound.
-    * The initial design is set to be a Sobol grid
-    * The random fraction is set to ``0.08447232371720552``, it was ``0.0`` before.
-
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
-
-    Attributes
-    ----------
-    logger
-    stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
-    """
-
-    def __init__(self, **kwargs: Any):
-        super().__init__(**kwargs)
-
+class BlackBoxFacade(Facade):
+    def _validate(self):
         # TODO what about these? vvv
         # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
         # # activate predict incumbent
         # self.solver.epm_chooser.predict_x_best = True
 
-    def _validate(self):
-        if len(self.config.instance_features) > 0:
+        if self.config.instance_features is not None and len(self.config.instance_features) > 0:
             raise NotImplementedError("The Black-Box GP cannot handle instances.")
 
         if not isinstance(self.model, BaseGaussianProcess):
@@ -102,7 +64,7 @@ class SMAC4BB(Facade):
             raise ValueError(f"model_type {model_type} not in available model types")
 
         if kernel is None:
-            kernel = SMAC4BB.get_kernel(config=config)
+            kernel = BlackBoxFacade.get_kernel(config=config)
 
         rng = np.random.default_rng(seed=config.seed)
         types, bounds = get_types(config.configspace, instance_features=None)
@@ -194,7 +156,7 @@ class SMAC4BB(Facade):
             kernel = cov_amp * ham_kernel + noise_kernel
 
         else:
-            raise ValueError("The number of continuous and categorical hyperparameters " "must be greater than zero.")
+            raise ValueError("The number of continuous and categorical hyperparameters must be greater than zero.")
 
         return kernel
 
@@ -224,9 +186,9 @@ class SMAC4BB(Facade):
         adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         min_config_calls: int = 1,
-        max_config_calls: int = 2000,
+        max_config_calls: int = 3,
     ) -> Intensifier:
-        # only 1 configuration per SMBO iteration
+        # Only 1 configuration per SMBO iteration
         if config.deterministic:
             min_challenger = 1
 
@@ -272,7 +234,7 @@ class SMAC4BB(Facade):
     def get_random_configuration_chooser(
         config: Config, *, random_probability: float = 0.08447232371720552
     ) -> RandomChooser:
-        return ChooserProb(rng=np.default_rng(seed=config.seed), prob=random_probability)
+        return ChooserProb(seed=config.seed, prob=random_probability)
 
     @staticmethod
     def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:

@@ -12,7 +12,7 @@ from smac.cli.scenario import Scenario
 from smac.cli.traj_logging import TrajLogger
 from smac.configspace import Configuration
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
 )
@@ -128,7 +128,7 @@ class SMACCLI(object):
                 run_id=main_args_.seed,
             )
         elif main_args_.mode == "SMAC4BB":
-            optimizer = SMAC4BB(
+            optimizer = BlackBoxFacade(
                 scenario=scen,
                 rng=np.random.RandomState(main_args_.seed),
                 runhistory=rh,

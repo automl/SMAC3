@@ -26,7 +26,7 @@ import smac
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.facade.psmac_facade import PSMAC
 
 importlib.reload(smac.facade.psmac_facade)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     print("Optimizing! Depending on your machine, this might take a few minutes.")
     smac = PSMAC(
         scenario=scenario,
-        facade_class=SMAC4BB,
+        facade_class=BlackBoxFacade,
         model_type=model_type,
         rng=np.random.RandomState(42),
         acquisition_function=EI,  # or others like PI, LCB as acquisition functions

@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 
 
 def schaffer(x):
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         }
     )
 
-    smac = SMAC4BB(
+    smac = BlackBoxFacade(
         scenario=scenario,
         rng=np.random.RandomState(5),
         tae_runner=tae,

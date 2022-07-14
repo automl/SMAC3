@@ -16,7 +16,7 @@ from smac.cli.scenario import Scenario
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import check_subspace_points, get_types
-from smac.facade.black_box import SMAC4BB
+from smac.facade.black_box import BlackBoxFacade
 from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing_chooser import (
     BOinGChooser,
@@ -77,7 +77,7 @@ class TestEPMChooserBOinG(unittest.TestCase):
         self.assertRaisesRegex(
             ValueError,
             "BOinG only supports RandomForestWithInstances as its global optimizer",
-            SMAC4BB,
+            BlackBoxFacade,
             scenario=self.scenario,
             rng=seed,
             runhistory=rh,
