@@ -96,8 +96,8 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(config: Config) -> AbstractAcquisitionFunction:
-        return EI()  # TODO pass exploration/exploitation parameter?
+    def get_acquisition_function(config: Config, par: float = 0.0) -> AbstractAcquisitionFunction:
+        return EI(par=par)
 
     @staticmethod
     def get_acquisition_optimizer(
