@@ -196,28 +196,6 @@ hyperparameters.
       warnings.warn("The balance properties of Sobol' points require"
     /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
       warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
-    /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/scipy/stats/_qmc.py:1382: UserWarning: The balance properties of Sobol' points require n to be a power of 2.
-      warnings.warn("The balance properties of Sobol' points require"
 
 
 
@@ -298,7 +276,7 @@ hyperparameters.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.623 seconds)
+   **Total running time of the script:** ( 0 minutes  24.836 seconds)
 
 
 .. _sphx_glr_download_examples_python_plot_synthetic_function_turbo.py:
