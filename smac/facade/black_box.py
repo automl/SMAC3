@@ -213,7 +213,7 @@ class BlackBoxFacade(Facade):
         config: Config,
         *,
         initial_configs: list[Configuration] | None = None,
-        n_configs_per_hyperparameter: int = 8,
+        n_configs_per_hyperparameter: int = 1,
         max_config_fracs: float = 0.25,
     ) -> InitialDesign:
         if len(config.configspace.get_hyperparameters()) > 21201:

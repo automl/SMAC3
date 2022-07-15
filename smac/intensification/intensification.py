@@ -659,6 +659,9 @@ class Intensifier(AbstractRacer):
         format_value = format_array(inc_perf)
         logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}")
 
+        print(inc_runs, inc_perf)
+        exit()
+
         # if running first configuration, go to next stage after 1st run
         if self.stage in [
             IntensifierStage.RUN_FIRST_CONFIG,
