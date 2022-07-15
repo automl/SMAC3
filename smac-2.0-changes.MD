@@ -1,3 +1,47 @@
+# Unified transformation guide
+
+- Remove `self.logger`. Create on top a global logger:
+logger = get_logger(__name__)
+
+- Remove `rng` from init and replace it with `seed: int = 0`
+
+- Comments should start upper-case. For example: `# This is a comment`.
+If multiple sentences are used, use punctuation. For example: `# This is one sentence. This is another.`
+
+- Docstring structure is shown in the following. Please start the general comment and the parameter description
+upper-case.
+
+    ```
+    """
+    First a general comment.
+
+    Parameters
+    ----------
+    X : np.ndarray | None, defaults to None
+        Explain what this parameter does.
+
+    Returns
+    -------
+    np.ndarray(N,1)
+        Acquisition function values wrt X.
+    """
+    ```
+
+- Replace all copyrights/authors/license with the following:
+
+    ```
+    __copyright__ = "Copyright 2022, automl.org"
+    __license__ = "3-clause BSD"
+    ```
+
+- Everytime you see a variable you don't know, look it up and replace it with the variable provided
+in the `variable renaming`. If the variable is not listed below, add the variable and change it
+accordingly. Just make sure it is persistent.
+
+
+
+# Variable renaming
+
 We removed run_obj == runtime COMPLETELY
 => no adaptive capping
 
@@ -23,15 +67,15 @@ always_race_against => race_against
 runhistory2epm => runhistory_transformer
 Runhistory2EPM => RunhistoryTransformer
 
-# Initial design
+## Initial design
 n_configs_x_params => n_configs_per_hyperparameter
 max_config_fracs => 
 
-# Algorithm Configuration
+## Algorithm Configuration
 feature_array => instance_features
 train_insts/train_instances => instances
 
-# Intensification
+## Intensification
 min_chall => min_challenger
 minR => min_config_calls
 maxR => max_config_calls
