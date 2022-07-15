@@ -8,22 +8,19 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.black_box import BlackBoxFacade
 
 
-def rosenbrock_2d(x):
-    x1 = x["x0"]
-    x2 = x["x1"]
+def quadratic(config) -> float:
+    x = config["x"]
 
-    val = 100.0 * (x2 - x1**2.0) ** 2.0 + (1 - x1) ** 2.0
-    return val
+    return x * x
 
 
 if __name__ == "__main__":
     # Build Configuration Space which defines all parameters and their ranges
     cs = ConfigurationSpace()
-    x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
-    x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
-    cs.add_hyperparameters([x0, x1])
+    x = UniformFloatHyperparameter("x", -100, 100, default_value=-100)
+    cs.add_hyperparameters([x])
 
     # Scenario object
-    config = Config(cs)
-    smac = BlackBoxFacade(config, rosenbrock_2d)
+    config = Config(cs, n_runs=20)
+    smac = BlackBoxFacade(config, quadratic)
     smac.optimize()
