@@ -427,6 +427,6 @@ class AbstractRacer(object):
         logger.info("Changes in incumbent:")
         for param in params:
             if param[1] != param[2]:
-                logger.info("  %s : %r -> %r" % param)
+                logger.info("--- %s: %r -> %r" % param)
             else:
-                logger.debug("  %s remains unchanged: %r", param[0], param[1])
+                logger.debug("--- %s remains unchanged: %r", param[0], param[1])

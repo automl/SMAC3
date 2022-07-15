@@ -5,7 +5,8 @@ from typing import Any
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.acquisition import EI, AbstractAcquisitionFunction
+from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition.expected_improvement import EI
 from smac.acquisition.maximizer import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
@@ -39,7 +40,7 @@ __license__ = "3-clause BSD"
 
 
 class BlackBoxFacade(Facade):
-    def _validate(self):
+    def _validate(self) -> None:
         super()._validate()
         # TODO what about these? vvv
         # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
@@ -171,7 +172,7 @@ class BlackBoxFacade(Facade):
         acquisition_function: AbstractAcquisitionFunction,
         *,
         n_sls_iterations: int = 10,
-        challengers: int = 5000,
+        challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             acquisition_function,

@@ -37,6 +37,9 @@ class Config:
     algorithm_walltime_limit: float | None = None
     n_runs: int = 10
 
+    # Other time things
+    intensify_percentage: float = 0.5  #
+
     # always_race_default
     # How to deal with instances? Have them here too? It's not really a config, rather data
     # So they probably should go to the cli directory.
@@ -56,6 +59,9 @@ class Config:
         # transform_y_options = [None, "log", "log_scaled", "inverse_scaled"]
         # if self.transform_y not in transform_y_options:
         #    raise RuntimeError(f"`transform_y` must be one of `{transform_y_options}`")
+
+        # Intensify percentage must be between 0 and 1
+        assert self.intensify_percentage >= 0.0 and self.intensify_percentage <= 1.0
 
         if self.output_directory is None:
             # Since the dataclass is frozen, we have to hack around this.

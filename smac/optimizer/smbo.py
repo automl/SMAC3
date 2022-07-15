@@ -136,6 +136,7 @@ class SMBO:
 
         if epm_chooser_kwargs is None:
             epm_chooser_kwargs = {}
+
         # TODO: consider if we need an additional EPMChooser for multi-objective optimization
         self.epm_chooser = epm_chooser(
             config=config,
@@ -443,14 +444,7 @@ class SMBO:
         -------
         time_left : float
         """
-
-        # frac_intensify = self.config.intensification_percentage  # type: ignore[attr-defined] # noqa F821
-        frac_intensify = 0.5
-        logger.info("FIX ME: Where to define intensification percentage?!")
-        if frac_intensify <= 0 or frac_intensify >= 1:
-            raise ValueError(
-                "The value for intensification_percentage-" "option must lie in (0,1), instead: %.2f" % frac_intensify
-            )
+        frac_intensify = self.config.intensify_percentage
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
 
@@ -516,9 +510,11 @@ class SMBO:
         # We removed `abort_on_first_run_crash` and therefore we expect the first
         # run to always succeed.
         if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
-            raise FirstRunCrashedException(
-                f"The first run crashed. Please check your setup again.\n\n{result.additional_info['traceback']}"
-            )
+            additional_info = ""
+            if "traceback" in result.additional_info:
+                additional_info = "\n\n" + result.additional_info["traceback"]
+
+            raise FirstRunCrashedException("The first run crashed. Please check your setup again" + additional_info)
 
         # Update the intensifier with the result of the runs
         self.incumbent, inc_perf = self.intensifier.process_results(
