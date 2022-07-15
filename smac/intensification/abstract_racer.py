@@ -109,6 +109,11 @@ class AbstractRacer(object):
             instances = []
         # removing duplicates in the user provided instances
         self.instances = list(OrderedDict.fromkeys(instances))
+
+        # Like what the heck...
+        if len(self.instances) == 0:
+            self.instances = [None]
+
         if instance_specifics is None:
             self.instance_specifics = {}  # type: Mapping[str, str]
         else:

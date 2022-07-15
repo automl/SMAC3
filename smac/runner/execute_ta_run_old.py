@@ -25,7 +25,7 @@ class ExecuteTARunOld(SerialRunner):
         self,
         config: Configuration,
         instance: Optional[str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = 0.0,
         instance_specific: str = "0",
@@ -34,7 +34,7 @@ class ExecuteTARunOld(SerialRunner):
         instance specifics.
 
         <specifics> for at most.
-        <cutoff> seconds and random seed <seed>.
+        <algorithm_walltime_limit> seconds and random seed <seed>.
 
         Parameters
         ----------
@@ -42,8 +42,8 @@ class ExecuteTARunOld(SerialRunner):
                 Dictionary param -> value
             instance : string, optional
                 Problem instance
-            cutoff : float
-                Runtime cutoff
+            algorithm_walltime_limit : float
+                Runtime algorithm_walltime_limit
             seed : int
                 Random seed
             budget : float, optional
@@ -65,14 +65,14 @@ class ExecuteTARunOld(SerialRunner):
         """
         if instance is None:
             instance = "0"
-        if cutoff is None:
-            cutoff = 99999999999999.0
+        if algorithm_walltime_limit is None:
+            algorithm_walltime_limit = 99999999999999.0
 
         stdout_, stderr_ = self._call_ta(
             config=config,
             instance=instance,
             instance_specific=instance_specific,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             seed=seed,
         )
 
@@ -111,7 +111,7 @@ class ExecuteTARunOld(SerialRunner):
                     ) = fields
                     additional_info = {"additional_info": additional_info_string}
 
-                runtime = min(float(runtime_string), cutoff)
+                runtime = min(float(runtime_string), algorithm_walltime_limit)
                 quality = float(quality_string)
 
         if "StatusType." in status_string:
@@ -154,16 +154,16 @@ class ExecuteTARunOld(SerialRunner):
         config: Configuration,
         instance: str,
         instance_specific: str,
-        cutoff: float,
+        algorithm_walltime_limit: float,
         seed: int,
     ) -> Tuple[str, str]:
 
-        # TODO: maybe replace fixed instance specific and cutoff_length (0) to other value
+        # TODO: maybe replace fixed instance specific and algorithm_walltime_limit_length (0) to other value
         cmd = []  # type: List[str]
         if not isinstance(self.ta, (list, tuple)):
             raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
-        cmd.extend([instance, instance_specific, str(cutoff), "0", str(seed)])
+        cmd.extend([instance, instance_specific, str(algorithm_walltime_limit), "0", str(seed)])
         for p in config:
             if not config.get(p) is None:
                 cmd.extend(["-" + str(p), str(config[p])])

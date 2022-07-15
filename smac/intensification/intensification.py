@@ -263,7 +263,6 @@ class Intensifier(AbstractRacer):
                     chooser=chooser,
                 )
                 incumbent = challenger
-                print(incumbent)
             else:
                 inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
                 if len(inc_runs) > 0:
@@ -272,7 +271,6 @@ class Intensifier(AbstractRacer):
 
         # LINES 3-7
         if self.stage in [IntensifierStage.RUN_FIRST_CONFIG, IntensifierStage.RUN_INCUMBENT]:
-
             # Line 3
             # A modified version, that not only checks for max_config_calls
             # but also makes sure that there are runnable instances,
@@ -301,7 +299,6 @@ class Intensifier(AbstractRacer):
             else:
                 # This point marks the transitions from lines 3-7
                 # to 8-18.
-
                 logger.debug("No further instance-seed pairs for incumbent available.")
 
                 self.stage = IntensifierStage.RUN_CHALLENGER
@@ -382,7 +379,7 @@ class Intensifier(AbstractRacer):
                     # we discard all the forthcoming runs.
                     self.to_run = []
                     self.stage = IntensifierStage.RUN_INCUMBENT
-                    logger.debug("Stop challenger itensification due " "to adaptive capping.")
+                    logger.debug("Stop challenger itensification due to adaptive capping.")
 
                 # Nevertheless, if there are no more instances to run,
                 # we might need to comply with line 17 and keep running the
@@ -658,9 +655,6 @@ class Intensifier(AbstractRacer):
         inc_perf = runhistory.get_cost(incumbent)
         format_value = format_array(inc_perf)
         logger.info(f"Updated estimated cost of incumbent on {len(inc_runs)} runs: {format_value}")
-
-        print(inc_runs, inc_perf)
-        exit()
 
         # if running first configuration, go to next stage after 1st run
         if self.stage in [

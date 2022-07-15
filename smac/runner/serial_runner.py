@@ -128,7 +128,7 @@ class SerialRunner(BaseRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
@@ -138,7 +138,7 @@ class SerialRunner(BaseRunner):
 
         <specifics> for at most.
 
-        <cutoff> seconds and random seed <seed>
+        <algorithm_walltime_limit> seconds and random seed <seed>
 
         This method exemplifies how to defined the run() method
 
@@ -148,7 +148,7 @@ class SerialRunner(BaseRunner):
                 dictionary param -> value
             instance : string
                 problem instance
-            cutoff : float, optional
+            algorithm_walltime_limit : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced.
             seed : int

@@ -101,8 +101,6 @@ class BlackBoxFacade(Facade):
 
     @staticmethod
     def get_kernel(config: Config):
-        rng = np.random.default_rng(seed=config.seed)
-
         types, bounds = get_types(config.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]
@@ -118,7 +116,9 @@ class BlackBoxFacade(Facade):
         cov_amp = ConstantKernel(
             2.0,
             constant_value_bounds=(np.exp(-10), np.exp(2)),
-            prior=LognormalPrior(mean=0.0, sigma=1.0, rng=rng),  # TODO convert expected arg RandomState -> Generator
+            prior=LognormalPrior(
+                mean=0.0, sigma=1.0, seed=config.seed
+            ),  # TODO convert expected arg RandomState -> Generator
         )
 
         # Continuous / Categorical Kernels
@@ -141,7 +141,7 @@ class BlackBoxFacade(Facade):
         noise_kernel = WhiteKernel(
             noise_level=1e-8,
             noise_level_bounds=(np.exp(-25), np.exp(2)),
-            prior=HorseshoePrior(scale=0.1, rng=rng),
+            prior=HorseshoePrior(scale=0.1, seed=config.seed),
         )
 
         # Continuous and categecorical HPs
@@ -171,11 +171,13 @@ class BlackBoxFacade(Facade):
         acquisition_function: AbstractAcquisitionFunction,
         *,
         n_sls_iterations: int = 10,
+        challengers: int = 5000,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
             acquisition_function,
             config_space=config.configspace,
             n_sls_iterations=n_sls_iterations,
+            challengers=challengers,
             seed=config.seed,
         )
         return optimizer

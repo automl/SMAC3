@@ -3,7 +3,7 @@ formatters:
   simple:
     # format: '\x1b[33;20m %(levelname)s: %(message)s (in %(name)s)\x1b[0m'
     # format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)'
-    format: '%(asctime)s - %(message)s (%(filename)s:%(lineno)d)'
+    format: '%(filename)s:%(lineno)d: %(message)s'
 handlers:
   console:
     class: logging.StreamHandler

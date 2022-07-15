@@ -35,7 +35,7 @@ class Config:
     cputime_limit: float = np.inf
     memory_limit: float | None = None
     algorithm_walltime_limit: float | None = None
-    n_runs: int = 200
+    n_runs: int = 10
 
     # always_race_default
     # How to deal with instances? Have them here too? It's not really a config, rather data

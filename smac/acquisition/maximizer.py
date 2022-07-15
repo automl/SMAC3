@@ -51,18 +51,20 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
         self,
         acquisition_function: AbstractAcquisitionFunction,
         config_space: ConfigurationSpace,
+        challengers: int = 5000,
         seed: int = 0,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.acquisition_function = acquisition_function
         self.config_space = config_space
+        self.challengers = challengers
         self.rng = np.random.RandomState(seed=seed)
 
     def maximize(
         self,
         runhistory: RunHistory,
         stats: Stats,
-        num_points: int,
+        num_points: int | None = None,
         random_configuration_chooser: Optional[RandomChooser] = None,
     ) -> Iterator[Configuration]:
         """Maximize acquisition function using ``_maximize``.
@@ -74,7 +76,7 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
         stats: ~smac.stats.stats.Stats
             current stats object
         num_points: int
-            number of points to be sampled
+            Number of points to be sampled. If `num_points` is not specified, `self.challengers` is used.
         random_configuration_chooser: ~smac.optimizer.random_configuration_chooser.RandomConfigurationChooser, optional
             part of the returned ChallengerList such
             that we can interleave random configurations
@@ -87,8 +89,11 @@ class AbstractAcquisitionOptimizer(object, metaclass=abc.ABCMeta):
         iterable
             An iterable consisting of :class:`smac.configspace.Configuration`.
         """
+        if num_points is None:
+            num_points = self.challengers
 
         def next_configs_by_acq_value() -> List[Configuration]:
+            assert num_points is not None
             return [t[1] for t in self._maximize(runhistory, stats, num_points)]
 
         challengers = ChallengerList(next_configs_by_acq_value, self.config_space, random_configuration_chooser)
@@ -180,9 +185,10 @@ class LocalSearch(AbstractAcquisitionOptimizer):
         n_steps_plateau_walk: int = 10,
         vectorization_min_obtain: int = 2,
         vectorization_max_obtain: int = 64,
+        challengers: int = 5000,
         seed: int = 0,
     ):
-        super().__init__(acquisition_function, config_space, seed=seed)
+        super().__init__(acquisition_function, config_space, challengers=challengers, seed=seed)
         self.max_steps = max_steps
         self.n_steps_plateau_walk = n_steps_plateau_walk
         self.vectorization_min_obtain = vectorization_min_obtain
@@ -638,9 +644,10 @@ class LocalAndSortedRandomSearch(AbstractAcquisitionOptimizer):
         max_steps: Optional[int] = None,
         n_steps_plateau_walk: int = 10,
         n_sls_iterations: int = 10,
+        challengers: int = 5000,
         seed: int = 0,
     ):
-        super().__init__(acquisition_function, config_space, seed=seed)
+        super().__init__(acquisition_function, config_space, challengers=challengers, seed=seed)
         self.random_search = RandomSearch(
             acquisition_function=acquisition_function, config_space=config_space, seed=seed
         )
@@ -738,9 +745,10 @@ class LocalAndSortedPriorRandomSearch(AbstractAcquisitionOptimizer):
         n_steps_plateau_walk: int = 10,
         n_sls_iterations: int = 10,
         prior_sampling_fraction: float = 0.5,
+        challengers: int = 5000,
         seed: int = 0,
     ):
-        super().__init__(acquisition_function, config_space, seed=seed)
+        super().__init__(acquisition_function, config_space, challengers=challengers, seed=seed)
         self.prior_random_search = RandomSearch(
             acquisition_function=acquisition_function, config_space=config_space, seed=seed
         )
@@ -869,6 +877,7 @@ class FixedSet(AbstractAcquisitionOptimizer):
         configurations: List[Configuration],
         acquisition_function: AbstractAcquisitionFunction,
         config_space: ConfigurationSpace,
+        challengers: int = 5000,
         seed: int = 0,
     ):
         """Maximize the acquisition function over a finite list of configurations.
@@ -883,7 +892,9 @@ class FixedSet(AbstractAcquisitionOptimizer):
 
         rng : np.random.RandomState or int, optional
         """
-        super().__init__(acquisition_function=acquisition_function, config_space=config_space, rng=rng)
+        super().__init__(
+            acquisition_function=acquisition_function, config_space=config_space, challengers=challengers, seed=seed
+        )
         self.configurations = configurations
 
     def _maximize(

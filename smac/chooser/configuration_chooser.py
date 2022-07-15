@@ -184,7 +184,6 @@ class ConfigurationChooser:
         challengers = self.acquisition_optimizer.maximize(
             runhistory=self.runhistory,
             stats=self.stats,
-            num_points=self.config.acq_opt_challengers,  # type: ignore[attr-defined] # noqa F821
             random_configuration_chooser=self.random_configuration_chooser,
         )
         return challengers

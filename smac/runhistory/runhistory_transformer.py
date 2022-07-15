@@ -137,8 +137,11 @@ class AbstractRunhistoryTransformer(object):
         self.instance_features = config.instance_features
 
         logger.error("FIX ME: REMOVE RUN_OBJ; HOW TO HANDLE CENSORED DATA?")
-        return
-        self.n_feats = config.n_features  # PCA components?
+
+        if self.instance_features is None:
+            self.n_feats = 0
+        else:
+            self.n_feats = self.instance_features.shape[1]
 
         self.n_params = n_params
 
@@ -152,7 +155,7 @@ class AbstractRunhistoryTransformer(object):
         if impute_censored_data and self.imputer is None:
             self.logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
             raise ValueError("impute_censored data, but no imputer given")
-        elif impute_censored_data and not isinstance(self.imputer, Baseimputer):
+        elif impute_censored_data and not isinstance(self.imputer, BaseImputor):
             raise ValueError(
                 "Given imputer is not an instance of " "smac.epm.base_imputer.Baseimputer, but %s" % type(self.imputer)
             )

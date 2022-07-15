@@ -21,7 +21,7 @@ from smac.cli.scenario import Scenario
 from smac.constants import MAXINT
 from smac.model.utils import get_rng
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.facade.psmac_facade import PSMAC
+from smac.facade.psmac import PSMAC
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory
 

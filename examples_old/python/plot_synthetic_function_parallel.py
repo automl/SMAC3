@@ -27,12 +27,12 @@ import smac
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
 from smac.facade.black_box import BlackBoxFacade
-from smac.facade.psmac_facade import PSMAC
+from smac.facade.psmac import PSMAC
 
 importlib.reload(smac.facade.psmac_facade)
 # Import SMAC-utilities
 from smac.cli.scenario import Scenario
-from smac.facade.psmac_facade import PSMAC
+from smac.facade.psmac import PSMAC
 from smac.optimizer.acquisition import EI
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"

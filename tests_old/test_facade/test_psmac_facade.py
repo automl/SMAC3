@@ -40,7 +40,7 @@ class TestPSMACFacade(unittest.TestCase):
         from smac.facade.black_box import BlackBoxFacade
         from smac.facade.hyperparameter_optimization import SMAC4HPO
         from smac.facade.multi_fidelity import SMAC4MF
-        from smac.facade.psmac_facade import PSMAC
+        from smac.facade.psmac import PSMAC
 
         facades = [None, AlgorithmConfigurationFacade, BlackBoxFacade, SMAC4HPO, SMAC4MF]
         n_workers_list = [1, 2, 3, 4]

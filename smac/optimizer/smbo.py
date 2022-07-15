@@ -453,10 +453,11 @@ class SMBO:
             )
         total_time = time_spent / (1 - frac_intensify)
         time_left = frac_intensify * total_time
+
         logger.debug(
-            "Total time: %.4f, time spent on choosing next "
-            "configurations: %.4f (%.2f), time left for "
-            "intensification: %.4f (%.2f)" % (total_time, time_spent, (1 - frac_intensify), time_left, frac_intensify)
+            f"\n--- Total time: {round(total_time, 4)}"
+            f"\n--- Time spent on choosing next configurations: {round(time_spent, 4)} ({(1 - frac_intensify)})"
+            f"\n--- Time left for intensification: {round(time_left, 4)} ({frac_intensify})"
         )
         return time_left
 
@@ -512,13 +513,12 @@ class SMBO:
             self._stop = True
             return
 
-        if self.config.abort_on_first_run_crash:  # type: ignore[attr-defined] # noqa F821
-            if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
-                raise FirstRunCrashedException(
-                    "First run crashed, abort. Please check your setup -- we assume that your default "
-                    "configuration does not crashes. (To deactivate this exception, use the SMAC config option "
-                    "'abort_on_first_run_crash'). Additional run info: %s" % result.additional_info
-                )
+        # We removed `abort_on_first_run_crash` and therefore we expect the first
+        # run to always succeed.
+        if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
+            raise FirstRunCrashedException(
+                f"The first run crashed. Please check your setup again.\n\n{result.additional_info['traceback']}"
+            )
 
         # Update the intensifier with the result of the runs
         self.incumbent, inc_perf = self.intensifier.process_results(
@@ -537,8 +537,9 @@ class SMBO:
                 logger.debug("An IncorporateRunResultCallback returned False, requesting abort.")
                 self._stop = True
 
-        if self.config.save_instantly:  # type: ignore[attr-defined] # noqa F821
-            self.save()
+        # We always save immediately
+        # TODO: Performance issues if we always save?
+        self.save()
 
         return
 

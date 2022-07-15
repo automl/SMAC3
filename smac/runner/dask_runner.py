@@ -233,7 +233,7 @@ class DaskParallelRunner(BaseRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
@@ -247,7 +247,7 @@ class DaskParallelRunner(BaseRunner):
                 dictionary param -> value
             instance : string
                 problem instance
-            cutoff : float, optional
+            algorithm_walltime_limit : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced.
             seed : int
@@ -272,7 +272,7 @@ class DaskParallelRunner(BaseRunner):
         return self.single_worker.run(
             config=config,
             instance=instance,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             seed=seed,
             budget=budget,
             instance_specific=instance_specific,

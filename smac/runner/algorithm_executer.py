@@ -9,7 +9,7 @@ import numpy as np
 import pynisher
 
 from smac.configspace import Configuration
-from smac.constants import MAX_CUTOFF, MAXINT
+from smac.constants import MAXINT
 from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
@@ -109,12 +109,12 @@ class AbstractAlgorithmExecuter(SerialRunner):
         self,
         config: Configuration,
         instance: Optional[str] = None,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self._ta> with configuration <config> for at most <cutoff>
+        """Runs target algorithm <self._ta> with configuration <config> for at most <algorithm_walltime_limit>
         seconds, allowing it to use at most <memory_limit> RAM.
 
         Whether the target algorithm is called with the <instance> and
@@ -127,7 +127,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
                 Dictionary param -> value
             instance : str, optional
                 Problem instance
-            cutoff : float, optional
+            algorithm_walltime_limit : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced. It is casted to integer internally.
             seed : int
@@ -161,17 +161,17 @@ class AbstractAlgorithmExecuter(SerialRunner):
 
         if self.use_pynisher:
             # walltime for pynisher has to be a rounded up integer
-            if cutoff is not None:
-                cutoff = int(math.ceil(cutoff))
-                if cutoff > MAX_CUTOFF:
-                    raise ValueError(
-                        "%d is outside the legal range of [0, 65535] "
-                        "for cutoff (when using pynisher, due to OS limitations)" % cutoff
-                    )
+            if algorithm_walltime_limit is not None:
+                algorithm_walltime_limit = int(math.ceil(algorithm_walltime_limit))
+                # if algorithm_walltime_limit > MAX_algorithm_walltime_limit:
+                #    raise ValueError(
+                #        "%d is outside the legal range of [0, 65535] "
+                #        "for algorithm_walltime_limit (when using pynisher, due to OS limitations)" % algorithm_walltime_limit
+                #    )
 
             arguments = {
                 "logger": self.logger,
-                "wall_time_in_s": cutoff,
+                "wall_time_in_s": algorithm_walltime_limit,
                 "mem_in_mb": self.memory_limit,
             }
 

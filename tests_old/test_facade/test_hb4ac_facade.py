@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter
 from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.model.random_model import RandomModel
-from smac.facade.hyperband_facade import HB4AC
+from smac.facade.hyperband import HB4AC
 from smac.initial_design.random_configuration_design import RandomInitialDesign
 from smac.intensification.hyperband import Hyperband
 

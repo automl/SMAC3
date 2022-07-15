@@ -26,7 +26,7 @@ class ExecuteTARunAClib(SerialRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
@@ -36,7 +36,7 @@ class ExecuteTARunAClib(SerialRunner):
 
         <specifics> for at most.
 
-        <cutoff> seconds and random seed <seed>
+        <algorithm_walltime_limit> seconds and random seed <seed>
 
         Parameters
         ----------
@@ -44,8 +44,8 @@ class ExecuteTARunAClib(SerialRunner):
                 Dictionary param -> value
             instance : str
                 Problem instance
-            cutoff : float
-                Runtime cutoff
+            algorithm_walltime_limit : float
+                Runtime algorithm_walltime_limit
             seed : int
                 Random seed
             budget : float (optional)
@@ -68,14 +68,14 @@ class ExecuteTARunAClib(SerialRunner):
 
         if instance is None:
             instance = "0"
-        if cutoff is None:
-            cutoff = 99999999999999
+        if algorithm_walltime_limit is None:
+            algorithm_walltime_limit = 99999999999999
 
         results, stdout_, stderr_ = self._call_ta(
             config=config,
             instance=instance,
             instance_specific=instance_specific,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             seed=seed,
         )
 
@@ -136,17 +136,27 @@ class ExecuteTARunAClib(SerialRunner):
         config: Configuration,
         instance: str,
         instance_specific: str,
-        cutoff: float,
+        algorithm_walltime_limit: float,
         seed: int,
     ) -> Tuple[Dict, str, str]:
 
-        # TODO: maybe replace fixed instance specific and cutoff_length (0) to
+        # TODO: maybe replace fixed instance specific and algorithm_walltime_limit_length (0) to
         # other value
         cmd = []  # type: List[str]
         if not isinstance(self.ta, (list, tuple)):
             raise TypeError("self.ta needs to be of type list or tuple, but is %s" % type(self.ta))
         cmd.extend(self.ta)
-        cmd.extend(["--instance", instance, "--cutoff", str(cutoff), "--seed", str(seed), "--config"])
+        cmd.extend(
+            [
+                "--instance",
+                instance,
+                "--algorithm_walltime_limit",
+                str(algorithm_walltime_limit),
+                "--seed",
+                str(seed),
+                "--config",
+            ]
+        )
 
         for p in config:
             if not config.get(p) is None:

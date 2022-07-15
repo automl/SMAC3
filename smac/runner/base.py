@@ -81,7 +81,7 @@ class BaseRunner(ABC):
         ta: Union[List[str], Callable],
         stats: Stats,
         multi_objectives: List[str] = ["cost"],
-        run_obj: str = "runtime",
+        run_obj: str = "quality",  # TODO: REMOVE
         par_factor: int = 1,
         cost_for_crash: Union[float, List[float]] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
@@ -132,7 +132,7 @@ class BaseRunner(ABC):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
@@ -142,7 +142,7 @@ class BaseRunner(ABC):
 
         <specifics> for at most.
 
-        <cutoff> seconds and random seed <seed>
+        <algorithm_walltime_limit> seconds and random seed <seed>
 
         This method exemplifies how to defined the run() method
 
@@ -152,7 +152,7 @@ class BaseRunner(ABC):
                 dictionary param -> value
             instance : string
                 problem instance
-            cutoff : float, optional
+            algorithm_walltime_limit : float, optional
                 Wallclock time limit of the target algorithm. If no value is
                 provided no limit will be enforced.
             seed : int
@@ -200,27 +200,29 @@ class BaseRunner(ABC):
         """
         start = time.time()
 
-        if run_info.cutoff is None and self.run_obj == "runtime":
+        if run_info.algorithm_walltime_limit is None and self.run_obj == "runtime":
+            raise RuntimeError("DEPRECATED. REMOVE!")
+
             if self.logger:
                 self.logger.critical(
                     "For scenarios optimizing running time "
-                    "(run objective), a cutoff time is required, "
+                    "(run objective), a algorithm_walltime_limit time is required, "
                     "but not given to this call."
                 )
             raise ValueError(
                 "For scenarios optimizing running time "
-                "(run objective), a cutoff time is required, "
+                "(run objective), a algorithm_walltime_limit time is required, "
                 "but not given to this call."
             )
-        cutoff = None
-        if run_info.cutoff is not None:
-            cutoff = int(math.ceil(run_info.cutoff))
+        algorithm_walltime_limit = None
+        if run_info.algorithm_walltime_limit is not None:
+            algorithm_walltime_limit = int(math.ceil(run_info.algorithm_walltime_limit))
 
         try:
             status, cost, runtime, additional_info = self.run(
                 config=run_info.config,
                 instance=run_info.instance,
-                cutoff=cutoff,
+                algorithm_walltime_limit=algorithm_walltime_limit,
                 seed=run_info.seed,
                 budget=run_info.budget,
                 instance_specific=run_info.instance_specific,
@@ -255,22 +257,24 @@ class BaseRunner(ABC):
             status = StatusType.CRASHED
 
         if self.run_obj == "runtime":
-            # The following line pleases mypy - we already check for cutoff not being none above,
-            # prior to calling run. However, mypy assumes that the data type of cutoff
+            raise RuntimeError("Not supported anymore. REMOVE!")
+
+            # The following line pleases mypy - we already check for algorithm_walltime_limit not being none above,
+            # prior to calling run. However, mypy assumes that the data type of algorithm_walltime_limit
             # is still Optional[int]
-            assert cutoff is not None
-            if runtime > self.par_factor * cutoff:
+            assert algorithm_walltime_limit is not None
+            if runtime > self.par_factor * algorithm_walltime_limit:
                 self.logger.warning(
                     "Returned running time is larger "
-                    "than {0} times the passed cutoff time. "
-                    "Clamping to {0} x cutoff.".format(self.par_factor)
+                    "than {0} times the passed algorithm_walltime_limit time. "
+                    "Clamping to {0} x algorithm_walltime_limit.".format(self.par_factor)
                 )
-                runtime = cutoff * self.par_factor
+                runtime = algorithm_walltime_limit * self.par_factor
                 status = StatusType.TIMEOUT
             if status == StatusType.SUCCESS:
                 cost = runtime
             else:
-                cost = cutoff * self.par_factor
+                cost = algorithm_walltime_limit * self.par_factor
             if status == StatusType.TIMEOUT and run_info.capped:
                 status = StatusType.CAPPED
         else:

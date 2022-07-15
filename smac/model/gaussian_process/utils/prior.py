@@ -27,10 +27,8 @@ class Prior(object):
         Random number generator
     """
 
-    def __init__(self, rng: np.random.RandomState):
-        if rng is None:
-            raise ValueError("Argument rng must not be `None`.")
-        self.rng = rng
+    def __init__(self, seed: int = 0):
+        self.rng = np.random.RandomState(seed)
 
     def lnprob(self, theta: float) -> float:
         """Return the log probability of theta.
@@ -143,7 +141,7 @@ class Prior(object):
 
 
 class TophatPrior(Prior):
-    def __init__(self, lower_bound: float, upper_bound: float, rng: np.random.RandomState):
+    def __init__(self, lower_bound: float, upper_bound: float, seed: int = 0):
         """Tophat prior as it used in the original spearmint code.
 
         This class is adapted from RoBO:
@@ -161,7 +159,7 @@ class TophatPrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(rng)
+        super().__init__(seed=seed)
         self.min = lower_bound
         self._log_min = np.log(lower_bound)
         self.max = upper_bound
@@ -224,7 +222,7 @@ class TophatPrior(Prior):
 
 
 class HorseshoePrior(Prior):
-    def __init__(self, scale: float, rng: np.random.RandomState):
+    def __init__(self, scale: float, seed: int = 0):
         """Horseshoe Prior as it is used in spearmint.
 
         This class is adapted from RoBO:
@@ -240,7 +238,7 @@ class HorseshoePrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(rng)
+        super().__init__(seed=seed)
         self.scale = scale
         self.scale_square = scale**2
 
@@ -313,8 +311,8 @@ class LognormalPrior(Prior):
     def __init__(
         self,
         sigma: float,
-        rng: np.random.RandomState,
         mean: float = 0,
+        seed: int = 0,
     ):
         """Log normal prior.
 
@@ -334,7 +332,7 @@ class LognormalPrior(Prior):
         mean: float
             Specifies the mean of the normal distribution
         """
-        super().__init__(rng)
+        super().__init__(seed=seed)
 
         if mean != 0:
             raise NotImplementedError(mean)
@@ -400,8 +398,8 @@ class LognormalPrior(Prior):
 
 
 class SoftTopHatPrior(Prior):
-    def __init__(self, lower_bound: float, upper_bound: float, exponent: float, rng: np.random.RandomState) -> None:
-        super().__init__(rng)
+    def __init__(self, lower_bound: float, upper_bound: float, exponent: float, seed: int = 0) -> None:
+        super().__init__(seed=seed)
 
         with warnings.catch_warnings():
             warnings.simplefilter("error")
@@ -474,7 +472,7 @@ class SoftTopHatPrior(Prior):
 
 
 class GammaPrior(Prior):
-    def __init__(self, a: float, scale: float, loc: float, rng: np.random.RandomState):
+    def __init__(self, a: float, scale: float, loc: float, seed: int = 0):
         """Gamma prior.
 
         f(x) = (x-loc)**(a-1) * e**(-(x-loc)) * (1/scale)**a / gamma(a)
@@ -490,7 +488,7 @@ class GammaPrior(Prior):
         rng: np.random.RandomState
             Random number generator
         """
-        super().__init__(rng)
+        super().__init__(seed=seed)
 
         self.a = a
         self.loc = loc

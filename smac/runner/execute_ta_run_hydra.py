@@ -46,19 +46,19 @@ class ExecuteTARunHydra(SerialRunner):
         self,
         config: Configuration,
         instance: str,
-        cutoff: Optional[float] = None,
+        algorithm_walltime_limit: Optional[float] = None,
         seed: int = 12345,
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
         """See ~smac.tae.execute_ta_run.ExecuteTARunOld for docstring."""
-        if cutoff is None:
-            raise ValueError("Cutoff of type None is not supported")
+        if algorithm_walltime_limit is None:
+            raise ValueError("algorithm_walltime_limit of type None is not supported")
 
         status, cost, runtime, additional_info = self.runner.run(
             config=config,
             instance=instance,
-            cutoff=cutoff,
+            algorithm_walltime_limit=algorithm_walltime_limit,
             seed=seed,
             budget=budget,
             instance_specific=instance_specific,
@@ -72,7 +72,7 @@ class ExecuteTARunHydra(SerialRunner):
             else:
                 self.logger.debug("Portfolio perf: %f vs %f = %f", oracle_perf, cost, min(oracle_perf, cost))
                 cost = min(oracle_perf, cost)
-            if oracle_perf < cutoff and status is StatusType.TIMEOUT:
+            if oracle_perf < algorithm_walltime_limit and status is StatusType.TIMEOUT:
                 status = StatusType.SUCCESS
         else:
             self.logger.error("Oracle performance missing --- should not happen")
