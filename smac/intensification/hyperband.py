@@ -125,7 +125,7 @@ class _Hyperband(_SuccessiveHalving):
         self,
         run_info: RunInfo,
         incumbent: Optional[Configuration],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
@@ -139,7 +139,7 @@ class _Hyperband(_SuccessiveHalving):
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
-        run_history : RunHistory
+        runhistory : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
         time_bound : float
@@ -161,7 +161,7 @@ class _Hyperband(_SuccessiveHalving):
         incumbent, inc_perf = self.sh_intensifier.process_results(
             run_info=run_info,
             incumbent=incumbent,
-            run_history=run_history,
+            runhistory=runhistory,
             time_bound=time_bound,
             result=result,
             log_traj=log_traj,
@@ -179,7 +179,7 @@ class _Hyperband(_SuccessiveHalving):
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
         chooser: Optional[ConfigurationChooser],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
@@ -198,7 +198,7 @@ class _Hyperband(_SuccessiveHalving):
                incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -230,7 +230,7 @@ class _Hyperband(_SuccessiveHalving):
             challengers=challengers,
             incumbent=incumbent,
             chooser=chooser,
-            run_history=run_history,
+            runhistory=runhistory,
             repeat_configs=self.sh_intensifier.repeat_configs,
         )
 
@@ -241,14 +241,14 @@ class _Hyperband(_SuccessiveHalving):
 
         return intent, run_info
 
-    def _update_stage(self, run_history: RunHistory = None) -> None:
+    def _update_stage(self, runhistory: RunHistory = None) -> None:
         """Update tracking information for a new stage/iteration and update statistics. This method
         is called to initialize stage variables and after all configurations of a successive halving
         stage are completed.
 
         Parameters
         ----------
-         run_history : smac.runhistory.runhistory.RunHistory
+         runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
         if not hasattr(self, "s"):

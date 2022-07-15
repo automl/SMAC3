@@ -218,7 +218,7 @@ class SMBO:
             if False:
                 if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
                     pSMAC.read(
-                        run_history=self.runhistory,
+                        runhistory=self.runhistory,
                         output_dirs=self.config.input_psmac_dirs,  # type: ignore[attr-defined] # noqa F821
                         configuration_space=self.config_space,
                         logger=logger,
@@ -233,7 +233,7 @@ class SMBO:
                 challengers=self.initial_design_configs,
                 incumbent=self.incumbent,
                 chooser=self.epm_chooser,
-                run_history=self.runhistory,
+                runhistory=self.runhistory,
                 repeat_configs=self.intensifier.repeat_configs,
                 num_workers=self.runner.num_workers(),
             )
@@ -313,7 +313,7 @@ class SMBO:
                 if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
                     assert self.config.output_directory is not None  # please mypy
                     pSMAC.write(
-                        run_history=self.runhistory,
+                        runhistory=self.runhistory,
                         output_directory=self.config.output_directory,  # type: ignore[attr-defined] # noqa F821
                         logger=logger,
                     )
@@ -524,7 +524,7 @@ class SMBO:
         self.incumbent, inc_perf = self.intensifier.process_results(
             run_info=run_info,
             incumbent=self.incumbent,
-            run_history=self.runhistory,
+            runhistory=self.runhistory,
             time_bound=max(self._min_time, time_left),
             result=result,
         )

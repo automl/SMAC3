@@ -64,7 +64,7 @@ class SimpleIntensifier(AbstractRacer):
         self,
         run_info: RunInfo,
         incumbent: Optional[Configuration],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
@@ -78,7 +78,7 @@ class SimpleIntensifier(AbstractRacer):
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
-        run_history : RunHistory
+        runhistory : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
         time_bound : float
@@ -109,11 +109,11 @@ class SimpleIntensifier(AbstractRacer):
         incumbent = self._compare_configs(
             challenger=run_info.config,
             incumbent=incumbent,
-            run_history=run_history,
+            runhistory=runhistory,
             log_traj=log_traj,
         )
         # get incumbent cost
-        inc_perf = run_history.get_cost(incumbent)
+        inc_perf = runhistory.get_cost(incumbent)
 
         return incumbent, inc_perf
 
@@ -122,7 +122,7 @@ class SimpleIntensifier(AbstractRacer):
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
         chooser: Optional[ConfigurationChooser],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
@@ -138,7 +138,7 @@ class SimpleIntensifier(AbstractRacer):
             incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -158,7 +158,7 @@ class SimpleIntensifier(AbstractRacer):
         challenger = self._next_challenger(
             challengers=challengers,
             chooser=chooser,
-            run_history=run_history,
+            runhistory=runhistory,
             repeat_configs=repeat_configs,
         )
 

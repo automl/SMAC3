@@ -40,6 +40,7 @@ __license__ = "3-clause BSD"
 
 class BlackBoxFacade(Facade):
     def _validate(self):
+        super()._validate()
         # TODO what about these? vvv
         # self.solver.scenario.acq_opt_challengers = 1000  # type: ignore[attr-defined] # noqa F821
         # # activate predict incumbent

@@ -338,7 +338,7 @@ class _SuccessiveHalving(AbstractRacer):
         self,
         run_info: RunInfo,
         incumbent: Optional[Configuration],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
@@ -352,7 +352,7 @@ class _SuccessiveHalving(AbstractRacer):
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
-        run_history : RunHistory
+        runhistory : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
         time_bound : float
@@ -406,7 +406,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         # 1: We first query if we have launched everything already (All M * N tasks)
         all_config_inst_seed_launched = self._all_config_inst_seed_pairs_launched(
-            run_history=run_history,
+            runhistory=runhistory,
             activate_configuration_being_intensified=self.running_challenger,
         )
 
@@ -446,7 +446,7 @@ class _SuccessiveHalving(AbstractRacer):
             incumbent = self._compare_configs(
                 challenger=run_info.config,
                 incumbent=incumbent,
-                run_history=run_history,
+                runhistory=runhistory,
                 log_traj=log_traj,
             )
         if is_stage_done:
@@ -462,10 +462,10 @@ class _SuccessiveHalving(AbstractRacer):
                 )
             )
 
-            self._update_stage(run_history=run_history)
+            self._update_stage(runhistory=runhistory)
 
         # get incumbent cost
-        inc_perf = run_history.get_cost(incumbent)
+        inc_perf = runhistory.get_cost(incumbent)
 
         return incumbent, inc_perf
 
@@ -474,7 +474,7 @@ class _SuccessiveHalving(AbstractRacer):
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
         chooser: Optional[ConfigurationChooser],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
@@ -491,7 +491,7 @@ class _SuccessiveHalving(AbstractRacer):
             incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -515,14 +515,14 @@ class _SuccessiveHalving(AbstractRacer):
             )
         # if this is the first run, then initialize tracking variables
         if not hasattr(self, "stage"):
-            self._update_stage(run_history=run_history)
+            self._update_stage(runhistory=runhistory)
 
         # In the case of multiprocessing, we have runs in Running stage, which have not
         # been processed via process_results(). get_next_run() is called agnostically by
         # smbo. To prevent launching more configs, than the ones needed, we query if
         # there is room for more configurations, else we wait for process_results()
         # to trigger a new stage
-        if self._all_config_inst_seed_pairs_launched(run_history, self.running_challenger):
+        if self._all_config_inst_seed_pairs_launched(runhistory, self.running_challenger):
             return RunInfoIntent.WAIT, RunInfo(
                 config=None,
                 instance=None,
@@ -563,7 +563,7 @@ class _SuccessiveHalving(AbstractRacer):
                 challenger = self._next_challenger(
                     challengers=challengers,
                     chooser=chooser,
-                    run_history=run_history,
+                    runhistory=runhistory,
                     repeat_configs=repeat_configs,
                 )
                 if challenger is None:
@@ -619,8 +619,8 @@ class _SuccessiveHalving(AbstractRacer):
         #   - there is no incumbent performance for the first ever 'intensify' run (from initial design)
         #   - during the 1st intensify run, the incumbent shouldn't be capped after being compared against itself
         if incumbent and incumbent != challenger:
-            inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-            inc_sum_cost = run_history.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
+            inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+            inc_sum_cost = runhistory.sum_cost(config=incumbent, instance_seed_budget_keys=inc_runs, normalize=True)
         else:
             inc_sum_cost = np.inf
             if self.first_run:
@@ -647,7 +647,7 @@ class _SuccessiveHalving(AbstractRacer):
         algorithm_walltime_limit = self.algorithm_walltime_limit
         if self.run_obj_time:
             algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
-                challenger=challenger, run_history=run_history, inc_sum_cost=inc_sum_cost
+                challenger=challenger, runhistory=runhistory, inc_sum_cost=inc_sum_cost
             )
             if algorithm_walltime_limit is not None and algorithm_walltime_limit <= 0:
                 # ran out of time to validate challenger
@@ -685,14 +685,14 @@ class _SuccessiveHalving(AbstractRacer):
             source_id=self.identifier,
         )
 
-    def _update_stage(self, run_history: RunHistory) -> None:
+    def _update_stage(self, runhistory: RunHistory) -> None:
         """Update tracking information for a new stage/iteration and update statistics. This method
         is called to initialize stage variables and after all configurations of a successive halving
         stage are completed.
 
         Parameters
         ----------
-         run_history : smac.runhistory.runhistory.RunHistory
+         runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         """
         if not hasattr(self, "stage"):
@@ -724,7 +724,7 @@ class _SuccessiveHalving(AbstractRacer):
                 # determine 'k' for the next iteration - at least 1
                 next_n_chal = int(max(1, self.n_configs_in_stage[self.stage]))
                 # selecting the top 'k' challengers for the next iteration
-                configs_to_run = self._top_k(configs=valid_challengers, run_history=run_history, k=next_n_chal)
+                configs_to_run = self._top_k(configs=valid_challengers, runhistory=runhistory, k=next_n_chal)
                 self.configs_to_run = [
                     config for config in configs_to_run if config not in self.do_not_advance_challengers
                 ]
@@ -784,7 +784,7 @@ class _SuccessiveHalving(AbstractRacer):
         self,
         incumbent: Configuration,
         challenger: Configuration,
-        run_history: RunHistory,
+        runhistory: RunHistory,
         log_traj: bool = True,
     ) -> Optional[Configuration]:
         """Compares the challenger with current incumbent and returns the best configuration, based
@@ -796,7 +796,7 @@ class _SuccessiveHalving(AbstractRacer):
             promising configuration
         incumbent : Configuration
             best configuration so far
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         log_traj : bool
             whether to log changes of incumbents in trajectory
@@ -807,7 +807,7 @@ class _SuccessiveHalving(AbstractRacer):
             incumbent configuration
         """
         if self.instance_as_budget:
-            new_incumbent = super()._compare_configs(incumbent, challenger, run_history, log_traj)
+            new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
             new_incumbent = incumbent if new_incumbent is None else new_incumbent
             return new_incumbent
@@ -820,14 +820,14 @@ class _SuccessiveHalving(AbstractRacer):
             new_incumbent = self._compare_configs_across_budgets(
                 challenger=challenger,
                 incumbent=incumbent,
-                run_history=run_history,
+                runhistory=runhistory,
                 log_traj=log_traj,
             )
             return new_incumbent
 
         # get runs for both configurations
-        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
+        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        chall_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
 
         if len(inc_runs) > 1:
             raise ValueError(
@@ -871,7 +871,7 @@ class _SuccessiveHalving(AbstractRacer):
             if log_traj:
                 # adding incumbent entry
                 self.stats.inc_changed += 1
-                new_inc_cost = run_history.get_cost(challenger)
+                new_inc_cost = runhistory.get_cost(challenger)
                 self.traj_logger.add_entry(
                     train_perf=new_inc_cost,
                     incumbent_id=self.stats.inc_changed,
@@ -881,8 +881,8 @@ class _SuccessiveHalving(AbstractRacer):
             return challenger
 
         # incumbent and challenger were both evaluated on the same budget, compare them based on their cost
-        chall_cost = run_history.get_cost(challenger)
-        inc_cost = run_history.get_cost(incumbent)
+        chall_cost = runhistory.get_cost(challenger)
+        inc_cost = runhistory.get_cost(incumbent)
         if chall_cost < inc_cost:
             self.logger.info(
                 "Challenger (%.4f) is better than incumbent (%.4f) on budget %.4f.",
@@ -925,7 +925,7 @@ class _SuccessiveHalving(AbstractRacer):
         self,
         challenger: Configuration,
         incumbent: Configuration,
-        run_history: RunHistory,
+        runhistory: RunHistory,
         log_traj: bool = True,
     ) -> Optional[Configuration]:
         """Compares challenger with current incumbent on any budget.
@@ -936,7 +936,7 @@ class _SuccessiveHalving(AbstractRacer):
             promising configuration
         incumbent : Configuration
             best configuration so far
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         log_traj : bool
             whether to log changes of incumbents in trajectory
@@ -949,8 +949,8 @@ class _SuccessiveHalving(AbstractRacer):
         curr_budget = self.all_budgets[self.stage]
 
         # compare challenger and incumbent based on cost
-        chall_cost = run_history.get_min_cost(challenger)
-        inc_cost = run_history.get_min_cost(incumbent)
+        chall_cost = runhistory.get_min_cost(challenger)
+        inc_cost = runhistory.get_min_cost(incumbent)
         if np.isfinite(chall_cost) and np.isfinite(inc_cost):
             if chall_cost < inc_cost:
                 self.logger.info(
@@ -991,7 +991,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         return new_incumbent
 
-    def _top_k(self, configs: List[Configuration], run_history: RunHistory, k: int) -> List[Configuration]:
+    def _top_k(self, configs: List[Configuration], runhistory: RunHistory, k: int) -> List[Configuration]:
         """Selects the top 'k' configurations from the given list based on their performance.
 
         This retrieves the performance for each configuration from the runhistory and checks
@@ -1001,7 +1001,7 @@ class _SuccessiveHalving(AbstractRacer):
         ----------
         configs: List[Configuration]
             list of configurations to filter from
-        run_history: smac.runhistory.runhistory.RunHistory
+        runhistory: smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         k: int
             number of configurations to select
@@ -1014,10 +1014,10 @@ class _SuccessiveHalving(AbstractRacer):
         # extracting costs for each given configuration
         config_costs = {}
         # sample list instance-seed-budget key to act as base
-        run_key = run_history.get_runs_for_config(configs[0], only_max_observed_budget=True)
+        run_key = runhistory.get_runs_for_config(configs[0], only_max_observed_budget=True)
         for c in configs:
             # ensuring that all configurations being compared are run on the same set of instance, seed & budget
-            cur_run_key = run_history.get_runs_for_config(c, only_max_observed_budget=True)
+            cur_run_key = runhistory.get_runs_for_config(c, only_max_observed_budget=True)
 
             # Move to compare set -- get_runs_for_config queries form a dictionary
             # which is not an ordered structure. Some queries to that dictionary returned unordered
@@ -1027,7 +1027,7 @@ class _SuccessiveHalving(AbstractRacer):
                     "Cannot compare configs that were run on different instances-seeds-budgets: %s vs %s"
                     % (run_key, cur_run_key)
                 )
-            config_costs[c] = run_history.get_cost(c)
+            config_costs[c] = runhistory.get_cost(c)
 
         configs_sorted = [k for k, v in sorted(config_costs.items(), key=lambda item: item[1])]
         # select top configurations only
@@ -1036,7 +1036,7 @@ class _SuccessiveHalving(AbstractRacer):
 
     def _all_config_inst_seed_pairs_launched(
         self,
-        run_history: RunHistory,
+        runhistory: RunHistory,
         activate_configuration_being_intensified: Optional[Configuration],
     ) -> bool:
         """When running SH, M configs might require N instances. Before moving to the next stage, we
@@ -1047,7 +1047,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         Parameters
         ----------
-        run_history : RunHistory
+        runhistory : RunHistory
             stores all runs we ran so far
         activate_configuration_being_intensified: Optional[Configuration]
             The last configuration being actively processes by this intensifier
@@ -1062,11 +1062,11 @@ class _SuccessiveHalving(AbstractRacer):
         # have been proposed
         configurations_by_this_intensifier = [c for c, i, s, b in self.run_tracker]
         running_configs = set()
-        for k, v in run_history.data.items():
-            if run_history.ids_config[k.config_id] in configurations_by_this_intensifier:
+        for k, v in runhistory.data.items():
+            if runhistory.ids_config[k.config_id] in configurations_by_this_intensifier:
                 # We get all configurations launched by the current intensifier
                 # regardless if status is RUNNING or not, to make it more robust
-                running_configs.add(run_history.ids_config[k.config_id])
+                running_configs.add(runhistory.ids_config[k.config_id])
 
         # The total number of runs for this stage account for finished configurations
         # (success + failed + do not advance) + the offset + running but not finished

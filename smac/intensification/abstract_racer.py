@@ -133,7 +133,7 @@ class AbstractRacer(object):
         challengers: Optional[List[Configuration]],
         incumbent: Configuration,
         chooser: Optional[ConfigurationChooser],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         repeat_configs: bool = True,
         num_workers: int = 1,
     ) -> Tuple[RunInfoIntent, RunInfo]:
@@ -151,7 +151,7 @@ class AbstractRacer(object):
              incumbent configuration
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             optimizer that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -172,7 +172,7 @@ class AbstractRacer(object):
         self,
         run_info: RunInfo,
         incumbent: Optional[Configuration],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         time_bound: float,
         result: RunValue,
         log_traj: bool = True,
@@ -186,7 +186,7 @@ class AbstractRacer(object):
                A RunInfo containing the configuration that was evaluated
         incumbent : Optional[Configuration]
             Best configuration seen so far
-        run_history : RunHistory
+        runhistory : RunHistory
             stores all runs we ran so far
             if False, an evaluated configuration will not be generated again
         time_bound : float
@@ -210,7 +210,7 @@ class AbstractRacer(object):
         self,
         challengers: Optional[List[Configuration]],
         chooser: Optional[ConfigurationChooser],
-        run_history: RunHistory,
+        runhistory: RunHistory,
         repeat_configs: bool = True,
     ) -> Optional[Configuration]:
         """Retuns the next challenger to use in intensification If challenger is None, then
@@ -222,7 +222,7 @@ class AbstractRacer(object):
             promising configurations to evaluate next
         chooser : smac.optimizer.epm_configuration_chooser.EPMChooser
             a sampler that generates next configurations to use for racing
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             stores all runs we ran so far
         repeat_configs : bool
             if False, an evaluated configuration will not be generated again
@@ -234,7 +234,7 @@ class AbstractRacer(object):
         """
         start_time = time.time()
 
-        used_configs = set(run_history.get_all_configs())
+        used_configs = set(runhistory.get_all_configs())
 
         if challengers:
             # iterate over challengers provided
@@ -264,7 +264,7 @@ class AbstractRacer(object):
         return None
 
     def _adapt_algorithm_walltime_limit(
-        self, challenger: Configuration, run_history: RunHistory, inc_sum_cost: float
+        self, challenger: Configuration, runhistory: RunHistory, inc_sum_cost: float
     ) -> float:
         """Adaptive capping: Compute algorithm_walltime_limit based on time so far used for incumbent and reduce
         algorithm_walltime_limit for next run of challenger accordingly.
@@ -278,7 +278,7 @@ class AbstractRacer(object):
         ----------
         challenger : Configuration
             Configuration which challenges incumbent
-        run_history : smac.runhistory.runhistory.RunHistory
+        runhistory : smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         inc_sum_cost: float
             Sum of runtimes of all incumbent runs
@@ -298,8 +298,8 @@ class AbstractRacer(object):
         # cost used by challenger for going over all its runs
         # should be subset of runs of incumbent (not checked for efficiency
         # reasons)
-        chall_inst_seeds = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
-        chal_sum_cost = run_history.sum_cost(
+        chall_inst_seeds = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
+        chal_sum_cost = runhistory.sum_cost(
             config=challenger, instance_seed_budget_keys=chall_inst_seeds, normalize=True
         )
         assert type(chal_sum_cost) == float
@@ -313,7 +313,7 @@ class AbstractRacer(object):
         self,
         incumbent: Configuration,
         challenger: Configuration,
-        run_history: RunHistory,
+        runhistory: RunHistory,
         log_traj: bool = True,
     ) -> Optional[Configuration]:
         """Compare two configuration wrt the runhistory and return the one which performs better (or
@@ -333,7 +333,7 @@ class AbstractRacer(object):
             Current incumbent
         challenger: Configuration
             Challenger configuration
-        run_history: smac.runhistory.runhistory.RunHistory
+        runhistory: smac.runhistory.runhistory.RunHistory
             Stores all runs we ran so far
         log_traj: bool
             Whether to log changes of incumbents in trajectory
@@ -342,14 +342,14 @@ class AbstractRacer(object):
         -------
         None or better of the two configurations x,y
         """
-        inc_runs = run_history.get_runs_for_config(incumbent, only_max_observed_budget=True)
-        chall_runs = run_history.get_runs_for_config(challenger, only_max_observed_budget=True)
+        inc_runs = runhistory.get_runs_for_config(incumbent, only_max_observed_budget=True)
+        chall_runs = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
         to_compare_runs = set(inc_runs).intersection(chall_runs)
 
         # performance on challenger runs, the challenger only becomes incumbent
         # if it dominates the incumbent
-        chal_perf = run_history.average_cost(challenger, to_compare_runs, normalize=True)
-        inc_perf = run_history.average_cost(incumbent, to_compare_runs, normalize=True)
+        chal_perf = runhistory.average_cost(challenger, to_compare_runs, normalize=True)
+        inc_perf = runhistory.average_cost(incumbent, to_compare_runs, normalize=True)
 
         assert type(chal_perf) == float
         assert type(inc_perf) == float
