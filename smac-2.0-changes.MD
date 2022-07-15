@@ -1,5 +1,11 @@
 # Unified transformation guide
 
+- Use future annotations: `from __future__ import annotations`. For example:
+    ```
+    def test_func(value: int | None = None) -> int | None:
+        return value
+    ```
+
 - Remove `self.logger`. Create on top a global logger:
 logger = get_logger(__name__)
 
@@ -27,16 +33,20 @@ upper-case.
     """
     ```
 
-- Replace all copyrights/authors/license with the following:
+- Everytime you see a variable you don't know, look it up and replace it with the variable provided
+in the `variable renaming`. If the variable is not listed below, add the variable and change it
+accordingly. Just make sure it is persistent.
 
+- If you find something with `run_obj == "runtime"` remove it. Since adaptive capping 
+is bounded to `runtime`, you can remove that too.
+
+- Please always check whether the docstrings are still correct. If not, correct them accordingly.
+
+- Replace all copyrights/authors/license with the following:
     ```
     __copyright__ = "Copyright 2022, automl.org"
     __license__ = "3-clause BSD"
     ```
-
-- Everytime you see a variable you don't know, look it up and replace it with the variable provided
-in the `variable renaming`. If the variable is not listed below, add the variable and change it
-accordingly. Just make sure it is persistent.
 
 
 
@@ -44,7 +54,6 @@ accordingly. Just make sure it is persistent.
 
 We removed run_obj == runtime COMPLETELY
 => no adaptive capping
-
 
 cutoff/cutoff-time/cutoff_time => algorithm_walltime_limit
 algo_runs_timelimit/tuner-timout/tuner_timout => cputime_limit

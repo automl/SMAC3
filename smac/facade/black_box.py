@@ -101,7 +101,7 @@ class BlackBoxFacade(Facade):
         return model
 
     @staticmethod
-    def get_kernel(config: Config):
+    def get_kernel(config: Config) -> kernels.Kernel:
         types, bounds = get_types(config.configspace, instance_features=None)
         cont_dims = np.where(np.array(types) == 0)[0]
         cat_dims = np.where(np.array(types) != 0)[0]

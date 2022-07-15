@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List, Mapping, Optional, Tuple, cast
 
 import logging
@@ -128,10 +129,10 @@ class Intensifier(AbstractRacer):
         self,
         instances: List[str],
         instance_specifics: Mapping[str, str] = None,
-        algorithm_walltime_limit: int = None,
+        algorithm_walltime_limit: float | None = None,
         deterministic: bool = False,
         run_obj_time: bool = True,
-        race_against: Configuration = None,
+        race_against: Configuration | None = None,
         run_limit: int = MAXINT,
         use_ta_time_bound: bool = False,
         min_config_calls: int = 1,
