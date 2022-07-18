@@ -106,12 +106,12 @@ class SMBO:
         runhistory: RunHistory,
         runhistory_transformer: AbstractRunhistoryTransformer,
         intensifier: AbstractRacer,
-        run_id: int,
+        # run_id: int,
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
         runner: BaseRunner,
-        restore_incumbent: Configuration = None,
+        # restore_incumbent: Configuration = None,
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
@@ -119,7 +119,9 @@ class SMBO:
         epm_chooser_kwargs: Optional[Dict] = None,
         seed: int = 0,
     ):
-        self.incumbent = restore_incumbent
+        # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
+        # the stats object.
+        self.incumbent = stats.get_incumbent()
 
         self.config = config
         self.config_space = config.configspace  # type: ignore[attr-defined] # noqa F821
@@ -127,7 +129,7 @@ class SMBO:
         self.initial_design = initial_design
         self.runhistory = runhistory
         self.intensifier = intensifier
-        self.run_id = run_id
+        # self.run_id = run_id
         self.rng = np.random.RandomState(seed)
         self._min_time = 10**-5
         self.runner = runner
@@ -146,7 +148,7 @@ class SMBO:
             model=model,  # type: ignore
             acquisition_optimizer=acquisition_optimizer,
             acquisition_function=acquisition_function,
-            restore_incumbent=restore_incumbent,
+            # restore_incumbent=restore_incumbent,
             random_configuration_chooser=random_configuration_chooser,
             predict_x_best=predict_x_best,
             min_samples_model=min_samples_model,
@@ -180,26 +182,9 @@ class SMBO:
             # to be on the safe side, never return an empty list of initial configs
             if not self.initial_design_configs:
                 self.initial_design_configs = [self.config_space.get_default_configuration()]
-
-        elif self.stats.submitted > 0 and self.incumbent is None:
-            raise ValueError(
-                "According to stats there have been runs started, "
-                "but the optimizer cannot detect an incumbent. Did "
-                "you set the incumbent (e.g. after restoring state)?"
-            )
-        elif self.stats.submitted == 0 and self.incumbent is not None:
-            raise ValueError(
-                "An incumbent is specified, but there are no runs "
-                "recorded as started in the Stats-object. If you're "
-                "restoring a state, please provide the Stats-object."
-            )
         else:
             # Restoring state!
-            logger.info(
-                "State Restored! Starting optimization with " "incumbent %s",
-                self.incumbent,
-            )
-            logger.info("State restored with following budget:")
+            logger.info(f"State restored! Starting optimization with incumbent {self.incumbent}.")
             self.stats.print()
 
     def run(self) -> Configuration:
@@ -211,8 +196,7 @@ class SMBO:
             The best found configuration.
         """
         self.start()
-
-        num_obj = self.config.count_objectives()
+        n_objectives = self.config.count_objectives()
 
         # Main BO loop
         while True:
@@ -251,11 +235,7 @@ class SMBO:
                 old_time_left = time_left
                 time_spent = time_spent + (time.time() - start_time)
                 time_left = self._get_timebound_for_intensification(time_spent, update=True)
-                logger.debug(
-                    "Updated intensification time bound from %f to %f",
-                    old_time_left,
-                    time_left,
-                )
+                logger.debug(f"Updated intensification time bound from {old_time_left} to {time_left}")
 
             # Skip starting new runs if the budget is now exhausted
             if self.stats.is_budget_exhausted():
@@ -270,7 +250,7 @@ class SMBO:
                 # completed and processed, it will be updated accordingly
                 self.runhistory.add(
                     config=run_info.config,
-                    cost=float(MAXINT) if num_obj == 1 else np.full(num_obj, float(MAXINT)),
+                    cost=float(MAXINT) if n_objectives == 1 else np.full(n_objectives, float(MAXINT)),
                     time=0.0,
                     status=StatusType.RUNNING,
                     instance_id=run_info.instance,
@@ -310,6 +290,7 @@ class SMBO:
                 self._incorporate_run_results(run_info, result, time_left)
 
             if False:
+                # TODO: FIX ME
                 if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
                     assert self.config.output_directory is not None  # please mypy
                     pSMAC.write(
@@ -355,6 +336,8 @@ class SMBO:
 
         return self.incumbent
 
+    '''
+    # TODO: Is this still needed?
     def validate(
         self,
         config_mode: Union[str, List[Configuration]] = "inc",
@@ -426,6 +409,7 @@ class SMBO:
                 output_fn=new_rh_path,
             )
         return new_rh
+    '''
 
     def _get_timebound_for_intensification(self, time_spent: float, update: bool) -> float:
         """Calculate time left for intensify from the time spent on choosing challengers using the
@@ -516,7 +500,7 @@ class SMBO:
             raise FirstRunCrashedException("The first run crashed. Please check your setup again" + additional_info)
 
         # Update the intensifier with the result of the runs
-        self.incumbent, inc_perf = self.intensifier.process_results(
+        self.incumbent, _ = self.intensifier.process_results(
             run_info=run_info,
             incumbent=self.incumbent,
             runhistory=self.runhistory,
@@ -542,6 +526,6 @@ class SMBO:
         """Saves the current stats and runhistory."""
         self.stats.save()
 
-        output_dir = self.config.output_directory
-        if output_dir is not None:
-            self.runhistory.save_json(fn=os.path.join(output_dir, "runhistory.json"))
+        path = self.config.output_directory
+        if path is not None:
+            self.runhistory.save_json(fn=str(path / "runhistory.json"))

@@ -85,6 +85,14 @@ class Stats:
         )
         self.trajectory.append(item)
 
+    def get_incumbent(self) -> Configuration | None:
+        if self.incumbent_changed == 0:
+            return None
+
+        # Transform dictionary to configuration
+        incumbent = self.trajectory[-1].incumbent
+        return Configuration(self.config.configspace, values=incumbent)
+
     def start_timing(self) -> None:
         """Starts the timer (for the runtime configuration budget).
 

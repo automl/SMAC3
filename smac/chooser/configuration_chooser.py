@@ -67,7 +67,7 @@ class ConfigurationChooser:
         model: RandomForestWithInstances,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        restore_incumbent: Configuration = None,
+        # restore_incumbent: Configuration = None,
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
         min_samples_model: int = 1,
@@ -75,7 +75,7 @@ class ConfigurationChooser:
         **epm_chooser_kwargs: Any,
     ):
         self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        self.incumbent = restore_incumbent
+        # self.incumbent = restore_incumbent
 
         self.config = config
         self.stats = stats

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Callable
+from typing import Any, Callable
 import dask
 import joblib
 
@@ -44,14 +44,6 @@ class Facade:
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
         run_id: int | None = None,
     ):
-        # TODO: How to integrate `restore_incumbent`?
-
-        # TODO: Resume run
-        # Check if config object is the same as in the last run
-        # Check if stats object is available etc.
-        # And then reload the runhistory
-        # However, we also have to make sure the kwargs are the same...
-
         if model is None:
             model = self.get_model(config)
 
@@ -121,36 +113,63 @@ class Facade:
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
 
+        # We have to update our meta data (arguments of the components)
+        meta = self.get_meta()
+        self.config.set_meta(meta)
+
         # Now we add some more dependencies
         # This is the easiest way to do this, although it might be a bit hacky
-        self.intensifier.set_stats(stats)
+        self.intensifier.set_stats(self.stats)
         self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
         self.runhistory_transformer.set_imputer(self._get_imputer())
-        # self.runhistory_transformer.set_success_states etc. for different intensifier?
+        # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
 
         # Unfortunately, we can't use the update method
         # here as update might incorporate increasing steps or else
-        self.acquisition_function.set_model(model)
+        self.acquisition_function.set_model(self.model)
 
-        if run_id is None:
-            run_id = 0
+        # Here we actually check whether the run should be continued or not.
+        # More precisely, we update our stats and runhistory object if all kwargs
+        # and config/stats object are the same. For doing so, we create a specific hash.
+        # SMBO recognizes that stats is not empty and hence does not run initial design anymore.
+        # Since the runhistory is already updated, the model uses previous data directly.
+        self._continue()
+
+        # And now we save our config object.
+        # Runhistory and stats are saved by `SMBO` as they change over time.
+        self.config.save()
 
         # Create optimizer
         self.optimizer = SMBO(
-            config=config,
-            stats=stats,
-            runner=runner,
-            initial_design=initial_design,
+            config=self.config,
+            stats=self.stats,
+            runner=self.runner,
+            initial_design=self.initial_design,
             runhistory=self.runhistory,
             runhistory_transformer=self.runhistory_transformer,
-            intensifier=intensifier,
-            run_id=run_id,
-            model=model,
-            acquisition_function=acquisition_function,
-            acquisition_optimizer=acquisition_optimizer,
-            random_configuration_chooser=random_configuration_chooser,
+            intensifier=self.intensifier,
+            # run_id=self.config.name,  # TODO: Why do we need this?
+            model=self.model,
+            acquisition_function=self.acquisition_function,
+            acquisition_optimizer=self.acquisition_optimizer,
+            random_configuration_chooser=self.random_configuration_chooser,
             seed=self.seed,
         )
+
+    def get_meta(self) -> dict[str, dict[str, Any]]:
+        """Generates a hash based on all kwargs of the facade. This is used for determine
+        whether a run should be continued or not."""
+        meta = {
+            "target_algorithm": {"code": str(self.runner.ta.__code__.co_code)},
+            # TODO: Create `get_meta` methods
+            # "initial_design": self.initial_design.get_meta(),
+            # "intensifier": self.intensifier.get_meta(),
+            # "model": self.model.get_meta(),
+            # "acquisition_function": self.acquisition_function.get_meta(),
+            # "random_configuration_chooser": self.random_configuration_chooser.get_meta(),
+        }
+
+        return meta
 
     def _validate(self) -> None:
         # Make sure the same acquisition function is used
@@ -158,6 +177,27 @@ class Facade:
 
         # We have to check that if we use transform_y it's done everywhere
         # For example, if we have LogEI, we also need to transform the data inside RunhistoryTransformer
+
+    def _continue(self) -> None:
+        """Update the runhistory and stats object if config and function kwargs are the same."""
+        old_output_directory = self.config.output_directory
+        old_runhistory_filename = self.config.output_directory / "runhistory.json"
+        old_stats_filename = self.config.output_directory / "stats.json"
+
+        if old_output_directory.exists() and old_runhistory_filename.exists() and old_stats_filename.exists():
+            old_config = Config.load(old_output_directory)
+
+            if self.config == old_config:
+                logger.info("Continuing from previous run.")
+
+                # We update the runhistory and stats in-place.
+                # Stats used the output directory from config directly.
+                self.runhistory.load_json(str(old_runhistory_filename), cs=self.config.configspace)
+                self.stats.load()
+            else:
+                raise RuntimeError(
+                    f"Found old run in `{self.config.output_directory}`, but it is not the same as the current one."
+                )
 
     def _get_imputer(self) -> BaseImputor | None:
         assert self.model is not None
