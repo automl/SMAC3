@@ -21,6 +21,6 @@ if __name__ == "__main__":
     cs.add_hyperparameters([x])
 
     # Scenario object
-    config = Config(cs, name="hey", n_runs=10)
+    config = Config(cs, name="hey", n_runs=60)
     smac = BlackBoxFacade(config, quadratic)
     smac.optimize()

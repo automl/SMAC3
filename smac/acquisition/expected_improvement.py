@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import norm
+
 from smac.acquisition import AbstractAcquisitionFunction
 
 

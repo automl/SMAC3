@@ -2,9 +2,9 @@ from typing import Dict, List, Optional, Tuple
 
 from subprocess import PIPE, Popen
 
+from smac.configspace import Configuration
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
-from smac.configspace import Configuration
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"

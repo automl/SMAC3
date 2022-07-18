@@ -10,10 +10,10 @@ import pynisher
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
 from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.stats import Stats
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"

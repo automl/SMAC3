@@ -6,21 +6,15 @@ import dask.distributed  # type: ignore
 import joblib
 import numpy as np  # type: ignore
 
-from smac.runner.algorithm_executer import AlgorithmExecuter
-
-# tae
-from smac.runner.base import BaseRunner
-from smac.runner.dask_runner import DaskParallelRunner
+from smac.acquisition import EI, AbstractAcquisitionFunction
+from smac.acquisition.maximizer import (
+    AbstractAcquisitionOptimizer,
+    LocalAndSortedRandomSearch,
+)
+from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.model.base_model import BaseModel
-from smac.model.base_imputor import BaseImputor
-
-# epm
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.model.random_forest.rfr_imputator import RFRImputator
-from smac.model.utils import get_types
 from smac.initial_design.default_configuration_design import DefaultInitialDesign
 
 # Initial designs
@@ -29,19 +23,17 @@ from smac.intensification.abstract_racer import AbstractRacer
 
 # intensification
 from smac.intensification.intensification import Intensifier
+from smac.model.base_imputor import BaseImputor
+from smac.model.base_model import BaseModel
+
+# epm
+from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.random_forest.rfr_imputator import RFRImputator
+from smac.model.utils import get_types
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
 )
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-from smac.acquisition import EI, AbstractAcquisitionFunction
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
-    LocalAndSortedRandomSearch,
-)
-from smac.chooser.random_chooser import (
-    ChooserProb,
-    RandomChooser,
-)
 
 # optimizer
 from smac.optimizer.smbo import SMBO
@@ -49,6 +41,11 @@ from smac.optimizer.smbo import SMBO
 # runhistory
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runner.algorithm_executer import AlgorithmExecuter
+
+# tae
+from smac.runner.base import BaseRunner
+from smac.runner.dask_runner import DaskParallelRunner
 
 # utils
 from smac.utils.logging import get_logger

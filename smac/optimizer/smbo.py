@@ -6,28 +6,25 @@ import time
 
 import numpy as np
 
+from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
+from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.traj_logging import TrajLogger
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.model.base_model import BaseModel
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
+from smac.model.base_model import BaseModel
 from smac.optimizer import pSMAC
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
-from smac.chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
-)
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
-from smac.utils.logging import get_logger
-from smac.utils.stats import Stats
 from smac.runner import FirstRunCrashedException, StatusType, TAEAbortException
 from smac.runner.base import BaseRunner
+from smac.utils.logging import get_logger
+from smac.utils.stats import Stats
 from smac.utils.validate import Validator
 
 __author__ = "Aaron Klein, Marius Lindauer, Matthias Feurer"
@@ -175,7 +172,7 @@ class SMBO:
 
         # Initialization, depends on input
         if self.stats.submitted == 0 and self.incumbent is None:
-            logger.info("Running initial design")
+            logger.info("Running initial design...")
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
 
@@ -482,9 +479,7 @@ class SMBO:
 
         if result.status == StatusType.ABORT:
             raise TAEAbortException(
-                "Target algorithm status ABORT - SMAC will "
-                "exit. The last incumbent can be found "
-                "in the trajectory-file."
+                "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
             )
         elif result.status == StatusType.STOP:
             self._stop = True

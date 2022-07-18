@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import abc
 from typing import Callable, Iterator, List, Optional, Set, Tuple, Union
 
@@ -9,17 +10,14 @@ import time
 
 import numpy as np
 
+from smac.acquisition import AbstractAcquisitionFunction
+from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.configspace import (
     Configuration,
     ConfigurationSpace,
     ForbiddenValueError,
     convert_configurations_to_array,
     get_one_exchange_neighbourhood,
-)
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.utils.stats import Stats

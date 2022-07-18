@@ -3,9 +3,9 @@ from typing import Callable, Dict, List, Optional, Tuple, Union
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.base import BaseRunner
+from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

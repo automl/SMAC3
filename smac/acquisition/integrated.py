@@ -3,6 +3,7 @@ from typing import Any, List
 import copy
 
 import numpy as np
+
 from smac.acquisition import AbstractAcquisitionFunction
 
 

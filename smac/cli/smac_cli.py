@@ -20,9 +20,9 @@ from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.random import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
 from smac.runner import FirstRunCrashedException, TAEAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
+from smac.utils.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2015, ML4AAD"

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import List, Mapping, Optional, Tuple, cast
 
 import logging
@@ -7,6 +8,7 @@ from enum import Enum
 
 import numpy as np
 
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import (
@@ -14,7 +16,6 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import (
     InstSeedBudgetKey,
     RunHistory,
@@ -233,10 +234,7 @@ class Intensifier(AbstractRacer):
             An object that encapsulates necessary information for a config run
         """
         if num_workers > 1:
-            raise ValueError(
-                "Intensifier does not support more than 1 worker, yet "
-                "the argument num_workers to get_next_run is {}".format(num_workers)
-            )
+            raise ValueError("The selected intensifier does not support more than 1 worker.")
 
         # If this function is called, it means the iteration is
         # not complete (we can be starting a new iteration, or re-running a

@@ -5,14 +5,14 @@ import inspect
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
-from smac.configspace import Configuration
-from smac.model.base_model import BaseModel
-from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.acquisition import EI, AbstractAcquisitionFunction
 from smac.acquisition.maximizer import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )
+from smac.configspace import Configuration
+from smac.model.base_model import BaseModel
+from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.optimizer.subspaces import LocalSubspace
 
 

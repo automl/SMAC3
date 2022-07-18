@@ -8,13 +8,13 @@ from ConfigSpace.hyperparameters import NumericalHyperparameter
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 from scipy.stats.qmc import LatinHypercube, Sobol
 
+from smac.acquisition import TS, AbstractAcquisitionFunction
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process import GaussianProcess
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.gpytorch import GPyTorchGaussianProcess
 from smac.model.gaussian_process.mcmc import MCMCGaussianProcess
-from smac.acquisition import TS, AbstractAcquisitionFunction
 from smac.optimizer.subspaces import LocalSubspace
 
 warnings.filterwarnings("ignore", message="The balance properties of Sobol' points require" " n to be a power of 2.")

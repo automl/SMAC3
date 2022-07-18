@@ -4,19 +4,13 @@ import logging
 
 import numpy as np
 
+from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition.maximizer import AbstractAcquisitionOptimizer, RandomSearch
+from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
-    RandomSearch,
-)
-from smac.chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
-)
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
 from smac.utils.stats import Stats

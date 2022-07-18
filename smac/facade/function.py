@@ -5,11 +5,11 @@ import logging
 import numpy as np
 from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: ignore
 
-from smac.runner.algorithm_executer import ExecuteTAFuncArray
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.runhistory.runhistory import RunKey
+from smac.runner.algorithm_executer import ExecuteTAFuncArray
 
 __author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2016, ML4AAD"

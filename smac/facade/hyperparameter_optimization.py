@@ -1,9 +1,9 @@
 from typing import Any
 
-from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.acquisition import LogEI
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
-from smac.acquisition import LogEI
+from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
 
 __author__ = "Marius Lindauer"

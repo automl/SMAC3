@@ -1,30 +1,36 @@
 from __future__ import annotations
+
 from abc import abstractmethod
 from typing import Any, Callable
+
 import dask
 import joblib
-
 import numpy as np
-from smac.runner.algorithm_executer import AlgorithmExecuter
-from smac.configspace import Configuration
+from matplotlib.style import available
+
 from smac.acquisition import AbstractAcquisitionFunction
 from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.runner.base import BaseRunner
+from smac.chooser.random_chooser import RandomChooser
 from smac.config import Config
+from smac.configspace import Configuration
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
-from smac.model.base_model import BaseModel
 from smac.model.base_imputor import BaseImputor
-from smac.chooser.random_chooser import RandomChooser
+from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
-from smac.multi_objective.abstract_multi_objective_algorithm import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.abstract_multi_objective_algorithm import (
+    AbstractMultiObjectiveAlgorithm,
+)
 from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
+from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.base import BaseRunner
+from smac.runner.dask_runner import DaskParallelRunner
 from smac.utils.logging import get_logger
+from smac.utils.others import recursively_compare_dicts
 from smac.utils.stats import Stats
-
 
 logger = get_logger(__name__)
 
@@ -42,7 +48,7 @@ class Facade:
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractRacer | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
-        run_id: int | None = None,
+        # run_id: int | None = None,
     ):
         if model is None:
             model = self.get_model(config)
@@ -65,12 +71,15 @@ class Facade:
         if multi_objective_algorithm is None:
             multi_objective_algorithm = self.get_multi_objective_algorithm(config)
 
+        # Initialize empty stats and runhistory object
         stats = Stats(config)
+        runhistory = RunHistory()
 
         # Set the seed for configuration space
         config.configspace.seed(config.seed)
 
-        # Prepare algorithm executer
+        # Prepare the algorithm executer
+        runner: BaseRunner
         if callable(target_algorithm):
             # We wrap our algorithm with the AlgorithmExecuter to use pynisher
             # and to catch exceptions
@@ -81,18 +90,19 @@ class Facade:
             # TODO: Integrate ExecuteTARunOld again
             raise NotImplementedError
 
-        # In case of multiple jobs, we need to pass the algorithm to the dask client
-        logger.info("FIXME: Parallelization is not working yet.")
-        if config.n_workers == -1:
-            n_workers = joblib.cpu_count()
-        elif config.n_workers > 1:
-            pass
-            # algorithm = DaskParallelRunner(  # type: ignore
-            #    algorithm,
-            #    n_workers=n_workers,
-            #    output_directory=config.output_directory,
-            #    dask_client=dask_client,
-            # )
+        # In case of multiple jobs, we need to wrap the runner again using `DaskParallelRunner`
+        if (n_workers := config.n_workers) > 1:
+            available_workers = joblib.cpu_count()
+            if n_workers > available_workers:
+                logger.info(f"Workers are reduced to {n_workers}.")
+                n_workers = available_workers
+
+            # We use a dask runner for parallelization
+            runner = DaskParallelRunner(
+                runner,
+                n_workers=n_workers,
+                output_directory=str(config.output_directory),
+            )
 
         # Set variables globally
         self.config = config
@@ -105,7 +115,7 @@ class Facade:
         self.random_configuration_chooser = random_configuration_chooser
         self.intensifier = intensifier
         self.multi_objective_algorithm = multi_objective_algorithm
-        self.runhistory = RunHistory()
+        self.runhistory = runhistory
         self.runhistory_transformer = self.get_runhistory_transformer(config)
         self.stats = stats
         self.seed = config.seed
@@ -113,12 +123,11 @@ class Facade:
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
 
-        # We have to update our meta data (arguments of the components)
-        meta = self.get_meta()
-        self.config.set_meta(meta)
+        # We have to update our meta data (basically arguments of the components)
+        self.config._set_meta(self._get_meta())
 
-        # Now we add some more dependencies
-        # This is the easiest way to do this, although it might be a bit hacky
+        # Now we add some more dependencies.
+        # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
         self.intensifier.set_stats(self.stats)
         self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
         self.runhistory_transformer.set_imputer(self._get_imputer())
@@ -148,15 +157,15 @@ class Facade:
             runhistory=self.runhistory,
             runhistory_transformer=self.runhistory_transformer,
             intensifier=self.intensifier,
-            # run_id=self.config.name,  # TODO: Why do we need this?
             model=self.model,
             acquisition_function=self.acquisition_function,
             acquisition_optimizer=self.acquisition_optimizer,
             random_configuration_chooser=self.random_configuration_chooser,
             seed=self.seed,
+            # run_id=self.config.name,  # TODO: Why do we need this?
         )
 
-    def get_meta(self) -> dict[str, dict[str, Any]]:
+    def _get_meta(self) -> dict[str, dict[str, Any]]:
         """Generates a hash based on all kwargs of the facade. This is used for determine
         whether a run should be continued or not."""
         meta = {
@@ -179,7 +188,7 @@ class Facade:
         # For example, if we have LogEI, we also need to transform the data inside RunhistoryTransformer
 
     def _continue(self) -> None:
-        """Update the runhistory and stats object if config and function kwargs are the same."""
+        """Update the runhistory and stats object if configs (inclusive meta data) are the same."""
         old_output_directory = self.config.output_directory
         old_runhistory_filename = self.config.output_directory / "runhistory.json"
         old_stats_filename = self.config.output_directory / "stats.json"
@@ -191,13 +200,35 @@ class Facade:
                 logger.info("Continuing from previous run.")
 
                 # We update the runhistory and stats in-place.
-                # Stats used the output directory from config directly.
+                # Stats use the output directory from the config directly.
                 self.runhistory.load_json(str(old_runhistory_filename), cs=self.config.configspace)
                 self.stats.load()
             else:
-                raise RuntimeError(
-                    f"Found old run in `{self.config.output_directory}`, but it is not the same as the current one."
+                diff = recursively_compare_dicts(self.config.__dict__, old_config.__dict__, level="config")
+                logger.info(
+                    f"Found old run in `{self.config.output_directory}` but it is not the same as the current one:\n"
+                    f"{diff}"
                 )
+
+                feedback = input(
+                    "\nPress one of the following numbers to continue or any other key to abort:\n"
+                    "(1) Overwrite old run completely.\n"
+                    "(2) Overwrite old run and re-use previous runhistory data. The configuration space "
+                    "has to be the same for this option.\n"
+                )
+
+                if feedback == "1":
+                    # We don't have to do anything here, since we work with a clean runhistory and stats object
+                    pass
+                elif feedback == "2":
+                    # We overwrite runhistory and stats.
+                    # However, we should ensure that we use the same configspace.
+                    assert self.config.configspace == old_config.configspace
+
+                    self.runhistory.load_json(str(old_runhistory_filename), cs=self.config.configspace)
+                    self.stats.load()
+                else:
+                    raise RuntimeError("SMAC run was stopped by the user.")
 
     def _get_imputer(self) -> BaseImputor | None:
         assert self.model is not None

@@ -1,15 +1,21 @@
 from __future__ import annotations
-import hashlib
 
+from typing import Any, Mapping
+
+import hashlib
+import json
 import random
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Mapping
 
 import ConfigSpace
 import numpy as np
-import json
 from ConfigSpace.read_and_write import json as cs_json
+
+from smac.utils.logging import get_logger
+from smac.utils.others import recursively_compare_dicts
+
+logger = get_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -19,21 +25,14 @@ class Config:
     """
 
     configspace: ConfigSpace
+
     # If no name is used, SMAC generates a hash based on the meta data (basically from the config and the arguments of the components)
     # You can use `name` to directly identify your run.
     name: str | None = None
     output_directory: Path = Path("smac3_output")  # ./smac3_output/name/seed/... in the end.
-    deterministic: bool = True  # Whether the algorithm is determinstic or not
-
-    # Original: "run_obj"
-    # runtime -> time
-    # quality -> performance
-    # Question: How to deal with categories here? -> post_init
-    # But we should get rid of time
-    # objective: str = "performance"
+    deterministic: bool = True  # Whether the target algorithm is determinstic or not.
 
     objectives: str | list[str] = "cost"
-    # save_instantly: bool = False
     crash_cost: float = np.inf
     # transform_y: str | None = None  # Whether y should be transformed (different runhistory2epm)
 
@@ -42,10 +41,10 @@ class Config:
     cputime_limit: float = np.inf
     memory_limit: float | None = None
     algorithm_walltime_limit: float | None = None
-    n_runs: int = 10
+    n_runs: int = 20
 
     # Other time things
-    intensify_percentage: float = 0.5  #
+    intensify_percentage: float = 0.5
 
     # always_race_default
     # How to deal with instances? Have them here too? It's not really a config, rather data
@@ -76,26 +75,26 @@ class Config:
             object.__setattr__(self, "seed", seed)
 
         # Change directory wrt name and seed
-        self.change_output_directory()
+        self._change_output_directory()
 
         # Set hashes
         object.__setattr__(self, "_meta", {})
 
-    def change_output_directory(self) -> None:
+    def _change_output_directory(self) -> None:
         # Create output directory
         if self.name is not None:
             new = Path(self.name) / str(self.seed)
             if not str(self.output_directory).endswith(str(new)):
                 object.__setattr__(self, "output_directory", self.output_directory / new)
 
-    def set_meta(self, meta: dict[str, dict[str, Any]]) -> None:
+    def _set_meta(self, meta: dict[str, dict[str, Any]]) -> None:
         object.__setattr__(self, "_meta", meta)
 
         # We overwrite name with the hash of the meta (if no name is passed)
         if self.name is None:
             hash = hashlib.md5(str(self.__dict__).encode("utf-8")).hexdigest()
             object.__setattr__(self, "name", hash)
-            self.change_output_directory()
+            self._change_output_directory()
 
     def get_meta(self) -> dict[str, str]:
         return self._meta  # type: ignore
@@ -160,7 +159,7 @@ class Config:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Config):
-            # Make sure we include the meta
+            # When using __dict__, we make sure to include the meta data
             return self.__dict__ == other.__dict__
 
         raise RuntimeError("Can only compare config objects.")

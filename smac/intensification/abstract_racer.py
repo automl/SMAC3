@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Iterator, List, Mapping, Optional, Tuple
 
 import logging
@@ -8,12 +9,11 @@ from enum import Enum
 
 import numpy as np
 
-from smac.configspace import Configuration
 from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.configspace import Configuration
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.utils.logging import format_array, get_logger
 from smac.utils.stats import Stats
-from smac.utils.logging import format_array
-from smac.utils.logging import get_logger
 
 _config_to_run_type = Iterator[Optional[Configuration]]
 

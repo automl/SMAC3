@@ -5,14 +5,14 @@ import warnings
 
 import numpy as np
 
+from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.utils.stats import Stats
 from smac.runner import StatusType
+from smac.utils.stats import Stats
 
 __author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
@@ -892,11 +892,7 @@ class _SuccessiveHalving(AbstractRacer):
             new_incumbent = challenger
             if log_traj:
                 assert self.stats
-                self.stats.add_incumbent(
-                    cost=chall_cost,
-                    incumbent=new_incumbent,
-                    budget=curr_budget
-                )
+                self.stats.add_incumbent(cost=chall_cost, incumbent=new_incumbent, budget=curr_budget)
         else:
             self.logger.debug(
                 "Incumbent (%.4f) is at least as good as the challenger (%.4f) on budget %.4f.",
@@ -969,11 +965,7 @@ class _SuccessiveHalving(AbstractRacer):
                 )
                 if log_traj and self.stats.incumbent_changed == 0:
                     assert self.stats
-                    self.stats.add_incumbent(
-                        cost=inc_cost,
-                        incumbent=incumbent,
-                        budget=curr_budget
-                    )
+                    self.stats.add_incumbent(cost=inc_cost, incumbent=incumbent, budget=curr_budget)
                 new_incumbent = incumbent
         else:
             self.logger.debug("Non-finite costs from run history!")

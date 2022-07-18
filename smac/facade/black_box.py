@@ -11,13 +11,13 @@ from smac.acquisition.maximizer import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )
+from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design.initial_design import InitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.model.gaussian_process import BaseGaussianProcess, GaussianProcess
 from smac.model.gaussian_process.kernels import (
     ConstantKernel,

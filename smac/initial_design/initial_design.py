@@ -87,7 +87,7 @@ class InitialDesign:
             )
         if self.init_budget > n_runs:
             raise ValueError("Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, n_runs))
-        self.logger.info("Running initial design for %d configurations" % self.init_budget)
+        self.logger.info(f"Running initial design for {self.init_budget} configurations.")
 
     def select_configurations(self) -> List[Configuration]:
         """Selects the initial configurations."""

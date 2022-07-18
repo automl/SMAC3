@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-import dataclasses
 from typing import Any, Dict, Optional
 
+import dataclasses
 import json
 import os
 import time
+from dataclasses import dataclass
 
 import numpy as np
-from smac.config import Config
-from smac.utils.logging import get_logger
 from ConfigSpace.configuration_space import Configuration, ConfigurationSpace
 from ConfigSpace.hyperparameters import (
     CategoricalHyperparameter,
@@ -18,6 +16,9 @@ from ConfigSpace.hyperparameters import (
     FloatHyperparameter,
     IntegerHyperparameter,
 )
+
+from smac.config import Config
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"

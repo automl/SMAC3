@@ -22,12 +22,12 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
+from smac.acquisition import EI, AbstractAcquisitionFunction
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess
 from smac.model.gaussian_process.kernels.boing import construct_gp_kernel
 from smac.model.utils import check_subspace_points
-from smac.acquisition import EI, AbstractAcquisitionFunction
 
 
 class LocalSubspace(ABC):

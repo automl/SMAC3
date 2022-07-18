@@ -2,17 +2,14 @@ import typing
 
 import numpy as np
 
+from smac.acquisition import TS, AbstractAcquisitionFunction
+from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
+from smac.chooser.configuration_chooser import ConfigurationChooser
+from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types
-from smac.acquisition import TS, AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
-from smac.chooser.configuration_chooser import ConfigurationChooser
-from smac.chooser.random_chooser import (
-    ChooserNoCoolDown,
-    RandomChooser,
-)
 from smac.optimizer.subspaces.turbo_subspace import TuRBOSubSpace
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer

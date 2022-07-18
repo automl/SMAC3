@@ -1,9 +1,9 @@
 # encoding=utf8
 from typing import Any, List
 
-
 import numpy as np
 from ConfigSpace.hyperparameters import FloatHyperparameter
+
 from smac.acquisition import AbstractAcquisitionFunction
 
 

@@ -14,13 +14,13 @@ import joblib
 import numpy as np
 from ConfigSpace.configuration_space import Configuration
 
-from smac.runner.base import BaseRunner
-from smac.runner.execute_ta_run_hydra import ExecuteTARunOld
 from smac.cli.output_directory import create_output_directory
 from smac.cli.scenario import Scenario
-from smac.model.utils import get_rng
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
+from smac.model.utils import get_rng
 from smac.runhistory.runhistory import RunHistory
+from smac.runner.base import BaseRunner
+from smac.runner.execute_ta_run_hydra import ExecuteTARunOld
 from smac.utils.result_merging import ResultMerger
 
 __author__ = "Andre Biedenkapp"

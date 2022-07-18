@@ -5,27 +5,24 @@ import logging
 import dask.distributed  # type: ignore
 import numpy as np
 
+from smac.acquisition.maximizer import AbstractAcquisitionOptimizer, RandomSearch
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
-from smac.model.random_model import RandomModel
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.initial_design.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
+from smac.model.random_model import RandomModel
 from smac.multi_objective.abstract_multi_objective_algorithm import (
     AbstractMultiObjectiveAlgorithm,
-)
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
-    RandomSearch,
 )
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import (
     AbstractRunhistoryTransformer,
-    RunhistoryTransformer,
     RunhistoryLogTransformer,
+    RunhistoryTransformer,
 )
-from smac.utils.stats import Stats
 from smac.runner.base import BaseRunner
+from smac.utils.stats import Stats
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"

@@ -20,9 +20,9 @@ from enum import Enum
 
 import numpy as np
 
-from smac.runner import StatusType
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
+from smac.runner import StatusType
 from smac.utils.logging import PickableLoggerAdapter
 
 __author__ = "Marius Lindauer"

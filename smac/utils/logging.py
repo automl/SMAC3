@@ -1,14 +1,13 @@
 from typing import Any, Dict, Iterable, List, Union
 
 import logging
-
-import numpy as np
 import logging.config
 from pathlib import Path
 
+import numpy as np
 import yaml
-import smac
 
+import smac
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -125,5 +124,5 @@ def format_array(
 
 def get_logger(logger_name: str) -> logging.Logger:
     logger = logging.getLogger(logger_name)
-    
+
     return logger
