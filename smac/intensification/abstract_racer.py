@@ -382,16 +382,9 @@ class AbstractRacer(object):
                     f"challenger ({chal_perf_format}) on {len(chall_runs)} runs."
                 )
                 assert self.stats
-                if log_traj and self.stats.inc_changed == 0:
-                    # adding incumbent entry
-                    self.stats.inc_changed += 1  # first incumbent
+                if log_traj and self.stats.incumbent_changed == 0:
+                    self.stats.add_incumbent(cost=chal_perf, incumbent=incumbent)
 
-                    logger.info("FIX ME: ADD TRAJ_LOGGER TO STATS")
-                    # self.traj_logger.add_entry(
-                    #    train_perf=chal_perf,
-                    #    incumbent_id=self.stats.inc_changed,
-                    #    incumbent=incumbent,
-                    # )
                 return incumbent
 
             # Challenger is better than incumbent
@@ -407,12 +400,9 @@ class AbstractRacer(object):
             self._log_incumbent_changes(incumbent, challenger)
 
             if log_traj:
-                self.stats.inc_changed += 1
+                assert self.stats
+                self.stats.add_incumbent(cost=chal_perf, incumbent=challenger)
 
-                logger.info("FIX ME: ADD TRAJ_LOGGER TO STATS")
-                # self.traj_logger.add_entry(
-                #    train_perf=chal_perf, incumbent_id=self.stats.inc_changed, incumbent=challenger
-                # )
             return challenger
 
         # undecided

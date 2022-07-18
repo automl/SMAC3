@@ -869,15 +869,13 @@ class _SuccessiveHalving(AbstractRacer):
                 inc_run.budget,
             )
             if log_traj:
-                # adding incumbent entry
-                self.stats.inc_changed += 1
-                new_inc_cost = runhistory.get_cost(challenger)
-                self.traj_logger.add_entry(
-                    train_perf=new_inc_cost,
-                    incumbent_id=self.stats.inc_changed,
+                assert self.stats
+                self.stats.add_incumbent(
+                    cost=runhistory.get_cost(challenger),
                     incumbent=challenger,
                     budget=curr_budget,
                 )
+
             return challenger
 
         # incumbent and challenger were both evaluated on the same budget, compare them based on their cost
@@ -893,13 +891,11 @@ class _SuccessiveHalving(AbstractRacer):
             self._log_incumbent_changes(incumbent, challenger)
             new_incumbent = challenger
             if log_traj:
-                # adding incumbent entry
-                self.stats.inc_changed += 1  # first incumbent
-                self.traj_logger.add_entry(
-                    train_perf=chall_cost,
-                    incumbent_id=self.stats.inc_changed,
+                assert self.stats
+                self.stats.add_incumbent(
+                    cost=chall_cost,
                     incumbent=new_incumbent,
-                    budget=curr_budget,
+                    budget=curr_budget
                 )
         else:
             self.logger.debug(
@@ -908,12 +904,10 @@ class _SuccessiveHalving(AbstractRacer):
                 chall_cost,
                 inc_run.budget,
             )
-            if log_traj and self.stats.inc_changed == 0:
-                # adding incumbent entry
-                self.stats.inc_changed += 1  # first incumbent
-                self.traj_logger.add_entry(
-                    train_perf=inc_cost,
-                    incumbent_id=self.stats.inc_changed,
+            if log_traj and self.stats.incumbent_changed == 0:
+                assert self.stats
+                self.stats.add_incumbent(
+                    cost=inc_cost,
                     incumbent=incumbent,
                     budget=curr_budget,
                 )
@@ -961,11 +955,9 @@ class _SuccessiveHalving(AbstractRacer):
                 self._log_incumbent_changes(incumbent, challenger)
                 new_incumbent = challenger
                 if log_traj:
-                    # adding incumbent entry
-                    self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(
-                        train_perf=chall_cost,
-                        incumbent_id=self.stats.inc_changed,
+                    assert self.stats
+                    self.stats.add_incumbent(
+                        cost=chall_cost,
                         incumbent=new_incumbent,
                         budget=curr_budget,
                     )
@@ -975,14 +967,12 @@ class _SuccessiveHalving(AbstractRacer):
                     inc_cost,
                     chall_cost,
                 )
-                if log_traj and self.stats.inc_changed == 0:
-                    # adding incumbent entry
-                    self.stats.inc_changed += 1  # first incumbent
-                    self.traj_logger.add_entry(
-                        train_perf=inc_cost,
-                        incumbent_id=self.stats.inc_changed,
+                if log_traj and self.stats.incumbent_changed == 0:
+                    assert self.stats
+                    self.stats.add_incumbent(
+                        cost=inc_cost,
                         incumbent=incumbent,
-                        budget=curr_budget,
+                        budget=curr_budget
                     )
                 new_incumbent = incumbent
         else:

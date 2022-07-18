@@ -11,7 +11,7 @@ import numpy as np
 @dataclass(frozen=True)
 class Config:
     """
-    Replacing the scenario class in the original code.
+    Replaces the scenario class in the original code.
     """
 
     configspace: ConfigSpace

@@ -46,6 +46,12 @@ class Facade:
     ):
         # TODO: How to integrate `restore_incumbent`?
 
+        # TODO: Resume run
+        # Check if config object is the same as in the last run
+        # Check if stats object is available etc.
+        # And then reload the runhistory
+        # However, we also have to make sure the kwargs are the same...
+
         if model is None:
             model = self.get_model(config)
 

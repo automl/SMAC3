@@ -172,7 +172,7 @@ class SMBO:
         self.stats.start_timing()
 
         # Initialization, depends on input
-        if self.stats.submitted_ta_runs == 0 and self.incumbent is None:
+        if self.stats.submitted == 0 and self.incumbent is None:
             logger.info("Running initial design")
             # Intensifier initialization
             self.initial_design_configs = self.initial_design.select_configurations()
@@ -181,13 +181,13 @@ class SMBO:
             if not self.initial_design_configs:
                 self.initial_design_configs = [self.config_space.get_default_configuration()]
 
-        elif self.stats.submitted_ta_runs > 0 and self.incumbent is None:
+        elif self.stats.submitted > 0 and self.incumbent is None:
             raise ValueError(
                 "According to stats there have been runs started, "
                 "but the optimizer cannot detect an incumbent. Did "
                 "you set the incumbent (e.g. after restoring state)?"
             )
-        elif self.stats.submitted_ta_runs == 0 and self.incumbent is not None:
+        elif self.stats.submitted == 0 and self.incumbent is not None:
             raise ValueError(
                 "An incumbent is specified, but there are no runs "
                 "recorded as started in the Stats-object. If you're "
@@ -200,7 +200,7 @@ class SMBO:
                 self.incumbent,
             )
             logger.info("State restored with following budget:")
-            self.stats.print_stats()
+            self.stats.print()
 
     def run(self) -> Configuration:
         """Runs the Bayesian optimization loop.
@@ -279,7 +279,6 @@ class SMBO:
                 )
 
                 run_info.config.config_id = self.runhistory.config_ids[run_info.config]
-
                 self.runner.submit_run(run_info=run_info)
 
                 # There are 2 criteria that the stats object uses to know
@@ -288,7 +287,7 @@ class SMBO:
                 # And the number of ta executions. Because we submit the job at this point,
                 # we count this submission as a run. This prevent for using more
                 # runner runs than what the config allows
-                self.stats.submitted_ta_runs += 1
+                self.stats.submitted += 1
 
             elif intent == RunInfoIntent.SKIP:
                 # No launch is required
@@ -323,8 +322,8 @@ class SMBO:
                 "Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)"
                 % (
                     self.stats.get_remaing_time_budget(),
-                    self.stats.get_remaining_ta_budget(),
-                    self.stats.get_remaining_ta_runs(),
+                    self.stats.get_remaining_target_algorithm_budget(),
+                    self.stats.get_remaining_target_algorithm_runs(),
                 )
             )
 
@@ -352,7 +351,7 @@ class SMBO:
 
             # print stats at the end of each intensification iteration
             if self.intensifier.iteration_done:
-                self.stats.print(debug_out=True)
+                self.stats.print()
 
         return self.incumbent
 
@@ -474,8 +473,8 @@ class SMBO:
             time in [sec] available to perform intensify
         """
         # update SMAC stats
-        self.stats.ta_time_used += float(result.time)
-        self.stats.finished_ta_runs += 1
+        self.stats.target_algorithm_walltime_used += float(result.time)
+        self.stats.finished += 1
 
         logger.debug(
             f"Return: Status: {result.status}, cost: {result.cost}, time: {result.time}, "
@@ -509,7 +508,7 @@ class SMBO:
 
         # We removed `abort_on_first_run_crash` and therefore we expect the first
         # run to always succeed.
-        if self.stats.finished_ta_runs == 1 and result.status == StatusType.CRASHED:
+        if self.stats.finished == 1 and result.status == StatusType.CRASHED:
             additional_info = ""
             if "traceback" in result.additional_info:
                 additional_info = "\n\n" + result.additional_info["traceback"]
