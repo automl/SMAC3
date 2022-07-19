@@ -77,9 +77,8 @@ class Stats:
         self.incumbent_changed += 1
         item = TrajectoryItem(
             cost=cost,
-            # incumbent_id=self.incumbent_changed,
             incumbent=incumbent,
-            walltime_used=self.get_used_wallclock_time(),
+            walltime_used=self.get_used_walltime(),
             target_algorithm_walltime_used=self.target_algorithm_walltime_used,
             target_algorithm_runs=self.finished,
             budget=budget,
@@ -101,7 +100,7 @@ class Stats:
         """
         self._start_time = time.time() - self.walltime_used
 
-    def get_used_wallclock_time(self) -> float:
+    def get_used_walltime(self) -> float:
         """Returns used wallclock time."""
         return time.time() - self._start_time
 
@@ -165,7 +164,7 @@ class Stats:
             f"--- Submitted target algorithm runs: {self.submitted} / {self.config.n_runs}\n"
             f"--- Finished target algorithm runs: {self.finished} / {self.config.n_runs}\n"
             f"--- Configurations: {self.n_configs}\n"
-            f"--- Used wallclock time: {round(time.time() - self._start_time, 2)} / {round(self.config.walltime_limit, 2)} sec\n"
+            f"--- Used wallclock time: {round(self.get_used_walltime())} / {round(self.config.walltime_limit, 2)} sec\n"
             f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {round(self.config.cputime_limit, 2)} sec\n"
             f"----------------------------------------------------"
         )
@@ -187,7 +186,7 @@ class Stats:
             "submitted": self.submitted,
             "finished": self.finished,
             "n_configs": self.n_configs,
-            "walltime_used": self.walltime_used,
+            "walltime_used": self.get_used_walltime(),
             "target_algorithm_walltime_used": self.target_algorithm_walltime_used,
             "incumbent_changed": self.incumbent_changed,
             "trajectory": [dataclasses.asdict(item) for item in self.trajectory],

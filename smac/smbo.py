@@ -15,7 +15,6 @@ from smac.constants import MAXINT
 from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.model.base_model import BaseModel
-from smac.optimizer import pSMAC
 from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
@@ -56,8 +55,6 @@ class SMBO:
     intensifier: Intensifier
         intensification of new challengers against incumbent configuration
         (probably with some kind of racing on the instances)
-    run_id: int
-        id of this run (used for pSMAC)
     model: BaseEPM
         empirical performance model
     acquisition_optimizer: AcquisitionFunctionMaximizer
@@ -90,7 +87,6 @@ class SMBO:
     initial_design
     runhistory
     intensifier
-    run_id
     rng
     initial_design_configs
     epm_chooser
@@ -105,7 +101,6 @@ class SMBO:
         runhistory: RunHistory,
         runhistory_transformer: AbstractRunhistoryTransformer,
         intensifier: AbstractRacer,
-        # run_id: int,
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
@@ -120,15 +115,14 @@ class SMBO:
     ):
         # Changed in 2.0: We don't restore the incumbent anymore but derive it directly from
         # the stats object.
-        self.incumbent = stats.get_incumbent()
+        self.incumbent = None
 
         self.config = config
-        self.config_space = config.configspace  # type: ignore[attr-defined] # noqa F821
+        self.configspace = config.configspace  # type: ignore[attr-defined] # noqa F821
         self.stats = stats
         self.initial_design = initial_design
         self.runhistory = runhistory
         self.intensifier = intensifier
-        # self.run_id = run_id
         self.rng = np.random.RandomState(seed)
         self._min_time = 10**-5
         self.runner = runner
@@ -180,7 +174,7 @@ class SMBO:
 
             # to be on the safe side, never return an empty list of initial configs
             if not self.initial_design_configs:
-                self.initial_design_configs = [self.config_space.get_default_configuration()]
+                self.initial_design_configs = [self.configspace.get_default_configuration()]
         else:
             # Restoring state!
             assert self.incumbent is not None
@@ -195,21 +189,14 @@ class SMBO:
         incumbent: np.array(1, H)
             The best found configuration.
         """
+        # Make sure we use the right incumbent
+        self.incumbent = self.stats.get_incumbent()
+
         self.start()
         n_objectives = self.config.count_objectives()
 
         # Main BO loop
         while True:
-            # TODO: Fix shared model
-            if False:
-                if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
-                    pSMAC.read(
-                        runhistory=self.runhistory,
-                        output_dirs=self.config.input_psmac_dirs,  # type: ignore[attr-defined] # noqa F821
-                        configuration_space=self.config_space,
-                        logger=logger,
-                    )
-
             start_time = time.time()
 
             # sample next configuration for intensification
@@ -289,16 +276,6 @@ class SMBO:
                 # Additionally check for new incumbent
                 self._incorporate_run_results(run_info, result, time_left)
 
-            if False:
-                # TODO: FIX ME
-                if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
-                    assert self.config.output_directory is not None  # please mypy
-                    pSMAC.write(
-                        runhistory=self.runhistory,
-                        output_directory=self.config.output_directory,  # type: ignore[attr-defined] # noqa F821
-                        logger=logger,
-                    )
-
             logger.debug(
                 "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
                 % (
@@ -377,7 +354,7 @@ class SMBO:
             assert self.config.output_directory is not None  # Please mypy
             traj_fn = os.path.join(self.config.output_directory, "traj_aclib2.json")
             trajectory = TrajLogger.read_traj_aclib_format(
-                fn=traj_fn, cs=self.config_space
+                fn=traj_fn, cs=self.configspace
             )  # type: Optional[List[Dict[str, Union[float, int, Configuration]]]]
         else:
             trajectory = None

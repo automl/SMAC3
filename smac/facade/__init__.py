@@ -18,7 +18,7 @@ from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.multi_objective import AbstractMultiObjectiveAlgorithm
-from smac.optimizer.smbo import SMBO
+from smac.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
@@ -44,7 +44,6 @@ class Facade:
         random_configuration_chooser: RandomChooser | None = None,
         intensifier: AbstractRacer | None = None,
         multi_objective_algorithm: AbstractMultiObjectiveAlgorithm | None = None,
-        # run_id: int | None = None,
     ):
         if model is None:
             model = self.get_model(config)
@@ -116,17 +115,27 @@ class Facade:
         self.stats = stats
         self.seed = config.seed
 
-        # We have to update our meta data (basically arguments of the components)
-        self.config._set_meta(self._get_meta())
+        # Create optimizer using the previously defined objects
+        self.optimizer = SMBO(
+            config=self.config,
+            stats=self.stats,
+            runner=self.runner,
+            initial_design=self.initial_design,
+            runhistory=self.runhistory,
+            runhistory_transformer=self.runhistory_transformer,
+            intensifier=self.intensifier,
+            model=self.model,
+            acquisition_function=self.acquisition_function,
+            acquisition_optimizer=self.acquisition_optimizer,
+            random_configuration_chooser=self.random_configuration_chooser,
+            seed=self.seed,
+        )
 
-        # Now we add some more dependencies.
-        # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
-        self.intensifier.set_stats(self.stats)
-        self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
-        self.runhistory_transformer.set_imputer(self._get_imputer())
-        self.acquisition_function.set_model(self.model)
-        self.acquisition_optimizer.set_acquisition_function(self.acquisition_function)
-        # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
+        # Adding dependencies of the components
+        self._update_dependencies()
+
+        # We have to update our meta data (basically arguments of the components)
+        self.config._set_meta(self.get_meta())
 
         # We have to validate if the object compositions are correct and actually make sense
         self._validate()
@@ -142,37 +151,16 @@ class Facade:
         # Runhistory and stats are saved by `SMBO` as they change over time.
         self.config.save()
 
-        # Create optimizer
-        self.optimizer = SMBO(
-            config=self.config,
-            stats=self.stats,
-            runner=self.runner,
-            initial_design=self.initial_design,
-            runhistory=self.runhistory,
-            runhistory_transformer=self.runhistory_transformer,
-            intensifier=self.intensifier,
-            model=self.model,
-            acquisition_function=self.acquisition_function,
-            acquisition_optimizer=self.acquisition_optimizer,
-            random_configuration_chooser=self.random_configuration_chooser,
-            seed=self.seed,
-            # run_id=self.config.name,  # TODO: Why do we need this?
-        )
+    def _update_dependencies(self) -> None:
+        # We add some more dependencies.
+        # This is the easiest way to incorporate dependencies, although it might be a bit hacky.
+        self.intensifier.set_stats(self.stats)
+        self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
+        self.runhistory_transformer.set_imputer(self._get_imputer())
+        self.acquisition_function.set_model(self.model)
+        self.acquisition_optimizer.set_acquisition_function(self.acquisition_function)
 
-    def _get_meta(self) -> dict[str, dict[str, Any]]:
-        """Generates a hash based on all kwargs of the facade. This is used for determine
-        whether a run should be continued or not."""
-        meta = {
-            "target_algorithm": {"code": str(self.runner.target_algorithm.__code__.co_code)},
-            # TODO: Create `get_meta` methods
-            # "initial_design": self.initial_design.get_meta(),
-            # "intensifier": self.intensifier.get_meta(),
-            # "model": self.model.get_meta(),
-            # "acquisition_function": self.acquisition_function.get_meta(),
-            # "random_configuration_chooser": self.random_configuration_chooser.get_meta(),
-        }
-
-        return meta
+        # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
 
     def _validate(self) -> None:
         # Make sure the same acquisition function is used
@@ -249,6 +237,21 @@ class Facade:
             )
 
         return None
+
+    def get_meta(self) -> dict[str, dict[str, Any]]:
+        """Generates a hash based on all kwargs of the facade. This is used for determine
+        whether a run should be continued or not."""
+        meta = {
+            "target_algorithm": {"code": str(self.runner.target_algorithm.__code__.co_code)},
+            "initial_design": self.initial_design.get_meta(),
+            # TODO: Create `get_meta` methods
+            # "intensifier": self.intensifier.get_meta(),
+            # "model": self.model.get_meta(),
+            # "acquisition_function": self.acquisition_function.get_meta(),
+            # "random_configuration_chooser": self.random_configuration_chooser.get_meta(),
+        }
+
+        return meta
 
     def optimize(self, save_instantly: bool = True) -> Configuration:
         """

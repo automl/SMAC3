@@ -10,11 +10,9 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.runner import StatusType
-from smac.utils.stats import Stats
+from smac.runhistory import RunInfo, RunValue, StatusType
+from smac.runhistory.runhistory import RunHistory
 
-__author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 

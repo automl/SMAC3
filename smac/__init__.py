@@ -5,7 +5,8 @@ import warnings
 
 from smac.config import Config
 from smac.facade.black_box import BlackBoxFacade
-from smac.facade.hyperparameter_optimization import HyperparameterOptimizationFacade
+from smac.facade.hyperparameter import HyperparameterFacade
+from smac.facade.multi_fidelity import MultiFidelityFacade
 from smac.runhistory.runhistory import RunHistory
 
 name = "SMAC3"
@@ -37,4 +38,4 @@ if os.name != "posix":
     )
 
 
-__all__ = ["Config", "RunHistory", "BlackBoxFacade", "HyperparameterOptimizationFacade"]
+__all__ = ["Config", "RunHistory", "BlackBoxFacade", "HyperparameterFacade", "MultiFidelityFacade"]

@@ -16,7 +16,7 @@ from smac.facade.black_box import BlackBoxFacade
 from smac.facade.experimental.hydra_facade import (  # type: ignore[attr-defined] # noqa F821
     Hydra,
 )
-from smac.facade.hyperparameter_optimization import SMAC4HPO
+from smac.facade.hyperparameter import SMAC4HPO
 from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.random import ROAR
 from smac.runhistory.runhistory import RunHistory

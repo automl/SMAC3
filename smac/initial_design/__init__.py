@@ -1,4 +1,5 @@
-from typing import List, Optional
+from __future__ import annotations
+from typing import Any, List, Optional
 
 import logging
 from collections import OrderedDict
@@ -12,9 +13,12 @@ from ConfigSpace.hyperparameters import (
     OrdinalHyperparameter,
 )
 from ConfigSpace.util import ForbiddenValueError, deactivate_inactive_hyperparameters
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2019, AutoML"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class InitialDesign:
@@ -59,17 +63,18 @@ class InitialDesign:
         init_budget: Optional[int] = None,
         seed: int = 0,
     ):
+        # TODO: Change init_budget to n_configs?
         self.configspace = configspace
         self.rng = np.random.RandomState(seed)
         self.configs = configs
 
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
+        logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
 
         n_params = len(self.configspace.get_hyperparameters())
         if init_budget is not None:
             self.init_budget = init_budget
             if n_configs_per_hyperparameter is not None:
-                self.logger.debug(
+                logger.debug(
                     "Ignoring argument `n_configs_per_hyperparameter` (value %d).",
                     n_configs_per_hyperparameter,
                 )
@@ -84,7 +89,11 @@ class InitialDesign:
             )
         if self.init_budget > n_runs:
             raise ValueError("Initial budget %d cannot be higher than the run limit %d." % (self.init_budget, n_runs))
-        self.logger.info(f"Running initial design for {self.init_budget} configurations.")
+        logger.info(f"Running initial design for {self.init_budget} configurations.")
+
+    def get_meta(self) -> dict[str, Any]:
+        """Returns the meta data of the created object."""
+        return {"init_budget": self.init_budget}
 
     def select_configurations(self) -> List[Configuration]:
         """Selects the initial configurations."""
@@ -131,9 +140,9 @@ class InitialDesign:
                 v_design[v_design == 1] = 1 - 10**-10
                 design[:, idx] = np.array(v_design * len(param.sequence), dtype=int)
             else:
-                raise ValueError("Hyperparameter not supported in LHD")
+                raise ValueError("Hyperparameter not supported in LHD.")
 
-        self.logger.debug("Initial Design")
+        logger.debug("Initial Design")
         configs = []
         for vector in design:
             try:
@@ -144,8 +153,8 @@ class InitialDesign:
                 continue
             conf.origin = origin
             configs.append(conf)
-            self.logger.debug(conf)
+            logger.debug(conf)
 
-        self.logger.debug("Size of initial design: %d" % (len(configs)))
+        logger.debug("Size of initial design: %d" % (len(configs)))
 
         return configs

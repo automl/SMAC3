@@ -7,7 +7,7 @@ from ConfigSpace.hyperparameters import UniformFloatHyperparameter  # type: igno
 
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
-from smac.facade.hyperparameter_optimization import SMAC4HPO
+from smac.facade.hyperparameter import SMAC4HPO
 from smac.runhistory.runhistory import RunKey
 from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
 

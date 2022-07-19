@@ -20,7 +20,7 @@ __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class HyperparameterOptimizationFacade(Facade):
+class HyperparameterFacade(Facade):
     @staticmethod
     def get_model(
         config: Config,

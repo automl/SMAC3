@@ -93,8 +93,8 @@ class SerialRunner(Runner):
 
         Returns
         -------
-            List[RunInfo, RunValue]: A list of RunInfo/RunValues pairs
-            a submitted configuration
+        List[RunInfo, RunValue]
+            A list of RunInfo/RunValues pairs a submitted configuration.
         """
         results_list = []
         while self.results:
@@ -102,8 +102,8 @@ class SerialRunner(Runner):
         return results_list
 
     def wait(self) -> None:
-        """SMBO/intensifier might need to wait for runs to finish before making a decision.
-
+        """
+        SMBO/intensifier might need to wait for runs to finish before making a decision.
         For serial runs, no wait is needed as the result is immediately available.
         """
         # There is no need to wait in serial runs.
@@ -116,7 +116,6 @@ class SerialRunner(Runner):
 
     def pending_runs(self) -> bool:
         """Whether or not there are configs still running.
-
         Generally if the runner is serial, launching a run instantly returns it's result. On
         parallel runners, there might be pending configurations to complete.
         """

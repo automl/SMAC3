@@ -118,7 +118,7 @@ class AlgorithmConfigurationFacade(Facade):
         return MeanAggregationStrategy(config.seed)
 
     @staticmethod
-    def get_runhistory_transformer(config: Config):
+    def get_runhistory_transformer(config: Config) -> RunhistoryTransformer:
         transformer = RunhistoryTransformer(
             config=config,
             n_params=len(config.configspace.get_hyperparameters()),

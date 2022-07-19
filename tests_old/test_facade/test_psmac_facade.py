@@ -6,7 +6,7 @@ from contextlib import suppress
 from unittest.mock import patch
 
 from smac.cli.scenario import Scenario
-from smac.optimizer.smbo import SMBO
+from smac.smbo import SMBO
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -38,7 +38,7 @@ class TestPSMACFacade(unittest.TestCase):
 
         from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
         from smac.facade.black_box import BlackBoxFacade
-        from smac.facade.hyperparameter_optimization import SMAC4HPO
+        from smac.facade.hyperparameter import SMAC4HPO
         from smac.facade.multi_fidelity import SMAC4MF
         from smac.facade.psmac import PSMAC
 

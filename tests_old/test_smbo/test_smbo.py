@@ -13,7 +13,7 @@ from smac.cli.traj_logging import TrajLogger
 from smac.configspace import ConfigurationSpace
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
-from smac.facade.hyperparameter_optimization import SMAC4HPO
+from smac.facade.hyperparameter import SMAC4HPO
 from smac.intensification.abstract_racer import RunInfoIntent
 from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, RunValue

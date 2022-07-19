@@ -11,7 +11,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.facade.black_box import BlackBoxFacade
-from smac.facade.hyperparameter_optimization import SMAC4HPO
+from smac.facade.hyperparameter import SMAC4HPO
 from smac.facade.random import ROAR
 from smac.multi_objective.parego import ParEGO
 

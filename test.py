@@ -5,8 +5,7 @@ from smac import Config
 
 # Import ConfigSpace and different types of parameters
 from smac.configspace import ConfigurationSpace
-from smac import BlackBoxFacade
-from smac import HyperparameterOptimizationFacade
+from smac import BlackBoxFacade, HyperparameterFacade, MultiFidelityFacade
 
 
 def quadratic(config) -> float:
@@ -24,6 +23,6 @@ if __name__ == "__main__":
     # Scenario object
     config = Config(cs, name="hey", n_runs=60)
     # smac = BlackBoxFacade(config, quadratic)
-    smac = HyperparameterOptimizationFacade(config, quadratic)
+    smac = HyperparameterFacade(config, quadratic)
 
     smac.optimize()

@@ -7,8 +7,8 @@ import numpy as np
 from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
-from smac.utils.stats import Stats
+from smac.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

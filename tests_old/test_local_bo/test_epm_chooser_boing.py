@@ -17,7 +17,7 @@ from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussian
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import check_subspace_points, get_types
 from smac.facade.black_box import BlackBoxFacade
-from smac.facade.hyperparameter_optimization import SMAC4HPO
+from smac.facade.hyperparameter import SMAC4HPO
 from smac.optimizer.configuration_chooser.boing_chooser import (
     BOinGChooser,
     subspace_extraction,
