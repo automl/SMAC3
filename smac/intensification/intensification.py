@@ -16,13 +16,8 @@ from smac.intensification.abstract_racer import (
     RunInfoIntent,
     _config_to_run_type,
 )
-from smac.runhistory.runhistory import (
-    InstSeedBudgetKey,
-    RunHistory,
-    RunInfo,
-    RunValue,
-    StatusType,
-)
+from smac.runhistory import InstSeedBudgetKey, RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import format_array, get_logger
 
 __author__ = "Katharina Eggensperger, Marius Lindauer"

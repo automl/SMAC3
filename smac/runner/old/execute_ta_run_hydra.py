@@ -3,8 +3,8 @@ from typing import Any, Dict, Mapping, Optional, Tuple, Type
 from smac.configspace import Configuration
 from smac.runner import StatusType
 from smac.runner.algorithm_executer import AlgorithmExecuter, ExecuteTAFuncArray
-from smac.runner.execute_ta_run_aclib import ExecuteTARunAClib
-from smac.runner.execute_ta_run_old import ExecuteTARunOld
+from smac.runner.old.execute_ta_run_aclib import ExecuteTARunAClib
+from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.runner.serial_runner import SerialRunner
 
 __copyright__ = "Copyright 2018, ML4AAD"

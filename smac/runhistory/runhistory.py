@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+__copyright__ = "Copyright 2015, ML4AAD"
+__license__ = "3-clause BSD"
+
+
 from typing import (
     Any,
     Dict,
@@ -16,127 +20,15 @@ from typing import (
 
 import collections
 import json
-from enum import Enum
 
 import numpy as np
 
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.multi_objective.utils import normalize_costs
-from smac.runner import StatusType
-from smac.utils.logging import PickableLoggerAdapter
+from smac.runhistory import RunKey, RunValue, StatusType, DataOrigin, EnumEncoder, InstSeedBudgetKey, InstSeedKey
+from smac.utils.logging import get_logger
 
-__author__ = "Marius Lindauer"
-__copyright__ = "Copyright 2015, ML4AAD"
-__license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
-
-logger = PickableLoggerAdapter(__name__)
-
-
-# NOTE class instead of collection to have a default value for budget in RunKey
-class RunKey(collections.namedtuple("RunKey", ["config_id", "instance_id", "seed", "budget"])):
-    __slots__ = ()
-
-    def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-        # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config_id: int,
-        instance_id: Optional[str],
-        seed: Optional[int],
-        budget: float = 0.0,
-    ) -> "RunKey":
-        """Creates a new `RunKey` instance."""
-        return super().__new__(cls, config_id, instance_id, seed, budget)
-
-
-# NOTE class instead of collection to have a default value for budget/source_id in RunInfo
-class RunInfo(
-    collections.namedtuple(
-        "RunInfo",
-        [
-            "config",
-            "instance",
-            "instance_specific",
-            "seed",
-            "algorithm_walltime_limit",
-            "capped",
-            "budget",
-            "source_id",
-        ],
-    )
-):
-    __slots__ = ()
-
-    def __new__(
-        cls,  # No type annotation because the 1st argument for a namedtuble is always the class type,
-        # see https://docs.python.org/3/reference/datamodel.html#object.__new__
-        config: Configuration,
-        instance: Optional[str],
-        instance_specific: str,
-        seed: int,
-        algorithm_walltime_limit: Optional[float],
-        capped: bool,
-        budget: float = 0.0,
-        # In the context of parallel runs, one will have multiple suppliers of
-        # configurations. source_id is a new mechanism to track what entity launched
-        # this configuration
-        source_id: int = 0,
-    ) -> "RunInfo":
-        """Creates a new `RunInfo` instance."""
-        return super().__new__(
-            cls,
-            config,
-            instance,
-            instance_specific,
-            seed,
-            algorithm_walltime_limit,
-            capped,
-            budget,
-            source_id,
-        )
-
-
-InstSeedKey = collections.namedtuple("InstSeedKey", ["instance", "seed"])
-
-InstSeedBudgetKey = collections.namedtuple("InstSeedBudgetKey", ["instance", "seed", "budget"])
-
-RunValue = collections.namedtuple("RunValue", ["cost", "time", "status", "starttime", "endtime", "additional_info"])
-
-
-class EnumEncoder(json.JSONEncoder):
-    """Custom encoder for enum-serialization (implemented for StatusType from tae).
-
-    Using encoder implied using object_hook as defined in StatusType to deserialize from json.
-    """
-
-    def default(self, obj: object) -> Any:
-        """Returns the default encoding of the passed object."""
-        if isinstance(obj, StatusType):
-            return {"__enum__": str(obj)}
-        return json.JSONEncoder.default(self, obj)
-
-
-class DataOrigin(Enum):
-    """Definition of how data in the runhistory is used.
-
-    * ``INTERNAL``: internal data which was gathered during the current
-      optimization run. It will be saved to disk, used for building EPMs and
-      during intensify.
-    * ``EXTERNAL_SAME_INSTANCES``: external data, which was gathered by running
-       another program on the same instances as the current optimization run
-       runs on (for example pSMAC). It will not be saved to disk, but used both
-       for EPM building and during intensify.
-    * ``EXTERNAL_DIFFERENT_INSTANCES``: external data, which was gathered on a
-       different instance set as the one currently used, but due to having the
-       same instance features can still provide useful information. Will not be
-       saved to disk and only used for EPM building.
-    """
-
-    INTERNAL = 1
-    EXTERNAL_SAME_INSTANCES = 2
-    EXTERNAL_DIFFERENT_INSTANCES = 3
+logger = get_logger(__name__)
 
 
 class RunHistory(Mapping[RunKey, RunValue]):
@@ -179,8 +71,6 @@ class RunHistory(Mapping[RunKey, RunValue]):
         self,
         overwrite_existing_runs: bool = False,
     ) -> None:
-        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
-
         # By having the data in a deterministic order we can do useful tests
         # when we serialize the data and can assume it's still in the same
         # order as it was added.
@@ -888,7 +778,7 @@ class RunHistory(Mapping[RunKey, RunValue]):
             with open(fn) as fp:
                 all_data = json.load(fp, object_hook=StatusType.enum_hook)
         except Exception as e:
-            self.logger.warning(
+            logger.warning(
                 "Encountered exception %s while reading runhistory from %s. " "Not adding any runs!",
                 e,
                 fn,

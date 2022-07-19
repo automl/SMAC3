@@ -6,6 +6,10 @@
         return value
     ```
 
+In that context, we also use the new operations:
+`list[int]`, `dict[int, int]`, etc.
+Please change if you still see the old style.
+
 - Remove `self.logger`. Create on top a global logger:
 logger = get_logger(__name__)
 

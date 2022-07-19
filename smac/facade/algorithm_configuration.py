@@ -10,8 +10,8 @@ from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.initial_design.default_configuration_design import DefaultInitialDesign
 from smac.initial_design import InitialDesign
+from smac.initial_design.default_configuration_design import DefaultInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.utils import get_types

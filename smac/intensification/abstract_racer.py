@@ -11,7 +11,8 @@ import numpy as np
 
 from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory
 from smac.utils.logging import format_array, get_logger
 from smac.utils.stats import Stats
 

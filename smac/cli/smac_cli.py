@@ -20,7 +20,7 @@ from smac.facade.hyperparameter_optimization import SMAC4HPO
 from smac.facade.psmac import PSMAC  # type: ignore[attr-defined] # noqa F821
 from smac.facade.random import ROAR
 from smac.runhistory.runhistory import RunHistory
-from smac.runner import FirstRunCrashedException, TAEAbortException
+from smac.runner import FirstRunCrashedException, TargetAlgorithmAbortException
 from smac.utils.merge_foreign_data import merge_foreign_data_from_file
 from smac.utils.stats import Stats
 
@@ -172,7 +172,7 @@ class SMACCLI(object):
             )
         try:
             optimizer.optimize()
-        except (TAEAbortException, FirstRunCrashedException) as err:
+        except (TargetAlgorithmAbortException, FirstRunCrashedException) as err:
             self.logger.error(err)
 
     def restore_state(

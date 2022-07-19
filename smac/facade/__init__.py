@@ -22,7 +22,7 @@ from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 from smac.runner.algorithm_executer import AlgorithmExecuter
-from smac.runner.base import BaseRunner
+from smac.runner import Runner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.utils.logging import get_logger
 from smac.utils.others import recursively_compare_dicts
@@ -35,7 +35,7 @@ class Facade:
     def __init__(
         self,
         config: Config,
-        target_algorithm: BaseRunner | Callable,
+        target_algorithm: Runner | Callable,
         *,
         model: BaseModel | None = None,
         acquisition_function: AbstractAcquisitionFunction | None = None,
@@ -75,12 +75,12 @@ class Facade:
         config.configspace.seed(config.seed)
 
         # Prepare the algorithm executer
-        runner: BaseRunner
+        runner: Runner
         if callable(target_algorithm):
             # We wrap our algorithm with the AlgorithmExecuter to use pynisher
             # and to catch exceptions
             runner = AlgorithmExecuter(target_algorithm, stats=stats)
-        elif isinstance(target_algorithm, BaseRunner):
+        elif isinstance(target_algorithm, Runner):
             runner = target_algorithm
         else:
             # TODO: Integrate ExecuteTARunOld again
@@ -163,7 +163,7 @@ class Facade:
         """Generates a hash based on all kwargs of the facade. This is used for determine
         whether a run should be continued or not."""
         meta = {
-            "target_algorithm": {"code": str(self.runner.ta.__code__.co_code)},
+            "target_algorithm": {"code": str(self.runner.target_algorithm.__code__.co_code)},
             # TODO: Create `get_meta` methods
             # "initial_design": self.initial_design.get_meta(),
             # "intensifier": self.intensifier.get_meta(),

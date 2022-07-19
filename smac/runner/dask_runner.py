@@ -8,15 +8,14 @@ import dask
 from dask.distributed import Client, Future, wait
 
 from smac.configspace import Configuration
-from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.runner import StatusType
-from smac.runner.base import BaseRunner
+from smac.runhistory import StatusType, RunInfo, RunValue
+from smac.runner import Runner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class DaskParallelRunner(BaseRunner):
+class DaskParallelRunner(Runner):
     """Interface to submit and collect a job in a distributed fashion.
 
     DaskParallelRunner is intended to comply with the bridge design pattern.
@@ -79,17 +78,16 @@ class DaskParallelRunner(BaseRunner):
 
     def __init__(
         self,
-        single_worker: BaseRunner,
+        single_worker: Runner,
         n_workers: int,
         patience: int = 5,
         output_directory: Optional[str] = None,
         dask_client: Optional[dask.distributed.Client] = None,
     ):
         super(DaskParallelRunner, self).__init__(
-            ta=single_worker.ta,
+            target_algorithm=single_worker.target_algorithm,
             stats=single_worker.stats,
             multi_objectives=single_worker.multi_objectives,
-            run_obj=single_worker.run_obj,
             par_factor=single_worker.par_factor,
             cost_for_crash=single_worker.cost_for_crash,
             abort_on_first_run_crash=single_worker.abort_on_first_run_crash,

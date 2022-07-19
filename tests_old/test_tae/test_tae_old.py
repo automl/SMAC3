@@ -6,7 +6,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import ConfigurationSpace
 from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.execute_ta_run_old import ExecuteTARunOld
+from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"

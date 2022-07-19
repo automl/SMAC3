@@ -16,10 +16,15 @@ from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.model.base_model import BaseModel
 from smac.optimizer import pSMAC
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
+from smac.runhistory import RunInfo, RunValue
+from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
-from smac.runner import FirstRunCrashedException, StatusType, TAEAbortException
-from smac.runner.base import BaseRunner
+from smac.runner import (
+    FirstRunCrashedException,
+    StatusType,
+    TargetAlgorithmAbortException,
+)
+from smac.runner import Runner
 from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 from smac.utils.validate import Validator
@@ -104,7 +109,7 @@ class SMBO:
         model: BaseModel,
         acquisition_optimizer: AbstractAcquisitionOptimizer,
         acquisition_function: AbstractAcquisitionFunction,
-        runner: BaseRunner,
+        runner: Runner,
         # restore_incumbent: Configuration = None,
         random_configuration_chooser: RandomChooser = ChooserNoCoolDown(modulus=2.0),
         predict_x_best: bool = True,
@@ -475,7 +480,7 @@ class SMBO:
         self.stats.n_configs = len(self.runhistory.config_ids)
 
         if result.status == StatusType.ABORT:
-            raise TAEAbortException(
+            raise TargetAlgorithmAbortException(
                 "The target algorithm was aborted. The last incumbent can be found in the trajectory file."
             )
         elif result.status == StatusType.STOP:

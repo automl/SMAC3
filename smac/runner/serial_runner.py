@@ -1,17 +1,18 @@
+from __future__ import annotations
+
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.runhistory.runhistory import RunInfo, RunValue
-from smac.runner import StatusType
-from smac.runner.base import BaseRunner
+from smac.runhistory import StatusType, RunInfo, RunValue
+from smac.runner import Runner
 from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
 
 
-class SerialRunner(BaseRunner):
+class SerialRunner(Runner):
     """Interface to submit and collect a job in a serial fashion.
 
     It dictates what a worker should do to convert a
@@ -51,19 +52,17 @@ class SerialRunner(BaseRunner):
 
     def __init__(
         self,
-        ta: Union[List[str], Callable],
+        target_algorithm: list[str] | Callable,
         stats: Stats,
-        multi_objectives: List[str] = ["cost"],
-        run_obj: str = "runtime",
+        multi_objectives: list[str] = ["cost"],
         par_factor: int = 1,
-        cost_for_crash: Union[float, List[float]] = float(MAXINT),
+        cost_for_crash: float | list[float] = float(MAXINT),
         abort_on_first_run_crash: bool = True,
     ):
         super(SerialRunner, self).__init__(
-            ta=ta,
+            target_algorithm=target_algorithm,
             stats=stats,
             multi_objectives=multi_objectives,
-            run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
@@ -133,7 +132,7 @@ class SerialRunner(BaseRunner):
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self.ta> with configuration <config> on instance <instance> with
+        """Runs target algorithm <self.target_algorithm> with configuration <config> on instance <instance> with
         instance specifics.
 
         <specifics> for at most.

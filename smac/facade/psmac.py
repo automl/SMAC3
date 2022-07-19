@@ -19,8 +19,8 @@ from smac.cli.scenario import Scenario
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.model.utils import get_rng
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.base import BaseRunner
-from smac.runner.execute_ta_run_hydra import ExecuteTARunOld
+from smac.runner.base import Runner
+from smac.runner.old.execute_ta_run_hydra import ExecuteTARunOld
 from smac.utils.result_merging import ResultMerger
 
 __author__ = "Andre Biedenkapp"
@@ -30,7 +30,7 @@ __license__ = "3-clause BSD"
 
 def optimize(
     scenario: Scenario,
-    tae_runner: Type[BaseRunner],
+    tae_runner: Type[Runner],
     tae_runner_kwargs: Dict,
     rng: Union[np.random.RandomState, int],
     output_dir: str,
@@ -143,7 +143,7 @@ class PSMAC(object):
         scenario: Scenario,
         rng: Optional[Union[np.random.RandomState, int]] = None,
         run_id: int = 1,
-        tae_runner: Type[BaseRunner] = ExecuteTARunOld,
+        tae_runner: Type[Runner] = ExecuteTARunOld,
         tae_runner_kwargs: Union[dict, None] = None,
         shared_model: bool = True,
         facade_class: Optional[Type[AlgorithmConfigurationFacade]] = None,

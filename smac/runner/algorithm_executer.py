@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Callable, Dict, List, Optional, Tuple, Union, cast
 
 import inspect
@@ -15,12 +17,8 @@ from smac.runner.serial_runner import SerialRunner
 from smac.utils.logging import PickableLoggerAdapter
 from smac.utils.stats import Stats
 
-__author__ = "Marius Lindauer, Matthias Feurer"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.2"
 
 
 class AbstractAlgorithmExecuter(SerialRunner):
@@ -60,11 +58,10 @@ class AbstractAlgorithmExecuter(SerialRunner):
 
     def __init__(
         self,
-        ta: Callable,
+        target_algorithm: Callable,
         stats: Stats,
-        multi_objectives: List[str] = ["cost"],
-        run_obj: str = "quality",
-        memory_limit: Optional[int] = None,
+        multi_objectives: list[str] = ["cost"],
+        memory_limit: int | None = None,
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
         abort_on_first_run_crash: bool = False,
@@ -72,30 +69,28 @@ class AbstractAlgorithmExecuter(SerialRunner):
     ):
 
         super().__init__(
-            ta=ta,
+            target_algorithm=target_algorithm,
             stats=stats,
             multi_objectives=multi_objectives,
-            run_obj=run_obj,
             par_factor=par_factor,
             cost_for_crash=cost_for_crash,
             abort_on_first_run_crash=abort_on_first_run_crash,
         )
-        self.ta = ta
+        self.target_algorithm = target_algorithm
         self.stats = stats
         self.multi_objectives = multi_objectives
-        self.run_obj = run_obj
 
         self.par_factor = par_factor
         self.cost_for_crash = cost_for_crash
         self.abort_on_first_run_crash = abort_on_first_run_crash
 
-        signature = inspect.signature(ta).parameters
+        signature = inspect.signature(target_algorithm).parameters
         self._accepts_seed = "seed" in signature.keys()
         self._accepts_instance = "instance" in signature.keys()
         self._accepts_budget = "budget" in signature.keys()
-        if not callable(ta):
-            raise TypeError("Argument `ta` must be a callable, but is %s" % type(ta))
-        self._ta = cast(Callable, ta)
+        if not callable(target_algorithm):
+            raise TypeError("Argument `ta` must be a callable, but is %s" % type(target_algorithm))
+        self._target_algorithm = cast(Callable, target_algorithm)
 
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
@@ -114,7 +109,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
         budget: Optional[float] = None,
         instance_specific: str = "0",
     ) -> Tuple[StatusType, float, float, Dict]:
-        """Runs target algorithm <self._ta> with configuration <config> for at most <algorithm_walltime_limit>
+        """Runs target algorithm <self._target_algorithm> with configuration <config> for at most <algorithm_walltime_limit>
         seconds, allowing it to use at most <memory_limit> RAM.
 
         Whether the target algorithm is called with the <instance> and
@@ -177,7 +172,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
 
             # call ta
             try:
-                obj = pynisher.enforce_limits(**arguments)(self._ta)
+                obj = pynisher.enforce_limits(**arguments)(self._target_algorithm)
                 rval = self._call_ta(obj, config, obj_kwargs)
             except Exception as e:
                 cost = np.asarray(cost).squeeze().tolist()
@@ -214,7 +209,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
 
             # call ta
             try:
-                rval = self._call_ta(self._ta, config, obj_kwargs)
+                rval = self._call_ta(self._target_algorithm, config, obj_kwargs)
 
                 if isinstance(rval, tuple):
                     result = rval[0]
@@ -314,6 +309,8 @@ class AlgorithmExecuter(AbstractAlgorithmExecuter):
         return obj(config, **obj_kwargs)
 
 
+'''
+# TODO: For what do we need this one?
 class ExecuteTAFuncArray(AbstractAlgorithmExecuter):
     """Evaluate function for given configuration and resource limit.
 
@@ -354,3 +351,4 @@ class ExecuteTAFuncArray(AbstractAlgorithmExecuter):
 
         x = np.array([val for _, val in sorted(config.get_dictionary().items())], dtype=float)
         return obj(x, **obj_kwargs)
+'''

@@ -24,7 +24,7 @@ from smac.runhistory.runhistory_transformer import (
     RunhistoryLogTransformer,
     RunhistoryTransformer,
 )
-from smac.runner.base import BaseRunner
+from smac.runner.base import Runner
 from smac.utils.stats import Stats
 
 __author__ = "Marius Lindauer"
@@ -99,7 +99,7 @@ class ROAR(AlgorithmConfigurationFacade):
     def __init__(
         self,
         scenario: Scenario,
-        tae_runner: Optional[Union[Type[BaseRunner], Callable]] = None,
+        tae_runner: Optional[Union[Type[Runner], Callable]] = None,
         tae_runner_kwargs: Optional[Dict] = None,
         runhistory: RunHistory = None,
         intensifier: Optional[Type[AbstractRacer]] = None,

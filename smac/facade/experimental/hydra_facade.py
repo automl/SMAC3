@@ -22,8 +22,8 @@ from smac.facade.psmac import PSMAC
 from smac.model.utils import get_rng
 from smac.optimizer.pSMAC import read
 from smac.runhistory.runhistory import RunHistory
-from smac.runner.base import BaseRunner
-from smac.runner.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
+from smac.runner.base import Runner
+from smac.runner.old.execute_ta_run_hydra import ExecuteTARunHydra, ExecuteTARunOld
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -80,7 +80,7 @@ class Hydra(object):
         n_optimizers: int = 1,
         rng: typing.Optional[typing.Union[np.random.RandomState, int]] = None,
         run_id: int = 1,
-        tae: typing.Type[BaseRunner] = ExecuteTARunOld,
+        tae: typing.Type[Runner] = ExecuteTARunOld,
         tae_kwargs: typing.Union[dict, None] = None,
         **kwargs,
     ):

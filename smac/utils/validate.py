@@ -13,10 +13,11 @@ from smac.constants import MAXINT
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.model.utils import get_types
-from smac.runhistory.runhistory import RunHistory, RunInfo, RunKey, RunValue, StatusType
+from smac.runhistory import RunInfo, RunKey, RunValue, StatusType
+from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.runner.base import BaseRunner
-from smac.runner.execute_ta_run_old import ExecuteTARunOld
+from smac.runner import Runner
+from smac.runner.old.execute_ta_run_old import ExecuteTARunOld
 from smac.utils.stats import Stats
 
 __author__ = "Joshua Marben"
@@ -27,7 +28,7 @@ __email__ = "joshua.marben@neptun.uni-freiburg.de"
 
 
 def _unbound_tae_starter(
-    tae: BaseRunner,
+    tae: Runner,
     runhistory: Optional[RunHistory],
     run_info: RunInfo,
     *args: Any,
@@ -155,7 +156,7 @@ class Validator(object):
         n_jobs: int = 1,
         backend: str = "threading",
         runhistory: Optional[RunHistory] = None,
-        tae: BaseRunner = None,
+        tae: Runner = None,
         output_fn: Optional[str] = None,
     ) -> RunHistory:
         """Validate configs on instances and save result in runhistory. If a runhistory is provided
@@ -253,7 +254,7 @@ class Validator(object):
 
     def _validate_parallel(
         self,
-        tae: BaseRunner,
+        tae: Runner,
         runs: List[_Run],
         n_jobs: int,
         backend: str,
