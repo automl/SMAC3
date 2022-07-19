@@ -23,7 +23,7 @@ __license__ = "3-clause BSD"
 logger = get_logger(__name__)
 
 
-class AbstractAlgorithmExecuter(SerialRunner):
+class AbstractTargetAlgorithmRunner(SerialRunner):
     """Baseclass to execute target algorithms which are python functions.
 
     Note
@@ -68,7 +68,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
         memory_limit: int | None = None,
         par_factor: int = 1,
         cost_for_crash: float = float(MAXINT),
-        abort_on_first_run_crash: bool = False,
+        abort_on_first_run_crash: bool = True,
         use_pynisher: bool = True,
     ):
 
@@ -267,7 +267,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
         raise NotImplementedError()
 
 
-class AlgorithmExecuter(AbstractAlgorithmExecuter):
+class TargetAlgorithmRunner(AbstractTargetAlgorithmRunner):
     """Evaluate function for given configuration and resource limit.
 
     Passes the configuration as a dictionary to the target algorithm. The

@@ -1,6 +1,6 @@
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.utils.stats import Stats
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -8,7 +8,7 @@ __license__ = "3-clause BSD"
 
 def eval_challenger(
     run_info: RunInfo,
-    taf: AlgorithmExecuter,
+    taf: TargetAlgorithmRunner,
     stats: Stats,
     runhistory: RunHistory,
     force_update=False,

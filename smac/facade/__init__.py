@@ -21,7 +21,7 @@ from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.runner import Runner
 from smac.runner.dask_runner import DaskParallelRunner
 from smac.utils.logging import get_logger
@@ -79,7 +79,7 @@ class Facade:
         if callable(target_algorithm):
             # We wrap our algorithm with the AlgorithmExecuter to use pynisher
             # and to catch exceptions
-            runner = AlgorithmExecuter(target_algorithm, stats=stats)
+            runner = TargetAlgorithmRunner(target_algorithm, stats=stats)
         elif isinstance(target_algorithm, Runner):
             runner = target_algorithm
         else:

@@ -15,12 +15,12 @@ from smac.intensification.intensification import Intensifier, IntensifierStage
 from smac.runhistory.runhistory import RunHistory, RunInfo
 from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 
 def eval_challenger(
     run_info: RunInfo,
-    taf: AlgorithmExecuter,
+    taf: TargetAlgorithmRunner,
     stats: Stats,
     runhistory: RunHistory,
     force_update=False,
@@ -98,7 +98,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -158,7 +158,7 @@ class TestIntensify(unittest.TestCase):
             time.sleep(1.5)
             return (x["a"] + 1) / 1000.0
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -218,7 +218,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(0.6)
             return (config["a"] + 1) / 1000.0
 
-        taf = AlgorithmExecuter(
+        taf = TargetAlgorithmRunner(
             use_pynisher=False,
             ta=target,
             stats=self.stats,
@@ -353,7 +353,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -429,7 +429,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 1
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -507,7 +507,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -574,7 +574,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return (x["a"] + 1) / 1000.0
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="solution_quality")
 
         intensifier = Intensifier(
             stats=self.stats,
@@ -738,7 +738,7 @@ class TestIntensify(unittest.TestCase):
                 time.sleep(1)
             return x["a"]
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="runtime")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -916,7 +916,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1073,7 +1073,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return x["a"]
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(
@@ -1131,7 +1131,7 @@ class TestIntensify(unittest.TestCase):
         def target(x):
             return 2 * x["a"] + x["b"]
 
-        taf = AlgorithmExecuter(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
+        taf = TargetAlgorithmRunner(use_pynisher=False, ta=target, stats=self.stats, run_obj="quality")
         taf.runhistory = self.rh
 
         intensifier = Intensifier(

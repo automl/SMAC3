@@ -7,7 +7,7 @@ from smac.configspace import ConfigurationSpace
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 from smac.runner.serial_runner import SerialRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
@@ -34,7 +34,7 @@ class TestSerialRunner(unittest.TestCase):
         return the expected values/types"""
 
         # We use the funcdict as a mechanism to test SerialRunner
-        runner = AlgorithmExecuter(ta=target, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target, stats=self.stats, run_obj="quality")
         self.assertIsInstance(runner, SerialRunner)
 
         run_info = RunInfo(
@@ -60,7 +60,7 @@ class TestSerialRunner(unittest.TestCase):
     def test_serial_runs(self):
 
         # We use the funcdict as a mechanism to test SerialRunner
-        runner = AlgorithmExecuter(ta=target_delayed, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target_delayed, stats=self.stats, run_obj="quality")
         self.assertIsInstance(runner, SerialRunner)
 
         run_info = RunInfo(

@@ -16,7 +16,7 @@ from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.runner import StatusType
 from smac.runner.dask_runner import DaskParallelRunner
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -42,7 +42,7 @@ class TestDaskRunner(unittest.TestCase):
         return the expected values/types"""
 
         # We use the funcdict as a mechanism to test Parallel Runner
-        runner = AlgorithmExecuter(ta=target, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target, stats=self.stats, run_obj="quality")
         runner = DaskParallelRunner(runner, n_workers=2)
         self.assertIsInstance(runner, DaskParallelRunner)
 
@@ -75,7 +75,7 @@ class TestDaskRunner(unittest.TestCase):
         closely in time together"""
 
         # We use the funcdict as a mechanism to test Runner
-        runner = AlgorithmExecuter(ta=target_delayed, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target_delayed, stats=self.stats, run_obj="quality")
         runner = DaskParallelRunner(runner, n_workers=2)
 
         run_info = RunInfo(
@@ -131,7 +131,7 @@ class TestDaskRunner(unittest.TestCase):
         """Make sure we can properly return the number of workers"""
 
         # We use the funcdict as a mechanism to test Runner
-        runner = AlgorithmExecuter(ta=target_delayed, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target_delayed, stats=self.stats, run_obj="quality")
         runner = DaskParallelRunner(runner, n_workers=2)
         self.assertEqual(runner.num_workers(), 2)
 
@@ -183,7 +183,7 @@ class TestDaskRunner(unittest.TestCase):
         def target_nonpickable(x, seed, instance):
             return x**2, {"key": seed, "instance": instance}
 
-        runner = AlgorithmExecuter(ta=target_nonpickable, stats=self.stats, run_obj="quality")
+        runner = TargetAlgorithmRunner(ta=target_nonpickable, stats=self.stats, run_obj="quality")
 
         runner = DaskParallelRunner(runner, n_workers=2)
 

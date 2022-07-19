@@ -10,7 +10,7 @@ from smac.cli.scenario import Scenario
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.algorithm_executer import ExecuteTAFuncArray, AlgorithmExecuter
+from smac.runner.target_algorithm_runner import ExecuteTAFuncArray, TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -26,7 +26,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return x**2
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         rval = taf.run(config=2)
 
         self.assertFalse(taf._accepts_instance)
@@ -39,7 +39,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x, seed):
             return x**2, {"key": seed}
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         rval = taf.run(config=2, instance="test")
         self.assertFalse(taf._accepts_instance)
         self.assertTrue(taf._accepts_seed)
@@ -51,7 +51,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x, seed, instance):
             return x**2, {"key": seed, "instance": instance}
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         rval = taf.run(config=2, instance="test")
         self.assertTrue(taf._accepts_instance)
         self.assertTrue(taf._accepts_seed)
@@ -63,7 +63,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             raise Exception(x)
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
@@ -76,7 +76,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return x**2
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats, use_pynisher=False)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
@@ -88,7 +88,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x, seed, instance):
             return x**2, {"key": seed, "instance": instance}
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats, use_pynisher=False)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2, instance="test")
         self.assertTrue(taf._accepts_instance)
         self.assertTrue(taf._accepts_seed)
@@ -100,7 +100,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return None
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats, use_pynisher=False)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
 
         self.assertFalse(taf._accepts_instance)
@@ -113,7 +113,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             raise Exception(x)
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats, use_pynisher=False)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats, use_pynisher=False)
         rval = taf.run(config=2)
         self.assertFalse(taf._accepts_instance)
         self.assertFalse(taf._accepts_seed)
@@ -138,7 +138,7 @@ class TestExecuteFunc(unittest.TestCase):
             a = np.random.random_sample((10000, 10000)).astype(np.float64)
             return np.sum(a)
 
-        taf = AlgorithmExecuter(ta=fill_memory, stats=self.stats, memory_limit=1024)
+        taf = TargetAlgorithmRunner(ta=fill_memory, stats=self.stats, memory_limit=1024)
         rval = taf.run(config=None)
 
         platform = os.getenv("TRAVIS_OS_NAME")
@@ -160,7 +160,7 @@ class TestExecuteFunc(unittest.TestCase):
         def run_over_time(*args):
             time.sleep(5)
 
-        taf = AlgorithmExecuter(ta=run_over_time, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=run_over_time, stats=self.stats)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.TIMEOUT)
         self.assertEqual(rval[1], 2147483647.0)
@@ -171,7 +171,7 @@ class TestExecuteFunc(unittest.TestCase):
         def run_over_time(*args):
             time.sleep(5)
 
-        taf = AlgorithmExecuter(ta=run_over_time, stats=self.stats, run_obj="runtime", par_factor=11)
+        taf = TargetAlgorithmRunner(ta=run_over_time, stats=self.stats, run_obj="runtime", par_factor=11)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.TIMEOUT)
         self.assertGreaterEqual(rval[1], 11)
@@ -182,7 +182,7 @@ class TestExecuteFunc(unittest.TestCase):
         def function(*args):
             return
 
-        taf = AlgorithmExecuter(ta=function, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=function, stats=self.stats)
         rval = taf.run(config=None, cutoff=1)
         self.assertEqual(rval[0], StatusType.CRASHED)
         self.assertEqual(rval[1], 2147483647.0)
@@ -193,7 +193,7 @@ class TestExecuteFunc(unittest.TestCase):
         def target(x):
             return x**2
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         self.assertRaises(ValueError, taf.run, config=2, cutoff=65536)
 
 

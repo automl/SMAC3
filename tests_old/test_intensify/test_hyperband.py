@@ -15,7 +15,7 @@ from smac.intensification.successive_halving import _SuccessiveHalving
 from smac.runhistory.runhistory import RunHistory, RunInfo, RunValue
 from smac.utils.stats import Stats
 from smac.runner import StatusType
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 from .test_eval_utils import eval_challenger
 
@@ -482,7 +482,7 @@ class Test_Hyperband(unittest.TestCase):
         def target(x):
             return 0.1
 
-        taf = AlgorithmExecuter(ta=target, stats=self.stats)
+        taf = TargetAlgorithmRunner(ta=target, stats=self.stats)
         taf.runhistory = self.rh
 
         intensifier = _Hyperband(

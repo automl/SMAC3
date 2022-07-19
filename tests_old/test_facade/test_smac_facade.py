@@ -37,7 +37,7 @@ from smac.runhistory.runhistory_transformer import (
     RunhistoryLogTransformer,
 )
 from smac.runner import StatusType
-from smac.runner.algorithm_executer import AlgorithmExecuter
+from smac.runner.target_algorithm_runner import TargetAlgorithmRunner
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
@@ -82,7 +82,7 @@ class TestSMACFacade(unittest.TestCase):
             return 5
 
         smac = AlgorithmConfigurationFacade(tae_runner=target_algorithm, scenario=self.scenario)
-        self.assertIsInstance(smac.solver.tae_runner, AlgorithmExecuter)
+        self.assertIsInstance(smac.solver.tae_runner, TargetAlgorithmRunner)
         self.assertIs(smac.solver.tae_runner.ta, target_algorithm)
 
     def test_pass_invalid_tae_runner(self):

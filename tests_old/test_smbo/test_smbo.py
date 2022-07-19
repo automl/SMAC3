@@ -19,7 +19,7 @@ from smac.optimizer.acquisition import EI, LogEI
 from smac.runhistory.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer, RunhistoryLogTransformer
 from smac.runner import FirstRunCrashedException, StatusType
-from smac.runner.algorithm_executer import ExecuteTAFuncArray
+from smac.runner.target_algorithm_runner import ExecuteTAFuncArray
 from smac.utils import test_helpers
 from smac.utils.validate import Validator
 
