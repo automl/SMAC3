@@ -4,7 +4,7 @@ from ConfigSpace.configuration_space import Configuration
 from ConfigSpace.hyperparameters import Constant
 from scipy.stats.qmc import LatinHypercube
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2019, AutoML"

@@ -52,8 +52,6 @@ class _Hyperband(_SuccessiveHalving):
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : Optional[str]
@@ -61,8 +59,6 @@ class _Hyperband(_SuccessiveHalving):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
@@ -85,10 +81,8 @@ class _Hyperband(_SuccessiveHalving):
         initial_budget: Optional[float] = None,
         max_budget: Optional[float] = None,
         eta: float = 3,
-        run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         identifier: int = 0,
@@ -104,10 +98,8 @@ class _Hyperband(_SuccessiveHalving):
             max_budget=max_budget,
             eta=eta,
             num_initial_challengers=None,  # initial challengers passed as None
-            run_obj_time=run_obj_time,
             n_seeds=n_seeds,
             instance_order=instance_order,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             incumbent_selection=incumbent_selection,
             seed=seed,
@@ -294,7 +286,6 @@ class _Hyperband(_SuccessiveHalving):
             run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
-            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
             inst_seed_pairs=self.inst_seed_pairs,  # additional argument to avoid
             identifier=self.identifier,
             seed=self.seed,
@@ -332,8 +323,6 @@ class Hyperband(ParallelScheduler):
         maximum budget allowed for 1 run of successive halving
     eta : float
         'halving' factor after each iteration in a successive halving run. Defaults to 3
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : Optional[str]
@@ -341,8 +330,6 @@ class Hyperband(ParallelScheduler):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier). This class will
         raise an exception if a value larger than 1 is passed.
@@ -366,7 +353,6 @@ class Hyperband(ParallelScheduler):
         run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: str = "shuffle_once",
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
         seed: int = 0,
@@ -378,7 +364,6 @@ class Hyperband(ParallelScheduler):
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
             run_obj_time=run_obj_time,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             seed=seed,
         )
@@ -450,10 +435,8 @@ class Hyperband(ParallelScheduler):
             initial_budget=self.initial_budget,
             max_budget=self.max_budget,
             eta=self.eta,
-            run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
-            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
             min_challenger=self.min_challenger,
             incumbent_selection=self.incumbent_selection,
             identifier=len(self.intensifier_instances),

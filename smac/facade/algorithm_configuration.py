@@ -1,14 +1,9 @@
 from __future__ import annotations
 
-from typing import Callable
-
-import dask.distributed  # type: ignore
-import joblib
-import numpy as np  # type: ignore
-
-from smac.acquisition import EI, AbstractAcquisitionFunction
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb, RandomChooser
@@ -16,44 +11,15 @@ from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
 from smac.initial_design.default_configuration_design import DefaultInitialDesign
-
-# Initial designs
-from smac.initial_design.initial_design import InitialDesign
-from smac.intensification.abstract_racer import AbstractRacer
-
-# intensification
+from smac.initial_design import InitialDesign
 from smac.intensification.intensification import Intensifier
-from smac.model.base_imputor import BaseImputor
-from smac.model.base_model import BaseModel
-
-# epm
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
-from smac.model.random_forest.rfr_imputator import RFRImputator
 from smac.model.utils import get_types
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
-
-# optimizer
-from smac.optimizer.smbo import SMBO
-
-# runhistory
-from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
-from smac.runner.algorithm_executer import AlgorithmExecuter
-
-# tae
-from smac.runner.base import BaseRunner
-from smac.runner.dask_runner import DaskParallelRunner
-
-# utils
 from smac.utils.logging import get_logger
 
-# stats and options
-from smac.utils.stats import Stats
-
-__author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
@@ -93,15 +59,12 @@ class AlgorithmConfigurationFacade(Facade):
         )
 
     @staticmethod
-    def get_acquisition_function(config: Config, par: float = 0.0) -> AbstractAcquisitionFunction:
+    def get_acquisition_function(config: Config, par: float = 0.0) -> EI:
         return EI(par=par)
 
     @staticmethod
-    def get_acquisition_optimizer(
-        config: Config, acquisition_function: AbstractAcquisitionFunction
-    ) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(config: Config) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
-            acquisition_function,
             config.configspace,
             seed=config.seed,
         )
@@ -112,7 +75,6 @@ class AlgorithmConfigurationFacade(Facade):
     def get_intensifier(
         config: Config,
         *,
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger=1,
         min_config_calls=1,
         max_config_calls=2000,
@@ -125,7 +87,6 @@ class AlgorithmConfigurationFacade(Facade):
             instance_specifics=config.instance_specifics,  # What is that?
             algorithm_walltime_limit=config.algorithm_walltime_limit,
             deterministic=config.deterministic,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             race_against=config.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,

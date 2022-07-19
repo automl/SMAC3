@@ -1,6 +1,6 @@
 import numpy as np
 
-from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition_function import AbstractAcquisitionFunction
 
 
 class TS(AbstractAcquisitionFunction):
@@ -48,6 +48,8 @@ class TS(AbstractAcquisitionFunction):
         np.ndarray(N,1)
             negative sample value of X
         """
+        assert self.model
+
         if len(X.shape) == 1:
             X = X[:, np.newaxis]
         sample_function = getattr(self.model, "sample_functions", None)

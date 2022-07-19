@@ -153,7 +153,7 @@ class Config:
         data["configspace"] = configspace
 
         config = Config(**data)
-        config.set_meta(meta)
+        config._set_meta(meta)
 
         return config
 

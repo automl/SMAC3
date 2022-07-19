@@ -1,11 +1,12 @@
-from typing import Any, Iterator, List, Optional, Tuple
+from __future__ import annotations
 
-import logging
+from typing import Any, Iterator, List, Optional, Tuple
 
 import numpy as np
 
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer, RandomSearch
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition_optimizer.random_search import RandomSearch
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
@@ -13,10 +14,14 @@ from smac.configspace.util import convert_configurations_to_array
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import AbstractRunhistoryTransformer
+from smac.utils.logging import get_logger
 from smac.utils.stats import Stats
 
 __copyright__ = "Copyright 2021, AutoML.org Freiburg-Hannover"
 __license__ = "3-clause BSD"
+
+
+logger = get_logger(__name__)
 
 
 class ConfigurationChooser:
@@ -68,9 +73,6 @@ class ConfigurationChooser:
         seed: int = 0,
         **epm_chooser_kwargs: Any,
     ):
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-        # self.incumbent = restore_incumbent
-
         self.config = config
         self.stats = stats
         self.runhistory = runhistory
@@ -82,15 +84,13 @@ class ConfigurationChooser:
         self.random_configuration_chooser = random_configuration_chooser
 
         self._random_search = RandomSearch(
-            acquisition_function,
-            self.config.configspace,  # type: ignore[attr-defined] # noqa F821
+            self.config.configspace,
+            acquisition_function=acquisition_function,
             seed=seed,
         )
 
-        self.initial_design_configs = []  # type: List[Configuration]
-
+        self.initial_design_configs: list[Configuration] = []
         self.predict_x_best = predict_x_best
-
         self.min_samples_model = min_samples_model
         self.currently_considered_budgets = [
             0.0,
@@ -150,7 +150,7 @@ class ConfigurationChooser:
         -------
         Iterator
         """
-        self.logger.debug("Search for next configuration")
+        logger.debug("Search for next configuration...")
         X, Y, X_configurations = self._collect_data_to_train_model()
 
         if X.shape[0] == 0:

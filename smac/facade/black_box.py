@@ -1,21 +1,19 @@
 from __future__ import annotations
 
-from typing import Any
-
 import numpy as np
 import sklearn.gaussian_process.kernels as kernels
 
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.expected_improvement import EI
-from smac.acquisition.maximizer import (
-    AbstractAcquisitionOptimizer,
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
+from smac.acquisition_optimizer.local_and_random_search import (
     LocalAndSortedRandomSearch,
 )
 from smac.chooser.random_chooser import ChooserProb, RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.facade import Facade
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 from smac.initial_design.sobol_design import SobolInitialDesign
 from smac.intensification.intensification import Intensifier
 from smac.model.gaussian_process import BaseGaussianProcess, GaussianProcess
@@ -28,9 +26,7 @@ from smac.model.gaussian_process.kernels import (
 from smac.model.gaussian_process.mcmc import MCMCGaussianProcess
 from smac.model.gaussian_process.utils.prior import HorseshoePrior, LognormalPrior
 from smac.model.utils import get_types
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
 
@@ -169,15 +165,13 @@ class BlackBoxFacade(Facade):
     @staticmethod
     def get_acquisition_optimizer(
         config: Config,
-        acquisition_function: AbstractAcquisitionFunction,
         *,
-        n_sls_iterations: int = 10,
+        local_search_iterations: int = 10,
         challengers: int = 1000,
     ) -> AbstractAcquisitionOptimizer:
         optimizer = LocalAndSortedRandomSearch(
-            acquisition_function,
-            config_space=config.configspace,
-            n_sls_iterations=n_sls_iterations,
+            configspace=config.configspace,
+            local_search_iterations=local_search_iterations,
             challengers=challengers,
             seed=config.seed,
         )
@@ -187,7 +181,6 @@ class BlackBoxFacade(Facade):
     def get_intensifier(
         config: Config,
         *,
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         min_config_calls: int = 1,
         max_config_calls: int = 3,
@@ -201,7 +194,6 @@ class BlackBoxFacade(Facade):
             instance_specifics=config.instance_specifics,  # What is that?
             algorithm_walltime_limit=config.algorithm_walltime_limit,
             deterministic=config.deterministic,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             race_against=config.configspace.get_default_configuration(),
             min_config_calls=min_config_calls,
@@ -217,7 +209,7 @@ class BlackBoxFacade(Facade):
         *,
         initial_configs: list[Configuration] | None = None,
         n_configs_per_hyperparameter: int = 1,
-        max_config_fracs: float = 0.25,
+        max_config_ratio: float = 0.25,
     ) -> InitialDesign:
         if len(config.configspace.get_hyperparameters()) > 21201:
             raise ValueError(
@@ -229,7 +221,7 @@ class BlackBoxFacade(Facade):
             n_runs=config.n_runs,
             configs=initial_configs,
             n_configs_per_hyperparameter=n_configs_per_hyperparameter,
-            max_config_fracs=max_config_fracs,
+            max_config_ratio=max_config_ratio,
             seed=config.seed,
         )
         return initial_design

@@ -1,92 +1,124 @@
+from __future__ import annotations
+
 from typing import Any
 
-from smac.acquisition import LogEI
+from smac.acquisition_function.expected_improvement import EI
+from smac.acquisition_optimizer.local_and_random_search import (
+    LocalAndSortedRandomSearch,
+)
+from smac.chooser.random_chooser import ChooserProb
+from smac.config import Config
+from smac.configspace import Configuration
+from smac.facade import Facade
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade
 from smac.initial_design.sobol_design import SobolInitialDesign
+from smac.intensification.intensification import Intensifier
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
+from smac.model.utils import get_types
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
+from smac.multi_objective.aggregation_strategy import MeanAggregationStrategy
 from smac.runhistory.runhistory_transformer import RunhistoryLogScaledTransformer
 
-__author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 
 
-class SMAC4HPO(AlgorithmConfigurationFacade):
-    """Facade to use SMAC for hyperparameter optimization.
+class HyperparameterOptimizationFacade(Facade):
+    @staticmethod
+    def get_model(
+        config: Config,
+        *,
+        n_trees: int = 10,
+        bootstrapping: bool = True,
+        ratio_features: float = 1.0,
+        min_samples_split: int = 2,
+        min_samples_leaf: int = 1,
+        max_depth: int = 2**20,
+    ) -> RandomForestWithInstances:
+        types, bounds = get_types(config.configspace)
 
-    see smac.facade.smac_Facade for API
-    This facade overwrites options available via the SMAC facade
+        return RandomForestWithInstances(
+            types=types,
+            bounds=bounds,
+            log_y=True,
+            num_trees=n_trees,
+            do_bootstrapping=bootstrapping,
+            ratio_features=ratio_features,
+            min_samples_split=min_samples_split,
+            min_samples_leaf=min_samples_leaf,
+            max_depth=max_depth,
+            configspace=config.configspace,
+            seed=config.seed,
+        )
 
-    See Also
-    --------
-    :class:`~smac.facade.smac_ac_facade.SMAC4AC` for documentation of parameters.
+    @staticmethod
+    def get_acquisition_function(config: Config, *, par: float = 0.0) -> EI:
+        return EI(par=par, log=True)
 
-    Attributes
-    ----------
-    logger
-    stats : Stats
-    solver : SMBO
-    runhistory : RunHistory
-        List with information about previous runs
-    trajectory : list
-        List of all incumbents
-    """
+    @staticmethod
+    def get_acquisition_optimizer(
+        config: Config,
+        *,
+        local_search_iterations: int = 10,
+        challengers: int = 10000,
+    ) -> LocalAndSortedRandomSearch:
+        optimizer = LocalAndSortedRandomSearch(
+            config.configspace,
+            local_search_iterations=local_search_iterations,
+            challengers=challengers,
+            seed=config.seed,
+        )
 
-    def __init__(self, **kwargs: Any):
-        scenario = kwargs["scenario"]
+        return optimizer
 
-        kwargs["initial_design"] = kwargs.get("initial_design", SobolInitialDesign)
-        if len(scenario.cs.get_hyperparameters()) > 21201 and kwargs["initial_design"] is SobolInitialDesign:
-            raise ValueError(
-                'The default initial design "Sobol sequence" can only handle up to 21201 dimensions. '
-                'Please use a different initial design, such as "the Latin Hypercube design".',
-            )
+    @staticmethod
+    def get_intensifier(config: Config, *, min_challenger=1, min_config_calls=1, max_config_calls=3) -> Intensifier:
+        intensifier = Intensifier(
+            instances=config.instances,
+            instance_specifics=config.instance_specifics,
+            algorithm_walltime_limit=config.algorithm_walltime_limit,
+            deterministic=config.deterministic,
+            min_challenger=min_challenger,
+            race_against=config.configspace.get_default_configuration(),
+            min_config_calls=min_config_calls,
+            max_config_calls=max_config_calls,
+            seed=config.seed,
+        )
 
-        init_kwargs = kwargs.get("initial_design_kwargs", dict())
-        init_kwargs["n_configs_x_params"] = init_kwargs.get("n_configs_x_params", 10)
-        init_kwargs["max_config_fracs"] = init_kwargs.get("max_config_fracs", 0.25)
-        kwargs["initial_design_kwargs"] = init_kwargs
+        return intensifier
 
-        # Intensification parameters - which intensifier to use and respective parameters
-        intensifier_kwargs = kwargs.get("intensifier_kwargs", dict())
-        intensifier_kwargs["min_chall"] = 1
-        kwargs["intensifier_kwargs"] = intensifier_kwargs
+    @staticmethod
+    def get_initial_design(
+        config: Config,
+        *,
+        initial_configs: list[Configuration] | None = None,
+        n_configs_per_hyperparamter: int = 10,
+        max_config_ratio: float = 0.25,  # Use at most X*budget in the initial design
+    ) -> SobolInitialDesign:
+        return SobolInitialDesign(
+            configspace=config.configspace,
+            n_runs=config.n_runs,
+            configs=initial_configs,
+            n_configs_per_hyperparameter=n_configs_per_hyperparamter,
+            max_config_ratio=max_config_ratio,
+            seed=config.seed,
+        )
 
-        if kwargs.get("model") is None:
-            model_class = RandomForestWithInstances
-            kwargs["model"] = model_class
+    @staticmethod
+    def get_random_configuration_chooser(config: Config, *, probability: float = 0.2) -> ChooserProb:
+        return ChooserProb(prob=probability)
 
-            # == static RF settings
-            model_kwargs = kwargs.get("model_kwargs", dict())
-            model_kwargs["num_trees"] = model_kwargs.get("num_trees", 10)
-            model_kwargs["do_bootstrapping"] = model_kwargs.get("do_bootstrapping", True)
-            model_kwargs["ratio_features"] = model_kwargs.get("ratio_features", 1.0)
-            model_kwargs["min_samples_split"] = model_kwargs.get("min_samples_split", 2)
-            model_kwargs["min_samples_leaf"] = model_kwargs.get("min_samples_leaf", 1)
-            model_kwargs["log_y"] = model_kwargs.get("log_y", True)
-            kwargs["model_kwargs"] = model_kwargs
+    @staticmethod
+    def get_multi_objective_algorithm(config: Config) -> AbstractMultiObjectiveAlgorithm | None:
+        if len(config.objectives) <= 1:
+            return None
 
-        # == Acquisition function
-        kwargs["acquisition_function"] = kwargs.get("acquisition_function", LogEI)
-        kwargs["runhistory2epm"] = kwargs.get("runhistory2epm", RunhistoryLogScaledTransformer)
+        return MeanAggregationStrategy(config.seed)
 
-        # assumes random chooser for random configs
-        random_config_chooser_kwargs = kwargs.get("random_configuration_chooser_kwargs", dict())
-        random_config_chooser_kwargs["prob"] = random_config_chooser_kwargs.get("prob", 0.2)
-        kwargs["random_configuration_chooser_kwargs"] = random_config_chooser_kwargs
-
-        # better improve acquisition function optimization
-        # 1. increase number of sls iterations
-        acquisition_function_optimizer_kwargs = kwargs.get("acquisition_function_optimizer_kwargs", dict())
-        acquisition_function_optimizer_kwargs["n_sls_iterations"] = 10
-        kwargs["acquisition_function_optimizer_kwargs"] = acquisition_function_optimizer_kwargs
-
-        super().__init__(**kwargs)
-        self.logger.info(self.__class__)
-
-        # better improve acquisition function optimization
-        # 2. more randomly sampled configurations
-        self.solver.scenario.acq_opt_challengers = 10000  # type: ignore[attr-defined] # noqa F821
-
-        # activate predict incumbent
-        self.solver.epm_chooser.predict_x_best = True
+    @staticmethod
+    def get_runhistory_transformer(config: Config) -> RunhistoryLogScaledTransformer:
+        return RunhistoryLogScaledTransformer(
+            config,
+            n_params=len(config.configspace.get_hyperparameters()),
+            seed=config.seed,
+        )

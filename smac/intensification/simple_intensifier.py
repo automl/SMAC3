@@ -29,8 +29,6 @@ class SimpleIntensifier(AbstractRacer):
         algorithm_walltime_limit of TA runs
     deterministic : bool
         whether the TA is deterministic or not
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     """
 
     def __init__(
@@ -39,7 +37,6 @@ class SimpleIntensifier(AbstractRacer):
         instance_specifics: Mapping[str, str] = None,
         algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
-        run_obj_time: bool = True,
         seed: int = 0,
         **kwargs: Any,
     ) -> None:
@@ -49,7 +46,6 @@ class SimpleIntensifier(AbstractRacer):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
             adaptive_capping_slackfactor=1.0,
             min_challenger=1,
             seed=seed,

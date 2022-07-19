@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 
 from smac.multi_objective.aggregation_strategy import AggregationStrategy
@@ -10,10 +8,10 @@ from smac.multi_objective.aggregation_strategy import AggregationStrategy
 class ParEGO(AggregationStrategy):
     def __init__(
         self,
-        rng: Optional[np.random.RandomState] = None,
         rho: float = 0.05,
+        seed: int = 0,
     ):
-        super(ParEGO, self).__init__(rng=rng)
+        super(ParEGO, self).__init__(seed=seed)
         self.rho = rho
 
     def __call__(self, values: list[float]) -> float:

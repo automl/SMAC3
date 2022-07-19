@@ -3,6 +3,10 @@ import os
 import sys
 import warnings
 
+from smac.config import Config
+from smac.facade.black_box import BlackBoxFacade
+from smac.facade.hyperparameter_optimization import HyperparameterOptimizationFacade
+
 name = "SMAC3"
 package_name = "smac"
 author = (
@@ -30,3 +34,6 @@ if os.name != "posix":
         f"Detected unsupported operating system: {sys.platform}."
         "Please be aware, that SMAC might not run on this system."
     )
+
+
+__all__ = ["Config", "BlackBoxFacade", "HyperparameterOptimizationFacade"]

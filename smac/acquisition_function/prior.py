@@ -4,7 +4,7 @@ from typing import Any, List
 import numpy as np
 from ConfigSpace.hyperparameters import FloatHyperparameter
 
-from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition_function import AbstractAcquisitionFunction
 
 
 class PriorAcquisitionFunction(AbstractAcquisitionFunction):

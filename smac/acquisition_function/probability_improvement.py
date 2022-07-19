@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition_function import AbstractAcquisitionFunction
 
 
 class PI(AbstractAcquisitionFunction):

@@ -3,28 +3,20 @@ from __future__ import annotations
 import abc
 from typing import Dict, List, Mapping, Optional, Tuple
 
-import logging
-
 import numpy as np
 
 from smac import constants
 from smac.config import Config
 from smac.configspace import convert_configurations_to_array
 from smac.model.base_imputor import BaseImputor
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.multi_objective.utils import normalize_costs
 from smac.runhistory.runhistory import RunHistory, RunKey, RunValue
 from smac.runner import StatusType
 from smac.utils.logging import get_logger
 
-__author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 logger = get_logger(__name__)
@@ -103,31 +95,27 @@ class AbstractRunhistoryTransformer(object):
         scale_percentage: int = 5,
         seed: int = 0,
     ) -> None:
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
-
         # General arguments
         self.config = config
         self.rng = np.random.RandomState(seed)
         self.n_params = n_params
 
         self.scale_percentage = scale_percentage
-        self.num_obj = config.count_objectives()
+        self.n_objectives = config.count_objectives()
 
         # Configuration
         self.impute_censored_data = impute_censored_data
         self.algorithm_walltime_limit = self.config.algorithm_walltime_limit  # type: ignore[attr-defined] # noqa F821
 
         if impute_state is None and impute_censored_data:
-            raise TypeError("impute_state not given")
+            raise TypeError("No `impute_state` is given.")
 
         if impute_state is None:
-            # please mypy
             self.impute_state = []  # type: List[StatusType]
         else:
             self.impute_state = impute_state
 
         if consider_for_higher_budgets_state is None:
-            # please mypy
             self.consider_for_higher_budgets_state = []  # type: List[StatusType]
         else:
             self.consider_for_higher_budgets_state = consider_for_higher_budgets_state
@@ -136,10 +124,7 @@ class AbstractRunhistoryTransformer(object):
             raise TypeError("success_states not given")
 
         self.success_states = success_states
-
         self.instance_features = config.instance_features
-
-        logger.error("FIX ME: REMOVE RUN_OBJ; HOW TO HANDLE CENSORED DATA?")
 
         if self.instance_features is None:
             self.n_feats = 0
@@ -149,14 +134,14 @@ class AbstractRunhistoryTransformer(object):
         self.n_params = n_params
 
         # Sanity checks
-        if impute_censored_data and config.run_obj != "runtime":
-            # So far we don't know how to handle censored quality data
-            self.logger.critical("Cannot impute censored data when not " "optimizing runtime")
-            raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
+        # if impute_censored_data and config.run_obj != "runtime":
+        #    # So far we don't know how to handle censored quality data
+        #    logger.critical("Cannot impute censored data when not " "optimizing runtime")
+        #    raise NotImplementedError("Cannot impute censored data when not " "optimizing runtime")
 
         # Check imputer stuff
         if impute_censored_data and self.imputer is None:
-            self.logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
+            logger.critical("You want me to impute censored data, but " "I don't know how. imputer is None")
             raise ValueError("impute_censored data, but no imputer given")
         elif impute_censored_data and not isinstance(self.imputer, BaseImputor):
             raise ValueError(
@@ -164,9 +149,9 @@ class AbstractRunhistoryTransformer(object):
             )
 
         # Learned statistics
-        self.min_y = np.array([np.NaN] * self.num_obj)
-        self.max_y = np.array([np.NaN] * self.num_obj)
-        self.perc = np.array([np.NaN] * self.num_obj)
+        self.min_y = np.array([np.NaN] * self.n_objectives)
+        self.max_y = np.array([np.NaN] * self.n_objectives)
+        self.perc = np.array([np.NaN] * self.n_objectives)
 
     def set_imputer(self, imputer: BaseImputor | None) -> None:
         self.imputer = imputer
@@ -302,7 +287,7 @@ class AbstractRunhistoryTransformer(object):
         Y: numpy.ndarray
             cost values
         """
-        self.logger.debug("Transform runhistory into X,y format")
+        logger.debug("Transform runhistory into X,y format")
 
         s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory, store_statistics=True)
@@ -341,7 +326,7 @@ class AbstractRunhistoryTransformer(object):
                 }
 
             if len(c_run_dict) == 0:
-                self.logger.debug("No censored data found, skip imputation")
+                logger.debug("No censored data found, skip imputation")
                 # If we do not impute, we also return TIMEOUT data
                 X = np.vstack((X, tX))
                 Y = np.concatenate((Y, tY))
@@ -363,7 +348,7 @@ class AbstractRunhistoryTransformer(object):
                     return_time_as_y=True,
                     store_statistics=False,
                 )
-                self.logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0]))
+                logger.debug("%d TIMEOUTS, %d CAPPED, %d SUCC" % (tX.shape[0], cen_X.shape[0], X.shape[0]))
                 cen_X = np.vstack((cen_X, tX))
                 cen_Y = np.concatenate((cen_Y, tY))
 
@@ -379,7 +364,7 @@ class AbstractRunhistoryTransformer(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
-        self.logger.debug("Converted %d observations" % (X.shape[0]))
+        logger.debug("Converted %d observations" % (X.shape[0]))
         return X, Y
 
     @abc.abstractmethod
@@ -419,7 +404,7 @@ class AbstractRunhistoryTransformer(object):
         cen: numpy.ndarray
             vector of bools indicating whether the y-value is censored
         """
-        self.logger.warning("This function is not tested and might not work as expected!")
+        logger.warning("This function is not tested and might not work as expected!")
         X = []
         y = []
         cen = []
@@ -487,7 +472,7 @@ class RunhistoryTransformer(AbstractRunhistoryTransformer):
                 X[row, :] = conf_vector
             # run_array[row, -1] = instances[row]
 
-            if self.num_obj > 1:
+            if self.n_objectives > 1:
                 assert self.multi_objective_algorithm is not None
 
                 # Let's normalize y here
@@ -543,7 +528,7 @@ class RunhistoryLogTransformer(RunhistoryTransformer):
         """
         # ensure that minimal value is larger than 0
         if np.any(values <= 0):
-            self.logger.warning(
+            logger.warning(
                 "Got cost of smaller/equal to 0. Replace by %f since we use"
                 " log cost." % constants.MINIMAL_COST_FOR_LOG
             )
@@ -711,7 +696,7 @@ class RunHistory2EPM4EIPS(AbstractRunhistoryTransformer):
             else:
                 X[row, :] = conf_vector
 
-            if self.num_obj > 1:
+            if self.n_objectives > 1:
                 assert self.multi_objective_algorithm is not None
 
                 # Let's normalize y here

@@ -1,6 +1,6 @@
 import numpy as np
 
-from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition_function import AbstractAcquisitionFunction
 
 
 class LCB(AbstractAcquisitionFunction):

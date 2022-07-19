@@ -103,8 +103,6 @@ class Intensifier(AbstractRacer):
         runtime algorithm_walltime_limit of TA runs
     deterministic: bool
         whether the TA is deterministic or not
-    run_obj_time: bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     race_against: Configuration
         if incumbent changes race this configuration always against new incumbent;
         can sometimes prevent over-tuning
@@ -119,8 +117,6 @@ class Intensifier(AbstractRacer):
     min_config_calls : int
         Minimum number of run per config (summed over all calls to
         intensify).
-    adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
     min_challenger: int
         minimal number of challengers to be considered
         (even if time_bound is exhausted earlier)
@@ -132,13 +128,11 @@ class Intensifier(AbstractRacer):
         instance_specifics: Mapping[str, str] = None,
         algorithm_walltime_limit: float | None = None,
         deterministic: bool = False,
-        run_obj_time: bool = True,
         race_against: Configuration | None = None,
         run_limit: int = MAXINT,
         use_ta_time_bound: bool = False,
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 2,
         seed: int = 0,
     ):
@@ -147,10 +141,8 @@ class Intensifier(AbstractRacer):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
             min_config_calls=min_config_calls,
             max_config_calls=max_config_calls,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             seed=seed,
         )
@@ -361,25 +353,11 @@ class Intensifier(AbstractRacer):
                     incumbent=incumbent, challenger=challenger, runhistory=runhistory, N=self.N
                 )
 
-            is_there_time_due_to_adaptive_cap = self._is_there_time_due_to_adaptive_cap(
-                challenger=challenger,
-                runhistory=runhistory,
-            )
-
             # If there is no more configs to run in this iteration, or no more
             # time to do so, change the current stage base on how the current
             # challenger performs as compared to the incumbent. This is done
             # via _process_racer_results
-            if len(self.to_run) == 0 or not is_there_time_due_to_adaptive_cap:
-
-                # If no more time, stage transition is a must
-                if not is_there_time_due_to_adaptive_cap:
-                    # Since the challenger fails to outperform the incumbent due to adaptive capping,
-                    # we discard all the forthcoming runs.
-                    self.to_run = []
-                    self.stage = IntensifierStage.RUN_INCUMBENT
-                    logger.debug("Stop challenger itensification due to adaptive capping.")
-
+            if len(self.to_run) == 0:
                 # Nevertheless, if there are no more instances to run,
                 # we might need to comply with line 17 and keep running the
                 # same challenger. In this case, if there is not enough information
@@ -484,7 +462,7 @@ class Intensifier(AbstractRacer):
         """
         if self.stage == IntensifierStage.PROCESS_FIRST_CONFIG_RUN:
             if incumbent is None:
-                logger.info("First run, no incumbent provided;" " challenger is assumed to be the incumbent")
+                logger.info("First run and no incumbent provided. Challenger is assumed to be the incumbent.")
                 incumbent = run_info.config
 
         if self.stage in [
@@ -498,23 +476,16 @@ class Intensifier(AbstractRacer):
                 runhistory=runhistory,
                 log_traj=log_traj,
             )
-
         else:
             self.run_id += 1
             self.num_chall_run += 1
-            if result.status == StatusType.CAPPED:
-                # move on to the next iteration
-                logger.debug("Challenger itensification timed out due " "to adaptive capping.")
-                self.stage = IntensifierStage.RUN_INCUMBENT
-            else:
-
-                self._ta_time += result.time
-                incumbent = self._process_racer_results(
-                    challenger=run_info.config,
-                    incumbent=incumbent,
-                    runhistory=runhistory,
-                    log_traj=log_traj,
-                )
+            self._ta_time += result.time
+            incumbent = self._process_racer_results(
+                challenger=run_info.config,
+                incumbent=incumbent,
+                runhistory=runhistory,
+                log_traj=log_traj,
+            )
 
         self.elapsed_time += result.endtime - result.starttime
         # check if 1 intensification run is complete - line 18
@@ -714,50 +685,13 @@ class Intensifier(AbstractRacer):
 
         # Run challenger on all <instance, seed> to run
         instance, seed, _ = self.to_run.pop()
-
         algorithm_walltime_limit = self.algorithm_walltime_limit
-        if self.run_obj_time:
-            algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
-                challenger=challenger, runhistory=runhistory, inc_sum_cost=self.inc_sum_cost
-            )
 
         logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
-
         logger.debug("Add run of challenger")
 
         # Line 12
         return incumbent, instance, seed, algorithm_walltime_limit
-
-    def _is_there_time_due_to_adaptive_cap(
-        self,
-        challenger: Configuration,
-        runhistory: RunHistory,
-    ) -> bool:
-        """A check to see if there is no more time for a challenger given the fact, that we are
-        optimizing time and the incumbent looks more promising Line 18.
-
-        Parameters
-        ----------
-        challenger : Configuration
-            Configuration which challenges incumbent
-        runhistory : RunHistory
-            Stores all runs we ran so far
-        Returns
-        -------
-        bool:
-            whether or not there is more time for a challenger run
-        """
-        # If time is not objective, then there is always time!
-        if not self.run_obj_time:
-            return True
-
-        algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
-            challenger=challenger, runhistory=runhistory, inc_sum_cost=self.inc_sum_cost
-        )
-        if algorithm_walltime_limit is not None and algorithm_walltime_limit <= 0:
-            return False
-        else:
-            return True
 
     def _process_racer_results(
         self,

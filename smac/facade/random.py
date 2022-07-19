@@ -5,7 +5,10 @@ import logging
 import dask.distributed  # type: ignore
 import numpy as np
 
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer, RandomSearch
+from smac.acquisition_optimizer.maximizer import (
+    AbstractAcquisitionOptimizer,
+    RandomSearch,
+)
 from smac.cli.scenario import Scenario
 from smac.configspace import Configuration
 from smac.facade.algorithm_configuration import AlgorithmConfigurationFacade

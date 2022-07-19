@@ -22,7 +22,7 @@ from ConfigSpace.hyperparameters import (
     UniformIntegerHyperparameter,
 )
 
-from smac.acquisition import EI, AbstractAcquisitionFunction
+from smac.acquisition_function import EI, AbstractAcquisitionFunction
 from smac.configspace import Configuration, ConfigurationSpace
 from smac.model.base_model import BaseModel
 from smac.model.gaussian_process.augmented import GloballyAugmentedLocalGaussianProcess

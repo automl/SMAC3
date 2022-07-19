@@ -63,16 +63,12 @@ class AbstractRacer(object):
         runtime algorithm_walltime_limit of TA runs
     deterministic: bool
         whether the TA is deterministic or not
-    run_obj_time: bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     min_config_calls : int
         Minimum number of run per config (summed over all calls to
         intensify).
     max_config_calls : int
         Maximum number of runs per config (summed over all calls to
         intensifiy).
-    adaptive_capping_slackfactor: float
-        slack factor of adpative capping (factor * adpative algorithm_walltime_limit)
     min_challenger: int
         minimal number of challengers to be considered (even if time_bound is exhausted earlier)
     """
@@ -83,10 +79,8 @@ class AbstractRacer(object):
         instance_specifics: Optional[Mapping[str, str]] = None,
         algorithm_walltime_limit: Optional[float] = None,
         deterministic: bool = False,
-        run_obj_time: bool = False,  # TODO: Remove this
         min_config_calls: int = 1,
         max_config_calls: int = 2000,
-        adaptive_capping_slackfactor: float = 1.2,
         min_challenger: int = 1,
         seed: int = 0,
     ):
@@ -97,11 +91,9 @@ class AbstractRacer(object):
         # scenario info
         self.algorithm_walltime_limit = algorithm_walltime_limit
         self.deterministic = deterministic
-        self.run_obj_time = run_obj_time
 
         self.min_config_calls = min_config_calls
         self.max_config_calls = max_config_calls
-        self.adaptive_capping_slackfactor = adaptive_capping_slackfactor
         self.min_challenger = min_challenger
 
         # instances
@@ -267,52 +259,6 @@ class AbstractRacer(object):
 
         logger.debug("No valid challenger was generated!")
         return None
-
-    def _adapt_algorithm_walltime_limit(
-        self, challenger: Configuration, runhistory: RunHistory, inc_sum_cost: float
-    ) -> float:
-        """Adaptive capping: Compute algorithm_walltime_limit based on time so far used for incumbent and reduce
-        algorithm_walltime_limit for next run of challenger accordingly.
-
-        !Only applicable if self.run_obj_time
-
-        !runs on incumbent should be superset of the runs performed for the
-         challenger
-
-        Parameters
-        ----------
-        challenger : Configuration
-            Configuration which challenges incumbent
-        runhistory : smac.runhistory.runhistory.RunHistory
-            Stores all runs we ran so far
-        inc_sum_cost: float
-            Sum of runtimes of all incumbent runs
-
-        Returns
-        -------
-        algorithm_walltime_limit: float
-            Adapted algorithm_walltime_limit
-        """
-        if not self.run_obj_time:
-            raise ValueError("This method only works when the run objective is time")
-
-        curr_algorithm_walltime_limit = (
-            self.algorithm_walltime_limit if self.algorithm_walltime_limit is not None else np.inf
-        )
-
-        # cost used by challenger for going over all its runs
-        # should be subset of runs of incumbent (not checked for efficiency
-        # reasons)
-        chall_inst_seeds = runhistory.get_runs_for_config(challenger, only_max_observed_budget=True)
-        chal_sum_cost = runhistory.sum_cost(
-            config=challenger, instance_seed_budget_keys=chall_inst_seeds, normalize=True
-        )
-        assert type(chal_sum_cost) == float
-
-        algorithm_walltime_limit = min(
-            curr_algorithm_walltime_limit, inc_sum_cost * self.adaptive_capping_slackfactor - chal_sum_cost
-        )
-        return algorithm_walltime_limit
 
     def _compare_configs(
         self,

@@ -65,6 +65,7 @@ num_trees => n_trees
 output_dir => output_directory
 ta_run_limit/ta-run-limit/runcount-limit/runcount_limit => n_runs
 cs/configspace/config_space => configspace
+max_config_fracs => max_config_ratio
 
 AbstractTAFunc => AbstractAlgorithmExecuter
 ExecuteTAFuncArray/ExecuteTAFuncDict => AlgorithmExecuter
@@ -75,6 +76,7 @@ par_factor => REMOVED (depending on run_obj == runtime)
 always_race_against => race_against
 runhistory2epm => runhistory_transformer
 Runhistory2EPM => RunhistoryTransformer
+num_obj => n_objectives (use `count_objectives` from the config object)
 
 ## Initial design
 n_configs_x_params => n_configs_per_hyperparameter

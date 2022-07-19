@@ -19,13 +19,16 @@ class StatusType(Enum):
     ABORT = 4
     MEMOUT = 5
     CAPPED = 6
+
     # Only relevant for SH/HB. Run might have a results, but should not be considered further.
     # By default, these runs will always be considered for building the model. Potential use cases:
     # 1) The run has converged and does not benefit from a higher budget
     # 2) The run has exhausted given resources and will not benefit from higher budgets
     DONOTADVANCE = 7
+
     # Gracefully exit SMAC - wait for currently executed runs to finish
     STOP = 8
+
     # In case a job was submited, but it has not finished
     RUNNING = 9
 

@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.stats import norm
 
-from smac.acquisition import AbstractAcquisitionFunction
+from smac.acquisition_function import AbstractAcquisitionFunction
 
 
 class EI(AbstractAcquisitionFunction):
@@ -12,7 +12,7 @@ class EI(AbstractAcquisitionFunction):
     with :math:`f(X^+)` as the best location.
     """
 
-    # TODO rename par (exploration / exploitation parameter)
+    # TODO: Rename par (exploration / exploitation parameter)
     def __init__(self, par: float = 0.0, log: bool = False):
         """Constructor.
 

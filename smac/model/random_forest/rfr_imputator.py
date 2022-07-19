@@ -8,30 +8,31 @@ from scipy.stats import truncnorm
 
 import smac.model.base_imputor
 from smac.model.base_model import BaseModel
+from smac.utils.logging import get_logger
 
-__author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
-__version__ = "0.0.1"
+
+
+logger = get_logger(__name__)
 
 
 class RFRImputator(smac.model.base_imputor.BaseImputor):
     """Imputor using pyrfr's Random Forest regressor.
 
-    **Note:** Sets var_threshold as the lower bound on the variance for the
-    predictions of the random forest
-
+    Note
+    ----
+    Sets var_threshold as the lower bound on the variance for the
+    predictions of the random forest.
 
     Parameters
     ----------
     rng : np.random.RandomState
         Will be used to draw a seed (currently not used)
-    cutoff : float
-        Cutoff value for this scenario (upper runnning time limit)
+    algorithm_walltime_limit : float
+        algorithm_walltime_limit value for this scenario (upper runnning time limit)
     threshold : float
-        Highest possible values (e.g. cutoff * parX).
+        Highest possible values (e.g. algorithm_walltime_limit * parX).
     model : BaseEPM
         Predictive model (i.e. RandomForestWithInstances)
     change_threshold : float
@@ -39,13 +40,11 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
     max_iter : int
         Maximum number of imputation iterations.
 
-
     Attributes
     ----------
-    logger : logging.Logger
     max_iter : int
     change_threshold : float
-    cutoff : float
+    algorithm_walltime_limit : float
     threshold : float
     seed : int
         Created by drawing random int from rng
@@ -56,21 +55,19 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
 
     def __init__(
         self,
-        rng: np.random.RandomState,
-        cutoff: float,
+        algorithm_walltime_limit: float,
         threshold: float,
         model: BaseModel,
         change_threshold: float = 0.01,
         max_iter: int = 2,
+        seed: int = 0,
     ):
         super(RFRImputator, self).__init__()
-        self.logger = logging.getLogger(self.__module__ + "." + self.__class__.__name__)
         self.max_iter = max_iter
         self.change_threshold = change_threshold
-        self.cutoff = cutoff
+        self.algorithm_walltime_limit = algorithm_walltime_limit
         self.threshold = threshold
-        self.seed = rng.randint(low=0, high=1000)
-
+        self.seed = np.random.RandomState(seed)
         self.model = model
 
         # Never use a lower variance than this
@@ -102,7 +99,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
             Same shape as censored_y [N, 1]
         """
         if censored_X.shape[0] == 0:
-            self.logger.critical("Nothing to impute, return None")
+            logger.critical("Nothing to impute. None is returned.")
             return None
 
         censored_y = censored_y.flatten()
@@ -111,7 +108,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
         # first learn model without censored data
         self.model.train(uncensored_X, uncensored_y)
 
-        self.logger.debug("Going to impute %d y-values with %s" % (censored_X.shape[0], str(self.model)))
+        logger.debug("Going to impute %d y-values with %s" % (censored_X.shape[0], str(self.model)))
 
         imputed_y = None  # define this, if imputation fails
 
@@ -122,7 +119,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
         change = 0
 
         while True:
-            self.logger.debug("Iteration %d of %d" % (it, self.max_iter))
+            logger.debug("Iteration %d of %d" % (it, self.max_iter))
 
             # predict censored y values
             y_mean, y_var = self.model.predict(censored_X)
@@ -153,7 +150,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
                 # Replace all nans with maximum of predicted perf and censored value
                 # this happens if the prediction is far smaller than the
                 # censored data point
-                self.logger.debug("Going to replace %d nan-value(s) with " "max(captime, predicted mean)" % n_nans)
+                logger.debug("Going to replace %d nan-value(s) with " "max(captime, predicted mean)" % n_nans)
                 imputed_y[nans] = np.max([censored_y[nans], y_mean[nans]], axis=0)
 
             if it > 1:
@@ -167,7 +164,7 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
             # should probably never happen
             imputed_y[imputed_y >= self.threshold] = self.threshold
 
-            self.logger.debug("Change: %f" % change)
+            logger.debug("Change: %f" % change)
 
             X = np.concatenate((uncensored_X, censored_X))
             y = np.concatenate((uncensored_y, imputed_y))
@@ -181,12 +178,12 @@ class RFRImputator(smac.model.base_imputor.BaseImputor):
             if it > self.max_iter:
                 break
 
-        self.logger.debug("Imputation used %d/%d iterations, last_change=%f" % (it - 1, self.max_iter, change))
+        logger.debug("Imputation used %d/%d iterations, last_change=%f" % (it - 1, self.max_iter, change))
 
-        # replace all y > cutoff with PAR10 values (i.e., threshold)
+        # replace all y > algorithm_walltime_limit with PAR10 values (i.e., threshold)
         imputed_y = np.array(imputed_y, dtype=float)
-        imputed_y[imputed_y >= self.cutoff] = self.threshold
+        imputed_y[imputed_y >= self.algorithm_walltime_limit] = self.threshold
 
         if not np.isfinite(imputed_y).all():
-            self.logger.critical("Imputed values are not finite, %s" % str(imputed_y))
+            logger.critical("Imputed values are not finite, %s" % str(imputed_y))
         return np.reshape(imputed_y, [imputed_y.shape[0], 1])

@@ -42,8 +42,6 @@ class ParallelScheduler(AbstractRacer):
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : Optional[str]
@@ -51,8 +49,6 @@ class ParallelScheduler(AbstractRacer):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
@@ -76,10 +72,8 @@ class ParallelScheduler(AbstractRacer):
         max_budget: Optional[float] = None,
         eta: float = 3,
         num_initial_challengers: Optional[int] = None,
-        run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: Optional[str] = "shuffle_once",
-        adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
@@ -91,8 +85,6 @@ class ParallelScheduler(AbstractRacer):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             seed=seed,
         )

@@ -10,7 +10,7 @@ from ConfigSpace.hyperparameters import (
 )
 from ConfigSpace.util import deactivate_inactive_hyperparameters
 
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 
 __author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"

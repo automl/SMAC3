@@ -6,8 +6,8 @@ from itertools import chain
 import numpy as np
 from ConfigSpace.hyperparameters import NumericalHyperparameter
 
-from smac.acquisition import EI, TS, AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
+from smac.acquisition_function import EI, TS, AbstractAcquisitionFunction
+from smac.acquisition_optimizer.maximizer import AbstractAcquisitionOptimizer
 from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario

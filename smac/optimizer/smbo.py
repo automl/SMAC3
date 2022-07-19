@@ -1,21 +1,18 @@
-from typing import Callable, Dict, List, Optional, Type, Union
+from typing import Callable, Dict, List, Optional, Type
 
-import logging
-import os
 import time
 
 import numpy as np
 
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.callbacks.callbacks import IncorporateRunResultCallback
 from smac.chooser.configuration_chooser import ConfigurationChooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
-from smac.cli.traj_logging import TrajLogger
 from smac.config import Config
 from smac.configspace import Configuration
 from smac.constants import MAXINT
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.model.base_model import BaseModel
 from smac.optimizer import pSMAC
@@ -197,6 +194,7 @@ class SMBO:
 
         # Main BO loop
         while True:
+            # TODO: Fix shared model
             if False:
                 if self.config.shared_model:  # type: ignore[attr-defined] # noqa F821
                     pSMAC.read(
@@ -205,7 +203,6 @@ class SMBO:
                         configuration_space=self.config_space,
                         logger=logger,
                     )
-            logger.error("FIX ME: shared model?")
 
             start_time = time.time()
 

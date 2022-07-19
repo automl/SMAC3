@@ -5,8 +5,8 @@ import inspect
 import numpy as np
 from ConfigSpace import ConfigurationSpace
 
-from smac.acquisition import EI, AbstractAcquisitionFunction
-from smac.acquisition.maximizer import (
+from smac.acquisition_function import EI, AbstractAcquisitionFunction
+from smac.acquisition_optimizer.maximizer import (
     AbstractAcquisitionOptimizer,
     LocalAndSortedRandomSearch,
 )

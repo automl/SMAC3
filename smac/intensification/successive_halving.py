@@ -81,8 +81,6 @@ class _SuccessiveHalving(AbstractRacer):
         Used internally when HB uses SH as a subrouting
     num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : Optional[str]
@@ -91,9 +89,6 @@ class _SuccessiveHalving(AbstractRacer):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
@@ -123,10 +118,8 @@ class _SuccessiveHalving(AbstractRacer):
         _all_budgets: Optional[np.ndarray] = None,
         _n_configs_in_stage: Optional[np.ndarray] = None,
         num_initial_challengers: Optional[int] = None,
-        run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: Optional[str] = "shuffle_once",
-        adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
@@ -138,8 +131,6 @@ class _SuccessiveHalving(AbstractRacer):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             seed=seed,
         )
@@ -195,12 +186,6 @@ class _SuccessiveHalving(AbstractRacer):
             _all_budgets=_all_budgets,
             _n_configs_in_stage=_n_configs_in_stage,
         )
-
-        # adaptive capping
-        if self.instance_as_budget and self.instance_order != "shuffle" and self.run_obj_time:
-            self.adaptive_capping = True
-        else:
-            self.adaptive_capping = False
 
         # challengers can be repeated only if optimizing across multiple seeds or changing instance orders every run
         # (this does not include having multiple instances)
@@ -278,7 +263,7 @@ class _SuccessiveHalving(AbstractRacer):
 
         # - if only 1 instance was provided & quality objective, then use algorithm_walltime_limit as budget
         # - else, use instances as budget
-        if not self.run_obj_time and len(self.inst_seed_pairs) <= 1:
+        if len(self.inst_seed_pairs) <= 1:
             # budget with algorithm_walltime_limit
             if initial_budget is None or max_budget is None:
                 raise ValueError(
@@ -291,9 +276,7 @@ class _SuccessiveHalving(AbstractRacer):
             self.instance_as_budget = False
 
         else:
-            # budget with instances
-            if self.run_obj_time and len(self.inst_seed_pairs) <= 1:
-                self.logger.warning("Successive Halving has objective 'runtime' but only 1 instance-seed pair.")
+            # Budget with instances
             self.initial_budget = int(initial_budget) if initial_budget else 1
             self.max_budget = int(max_budget) if max_budget else len(self.inst_seed_pairs)
             self.instance_as_budget = True
@@ -645,15 +628,6 @@ class _SuccessiveHalving(AbstractRacer):
 
         # selecting algorithm_walltime_limit if running adaptive capping
         algorithm_walltime_limit = self.algorithm_walltime_limit
-        if self.run_obj_time:
-            algorithm_walltime_limit = self._adapt_algorithm_walltime_limit(
-                challenger=challenger, runhistory=runhistory, inc_sum_cost=inc_sum_cost
-            )
-            if algorithm_walltime_limit is not None and algorithm_walltime_limit <= 0:
-                # ran out of time to validate challenger
-                self.logger.debug("Stop challenger intensification due to adaptive capping.")
-                self.curr_inst_idx[challenger] = np.inf
-
         self.logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
 
         # For testing purposes, this attribute highlights whether a
@@ -755,6 +729,7 @@ class _SuccessiveHalving(AbstractRacer):
 
             if next_stage:
                 # update stats for the prev iteration
+                assert self.stats
                 self.stats.update_average_configs_per_intensify(n_configs=self._chall_indx)
 
                 # reset stats for the new iteration
@@ -806,6 +781,8 @@ class _SuccessiveHalving(AbstractRacer):
         Optional[Configuration]
             incumbent configuration
         """
+        assert self.stats
+
         if self.instance_as_budget:
             new_incumbent = super()._compare_configs(incumbent, challenger, runhistory, log_traj)
             # if compare config returned none, then it is undecided. So return old incumbent
@@ -900,6 +877,7 @@ class _SuccessiveHalving(AbstractRacer):
                 chall_cost,
                 inc_run.budget,
             )
+
             if log_traj and self.stats.incumbent_changed == 0:
                 assert self.stats
                 self.stats.add_incumbent(
@@ -936,6 +914,7 @@ class _SuccessiveHalving(AbstractRacer):
         Optional[Configuration]
             incumbent configuration
         """
+        assert self.stats
         curr_budget = self.all_budgets[self.stage]
 
         # compare challenger and incumbent based on cost
@@ -964,7 +943,6 @@ class _SuccessiveHalving(AbstractRacer):
                     chall_cost,
                 )
                 if log_traj and self.stats.incumbent_changed == 0:
-                    assert self.stats
                     self.stats.add_incumbent(cost=inc_cost, incumbent=incumbent, budget=curr_budget)
                 new_incumbent = incumbent
         else:
@@ -1153,8 +1131,6 @@ class SuccessiveHalving(ParallelScheduler):
         'halving' factor after each iteration in a successive halving run. Defaults to 3
     num_initial_challengers : Optional[int]
         number of challengers to consider for the initial budget. If None, calculated internally
-    run_obj_time : bool
-        whether the run objective is runtime or not (if true, apply adaptive capping)
     n_seeds : Optional[int]
         Number of seeds to use, if TA is not deterministic. Defaults to None, i.e., seed is set as 0
     instance_order : Optional[str]
@@ -1162,8 +1138,6 @@ class SuccessiveHalving(ParallelScheduler):
         * None - use as is given by the user
         * shuffle_once - shuffle once and use across all SH run (default)
         * shuffle - shuffle before every SH run
-    adaptive_capping_slackfactor : float
-        slack factor of adpative capping (factor * adaptive algorithm_walltime_limit)
     inst_seed_pairs : List[Tuple[str, int]], optional
         Do not set this argument, it will only be used by hyperband!
     min_challenger: int
@@ -1187,10 +1161,8 @@ class SuccessiveHalving(ParallelScheduler):
         max_budget: Optional[float] = None,
         eta: float = 3,
         num_initial_challengers: Optional[int] = None,
-        run_obj_time: bool = True,
         n_seeds: Optional[int] = None,
         instance_order: Optional[str] = "shuffle_once",
-        adaptive_capping_slackfactor: float = 1.2,
         inst_seed_pairs: Optional[List[Tuple[str, int]]] = None,
         min_challenger: int = 1,
         incumbent_selection: str = "highest_executed_budget",
@@ -1202,8 +1174,6 @@ class SuccessiveHalving(ParallelScheduler):
             instance_specifics=instance_specifics,
             algorithm_walltime_limit=algorithm_walltime_limit,
             deterministic=deterministic,
-            run_obj_time=run_obj_time,
-            adaptive_capping_slackfactor=adaptive_capping_slackfactor,
             min_challenger=min_challenger,
             seed=seed,
         )
@@ -1281,10 +1251,8 @@ class SuccessiveHalving(ParallelScheduler):
             max_budget=self.max_budget,
             eta=self.eta,
             num_initial_challengers=self.num_initial_challengers,
-            run_obj_time=self.run_obj_time,
             n_seeds=self.n_seeds,
             instance_order=self.instance_order,
-            adaptive_capping_slackfactor=self.adaptive_capping_slackfactor,
             inst_seed_pairs=self.inst_seed_pairs,
             min_challenger=self.min_challenger,
             incumbent_selection=self.incumbent_selection,

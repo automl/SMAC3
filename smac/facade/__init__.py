@@ -3,25 +3,21 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Callable
 
-import dask
 import joblib
 import numpy as np
-from matplotlib.style import available
 
-from smac.acquisition import AbstractAcquisitionFunction
-from smac.acquisition.maximizer import AbstractAcquisitionOptimizer
+from smac.acquisition_function import AbstractAcquisitionFunction
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.chooser.random_chooser import RandomChooser
 from smac.config import Config
 from smac.configspace import Configuration
-from smac.initial_design.initial_design import InitialDesign
+from smac.initial_design import InitialDesign
 from smac.intensification.abstract_racer import AbstractRacer
 from smac.model.base_imputor import BaseImputor
 from smac.model.base_model import BaseModel
 from smac.model.random_forest.rf_with_instances import RandomForestWithInstances
 from smac.model.random_forest.rfr_imputator import RFRImputator
-from smac.multi_objective.abstract_multi_objective_algorithm import (
-    AbstractMultiObjectiveAlgorithm,
-)
+from smac.multi_objective import AbstractMultiObjectiveAlgorithm
 from smac.optimizer.smbo import SMBO
 from smac.runhistory.runhistory import RunHistory
 from smac.runhistory.runhistory_transformer import RunhistoryTransformer
@@ -57,7 +53,7 @@ class Facade:
             acquisition_function = self.get_acquisition_function(config)
 
         if acquisition_optimizer is None:
-            acquisition_optimizer = self.get_acquisition_optimizer(config, acquisition_function)
+            acquisition_optimizer = self.get_acquisition_optimizer(config)
 
         if initial_design is None:
             initial_design = self.get_initial_design(config)
@@ -120,9 +116,6 @@ class Facade:
         self.stats = stats
         self.seed = config.seed
 
-        # We have to validate if the object compositions are correct and actually make sense
-        self._validate()
-
         # We have to update our meta data (basically arguments of the components)
         self.config._set_meta(self._get_meta())
 
@@ -131,11 +124,12 @@ class Facade:
         self.intensifier.set_stats(self.stats)
         self.runhistory_transformer.set_multi_objective_algorithm(self.multi_objective_algorithm)
         self.runhistory_transformer.set_imputer(self._get_imputer())
+        self.acquisition_function.set_model(self.model)
+        self.acquisition_optimizer.set_acquisition_function(self.acquisition_function)
         # TODO: self.runhistory_transformer.set_success_states etc. for different intensifier?
 
-        # Unfortunately, we can't use the update method
-        # here as update might incorporate increasing steps or else
-        self.acquisition_function.set_model(self.model)
+        # We have to validate if the object compositions are correct and actually make sense
+        self._validate()
 
         # Here we actually check whether the run should be continued or not.
         # More precisely, we update our stats and runhistory object if all kwargs
@@ -232,21 +226,22 @@ class Facade:
 
     def _get_imputer(self) -> BaseImputor | None:
         assert self.model is not None
+        assert self.config
 
-        logger.error("FIX ME: HOW TO TRANSFORM Y?")
-        return None
+        # TODO: Can anyone tell me what the `par_factor` does?
+        par_factor = 10.0
 
         if isinstance(self.model, RandomForestWithInstances):
-            if self.log_y:
-                cutoff = np.log(np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)]))
-                threshold = cutoff + np.log(self.config.par_factor)
+            if self.model.log_y:
+                algorithm_walltime_limit = np.log(np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)]))
+                threshold = algorithm_walltime_limit + np.log(par_factor)
             else:
-                cutoff = np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)])
-                threshold = cutoff * self.config.par_factor
+                algorithm_walltime_limit = np.nanmin([np.inf, np.float_(self.config.algorithm_walltime_limit)])
+                threshold = algorithm_walltime_limit * par_factor
 
             return RFRImputator(
                 model=self.model,
-                algorithm_walltime_limit=self.config.algorithm_walltime_limit,
+                algorithm_walltime_limit=algorithm_walltime_limit,
                 max_iter=2,
                 threshold=threshold,
                 change_threshold=0.01,
@@ -294,9 +289,7 @@ class Facade:
 
     @staticmethod
     @abstractmethod
-    def get_acquisition_optimizer(
-        config: Config, acquisition_function: AbstractAcquisitionFunction
-    ) -> AbstractAcquisitionOptimizer:
+    def get_acquisition_optimizer(config: Config) -> AbstractAcquisitionOptimizer:
         raise NotImplementedError
 
     @staticmethod
