@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
@@ -17,10 +18,10 @@ class IncorporateRunResultCallback:
 
     def __call__(
         self,
-        smbo: "SMBO",
+        smbo: SMBO,
         run_info: RunInfo,
         result: RunValue,
         time_left: float,
-    ) -> Optional[bool]:
+    ) -> bool | None:
         """Calls the callback."""
         ...

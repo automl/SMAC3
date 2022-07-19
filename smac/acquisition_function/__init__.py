@@ -8,7 +8,9 @@ import numpy as np
 from smac.configspace import Configuration
 from smac.configspace.util import convert_configurations_to_array
 from smac.model.base_model import BaseModel
-from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 __author__ = "Aaron Klein, Marius Lindauer"
 __copyright__ = "Copyright 2017, ML4AAD"
@@ -32,7 +34,6 @@ class AbstractAcquisitionFunction(metaclass=abc.ABCMeta):
     def __init__(self) -> None:
         self.model: BaseModel | None = None
         self._required_updates = ("model",)  # type: Tuple[str, ...]
-        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def set_model(self, model) -> None:
         self.model = model

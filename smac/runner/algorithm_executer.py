@@ -14,17 +14,21 @@ from smac.configspace import Configuration
 from smac.constants import MAXINT
 from smac.runner import StatusType
 from smac.runner.serial_runner import SerialRunner
-from smac.utils.logging import PickableLoggerAdapter
 from smac.utils.stats import Stats
+from smac.utils.logging import get_logger
 
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
+
+logger = get_logger(__name__)
 
 
 class AbstractAlgorithmExecuter(SerialRunner):
     """Baseclass to execute target algorithms which are python functions.
 
-    **Note:*** Do not use directly
+    Note
+    ----
+    Do not use this class directly.
 
     Parameters
     ----------
@@ -95,10 +99,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
         if memory_limit is not None:
             memory_limit = int(math.ceil(memory_limit))
         self.memory_limit = memory_limit
-
         self.use_pynisher = use_pynisher
-
-        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def run(
         self,
@@ -165,7 +166,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
                 #    )
 
             arguments = {
-                "logger": self.logger,
+                "logger": logger,
                 "wall_time_in_s": algorithm_walltime_limit,
                 "mem_in_mb": self.memory_limit,
             }
@@ -221,7 +222,7 @@ class AbstractAlgorithmExecuter(SerialRunner):
                 status = StatusType.SUCCESS
                 cost = result  # type: ignore
             except Exception as e:
-                self.logger.exception(e)
+                logger.exception(e)
                 status = StatusType.CRASHED
                 additional_run_info = {}
 

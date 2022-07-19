@@ -1,10 +1,10 @@
-from typing import Any, Dict, Iterable, List, Union
-
 import logging
 import logging.config
 from pathlib import Path
-
 import numpy as np
+import os
+from typing import Union, List, Iterable
+
 import yaml
 
 import smac
@@ -14,13 +14,41 @@ __license__ = "3-clause BSD"
 
 
 path = Path() / smac.__file__
-with (path.parent / "utils" / "logging.yml").open("r") as stream:
+with (path.parent / "logging.yml").open("r") as stream:
     config = yaml.load(stream, Loader=yaml.FullLoader)
+
+
+class CustomFormatter(logging.Formatter):
+    def format(self, record):
+        # We cut the pathname
+        if "pathname" in record.__dict__.keys():
+            # truncate the pathname
+            filename = os.path.basename(record.pathname)
+            if len(filename) > 20:
+                filename = "{}~{}".format(filename[:3], filename[-16:])
+            record.pathname = filename
+
+        return super(CustomFormatter, self).format(record)
+
 
 logging.config.dictConfig(config)
 
 
-class PickableLoggerAdapter(object):
+def get_logger(logger_name: str) -> logging.Logger:
+    logger = logging.getLogger(logger_name)
+
+    # TODO: Fix
+    # logger.propagate = False
+    # logger_handler = logging.StreamHandler()
+    # logger_handler.setFormatter(CustomFormatter())
+    # logger.handlers.clear()
+    # logger.addHandler(logger_handler)
+
+    return logger
+
+
+'''
+class PickableLoggerAdapter:
     def __init__(self, name: str) -> None:
         self.name = name
         self.logger = logging.getLogger(self.name)
@@ -79,8 +107,10 @@ class PickableLoggerAdapter(object):
     def isEnabledFor(self, level):  # type: ignore[no-untyped-def] # noqa F821
         """Check if logger is enabled for a given level."""
         return self.logger.isEnabledFor(level)
+'''
 
 
+# TODO: Move me
 def format_array(
     inputs: Union[str, int, float, np.ndarray, list], format_vals: bool = True
 ) -> Union[float, List[float]]:
@@ -116,13 +146,3 @@ def format_array(
         return formatted_list[0]
 
     return formatted_list
-
-
-# def get_logger(name: str) -> PickableLoggerAdapter:
-#    return PickableLoggerAdapter(name)
-
-
-def get_logger(logger_name: str) -> logging.Logger:
-    logger = logging.getLogger(logger_name)
-
-    return logger

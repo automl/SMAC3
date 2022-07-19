@@ -3,11 +3,11 @@ formatters:
   simple:
     # format: '\x1b[33;20m %(levelname)s: %(message)s (in %(name)s)\x1b[0m'
     # format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)'
-    format: '%(filename)s:%(lineno)d: %(message)s'
+    format: '[%(levelname)s][%(filename)s:%(lineno)d] %(message)s'
 handlers:
   console:
     class: logging.StreamHandler
-    level: INFO
+    level: DEBUG
     formatter: simple
     stream: ext://sys.stdout
 loggers:
@@ -16,5 +16,5 @@ loggers:
     handlers: [ console ]
     propagate: no
 root:
-  level: INFO
+  level: DEBUG
   handlers: [console]

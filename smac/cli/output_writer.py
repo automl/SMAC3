@@ -5,7 +5,9 @@ import shutil
 import warnings
 
 from smac.configspace import ConfigurationSpace, json, pcs_new
-from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.logging import get_logger
+
+logger = get_logger(__name__)
 
 if TYPE_CHECKING:
     from smac.cli.scenario import Scenario

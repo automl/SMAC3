@@ -183,7 +183,8 @@ class SMBO:
                 self.initial_design_configs = [self.config_space.get_default_configuration()]
         else:
             # Restoring state!
-            logger.info(f"State restored! Starting optimization with incumbent {self.incumbent}.")
+            assert self.incumbent is not None
+            logger.info(f"State restored! Starting optimization with incumbent {self.incumbent.get_dictionary()}.")
             self.stats.print()
 
     def run(self) -> Configuration:
@@ -299,7 +300,7 @@ class SMBO:
                     )
 
             logger.debug(
-                "Remaining budget: %f (wallclock), %f (ta costs), %f (target runs)"
+                "Remaining budget: %f (wallclock time), %f (target algorithm time), %f (target algorithm runs)"
                 % (
                     self.stats.get_remaing_time_budget(),
                     self.stats.get_remaining_target_algorithm_budget(),
@@ -309,9 +310,9 @@ class SMBO:
 
             if self.stats.is_budget_exhausted() or self._stop:
                 if self.stats.is_budget_exhausted():
-                    logger.debug("Exhausted configuration budget")
+                    logger.debug("Configuration budget is exhausted.")
                 else:
-                    logger.debug("Shutting down because a configuration or callback returned status STOP")
+                    logger.debug("Shutting down because a configuration or callback returned status STOP.")
 
                 # The budget can be exhausted  for 2 reasons: number of ta runs or
                 # time. If the number of ta runs is reached, but there is still budget,

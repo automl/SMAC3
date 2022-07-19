@@ -158,19 +158,20 @@ class Stats:
         if debug:
             log = logger.debug
 
-        log("---------------------STATISTICS---------------------")
-        log(f"Incumbent changed: {self.incumbent_changed - 1}")
-        log(f"Submitted target algorithm runs: {self.submitted} / {self.config.n_runs}")
-        log(f"Finished target algorithm runs: {self.finished} / {self.config.n_runs}")
-        log(f"Configurations: {self.n_configs}")
-        log("Used wallclock time: %.2f / %.2f sec " % (time.time() - self._start_time, self.config.walltime_limit))
         log(
-            "Used target algorithm runtime: %.2f / %.2f sec"
-            % (self.target_algorithm_walltime_used, self.config.cputime_limit)
+            "\n"
+            f"--- STATISTICS -------------------------------------\n"
+            f"--- Incumbent changed: {self.incumbent_changed - 1}\n"
+            f"--- Submitted target algorithm runs: {self.submitted} / {self.config.n_runs}\n"
+            f"--- Finished target algorithm runs: {self.finished} / {self.config.n_runs}\n"
+            f"--- Configurations: {self.n_configs}\n"
+            f"--- Used wallclock time: {round(time.time() - self._start_time, 2)} / {round(self.config.walltime_limit, 2)} sec\n"
+            f"--- Used target algorithm runtime: {round(self.target_algorithm_walltime_used, 2)} / {round(self.config.cputime_limit, 2)} sec\n"
+            f"----------------------------------------------------"
         )
 
-        logger.debug("Debug Statistics:")
         if self._n_calls_of_intensify > 0:
+            logger.debug("Debug Statistics:")
             logger.debug(
                 "Average Configurations per Intensify: %.2f"
                 % (self._n_configs_per_intensify / self._n_calls_of_intensify)
@@ -179,7 +180,6 @@ class Stats:
                 "Exponential Moving Average of Configurations per Intensify: %.2f"
                 % (self._ema_n_configs_per_intensifiy)
             )
-        log("----------------------------------------------------")
 
     def save(self) -> None:
         """Save all relevant attributes to json-dictionary."""

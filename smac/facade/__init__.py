@@ -268,7 +268,7 @@ class Facade:
 
             if incumbent is not None:
                 cost = self.runhistory.get_cost(incumbent)
-                logger.info(f"Final Incumbent: {incumbent}")
+                logger.info(f"Final Incumbent: {incumbent.get_dictionary()}")
                 logger.info(f"Estimated cost: {cost}")
 
         return incumbent

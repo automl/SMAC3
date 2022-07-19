@@ -6,14 +6,18 @@
         return value
     ```
 
-In that context, we also use the new operations:
-`list[int]`, `dict[int, int]`, etc.
-Please change if you still see the old style.
+    In that context, we also use the new operations:
+    `list[int]`, `dict[int, int]`, etc.
 
-- Remove `self.logger`. Create on top a global logger:
-logger = get_logger(__name__)
+    And in the parameters:
+    `smbo: "SMBO"` => `smbo: SMBO`
+    
+    Please change if you see the old style.
 
-- Remove `rng` from init and replace it with `seed: int = 0`
+- Remove `self.logger` in all classes. Create on top a global logger:
+logger = get_logger(__name__) (from smac.utils.logging import get_logger)
+
+- Remove `rng` from init and replace it with `seed: int = 0`. Create new `rng = np.random.RandomState(seed)` if needed.
 
 - Comments should start upper-case. For example: `# This is a comment`.
 If multiple sentences are used, use punctuation. For example: `# This is one sentence. This is another.`
@@ -25,6 +29,10 @@ upper-case.
     """
     First a general comment.
 
+    Note
+    ----
+    This could be a note here. Can also be a warning.
+
     Parameters
     ----------
     X : np.ndarray | None, defaults to None
@@ -32,26 +40,21 @@ upper-case.
 
     Returns
     -------
-    np.ndarray(N,1)
+    optional_a_name_here : np.ndarray(N,1)
         Acquisition function values wrt X.
     """
     ```
 
 - Everytime you see a variable you don't know, look it up and replace it with the variable provided
-in the `variable renaming`. If the variable is not listed below, add the variable and change it
+in the `variable renaming` below. If the variable is not listed below, add the variable and change it
 accordingly. Just make sure it is persistent.
 
 - If you find something with `run_obj == "runtime"` remove it. Since adaptive capping 
 is bounded to `runtime`, you can remove that too.
 
-- Please always check whether the docstrings are still correct. If not, correct them accordingly.
+- Please always check whether the docstrings are still correct. If not, correct them accordingly. Sometimes the ordering has changed.
 
-- Replace all copyrights/authors/license with the following:
-    ```
-    __copyright__ = "Copyright 2022, automl.org"
-    __license__ = "3-clause BSD"
-    ```
-
+- Get rid of `# type: ignore`.
 
 
 # Variable renaming
@@ -84,7 +87,7 @@ num_obj => n_objectives (use `count_objectives` from the config object)
 
 ## Initial design
 n_configs_x_params => n_configs_per_hyperparameter
-max_config_fracs => 
+max_config_fracs => max_config_ratio
 
 ## Algorithm Configuration
 feature_array => instance_features

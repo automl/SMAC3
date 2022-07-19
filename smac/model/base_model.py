@@ -12,15 +12,13 @@ from sklearn.preprocessing import MinMaxScaler
 
 from smac.configspace import ConfigurationSpace
 from smac.constants import VERY_SMALL_NUMBER
-from smac.model.base_imputor import BaseImputor
-from smac.utils.logging import PickableLoggerAdapter
+from smac.utils.logging import get_logger
 
-__author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Marius Lindauer"
-__email__ = "lindauer@cs.uni-freiburg.de"
-__version__ = "0.0.1"
+
+
+logger = get_logger(__name__)
 
 
 class BaseModel:
@@ -107,8 +105,6 @@ class BaseModel:
         self.types = types
         # Initial types array which is used to reset the type array at every call to train()
         self._initial_types = copy.deepcopy(types)
-
-        self.logger = PickableLoggerAdapter(self.__module__ + "." + self.__class__.__name__)
 
     def train(self, X: np.ndarray, Y: np.ndarray) -> "BaseModel":
         """Trains the EPM on X and Y.

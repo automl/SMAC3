@@ -287,7 +287,7 @@ class AbstractRunhistoryTransformer(object):
         Y: numpy.ndarray
             cost values
         """
-        logger.debug("Transform runhistory into X,y format")
+        logger.debug("Transforming runhistory into X, y format...")
 
         s_run_dict = self._get_s_run_dict(runhistory, budget_subset)
         X, Y = self._build_matrix(run_dict=s_run_dict, runhistory=runhistory, store_statistics=True)
@@ -364,7 +364,7 @@ class AbstractRunhistoryTransformer(object):
             X = np.vstack((X, tX))
             Y = np.concatenate((Y, tY))
 
-        logger.debug("Converted %d observations" % (X.shape[0]))
+        logger.debug("Converted %d observations." % (X.shape[0]))
         return X, Y
 
     @abc.abstractmethod

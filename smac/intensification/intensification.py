@@ -337,7 +337,7 @@ class Intensifier(AbstractRacer):
                 budget=0.0,
             )
 
-        logger.debug("Intensify on %s", challenger)
+        logger.debug("Intensify on %s.", challenger.get_dictionary())
         if hasattr(challenger, "origin"):
             logger.debug("Configuration origin: %s", challenger.origin)
 
@@ -682,8 +682,7 @@ class Intensifier(AbstractRacer):
         instance, seed, _ = self.to_run.pop()
         algorithm_walltime_limit = self.algorithm_walltime_limit
 
-        logger.debug("algorithm_walltime_limit for challenger: %s" % str(algorithm_walltime_limit))
-        logger.debug("Add run of challenger")
+        logger.debug("Algorithm walltime limit for challenger: %s" % str(algorithm_walltime_limit))
 
         # Line 12
         return incumbent, instance, seed, algorithm_walltime_limit
@@ -906,19 +905,21 @@ class Intensifier(AbstractRacer):
         """
         if challengers:
             # iterate over challengers provided
-            logger.debug("Using challengers provided")
+            logger.debug("Using provided challengers...")
             chall_gen = iter(challengers)  # type: _config_to_run_type
         elif chooser:
             # generating challengers on-the-fly if optimizer is given
-            logger.debug("Generating new challenger from optimizer")
+            logger.debug("Generating new challenger from optimizer...")
             chall_gen = chooser.choose_next()
         else:
-            raise ValueError("No configurations/chooser provided. Cannot generate challenger!")
+            raise ValueError("No configurations/chooser provided. Can not generate challenger!")
 
         return chall_gen
 
     def _next_iteration(self) -> None:
         """Updates tracking variables at the end of an intensification run."""
+        assert self.stats
+
         # track iterations
         self.n_iters += 1
         self.iteration_done = True

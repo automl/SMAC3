@@ -45,7 +45,6 @@ class DaskParallelRunner(Runner):
 
     Dask works with Future object which are managed via the DaskParallelRunner.client.
 
-
     Parameters
     ----------
     single_worker: BaseRunner
@@ -60,7 +59,6 @@ class DaskParallelRunner(Runner):
         worker directory must be set by the program/user starting the workers.
     dask_client: dask.distributed.Client
         User-created dask client, can be used to start a dask cluster and then attach SMAC to it.
-
 
     Attributes
     ----------
@@ -241,31 +239,31 @@ class DaskParallelRunner(Runner):
 
         Parameters
         ----------
-            config : Configuration
-                dictionary param -> value
-            instance : string
-                problem instance
-            algorithm_walltime_limit : float, optional
-                Wallclock time limit of the target algorithm. If no value is
-                provided no limit will be enforced.
-            seed : int
-                random seed
-            budget : float, optional
-                A positive, real-valued number representing an arbitrary limit to the target
-                algorithm. Handled by the target algorithm internally
-            instance_specific: str
-                instance specific information (e.g., domain file or solution)
+        config : Configuration
+            dictionary param -> value
+        instance : string
+            problem instance
+        algorithm_walltime_limit : float, optional
+            Wallclock time limit of the target algorithm. If no value is
+            provided no limit will be enforced.
+        seed : int
+            random seed
+        budget : float, optional
+            A positive, real-valued number representing an arbitrary limit to the target
+            algorithm. Handled by the target algorithm internally
+        instance_specific: str
+            instance specific information (e.g., domain file or solution)
 
         Returns
         -------
-            status: enum of StatusType (int)
-                {SUCCESS, TIMEOUT, CRASHED, ABORT}
-            cost: float
-                cost/regret/quality (float) (None, if not returned by TA)
-            runtime: float
-                runtime (None if not returned by TA)
-            additional_info: dict
-                all further additional run information
+        status: enum of StatusType (int)
+            {SUCCESS, TIMEOUT, CRASHED, ABORT}
+        cost: float
+            cost/regret/quality (float) (None, if not returned by TA)
+        runtime: float
+            runtime (None if not returned by TA)
+        additional_info: dict
+            all further additional run information
         """
         return self.single_worker.run(
             config=config,
@@ -277,26 +275,18 @@ class DaskParallelRunner(Runner):
         )
 
     def num_workers(self) -> int:
-        """Total number of workers available.
-
-        This number is dynamic as more resources can be allocated
-        """
+        """Total number of workers available. This number is dynamic as more resources can be allocated."""
         return sum(self.client.nthreads().values())
 
     def _workers_available(self) -> bool:
-        """
-        Query if there are workers available, which means that there are resources to launch a
-        dask job.
-        """
+        """Query if there are workers available, which means that there are resources to launch a dask job."""
         total_compute_power = sum(self.client.nthreads().values())
         if len(self.futures) < total_compute_power:
             return True
         return False
 
     def __del__(self) -> None:
-        """
-        Make sure that when this object gets deleted, the client is terminated.
-
+        """Make sure that when this object gets deleted, the client is terminated.
         This is only done if the client was created by the dask runner.
         """
         if self.close_client_at_del:
