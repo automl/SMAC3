@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List
 
 import warnings
@@ -8,7 +9,6 @@ from scipy.stats.qmc import Sobol
 
 from smac.initial_design import InitialDesign
 
-__author__ = "Marius Lindauer"
 __copyright__ = "Copyright 2018, ML4AAD"
 __license__ = "3-clause BSD"
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -5,12 +6,8 @@ import numpy as np
 from smac.configspace import ConfigurationSpace
 from smac.model.base_model import BaseModel
 
-__author__ = "Katharina Eggensperger"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Katharina Eggensperger"
-__email__ = "eggenspk@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class RandomModel(BaseModel):

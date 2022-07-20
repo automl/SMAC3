@@ -1,3 +1,4 @@
+from __future__ import annotations
 import itertools
 
 import numpy as np
@@ -12,7 +13,7 @@ from ConfigSpace.util import deactivate_inactive_hyperparameters
 
 from smac.initial_design import InitialDesign
 
-__author__ = "Marius Lindauer"
+
 __copyright__ = "Copyright 2016, ML4AAD"
 __license__ = "3-clause BSD"
 

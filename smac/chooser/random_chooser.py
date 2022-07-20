@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -5,12 +6,8 @@ import logging
 
 import numpy as np
 
-__author__ = "Aaron Kimmig"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Aaron Kimmig"
-__email__ = "kimmiga@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class RandomChooser(ABC):

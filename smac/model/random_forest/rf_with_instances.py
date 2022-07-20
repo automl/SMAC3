@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -9,12 +10,8 @@ from smac.model.base_imputor import BaseImputor
 from smac.model.random_forest import BaseRandomForest
 from smac.model.random_forest.rfr_imputator import RFRImputator
 
-__author__ = "Aaron Klein"
 __copyright__ = "Copyright 2015, ML4AAD"
 __license__ = "3-clause BSD"
-__maintainer__ = "Aaron Klein"
-__email__ = "kleinaa@cs.uni-freiburg.de"
-__version__ = "0.0.1"
 
 
 class RandomForestWithInstances(BaseRandomForest):

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import List, Mapping, Optional, Tuple
 
 import logging
@@ -9,11 +10,9 @@ from smac.configspace import Configuration
 from smac.intensification.abstract_racer import AbstractRacer, RunInfoIntent
 from smac.intensification.parallel_scheduling import ParallelScheduler
 from smac.intensification.successive_halving import _SuccessiveHalving
-from smac.runhistory import RunInfo, RunValue, StatusType
+from smac.runhistory import RunInfo, RunValue
 from smac.runhistory.runhistory import RunHistory
-from smac.utils.stats import Stats
 
-__author__ = "Ashwin Raaghav Narayanan"
 __copyright__ = "Copyright 2019, ML4AAD"
 __license__ = "3-clause BSD"
 

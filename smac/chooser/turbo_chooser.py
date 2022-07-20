@@ -1,9 +1,10 @@
+from __future__ import annotations
 import typing
 
 import numpy as np
 
 from smac.acquisition_function import TS, AbstractAcquisitionFunction
-from smac.acquisition_optimizer.maximizer import AbstractAcquisitionOptimizer
+from smac.acquisition_optimizer import AbstractAcquisitionOptimizer
 from smac.chooser import Chooser
 from smac.chooser.random_chooser import ChooserNoCoolDown, RandomChooser
 from smac.cli.scenario import Scenario
